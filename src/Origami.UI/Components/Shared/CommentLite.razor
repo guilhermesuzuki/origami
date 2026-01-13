@@ -1,0 +1,38 @@
+﻿@inherits Basic
+@implements IEntityNull<BaseComment>
+@inject ISocialProfileRepository _socialProfile
+
+@if (Entity != null)
+{
+    var socialProfile = this.Super.SocialProfiles.ReadFromCache().Id(Entity.SocialProfileId) ?? new();
+    <div class="comment-lite @Class">
+        <div class="comment-header d-inline-flex align-items-center">
+            @if (Entity is OrigamiPostComment postComment)
+            {
+                var post = this.Super.Posts.ReadFromCache().Id(postComment.PostId);
+                <i class="fa-solid fa-file-lines pe-1" style="font-size: 12px;" title="@(post != null ? post.Title : null)"></i>
+            }
+            @if (Entity is OrigamiVideoComment videoComment)
+            {
+                var video = this.Super.Videos.ReadFromCache().Id(videoComment.VideoId);
+                <i class="fa-solid fa-video pe-1" style="font-size: 12px;" title="@(video != null ? video.Title : null)"></i>
+            }
+            <SocialProfileHeaderLite Entity="socialProfile"></SocialProfileHeaderLite>
+        </div>
+        <div class="comment-date x-small">
+            @if (Entity.PinnedById != null)
+            {
+                <span class="pe-1">
+                    <i class="bi bi-pin-fill"></i>
+                    <span>•</span>
+                </span>
+            }
+            <Id Entity="Entity" Class="pe-1"></Id>
+        </div>
+        <div class="comment-text mt-2">@(Entity.Content.Markup())</div>
+    </div>
+}
+
+@code {
+    [Parameter] public BaseComment? Entity { get; set; }
+}

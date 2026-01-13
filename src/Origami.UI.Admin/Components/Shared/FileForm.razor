@@ -1,0 +1,73 @@
+﻿@using Origami.Core.Models.FileSystem
+
+@inherits Basic
+@implements IEntityNull<OrigamiSystemFile>
+
+@if (Entity != null)
+{
+    <div class="file-form @Class p-3">
+        @if (Entity.IsImage)
+        {
+            <div class="border" style="background-color: #20202050; background-image: url(@(Entity.WebPath));background-repeat: no-repeat;background-position: center;background-size: contain;height:400px;"></div>
+        }
+        else if (Entity.IsVideo)
+        {
+            <video src="@Entity.WebPath" controls style="width:100%;"></video>
+        }
+        else if (Entity.IsAudio) 
+        {
+            <audio src="@Entity.WebPath" controls style="width:100%;"></audio>
+        }
+        <table class="w-100 mt-3 border">
+            <tr>
+                <td class="p-3" style="width:25%;">@Text.Lower("Path"):</td>
+                <td class="p-3">@Entity.WebPath</td>
+            </tr>
+            <tr>
+                <td class="p-3" style="width:25%;">@Text.Lower("Name"):</td>
+                <td class="p-3">@Entity.Name</td>
+            </tr>
+            <tr>
+                <td class="p-3" style="width:25%;">@Text.Lower("Size"):</td>
+                <td class="p-3">@Entity.FileSize.SizeInBytes()</td>
+            </tr>
+            <tr>
+                <td class="p-3" style="width:25%;">@Text.Lower("Created"):</td>
+                <td class="p-3">@_fileInfo().CreationTimeUtc</td>
+            </tr>
+            <tr>
+                <td class="p-3" style="width:25%;">@Text.Lower("Modified"):</td>
+                <td class="p-3">@_fileInfo().LastWriteTimeUtc</td>
+            </tr>
+            <tr>
+                <td class="p-3" style="width:25%;">@Text.Lower("Accessed"):</td>
+                <td class="p-3">@_fileInfo().LastAccessTimeUtc</td>
+            </tr>
+            <tr>
+                <td class="p-3" style="width:25%;">@Text.Lower("Local Path"):</td>
+                <td class="p-3">@Entity.LocalPath</td>
+            </tr>
+        </table>
+    </div>
+}
+else
+{
+    <div class="@Class" style="display: flex; justify-content: center; align-items: center; height: 200px;">
+        <div>
+            <span class="fs-3">@Text.Lower("Select a File")</span>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public OrigamiSystemFile? Entity { get; set; }
+
+    /// <summary>
+    /// Returns File Info from the <see cref="Entity"/>
+    /// </summary>
+    /// <returns></returns>
+    private FileInfo _fileInfo()
+    {
+        return new(this.Entity!.LocalPath);
+    }
+}

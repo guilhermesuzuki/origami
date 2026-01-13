@@ -1,0 +1,28 @@
+﻿@inherits Basic
+
+<MudSelect Class="blog-select"
+           FullWidth="true"
+           Immediate="true"
+           MultiSelection="false"
+           Disabled="@Disabled"
+           @bind-Value="this.UserFacade.BlogId"
+           Style="@Style"
+           HelperText="@Text.Lower("Blog")">
+    @foreach (var blog in this._getBlogs())
+    {
+        <MudSelectItem Value="@blog.Id">
+            <BlogHeaderLite Entity="blog"></BlogHeaderLite>
+        </MudSelectItem>
+    }
+</MudSelect>
+
+@code {
+    [Parameter] public bool Disabled { get; set; }
+
+    [Parameter] public string Style { get; set; } = string.Empty;
+
+    private IEnumerable<OrigamiBlog> _getBlogs()
+    {
+        return this.Super.Blogs.ReadFromCache().NonDeleted().OrderBy(x => x.Name);
+    }
+}

@@ -1,0 +1,332 @@
+﻿@inherits Basic
+@implements IBlogId
+@inject ISuperRepository _super
+
+<style>
+    .blog-menu .categories .id { display: none; }
+    .blog-menu .content-header-lite { display: none; }
+    .blog-menu .page-header-image,
+    .blog-menu .post-header-image,
+    .blog-menu .video-header-image { max-height: 111.03px; }
+    .blog-menu .nothing-to-see-here { max-height: 111.03px; }
+</style>
+<div class="blog-menu @Class">
+    <div class="row">
+        <div class="col-12 col-xxl-4"></div>
+        <div class="col-12 col-xxl-4 text-center">
+            <div class="btn-group w-100">
+                <button class="btn btn-outline-dark fw-bold cursor-pointer w-100" @onclick="this.GoToBlog">
+                    <i class="bi bi-box-arrow-up-right"></i>
+                    @Text.Lower("Go to blog")
+                </button>
+                <button class="btn btn-outline-dark fw-bold cursor-pointer w-100" @onclick="this.GoToRss">
+                    <i class="bi bi-rss-fill"></i>
+                    @Text.Lower("RSS feed")
+                </button>
+            </div>
+        </div>
+        <div class="col-12 col-xxl-4"></div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-12 col-xxl-3">
+            <div class="row">
+                <div class="col-12 col-xxl-6 categories">
+                    <a class="text-center focusable" href="/blogs/@_blog.Slug/categories">
+                        <i class="fa-solid fa-layer-group"></i>
+                        <span>@Text.Lower("Categories")</span>
+                    </a>
+                    @if (_categories.Any() == true)
+                    {
+                        @foreach (var category in _categories)
+                        {
+                            <CategoryHeader Class="mt-1" Entity="category"></CategoryHeader>
+                        }
+                    }
+                    else
+                    {
+                        <NothingToSeeHere Class="mt-1 border p-3 shadow-sm">
+                            <TitleTemplate>
+                                <i class="fa-solid fa-face-grin-beam-sweat"></i>
+                                <span class="header">@Text.Lower("No categories")</span>
+                            </TitleTemplate>
+                        </NothingToSeeHere>
+                    }
+                </div>
+                <div class="col-12 col-xxl-6 tags">
+                    <a class="text-center focusable" href="/blogs/@_blog.Slug/tags">
+                        <i class="fa-solid fa-tag"></i>
+                        <span>@Text.Lower("Tags")</span>
+                    </a>
+                    @if (_tags.Any() == true)
+                    {
+                        @foreach (var tag in _tags)
+                        {
+                            <TagHeader Class="mt-1" Entity="tag"></TagHeader>
+                        }
+                    }
+                    else
+                    {
+                        <NothingToSeeHere Class="mt-1 border p-3 shadow-sm">
+                            <TitleTemplate>
+                                <i class="fa-solid fa-face-grin-beam-sweat"></i>
+                                <span class="header">@Text.Lower("No tags")</span>
+                            </TitleTemplate>
+                        </NothingToSeeHere>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-xxl-9">
+            <div class="row">
+                <div class="col-12 col-xxl-4">
+                    <ul class="inline-list">
+                        <li></li>
+                        <li>
+                            <a class="text-center focusable" href="/blogs/@_blog.Slug/pages">
+                                <i class="bi bi-file-earmark-text-fill"></i>
+                                <span>@Text.Lower("Pages")</span>
+                            </a>
+                        </li>
+                        <li class="text-right">
+                            <select @onclick:stopPropagation="true" @bind="@this.PageListing" class="x-small">
+                                <option value="1">@Text.Lower("Most popular")</option>
+                                <option value="2">@Text.Lower("Most recent")</option>
+                            </select>
+                        </li>
+                    </ul>
+                    @if (_pages.Any() == true)
+                    {
+                        @foreach (var page in _pages)
+                        {
+                            <div class="mt-1">
+                                <PageHeaderLite Entity="page"></PageHeaderLite>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <NothingToSeeHere Class="mt-1 border p-3 shadow-sm">
+                            <TitleTemplate>
+                                <i class="fa-solid fa-face-grin-beam-sweat"></i>
+                                <span class="header">@Text.Lower("No pages")</span>
+                            </TitleTemplate>
+                        </NothingToSeeHere>
+                    }
+                </div>
+                <div class="col-12 col-xxl-4">
+                    <ul class="inline-list">
+                        <li></li>
+                        <li>
+                            <a class="text-center focusable" href="/blogs/@_blog.Slug/posts">
+                                <i class="bi bi-file-earmark-text-fill"></i>
+                                <span>@Text.Lower("Posts")</span>
+                            </a>
+                        </li>
+                        <li class="text-right">
+                            <select @onclick:stopPropagation="true" @bind="@this.PostListing" class="x-small">
+                                <option value="1">@Text.Lower("Most popular")</option>
+                                <option value="2">@Text.Lower("Most recent")</option>
+                            </select>
+                        </li>
+                    </ul>
+                    @if (_posts.Any() == true)
+                    {
+                        @foreach (var post in _posts)
+                        {
+                            <div class="mt-1">
+                                <PostHeaderLite Entity="post"></PostHeaderLite>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <NothingToSeeHere Class="mt-1 border p-3 shadow-sm">
+                            <TitleTemplate>
+                                <i class="fa-solid fa-face-grin-beam-sweat"></i>
+                                <span class="header">@Text.Lower("No posts")</span>
+                            </TitleTemplate>
+                        </NothingToSeeHere>
+                    }
+                </div>
+                <div class="col-12 col-xxl-4">
+                    <ul class="inline-list">
+                        <li></li>
+                        <li>
+                            <a class="text-center focusable" href="/blogs/@_blog.Slug/videos">
+                                <i class="fa-solid fa-video"></i>
+                                <span>@Text.Lower("Videos")</span>
+                            </a>
+                        </li>
+                        <li class="text-right">
+                            <select @onclick:stopPropagation="true" @bind="@this.VideoListing" class="x-small">
+                                <option value="1">@Text.Lower("Most popular")</option>
+                                <option value="2">@Text.Lower("Most recent")</option>
+                            </select>
+                        </li>
+                    </ul>
+                    @if (_videos.Any() == true)
+                    {
+                        @foreach (var video in _videos)
+                        {
+                            <div class="mt-1">
+                                <VideoHeaderLite Entity="video"></VideoHeaderLite>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <NothingToSeeHere Class="mt-1 border p-3 shadow-sm">
+                            <TitleTemplate>
+                                <i class="fa-solid fa-face-grin-beam-sweat"></i>
+                                <span class="header">@Text.Lower("No videos")</span>
+                            </TitleTemplate>
+                        </NothingToSeeHere>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public Guid BlogId { get; set; }
+
+    private OrigamiBlog _blog = new();
+    private IEnumerable<OrigamiCategory> _categories = [];
+    private IEnumerable<OrigamiPage> _pages = [];
+    private IEnumerable<OrigamiPost> _posts = [];
+    private IEnumerable<OrigamiTag> _tags = [];
+    private IEnumerable<OrigamiVideo> _videos = [];
+
+    private string _pageListing = "1";
+    private string _postListing = "1";
+    private string _videoListing = "1";
+
+    private string PageListing
+    {
+        get => _pageListing;
+        set
+        {
+            _pageListing = value;
+            this.LoadPages(value);
+        }
+    }
+
+    private string PostListing
+    {
+        get => _postListing;
+        set
+        {
+            _postListing = value;
+            this.LoadPosts(value);
+        }
+    }
+
+    private string VideoListing
+    {
+        get => _videoListing;
+        set
+        {
+            _videoListing = value;
+            this.LoadVideos(value);
+        }
+    }
+
+    private void LoadBlog()
+    {
+        _blog = this.Super.Blogs.ReadFromCache().Id(BlogId) ?? new();
+    }
+
+    private void LoadCategories()
+    {
+        _categories = this._super.GetCategories()
+            .Blog(BlogId)
+            .OrderByDescending(x => { return _super.GetPosts(x).Published().Count() + _super.GetVideos(x).Published().Count(); })
+            .Take(7)
+            .OrderBy(x => x.Name);
+    }
+
+    private void LoadPages(string order = "1")
+    {
+        var list = new List<Core.Models.OrigamiPage>();
+        var items = this._super.GetPages().Blog(BlogId);
+
+        switch (order)
+        {
+            case "2":
+                list.AddRange(items.OrderByDescending(x => x.DateCreated).Take(7));
+                break;
+            default:
+                list.AddRange(items.OrderByDescending(x => this._super.PageViews.GetViews(x)).Take(7));
+                break;
+        }
+
+        var fp = this.Super.Pages.ReadFromCache().FrontPage(BlogId);
+        if (fp != null)
+        {
+            list.Insert(0, fp);
+        }
+
+        _pages = list.Distinct().Take(7);
+    }
+
+    private void LoadPosts(string order = "1")
+    {
+        var items = this._super.Posts.ReadFromCache().NonDeleted().Published().Blog(BlogId);
+
+        switch (order)
+        {
+            case "2":
+                _posts = items.OrderByDescending(x => x.DateCreated).Take(7);
+                break;
+            default:
+                _posts = items.OrderByDescending(x => this._super.PostViews.GetViews(x)).Take(7);
+                break;
+        }
+    }
+
+    private void LoadTags()
+    {
+        _tags = this._super.Tags.ReadFromCache()
+            .Blog(BlogId)
+            .OrderByDescending(x => { return _super.GetPosts(x).Published().Count() + _super.GetVideos(x).Published().Count(); })
+            .Take(7)
+            .OrderBy(x => x.Name);
+    }
+
+    private void LoadVideos(string order = "1")
+    {
+        var items = this._super.Videos.ReadFromCache().NonDeleted().Published().Blog(BlogId);
+
+        switch (order)
+        {
+            case "2":
+                _videos = items.OrderByDescending(x => x.DateCreated).Take(7);
+                break;
+            default:
+                _videos = items.OrderByDescending(x => this._super.VideoViews.GetViews(x)).Take(7);
+                break;
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        this.LoadBlog();
+        this.LoadCategories();
+        this.LoadPages();
+        this.LoadPosts();
+        this.LoadTags();
+        this.LoadVideos();
+    }
+
+    private void GoToBlog()
+    {
+        this.NavigationManager.NavigateTo($"{this._blog.Hyperlink}#content-start");
+    }
+
+    private void GoToRss()
+    {
+        this.NavigationManager.NavigateTo($"{this._blog.Hyperlink}rss.xml", true);
+    }
+}

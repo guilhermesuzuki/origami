@@ -1,0 +1,15 @@
+﻿@inject CustomHeadContentService HeadService
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    protected override void OnInitialized()
+    {
+        HeadService.SetContent(ChildContent);
+    }
+
+    protected override void OnParametersSet()
+    {
+        HeadService.SetContent(ChildContent);
+    }
+}

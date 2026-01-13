@@ -1,0 +1,16 @@
+﻿@using Origami.Core.Models
+@inherits Basic
+@implements IEntityNull<OrigamiSpecialPage>
+
+@if (this.Entity != null)
+{
+    <div class="specialpage-header-lite-3 @Class">
+        <i class="fa-solid fa-file-lines" title="@Text.Original("Page")"></i>
+        <span>@Entity.Title</span>
+        <Id Class="d-block x-small" Entity="@Entity"></Id>
+    </div>
+}
+
+@code {
+    [Parameter] public OrigamiSpecialPage? Entity { get; set; }
+}

@@ -1,0 +1,27 @@
+﻿@inject CustomHeadContentService HeadService
+
+@if (_headContent != null)
+{
+    @_headContent
+}
+
+@code {
+    private RenderFragment? _headContent;
+
+    protected override void OnInitialized()
+    {
+        HeadService.OnChange += HandleHeadContentChange;
+        _headContent = HeadService.CurrentContent;
+    }
+
+    private void HandleHeadContentChange()
+    {
+        _headContent = HeadService.CurrentContent;
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        HeadService.OnChange -= HandleHeadContentChange;
+    }
+}

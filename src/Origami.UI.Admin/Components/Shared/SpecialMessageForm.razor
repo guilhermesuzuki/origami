@@ -1,0 +1,120 @@
+﻿@inherits BasicFormFull<OrigamiSpecialMessage>
+@inject IPageRepository _page
+@inject IFileRepository _fileRepository
+
+<MudFileUpload @ref="this.FileUpload" T="IBrowserFile" FilesChanged="UploadHeader" Accept=".png, .jpg, .bmp, .tiff" MaximumFileCount="1"></MudFileUpload>
+<div class="form @Class">
+    <div class="row">
+        <div class="col-12">
+            <div class="p-3">
+                <MudTextField ReadOnly="true"
+                              Immediate="true"
+                              Value="@(Text.Lower(Entity.IsDraft.YesNo()))"
+                              HelperText="@Text.Lower("Still a draft?")"
+                              Class="cursor-pointer yes-no"
+                              title="@Text.Lower("Click here to change it")"
+                              @onclick="() => this.Entity.IsDraft = !this.Entity.IsDraft.GetValueOrDefault()"></MudTextField>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-xxl-6">
+            <div class="p-3">
+                <BasicHeaderNotes Entity="this.Entity"></BasicHeaderNotes>
+                <BasicHeader Class="mt-3" Entity="this.Entity"></BasicHeader>
+                <ul class="inline-list mt-3">
+                    <li>
+                        <MudSelect T="string" @bind-Value="Entity.Type" HelperText="@Text.Lower("Type")" Required="true">
+                            <MudSelectItem Value="OrigamiSpecialMessageTypes.None.ToString()">@Text.Original("None")</MudSelectItem>
+                            <MudSelectItem Value="OrigamiSpecialMessageTypes.Danger.ToString()">
+                                <span class="text-danger">
+                                    <i class="fa-solid fa-bomb"></i>
+                                    @Text.Original("Danger")
+                                </span>
+                            </MudSelectItem>
+                            <MudSelectItem Value="OrigamiSpecialMessageTypes.Info.ToString()">
+                                <span class="text-info">
+                                    <i class="fa-solid fa-circle-info"></i>
+                                    @Text.Original("Info")
+                                </span>
+                            </MudSelectItem>
+                            <MudSelectItem Value="OrigamiSpecialMessageTypes.Success.ToString()">
+                                <span class="text-success">
+                                    <i class="fa-solid fa-circle-check"></i>
+                                    @Text.Original("Success")
+                                </span>
+                            </MudSelectItem>
+                            <MudSelectItem Value="OrigamiSpecialMessageTypes.Warning.ToString()">
+                                <span class="text-warning">
+                                    <i class="fa-solid fa-triangle-exclamation"></i>
+                                    @Text.Original("Warning")
+                                </span>
+                            </MudSelectItem>
+                        </MudSelect>
+                    </li>
+                </ul>
+                <ul class="inline-list mt-3">
+                    <li>
+                        <MudDatePicker @bind-Date="Entity.MB_StartDate"
+                                       Mask="@(new DateMask("yyyy.MM.dd"))"
+                                       DateFormat="yyyy.MM.dd"
+                                       HelperText="@Text.Lower("Start Date")"
+                                       Variant="Variant.Text"
+                                       Clearable="true" />
+                    </li>
+                    <li>
+                        <MudDatePicker @bind-Date="Entity.MB_EndDate"
+                                       Mask="@(new DateMask("yyyy.MM.dd"))"
+                                       DateFormat="yyyy.MM.dd"
+                                       HelperText="@Text.Lower("End Date")"
+                                       Variant="Variant.Text"
+                                       Clearable="true" />
+                    </li>
+                </ul>
+                <ul class="inline-list mt-3">
+                    <li>
+                        <MudTextField Immediate="true"
+                                      AdornmentIcon="@Icons.Material.Filled.Description"
+                                      Adornment="Adornment.Start"
+                                      @bind-Value="@Entity.Title"
+                                      HelperText="@Text.Lower("Title")"
+                                      Required="true"></MudTextField>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="p-3">
+                <TinyMCEContent Entity="Entity" Title="@Text.Lower("Content")"></TinyMCEContent>
+            </div>
+        </div>
+    </div>
+    <div class="buttons mt-3 p-3 text-center">
+        <div class="btn-group">
+            <button class="btn btn-success text-white fw-bold" @onclick="Save" disabled="@this.DisableTheSaveButton">
+                <i class="fa-solid fa-floppy-disk"></i>
+                @Text.Lower("Save")
+            </button>
+            <button class="btn btn-secondary text-white fw-bold" @onclick="UndoChanges" disabled="@this.Entity.New">
+                <i class="fa-solid fa-rotate-left"></i>
+                @Text.Lower("Undo changes")
+            </button>
+            <button class="btn btn-info text-white fw-bold" @onclick="CreateEntity">
+                <i class="fa-solid fa-square-plus"></i>
+                @Text.Lower("New")
+            </button>
+        </div>
+    </div>
+</div>
+@code {
+    protected override bool DisableTheSaveButton
+    {
+        get
+        {
+            if (this.Entity.Title.Has() == false) return true;
+            return false;
+        }
+    }
+}

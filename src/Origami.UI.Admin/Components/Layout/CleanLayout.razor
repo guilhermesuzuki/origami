@@ -1,0 +1,65 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
+@inherits LayoutComponentBase
+
+@inject Text _text
+@inject IBlogRepository _blog
+@inject IConfiguration _configuration
+@inject IJSRuntime _jsRuntime
+@inject NavigationManager _navigationManager
+@inject IUserFacade _userFacade
+@inject UserManager<IdentityUser> _userManager
+@inject AuthenticationStateProvider _authenticationStateProvider
+@inject IUserRepository _userRepository
+@inject ISettingsRepository _settings
+
+<CustomHeadContent>
+    <link rel="stylesheet" href="_content/Origami.UI/lib/css/style-site-admin.css" />
+    <AppLinks></AppLinks>
+    <style>
+        .site-name { font-size: 2.5vw !important; }
+        .logo .site-name-container { margin-top: -40px !important; }
+    </style>
+</CustomHeadContent>
+<PageTitle>@_settings.GetSettings().Name.ToLower()</PageTitle>
+<ProcessResult></ProcessResult>
+
+<div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+    <div class="shadow-lg p-4 border" style="max-width:100%; max-height:800px; width: 800px;">
+        <Logo />
+        <div class="body-wrapper">@Body</div>
+    </div>
+</div>
+
+<MudThemeProvider />
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+<BlazorErrorUi></BlazorErrorUi>
+
+@code {
+    [CascadingParameter] private Task<AuthenticationState>? authenticationState { get; set; }
+
+    /// <summary>
+    /// Loads the authenticated user
+    /// </summary>
+    /// <returns></returns>
+    protected async Task LoadUserAsync()
+    {
+        var state = await authenticationState!;
+        if (state == null) return;
+        if (state.User.Identity == null) return;
+        if (state.User.Identity.IsAuthenticated == false) return;
+        var nameId = state.User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (nameId != null && Guid.TryParse(nameId, out var id) == true)
+        {
+            this._userFacade.User = _userRepository.ReadFromCache().Id(id) ?? new();
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await this.LoadUserAsync();
+        await base.OnInitializedAsync();
+    }
+}

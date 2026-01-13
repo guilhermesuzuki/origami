@@ -1,0 +1,26 @@
+﻿@inherits Basic
+
+@if (this.Super != null)
+{
+    var pp = this.Super.SpecialPages.ReadFromCache().GetByType(OrigamiSpecialPageTypes.CookiePolicy).FirstOrDefault();
+    <div class="cookie-consent-form @Class">
+        <div class="comment-text p-3 border shadow-lg">
+            <p>
+                @Text.Original("We use cookies and similar technologies to enhance your browsing experience, analyze site traffic, personalize content, and serve targeted advertisements")<span>.</span>
+                @Text.Original("By continuing to use our site, you consent to our use of cookies")<span>.</span>
+                @Text.Original("And click OK to close this pop-up window")<span>.</span>
+            </p>
+            @if (pp != null)
+            {
+                <p><a href="@pp.Hyperlink#content-start" class="btn-link" style="cursor:pointer;">@Text.Original("Click here to read our cookie policy")</a></p>
+            }
+            <div class="btn-group mt-3">
+                <button class="btn btn-success" onclick="OkToCookies()">@Text.Original("OK")</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+
+}

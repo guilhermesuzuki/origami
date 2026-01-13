@@ -1,0 +1,83 @@
+﻿@using Microsoft.Extensions.Options
+@inherits Basic
+@inject IOptionsMonitor<SocialNetwork> socialNetwork
+<span class="subscribe-here @Class">
+    <span class="fw-bold me-3">@Text.Lower("Subscribe")</span>
+    <span class="me-3 p-1">
+        @if (socialNetwork.CurrentValue.Microsoft.Enabled)
+        {
+            <span title="Microsoft" class="me-1 cursor-pointer focusable" @onclick="this.Microsoft">
+                <i class="fa-brands fa-microsoft"></i>
+            </span>
+        }
+        @if (socialNetwork.CurrentValue.Google.Enabled)
+        {
+            <span title="Google" class="me-1 cursor-pointer focusable" @onclick="this.Google">
+                <i class="fa-brands fa-google"></i>
+            </span>
+        }
+        @if (socialNetwork.CurrentValue.Facebook.Enabled)
+        {
+            <span title="Facebook" class="me-1 cursor-pointer focusable" @onclick="this.Facebook">
+                <i class="fa-brands fa-facebook"></i>
+            </span>
+        }
+        @if (socialNetwork.CurrentValue.GitHub.Enabled)
+        {
+            <span title="GitHub" class="cursor-pointer focusable" @onclick="this.GitHub">
+                <i class="fa-brands fa-github"></i>
+            </span>
+        }
+    </span>
+    <span class="me-3" title="@Text.Lower("Subscriber(s)")">
+        <i class="bi bi-envelope-check-fill"></i>
+        <span>@this.Super.Subscribers.ReadFromCache().NonDeleted().Count()</span>
+    </span>
+    <span title="@Text.Lower("People online")">
+        <i class="bi bi-person-fill"></i>
+        <span>@AppFacade.OnlineUsers.Count</span>
+    </span>
+</span>
+
+@code {
+    /// <summary>
+    /// Timer to refresh the UI.
+    /// </summary>
+    protected System.Timers.Timer timer = new(5000);
+
+    private void Microsoft()
+    {
+        var returnUrl = Uri.EscapeDataString("/subscribe");
+        this.NavigationManager!.NavigateTo($"/login/openidconnect?returnUrl={returnUrl}", true);
+    }
+
+    private void Google()
+    {
+        var returnUrl = Uri.EscapeDataString("/subscribe");
+        this.NavigationManager!.NavigateTo($"/login/google?returnUrl={returnUrl}", true);
+    }
+
+    private void Facebook()
+    {
+        var returnUrl = Uri.EscapeDataString("/subscribe");
+        this.NavigationManager!.NavigateTo($"/login/facebook?returnUrl={returnUrl}", true);
+    }
+
+    private void GitHub()
+    {
+        var returnUrl = Uri.EscapeDataString("/subscribe");
+        this.NavigationManager!.NavigateTo($"/login/github?returnUrl={returnUrl}", true);
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        timer.Start();
+        timer.Elapsed += OnTimerElapsed;
+    }
+
+    private void OnTimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        InvokeAsync(this.StateHasChanged);
+    }
+}

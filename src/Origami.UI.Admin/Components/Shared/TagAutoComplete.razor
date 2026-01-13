@@ -1,0 +1,64 @@
+﻿@inherits Basic
+@inject IPostTagRepository postTags
+@inject IVideoTagRepository videoTags
+
+<style>
+    .tag-container { display: flex; flex-wrap: wrap; /* Allows spans to wrap to the next line if there’s no space */ }
+</style>
+<div class="tag-autocomplete @Class">
+    <MudTextField T="string" Immediate="true" HelperText="@Text.Lower("Type in to search or add a new tag")" @bind-Value:get="_tagName" @bind-Value:set="_setTagName" @onkeydown="_onKeyDown">
+    </MudTextField>
+    @if (_tagsFound.Any() == true)
+    {
+        <div class="mt-3 tag-container">
+            @foreach (var tag in _tagsFound)
+            {
+                <span class="p-1 border me-1 mb-1 cursor-pointer" @onclick="async () => await this.TagEntered.InvokeAsync(tag.Name)">@tag.Name</span>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private string _tagName { get; set; } = string.Empty;
+    private List<OrigamiTag> _tagsFound = [];
+
+    /// <summary>
+    /// Tag entered
+    /// </summary>
+    [Parameter] public EventCallback<string> TagEntered { get; set; }
+
+    /// <summary>
+    /// Sets the tag name
+    /// </summary>
+    /// <param name="tag"></param>
+    private void _setTagName(string tag)
+    {
+        this._tagName = tag;
+        this._tagsFound = new();
+
+        if (tag.Has() == true)
+        {
+            this._tagsFound = [
+                ..postTags.ReadFromCache().Distinct().Where(x => x.Tag.Contains(tag, StringComparison.InvariantCultureIgnoreCase) == true).Select(x => new OrigamiTag { Name = x.Tag }),
+                ..videoTags.ReadFromCache().Distinct().Where(x => x.Tag.Contains(tag, StringComparison.InvariantCultureIgnoreCase) == true).Select(x => new OrigamiTag { Name = x.Tag }),
+            ];
+
+            this._tagsFound = this._tagsFound.DistinctBy(x => x.Name).OrderBy(x => x.Name).ToList();
+        }
+    }
+
+    private async Task _onKeyDown(KeyboardEventArgs k)
+    {
+        if (k.Code.Like("enter") == true && this._tagName.Has() == true)
+        {
+            await this.TagEntered.InvokeAsync(this._tagName);
+        }
+    }
+
+    public void Clear()
+    {
+        this._tagName = string.Empty;
+        this._tagsFound = [];
+    }
+}

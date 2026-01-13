@@ -1,0 +1,22 @@
+﻿@inherits Basic
+
+<div id="blazor-error-ui">
+    <environment include="Staging,Production">
+        @Text.Original("An error has occurred")
+        <span>.</span>
+        @Text.Original("This application may no longer respond until reloaded")
+        <span>.</span>
+    </environment>
+    <environment include="Development">
+        @Text.Original("An unhandled exception has occurred")
+        <span>.</span>
+        @Text.Original("See browser dev tools for details")
+        <span>.</span>
+    </environment>
+    <a href="" class="reload">@Text.Original("Reload")</a>
+    <a class="dismiss">🗙</a>
+</div>
+
+@code {
+
+}

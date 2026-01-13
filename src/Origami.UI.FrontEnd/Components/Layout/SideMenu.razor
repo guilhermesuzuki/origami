@@ -1,0 +1,88 @@
+﻿@using System.Globalization;
+@inherits Basic
+
+@if (this.UserFacade != null)
+{
+    var re = this.Super.Resumes.ReadFromCache().Any();
+    var pp = this.Super.Pages.ReadFromCache().PrivacyPolicy();
+    var tc = this.Super.Pages.ReadFromCache().TermsAndConditions();
+    var ts = this.Super.Pages.ReadFromCache().TermsOfService();
+    <div class="position-relative @Class">
+        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+            <i class="fa-solid fa-bars fs-2 text-white"></i>
+        </button>
+        @if (this.collapseNavMenu == false)
+        {
+            <div class="position-fixed bg-white bg-opacity-50 zeroes" style="z-index: 25;" @onclick="this.ToggleNavMenu"></div>
+            <div class="position-fixed nav-scrollable border shadow-lg mt-3 overflow-hidden" @onclick="ToggleNavMenu" style="background-color:white;z-index:50;max-width:calc(100% - 96px);">
+                <div class="row">
+                    @if (re == true)
+                    {
+                        <div class="border-bottom position-relative" style="">
+                            <a class="fs-5" href="/resume/#content-start" style="">
+                                <div class="p-3">
+                                    <i class="bi bi-file-earmark-text-fill"></i>
+                                    @Text.Original("Resume")
+                                </div>
+                            </a>
+                        </div>
+                    }
+                    @if (pp != null)
+                    {
+                        <div class="border-bottom position-relative col-12" style="">
+                            <a class="fs-5" href="@pp.Hyperlink#content-start" style="">
+                                <div class="p-3">
+                                    <i class="bi bi-file-earmark-text-fill"></i>
+                                    @Text.Original("Privacy Policy")
+                                </div>
+                            </a>
+                        </div>
+                    }
+                    @if (tc != null)
+                    {
+                        <div class="border-bottom position-relative col-12" style="">
+                            <a class="fs-5" href="@tc.Hyperlink#content-start" style="">
+                                <div class="p-3">
+                                    <i class="bi bi-file-earmark-text-fill"></i>
+                                    @Text.Original("Terms and Conditions")
+                                </div>
+                            </a>
+                        </div>
+                    }
+                    @if (ts != null)
+                    {
+                        <div class="border-bottom position-relative col-12" style="">
+                            <a class="fs-5" href="@ts.Hyperlink#content-start" style="">
+                                <div class="p-3">
+                                    <i class="bi bi-file-earmark-text-fill"></i>
+                                    @Text.Original("Terms of Service")
+                                </div>
+                            </a>
+                        </div>
+                    }
+                </div>
+                <div class="border-bottom position-relative" style="">
+                    <a class="fs-5" href="https://blazor.net" target="_blank" style="color:#5C2D91;">
+                        <div class="p-3">
+                            <img src="/files/blazor.png" height="15.156" style="margin-bottom: 3px;" />
+                            <span class="fw-bold">@Text.Get("Powered With Blazor")</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private bool collapseNavMenu = true;
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    /// <summary>
+    /// Toggles the Navigation Menu
+    /// </summary>
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}

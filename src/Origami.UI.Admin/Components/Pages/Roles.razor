@@ -1,0 +1,83 @@
+﻿@page "/roles"
+@inherits BasicAdminGrid<OrigamiRole>
+@inject IBlogRepository _blogs
+@inject IUserRoleRepository _userRoleRepository
+@inject IRightRoleRepository _rightRoleRepository
+<Root Access="this.CanAccess()">
+    <HeaderTemplate>
+        <div class="p-3 border-bottom">
+            <div class="row">
+                <div class="d-inline-flex align-items-center col-12 col-xxl-8">
+                    <ul class="inline-list w-100">
+                        <li style="width:80%;">
+                            <i class="fa-solid fa-id-badge pe-1"></i>
+                            <span class="me-3">@Text.Get("Roles", Text.Styles.Uppercase)</span>
+                            <div class="btn-group pe-1">
+                                <button class="btn btn-light text-danger border border-danger" disabled="@this.DisableTheDeleteButton" @onclick="this.DeleteSelectedEntities">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            </div>
+                        </li>
+                        <li style="width:20%;">
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-12 col-xxl-4">
+                    <BlogSelect></BlogSelect>
+                </div>
+            </div>
+        </div>
+        <div class="p-3 border-bottom">
+            <div class="row">
+                <div class="col-12">
+                    <SearchLite T="OrigamiRole" OnHitSelected="this.OnSearchResultSelected"></SearchLite>
+                </div>
+            </div>
+        </div>
+    </HeaderTemplate>
+    <ContentTemplate>
+        <div class="p-3">
+            <div class="row">
+                <div class="datagrid-options col-12 text-right mb-1">
+                    <DataGridOptions Deleted="this.IncludeDeletedEntitiesInDataGrid" DeletedChanged="this.OnIncludeDeletedEntitiesChanged"></DataGridOptions>
+                </div>
+                <div class="roles col-12">
+                    <MudDataGrid @ref="DataGrid" T="OrigamiRole" ServerData="GetEntities" Filterable="false" SortMode="SortMode.None" Class="border selectable" SelectedItems="this.SelectedEntities" MultiSelection="true" SelectedItemsChanged="this.SelectedEntitiesChanged"
+                                 RowClassFunc="this.RowClassFunc" Bordered="true" SelectOnRowClick="false">
+                        <Columns>
+                            <SelectColumn T="OrigamiRole"></SelectColumn>
+                            <TemplateColumn Title="@Text.Upper("Role")">
+                                <CellTemplate>
+                                    <div class="cursor-pointer" @onclick="() => OnEdit(context.Item)">
+                                        <span class="d-block">@context.Item.Name</span>
+                                        <Id Class="x-small" Entity="context.Item"></Id>
+                                    </div>
+                                </CellTemplate>
+                            </TemplateColumn>
+                            <TemplateColumn Title="@Text.Upper("System role")" CellClass="text-center" HeaderStyle="width: 10%;">
+                                <CellTemplate>
+                                    @if (context.Item.IsSystemRole)
+                                    {
+                                        <i class="fa-solid fa-lock"></i>
+                                    }
+                                </CellTemplate>
+                            </TemplateColumn>
+                        </Columns>
+                        <PagerContent>
+                            <MudDataGridPager T="OrigamiRole" />
+                        </PagerContent>
+                        <NoRecordsContent>
+                            <NoEntriesWereFound></NoEntriesWereFound>
+                        </NoRecordsContent>
+                    </MudDataGrid>
+                </div>
+                <div class="roles-form col-12 mt-3">
+                    <RoleForm Class="p-3 shadow-sm border" Entity="this.SelectedEntity" Saved="this.EntitySaved" Cancelled="this.EntityCancelled" Created="this.EntityCreated"></RoleForm>
+                </div>
+            </div>
+        </div>
+    </ContentTemplate>
+</Root>
+@code {
+    protected override string DefaultOrdering => $"{nameof(OrigamiRole.Name)}";
+}

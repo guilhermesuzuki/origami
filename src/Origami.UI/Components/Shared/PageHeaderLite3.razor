@@ -1,0 +1,15 @@
+﻿@inherits Basic
+@implements IEntityNull<Core.Models.OrigamiPage>
+
+@if (this.Entity != null)
+{
+    <div class="page-header-lite-3 @Class">
+        <i class="fa-solid fa-file-lines" title="@Text.Original("Page")"></i>
+        <span>@Entity.Title</span>
+        <Id Class="d-block x-small" Entity="@Entity"></Id>
+    </div>
+}
+
+@code {
+    [Parameter] public Core.Models.OrigamiPage? Entity { get; set; }
+}

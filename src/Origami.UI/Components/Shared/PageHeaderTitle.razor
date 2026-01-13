@@ -1,0 +1,21 @@
+﻿@inherits Basic
+@implements IEntityNull<Core.Models.OrigamiPage>
+@*to avoid repetition inside PageHeader*@
+@if (this.Entity != null)
+{
+    <div class="page-header-title d-inline-flex align-items-center">
+        <span class="d-inline-block language @Entity.Get().LanguageWrittenOn"></span>
+        @if (this.Entity.IsFrontPage)
+        {
+            <span class="fw-bold ms-1 x-small bg-success text-white px-1 text-lowercase">
+                <i class="bi bi-globe"></i>
+                @Text.Lower("Front-page")
+            </span>
+        }
+    </div>
+    <span class="d-block" style="margin-top:-10px;">@Entity.Title</span>
+}
+
+@code {
+    [Parameter] public Core.Models.OrigamiPage? Entity { get; set; }
+}

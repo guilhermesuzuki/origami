@@ -1,0 +1,48 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
+@inherits LayoutComponentBase
+
+@inject IBlogRepository _blog
+@inject IConfiguration _configuration
+@inject IHttpContextAccessor _httpContextAccessor
+@inject ISettingsRepository _settings
+@inject IUserFacade _userFacade
+@inject NavigationManager _navigationManager
+@inject Text _text
+
+@if (_userFacade != null)
+{
+    var settings = _settings.GetSettings();
+    <table width="600" cellpadding="0" cellspacing="0" border="0" align="center" style="border-collapse: collapse; font-family: Consolas, sans-serif; margin:auto;">
+        <tr>
+            <td align="center" bgcolor="#f4f4f4" style="padding: 20px;">
+                <a href="//@settings.Name">
+                    @if (settings.LogoUrl.Has())
+                    {
+                        <img src="@settings.LogoUrl" alt="Logo" style="width: 100px; height: auto; display: block;">
+                    }
+                    <span>@settings.Name</span>
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td bgcolor="#ffffff" style="padding: 20px; color: #333333;">
+                @Body
+            </td>
+        </tr>
+    </table>
+}
+
+@code {
+    protected string GetSiteUrl()
+    {
+        var request = _httpContextAccessor.HttpContext?.Request;
+        if (request != null)
+        {
+            var scheme = request.Scheme;
+            var host = request.Host.ToUriComponent();
+            return $"{scheme}://{host}";
+        }
+        return string.Empty;
+    }
+}

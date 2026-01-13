@@ -1,0 +1,41 @@
+﻿@using System.ServiceModel.Syndication
+@inherits Basic
+@implements IEntityNull<SyndicationItem>
+
+@if (Entity != null)
+{
+    var link = Entity.Links.FirstOrDefault(x => x.RelationshipType == "alternate");
+    <div class="syndication-item-header position-relative @Class">
+        <ul class="inline-list x-small">
+            <li>@Entity.PublishDate</li>
+        </ul>
+        <span class="fw-bold ellipsis">
+            @if (Entity.Categories.Count > 0)
+            {
+                var category = Entity.Categories.First();
+
+                @if (category.Name.Like("Page"))
+                {
+                    <i class="bi bi-file-earmark-text-fill"></i>
+                }
+                else if (category.Name.Like("Post"))
+                {
+                    <i class="bi bi-file-earmark-text-fill"></i>
+                }
+                else if (category.Name.Like("Video"))
+                {
+                    <i class="fa-solid fa-video"></i>
+                }
+            }
+            <span class="ps-1">@Entity.Title.Text</span>
+        </span>
+        @if (link != null)
+        {
+            <a href="@link.Uri" target="_blank" class="text-decoration-none position-absolute zeroes"></a>
+        }
+    </div>
+}
+
+@code {
+    [Parameter] public SyndicationItem? Entity { get; set; }
+}

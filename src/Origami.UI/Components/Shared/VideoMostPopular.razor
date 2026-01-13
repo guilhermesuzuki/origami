@@ -1,0 +1,65 @@
+﻿@inherits Basic
+@implements IBlogId
+@implements IShowFakes
+@inject IVideoRepository _video
+@inject IVideoViewRepository _videoView
+
+@if (MostPopular.Count > 0)
+{
+    <div class="video-most-popular @Class overflow-auto">
+        <label class="w-100 text-center text-danger fs-1">
+            <i class="fa-solid fa-fire"></i>
+            <span>@Text.Lower("Most popular")</span>
+        </label>
+        <div class="d-inline-flex mt-3 pb-2 position-relative">
+            @foreach (var video in MostPopular)
+            {
+                <div class="pe-1" style="width:300px;">
+                    <VideoHeader Entity="video"></VideoHeader>
+                </div>
+            }
+        </div>
+    </div>
+}
+else if (this.ShowFakes == true)
+{
+    <div class="video-most-popular fakes @Class overflow-auto">
+        <label class="w-100 text-center text-danger fs-1">
+            <i class="fa-solid fa-fire"></i>
+            <span>@Text.Lower("Most popular")</span>
+        </label>
+        <div class="d-inline-flex mt-3 pb-2 position-relative">
+            @foreach (var video in OrigamiVideo.GetFakes())
+            {
+                <div class="pe-1" style="width:300px;">
+                    <VideoHeader Class="fake" Entity="video"></VideoHeader>
+                </div>
+            }
+            <div class="position-absolute zeroes bg-white bg-opacity-75"></div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public Guid BlogId { get; set; }
+    [Parameter] public bool ShowFakes { get; set; } = false;
+    protected List<OrigamiVideo> MostPopular { get; set; } = new();
+
+    protected void LoadVideos()
+    {
+        this.MostPopular = _video.ReadFromCache()
+            .NonDeleted()
+            .Published()
+            .Blog(this.BlogId)
+            .OrderByDescending(x => _videoView.GetViews(x))
+            .ThenBy(x => x.Title)
+            .Take(10)
+            .ToList();
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        this.LoadVideos();
+    }
+}

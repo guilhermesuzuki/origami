@@ -1,0 +1,32 @@
+﻿@inherits Basic
+@implements IEntityNull<Core.Models.OrigamiPage>
+
+@if (this.Entity != null)
+{
+    <div class="page-content @Class">
+        @if (this.Entity.Content.Has() == true)
+        {
+            @((MarkupString)this.Entity.Content)
+        }
+        else
+        {
+            <p class="fs-2 w-100 text-center">
+                <i class="fa-solid fa-quote-left"></i>
+                @Text.Lower("No Text From This Page")
+                <i class="fa-solid fa-quote-right"></i>
+            </p>
+        }
+    </div>
+}
+else 
+{
+    <p class="fs-2 w-100 text-center @Class">
+        <i class="fa-solid fa-quote-left"></i>
+        @Text.Lower("No Text From This Page")
+        <i class="fa-solid fa-quote-right"></i>
+    </p>
+}
+
+@code {
+    [Parameter] public Core.Models.OrigamiPage? Entity { get; set; }
+}

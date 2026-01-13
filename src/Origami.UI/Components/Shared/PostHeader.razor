@@ -1,0 +1,233 @@
+﻿@inherits Basic
+@implements IEntityNull<OrigamiPost>
+@implements IHyperlink
+@inject NavigationManager _navigationManager
+@inject IPostCommentRepository _postComment
+@inject IPostRatingRepository _postRating
+@inject IPostViewRepository _postView
+@inject IPostTagRepository _postTag
+@inject IUserRepository _user
+
+@if (this.Entity != null)
+{
+    var header = this.Entity.Get().HeaderImage.NoHeader();
+    var views = _postView.GetViews(Entity);
+    var comments = _postComment.GetComments(Entity);
+    <ContentHeaderLite Entity="this.Entity"></ContentHeaderLite>
+    <div class="post-header position-relative shadow-sm cursor-pointer @Class" @onclick="() => this.GoToPost()">
+        <div class="post-header-image" style="background-image: url(@header)"></div>
+        <div class="post-header-title position-absolute overflow-auto zeroes">
+            <div class="p-3">
+                <div class="post-rating-count small" style="margin-bottom: -5px;">
+                    <i class="fa-solid fa-user pe-1"></i>@_postRating.Ratings(this.Entity).Count()
+                </div>
+                <div class="post-rating d-inline-flex align-items-center">
+                    <span class="d-inline-block language @Entity.Get().LanguageWrittenOn me-1"></span>
+                    <ul class="d-inline-flex align-items-center rating padding-u-5" data-rating="@Math.Round(_postRating.CalculateRating(this.Entity), 1, MidpointRounding.ToEven)">
+                        <li>
+                            <div data-rating-level="1"
+                            class="@(UserFacade.SocialProfile.New || HasRated() ? null : "cursor-pointer rateable") rating-star rating-star-1 rating-star-empty"
+                            @onclick="() => this.Rate(1)" @onclick:stopPropagation="true"></div>
+                        </li>
+                        <li>
+                            <div data-rating-level="2"
+                            class="@(UserFacade.SocialProfile.New || HasRated() ? null : "cursor-pointer rateable") rating-star rating-star-2 rating-star-empty"
+                            @onclick="() => this.Rate(2)" @onclick:stopPropagation="true"></div>
+                        </li>
+                        <li>
+                            <div data-rating-level="3"
+                            class="@(UserFacade.SocialProfile.New || HasRated() ? null : "cursor-pointer rateable") rating-star rating-star-3 rating-star-empty"
+                            @onclick="() => this.Rate(3)" @onclick:stopPropagation="true"></div>
+                        </li>
+                        <li>
+                            <div data-rating-level="4"
+                            class="@(UserFacade.SocialProfile.New || HasRated() ? null : "cursor-pointer rateable") rating-star rating-star-4 rating-star-empty"
+                            @onclick="() => this.Rate(4)" @onclick:stopPropagation="true"></div>
+                        </li>
+                        <li>
+                            <div data-rating-level="5"
+                            class="@(UserFacade.SocialProfile.New || HasRated() ? null : "cursor-pointer rateable") rating-star rating-star-5 rating-star-empty"
+                            @onclick="() => this.Rate(5)" @onclick:stopPropagation="true"></div>
+                        </li>
+                        <AuthorizeView>
+                            <Authorized>
+                                @if (UserFacade.SocialProfile.New)
+                                {
+                                    <li class="ps-1">
+                                        <MudTooltip Text="@Text.Lower("You Need To Login To Rate This")">
+                                            <i class="fa-solid fa-circle-info"></i>
+                                        </MudTooltip>
+                                    </li>
+                                }
+                            </Authorized>
+                            <NotAuthorized>
+                                <li class="ps-1">
+                                    <MudTooltip Text="@Text.Lower("You Need To Login To Rate This")">
+                                        <i class="fa-solid fa-circle-info"></i>
+                                    </MudTooltip>
+                                </li>
+                            </NotAuthorized>
+                        </AuthorizeView>
+                    </ul>
+                </div>
+                <AuthorizeView>
+                    <Authorized>
+                        @if (HasRated() == true)
+                        {
+                            var rating = this.RatingFromCurrentUser();
+                            <div class="x-small">
+                                <label>@Text.Lower("You Rated This Post: {0} Star(s)", rating!.Rating) - </label>
+                                <label class="focusable" @onclick="() => this.PurgeRate()" @onclick:stopPropagation="true">
+                                    <i class="fa-solid fa-rotate-left"></i>
+                                    @Text.Lower("Undo")
+                                </label>
+                            </div>
+                        }
+                    </Authorized>
+                </AuthorizeView>
+                <span class="title fw-bold text-uppercase focusable ellipsis" style="-webkit-line-clamp:5!important;" title="@Entity.Title">@Entity.Title</span>
+                <div>
+                    <label class="post-date pe-1">@(Entity.DatePublished ?? Entity.DateModified ?? Entity.DateCreated)</label>
+                    <label class="post-views pe-1 @(views > 0 ? null : "d-none")">
+                        <i class="fa-solid fa-eye"></i>
+                        @views
+                    </label>
+                    <label class="post-views pe-1 @(comments > 0 ? null : "d-none")">
+                        <i class="fa-solid fa-comment"></i>
+                        @comments
+                    </label>
+                </div>
+                <div class="post-tags mt-2 text-center">
+                    @foreach (var tag in this.Super.GetTags(Entity).OrderBy(x => x.Tag))
+                    {
+                        <PostTag Entity="tag"></PostTag>
+                    }
+                </div>
+            </div>
+            <ul class="inline-list position-absolute w-100 z-index-middle" style="top:0;">
+                <li class="text-left" style="width: 50px;">
+                    <div class="p-2 cursor-pointer focusable" title="@Text.Lower("Post")">
+                        <i class="bi bi-file-earmark-text-fill"></i>
+                    </div>
+                </li>
+                <li class="text-center">
+                    <Draft Entity="this.Entity"></Draft>
+                </li>
+                <li class="text-right" style="width: 50px;">
+                    <div class="p-2 cursor-pointer focusable" @onclick="() => _showHeaderImage = true" @onclick:stopPropagation="true">
+                        <i class="fa-solid fa-image"></i>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    @if (_showHeaderImage)
+    {
+        <div class="position-fixed popup-container z-index-front">
+            <div class="border shadow-lg position-relative" style="width: 90%; height: 90%;">
+                <div class="overflow-auto text-center h-100 w-100" style="padding-bottom: 70px;">
+                    <img class="mw-100 mh-100 position-absolute" src="@header" style="top:50%;left:50%;transform:translate(-50%,-50%)" />
+                </div>
+                <ul class="inline-list position-absolute w-100 border bg-white" style="bottom:0;">
+                    <li></li>
+                    <li class="text-right">
+                        <div class="btn-group p-3">
+                            <button class="btn btn-secondary" @onclick="() => this._showHeaderImage = false">
+                                <i class="fa-solid fa-circle-xmark"></i>
+                                @Text.Lower("Close window")
+                            </button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    }
+}
+
+@code {
+    private bool _showHeaderImage = false;
+
+    [Parameter] public OrigamiTag? Tag { get; set; }
+    [Parameter] public OrigamiCategory? Category { get; set; }
+    [Parameter] public OrigamiPost? Entity { get; set; }
+
+    /// <summary>
+    /// Event triggered when the user rates the post (or unrates it)
+    /// </summary>
+    [Parameter] public EventCallback<OrigamiPostRating?> OnUserHasRated { get; set; }
+
+    /// <summary>
+    /// Browses to the Post Details
+    /// </summary>
+    protected void GoToPost()
+    {
+        _navigationManager.NavigateTo($"{Hyperlink}#content-start");
+    }
+
+    public string Hyperlink
+    {
+        get
+        {
+            if (this.Entity != null)
+            {
+                var blog = this.Super.Blogs.ReadFromCache().Id(this.Entity.BlogId)!;
+                if (this.Tag != null) return blog.GetHyperlink(this.Tag, this.Entity);
+                if (this.Category != null) return blog.GetHyperlink(this.Category, this.Entity);
+                return $"{Entity.Hyperlink}";
+            }
+
+            if (this.Tag != null) 
+            {
+                var blog = this.Super.Blogs.ReadFromCache().Id(this.Tag.BlogId)!;
+                return blog.GetHyperlink(this.Tag);
+            }
+
+            if (this.Category != null)
+            {
+                var blog = this.Super.Blogs.ReadFromCache().Id(this.Category.BlogId)!;
+                return blog.GetHyperlink(this.Category);
+            }
+
+            throw new InvalidOperationException("No Entity, tag or category was provided");
+        }
+    }
+
+    protected OrigamiPostRating? RatingFromCurrentUser()
+    {
+        return _postRating.Ratings(this.Entity!).FirstOrDefault(x => x.SocialProfileId == UserFacade.SocialProfile.Id);
+    }
+
+    protected bool HasRated()
+    {
+        return RatingFromCurrentUser() != null;
+    }
+
+    protected void Rate(byte rate)
+    {
+        if (HasRated() == false)
+        {
+            var rating = new OrigamiPostRating
+            {
+                Id = Guid.NewGuid(),
+                SocialProfileId = UserFacade.SocialProfile.Id,
+                PostId = this.Entity!.Id,
+                Rating = rate,
+            };
+
+            var context = new DataOperationContextFrontEnd<OrigamiPostRating>(UserFacade.SocialProfile, DateTime.UtcNow, rating);
+            var hub = this._postRating.SmartCreate(context);
+            if (hub.Ok) this.OnUserHasRated.InvokeAsync(rating);
+        }
+    }
+
+    protected void PurgeRate()
+    {
+        var rating = this.RatingFromCurrentUser();
+        if (rating != null)
+        {
+            var context = new DataOperationContextFrontEnd<OrigamiPostRating>(UserFacade.SocialProfile, DateTime.UtcNow, rating);
+            var hub = this._postRating.SmartPurge(context);
+            if (hub.Ok) this.OnUserHasRated.InvokeAsync(rating);
+        }
+    }
+}

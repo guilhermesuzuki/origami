@@ -1,0 +1,42 @@
+﻿@using Origami.Core.Models
+@inherits Basic
+@implements IEntityNull<OrigamiSpecialPage>
+
+@if (this.Entity != null)
+{
+    var also = this.AlsoIn();
+    <div class="specialpage-header-lite-4 @Class">
+        <span class="d-flex align-items-center">
+            <span class="d-inline-block language @Entity.LanguageWrittenOn"></span>
+            <span class="ms-1">@Entity.Title</span>
+        </span>
+        @if (also.Count() > 0)
+        {
+            <div class="x-small d-flex align-items-center" style="justify-content: end;">
+                <span>@Text.Lower("Also in")</span>
+                @foreach (var p in also)
+                {
+                    <span class="ms-1 d-inline-block language @p.LanguageWrittenOn" style="min-height: 12px; min-width: 12px;"></span>
+                }
+            </div>
+        }
+    </div>
+}
+
+@code {
+    [Parameter] public OrigamiSpecialPage? Entity { get; set; }
+
+    /// <summary>
+    /// Other pages with the same type, but in other languages
+    /// </summary>
+    /// <returns></returns>
+    protected IEnumerable<OrigamiSpecialPage> AlsoIn()
+    {
+        if (this.Entity != null)
+        {
+            var result = this.Super.SpecialPages.ReadFromCache().GetByType(Enum.Parse<OrigamiSpecialPageTypes>(this.Entity.Type));
+            return result.Where(x => x.Id != this.Entity.Id).OrderBy(x => x.LanguageWrittenOn);
+        }
+        return [];
+    }
+}

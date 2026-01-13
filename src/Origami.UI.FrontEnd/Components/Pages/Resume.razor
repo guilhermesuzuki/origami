@@ -1,0 +1,235 @@
+﻿@using System.Xml.Linq;
+
+@page "/resume"
+@inherits BasicPage
+
+@if (_resume != null)
+{
+    var workExperience = _resume.Work.Experience;
+    var recent = workExperience.Jobs.Take((workExperience.Jobs.Count / 2) + 1);
+    var old = workExperience.Jobs.Except(recent);
+    var mail = _resume.Personal.Emails.FirstOrDefault();
+
+    <div class="resume row">
+        <div class="col-12 col-xl-4 mb-3">
+            <div class="position-sticky resume-profile" style="top: 1.5rem;">
+                @* personal *@
+                @* certifications *@
+                @* education *@
+                @* languages *@
+                <div class="p-3 border fs-4">
+                    <label class="w-100 text-center text-uppercase">@_resume.Personal.Description</label>
+                    <div class="fs-5">
+                        <table class="w-100">
+                            <tr>
+                                <td class="text-center" style="width:25px;">
+                                    <i class="fa-solid fa-user"></i>
+                                </td>
+                                <td>
+                                    @string.Format("{0}, {1} {2}", _resume.Personal.FullName, _resume.Personal.Birthday.Age(), Text.Get("Years"))
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">
+                                    <MudIcon Icon="@Icons.Material.Filled.LocationOn"></MudIcon>
+                                </td>
+                                <td>
+                                    @_resume.Personal.Location
+                                </td>
+                            </tr>
+                            @if (mail != null)
+                            {
+                                <tr>
+                                    <td class="text-center">
+                                        <MudIcon Icon="@Icons.Material.Filled.AlternateEmail"></MudIcon>
+                                    </td>
+                                    <td>
+                                        <a class="no-link" href="mailto:@@@mail.Address">@mail.Address</a>
+                                    </td>
+                                </tr>
+                            }
+                            @foreach (var phone in _resume.Personal.Telephones.OrderBy(i => i.Order))
+                            {
+                                <tr>
+                                    <td class="text-center">
+                                        @if (phone.Whatsapp)
+                                        {
+                                            <i class="fa-brands fa-square-whatsapp"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="fa-solid fa-square-phone"></i>
+                                        }
+                                    </td>
+                                    <td>
+                                        <span>@phone</span>
+                                    </td>
+                                </tr>
+                            }
+                            <tr>
+                                <td class="text-center">
+                                    <i class="fa-brands fa-square-facebook"></i>
+                                </td>
+                                <td>
+                                    <a target="_blank" data-tooltipster="true" href="@_resume.Personal.Facebook.Link" alt="link">@_resume.Personal.Facebook.Username</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">
+                                    <i class="fa-brands fa-square-twitter"></i>
+                                </td>
+                                <td>
+                                    <a target="_blank" data-tooltipster="true" href="@_resume.Personal.Twitter.Link" alt="link">@_resume.Personal.Twitter.Username</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">
+                                    <i class="fa-brands fa-linkedin"></i>
+                                </td>
+                                <td>
+                                    <a target="_blank" data-tooltipster="true" href="@_resume.Work.LinkedIn.Link" alt="link">@_resume.Work.LinkedIn.Username</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="p-3 border fs-4 mt-3">
+                    <label class="w-100 text-center text-uppercase">@_resume.Work.Certifications.Description</label>
+                    <table class="w-100 fs-5">
+                        @foreach (var certification in _resume.Work.Certifications.EachCertification)
+                        {
+                            <tr>
+                                <td class="text-center" style="width: 25px;">
+                                    <i class="fa-solid fa-file"></i>
+                                </td>
+                                <td>
+                                    <a target="_blank" href="@certification.File" class="text-lowercase">@certification.Name</a>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                    @if (string.IsNullOrWhiteSpace(_resume.Work.Certifications.Information) == false)
+                    {
+                        <div class="pure-u-1 bd-0-top">
+                            <div style="word-break: break-all; word-wrap:break-word; font-size: medium; padding: 10px 30px;">@((MarkupString)_resume.Work.Certifications.Information)</div>
+                        </div>
+                    }
+                    <div class="clear"></div>
+                </div>
+                <div class="p-3 border fs-4 mt-3">
+                    <label class="w-100 text-center text-uppercase">@_resume.Personal.Education.Description</label>
+                    <table class="w-100 fs-5">
+                        @foreach (var college in _resume.Personal.Education.Colleges)
+                        {
+                            <tr>
+                                <td class="text-center" style="width:25px;">
+                                    <i class="fa-solid fa-user-graduate"></i>
+                                </td>
+                                <td class="ps-1">
+                                    <div><b>@college.ShortName</b></div>
+                                    <div class="" style="font-size:.7em;">@college.CourseName</div>
+                                    <div class="" style="font-size:.7em;">@string.Format("{0}, {1} {2}, {3}", college.Finished, college.Duration, college.DurationDescription, college.School)</div>
+                                </td>
+                            </tr>
+                        }
+                        @foreach (var tradeschool in _resume.Personal.Education.TradeSchools)
+                        {
+                            <tr>
+                                <td class="text-center" style="width:25px;">
+                                    <i class="fa-solid fa-user-graduate"></i>
+                                </td>
+                                <td class="ps-1">
+                                    <div><b>@tradeschool.ShortName</b></div>
+                                    <div class="" style="font-size:.7em;">@tradeschool.CourseName</div>
+                                    <div class="" style="font-size:.7em;">@string.Format("{0}, {1} {2}, {3}", tradeschool.Finished, tradeschool.Duration, tradeschool.DurationDescription, tradeschool.School)</div>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+                <div class="p-3 border fs-4 mt-3">
+                    <label class="w-100 text-center text-uppercase">@_resume.Personal.Languages.Description</label>
+                    <table class="w-100 fs-5">
+                        @foreach (var language in _resume.Personal.Languages.EachLanguage)
+                        {
+                            var course = language.Courses.FirstOrDefault();
+                            var certificate = language.Certificates.FirstOrDefault();
+                            <tr>
+                                <td class="text-center" style="width: 25px;">
+                                    <i class="fa-solid fa-comment"></i>
+                                </td>
+                                <td>
+                                    <span><b>@language.ShortName</b>, @language.Level</span>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-xl-8">
+            <div class="p-3 border resume-work-experience">
+                <label class="w-100 text-uppercase text-center fs-4">@Text.Get("Work Experience: Most Recent Ones")</label>
+                <div class="mt-3">
+                    @foreach (var job in recent)
+                    {
+                        <ResumeJob job="job"></ResumeJob>
+                    }
+                </div>
+            </div>
+            <div class="p-3 border mt-3 resume-work-experience">
+                <label class="w-100 text-uppercase text-center fs-4">@Text.Get("Work Experience: Older Ones")</label>
+                <div class="mt-3">
+                    @foreach (var job in old)
+                    {
+                        <ResumeJob job="job"></ResumeJob>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private Core.Models.Resume.Resume? _resume { get; set; }
+
+    protected override void OnInitialized()
+    {
+        this.LoadResume();
+        base.OnInitialized();
+    }
+
+    protected virtual void LoadResume()
+    {
+        this._resume = null;
+
+        if (this.Super.Resumes.ReadFromCache().Any() == true)
+        {
+            var ci = Thread.CurrentThread.CurrentUICulture;
+
+            this._resume = 
+                ci.En() ? this.Super.Resumes.ReadFromCache().FirstOrDefault(i => i.Language.Like("en-us") == true) :
+                ci.Es() ? this.Super.Resumes.ReadFromCache().FirstOrDefault(i => i.Language.Like("es-es") == true) :
+                ci.Ja() ? this.Super.Resumes.ReadFromCache().FirstOrDefault(i => i.Language.Like("ja-jp") == true) :
+                ci.Pt() ? this.Super.Resumes.ReadFromCache().FirstOrDefault(i => i.Language.Like("pt-br") == true) :
+                this.Super.Resumes.ReadFromCache().FirstOrDefault(i => i.Language.Like("en-us") == true) ?? 
+                this.Super.Resumes.ReadFromCache().FirstOrDefault();
+        }
+    }
+
+    private string TdWidth_WorkAround(Core.Models.Resume.Education.College college)
+    {
+        if (college.Certificates.Count > 0)
+        {
+            return (100 / (1 + college.Certificates.Count)).ToString() + "%";
+        }
+
+        return "100%";
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        this.PageTitle.SetTitle(Text.Original("Resume"));
+        await base.OnAfterRenderAsync(firstRender);
+    }
+}

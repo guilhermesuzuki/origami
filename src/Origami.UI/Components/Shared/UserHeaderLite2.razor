@@ -1,0 +1,25 @@
+﻿@inherits Basic
+@implements IEntityNull<OrigamiUser>
+
+@if (this.Entity != null)
+{
+    @if (this.Entity.DisplayName.Has() == true)
+    {
+        <span class="user-header-lite-2 cursor-pointer @Class ellipsis d-inline-flex align-items-center" title="@Text.Lower("Author")" @onclick="_goToDetails">
+            @if (this.Entity.HeaderImage.Has() == true)
+            {
+                <img class="me-1" src="@this.Entity.HeaderImage" style="height: 15px;" />
+            }
+            @Entity.DisplayName
+        </span>
+    }
+}
+
+@code {
+    [Parameter] public OrigamiUser? Entity { get; set; }
+
+    private void _goToDetails()
+    {
+        this.NavigationManager!.NavigateTo($"/users/{Entity?.Id}");
+    }
+}

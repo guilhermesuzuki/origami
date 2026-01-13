@@ -1,0 +1,351 @@
+﻿@using System.Globalization;
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Caching.Memory
+@using System.Security.Claims
+
+@inherits Basic
+
+@inject IMemoryCache _memoryCache
+@inject ISuperRepository _superRepository
+@inject IHttpContextAccessor _httpContextAccessor
+
+<style>
+    .logged-in-user .id { display: none !important; }
+</style>
+<div class="main-menu m-2 border @Class">
+    <div class="border-bottom">
+        <ul class="inline-list p-2 text-center">
+            <li>
+                <div class="m-auto" style="width:50px;">
+                    <HeaderImageLite Entity="this.UserFacade.User"></HeaderImageLite>
+                </div>
+                <div class="mt-1 logged-in-user">
+                    <UserHeaderLite Entity="this.UserFacade.User"></UserHeaderLite>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="border-bottom">
+        <ul class="inline-list cursor-pointer">
+            <li class="border-end text-center p-2" @onclick="LogoutAsync">
+                <i class="fa-solid fa-power-off"></i>
+            </li>
+            <li class="border-end text-center p-2" @onclick="GoToChangePassword">
+                <i class="fa-solid fa-key"></i>
+            </li>
+            <li class="text-center p-2" @onclick="GoToUserProfile">
+                <i class="fa-solid fa-user"></i>
+            </li>
+        </ul>
+    </div>
+    <div class="menu border-bottom" @onclick="GoToDashboard">
+        <i class="fa fa-th-large"></i>
+        <span>@Text.Lower("Dashboard")</span>
+    </div>
+    <div class="menu border-bottom" @onclick="GoToBlogs">
+        <i class="fa-solid fa-cubes"></i>
+        <span>@Text.Lower("Blogs")</span>
+    </div>
+    <div class="menu border-bottom" @onclick="OnContentClick">
+        <i class="fa fa-align-justify"></i>
+        <span>@Text.Lower("Content")</span>
+    </div>
+    @if (_contentExpanded)
+    {
+        <div class="border-bottom p-2">
+            <div class="sub-menu" @onclick="GoToFileManager">
+                <i class="fa-solid fa-folder-closed"></i>
+                <span>@Text.Lower("File manager")</span>
+            </div>
+            <div class="sub-menu" @onclick="GoToPosts">
+                <i class="bi bi-file-earmark-text-fill"></i>
+                <span>@Text.Lower("Posts")</span>
+            </div>
+            <div class="sub-menu" @onclick="GoToPostsComments">
+                <i class="fa-solid fa-comment"></i>
+                <span>@Text.Lower("Posts comments")</span>
+            </div>
+            <div class="sub-menu" @onclick="GoToVideos">
+                <i class="fa-solid fa-video"></i>
+                <span>@Text.Lower("Videos")</span>
+            </div>
+            <div class="sub-menu" @onclick="GoToVideosComments">
+                <i class="fa-solid fa-comment"></i>
+                <span>@Text.Lower("Videos comments")</span>
+            </div>
+            <div class="sub-menu" @onclick="GoToPages">
+                <i class="bi bi-file-earmark-text-fill"></i>
+                <span>@Text.Lower("Pages")</span>
+            </div>
+            <div class="sub-menu" @onclick="GoToCategories">
+                <i class="fa-solid fa-layer-group"></i>
+                <span>@Text.Lower("Categories")</span>
+            </div>
+            <div class="sub-menu" @onclick="GoToTags">
+                <i class="fa-solid fa-tag"></i>
+                <span>@Text.Lower("Tags")</span>
+            </div>
+            <div class="sub-menu" @onclick="GoToSocialProfiles">
+                <i class="fa-solid fa-id-badge"></i>
+                <span>@Text.Lower("Social profiles")</span>
+            </div>
+            <div class="sub-menu" @onclick="GoToSpecialMessages">
+                @* <i class="bi bi-chat-left-quote-fill"></i> *@
+                <i class="fa-solid fa-bullhorn me-1"></i>
+                <span>@Text.Lower("Special messages")</span>
+            </div>
+            <div class="sub-menu" @onclick="GoToSpecialPages">
+                <i class="bi bi-file-earmark-text-fill"></i>
+                <span>@Text.Lower("Special pages")</span>
+            </div>
+            <div class="sub-menu" @onclick="GoToUserTrashes">
+                <i class="fa-solid fa-trash-can"></i>
+                <span>@Text.Lower("User trashes")</span>
+            </div>
+            <div class="sub-menu" @onclick="GoToTrashes">
+                <i class="fa-solid fa-trash-can"></i>
+                <span>
+                    @Text.Lower("Other trashes")
+                    <span class="subtitle ms-1 border-bottom" style="opacity: 0.8; font-size: 0.8em;">
+                        @Text.Lower("blogs, specials...")
+                    </span>
+                </span>
+            </div>
+        </div>
+    }
+    
+    <div class="menu border-bottom" @onclick="GoToRoles">
+        <i class="fa-solid fa-id-badge"></i>
+        <span>@Text.Lower("Roles")</span>
+    </div>
+    <div class="menu border-bottom" @onclick="GoToUsers">
+        <i class="fa-solid fa-user-group"></i>
+        <span>@Text.Lower("Users")</span>
+    </div>
+    <div class="menu border-bottom" @onclick="GoToSettings">
+        <i class="fa-solid fa-gear"></i>
+        <span>@Text.Lower("Settings")</span>
+    </div>
+    <div class="menu border-bottom" @onclick="GoToBackupAndRestore">
+        <i class="fa-solid fa-database"></i>
+        <span>@Text.Lower("Backup and restore")</span>
+    </div>
+    <div class="menu border-bottom text-warning d-none" @onclick="ClearCache">
+        <i class="fa-solid fa-broom"></i>
+        <span>@Text.Lower("Clear cache")</span>
+    </div>
+    <div class="menu border-bottom text-danger d-none" @onclick="RegenerateNanoIds">
+        <i class="fa-solid fa-broom"></i>
+        <span>@Text.Lower("Regenerate nano-ids")</span>
+    </div>
+    @if (this.GetUserLocation() != null)
+    {
+        var location = this.GetUserLocation()!;
+        <div class="menu border-bottom text-info">
+            <i class="fa-solid fa-map-location-dot"></i>
+            <div class="ellipsis" style="-webkit-line-clamp: 2;">@location.Country, @location.Region, @location.City</div>
+            <div class="x-small mb-2" style="line-height:10px;">@location.Provider</div>
+        </div>
+    }
+</div>
+
+@code {
+    bool _contentExpanded = true;
+    bool _usersExpanded = false;
+    bool _settingsExpanded = false;
+
+    /// <summary>
+    /// Logs the user out
+    /// </summary>
+    private async Task ClearCache()
+    {
+        var answer = await this.DialogService.ShowMessageBox(
+            this.Text.Upper("Clear cache of the admin website"),
+            this.Text.Original("Are you sure?"),
+            yesText: this.Text.Lower("Yes"),
+            noText: this.Text.Lower("No"));
+
+        if (answer.GetValueOrDefault() == true)
+        {
+            if (_memoryCache is MemoryCache memoryCache)
+            {
+                memoryCache.Clear();
+                this.NavigationManager!.NavigateTo(this.NavigationManager.Uri, forceLoad: true);
+            }
+        }
+    }
+
+    protected async Task LogoutAsync()
+    {
+        var answer = await this.DialogService.ShowMessageBox(
+            this.Text.Upper("Log Out"),
+            this.Text.Original("Are you sure?"),
+            yesText: this.Text.Lower("Yes"),
+            noText: this.Text.Lower("No"));
+
+        if (answer.GetValueOrDefault() == true)
+        {
+            await this.JSRuntime.InvokeVoidAsync("$.removeCookie", this.Configuration.GetUserCookieKey(), new { path = "/" });
+            this.UserFacade.User = OrigamiUser.AnonymousUser;
+            this.NavigationManager.Refresh(true);
+        }
+    }
+
+    private void OnContentClick()
+    {
+        _contentExpanded = !_contentExpanded;
+    }
+
+    private void OnUsersClick()
+    {
+        _usersExpanded = !_usersExpanded;
+    }
+
+    private void OnSettingsClick()
+    {
+        _settingsExpanded = !_settingsExpanded;
+    }
+
+    private void GoToBlogs()
+    {
+        this.NavigationManager!.NavigateTo($"/blogs");
+    }
+
+    private void GoToCategories()
+    {
+        this.NavigationManager!.NavigateTo($"/categories");
+    }
+
+    private void GoToChangePassword()
+    {
+        this.NavigationManager!.NavigateTo($"/password/change");
+    }
+
+    private void GoToDashboard()
+    {
+        this.NavigationManager!.NavigateTo($"/");
+    }
+
+    private void GoToFileManager()
+    {
+        this.NavigationManager!.NavigateTo($"/filemanager");
+    }
+
+    private void GoToPages()
+    {
+        this.NavigationManager!.NavigateTo($"/pages");
+    }
+
+    private void GoToPostsComments()
+    {
+        this.NavigationManager!.NavigateTo($"/posts/comments");
+    }
+
+    private void GoToPosts()
+    {
+        this.NavigationManager!.NavigateTo($"/posts");
+    }
+
+    private void GoToSpecialMessages()
+    {
+        this.NavigationManager!.NavigateTo($"/specialmessages");
+    }
+
+    private void GoToSpecialPages()
+    {
+        this.NavigationManager!.NavigateTo($"/specialpages");
+    }
+
+    private void GoToSocialProfiles()
+    {
+        this.NavigationManager!.NavigateTo($"/socialprofiles");
+    }
+
+    private void GoToTags()
+    {
+        this.NavigationManager!.NavigateTo($"/tags");
+    }
+
+    private void GoToVideos()
+    {
+        this.NavigationManager!.NavigateTo($"/videos");
+    }
+
+    private void GoToVideosComments()
+    {
+        this.NavigationManager!.NavigateTo($"/videos/comments");
+    }
+
+    private void GoToUsers()
+    {
+        this.NavigationManager!.NavigateTo($"/users");
+    }
+
+    private void GoToRoles()
+    {
+        this.NavigationManager!.NavigateTo($"/roles");
+    }
+
+    private void GoToSettings()
+    {
+        this.NavigationManager!.NavigateTo($"/settings");
+    }
+
+    private void GoToHome()
+    {
+        this.NavigationManager!.NavigateTo($"/", true);
+    }
+
+    private void GoToTrashes()
+    {
+        this.NavigationManager!.NavigateTo($"/trashes");
+    }
+
+    private void GoToUserTrashes()
+    {
+        this.NavigationManager!.NavigateTo($"/user/trashes");
+    }
+
+    private void GoToUserProfile()
+    {
+        this.NavigationManager!.NavigateTo($"/user/profile");
+    }
+
+    private async Task RegenerateNanoIds()
+    {
+        var answer = await this.DialogService.ShowMessageBox(
+            this.Text.Upper("Regenerate nano-ids"),
+            this.Text.Original("Are you sure?"),
+            yesText: this.Text.Lower("Yes"),
+            noText: this.Text.Lower("No"));
+
+        if (answer.GetValueOrDefault() == true)
+        {
+            try
+            {
+                using (var transaction = new TransactionScope())
+                {
+                    this.UserFacade.Result = _superRepository.RegenerateNanoIds();
+                    transaction.Complete();
+                }
+                this.NavigationManager!.NavigateTo(this.NavigationManager!.Uri, forceLoad: true);
+            }
+            catch (Exception ex)
+            {
+                this.UserFacade.Result = new(ex);
+                return;
+            }
+        }
+    }
+
+    protected Location? GetUserLocation()
+    {
+        if (_httpContextAccessor.HttpContext == null) return null;
+        return _memoryCache.Get<Location?>($"Origami_UserLocation_{_httpContextAccessor.HttpContext.Connection.Id}");
+    }
+
+    private void GoToBackupAndRestore()
+    {
+        this.NavigationManager!.NavigateTo($"/backups");
+    }
+}

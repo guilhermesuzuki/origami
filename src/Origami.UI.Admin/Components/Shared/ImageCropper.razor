@@ -1,0 +1,89 @@
+﻿@inherits Basic
+
+<MudFileUpload @ref="_fileUpload" T="IBrowserFile" Accept=".png, .jpg, .bmp, .tiff" OnFilesChanged="OnInputFileChanged"></MudFileUpload>
+<div class="image-cropper @Class btn-group mt-3 w-100 border">
+    <button class="btn btn-light w-100" @onclick="PickFile">
+        <i class="fa-solid fa-cloud-arrow-up"></i>
+        <div>@Text.Lower("Only image files")</div>
+        <div class="x-small">@Text.Original("{0} max.", this.FileLimitInBytes.SizeInBytes())</div>
+    </button>
+    <button class="btn btn-light w-100" @onclick="OnPickImageFromFileManager">
+        <i class="fa-solid fa-folder"></i>
+        @Text.Lower("Pick from file manager")
+    </button>
+    <button class="btn btn-light w-100" @onclick="ClearImage">
+        <i class="fa-solid fa-trash-can"></i>
+        @Text.Lower("Clear image")
+    </button>
+</div>
+@if (_base64Image.Has() == true)
+{
+    <div class="position-fixed popup-container">
+        <div class="border p-3 shadow-lg text-center" style="width: 80%;">
+            <BootstrapBlazor.Components.ImageCropper @ref="this._cropper" Url="@_base64Image" Options="this.GetOptions()"></BootstrapBlazor.Components.ImageCropper>
+            <div class="btn-group mt-3">
+                <button class="btn btn-success" @onclick="this.DoneCropping">@Text.Lower("Done")</button>
+                <button class="btn btn-secondary" @onclick="() => _base64Image = string.Empty">@Text.Lower("Close")</button>
+            </div>
+        </div>
+    </div>
+}
+<style>
+    .bb-cropper { margin: auto; }
+</style>
+
+@code {
+    private MudFileUpload<IBrowserFile> _fileUpload = null!;
+
+    [Parameter] public int Proportion { get; set; } = 1;
+    [Parameter] public long FileLimitInBytes { get; set; } = 1024L * 1024L * 16L;
+
+    [Parameter] public EventCallback<string> OnImageWasCropped { get; set; }
+    [Parameter] public EventCallback OnClearImage { get; set; }
+    [Parameter] public EventCallback OnPickImageFromFileManager { get; set; }
+
+    private BootstrapBlazor.Components.ImageCropper _cropper = null!;
+    private string _base64Image = string.Empty;
+
+    private BootstrapBlazor.Components.ImageCropperOption GetOptions()
+    {
+        return new() { AspectRatio = Proportion, ViewMode = BootstrapBlazor.Components.ImageCropperViewMode.CropBoxNotToExceedTheSizeCanvas, };
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
+    private async Task OnInputFileChanged(InputFileChangeEventArgs args)
+    {
+        if (args.File.Size > this.FileLimitInBytes)
+        {
+            this.UserFacade.Result = new() { ErrorMessage = Text.Original("Image is too large") };
+            return;
+        }
+        this._base64Image = await args.File.GetBase64Image();
+        await this.InvokeAsync(this.StateHasChanged);
+    }
+
+    async Task DoneCropping()
+    {
+        var crop = await this._cropper.Crop();
+        await this.OnImageWasCropped.InvokeAsync(crop);
+        _base64Image = string.Empty;
+    }
+
+    /// <summary>
+    /// Picks a file, using <see cref="FileUpload"/>
+    /// </summary>
+    /// <returns></returns>
+    protected async Task PickFile()
+    {
+        await this._fileUpload.OpenFilePickerAsync();
+    }
+
+    protected async Task ClearImage()
+    {
+        await this.OnClearImage.InvokeAsync();
+    }
+}

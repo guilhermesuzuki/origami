@@ -1,0 +1,16 @@
+﻿@inherits Basic
+@implements IEntityNull<Core.Models.Result>
+
+<div class="wrapper position-absolute popup-container">
+    <div class="you-dont-have-access border shadow-lg position-relative d-inline-flex align-items-center @Class" style="width: 95%; height: 95%;">
+        <div class="overflow-auto text-center fs-1 w-100">
+            <i class="bi bi-lock-fill d-block"></i>
+            @Text.Lower("You don't have access to this feature")
+            <span class="d-block fs-small text-decoration-underline mb-1">@Text.Lower("Talk to an administrator, if this is not correct")</span>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public Core.Models.Result? Entity { get; set; }
+}

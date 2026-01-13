@@ -1,0 +1,33 @@
+﻿@inherits Basic
+@implements IEntityNull<OrigamiVideo>
+@inject IFileRepository _fileRepository
+
+@if (this.Entity != null)
+{
+    <div class="video-media-file @Class">
+        @if (Entity.MediaFile.WebPath.Has() == true && _fileRepository.FileExists(this.Entity.MediaFile.WebPath) == true)
+        {
+            <video class="w-100 border" src="@(Entity.MediaFile.WebPath)" style="height:auto;" controls>
+                @foreach (var subtitle in this.Entity.GetSubtitles()) 
+                {
+                    <track src="@subtitle.WebPath" kind="subtitles" srclang="@subtitle.Language?.ToLower().Split('-')[0]" label="@subtitle.FileName" />
+                }
+            </video>
+            <div class="text-center x-small p-1 border mt-2">
+                <span>@Entity.MediaFile.WebPath</span>
+                @if (_fileRepository.FileExists(Entity.MediaFile.WebPath) == true)
+                {
+                    <span class="ps-1">@_fileRepository.GetFile(Entity.MediaFile.WebPath)?.FileSize.SizeInBytes()</span>
+                }
+            </div>
+        }
+        else
+        {
+            <img class="w-100 border no-video" src="@OrigamiConstants.NoVideo" style="height:auto" />
+        }
+    </div>
+}
+
+@code {
+    [Parameter] public OrigamiVideo? Entity { get; set; }
+}

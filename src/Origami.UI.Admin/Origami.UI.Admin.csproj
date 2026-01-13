@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<Version>2.0.0</Version>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Remove="wwwroot\files\**" />
+	  <Content Remove="wwwroot\files\**" />
+	  <EmbeddedResource Remove="wwwroot\files\**" />
+	  <None Remove="wwwroot\files\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Origami.UI\Origami.UI.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="BootstrapBlazor.ImageCropper" Version="10.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.1" />
+		<PackageReference Include="System.ServiceModel.Syndication" Version="10.0.1" />
+	</ItemGroup>
+
+</Project>

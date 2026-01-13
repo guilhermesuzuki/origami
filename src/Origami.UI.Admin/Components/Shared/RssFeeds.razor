@@ -1,0 +1,105 @@
+﻿@using System.Text.Json
+@using System.ServiceModel.Syndication;
+@using System.Xml;
+
+@inherits Basic
+@inject ISettingsRepository _settings
+
+<div class="rss-feeds @Class">
+    @foreach (var feed in _feeds)
+    {
+        var link = feed.Links.FirstOrDefault(x => x.RelationshipType == "alternate");
+        @if (link != null)
+        {
+            <div class="text-white bg-secondary text-center p-2">
+                <i class="bi bi-link"></i>
+                <a href="@link.Uri" target="_blank" class="text-white">@link.Uri</a>
+            </div>
+        }
+        <div class="p-2">
+            <MudDataGrid T="SyndicationItem" Items="feed.Items" Class="" Bordered="true">
+                <Columns>
+                    <TemplateColumn>
+                        <CellTemplate>
+                            <div class="border bg-light bg-gradient p-2">
+                                <SyndicationItemHeader Entity="@context.Item" Class="mb-0" />
+                            </div>
+                        </CellTemplate>
+                    </TemplateColumn>
+                </Columns>
+                <PagerContent>
+                    <MudDataGridPager T="SyndicationItem" PageSizeOptions="[3, 5, 8, 13]" />
+                </PagerContent>
+                <NoRecordsContent>
+                    <NoEntriesWereFound></NoEntriesWereFound>
+                </NoRecordsContent>
+            </MudDataGrid>
+        </div>
+    }
+</div>
+
+@code {
+    private List<SyndicationFeed> _feeds { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        this.LoadFeeds();
+    }
+
+    protected void LoadFeeds()
+    {
+        this.AppFacade.RefreshingTheUI += (obj, args) =>
+        {
+            if (this.HttpContextAccessor.HttpContext == null) return;
+            if (obj is string[] s)
+            {
+                if (s.Length < 2) return;
+                if (s[0] != this.HttpContextAccessor.HttpContext.Connection.Id) return;
+                if (s[1].Like(OrigamiConstants.Events.RssFeeds) == true) this.InvokeAsync(this.StateHasChanged);
+            }
+        };
+
+        var settings = _settings.GetSettings();
+
+        IEnumerable<string> feeds = [
+            settings.RssFeed1,
+            settings.RssFeed2,
+            settings.RssFeed3,
+            settings.RssFeed4,
+            settings.RssFeed5, ];
+
+        feeds = feeds.Distinct();
+
+        IList<Task> probing = [];
+
+        foreach (var url in feeds)
+        {
+            if (url.Has() == false) continue;
+
+            using var cts = new CancellationTokenSource(TimeSpan.FromMilliseconds(250));
+            var token = cts.Token;
+
+            probing.Add(Task.Run(() =>
+            {
+                try
+                {
+                    if (this.HttpContextAccessor.HttpContext != null)
+                    {
+                        using var reader = XmlReader.Create(url);
+                        var feed = SyndicationFeed.Load(reader);
+                        this._feeds.Add(feed);
+                        this.AppFacade.RefreshUI(this.HttpContextAccessor.HttpContext!.Connection.Id, OrigamiConstants.Events.RssFeeds);
+                    }
+                }
+                catch (Exception)
+                {
+                    this.UserFacade.Result = new()
+                    {
+                        ErrorMessage = Text.Lower("Error while trying to retrieve feed {0}", url)
+                    };
+                }
+            }, token));
+        }
+    }
+}

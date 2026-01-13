@@ -1,0 +1,27 @@
+﻿@inherits Basic
+@implements IEntityNull<OrigamiPage>
+
+@if (this.Entity != null)
+{
+    <span class="page-header-lite-2 position-relative @Class">
+        <span class="d-inline-flex align-items-center" title="@Entity.Title">
+            @if (this.ShowLanguage)
+            {
+                <span class="language d-inline-block @Entity.LanguageWrittenOn me-1"></span>
+            }
+            <span class="ellipsis">@Entity.Title</span>
+            @if (this.Entity.IsFrontPage == true)
+            {
+                <span class="ms-1 bg-success text-white x-small" style="padding: 0.15rem!important;">
+                    @Text.Lower("Front-page")
+                </span>
+            }
+        </span>
+        <Id Class="d-block x-small" Entity="Entity"></Id>
+    </span>
+}
+
+@code {
+    [Parameter] public OrigamiPage? Entity { get; set; }
+    [Parameter] public bool ShowLanguage { get; set; } = true;
+}

@@ -1,0 +1,42 @@
+﻿@using System.Transactions
+@inherits BasicForm<OrigamiTrash>
+@inject IRoleRepository _roles
+
+<div class="trash-form @Class">
+    @if (this.Entity.New)
+    {
+        <div class="w-100 text-white bg-secondary text-center">
+            @Text.Lower("Select trash")
+        </div>
+    }
+    else
+    {
+        <style>
+            .trash-content [class^="col-"] { width: 100% !important; }
+        </style>
+        <div class="w-100 text-white bg-secondary text-center">
+            @Text.Lower("You are viewing an existing trash")
+        </div>
+        <div class="trash-content mt-3">
+            @if (Entity.Type.Like("SpecialPage") == true)
+            {
+                var entity = this.Super.SpecialPages.ReadFromCache().Id(Entity.Id);
+                <TrashFormSpecialPage Entity="entity"></TrashFormSpecialPage>
+            }
+            else if (Entity.Type.Like("SpecialMessage") == true)
+            {
+                var entity = this.Super.SpecialMessages.ReadFromCache().Id(Entity.Id);
+                <TrashFormSpecialMessage Entity="entity"></TrashFormSpecialMessage>
+            }
+            else if (Entity.Type.Like("Blog") == true)
+            {
+                var entity = this.Super.Blogs.ReadFromCache().Id(Entity.Id)!;
+                <TrashFormBlog Entity="entity"></TrashFormBlog>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    
+}

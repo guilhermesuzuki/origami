@@ -1,0 +1,66 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
+@inherits LayoutComponentBase
+
+@inject Text _text
+@inject IBlogRepository _blog
+@inject IConfiguration _configuration
+@inject IUserFacade _userFacade
+@inject IUserRepository _userRepository
+@inject ISettingsRepository _settings
+
+<CustomHeadContent>
+    <link rel="stylesheet" href="_content/Origami.UI/lib/css/style-site-admin.css" />
+    <AppLinks></AppLinks>
+</CustomHeadContent>
+<PageTitle>@_text.Lower("Admin"): @_settings.GetSettings().Name.ToLower()</PageTitle>
+@if (_userFacade.User.New != true)
+{
+    <div class="page">
+        <ProcessResult></ProcessResult>
+        <div class="sidebar col-12 col-lg-3 hidden-sm visible-lg position-sticky overflow-hidden" style="overflow-y:auto!important;">
+            <Logo Class="p-4 border-bottom" />
+            <NavMenu></NavMenu>
+        </div>
+        <main class="overflow-hidden position-relative" style="overflow-y:auto !important;">
+            <EmailStatus></EmailStatus>    
+            @Body
+        </main>
+    </div>
+}
+else
+{
+    <RedirectToLogin></RedirectToLogin>
+}
+<MudThemeProvider />
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+<BlazorErrorUi></BlazorErrorUi>
+
+@code {
+    [CascadingParameter] private Task<AuthenticationState>? authenticationState { get; set; }
+
+    /// <summary>
+    /// Loads the authenticated user
+    /// </summary>
+    /// <returns></returns>
+    protected async Task LoadUserAsync()
+    {
+        var state = await authenticationState!;
+        if (state == null) return;
+        if (state.User.Identity == null) return;
+        if (state.User.Identity.IsAuthenticated == false) return;
+        var nameId = state.User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (nameId != null && Guid.TryParse(nameId, out var id) == true)
+        {
+            this._userFacade.User = _userRepository.ReadFromCache().Id(id) ?? new();
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await this.LoadUserAsync();
+    }
+}

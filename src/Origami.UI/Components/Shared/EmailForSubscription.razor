@@ -1,0 +1,139 @@
+﻿@using Microsoft.Extensions.Options;
+
+@inherits Basic
+@implements IEntityNull<OrigamiSocialProfile>
+@inject ISubscriberRepository _subscriber
+
+@if (this.Entity != null)
+{
+    <div class="email-for-subscription @Class">
+        <div class="fs-3 text-center">@Text.Lower("We need a valid e-mail to subscribe")</div>
+        <div class="row mt-3">
+            <div class="col-6 step-1">
+                <div class="p-3 border shadow-sm position-relative">
+                    <MudTextField @ref="_emailField" HelperText="@Text.Lower("1. tell us your e-mail")"
+                                  InputType="InputType.Email"
+                                  @bind-Value="_email"
+                                  AdornmentIcon="@this.EmailIcon"
+                                  AdornmentColor="@this.EmailIconColor"
+                                  Adornment="Adornment.End"
+                                  Immediate="true"></MudTextField>
+                    <button class="btn btn-danger w-100 mt-3" disabled="@(this._email.Email() == false)" @onclick="this.SendEmailWithVerificationCode">@Text.Lower("Send verification code")</button>
+                    @if (this._step1Disabled)
+                    {
+                        <div class="position-absolute zeroes bg-opacity-50 bg-light cursor-not-allowed"></div>
+                    }
+                </div>
+            </div>
+            <div class="col-6 step-2">
+                <div class="p-3 border shadow-sm position-relative">
+                    <MudTextField @ref="_codeField" HelperText="@Text.Lower("2. validate e-mail (check your spam folder)")"
+                                  MaxLength="4"
+                                  @bind-Value="@this._code"
+                                  Immediate="true"></MudTextField>
+                    <button class="btn btn-success w-100 mt-3" disabled="@(this._code.Length != 4)" @onclick="this._validateCode">@Text.Lower("Validate code and finish subscribing")</button>
+                    @if (this._step2Disabled)
+                    {
+                        <div class="position-absolute zeroes bg-opacity-50 bg-light cursor-not-allowed"></div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private string _code = string.Empty;
+    private string _email = string.Empty;
+    private System.Timers.Timer? _emailTimer;
+    private string EmailIcon = string.Empty;
+    private Color EmailIconColor = Color.Default;
+    private bool _step1Disabled = false;
+    private bool _step2Disabled = true;
+
+    private MudTextField<string> _emailField = null!;
+    private MudTextField<string> _codeField = null!;
+
+    [Parameter] public OrigamiSocialProfile? Entity { get; set; }
+    [Parameter] public EventCallback<OrigamiSocialProfile> UserHasSubscribed { get; set; }
+
+    /// <summary>
+    /// Resets the component state to initial values.
+    /// </summary>
+    public void Reset()
+    {
+        this._code = string.Empty;
+        this._email = string.Empty;
+        this.EmailIcon = string.Empty;
+        this.EmailIconColor = Color.Default;
+        this._step1Disabled = false;
+        this._step2Disabled = true;
+        this._emailField.FocusAsync();
+    }
+
+    private void SendEmailWithVerificationCode()
+    {
+        var code = Guid.NewGuid().ToString().Split('-')[1].ToUpper();
+        var email = this._email.Trim();
+
+        try
+        {
+            var ok = this._subscriber.VerificationCode(new(OrigamiUser.AnonymousUser, DateTime.UtcNow, UserFacade.SocialProfile), email, code);
+            if (ok)
+            {
+                this._step1Disabled = true;
+                this._step2Disabled = false;
+                EmailIcon = Icons.Material.Filled.CheckCircle;
+                EmailIconColor = Color.Success;
+                this._startEmailTimer();
+                this.UserFacade.Result = new();
+                this._codeField.FocusAsync();
+                return;
+            }
+            EmailIcon = Icons.Material.Filled.Error;
+            EmailIconColor = Color.Error;
+            this._startEmailTimer();
+            this.UserFacade.Result = new() { ErrorMessage = Text.Lower("Failed to send verification code. Please try again later."), };
+        }
+        catch 
+        {
+            EmailIcon = Icons.Material.Filled.Error;
+            EmailIconColor = Color.Error;
+            this._startEmailTimer();
+            this.UserFacade.Result = new() { ErrorMessage = Text.Lower("Failed to send verification code. Please try again later."), };
+        }
+    }
+
+    private void _validateCode()
+    {
+        var ok = this._subscriber.ValidateVerificationCode(new(OrigamiUser.AnonymousUser, DateTime.UtcNow, UserFacade.SocialProfile), _code);
+        if (ok)
+        {
+            this.UserFacade.SocialProfile.Email = _email;
+            this._code = string.Empty;
+            this._email = string.Empty;
+            this.UserFacade.Result = this.Super.Subscribers.Subscribe(new(OrigamiUser.AnonymousUser, DateTime.UtcNow, this.UserFacade.SocialProfile));
+            this.UserHasSubscribed.InvokeAsync(this.UserFacade.SocialProfile);
+            return;
+        }
+        this.UserFacade.Result = new() { ErrorMessage = Text.Lower("The verification code is not valid"), };
+    }
+
+    private void _startEmailTimer()
+    {
+        this._emailTimer = new() { AutoReset = false, Enabled = true, Interval = 3750, };
+        this._emailTimer.Elapsed += (sender, e) =>
+        {
+            EmailIcon = string.Empty;
+            EmailIconColor = Color.Default;
+            this._emailTimer.Stop();
+            this._emailTimer = null;
+        };
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+        if (firstRender && this._emailField != null) this._emailField.FocusAsync();
+    }
+}

@@ -1,0 +1,20 @@
+﻿@inherits Basic
+@implements IEntityNull<BaseContent>
+@inject IUserRepository _user
+@if (this.Entity != null)
+{
+    var author = this.Super.Users.ReadFromCache().Id(this.Entity.AuthorId);
+    @if (author != null) 
+    {
+        <div class="content-header-lite text-center p-1 bg-light border">
+            <ul class="inline-list">
+                <li>
+                    <UserHeaderLite2 Entity="author"></UserHeaderLite2>
+                </li>
+            </ul>
+        </div>
+    }
+}
+@code {
+    [Parameter] public BaseContent? Entity { get; set; }
+}

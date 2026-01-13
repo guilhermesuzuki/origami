@@ -1,0 +1,31 @@
+﻿@inherits Basic
+@implements IEntityNull<OrigamiSpecialMessage>
+
+@if (this.Entity != null)
+{
+    var bg = this.Entity.Type switch
+    {
+        "None" => string.Empty,
+        _ => $"bg-{this.Entity.Type.ToLower()}",
+    };
+    <div class="p-3 position-relative text-center text-white @bg @Class">
+        <Draft Entity="this.Entity"></Draft>
+        <div class="special-message-header-lite">
+            <span class="d-inline-flex align-items-center" title="@Entity.Title">
+                <i class="fa-solid fa-bullhorn me-1"></i>
+                <span>@Entity.Title</span>
+            </span>
+        </div>
+        @if (this.Entity.Content.Has() == true)
+        {
+            <div class="special-message-header-content text-white">
+                @((MarkupString)this.Entity.Content)
+            </div>
+        }
+    </div>
+
+}
+
+@code {
+    [Parameter] public OrigamiSpecialMessage? Entity { get; set; }
+}

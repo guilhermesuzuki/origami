@@ -1,0 +1,28 @@
+﻿@inherits BasicForm<Core.Models.OrigamiBlog>
+
+<div class="trash-form-blog @Class">
+    <div class="row">
+        <div class="col-12">
+            <BasicHeaderNotes Entity="Entity"></BasicHeaderNotes>
+            <BasicHeader Class="mt-3" Entity="this.Entity"></BasicHeader>
+            <ul class="inline-list mt-3">
+                <li>
+                    <MudTextField @bind-Value="this.Entity.Name"
+                                  HelperText="@Text.Lower("Name")"
+                                  AdornmentIcon="@Icons.Material.Filled.Description"
+                                  Adornment="Adornment.Start"
+                                  ReadOnly="true"></MudTextField>
+                </li>
+                <li>
+                    <MudTextField Value="this.Entity.Slug"
+                                  HelperText="@Text.Lower("Slug")"
+                                  ReadOnly="true"></MudTextField>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+@code {
+    
+}

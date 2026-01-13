@@ -1,0 +1,14 @@
+﻿@inherits Basic
+
+<div class="something-went-wrong fs-1 text-center @Class">
+    <i class="fa-solid fa-face-grin-beam-sweat" style="font-size:70px;"></i>
+    <span class="d-block title" style="margin-top: -7px;">@Text.Lower(Text.SomethingWentWrongPleaseTryAgain)</span>
+    @if (this.Error.Has() == true)
+    {
+        <span class="fs-3 d-block error">@this.Error</span>
+    }
+</div>
+
+@code {
+    [Parameter] public string Error { get; set; } = string.Empty;
+}

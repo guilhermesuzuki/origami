@@ -1,0 +1,76 @@
+﻿@inherits Basic
+@implements IEntityNull<Core.Models.OrigamiPage>
+
+@if (this.Entity != null)
+{
+    <div class="trash-form-page @Class">
+        <BasicHeaderNotes Entity="Entity"></BasicHeaderNotes>
+        @if (this.Entity.ParentId != null)
+        {
+            var parent = this.Super.Pages.ReadFromCache().Id(this.Entity.ParentId.Value);
+            <div class="page-parent mt-3">
+                <div class="xx-small">@Text.Lower("Parent")</div>
+                <div class="fw-bold shadow-sm border p-2">
+                    <PageHeaderLite2 Entity="parent"></PageHeaderLite2>
+                </div>
+            </div>
+        }
+        <PageHeaderLite Class="mt-3" Entity="Entity"></PageHeaderLite>
+        <BasicHeader Class="mt-3" Entity="Entity"></BasicHeader>
+        <ul class="inline-list mt-3">
+            <li>
+                <MudTextField @bind-Value="this.Entity.Title"
+                              HelperText="@Text.Lower("Title")"
+                              AdornmentIcon="@Icons.Material.Filled.Description"
+                              Adornment="Adornment.Start"
+                              ReadOnly="true"></MudTextField>
+            </li>
+            <li>
+                <MudTextField ReadOnly="true"
+                              AdornmentIcon="@Icons.Material.Filled.Link"
+                              Adornment="Adornment.Start"
+                              @bind-Value="@Entity.Slug"
+                              HelperText="@Text.Lower("Slug")"></MudTextField>
+            </li>
+        </ul>
+        <ul class="inline-list mt-3">
+            <li>
+                <MudTextField ReadOnly="true"
+                              @bind-Value="@(Entity.Keywords)"
+                              HelperText="@Text.Lower("Keywords")"></MudTextField>
+            </li>
+        </ul>
+        @if (Entity.Description.Has() == true)
+        {
+            <div class="border-top border-bottom mt-3 p-3 bg-light bg-gradient" style="margin-left: -1rem; margin-right: -1rem;">
+                @Entity.Description
+            </div>
+        }
+        @if (Entity.Content.Has() == true)
+        {
+            <div class="border-top border-bottom mt-3 p-3 bg-light bg-gradient page-comment-text" style="margin-left: -1rem; margin-right: -1rem;">
+                @Entity.Content.Markup()
+            </div>
+        }
+        @if (this.Entity != null)
+        {
+            var children = this.Super.Pages.ReadFromCache().GetChildren(this.Entity).OrderBy(x => x.Title);
+            @if (children.Any() == true)
+            {
+                <div class="page-parent mt-3">
+                    <div class="xx-small">@Text.Lower("Children will be purged too")</div>
+                    @foreach (var child in children)
+                    {
+                        <div class="shadow-sm border p-2 mt-1">
+                            <PageHeaderLite2 Entity="child"></PageHeaderLite2>
+                        </div>
+                    }
+                </div>
+            }
+        }
+    </div>
+}
+
+@code {
+    [Parameter] public Core.Models.OrigamiPage? Entity { get; set; }
+}

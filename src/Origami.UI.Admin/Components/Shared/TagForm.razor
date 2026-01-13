@@ -1,0 +1,53 @@
+﻿@using System.Transactions
+@inherits BasicFormFull<OrigamiTag>
+@inject IBlogRepository _blog
+@inject IPostTagRepository _postTag
+@inject IVideoTagRepository _videoTag
+
+<div class="tag-form @Class">
+    @if (this.Entity.New)
+    {
+        <div class="w-100 text-white bg-secondary text-center">
+            @Text.Lower("Select a Tag")
+        </div>
+    }
+    else
+    {
+        <BasicHeaderNotes Entity="this.Entity"></BasicHeaderNotes>
+        
+        <ul class="inline-list mt-3">
+            <li>
+                <MudTextField Immediate="true"
+                              FullWidth="true"
+                              @bind-Value="@Entity.Name"
+                              HelperText="@Text.Lower("Name")"></MudTextField>
+            </li>
+            <li>
+                <MudTextField Immediate="true"
+                              FullWidth="true"
+                              ReadOnly="true"
+                              Value="@Entity.Slug"
+                              HelperText="@Text.Lower("Slug")"></MudTextField>
+            </li>
+        </ul>
+
+        <div class="buttons btn-group mt-3 w-100">
+            <button class="btn btn-success text-white fw-bold" @onclick="Save" disabled="@this.DisableTheSaveButton">
+                <i class="fa-solid fa-floppy-disk"></i>
+                @Text.Lower("Save")
+            </button>
+            <button class="btn btn-secondary text-white fw-bold" @onclick="UndoChanges" disabled="@this.Entity.New">
+                <i class="fa-solid fa-rotate-left"></i>
+                @Text.Lower("Undo changes")
+            </button>
+            <button class="btn btn-info text-white fw-bold" disabled>
+                <i class="fa-solid fa-square-plus"></i>
+                @Text.Lower("New")
+            </button>
+        </div>
+    }
+</div>
+
+@code {
+
+}

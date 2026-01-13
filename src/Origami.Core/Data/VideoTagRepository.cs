@@ -1,0 +1,43 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
+using Origami.Core.Models;
+
+namespace Origami.Core.Data
+{
+    public class VideoTagRepository :
+        RepositoryOuterLayer<OrigamiVideoTag>,
+        IVideoTagRepository
+    {
+        /// <summary>
+        /// Default constructor with DI
+        /// </summary>
+        /// <param name="dbContext"></param>
+        /// <param name="distributedCache"></param>
+        public VideoTagRepository(
+            IDbContextFactory<OrigamiDbContext> dbContextFactory,
+            IMemoryCache memoryCache,
+            Text text,
+            IWebRootPath wwwRoot)
+            : base(text, dbContextFactory, memoryCache, wwwRoot)
+        {
+
+        }
+
+        public override string DeletePermission => nameof(OrigamiRole.DeleteTags);
+        public override string ReadPermission => nameof(OrigamiRole.ViewTags);
+        public override string UpdatePermission => nameof(OrigamiRole.EditTags);
+
+        public IEnumerable<OrigamiVideoTag> Tags(OrigamiVideo Video)
+        {
+            return from x in ReadFromCache() where x.VideoId == Video.Id select x;
+        }
+
+        public IEnumerable<OrigamiVideo> Videos(OrigamiTag tag)
+        {
+            return from x in ReadFromCache()
+                   where x.Video!.BlogId == tag.BlogId
+                   where x.Tag.Like(tag.Name)
+                   select x.Video;
+        }
+    }
+}

@@ -1,0 +1,106 @@
+﻿@page "/tags"
+@inherits BasicAdminGrid<OrigamiTag>
+@inject IPostTagRepository _postTag
+@inject IVideoTagRepository _videoTag
+@inject IBlogRepository _blogs
+<Root Access="this.CanAccess()">
+    <HeaderTemplate>
+        <div class="p-3 border-bottom">
+            <div class="row">
+                <div class="d-inline-flex align-items-center col-12 col-xxl-8">
+                    <i class="fa-solid fa-tag pe-1"></i>
+                    <span class="me-3">@Text.Upper("Tags")</span>
+                    <button class="btn btn-danger text-white" disabled="@this.DisableThePurgeButton" @onclick="this.PurgeSelectedEntities">
+                        <i class="fa-solid fa-database"></i>
+                        <i class="fa fa-ban" style="position: absolute; right: 8px; bottom: 8px; font-size: 8px;"></i>
+                    </button>
+                </div>
+                <div class="col-12 col-xxl-4">
+                    <BlogSelect></BlogSelect>
+                </div>
+            </div>
+        </div>
+        <div class="p-3 border-bottom">
+            <div class="row">
+                <div class="col-12">
+                    <SearchLite T="OrigamiTag" OnHitSelected="this.OnSearchResultSelected"></SearchLite>
+                </div>
+            </div>
+        </div>
+    </HeaderTemplate>
+    <ContentTemplate>
+        <div class="p-3">
+            <div class="row">
+                <div class="tags col-12 col-xxl-8">
+                    <MudDataGrid @ref="DataGrid" T="OrigamiTag" Items="GetItems()" Filterable="false" SortMode="SortMode.None" Class="border selectable" SelectedItems="this.SelectedEntities" MultiSelection="true"
+                                 SelectedItemsChanged="this.SelectedEntitiesChanged" RowClassFunc="RowClassFunc" Bordered="true" SelectOnRowClick="false">
+                        <Columns>
+                            <SelectColumn T="OrigamiTag"></SelectColumn>
+                            <TemplateColumn Title="@Text.Upper("Name")" Sortable="false" Filterable="false" SortBy="x => nameof(x.Name)">
+                                <CellTemplate>
+                                    <div class="cursor-pointer" @onclick="() => OnEdit(context.Item)">
+                                        <TagHeaderLite Entity="context.Item"></TagHeaderLite>
+                                    </div>
+                                </CellTemplate>
+                            </TemplateColumn>
+                            <TemplateColumn Title="@Text.Upper("Posts, Videos")" Sortable="false" Filterable="false" CellClass="col-2">
+                                <CellTemplate>
+                                    <div class="p-1">
+                                        <span>@Text.Lower("{0} Post(s)", this.Super.GetPosts(context.Item).Blog(this.UserFacade.BlogId).Published().Count())</span>
+                                    </div>
+                                    <div class="p-1 mt-1">
+                                        <span>@Text.Lower("{0} Video(s)", this.Super.GetVideos(context.Item).Blog(this.UserFacade.BlogId).Published().Count())</span>
+                                    </div>
+                                </CellTemplate>
+                            </TemplateColumn>
+                        </Columns>
+                        <PagerContent>
+                            <MudDataGridPager T="OrigamiTag" />
+                        </PagerContent>
+                        <NoRecordsContent>
+                            <NoEntriesWereFound></NoEntriesWereFound>
+                        </NoRecordsContent>
+                    </MudDataGrid>
+                </div>
+                <div class="tags-form col-12 col-xxl-4">
+                    <TagForm Class="p-3 shadow-sm border position-sticky" Entity="this.SelectedEntity" Saved="this.EntitySaved" Cancelled="this.EntityCancelled"></TagForm>
+                </div>
+            </div>
+        </div>
+    </ContentTemplate>
+</Root>
+@code {
+    protected override Result<OrigamiTag> RemoveEntityFromCache(OrigamiTag entity)
+    {
+        var result = new Result<OrigamiTag>();
+
+        this._postTag.ReadFromCache().Where(x => x.Tag == entity.Name && x.Post!.BlogId == entity.BlogId).Each(this._postTag.PurgeCache);
+        this._videoTag.ReadFromCache().Where(x => x.Tag == entity.Name && x.Video!.BlogId == entity.BlogId).Each(this._videoTag.PurgeCache);
+
+        SelectedEntity = SelectedEntity.Id == entity.Id ? this.CreateEntity() : SelectedEntity;
+
+        return result;
+    }
+
+    protected override async Task DeleteSelectedEntities()
+    {
+        await ExecuteWithSelectedEntities(
+            async () =>
+            {
+                return await DialogService.ShowMessageBox(
+                    Text.Upper("Deleting {0} Item(s)", SelectedEntities.Count),
+                    Text.Original("Are you sure?"),
+                    yesText: Text.Lower("Yes"),
+                    noText: Text.Lower("No"));
+            },
+            this.DeleteEntity
+        );
+    }
+
+    protected override string RowClassFunc(OrigamiTag entity, int index)
+    {
+        var result = base.RowClassFunc(entity, index);
+        if (entity.Name == SelectedEntity.Name && entity.Slug == SelectedEntity.Slug) result += " selected-row";
+        return result;
+    }
+}

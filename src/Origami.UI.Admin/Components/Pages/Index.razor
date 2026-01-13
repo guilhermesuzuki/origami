@@ -1,0 +1,708 @@
+﻿@page "/"
+@inherits BasicAdmin
+@implements IId
+@inject IDashboardRepository _dashboard
+
+<style>
+    .physical-page-header-lite-3 .id { display: none !important; }
+    .rss-feeds thead { display: none !important; }
+</style>
+<HeadContent>
+    <meta property="og:title" content="@PageTitle.GetTitle()" />
+    <meta property="og:description" content="@this.Super.Settings.GetSettings().Description" />
+    <meta property="og:image" content="@this.Super.Settings.GetSettings().LogoUrl" />
+</HeadContent>
+<Root Access="this.CanAccess()" Class="min-vh-100">
+    <HeaderTemplate>
+        <div class="sub-header p-3 border-bottom">
+            <div class="row">
+                <div class="d-inline-flex align-items-center col-12 col-xxl-8">
+                    <i class="fa-solid fa-gauge-simple pe-1"></i>
+                    <span class="me-3">@Text.Upper("Dashboard")</span>
+                    <div class="btn-group pe-1">
+                        <button class="btn btn-danger text-white" title="@Text.Lower("Enter maintenance mode")" disabled="@this.DisableEnterMaintenanceModeButton" @onclick="this.EnterMaintenanceMode">
+                            <i class="fa-solid fa-person-digging"></i>
+                            <i class="fa-solid fa-arrow-down"></i>
+                            <span class="">@Text.Lower("Enter")</span>
+                        </button>
+                        <button class="btn btn-success text-white" title="@Text.Lower("Leave maintenance mode")" disabled="@this.DisableLeaveMaintenanceModeButton" @onclick="this.LeaveMaintenanceMode">
+                            <i class="fa-solid fa-person-digging"></i>
+                            <i class="fa-solid fa-arrow-up"></i>
+                            <span class="">@Text.Lower("Leave")</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-12 col-xxl-4">
+                    <BlogSelect></BlogSelect>
+                </div>
+            </div>
+        </div>
+    </HeaderTemplate>
+    <ContentTemplate>
+        <div class="p-3">
+            <div class="row">
+                <div class="col-12 col-xxl-4">
+                    <div class="p-3">
+                        <div class="border shadow-sm">
+                            <div class="p-3 border-bottom bg-light bg-gradient fw-bold">@Text.Upper("Stats")</div>
+                            <ul class="inline-list p-3 border-bottom">
+                                <li>@Text.Original("Published posts")</li>
+                                <li class="text-right" style="width:20px;">
+                                    <span class="">@this.Super.Posts.ReadFromCache().Published(this.UserFacade.BlogId).Count()</span>
+                                </li>
+                            </ul>
+                            <ul class="inline-list p-3 border-bottom">
+                                <li>@Text.Original("Published videos")</li>
+                                <li class="text-right" style="width:20px;">
+                                    <span class="">@this.Super.Videos.ReadFromCache().Published(this.UserFacade.BlogId).Count()</span>
+                                </li>
+                            </ul>
+                            <ul class="inline-list p-3 border-bottom">
+                                <li>@Text.Original("Published pages")</li>
+                                <li class="text-right" style="width:20px;">
+                                    <span class="">@this.Super.Pages.ReadFromCache().Published(this.UserFacade.BlogId).Count()</span>
+                                </li>
+                            </ul>
+                            <ul class="inline-list p-3 border-bottom">
+                                <li>@Text.Original("Published special pages")</li>
+                                <li class="text-right" style="width:20px;">
+                                    <span class="">@this.Super.SpecialPages.ReadFromCache().Published().Count()</span>
+                                </li>
+                            </ul>
+                            <ul class="inline-list p-3 border-bottom">
+                                <li>@Text.Original("Published special messages")</li>
+                                <li class="text-right" style="width:20px;">
+                                    <span class="">@this.Super.SpecialMessages.ReadFromCache().Published().Count()</span>
+                                </li>
+                            </ul>
+                            <ul class="inline-list p-3 border-bottom">
+                                <li>@Text.Original("Draft posts")</li>
+                                <li class="text-right" style="width:20px;">
+                                    <span class="">@this.DraftPosts().Count()</span>
+                                </li>
+                            </ul>
+                            <ul class="inline-list p-3 border-bottom">
+                                <li>@Text.Original("Draft videos")</li>
+                                <li class="text-right" style="width:20px;">
+                                    <span class="">@this.DraftVideos().Count()</span>
+                                </li>
+                            </ul>
+                            <ul class="inline-list p-3 border-bottom">
+                                <li>@Text.Original("Draft pages")</li>
+                                <li class="text-right" style="width:20px;">
+                                    <span class="">@this.DraftPages().Count()</span>
+                                </li>
+                            </ul>
+                            <ul class="inline-list p-3 border-bottom">
+                                <li>@Text.Original("Draft special pages")</li>
+                                <li class="text-right" style="width:20px;">
+                                    <span class="">@this.DraftSpecialPages().Count()</span>
+                                </li>
+                            </ul>
+                            <ul class="inline-list p-3 border-bottom">
+                                <li>@Text.Original("Draft special messages")</li>
+                                <li class="text-right" style="width:20px;">
+                                    <span class="">@this.DraftSpecialMessages().Count()</span>
+                                </li>
+                            </ul>
+                            <ul class="inline-list p-3 border-bottom">
+                                <li>@Text.Original("Approved comments")</li>
+                                <li class="text-right" style="width:20px;">
+                                    <span class="">@(this.Super.GetComments(this.UserFacade.BlogId).Count(x => x.IsApproved))</span>
+                                </li>
+                            </ul>
+                            <ul class="inline-list p-3 border-bottom">
+                                <li>@Text.Original("Unapproved comments")</li>
+                                <li class="text-right" style="width:20px;">
+                                    <span class="">@(this.Super.GetComments(this.UserFacade.BlogId).Count(x => x.IsApproved == false))</span>
+                                </li>
+                            </ul>
+                            <ul class="inline-list p-3 border-bottom">
+                                <li>@Text.Original("Spam comments")</li>
+                                <li class="text-right" style="width:20px;">
+                                    <span class="">@(this.Super.GetComments(this.UserFacade.BlogId).Count(x => x.IsSpam))</span>
+                                </li>
+                            </ul>
+                            <ul class="inline-list p-3 border-bottom">
+                                <li>@Text.Original("Deleted comments")</li>
+                                <li class="text-right" style="width:20px;">
+                                    <span class="">@(this.Super.GetComments(this.UserFacade.BlogId).Count(x => x.IsDeleted))</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="p-3">
+                        <div class="border shadow-sm">
+                            <div class="p-3 border-bottom bg-light bg-gradient fw-bold">@Text.Upper("Latest comments")</div>
+                            @foreach (var comment in this.Super.GetComments(this.UserFacade.BlogId).Where(x => x.IsDeleted == false && this.Super.IsParentDeleted(x) == false).OrderByDescending(x => x.DateCreated).Take(5))
+                            {
+                                <CommentLite Class="border-bottom p-3" Entity="comment"></CommentLite>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-xxl-4">
+                    <div class="p-3">
+                        <div class="border shadow-sm">
+                            <div class="p-3 border-bottom bg-light bg-gradient fw-bold">@Text.Upper("Quick post")</div>
+                            <QuickPost Class="p-3"></QuickPost>
+                        </div>
+                    </div>
+                    <div class="p-3">
+                        <div class="border shadow-sm">
+                            <div class="p-3 border-bottom bg-light bg-gradient fw-bold">@Text.Upper("Draft pages")</div>
+                            @foreach (var page in this.DraftPages())
+                            {
+                                <div class="p-3 border-bottom">
+                                    <PageHeaderLite2 Class="" Entity="page"></PageHeaderLite2>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="p-3">
+                        <div class="border shadow-sm">
+                            <div class="p-3 border-bottom bg-light bg-gradient fw-bold">@Text.Upper("Draft posts")</div>
+                            @foreach (var post in this.DraftPosts())
+                            {
+                                <div class="p-3 border-bottom">
+                                    <PostHeaderLite2 Class="" Entity="post"></PostHeaderLite2>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="p-3">
+                        <div class="border shadow-sm">
+                            <div class="p-3 border-bottom bg-light bg-gradient fw-bold">@Text.Upper("Draft videos")</div>
+                            @foreach (var video in this.DraftVideos())
+                            {
+                                <div class="p-3 border-bottom">
+                                    <VideoHeaderLite2 Class="" Entity="video"></VideoHeaderLite2>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="p-3">
+                        <div class="border shadow-sm">
+                            <div class="p-3 border-bottom bg-light bg-gradient fw-bold">@Text.Upper("Draft special pages")</div>
+                            @foreach (var page in this.DraftSpecialPages())
+                            {
+                                <div class="p-3 border-bottom">
+                                    <SpecialPageHeaderLite2 Class="" Entity="page"></SpecialPageHeaderLite2>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="p-3">
+                        <div class="border shadow-sm">
+                            <div class="p-3 border-bottom bg-light bg-gradient fw-bold">@Text.Upper("Draft special messages")</div>
+                            @foreach (var message in this.DraftSpecialMessages())
+                            {
+                                <div class="p-3 border-bottom">
+                                    <SpecialMessageHeaderLite Class="" Entity="message"></SpecialMessageHeaderLite>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-xxl-4">
+                    <div class="p-3">
+                        <div class="border shadow-sm">
+                            <div class="p-3 border-bottom bg-light bg-gradient fw-bold">@Text.Upper("Latest news")</div>
+                            <RssFeeds></RssFeeds>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ContentTemplate>
+</Root>
+<Root Access="this.CanAccess()" Class="min-vh-100">
+    <HeaderTemplate>
+        <div class="sub-header p-3 border-bottom border-top">
+            <ul class="inline-list align-items-center">
+                <li class="w-50">
+                    <i class="fa-solid fa-chart-simple pe-1"></i>
+                    <span class="me-3">@Text.Upper("Dashboard analytics")</span>
+                </li>
+                <li class="w-50">
+                    <ul class="inline-list">
+                        <li class="w-25"></li>
+                        <li class="w-25"></li>
+                        <li class="w-25"></li>
+                        <li class="w-25">
+                            <MudSelect T="TimePeriod" @bind-Value="TimePeriod" HelperText="@Text.Lower("Time period")">
+                                <MudSelectItem Value="@TimePeriod.Last24Hours">@Text.Original("Last 24 hours")</MudSelectItem>
+                                <MudSelectItem Value="@TimePeriod.Last7Days">@Text.Original("Last 7 days")</MudSelectItem>
+                                <MudSelectItem Value="@TimePeriod.Last30Days">@Text.Original("Last 30 days")</MudSelectItem>
+                                <MudSelectItem Value="@TimePeriod.Last90Days">@Text.Original("Last 90 days")</MudSelectItem>
+                                <MudSelectItem Value="@TimePeriod.Last180Days">@Text.Original("Last 180 days")</MudSelectItem>
+                                <MudSelectItem Value="@TimePeriod.Last365Days">@Text.Original("Last 365 days")</MudSelectItem>
+                                <MudSelectItem Value="@TimePeriod.CurrentMonth">@Text.Original("Current month")</MudSelectItem>
+                                <MudSelectItem Value="@TimePeriod.CurrentYear">@Text.Original("Current year")</MudSelectItem>
+                                <MudSelectItem Value="@TimePeriod.Everything">
+                                    <i class="fa-solid fa-triangle-exclamation text-danger" title="@Text.Original("Slow")"></i>
+                                    @Text.Original("Everything")
+                                </MudSelectItem>
+                            </MudSelect>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </HeaderTemplate>
+    <ContentTemplate>
+        <ul class="inline-list p-3 pb-0 w-100">
+            <li>
+                <div class="row">
+                    <div class="col-12 col-xxl-6">
+                        @if (this._platforms.Any() == true)
+                        {
+                            <div id="devices" class="border p-3">
+                                <div class="text-center fw-bold">
+                                    @Text.Original("Platforms")
+                                </div>
+                                <MudChart Class="mt-3" InputData="_platformsData" InputLabels="_platformsLabels" ChartType="ChartType.Pie" Width="100%" Height="300px" />
+                            </div>
+                        }
+                    </div>
+                    <div class="col-12 col-xxl-6">
+                        @if (this._browsers.Any() == true)
+                        {
+                            <div id="browsers" class="border p-3">
+                                <div class="text-center fw-bold">
+                                    @Text.Original("Browsers")
+                                </div>
+                                <MudChart Class="mt-3" InputData="_browsersData" InputLabels="_browsersLabels" ChartType="ChartType.Pie" Width="100%" Height="300px" />
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="mt-3">
+                    @if (this._history.Any() == true)
+                    {
+                        <div id="history" class="border p-3">
+                            <div class="text-center fw-bold">
+                                @Text.Original("History")
+                            </div>
+                            <MudChart Class="mt-3" ChartSeries="@_series" XAxisLabels="@_xAxisLabels" ChartType="ChartType.Line" Width="100%" Height="450px" />
+                        </div>
+                    }
+                </div>
+            </li>
+        </ul>
+        <div class="p-3">
+            <MudDataGrid @ref="_userViews" T="OrigamiUserView" ServerData="UserViews" SortMode="SortMode.None" Filterable="false" Class="border selectable" RowClassFunc="this.UserViewRowCssClass">
+                <Columns>
+                    <PropertyColumn Title="@Text.Upper("Date")" Property="x => x.DateCreated" CellClass="col-1"></PropertyColumn>
+                    <TemplateColumn CellClass="col-3">
+                        <CellTemplate>
+                            <div class="">
+                                <div class="x-small">@Text.Lower(context.Item.TypeName)</div>
+                                @if (context.Item.Type.Like("PhysicalPageView") == true)
+                                {
+                                    var page = this.Super.PhysicalPages.ReadFromCache().Id(context.Item.Id);
+                                    <PhysicalPageHeaderLite3 Entity="page"></PhysicalPageHeaderLite3>
+                                }
+                                else if (context.Item.Type.Like("PageView") == true)
+                                {
+                                    var page = this.Super.Pages.ReadFromCache().Id(context.Item.Id);
+                                    <PageHeaderLite2 Entity="page"></PageHeaderLite2>
+                                }
+                                else if (context.Item.Type.Like("PostView") == true)
+                                {
+                                    var post = this.Super.Posts.ReadFromCache().Id(context.Item.Id);
+                                    <PostHeaderLite2 Entity="post"></PostHeaderLite2>
+                                }
+                                else if (context.Item.Type.Like("VideoView") == true)
+                                {
+                                    var video = this.Super.Videos.ReadFromCache().Id(context.Item.Id);
+                                    <VideoHeaderLite2 Entity="video"></VideoHeaderLite2>
+                                }
+                                else if (context.Item.Type.Like("SpecialPageView") == true)
+                                {
+                                    var specialpage = this.Super.SpecialPages.ReadFromCache().Id(context.Item.Id);
+                                    <SpecialPageHeaderLite2 Entity="specialpage"></SpecialPageHeaderLite2>
+                                }
+                                @if (context.Item.SocialProfileId != null)
+                                {
+                                    var socialProfile = this.Super.SocialProfiles.ReadFromCache().Id(context.Item.SocialProfileId);
+                                    <SocialProfileHeaderLite Class="p-1 border mt-1" Entity="socialProfile"></SocialProfileHeaderLite>
+                                }
+                            </div>
+                        </CellTemplate>
+                    </TemplateColumn>
+                    <TemplateColumn Title="@Text.Upper("Browser • Url")" CellClass="col-4">
+                        <CellTemplate>
+                            <div class="x-small">
+                                <span>@context.Item.Platform • @context.Item.Browser</span>
+                                @if (context.Item.IsMobileDevice == true)
+                                {
+                                    <span> • <i class="fa-solid fa-mobile-screen-button"></i></span>
+                                }
+                            </div>
+                            <div class="mt-1">
+                                <span class="ellipsis" title="@context.Item.UserAgent">@context.Item.UserAgent</span>
+                                @if (context.Item.IsBot == true)
+                                {
+                                    <span> • <i class="fa-solid fa-robot"></i></span>
+                                }
+                            </div>
+                            <div class="mt-1">
+                                @if (context.Item.UrlReferrer.Has() == true)
+                                {
+                                    <div class="x-small">
+                                        @Text.Lower("User came from")
+                                        <span> </span>
+                                        <a class="border-bottom" href="@context.Item.UrlReferrer">@context.Item.UrlReferrer</a>
+                                    </div>
+                                }
+                                <div>
+                                    <a class="border-bottom" href="@context.Item.Url">@context.Item.Url</a>
+                                </div>
+                            </div>
+                        </CellTemplate>
+                    </TemplateColumn>
+                    <TemplateColumn Title="@Text.Upper("User")" CellClass="col-2">
+                        <CellTemplate>
+                            @if (context.Item.Admin == true)
+                            {
+                                @if (context.Item.UserId != null)
+                                {
+                                    var user = this.Super.Users.ReadFromCache().Id(context.Item.UserId);
+                                    @if (user != null)
+                                    {
+                                        <span><i class="bi bi-person-fill"></i>@user.Username (@user.DisplayName)</span>
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                @if (context.Item.SocialProfileId != null)
+                                {
+                                    var profile = this.Super.SocialProfiles.ReadFromCache().Id(context.Item.SocialProfileId);
+                                    @if (profile != null)
+                                    {
+                                        <span><i class="bi bi-person-fill"></i>@profile.SocialNetwork, @profile.FirstName @profile.LastName</span>
+                                    }
+                                }
+                            }
+                        </CellTemplate>
+                    </TemplateColumn>
+                    <TemplateColumn Title="@Text.Upper("Ip")" CellClass="">
+                        <CellTemplate>
+                            <span>@context.Item.HostAddress</span>
+                            @if (context.Item.Location != null)
+                            {
+                                var location = context.Item.Location;
+                                <div class="x-small">
+                                    <i class="bi bi-geo-fill"></i>
+                                    <span>@location.Country</span>
+                                    <span> • </span>
+                                    <span>@location.Region</span>
+                                    <span> • </span>
+                                    <span>@location.City</span>
+                                </div>
+                            }
+                        </CellTemplate>
+                    </TemplateColumn>
+                </Columns>
+                <PagerContent>
+                    <MudDataGridPager T="OrigamiUserView" />
+                </PagerContent>
+            </MudDataGrid>
+        </div>
+    </ContentTemplate>
+</Root>
+@code {
+    private TimePeriod _timePeriod = TimePeriod.Last24Hours;
+    private MudDataGrid<OrigamiUserView>? _userViews;
+
+    private IEnumerable<ProcessedUserView> _browsers = [];
+    private IEnumerable<ProcessedUserView> _platforms = [];
+    private IEnumerable<ProcessedUserViewForHistory> _history = [];
+
+    protected bool DisableEnterMaintenanceModeButton => this.Super.Settings.ReadFromDatabase().First().MaintenanceMode == true;
+    protected bool DisableLeaveMaintenanceModeButton => this.Super.Settings.ReadFromDatabase().First().MaintenanceMode == false;
+
+    /// <summary>
+    /// Period of Time the user has selected
+    /// </summary>
+    protected TimePeriod TimePeriod
+    {
+        get => this._timePeriod;
+        set
+        {
+            this._timePeriod = value;
+            this._userViews!.ReloadServerData();
+            this._loadCharts();
+        }
+    }
+
+    /// <summary>
+    /// Last 5 draft pages
+    /// </summary>
+    /// <returns></returns>
+    protected IEnumerable<OrigamiPage> DraftPages()
+    {
+        return this.Super.Pages.ReadFromCache()
+            .Drafts()
+            .Blog(UserFacade.BlogId)
+            .Where(x => this.Super.IsParentDeleted(x) == false)
+            .OrderByDescending(x => x.DateCreated)
+            .Take(5);
+    }
+
+    /// <summary>
+    /// Last 5 draft posts
+    /// </summary>
+    /// <returns></returns>
+    protected IEnumerable<OrigamiPost> DraftPosts()
+    {
+        return this.Super.Posts.ReadFromCache()
+            .Drafts()
+            .Blog(UserFacade.BlogId)
+            .OrderByDescending(x => x.DateCreated)
+            .Take(5);
+    }
+
+    /// <summary>
+    /// Last 5 draft videos
+    /// </summary>
+    /// <returns></returns>
+    protected IEnumerable<OrigamiVideo> DraftVideos()
+    {
+        return this.Super.Videos.ReadFromCache()
+            .Drafts()
+            .Blog(UserFacade.BlogId)
+            .OrderByDescending(x => x.DateCreated)
+            .Take(5);
+    }
+
+    /// <summary>
+    /// Last 5 draft pages
+    /// </summary>
+    /// <returns></returns>
+    protected IEnumerable<OrigamiSpecialPage> DraftSpecialPages()
+    {
+        return this.Super.SpecialPages.ReadFromCache()
+            .Drafts()
+            .OrderByDescending(x => x.DateCreated)
+            .Take(5);
+    }
+
+    /// <summary>
+    /// Last 5 draft pages
+    /// </summary>
+    /// <returns></returns>
+    protected IEnumerable<OrigamiSpecialMessage> DraftSpecialMessages()
+    {
+        return this.Super.SpecialMessages.ReadFromCache()
+            .Drafts()
+            .OrderByDescending(x => x.DateCreated)
+            .Take(5);
+    }
+
+    /// <summary>
+    /// This method should retrieve the Entities from database or memory
+    /// </summary>
+    /// <param name="state"></param>
+    /// <returns></returns>
+    protected virtual Task<GridData<OrigamiUserView>> UserViews(GridState<OrigamiUserView> state)
+    {
+        var orders = new StringBuilder();
+
+        //iterates through every sort definition
+        foreach (var definition in state.SortDefinitions)
+        {
+            orders.AppendFormat(",{0} {1}",
+                definition.SortBy,
+                definition.Descending ? "DESC" : "ASC");
+        }
+
+        var range = this.TimePeriod.GetRange();
+        var filters = new StringBuilder($"({nameof(OrigamiUserView.BlogId)} == \"{this.UserFacade.BlogId}\")");
+
+        filters.AppendLine($" && {nameof(OrigamiUserView.DateCreated)} >= \"{range.Start}\"");
+        filters.AppendLine($" && {nameof(OrigamiUserView.DateCreated)} <= \"{range.End}\"");
+
+        //iterates through every filter definition
+        foreach (var definition in state.FilterDefinitions)
+        {
+            filters.AppendFormat(" && ({0})", definition.Filter());
+        }
+
+        var orderBy = orders.ToString();
+
+        orderBy = string.IsNullOrWhiteSpace(orderBy)
+            ? $"{nameof(OrigamiUserView.DateCreated)} DESC"
+            : orderBy[1..];
+
+        //pulls information from cache
+        var result = this.Super.UserViews.ReadFromDatabase().Query(
+            state.PageSize,
+            state.Page * state.PageSize,
+            filters.ToString(),
+            orderBy
+        );
+
+        return Task.FromResult(new GridData<OrigamiUserView> { Items = result.Rows, TotalItems = (int)result.NumberOfRows, });
+    }
+
+    /// <summary>
+    /// Has the Blog property changed in UserFacade?
+    /// </summary>
+    protected virtual void HasBlogChangedInUserFacade()
+    {
+        this.UserFacade.Changed += async (sender, p) =>
+        {
+            if (p.PropertyName.Like(nameof(IUserFacade.BlogId)) == true)
+            {
+                await this._loadCharts();
+                await this._userViews!.ReloadServerData();
+                await this.InvokeAsync(this.StateHasChanged);
+            }
+        };
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        this.HasBlogChangedInUserFacade();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await this._loadCharts();
+    }
+
+    private Task _loadCharts()
+    {
+        var t1 = this._loadBrowsersAsync();
+        var t2 = this._loadPlatformsAsync();
+        var t3 = this._loadHistoryAsync();
+        return Task.CompletedTask;
+    }
+
+    private async Task _loadBrowsersAsync()
+    {
+        var range = this.TimePeriod.GetRange();
+        this._browsers = await this.Super.UserViews.GetBrowsersAsync(this.UserFacade.BlogId, range.Start, range.End);
+        await this.InvokeAsync(this.StateHasChanged);
+    }
+
+    private async Task _loadPlatformsAsync()
+    {
+        var range = this.TimePeriod.GetRange();
+        this._platforms = await this.Super.UserViews.GetPlatformsAsync(this.UserFacade.BlogId, range.Start, range.End);
+        await this.InvokeAsync(this.StateHasChanged);
+    }
+
+    private async Task _loadHistoryAsync()
+    {
+        var range = this.TimePeriod.GetRange();
+        this._history = await this.Super.UserViews.GetHistoryAsync(this.TimePeriod, this.UserFacade.BlogId, range.Start, range.End);
+        await this.InvokeAsync(this.StateHasChanged);
+    }
+
+    /// <summary>
+    /// Platforms - Labels
+    /// </summary>
+    private string[] _platformsLabels => _platforms.Select(x => x.Description).ToArray();
+
+    /// <summary>
+    /// Platforms - Data
+    /// </summary>
+    private double[] _platformsData => _platforms.Select(x => (double)x.Count).ToArray();
+
+    /// <summary>
+    /// Browsers - Labels
+    /// </summary>
+    private string[] _browsersLabels => _browsers.Select(x => x.Description).ToArray();
+
+    /// <summary>
+    /// Browsers - Data
+    /// </summary>
+    private double[] _browsersData => _browsers.Select(x => (double)x.Count).ToArray();
+
+    /// <summary>
+    /// ChartSeries for the History Line Chart
+    /// </summary>
+    private List<ChartSeries> _series
+    {
+        get
+        {
+            return new List<ChartSeries>()
+            {
+                new() { Name = Text.Original("Views"), Index = 0, Visible = true, Data = this._history.Where(x => x.IsBot == false).Select(x => (double)x.Count).ToArray() },
+                new() { Name = Text.Original("Bot Views"), Index = 1, Visible = true, Data = this._history.Where(x => x.IsBot == true).Select(x => (double)x.Count).ToArray() },
+            };
+        }
+    }
+
+    /// <summary>
+    /// Labels for the X Axis of the History Line Chart
+    /// </summary>
+    private string[] _xAxisLabels => this._history.Select(x => x.Description).Distinct().ToArray();
+
+    protected override Core.Models.Result CanAccess()
+    {
+        return this._dashboard.CanRead(this.UserFacade.User.Id);
+    }
+
+    protected string UserViewRowCssClass(OrigamiUserView view, int index)
+    {
+        var css = new StringBuilder();
+
+        if (view.Admin.GetValueOrDefault() == true)
+        {
+            css.Append(" admin");
+        }
+        else
+        {
+            css.Append(" frontend");
+        }
+
+        return css.ToString();
+    }
+
+    protected async Task EnterMaintenanceMode()
+    {
+        var ok = await DialogService.ShowMessageBox(
+            Text.Upper("Entering maintenance mode"),
+            Text.Original("Are you sure?"),
+            yesText: Text.Lower("Yes"),
+            noText: Text.Lower("No"));
+
+        if (ok.GetValueOrDefault())
+        {
+            using (var transaction = new TransactionScope())
+            {
+                var ctx = new DataOperationContext(this.UserFacade.User, DateTime.UtcNow);
+                var hub = this.Super.SpecialPages.EnterMaintenanceMode(ctx);
+                this.UserFacade.Result = hub;
+                if (hub.Ok) transaction.Complete();
+            }
+        }
+    }
+
+    protected async Task LeaveMaintenanceMode()
+    {
+        var ok = await DialogService.ShowMessageBox(
+            Text.Upper("Leaving maintenance mode"),
+            Text.Original("Are you sure?"),
+            yesText: Text.Lower("Yes"),
+            noText: Text.Lower("No"));
+
+        if (ok.GetValueOrDefault())
+        {
+            using (var transaction = new TransactionScope())
+            {
+                var ctx = new DataOperationContext(this.UserFacade.User, DateTime.UtcNow);
+                var hub = this.Super.SpecialPages.LeaveMaintenanceMode(ctx);
+                this.UserFacade.Result = hub;
+                if (hub.Ok) transaction.Complete();
+            }
+        }
+    }
+}

@@ -1,0 +1,58 @@
+﻿@inherits Basic
+
+@inject IPostRatingRepository _postRating
+@inject ISocialProfileRepository _socialProfile
+
+@if (this.Post != null)
+{
+    <div class="post-ratings @Class">
+        <label class="w-100 text-center fs-3">
+            <i class="fa-solid fa-star"></i>
+            @Text.Lower("{0} People Rated This Post", _postRating.Ratings(this.Post).Count())
+            <i class="fa-solid fa-star"></i>
+        </label>
+        <div class="row">
+            @foreach (var rating in _postRating.Ratings(this.Post).OrderByDescending(x => x.DateCreated).Take(this.Page * this.PageSize))
+            {
+                var socialProfile = rating.SocialProfileId != null ? _socialProfile.ReadFromCache().Id(rating.SocialProfileId.Value) : null;
+                <div class="col-12 col-xl-4 text-center mt-3">
+                    <div class="p-3">
+                        @if (socialProfile != null)
+                        {
+                            <SocialProfileHeader Entity="socialProfile"></SocialProfileHeader>
+                        }
+                        else
+                        {
+                            <div class="anonymous-rating">
+                                <i class="fa-solid fa-user fs-3"></i><br />
+                                <label class="fw-bold" style="font-size: 20px;">@Text.Lower("Anonymous")</label>
+                            </div>
+                        }
+                        <div>@rating.DateCreated</div>
+                        <div>
+                            @Text.Lower("Rating"): <i class="fa-solid fa-star"></i> @rating.Rating
+                            @if (rating.Rating == 1)
+                            {
+                                <i class="fa-solid fa-triangle-exclamation ps-1" title="@Text.Lower("Rating 1 Is Not Accounted For In The Final Rating")"></i>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <button class="d-block mt-3 w-50 text-center btn btn-light border @(_disableLoadMore ? "cursor-not-allowed" : null)" disabled="@this._disableLoadMore" @onclick="() => {this.Page += 1; this.OnPageChanged.InvokeAsync(this.Page);}" style="margin:auto;">@Text.Lower("See more ratings")</button>
+    </div>
+}
+
+@code {
+    [Parameter] public int Page { get; set; } = 1;
+    [Parameter] public int PageSize { get; set; } = 9;
+    [Parameter] public OrigamiPost? Post { get; set; }
+
+    [Parameter] public EventCallback<int> OnPageChanged{ get; set; }
+
+    private bool _disableLoadMore
+    {
+        get => this.Page * this.PageSize >= _postRating.Ratings(this.Post!).Count();
+    }
+}

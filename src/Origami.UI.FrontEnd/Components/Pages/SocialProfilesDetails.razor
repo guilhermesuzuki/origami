@@ -1,0 +1,448 @@
+﻿@page "/socialprofiles/{SocialProfileId:guid}"
+@inherits BasicPage
+
+@inject ISocialProfileRepository _socialProfile
+@inject ISocialProfileDeleteRepository _socialProfileForDeletion
+@inject IBlogRepository _blog
+@inject IPostRepository _post
+@inject IVideoRepository _video
+
+@inject IPostCommentReactionRepository _postCommentReaction
+@inject IPostCommentRepository _postComment
+@inject IPostRatingRepository _postRating
+
+@inject IVideoCommentReactionRepository _videoCommentReaction
+@inject IVideoCommentRepository _videoComment
+@inject IVideoRatingRepository _videoRating
+
+@inject ISubscriberRepository _subscriber
+@inject IDialogService _dialogService
+
+<Root>
+    @if (this.SocialProfile.New == false)
+    {
+        <style>
+            .social-profile ul { list-style: none; padding-left: 0; margin-bottom: 0; }
+        </style>
+        <div class="social-profile-details">
+            <div class="row">
+                <div class="col-12 col-xl-4">
+                    <div class="p-3 shadow-lg position-sticky" style="top: 1rem;">
+                        <div class="w-100 text-center fs-4 p-2">
+                            <i class="fa-solid fa-user"></i>
+                            @Text.Lower("Profile Information")
+                        </div>
+                        @if (SocialProfile.ProfilePictureUrl.Has() == true)
+                        {
+                            <div class="row mt-3">
+                                <div class="col-12 text-center">
+                                    <div class="fs-5">@Text.Lower("Logo • Avatar")</div>
+                                    <img src="@SocialProfile.ProfilePictureUrl" onerror="this.onerror=null; this.src='@(OrigamiConstants.NoUser)'" height="128" />
+                                </div>
+                            </div>
+                        }
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <div class="fs-5">@Text.Lower("Name")</div>
+                                <SocialProfileHeaderLite ProfilePicture="false" Entity="this.SocialProfile"></SocialProfileHeaderLite>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <div class="fs-5">@Text.Lower("Subscriber")?</div>
+                                @if (this.Subscriber()?.IsDeleted == false)
+                                {
+                                    <span class="yes">@Text.Lower("Yes, since"): @(this.Subscriber()!.DateModified ?? this.Subscriber()!.DateCreated)</span>
+                                }
+                                else
+                                {
+                                    <span class="no">@Text.Lower("No")</span>
+                                }
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12 col-xl-6">
+                                <div class="fs-5">
+                                    @Text.Lower("Ratings")
+                                </div>
+                                <ul>
+                                    <li>
+                                        <i class="bi bi-file-earmark-text-fill"></i>
+                                        @Text.Lower("{0} On Posts", _postRating.RatingsFromProfile(this.SocialProfile).Count())
+                                    </li>
+                                    <li>
+                                        <i class="bi bi-file-earmark-play-fill"></i>
+                                        @Text.Lower("{0} On Videos", _videoRating.RatingsFromProfile(this.SocialProfile).Count())
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-12 col-xl-6">
+                                <div class="fs-5">
+                                    @Text.Lower("Reactions")
+                                </div>
+                                <ul>
+                                    <li>
+                                        <i class="bi bi-file-earmark-text-fill"></i>
+                                        @Text.Lower("{0} On Post Comments", _postCommentReaction.ReactionsFromProfile(this.SocialProfile).Count())
+                                    </li>
+                                    <li>
+                                        <i class="bi bi-file-earmark-play-fill"></i>
+                                        @Text.Lower("{0} On Video Comments", _videoCommentReaction.ReactionsFromProfile(this.SocialProfile).Count())
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <div class="fs-5">
+                                    @Text.Lower("Comments [Including Deleted]")
+                                </div>
+                                <ul>
+                                    <li>
+                                        <i class="bi bi-file-earmark-text-fill"></i>
+                                        @Text.Lower("{0} On Posts", _postComment.CommentsFromProfile(this.SocialProfile, true).Count())
+                                    </li>
+                                    <li>
+                                        <i class="bi bi-file-earmark-play-fill"></i>
+                                        @Text.Lower("{0} On Videos", _videoComment.CommentsFromProfile(this.SocialProfile, true).Count())
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <AuthorizeView>
+                            <Authorized>
+                                @if (this.SocialProfileId == this.UserFacade.SocialProfile.Id)
+                                {
+                                    <button class="w-100 mt-3 btn bg-warning text-white" @onclick="this.WipeData">
+                                        <i class="fa-solid fa-triangle-exclamation pe-1"></i>
+                                        @Text.Lower("Wipe all data from the website")
+                                    </button>
+                                    @if (this.Subscriber() == null || this.Subscriber()!.IsDeleted == true)
+                                    {
+                                        <button class="w-100 mt-3 btn bg-success text-white" @onclick="this.Subscribe">
+                                            <i class="fa-solid fa-user-plus pe-1"></i>
+                                            @Text.Lower("Subscribe to the website")
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button class="w-100 mt-3 btn bg-danger text-white" @onclick="this.Unsubscribe">
+                                            <i class="fa-solid fa-user-minus pe-1"></i>
+                                            @Text.Lower("Unsubscribe from the website")
+                                        </button>
+                                    }
+                                    @* incognito mode *@
+                                    @if (this.UserFacade.SocialProfile.IsModerator)
+                                    {
+                                        @if (this._incognitoMode == true)
+                                        {
+                                            <button class="w-100 p-2 btn bg-danger text-white border mt-3" @onclick="this.LeaveIncognito">
+                                                <i class="fa-solid fa-user-secret"></i>
+                                                @Text.Lower("Leave incognito")
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <button class="w-100 p-2 btn bg-danger text-white border mt-3" @onclick="this.EnterIncognito">
+                                                <i class="fa-solid fa-user-secret"></i>
+                                                @Text.Lower("Enter incognito")
+                                            </button>
+                                        }
+                                    }
+                                    <button class="w-100 p-2 btn border-danger text-danger border mt-3" @onclick="this.Logout">
+                                        <i class="fa-solid fa-right-from-bracket"></i>
+                                        @Text.Lower("Logout")
+                                    </button>
+                                }
+                            </Authorized>
+                        </AuthorizeView>
+                    </div>
+                </div>
+                <div class="col-12 col-xl-8">
+                    <div class="p-3 shadow-lg">
+                        <label class="w-100 text-center fs-4 p-2">
+                            <i class="fa-solid fa-user"></i>
+                            @Text.Lower("Interactions (Last 50)")
+                        </label>
+                        <MudDataGrid Class="border-top" Items="this.Interactions" SortMode="SortMode.None" Filterable="false">
+                            <Columns>
+                                <PropertyColumn Property="x => x.DateCreated" Title="@Text.Lower("Date")"></PropertyColumn>
+                                <TemplateColumn CellStyle="width: 85%;">
+                                    <CellTemplate>
+                                        @if (context.Item is Core.Models.OrigamiPostCommentReaction postReaction)
+                                        {
+                                            var comment = _postComment.ReadFromCache().Id(postReaction.CommentId);
+                                            var post = _post.ReadFromCache().Id(comment!.PostId);
+                                            <div class="">
+                                                <span class="fw-bold">@Text.Lower("Reacted {0} To:", postReaction.Reaction)</span>
+                                                <PostHeaderLite Entity="post"></PostHeaderLite>
+                                                <CommentLite Class="mt-2 p-2 frame-purple" Entity="comment"></CommentLite>
+                                            </div>
+                                        }
+                                        @if (context.Item is OrigamiPostComment postComment)
+                                        {
+                                            var post = _post.ReadFromCache().Id(postComment.PostId);
+                                            <div class="">
+                                                <span class="fw-bold">@Text.Lower("Commented On Post:")</span>
+                                                <PostHeaderLite Entity="post"></PostHeaderLite>
+                                                <CommentLite Class="mt-2 p-2 frame-purple" Entity="postComment"></CommentLite>
+                                            </div>
+                                        }
+                                        @if (context.Item is OrigamiPostRating postRating)
+                                        {
+                                            var post = _post.ReadFromCache().Id(postRating.PostId);
+                                            <div class="">
+                                                <span class="fw-bold">@Text.Lower("Rated {0} On:", postRating.Rating)</span>
+                                                <PostHeaderLite Entity="post"></PostHeaderLite>
+                                            </div>
+                                        }
+                                        @if (context.Item is OrigamiVideoCommentReaction videoReaction)
+                                        {
+                                            var comment = _videoComment.ReadFromCache().Id(videoReaction.CommentId);
+                                            var video = _video.ReadFromCache().Id(comment!.VideoId);
+                                            <div class="">
+                                                <span class="fw-bold">@Text.Lower("Reacted {0} To:", videoReaction.Reaction)</span>
+                                                <VideoHeaderLite Entity="video"></VideoHeaderLite>
+                                                <CommentLite Class="mt-2 p-2 frame-purple" Entity="comment"></CommentLite>
+                                            </div>
+                                        }
+                                        @if (context.Item is OrigamiVideoComment videoComment)
+                                        {
+                                            var video = _video.ReadFromCache().Id(videoComment.VideoId);
+                                            <div class="">
+                                                <span class="fw-bold">@Text.Lower("Commented On Video:")</span>
+                                                <VideoHeaderLite Entity="video"></VideoHeaderLite>
+                                                <CommentLite Class="mt-2 p-2 frame-purple" Entity="videoComment"></CommentLite>
+                                            </div>
+                                        }
+                                        @if (context.Item is OrigamiVideoRating videoRating)
+                                        {
+                                            var video = _video.ReadFromCache().Id(videoRating.VideoId);
+                                            <div class="p-2">
+                                                <span class="fw-bold">@Text.Lower("Rated {0} On:", videoRating.Rating)</span>
+                                                <VideoHeaderLite Entity="video"></VideoHeaderLite>
+                                            </div>
+                                        }
+                                    </CellTemplate>
+                                </TemplateColumn>
+                            </Columns>
+                            <PagerContent>
+                                <MudDataGridPager T="IDateCreated" PageSizeOptions="new[] { 5, }"></MudDataGridPager>
+                            </PagerContent>
+                        </MudDataGrid>
+                    </div>
+                </div>
+            </div>
+            <AuthorizeView>
+                <Authorized>
+                    @if (this.SocialProfileId == this.UserFacade.SocialProfile.Id)
+                    {
+                        @if (this.SocialProfileForDeletions != null && this.SocialProfileForDeletions.Any() == true)
+                        {
+                            <div class="row mt-6">
+                                <div class="col-12">
+                                    <div class="p-3 shadow-lg">
+                                        <label class="w-100 text-center fs-4 p-2">
+                                            <i class="fa-solid fa-user"></i>
+                                            @Text.Lower("Requests for information wipe-out")
+                                        </label>
+                                        <MudDataGrid Class="border-top" Items="this.SocialProfileForDeletions" SortMode="SortMode.None" Filterable="false">
+                                            <Columns>
+                                                <PropertyColumn Property="x => x.DateCreated" Title="@Text.Lower("Request Date")"></PropertyColumn>
+                                                <PropertyColumn Property="x => x.PostComments" Context="gContext">
+                                                    <HeaderTemplate>
+                                                        <i class="fa-solid fa-comment"></i>
+                                                        @Text.Lower("Comments on posts")<br />
+                                                        @Text.Lower("[At the time]")
+                                                    </HeaderTemplate>
+                                                </PropertyColumn>
+                                                <PropertyColumn Property="x => x.PostCommentReactions" Context="gContext">
+                                                    <HeaderTemplate>
+                                                        <i class="fa-solid fa-thumbs-up"></i>
+                                                        @Text.Lower("Comment reactions on posts")<br />
+                                                        @Text.Lower("[At the time]")
+                                                    </HeaderTemplate>
+                                                </PropertyColumn>
+                                                <PropertyColumn Property="x => x.PostRatings" Context="gContext">
+                                                    <HeaderTemplate>
+                                                        <i class="fa-solid fa-star"></i>
+                                                        @Text.Lower("Ratings on posts")<br />
+                                                        @Text.Lower("[At the time]")
+                                                    </HeaderTemplate>
+                                                </PropertyColumn>
+                                                <PropertyColumn Property="x => x.VideoComments" Context="gContext">
+                                                    <HeaderTemplate>
+                                                        <i class="fa-solid fa-comment"></i>
+                                                        @Text.Lower("Comments on videos")<br />
+                                                        @Text.Lower("[At the time]")
+                                                    </HeaderTemplate>
+                                                </PropertyColumn>
+                                                <PropertyColumn Property="x => x.VideoCommentReactions" Context="gContext">
+                                                    <HeaderTemplate>
+                                                        <i class="fa-solid fa-thumbs-up"></i>
+                                                        @Text.Lower("Comment reactions on videos")<br />
+                                                        @Text.Lower("[At the time]")
+                                                    </HeaderTemplate>
+                                                </PropertyColumn>
+                                                <PropertyColumn Property="x => x.VideoRatings" Context="gContext">
+                                                    <HeaderTemplate>
+                                                        <i class="fa-solid fa-star"></i>
+                                                        @Text.Lower("Ratings on videos")<br />
+                                                        @Text.Lower("[At the time]")
+                                                    </HeaderTemplate>
+                                                </PropertyColumn>
+                                            </Columns>
+                                        </MudDataGrid>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                </Authorized>
+            </AuthorizeView>
+        </div>
+    }
+    else
+    {
+        <NothingToSeeHere Subtitle="@Text.Lower("Profile Not Found")"></NothingToSeeHere>
+    }
+</Root>
+
+@code {
+    protected OrigamiSocialProfile SocialProfile = new();
+    protected IEnumerable<OrigamiSocialProfileDelete>? SocialProfileForDeletions;
+    protected IEnumerable<IDateCreated>? Interactions;
+
+    [Parameter] public Guid SocialProfileId { get; set; }
+
+    private bool _incognitoMode = false;
+
+    protected void LoadSocialProfile()
+    {
+        this.SocialProfile = _socialProfile.ReadFromCache().NonDeleted().Id(this.SocialProfileId) ?? new();
+    }
+
+    protected void LoadInteractions()
+    {
+        if (this.SocialProfile.Has() == false) return;
+
+        var interactions = new List<IDateCreated>();
+
+        //post comment reactions
+        interactions.AddRange(this._postCommentReaction.ReactionsFromProfile(this.SocialProfile)
+            .OrderByDescending(x => x.DateCreated)
+            .Take(50));
+
+        //post comments
+        interactions.AddRange(this._postComment.CommentsFromProfile(this.SocialProfile, this.SocialProfileId == UserFacade.SocialProfile.Id)
+            .OrderByDescending(x => x.DateCreated)
+            .Take(50));
+
+        //post ratings
+        interactions.AddRange(this._postRating.RatingsFromProfile(this.SocialProfile)
+            .OrderByDescending(x => x.DateCreated)
+            .Take(50));
+
+        //video comment reactions
+        interactions.AddRange(this._videoCommentReaction.ReactionsFromProfile(this.SocialProfile)
+            .OrderByDescending(x => x.DateCreated)
+            .Take(50));
+
+        //video comments
+        interactions.AddRange(this._videoComment.CommentsFromProfile(this.SocialProfile, this.SocialProfileId == UserFacade.SocialProfile.Id)
+            .OrderByDescending(x => x.DateCreated)
+            .Take(50));
+
+        //video ratings
+        interactions.AddRange(this._videoRating.RatingsFromProfile(this.SocialProfile)
+            .OrderByDescending(x => x.DateCreated)
+            .Take(50));
+
+        //loads the interactions
+        this.Interactions = interactions.OrderByDescending(x => x.DateCreated).Take(50);
+    }
+
+    protected void LoadSocialProfileDeletions()
+    {
+        if (this.SocialProfile.Has() == false) return;
+
+        this.SocialProfileForDeletions = _socialProfileForDeletion.ReadFromDatabase()
+            .Where(x => x.SocialProfileId == this.SocialProfileId)
+            .OrderByDescending(x => x.DateCreated)
+            .ToList();
+    }
+
+    /// <summary>
+    /// Wipes the user's data from the website (like reactions, comments and ratings)
+    /// </summary>
+    private async Task WipeData()
+    {
+        var answer = await this._dialogService.ShowMessageBox(
+            title: Text.Upper("Are you sure?"),
+            message: Text.Lower("This will delete all your data from the website"),
+            yesText: Text.Lower("Yes"),
+            noText: Text.Lower("No")) ?? false;
+
+        if (answer)
+        {
+            var context = new DataOperationContext<OrigamiSocialProfile>(new(), DateTime.UtcNow, this.UserFacade.SocialProfile);
+
+            UserFacade.Result = this._socialProfileForDeletion.WipeDataOut(context, false);
+
+            this.LoadSocialProfile();
+            this.LoadInteractions();
+            this.LoadSocialProfileDeletions();
+        }
+    }
+
+    private OrigamiSubscriber? Subscriber()
+    {
+        return _subscriber.ReadFromCache()
+            .NonDeleted()
+            .Where(x => x.SocialProfileId == this.SocialProfileId)
+            .Where(x => x.IsVerified)
+            .FirstOrDefault();
+    }
+
+    /// <summary>
+    /// The user leaves the incognito mode
+    /// </summary>
+    private async Task LeaveIncognito()
+    {
+        var remove = await this.JSRuntime.InvokeAsync<bool>("$.removeCookie", "incognito-mode", new { path = "/" });
+        if (remove == true) this.NavigationManager.NavigateTo(this.NavigationManager.Uri, true);
+    }
+
+    /// <summary>
+    /// The user enters the incognito mode
+    /// </summary>
+    private async Task EnterIncognito()
+    {
+        var remove = await this.JSRuntime.InvokeAsync<bool>("$.removeCookie", "incognito-mode", new { path = "/" });
+        var add = await this.JSRuntime.InvokeAsync<string>("$.cookie", "incognito-mode", 1, new { path = "/", expires = 365, });
+        this.NavigationManager.NavigateTo(this.NavigationManager.Uri, true);
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        this.LoadSocialProfile();
+        this.LoadSocialProfileDeletions();
+        this.LoadInteractions();
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+        this._loadIncognitoMode(firstRender);
+    }
+
+    private async void _loadIncognitoMode(bool firstRender)
+    {
+        if (firstRender)
+        {
+            this._incognitoMode = await this.JSRuntime.IncognitoModeAsync();
+            this.StateHasChanged();
+        }
+    }
+}

@@ -1,0 +1,46 @@
+﻿@page "/"
+@page "/blogs/{Slug}"
+@inherits BasicPage
+<Root>
+    <HeadContent>
+        <meta property="og:title" content="@PageTitle.GetTitle()" />
+        <meta property="og:description" content="@this.Super.Settings.GetSettings().Description" />
+        <meta property="og:image" content="@this.Super.Settings.GetSettings().LogoUrl" />
+    </HeadContent>
+    <FrontPage BlogId="this.BlogId" Class="mb-6"></FrontPage>
+    <VideoMostPopular BlogId="this.BlogId" Class="mb-6"></VideoMostPopular>
+    <VideoList BlogId="this.BlogId" Class="mb-6" Page="this.VideoPage"></VideoList>
+    <PostMostPopular BlogId="this.BlogId" Class="mb-6"></PostMostPopular>
+    <PostList BlogId="this.BlogId" Class="" Page="this.PostPage"></PostList>
+    @if (this.Super.EmptyHome(BlogId) == true)
+    {
+        <NothingToSeeHere Class="p-3 border shadow-sm" Subtitle="@Text.Lower("No content for now")"></NothingToSeeHere>
+    }
+</Root>
+@code {
+    private OrigamiBlog _blog = new();
+
+    [Parameter] public string Slug { get; set; } = string.Empty;
+
+    protected int PostPage { get; set; } = 1;
+    protected int VideoPage { get; set; } = 1;
+
+    /// <summary>
+    /// Blog ID based on the provided slug.
+    /// </summary>
+    private OrigamiBlog GetBlog() => this.Super.Blogs.ReadFromCache().Slug(Slug) ?? this.Super.Blogs.GetPrimary();
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        this.PageTitle.SetTitle();
+        return base.OnAfterRenderAsync(firstRender);
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        this._blog = this.GetBlog();
+    }
+
+    public override Guid BlogId => this._blog.Id;
+}

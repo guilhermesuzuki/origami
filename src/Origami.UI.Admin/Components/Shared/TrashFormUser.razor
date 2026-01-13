@@ -1,0 +1,51 @@
+﻿@inherits BasicForm<OrigamiUser>
+
+<div class="trash-form-user @Class">
+    <div class="row">
+        <div class="col-12">
+            <BasicHeaderNotes Entity="this.Entity"></BasicHeaderNotes>
+            <div class="text-center p-3 mt-3 border">
+                <HeaderImageLite Entity="this.Entity" ImgMaxWidth="256px"></HeaderImageLite>
+            </div>
+            <BasicHeader Class="mt-3" Entity="this.Entity"></BasicHeader>
+            <ul class="inline-list mt-3">
+                <li class="">
+                    <MudTextField @bind-Value="this.Entity.Username"
+                                  HelperText="@Text.Lower("Username")"
+                                  ReadOnly="true"
+                                  Required="true"></MudTextField>
+                </li>
+                <li class="">
+                    <MudTextField @bind-Value="this.Entity.DisplayName"
+                                  ReadOnly="true"
+                                  Required="true"
+                                  HelperText="@Text.Lower("Display name")"></MudTextField>
+                </li>
+            </ul>
+            <ul class="inline-list mt-3">
+                <li class="">
+                    <MudTextField @bind-Value="this.Entity.EmailAddress"
+                                  HelperText="@Text.Lower("E-mail")"
+                                  InputType="InputType.Email"
+                                  ReadOnly="true"
+                                  Required="true"></MudTextField>
+                </li>
+            </ul>
+            <ul class="inline-list mt-3">
+                <li>
+                    <MudTextField @bind-Value="this.Entity.FirstName"
+                                  ReadOnly="true"
+                                  HelperText="@Text.Lower("First name")"></MudTextField>
+                </li>
+                <li>
+                    <MudTextField @bind-Value="this.Entity.LastName"
+                                  ReadOnly="true"
+                                  HelperText="@Text.Lower("Last name")"></MudTextField>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+@code {
+
+}

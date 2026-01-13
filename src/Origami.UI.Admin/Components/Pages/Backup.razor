@@ -1,0 +1,190 @@
+﻿@page "/backups"
+@using Origami.Core.Models.FileSystem
+@inherits BasicAdminGrid<OrigamiBackup>
+@implements IFilter
+
+<Root Access="this.CanAccess()">
+    <HeaderTemplate>
+        <div class="p-3 border-bottom">
+            <div class="row">
+                <div class="d-inline-flex align-items-center col-12 col-xxl-8">
+                    <ul class="inline-list w-100">
+                        <li style="width:80%;">
+                            <i class="fa-solid fa-database pe-1"></i>
+                            <span class="pe-3">@Text.Get("Backups", Text.Styles.Uppercase)</span>
+                            <div class="btn-group pe-1">
+                                <button class="btn btn-light text-danger border border-danger" disabled="@this.DisableTheDeleteButton" @onclick="this.PurgeSelectedEntities">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            </div>
+                            <div class="btn-group pe-1">
+                                <button class="btn btn-success text-white" title="@Text.Lower("Backup files and database")" disabled="@this.DisableTheBackupButton" @onclick="this.BackupTheSystem">
+                                    <i class="bi bi-database-fill-add"></i>
+                                    <span>@Text.Lower("Backup")</span>
+                                </button>
+                                <button class="btn btn-warning text-white" title="@Text.Lower("Restore files and database from a backup in the list below")" disabled="@this.DisableTheRestoreButton">
+                                    <i class="bi bi-database-fill-exclamation"></i>
+                                    <span>@Text.Lower("Restore from list")</span>
+                                </button>
+                            </div>
+                            <div class="btn-group pe-1">
+                                <button class="btn btn-danger text-white" title="@Text.Lower("Restore files and database from a zip file")">
+                                    <i class="bi bi-database-fill-exclamation"></i>
+                                    <span>@Text.Lower("Restore from a zip file")</span>
+                                </button>
+                            </div>
+                            @* <div class="btn-group pe-1">
+                                <button class="btn btn-success text-white" title="@Text.Lower("Mark as front-page")" disabled="@this.DisableTheFrontPageButton" @onclick="this.MarkAsFrontPage">
+                                    <i class="fa-solid fa-file-circle-check"></i>
+                                </button>
+                                <button class="btn btn-warning text-white" title="@Text.Lower("Unmark as front-page")" disabled="@this.DisableTheFrontPageButton" @onclick="this.UnmarkAsFrontPage">
+                                    <i class="fa-solid fa-file-circle-xmark"></i>
+                                </button>
+                            </div> *@
+                        </li>
+                        <li style="width:20%;">
+                            @* <MudSelect T="string" HelperText="@Text.Lower("Filter")" @bind-Value:get="Filter" @bind-Value:set="(filter) => SetFilterAndRefreshUI(filter)">
+                                <MudSelectItem T="string" Value="@(new string("all"))">@Text.Original("All")</MudSelectItem>
+                                <MudSelectItem T="string" Value="@(new string("published"))">@Text.Original("Published")</MudSelectItem>
+                                <MudSelectItem T="string" Value="@(new string("drafts"))">@Text.Original("Drafts")</MudSelectItem>
+                            </MudSelect> *@
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-12 col-xxl-4">
+                    <BlogSelect Style="visibility:hidden;"></BlogSelect>
+                </div>
+            </div>
+        </div>
+        @* <div class="p-3 border-bottom">
+            <div class="row">
+                <div class="col-12">
+                    <SearchLite T="OrigamiBackup" OnHitSelected="this.OnSearchResultSelected"></SearchLite>
+                </div>
+            </div>
+        </div> *@
+    </HeaderTemplate>
+    <ContentTemplate>
+        <div class="p-3">
+            <div class="row">
+                @* <div class="datagrid-options col-12 text-right mb-1">
+                    <DataGridOptions Deleted="this.IncludeDeletedEntitiesInDataGrid" DeletedChanged="this.OnIncludeDeletedEntitiesChanged"></DataGridOptions>
+                </div> *@
+                <div class="pages col-12">
+                    <MudDataGrid @ref="DataGrid" T="OrigamiBackup" ServerData="GetEntities" Filterable="false" SortMode="SortMode.None" Class="border" SelectedItems="this.SelectedEntities" MultiSelection="false" SelectedItemsChanged="this.SelectedEntitiesChanged"
+                                 RowClassFunc="this.RowClassFunc" Bordered="true" SelectOnRowClick="false">
+                        <Columns>
+                            <SelectColumn T="OrigamiBackup"></SelectColumn>
+                            <TemplateColumn Title="@Text.Upper("Title")">
+                                <CellTemplate>
+                                    <div>
+                                        @if (context.Item is OrigamiBackup)
+                                        {
+                                            <div>
+                                                <i class="bi bi-database-fill-add"></i>
+                                                @Text.Original("Backup")
+                                            </div>
+                                        }
+                                        @if (context.Item is OrigamiBackupRestore)
+                                        {
+                                            <div>
+                                                <i class="bi bi-database-fill-exclamation"></i>
+                                                @Text.Original("Restore")
+                                            </div>
+                                        }
+                                        <Id Class="x-small" Entity="context.Item"></Id>
+                                    </div>
+                                </CellTemplate>
+                            </TemplateColumn>
+                            <TemplateColumn Title="@Text.Upper("User")" CellClass="col-2 text-center">
+                                <CellTemplate>
+                                    @if (context.Item.UserId != Guid.Empty)
+                                    {
+                                        var user = this.Super.Users.ReadFromCache().Id(context.Item.UserId);
+                                        @if (user != null)
+                                        {
+                                            <span><i class="bi bi-person-fill"></i>@user.Username (@user.DisplayName)</span>
+                                        }
+                                    }
+                                </CellTemplate>
+                            </TemplateColumn>
+                            <TemplateColumn Title="@Text.Upper("Download")" CellClass="col-1 text-center">
+                                <CellTemplate>
+                                    @if (this.Super.Files.FileExists(context.Item.File) == true)
+                                    {
+                                        var file = this.Super.Files.GetFile(context.Item.File)!;
+                                        <button @onclick="() => _downloadFile(file)" @onclick:stopPropagation="true">
+                                            <i class="fa-solid fa-file-arrow-down"></i>
+                                        </button>
+                                        <div class="x-small">@context.Item.File</div>
+                                    }
+                                </CellTemplate>
+                            </TemplateColumn>
+                        </Columns>
+                        <PagerContent>
+                            <MudDataGridPager T="OrigamiBackup" />
+                        </PagerContent>
+                        <NoRecordsContent>
+                            <NoEntriesWereFound></NoEntriesWereFound>
+                        </NoRecordsContent>
+                    </MudDataGrid>
+                </div>
+                <div class="pages-form col-12 mt-3">
+                </div>
+            </div>
+        </div>
+    </ContentTemplate>
+</Root>
+@code {
+
+    protected override string DefaultOrdering => $"{nameof(OrigamiBackup.DateCreated)}";
+
+    /// <summary>
+    /// Disables the restore button if a restore process is currently running.
+    /// </summary>
+    protected override bool DisableTheRestoreButton
+    {
+        get
+        {
+            if (this.Repository is IBackupRestoreRepository backupRestoreRepository)
+            {
+                return base.DisableTheRestoreButton && backupRestoreRepository.CurrentProcess != null;
+            }
+            throw new InvalidOperationException();
+        }
+    }
+
+    protected bool DisableTheBackupButton
+    {
+        get
+        {
+            if (this.Repository is IBackupRestoreRepository backupRestoreRepository)
+            {
+                return backupRestoreRepository.CurrentProcess != null;
+            }
+            return false;
+        }
+    }
+
+    protected async Task BackupTheSystem()
+    {
+        if (this.Repository is IBackupRestoreRepository backupRestoreRepository)
+        {
+            using (var transaction = new TransactionScope())
+            {
+                var hub = await backupRestoreRepository.Backup(this.UserFacade.User);
+                if (hub.Ok)
+                {
+                    transaction.Complete();
+                    this.DataGrid?.ReloadServerData();
+                }
+                UserFacade.Result = hub;
+            }
+        }
+    }
+
+    private async Task _downloadFile(OrigamiSystemFile file)
+    {
+        await this.JSRuntime.InvokeVoidAsync("origami.common.downloadFileFromUrl", file.WebPath);
+    }
+}

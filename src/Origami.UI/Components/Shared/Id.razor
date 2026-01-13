@@ -1,0 +1,72 @@
+﻿@inherits Basic
+@implements IEntityNull<IId>
+
+@if (this.Entity != null)
+{
+    var isDeleted = this.Entity is IDeleted deleted && deleted.IsDeleted;
+    isDeleted |= this.Entity is OrigamiCategory category && this.Super.IsParentDeleted(category) == true;
+    isDeleted |= this.Entity is OrigamiPage page && this.Super.IsParentDeleted(page) == true;
+    <span class="id @Class">
+        <span class="col-1">
+            @if (this.Entity is INanoId nanoId)
+            {
+                <span class="me-1" title="@Text.Original("Nano Id")">
+                    <i class="bi bi-key-fill"></i>
+                    <span>@nanoId.NanoId</span>
+                </span>
+            }
+            else
+            {
+                <span class="me-1" title="@Text.Original("Id")">
+                    <i class="bi bi-key-fill"></i>
+                    <span>@this.Entity.Id</span>
+                </span>
+            }
+            @if (this.Entity is IVersion version && version.Version.SequenceEqual([]) == false)
+            {
+                <span class="me-1" title="@Text.Original("Version")">[@version.Version.HexString()]</span>
+            }
+            @if (isDeleted)
+            {
+                <span class="is-deleted me-1 text-danger">
+                    <i class="bi bi-trash-fill"></i>
+                    <span>@Text.Lower("Deleted")</span>
+                </span>
+            }
+            @if (this.Entity is IDraft draft && draft.IsDraft.GetValueOrDefault() == true)
+            {
+                <span class="me-1 text-info">
+                    <i class="bi bi-exclamation-diamond-fill"></i>
+                    @Text.Lower("Draft")
+                </span>
+            }
+        </span>
+        <span class="col-2">
+            @if (this.Entity is IDateCreated dateCreated)
+            {
+                <span class="me-1" title="@Text.Original("Date Created")">
+                    <i class="bi bi-calendar-plus-fill"></i>
+                    <span class="">@dateCreated.DateCreated.ToString()</span>
+                </span>
+            }
+            @if (this.Entity is IDateModified dateModified && dateModified.DateModified.HasValue)
+            {
+                <span class="me-1" title="@Text.Original("Date Modified")">
+                    <i class="bi bi-calendar-check-fill"></i>
+                    <span class="">@dateModified.DateModified.ToString()</span>
+                </span>
+            }
+            @if (this.Entity is IPublished published && published.IsPublished && published.DatePublished.HasValue)
+            {
+                <span class="me-1" title="@Text.Original("Date Published")">
+                    <i class="bi bi-calendar-heart-fill"></i>
+                    <span class="">@published.DatePublished.ToString()</span>
+                </span>
+            }
+        </span>
+    </span>
+}
+
+@code {
+    [Parameter] public IId? Entity { get; set; }
+}

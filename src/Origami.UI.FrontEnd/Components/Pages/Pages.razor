@@ -1,0 +1,20 @@
+﻿@page "/blogs/{Slug}/pages"
+@inherits BasicPage
+@inject ISuperRepository _super
+
+<Root>
+    <BlogHeaderLite2 Class="text-center fs-1" Entity="this.GetBlog()" DisplayBlogNameEvenWithoutHeaderImage="false"></BlogHeaderLite2>
+    <PageList Class="mt-3" BlogId="@this.BlogId" Page="@Page" ShowFakes="true"></PageList>
+</Root>
+
+@code {
+    [Parameter] public string Slug { get; set; } = string.Empty;
+    [Parameter] public int Page { get; set; } = 1;
+
+    /// <summary>
+    /// Blog ID based on the provided slug.
+    /// </summary>
+    private OrigamiBlog GetBlog() => _super.Blogs.ReadFromCache().Slug(Slug) ?? new();
+
+    public override Guid BlogId => this.GetBlog().Id;
+}

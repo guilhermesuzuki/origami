@@ -1,0 +1,17 @@
+﻿@inherits Basic
+@implements IEntityNull<OrigamiSpecialPage>
+
+@if (this.Entity != null)
+{
+    <span class="page-header-lite-2 position-relative @Class">
+        <span class="d-inline-flex align-items-center" title="@Entity.Title">
+            <span class="language d-inline-block @Entity.LanguageWrittenOn me-1"></span>
+            <span class="ellipsis">@Entity.Title</span>
+        </span>
+        <Id Class="d-block x-small" Entity="Entity"></Id>
+    </span>
+}
+
+@code {
+    [Parameter] public OrigamiSpecialPage? Entity { get; set; }
+}

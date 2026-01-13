@@ -1,0 +1,167 @@
+﻿@inherits Basic
+@typeparam T where T: class, IId, new()
+
+<div class="search-lite @Class">
+    <div class="search-field position-relative">
+        <ul class="expand-size">
+            <li>
+                <MudTextField T="string"
+                              FullWidth="true"
+                              Immediate="true"
+                              HelperText="@Text.Lower("Type in here to search")"
+                              @bind-Value:get="@_search"
+                              @bind-Value:set="@_startQuery"></MudTextField>
+            </li>
+            <li class="position-relative ms-2" style="flex:none;">
+                <button class="m-auto" @onclick="() => this._startQuery(string.Empty)" disabled="@(this._search.Has() ? false : true)">
+                    <i class="fa-solid fa-broom"></i>
+                </button>
+            </li>
+        </ul>
+    </div>
+    @if (this._hits.Any() == true)
+    {
+        <div class="search-results mt-3 border shadow-lg p-3">
+            <div class="row">
+                @foreach (var hit in _hits)
+                {
+                    <div class="cursor-pointer col-12 col-xxl-3" @onclick="() => OnSelect(hit)" @onclick:stopPropagation="true">
+                        @if (hit is OrigamiBlog blog)
+                        {
+                            <BlogHeaderLite Entity="blog"></BlogHeaderLite>
+                        }
+                        else if (hit is OrigamiPage page)
+                        {
+                            <PageHeaderLite Entity="page"></PageHeaderLite>
+                        }
+                        else if (hit is OrigamiPost post)
+                        {
+                            <PostHeaderLite Entity="post"></PostHeaderLite>
+                        }
+                        else if (hit is OrigamiVideo video)
+                        {
+                            <VideoHeaderLite Entity="video"></VideoHeaderLite>
+                        }
+                        else if (hit is OrigamiPostComment postComment)
+                        {
+                            <CommentLite Entity="postComment"></CommentLite>
+                        }
+                        else if (hit is OrigamiVideoComment videoComment)
+                        {
+                            <CommentLite Entity="videoComment"></CommentLite>
+                        }
+                        else if (hit is OrigamiCategory category)
+                        {
+                            <CategoryHeaderLite Entity="category"></CategoryHeaderLite>
+                        }
+                        else if (hit is OrigamiUser user)
+                        {
+                            <UserHeaderLite Entity="user"></UserHeaderLite>
+                        }
+                        else if (hit is OrigamiRole role)
+                        {
+                            <RoleHeaderLite Entity="role"></RoleHeaderLite>
+                        }
+                        else if (hit is OrigamiSocialProfile socialProfile)
+                        {
+                            <SocialProfileHeaderLite Entity="socialProfile"></SocialProfileHeaderLite>
+                        }
+                        else if (hit is OrigamiTag tag)
+                        {
+                            <TagHeaderLite Entity="tag"></TagHeaderLite>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    else if (this._search.Has() == true)
+    {
+        <NothingToSeeHere Class="mt-3 shadow-lg p-3 border"></NothingToSeeHere>
+    }
+</div>
+
+@code {
+    private string _search = string.Empty;
+
+    /// <summary>
+    /// List of hits found in the search
+    /// </summary>
+    private IEnumerable<T> _hits = [];
+
+    /// <summary>
+    /// Search timer
+    /// </summary>
+    private System.Timers.Timer? _searchTimer;
+
+    /// <summary>
+    /// Search repository to use
+    /// </summary>
+    [Inject] protected ISearch<T> Search { get; set; } = null!;
+
+    [Parameter] public EventCallback<T> OnHitSelected { get; set; }
+
+    /// <summary>
+    /// Clears the hits list
+    /// </summary>
+    private void _clearHits()
+    {
+        this._hits = [];
+    }
+
+    /// <summary>
+    /// User has typed-in and will start the timer
+    /// </summary>
+    /// <param name="queryTerm"></param>
+    private void _startQuery(string queryTerm)
+    {
+        this._search = queryTerm;
+        this._clearHits();
+
+        if (_searchTimer != null)
+        {
+            _searchTimer.Stop();
+            _searchTimer = null;
+        }
+
+        _searchTimer = new();
+        _searchTimer.Enabled = true;
+        _searchTimer.AutoReset = false;
+        _searchTimer.Interval = 750;
+        _searchTimer.Elapsed += (o, e) =>
+        {
+            this._queryLucene(queryTerm);
+        };
+
+        _searchTimer.Start();
+    }
+
+    /// <summary>
+    /// Searches for the <paramref name="queryTerm"/>
+    /// </summary>
+    /// <param name="queryTerm"></param>
+    /// <returns></returns>
+    private void _queryLucene(string queryTerm)
+    {
+        queryTerm = queryTerm.Trim();
+
+        this._clearHits();
+
+        if (queryTerm.Length < 2)
+        {
+            this.InvokeAsync(this.StateHasChanged);
+            return;
+        }
+
+        this._hits = this.Search.Search(queryTerm);
+        this.InvokeAsync(this.StateHasChanged);
+    }
+
+    protected virtual void OnSelect(T item)
+    {
+        if (this.OnHitSelected.HasDelegate)
+        {
+            this.OnHitSelected.InvokeAsync(item);
+        }
+    }
+}

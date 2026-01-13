@@ -1,0 +1,119 @@
+﻿@inherits Basic
+@implements IBlogId
+@implements IShowFakes
+@inject ISuperRepository _super
+
+@if (this.Pages.Count > 0)
+{
+    <div class="page-list @Class position-relative">
+        <div class="row">
+            @for (int i = 1; i <= 5; i++)
+            {
+                <div class="col-12 col-xl-2"></div>
+            }
+            <div class="col-12 col-xl-2">
+                <MudSelect T="int" @bind-Value:get="this.OrderBy" @bind-Value:set="SetOrderBy">
+                    <MudSelectItem Value="1">@Text.Lower("By most recent")</MudSelectItem>
+                    <MudSelectItem Value="2">@Text.Lower("By title")</MudSelectItem>
+                    <MudSelectItem Value="3">@Text.Lower("By title desc.")</MudSelectItem>
+                    <MudSelectItem Value="4">@Text.Lower("By oldest")</MudSelectItem>
+                    <MudSelectItem Value="5">@Text.Lower("By language, title")</MudSelectItem>
+                    <MudSelectItem Value="6">@Text.Lower("By language, most recent")</MudSelectItem>
+                </MudSelect>
+            </div>
+        </div>
+        <div class="row mt-3">
+            @for (int i = 0; i < this.Page * this.PageSize; i++)
+            {
+                @if (Pages.Count > i)
+                {
+                    <div class="col-12 col-xl-4 mb-3">
+                        <PageHeader Entity="Pages[i]" ShowRelatedPages="false"></PageHeader>
+                    </div>
+                }
+            }
+        </div>
+        <div class="text-center">
+            <button class="text-center btn btn-light border" style="min-width: 250px; max-width: 100%" disabled="@_disableLoadMore" @onclick="() => { this.Page += 1; this.LoadPages(); }">
+                <div><i class="fa-solid fa-file-lines fs-2"></i></div>
+                @Text.Lower("See more pages")
+            </button>
+        </div>
+    </div>
+}
+else if (this.ShowFakes == true)
+{
+    <div class="post-list fakes @Class position-relative">
+        <div class="row">
+            @foreach (var page in Core.Models.OrigamiPage.GetFakes())
+            {
+                <div class="col-12 col-xl-4 mb-3">
+                    <PageHeader Class="fake" Entity="page" ShowRelatedPages="false"></PageHeader>
+                </div>
+            }
+        </div>
+        <div class="text-center">
+            <button class="text-center btn btn-light border" style="min-width: 250px; max-width: 100%" disabled="disabled">
+                <div><i class="fa-solid fa-file-lines fs-2"></i></div>
+                @Text.Lower("See more pages")
+            </button>
+        </div>
+        <div class="position-absolute zeroes bg-white bg-opacity-75"></div>
+    </div>
+}
+
+@code {
+    [Parameter] public Guid BlogId { get; set; }
+    [Parameter] public int Page { get; set; } = 1;
+    [Parameter] public int PageSize { get; set; } = 9;
+    [Parameter] public int OrderBy { get; set; } = 1;
+    [Parameter] public bool ShowFakes { get; set; } = false;
+
+    protected List<Core.Models.OrigamiPage> Pages = [];
+
+    private bool _disableLoadMore
+    {
+        get => _super.Pages
+            .ReadFromCache()
+            .NonDeleted()
+            .Published()
+            .Blog(this.BlogId)
+            .Count() <= this.Page * this.PageSize;
+    }
+
+    /// <summary>
+    /// Loads the posts from the repository
+    /// </summary>
+    protected void LoadPages()
+    {
+        var pages = _super.Pages
+            .ReadFromCache()
+            .NonDeleted()
+            .Published()
+            .Blog(this.BlogId);
+
+        pages = this.OrderBy switch
+        {
+            2 => pages.OrderBy(x => x.Title),
+            3 => pages.OrderByDescending(x => x.Title),
+            4 => pages.OrderBy(x => x.DateCreated),
+            5 => pages.OrderBy(x => x.LanguageWrittenOn).ThenBy(x => x.Title),
+            6 => pages.OrderBy(x => x.LanguageWrittenOn).ThenByDescending(x => x.DateCreated),
+            _ => pages.OrderByDescending(x => x.DateCreated)
+        };
+
+        this.Pages = pages.Take(Page * PageSize).ToList();
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        this.LoadPages();
+    }
+
+    private void SetOrderBy(int value)
+    {
+        this.OrderBy = value;
+        this.LoadPages();
+    }
+}

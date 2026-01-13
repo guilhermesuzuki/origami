@@ -1,0 +1,44 @@
+﻿@inherits Basic
+@implements IEntityNull<OrigamiTag>
+@implements IHyperlink
+
+@inject IPostTagRepository _postTag
+@inject IVideoTagRepository _videoTag
+
+@if (this.Entity != null)
+{
+    <div class="tag-header p-2 text-center border shadow-sm @Class">
+        <a href="@this.Hyperlink">
+            <i class="fa-solid fa-tag" style="font-size:45px;"></i>
+            <div class="mt-1 text-uppercase fw-bold ellipsis name" title="@this.Entity.Name">@this.Entity.Name</div>
+            @if (this.ShowCounter)
+            {
+                <div class="mt-1 text-center">
+                    <span class="mx-1">@Text.Lower("{0} post(s)", this.PublishedPosts)</span>
+                    <span class="mx-1">@Text.Lower("{0} video(s)", this.PublishedVideos)</span>
+                </div>
+            }
+        </a>
+    </div>
+}
+
+@code {
+    [Parameter] public OrigamiTag? Entity { get; set; }
+    [Parameter] public bool ShowCounter { get; set; } = true;
+
+    private int PublishedPosts => this.Entity != null ? this.Super.GetPosts(this.Entity).Published().Count() : 0;
+    private int PublishedVideos => this.Entity != null ? this.Super.GetVideos(this.Entity).Published().Count() : 0;
+
+    public string Hyperlink
+    {
+        get
+        {
+            if (Entity != null)
+            {
+                var blog = this.Super.Blogs.ReadFromCache().Id(Entity.BlogId)!;
+                return $"/blogs/{blog.Slug}/tags/{Entity.Slug}/#content-start";
+            }
+            return string.Empty;
+        }
+    }
+}

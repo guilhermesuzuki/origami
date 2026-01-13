@@ -1,0 +1,57 @@
+﻿@inherits Basic
+@implements IEntityNull<OrigamiSocialProfile>
+@inject IBlogRepository _blog
+@inject ISubscriberRepository _subscriber
+
+@if (Entity != null)
+{
+    <div class="social-profile-header text-center @Class">
+        <img class="d-block logo" src="@Entity.ProfilePicture()" height="77" style="margin:auto;" onerror="this.src='@(OrigamiConstants.NoUser)'" />
+        <div>
+            <a class="" href="/socialprofiles/@Entity.Id/#content-start" title="@Text.Lower("Go to Profile")">
+                <div class="d-inline-flex align-items-center fs-5">
+                    @if (Entity.SocialNetwork == SocialNetworks.Google)
+                    {
+                        <i class="fa-brands fa-google"></i>
+                    }
+                    else if (Entity.SocialNetwork == SocialNetworks.Facebook)
+                    {
+                        <i class="fa-brands fa-facebook"></i>
+                    }
+                    else if (Entity.SocialNetwork == SocialNetworks.Twitter)
+                    {
+                        <i class="fa-brands fa-twitter"></i>
+                    }
+                    else if (Entity.SocialNetwork == SocialNetworks.GitHub)
+                    {
+                        <i class="fa-brands fa-github"></i>
+                    }
+                    else if (Entity.SocialNetwork == SocialNetworks.Microsoft)
+                    {
+                        <i class="fa-brands fa-microsoft"></i>
+                    }
+                    <span class="ps-1 fw-bold social-profile-name">@Entity.Name()</span>
+                    <SocialProfileFeatures Entity="Entity"></SocialProfileFeatures>
+                </div>
+            </a>
+        </div>
+    </div>
+}
+
+@code {
+
+    [Parameter] public OrigamiSocialProfile? Entity { get; set; }
+
+    private string SubscriberText()
+    {
+        if (this.Entity != null) 
+        {
+            var sub = this.Super.GetSubscriber(this.Entity);
+            if (sub != null)
+            {
+                return $"{Text.Lower("Yes, since")}: {sub.GetDate()}";
+            }
+        }
+        return Text.Lower("No");
+    }
+}

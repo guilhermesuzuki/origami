@@ -1,0 +1,117 @@
+﻿@page "/users"
+@inherits BasicAdminGrid<OrigamiUser>
+<style>
+    .roles .id { display: none !important; }
+</style>
+<Root Access="this.CanAccess()">
+    <HeaderTemplate>
+        <div class="p-3 border-bottom">
+            <div class="row">
+                <div class="d-inline-flex align-items-center col-12 col-xxl-8">
+                    <ul class="inline-list w-100">
+                        <li style="width:80%;">
+                            <i class="fa-solid fa-user-group pe-1"></i>
+                            <span class="me-3">@Text.Get("Users", Text.Styles.Uppercase)</span>
+                            <div class="btn-group pe-1">
+                                <button class="btn btn-light text-danger border border-danger" disabled="@this.DisableTheDeleteButton" @onclick="this.DeleteSelectedEntities">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            </div>
+                        </li>
+                        <li style="width:20%;">
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-12 col-xxl-4">
+                    <BlogSelect></BlogSelect>
+                </div>
+            </div>
+        </div>
+        <div class="p-3 border-bottom">
+            <div class="row">
+                <div class="col-12">
+                    <SearchLite T="OrigamiUser" OnHitSelected="this.OnSearchResultSelected"></SearchLite>
+                </div>
+            </div>
+        </div>
+    </HeaderTemplate>
+    <ContentTemplate>
+        <div class="p-3">
+            <div class="row">
+                <div class="datagrid-options col-12 text-right mb-1">
+                    <DataGridOptions Deleted="this.IncludeDeletedEntitiesInDataGrid" DeletedChanged="this.OnIncludeDeletedEntitiesChanged"></DataGridOptions>
+                </div>
+                <div class="users col-12">
+                    <MudDataGrid @ref="DataGrid" T="OrigamiUser" ServerData="GetEntities" Filterable="false" SortMode="SortMode.None" Class="border selectable" SelectedItems="this.SelectedEntities" MultiSelection="true" SelectedItemsChanged="this.SelectedEntitiesChanged"
+                                 RowClassFunc="this.RowClassFunc" Bordered="true" SelectOnRowClick="false">
+                        <Columns>
+                            <SelectColumn T="OrigamiUser"></SelectColumn>
+                            <TemplateColumn Title="@Text.Upper("User")" HeaderStyle="width: 75%;">
+                                <CellTemplate>
+                                    <div class="cursor-pointer" @onclick="() => OnEdit(context.Item)">
+                                        <ul class="inline-list">
+                                            <li class="pe-1" style="width:50px;">
+                                                <HeaderImageLite Entity="context.Item"></HeaderImageLite>
+                                            </li>
+                                            <li>
+                                                <UserHeaderLite Entity="context.Item"></UserHeaderLite>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </CellTemplate>
+                            </TemplateColumn>
+                            <TemplateColumn Title="@Text.Upper("Roles")" HeaderStyle="width: 25%;" CellClass="roles">
+                                <CellTemplate>
+                                    @if (context.Item != null)
+                                    {
+                                        var userRoles = this.Super.UserRoles.ReadFromCache().Where(x => x.UserId == context.Item.Id).ToList();
+                                        @foreach (var userRole in userRoles)
+                                        {
+                                            var role = this.Super.Roles.ReadFromCache().NonDeleted().FirstOrDefault(x => x.Id == userRole.RoleId);
+                                            <RoleHeaderLite Class="shadow-sm mb-1 border p-2" Entity="role"></RoleHeaderLite>
+                                        }
+                                    }
+                                </CellTemplate>
+                            </TemplateColumn>
+                        </Columns>
+                        <PagerContent>
+                            <MudDataGridPager T="OrigamiUser" />
+                        </PagerContent>
+                        <NoRecordsContent>
+                            <NoEntriesWereFound></NoEntriesWereFound>
+                        </NoRecordsContent>
+                    </MudDataGrid>
+                </div>
+                <div class="users-form col-12 mt-3">
+                    <UserForm Class="p-3 shadow-sm border position-sticky" Entity="this.SelectedEntity" Saved="this.EntitySaved" Cancelled="this.EntityCancelled" Created="this.EntityCreated" OnUserBlocked="this.EntitySaved" OnUserUnblocked="this.EntitySaved"></UserForm>
+                </div>
+            </div>
+        </div>
+    </ContentTemplate>
+</Root>
+@code {
+    protected override string DefaultOrdering => $"{nameof(OrigamiUser.Username)}";
+
+    protected override async Task DeleteSelectedEntities()
+    {
+        var current = this.SelectedEntities.FirstOrDefault(x => x.Id == this.UserFacade.User.Id);
+        if (current != null)
+        {
+            var answer = await DialogService.ShowMessageBox(
+                Text.Upper("Deleting {0} item(s), including yourself", SelectedEntities.Count),
+                Text.Original("Are you sure?") + " " + Text.Original("You will be logged out at the end"),
+                yesText: Text.Lower("Yes"),
+                noText: Text.Lower("No"));
+
+            if (answer.GetValueOrDefault() == true)
+            {
+                await ExecuteWithSelectedEntities(() => Task.FromResult(answer), this.DeleteEntity);
+                await this.LogoutFromAdminAsync();
+            }
+        }
+        else
+        {
+            await base.DeleteSelectedEntities();
+        }
+    }
+}

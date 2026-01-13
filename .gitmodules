@@ -1,0 +1,6 @@
+[submodule "src/Origami.UI.Admin/wwwroot"]
+	path = src/Origami.UI.Admin/wwwroot
+	url = https://github.com/guilhermesuzuki/origami-files.git
+[submodule "src/Origami.UI.FrontEnd/wwwroot"]
+	path = src/Origami.UI.FrontEnd/wwwroot
+	url = https://github.com/guilhermesuzuki/origami-files.git

@@ -1,0 +1,51 @@
+﻿@inherits Basic
+
+@if (this.Super != null) 
+{
+    var cookie = this.CookiePolicy();
+    var privacy = this.PrivacyPolicy();
+    var conditions = this.TermsAndConditions();
+    var services = this.TermsOfService();
+    IEnumerable<OrigamiSpecialPage> pages = [ cookie, privacy, conditions, services, ];
+    <style>
+        html body .border-bottom-highlight { border-bottom: 2px solid var(--site-highlight)!important; }
+    </style>
+    <div class="footer p-4 bg-light border float-right d-inline-flex align-items-center w-100 @Class" style="justify-content: flex-end;">
+        @foreach (var p in pages)
+        {
+            @if (p.New == false)
+            {
+                <a href="@p.Hyperlink" class="me-1 p-2 border border-light-subtle border-bottom-highlight">
+                    <SpecialPageHeaderLite4 Entity="@p"></SpecialPageHeaderLite4>
+                </a>
+            }
+        }
+        <span class="origami ms-5 p-2 text-right">
+            <span class="fw-bold origami-name">@Text.Original("Origami")</span>
+            <span class="fw-bold origami-version">@GetCurrentVersion()</span>
+        </span>
+    </div>
+}
+
+@code {
+    protected string GetCurrentVersion()
+    {
+        return typeof(Footer).Assembly.GetName().Version?.ToString() ?? "0.0.0";
+    }
+    protected OrigamiSpecialPage CookiePolicy()
+    {
+        return this.Super.SpecialPages.ReadFromCache().GetByType(OrigamiSpecialPageTypes.CookiePolicy).FirstOrDefault() ?? new();
+    }
+    protected OrigamiSpecialPage PrivacyPolicy()
+    {
+        return this.Super.SpecialPages.ReadFromCache().GetByType(OrigamiSpecialPageTypes.PrivacyPolicy).FirstOrDefault() ?? new();
+    }
+    protected OrigamiSpecialPage TermsAndConditions()
+    {
+        return this.Super.SpecialPages.ReadFromCache().GetByType(OrigamiSpecialPageTypes.TermsAndConditions).FirstOrDefault() ?? new();
+    }
+    protected OrigamiSpecialPage TermsOfService()
+    {
+        return this.Super.SpecialPages.ReadFromCache().GetByType(OrigamiSpecialPageTypes.TermsOfService).FirstOrDefault() ?? new();
+    }
+}

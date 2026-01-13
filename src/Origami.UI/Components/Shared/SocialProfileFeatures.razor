@@ -1,0 +1,37 @@
+﻿@inherits Basic
+@implements IEntityNull<OrigamiSocialProfile>
+
+@if (this.Entity != null)
+{
+    <div class="social-profile-features @Class d-inline-flex align-items-center">
+        @if (this.Entity.IsModerator)
+        {
+            <span class="social-profile-moderator ms-1 text-info fw-bold border border-info shadow-sm pe-1 ps-1 bg-info text-white" style="font-size: 8pt!important;" title="@Text.Lower("Moderator")">
+                <i class="fa-solid fa-crown"></i>
+            </span>
+        }
+        @if (this.IsSubscriber() == true)
+        {
+            <span class="social-profile-subscriber ms-1 text-success fw-bold border border-success shadow-sm pe-1 ps-1 bg-success text-white" style="font-size: 8pt!important;" title="@Text.Lower("Subscriber")">
+                <i class="bi bi-envelope-check-fill"></i>
+            </span>
+        }
+        @if (this.Entity.IsBlocked)
+        {
+            <span class="social-profile-moderator ms-1 bg-danger text-white fw-bold shadow-sm pe-1 ps-1 border border-danger" style="font-size: 8pt!important;">
+                <i class="bi bi-person-fill-slash"></i>
+                @Text.Lower("Blocked")
+            </span>
+        }
+    </div>
+}
+
+@code {
+    [Parameter] public OrigamiSocialProfile? Entity { get; set; }
+
+    private bool IsSubscriber()
+    {
+        if (Entity == null) return false;
+        return this.Super.GetSubscriber(this.Entity) != null;
+    }
+}

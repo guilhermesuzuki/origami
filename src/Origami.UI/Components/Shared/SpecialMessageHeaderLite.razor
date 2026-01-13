@@ -1,0 +1,21 @@
+﻿@inherits Basic
+@implements IEntityNull<OrigamiSpecialMessage>
+
+@if (this.Entity != null)
+{
+    var textCss = this.Entity.Type switch
+    {
+        "None" => string.Empty,
+        _ => $"text-{this.Entity.Type.ToLower()}",
+    };
+    <span class="page-header-lite-2 position-relative @Class">
+        <span class="d-inline-flex align-items-center @textCss" title="@Entity.Title">
+            <span class="ellipsis">@Entity.Title</span>
+        </span>
+        <Id Class="d-block x-small" Entity="Entity"></Id>
+    </span>
+}
+
+@code {
+    [Parameter] public OrigamiSpecialMessage? Entity { get; set; }
+}

@@ -1,0 +1,32 @@
+﻿@inherits Basic
+@implements IEntityNull<Object>
+
+@if (Entity != null)
+{
+    <div class="header-lite @Class">
+        <HeaderIcon Entity="Entity" />
+        @if (this.Entity is OrigamiSettings settings)
+        {
+            <span class="ps-1">@Text.Original("Settings")</span>
+        }
+        else
+        {
+            @if (this.Entity is ITitle title)
+            {
+                <span class="ps-1">@title.Title</span>
+            }
+            @if (this.Entity is IName name)
+            {
+                <span class="ps-1">@name.Name</span>
+            }
+            @if (this.Entity is OrigamiUser user)
+            {
+                <span class="ps-1">@user.Username</span>
+            }
+        }
+    </div>
+}
+
+@code {
+    [Parameter] public Object? Entity { get; set; }
+}

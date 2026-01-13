@@ -1,0 +1,798 @@
+﻿@page "/filemanager/{Mode?}"
+@using System.Buffers
+@using Origami.Core.Models.FileSystem
+@inherits BasicAdmin
+@inject IDirectoryRepository directoryRepository
+@inject IFileRepository fileRepository
+@inject IBlogRepository blogRepository
+@inject IPostRepository postRepository
+@inject IPageRepository pageRepository
+@inject IVideoRepository videoRepository
+@inject ICategoryRepository categoryRepository
+@inject IUserRepository userRepository
+@inject IFileManagerRepository fileManagerRepository
+
+<style>
+    .filemanager-wrapper .directory { height: 200px; }
+    .filemanager-wrapper .file { height: 200px; }
+    .filemanager-wrapper .selected-file { border-color: #202020 !important; }
+</style>
+@if (Mode.Has() == true)
+{
+    @if (Mode.Like("tinymce") == true)
+    {
+        <style>
+            .sidebar { display: none !important; visibility: hidden !important; }
+        </style>
+    }
+    else if (Mode.Like("image") == true)
+    {
+        <style>
+            .sidebar { display: none !important; visibility: hidden !important; }
+        </style>
+    }
+    else if (Mode.Like("video") == true)
+    {
+        <style>
+            .sidebar { display: none !important; visibility: hidden !important; }
+        </style>
+    }
+}
+<Root Access="this.CanAccess()" Class="@Class">
+    <HeaderTemplate>
+        <div class="header p-3 border-bottom">
+            <div class="row">
+                <div class="d-inline-flex align-items-center col-12 col-xxl-8">
+                    <i class="fa-solid fa-folder pe-1"></i>
+                    <span class="pe-3">@Text.Get("File Manager", Text.Styles.Uppercase)</span>
+                    <div class="btn-group pe-1">
+                        <button class="btn btn-danger text-white" @onclick="this._refresh">
+                            <i class="fa-solid fa-rotate-right"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-12 col-xxl-4">
+                    <BlogSelect></BlogSelect>
+                </div>
+            </div>
+        </div>
+    </HeaderTemplate>
+    <ContentTemplate>
+        <SearchFileManagerHeader @ref="this._searchHeader" Class="p-3 border-bottom" OnSearch="this.OnSearch"></SearchFileManagerHeader>
+        <div class="p-3 fs-3 border-bottom">
+            <div class="row">
+                <div class="col-12 col-xxl-8">
+                    <FileManagerPath VirtualPath="@this.VirtualPath" OnPathClicked="(virtualPath) => this._openFolder(virtualPath)"></FileManagerPath>
+                    <span class="d-block fs-6">
+                        @if (this._directories?.Any() == true)
+                        {
+                            <span class="me-2">@(this._directories.Count() == 1 ? Text.Lower("{0} Directory", _directories.Count()) : Text.Lower("{0} Directories", _directories.Count()))</span>
+                        }
+                        @if (this._files?.Any() == true)
+                        {
+                            <span class="me-2">@(this._files.Count() == 1 ? Text.Lower("{0} File", this._files.Count()) : Text.Lower("{0} Files", this._files.Count()))</span>
+                        }
+                    </span>
+                </div>
+                <div class="col-12 col-xxl-4">
+                    <div class="btn-group w-100 fs-small">
+                        <button class="btn btn-secondary" @onclick="this._selectAll">
+                            <i class="fa-solid fa-square-check"></i>
+                            @Text.Original("Select All")
+                        </button>
+                        <button class="btn btn-secondary" disabled="@_disableUnselectAll" @onclick="this._unselectAll">
+                            <i class="fa-solid fa-square"></i>
+                            @Text.Original("Unselect All")
+                        </button>
+                        <button class="btn btn-danger" disabled="@_disableUnselectAll" @onclick="this._deleteItems">
+                            <i class="fa-solid fa-trash-can"></i>
+                            @Text.Original("Delete Selected Item(s)")
+                        </button>
+                        <button class="btn btn-primary" @onclick="() => _addingFolder = true">
+                            <i class="fa-solid fa-folder-plus"></i>
+                            @Text.Original("Add Folder")
+                        </button>
+                        <button class="btn btn-primary" @onclick="_uploadFiles">
+                            <i class="fa-solid fa-file-circle-plus"></i>
+                            @Text.Original("Upload Files")
+                            <span class="x-small">@Text.Original("(1024 files max)")</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="p-3">
+            <div class="row">
+                <div class="col-12 col-xxl-8">
+                    @if (this._hits != null)
+                    {
+                        <div class="row search-hits">
+                            @if (this._hits.Any() == true)
+                            {
+                                @foreach (var hit in this._hits)
+                                {
+                                    @if (hit is OrigamiSystemFile file)
+                                    {
+                                        <div class="mb-3 cursor-pointer col-12 col-xxl-6 @(this._selectedFile != null && this._selectedFile.WebPath == file.WebPath ? "selected-file" : null) dummy" @onclick="() => _selectFile(file)">
+                                            <div class="p-2 border file shadow-sm position-relative">
+                                                <div class="d-inline-flex align-items-center" style="height:100px;" title="@file.Name">
+                                                    @if (file.IsImage)
+                                                    {
+                                                        <img src="@file.WebPath.QueryString("size", "small")" width="50" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <HeaderIcon Entity="file" Class="fs-1"></HeaderIcon>
+                                                    }
+                                                    <div class="ms-3">
+                                                        <span class="ellipsis">
+                                                            @file.Name
+                                                            <span class="x-small">@file.FileSize.SizeInBytes()</span>
+                                                        </span>
+                                                        <FileManagerPath Class="x-small" VirtualPath="@file.WebPathDirectory" OnPathClicked="(path) => this._openFolder(path)"></FileManagerPath>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                    @if (hit is DirectoryContext directory)
+                                    {
+                                        <div class="mb-3 cursor-pointer col-12 col-xxl-6" @onclick="() => _openFolder(directory.Directory.WebPath)">
+                                            <div class="p-2 border shadow-sm directory position-relative">
+                                                <div class="d-inline-flex align-items-center" title="@directory.Directory.Name" style="height: 100px;">
+                                                    <i class="fa-solid fa-folder d-block fs-1"></i>
+                                                    <div class="ms-3">
+                                                        <FileManagerPath Class="x-small" VirtualPath="@directory.Directory.WebPath" OnPathClicked="(path) => this._openFolder(path)"></FileManagerPath>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                <NothingToSeeHere Class="col-12"></NothingToSeeHere>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="filemanager-wrapper row text-center">
+                            @if (this.VirtualPath.Like(RootPath) == false)
+                            {
+                                <div class="mb-3 cursor-pointer col-6 col-xxl-3" @onclick="_goBackInNavigation">
+                                    <div class="p-2 border shadow-sm directory position-relative">
+                                        <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
+                                            <i class="fa-solid fa-arrow-up fs-3"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            @if (_directories != null)
+                            {
+                                @foreach (var dir in this._directories)
+                                {
+                                    <div class="mb-3 cursor-pointer col-6 col-xxl-3" @onclick="() => _openFolder(dir.Directory.WebPath)">
+                                        <div class="p-2 border shadow-sm directory position-relative">
+                                            <div class="position-absolute text-left">
+                                                <MudCheckBox T="bool" @bind-Value="dir.Directory.Checked"></MudCheckBox>
+                                            </div>
+                                            <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
+                                                <div title="@dir.Directory.Name">
+                                                    <i class="fa-solid fa-folder d-block fs-1 mb-1 m-auto"></i>
+                                                    <span class="ellipsis">@dir.Directory.Name</span>
+                                                    @if (dir.Context != null)
+                                                    {
+                                                        <div class="x-small d-block" title="@dir.Directory.Name">
+                                                            <span class="ellipsis">
+                                                                <HeaderLite Entity="dir.Context"></HeaderLite>
+                                                            </span>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div class="position-absolute p-2 border-top" style="bottom:0;left:0;right:0;z-index:5;">
+                                                <ul class="inline-list">
+                                                    <li>
+                                                        <button @onclick="() => _renamingDirectory = dir.Directory" @onclick:stopPropagation="true">
+                                                            <i class="fa-solid fa-pen-to-square"></i>
+                                                        </button>
+                                                    </li>
+                                                    <li>
+                                                        <button @onclick="() => _deleteFolder(dir.Directory)" @onclick:stopPropagation="true">
+                                                            <i class="fa-solid fa-trash-can"></i>
+                                                        </button>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            @if (_files != null)
+                            {
+                                @foreach (var file in this._files)
+                                {
+                                    <div class="mb-3 cursor-pointer col-6 col-xxl-3 @(this._selectedFile != null && this._selectedFile.WebPath == file.WebPath ? "selected-file" : null) dummy" @onclick="() => _selectFile(file)">
+                                        <div class="p-2 border file shadow-sm position-relative">
+                                            <div class="position-absolute text-left">
+                                                <MudCheckBox T="bool" @bind-Value="file.Checked"></MudCheckBox>
+                                            </div>
+                                            <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
+                                                @if (file.IsImage)
+                                                {
+                                                    <div class="position-absolute w-75 h-75" style="opacity:0.25; background-image:url(@(file.WebPath.QueryString("size", "small").QueryString("v", _version.ToString())));background-repeat:no-repeat;background-position:center;background-size:contain;"></div>
+                                                }
+                                                <div class="mw-100" style="z-index:5;" title="@file.Name">
+                                                    @if (file.IsImage)
+                                                    {
+                                                        <i class="fa-solid fa-image d-block fs-1 mb-1 m-auto"></i>
+                                                    }
+                                                    else if (file.IsVideo)
+                                                    {
+                                                        <i class="fa-solid fa-video d-block fs-1 mb-1 m-auto"></i>
+                                                    }
+                                                    else
+                                                    {
+                                                        <i class="fa-solid fa-file d-block fs-1 mb-1 m-auto"></i>
+                                                    }
+                                                    <span class="ellipsis">@file.Name</span>
+                                                    <span class="d-block x-small">@file.FileSize.SizeInBytes()</span>
+                                                </div>
+                                                <div class="position-absolute p-2 border-top" style="bottom:0;left:0;right:0;z-index:5;">
+                                                    <ul class="inline-list">
+                                                        <li>
+                                                            <button @onclick="() => _downloadFile(file)" @onclick:stopPropagation="true">
+                                                                <i class="fa-solid fa-file-arrow-down"></i>
+                                                            </button>
+                                                        </li>
+                                                        <li>
+                                                            <button @onclick="() => _needsToRenameFile(file)" @onclick:stopPropagation="true">
+                                                                <i class="fa-solid fa-pen-to-square"></i>
+                                                            </button>
+                                                        </li>
+                                                        <li>
+                                                            <button @onclick="() => _deleteFile(file)" @onclick:stopPropagation="true">
+                                                                <i class="fa-solid fa-trash-can"></i>
+                                                            </button>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    }
+                </div>
+                <div class="col-12 col-xxl-4">
+                    <FileForm Class="p-3 shadow-sm border position-sticky" Entity="this._selectedFile"></FileForm>
+                </div>
+            </div>
+        </div>
+    </ContentTemplate>
+</Root>
+@if (_addingFolder)
+{
+    <div class="position-absolute popup-container">
+        <div class="border p-3 shadow-lg" style="width: 500px;">
+            <div>
+                <MudTextField T="string" HelperText="@Text.Lower("New folder")" FullWidth="true" @bind-Value="_nameFolder">
+                </MudTextField>
+            </div>
+            <div class="btn-group w-100 mt-3">
+                <button class="btn btn-success" @onclick="_addFolder">@Text.Lower("Save")</button>
+                <button class="btn btn-secondary" @onclick="() => _addingFolder = false">@Text.Lower("Cancel")</button>
+            </div>
+        </div>
+    </div>
+}
+@if (_renamingDirectory != null)
+{
+    <div class="position-absolute popup-container">
+        <div class="border p-3 shadow-lg" style="width: 500px;">
+            <div>
+                <MudTextField T="string" HelperText="@Text.Lower("Original name")" Text="@_renamingDirectory.Name" FullWidth="true" ReadOnly="true">
+                </MudTextField>
+                <MudTextField T="string" HelperText="@Text.Lower("New name")" FullWidth="true" @bind-Value="_nameDirectory">
+                </MudTextField>
+            </div>
+            <div class="btn-group w-100 mt-3">
+                <button class="btn btn-success" @onclick="_renameDirectory">@Text.Lower("Save")</button>
+                <button class="btn btn-secondary" @onclick="() => _renamingDirectory = null">@Text.Lower("Cancel")</button>
+            </div>
+        </div>
+    </div>
+}
+@if (_renamingFile != null)
+{
+    <div class="position-absolute popup-container">
+        <div class="border p-3 shadow-lg" style="width: 500px;">
+            <div>
+                <MudTextField T="string" HelperText="@Text.Lower("Original name")" Text="@_renamingFile.Name" FullWidth="true" ReadOnly="true">
+                </MudTextField>
+                <ul class="inline-list">
+                    <li class="w-75">
+                        <MudTextField T="string" HelperText="@Text.Lower("New name")" FullWidth="true" @bind-Value="_nameFile">
+                        </MudTextField>
+                    </li>
+                    <li class="w-25">
+                        <MudTextField T="string" HelperText="@Text.Lower("Extension")" FullWidth="true" @bind-Value="_nameExtension">
+                        </MudTextField>
+                    </li>
+                </ul>
+            </div>
+            <div class="btn-group w-100 mt-3">
+                <button class="btn btn-success" @onclick="_renameFile">@Text.Lower("Save")</button>
+                <button class="btn btn-secondary" @onclick="() => _renamingFile = null">@Text.Lower("Cancel")</button>
+            </div>
+        </div>
+    </div>
+}
+@if (_uploadingFiles == true)
+{
+    <div class="position-absolute popup-container">
+        <div class="border p-3 shadow-lg" style="width: 50%;">
+            <FileUpload VirtualPath="@this.VirtualPath" OnCloseWindow="() => { this._loadFiles(true); _uploadingFiles = false; }"></FileUpload>
+        </div>
+    </div>
+}
+
+@code {
+    private Guid _version = Guid.NewGuid();
+    private SearchFileManagerHeader _searchHeader = null!;
+
+    /// <summary>
+    /// This event happens when a file is selected/clicked in the UI
+    /// </summary>
+    [Parameter] public EventCallback<OrigamiSystemFile> OnFileClicked { get; set; }
+
+    /// <summary>
+    /// root path
+    /// </summary>
+    public const string RootPath = "/files/";
+
+    private bool _addingFolder = false;
+    private bool _uploadingFiles = false;
+    private OrigamiSystemDirectory? _renamingDirectory;
+    private OrigamiSystemFile? _renamingFile;
+    private OrigamiSystemFile? _selectedFile;
+    private string _nameDirectory = string.Empty;
+    private string _nameExtension = string.Empty;
+    private string _nameFile = string.Empty;
+    private string _nameFolder = string.Empty;
+    private CancellationTokenSource _cancellationTokenSource = new();
+
+    /// <summary>
+    /// Current virtual path
+    /// </summary>
+    [Parameter] public string VirtualPath { get; set; } = RootPath;
+
+    /// <summary>
+    /// Indicates whether the File Manager is in tinyMCE mode
+    /// </summary>
+    [Parameter] public string? Mode { get; set; }
+
+    /// <summary>
+    /// Disables or enables the unSelectAll button
+    /// </summary>
+    private bool _disableUnselectAll
+    {
+        get
+        {
+            if (this._directories?.Any(x => x.Directory.Checked) == true) return false;
+            if (this._files?.Any(x => x.Checked) == true) return false;
+            return true;
+        }
+    }
+
+    /// <summary>
+    /// Gets all files at the <see cref="VirtualPath"/>
+    /// </summary>
+    private IEnumerable<OrigamiSystemFile>? _files;
+
+    /// <summary>
+    /// Gets all subdirectories from <see cref="VirtualPath"/>
+    /// </summary>
+    private IEnumerable<DirectoryContext>? _directories;
+
+    /// <summary>
+    /// All hits from the search, if any
+    /// </summary>
+    private IList<IId>? _hits;
+
+    private void _addFolder()
+    {
+        try
+        {
+            var result = this.directoryRepository.Create($"{this.VirtualPath}{_nameFolder}");
+            if (result)
+            {
+                this._loadFiles(true);
+                this._loadDirectories(true);
+
+                this.UserFacade.Result = new();
+                this._addingFolder = false;
+                this._nameFolder = string.Empty;
+                return;
+            }
+
+            throw new InvalidOperationException(Text.Original("Creation of the directory was not possible"));
+        }
+        catch (Exception ex)
+        {
+            this.UserFacade.Result = new() { ErrorMessage = ex.GetMessage() };
+        }
+    }
+
+    private async Task _addToEditor(OrigamiSystemFile file)
+    {
+        await this.JSRuntime.InvokeVoidAsync("origami.editor.add",
+            file.WebPath,
+            file.Name,
+            file.FileSize.SizeInBytes(),
+            file.IsImage ? "image" : file.IsVideo ? "video" : file.IsAudio ? "audio" : string.Empty
+            );
+    }
+
+    private async Task _deleteFile(OrigamiSystemFile file)
+    {
+        var result = await this.DialogService.ShowMessageBox(
+            Text.Upper("Delete File"),
+            Text.Original("Are you sure?"),
+            yesText: Text.Original("Yes"),
+            noText: Text.Original("No")
+        );
+
+        if (result.GetValueOrDefault() == true)
+        {
+            try
+            {
+                new FileInfo(file.LocalPath).Delete();
+                this._loadFiles(true);
+            }
+            catch (Exception ex)
+            {
+                this.UserFacade.Result = new() { ErrorMessage = ex.GetMessage() };
+            }
+        }
+    }
+
+    private async Task _deleteFolder(OrigamiSystemDirectory dir)
+    {
+        var result = await this.DialogService.ShowMessageBox(
+            Text.Upper("Delete Folder"),
+            Text.Original("Are you sure?"),
+            yesText: Text.Original("Yes"),
+            noText: Text.Original("No")
+        );
+
+        if (result.GetValueOrDefault() == true)
+        {
+            try
+            {
+                new DirectoryInfo(dir.LocalPath).Delete(true);
+                this._loadDirectories(true);
+            }
+            catch (Exception ex)
+            {
+                this.UserFacade.Result = new() { ErrorMessage = ex.GetMessage() };
+            }
+        }
+    }
+
+    private async Task _deleteItems()
+    {
+        var result = await this.DialogService.ShowMessageBox(
+            Text.Upper("Delete selected items"),
+            Text.Original("Are you sure?"),
+            yesText: Text.Original("Yes"),
+            noText: Text.Original("No")
+        );
+
+        if (result.GetValueOrDefault() == true)
+        {
+            try
+            {
+                var count = 0;
+
+                if (_directories != null)
+                {
+                    var directories = _directories.Where(x => x.Directory.Checked);
+                    foreach (var directory in directories)
+                    {
+                        new DirectoryInfo(directory.Directory.LocalPath).Delete(true);
+                        count++;
+                    }
+                }
+
+                if (_files != null)
+                {
+                    var files = _files.Where(x => x.Checked);
+                    foreach (var file in files)
+                    {
+                        new FileInfo(file.LocalPath).Delete();
+                        count++;
+                    }
+                }
+
+                this._loadFiles(true);
+                this._loadDirectories(true);
+
+                this.UserFacade.Result = new() { SuccessMessage = Text.Original("{0} item(s) deleted") };
+            }
+            catch (Exception ex)
+            {
+                this.UserFacade.Result = new() { ErrorMessage = ex.GetMessage() };
+            }
+        }
+    }
+
+    private async Task _downloadFile(OrigamiSystemFile file)
+    {
+        var fileUrl = file.WebPath;
+        await this.JSRuntime.InvokeVoidAsync("origami.common.downloadFileFromUrl", fileUrl);
+    }
+
+    private void _goBackInNavigation()
+    {
+        var split = this.VirtualPath.Split('/', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        this.VirtualPath = $"/{string.Join('/', split[0..(split.Length - 1)])}/";
+
+        this._loadFiles(true);
+        this._loadDirectories(true);
+    }
+
+    private void _loadDirectories(bool force = false)
+    {
+        if (force) this._directories = null;
+        if (this._directories != null) return;
+
+        var localPath = directoryRepository.LocalPath(this.VirtualPath);
+
+        try
+        {
+            var directories = new DirectoryInfo(localPath)
+                .EnumerateDirectories()
+                .Select(x => new OrigamiSystemDirectory(x.FullName, $"{this.VirtualPath.TrimEnd('/')}/{x.Name}"));
+
+            List<DirectoryContext> result = new();
+
+            foreach (var item in directories)
+            {
+                result.Add(new(item) { Context = this.Super.GuessWho(item.Name), });
+            }
+
+            this._directories = result.OrderBy(x => x.Name.Has() ? 0 : 1).ThenBy(x => x.Name).ThenBy(x => x.Directory.LocalPath).ToList();
+        }
+        catch (DirectoryNotFoundException)
+        {
+
+        }
+    }
+
+    private void _loadFiles(bool force = false)
+    {
+        if (force) this._files = null;
+        if (this._files != null) return;
+
+        var localPath = directoryRepository.LocalPath(this.VirtualPath);
+
+        try
+        {
+            this._files = new DirectoryInfo(localPath)
+                .EnumerateFiles()
+                .Select(x => new OrigamiSystemFile(x.FullName, $"{this.VirtualPath.TrimEnd('/')}/{x.Name}"))
+                .OrderBy(x => x.LocalPath)
+                .ToList();
+        }
+        catch (DirectoryNotFoundException)
+        {
+
+        }
+    }
+
+    private void _needsToRenameFile(OrigamiSystemFile file)
+    {
+        _renamingFile = file;
+        _nameFile = file.Name[0..(file.Name.Length - file.Extension.Length)];
+        _nameExtension = file.Extension;
+    }
+
+    private void _openFolder(string webPath)
+    {
+        this._hits = null;
+        this._searchHeader.Clear();
+        this.VirtualPath = $"/{webPath.Trim('/')}/";
+        this._loadFiles(true);
+        this._loadDirectories(true);
+    }
+
+    private void _refresh()
+    {
+        this._version = Guid.NewGuid();
+        this._loadFiles(true);
+        this._loadDirectories(true);
+    }
+
+    private void _renameDirectory()
+    {
+        var split = _renamingDirectory!.LocalPath.Split(Path.DirectorySeparatorChar);
+        var newpath = Path.Combine(string.Join(Path.DirectorySeparatorChar, split[0..(split.Length - 1)]), _nameDirectory);
+        try
+        {
+            Directory.Move(_renamingDirectory!.LocalPath, newpath);
+
+            this._nameDirectory = string.Empty;
+            this._renamingDirectory = null;
+
+            this._loadDirectories(true);
+
+            this.UserFacade.Result = new();
+        }
+        catch (Exception ex)
+        {
+            this.UserFacade.Result = new() { ErrorMessage = ex.GetMessage(), };
+        }
+    }
+
+    private void _renameFile()
+    {
+        var split = _renamingFile!.LocalPath.Split(Path.DirectorySeparatorChar);
+        var newname = Path.Combine(string.Join(Path.DirectorySeparatorChar, split[0..(split.Length - 1)]), _nameFile + _nameExtension);
+
+        try
+        {
+            System.IO.File.Move(_renamingFile!.LocalPath, newname);
+
+            this._nameFile = string.Empty;
+            this._renamingFile = null;
+
+            this._loadFiles(true);
+
+            this.UserFacade.Result = new();
+        }
+        catch (Exception ex)
+        {
+            this.UserFacade.Result = new() { ErrorMessage = ex.GetMessage(), };
+        }
+    }
+
+    private void _unselectAll()
+    {
+        if (_directories != null)
+        {
+            foreach (var dir in _directories) dir.Directory.Checked = false;
+        }
+        if (_files != null)
+        {
+            foreach (var file in _files) file.Checked = false;
+        }
+    }
+
+    private void _selectAll()
+    {
+        if (_directories != null)
+        {
+            foreach (var dir in _directories) dir.Directory.Checked = true;
+        }
+        if (_files != null)
+        {
+            foreach (var file in _files) file.Checked = true;
+        }
+    }
+
+    private void _uploadFiles()
+    {
+        this._uploadingFiles = true;
+    }
+
+    private async Task _selectFile(OrigamiSystemFile file)
+    {
+        if (Mode.Has() == true && Mode.Like("tinymce") == true)
+        {
+            await this.JSRuntime.InvokeVoidAsync("origami.editor.add",
+                file.WebPath,
+                file.Name,
+                file.FileSize.SizeInBytes(),
+                file.IsImage ? "image" : file.IsVideo ? "video" : file.IsAudio ? "audio" : "file"
+            );
+
+            this.UserFacade.Result = new();
+        }
+
+        this._selectedFile = file;
+        await this.OnFileClicked.InvokeAsync(file);
+    }
+
+    protected override Core.Models.Result CanAccess()
+    {
+        return this.fileManagerRepository.CanRead(this.UserFacade.User.Id);
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        this.VirtualPath = $"/files/blogs/{this.GetBlogFromUserFacade().NanoId}/";
+
+        this.UserFacade.Changed += (sender, property) =>
+        {
+            if (property.PropertyName.Like(nameof(IUserFacade.BlogId)))
+            {
+                this.VirtualPath = $"/files/blogs/{this.GetBlogFromUserFacade().NanoId}/";
+                this._loadFiles(true);
+                this._loadDirectories(true);
+                this.InvokeAsync(this.StateHasChanged);
+            }
+        };
+
+        this._loadFiles();
+        this._loadDirectories();
+    }
+
+    protected virtual void OnSearch(string query)
+    {
+        if (query.Has() == false)
+        {
+            this._hits = null;
+            return;
+        }
+
+        this._hits = [];
+
+        var rootPath = this.directoryRepository.LocalPath(this.VirtualPath);
+        var directories = Directory.GetDirectories(rootPath, "*", SearchOption.AllDirectories);
+        var files = Directory.GetFiles(rootPath, $"*{query}*", SearchOption.AllDirectories);
+
+        foreach (var file in files)
+        {
+            var info = new FileInfo(file);
+            var webpath = $"/{file.ToLower().Split("wwwroot")[1].Replace("\\", "/").TrimStart('/')}";
+            var origamiFile = new OrigamiSystemFile(info.FullName, webpath);
+            this._hits.Add(origamiFile);
+        }
+
+        foreach (var directory in directories)
+        {
+            var info = new DirectoryInfo(directory);
+            var webpath = $"/{directory.ToLower().Split("wwwroot")[1].Replace("\\", "/").TrimStart('/')}";
+            var origamiDirectory = new OrigamiSystemDirectory(info.FullName, webpath);
+            var context = new DirectoryContext(origamiDirectory) { Context = this.Super.GuessWho(info.Name) };
+
+            if (info.Name.Contains(query, StringComparison.CurrentCultureIgnoreCase) == true)
+            {
+                this._hits.Add(context);
+                continue;
+            }
+
+            if (context.Name.Contains(query, StringComparison.CurrentCultureIgnoreCase) == true)
+            {
+                this._hits.Add(context);
+                continue;
+            }
+        }
+
+        this._hits = this._hits
+        .OrderBy(x =>
+        {
+            return x switch
+            {
+                DirectoryContext context => 2,
+                OrigamiSystemFile file => 1,
+                _ => 3
+            };
+        }).OrderBy(x =>
+        {
+            return x switch
+            {
+                DirectoryContext context => context.Name.Has() ? context.Name : context.Directory.Name,
+                OrigamiSystemFile file => file.Name,
+                _ => string.Empty
+            };
+        }).ToList();
+    }
+}
+
+

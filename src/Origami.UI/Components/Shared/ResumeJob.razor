@@ -1,0 +1,133 @@
+﻿@using System.Globalization;
+
+@inherits Basic
+@inject Text _text
+
+<div class="resume-job mt-3 border shadow-sm @(job.SelfEmployed ? "self-employed" : "")">
+    @if (job.Addresses.Any() == true)
+    {
+        var address = job.Addresses.First();
+        var country = address.Country.ToLower();
+        var workingFor = job.Addresses.Count > 1 ? job.Addresses.Last() : null;
+        var workingForCountry = workingFor?.Country.ToLower();
+        <div class="location p-2 bg-light">
+            <div class="row">
+                <div class="col-9">
+                    <i class="fa-solid fa-location-dot"></i>
+                    @string.Format("{0} • {1} • {2}", address.City, address.State, address.Country)
+                </div>
+                <div class="col-3 text-right">
+                    <span title="@_text.Lower("Working From")">
+                        @if (country == "canada")
+                        {
+                            <img src="/files/language-en.png" style="width:20px;" />
+                        }
+                        else if (country == "brazil" || country == "brasil")
+                        {
+                            <img src="/files/language-pt_br.png" style="width:20px;" />
+                        }
+                        else if (country == "portugal")
+                        {
+                            <img src="/files/language-pt_pt.png" style="width:20px;" />
+                        }
+                    </span>
+                    @if (workingFor != null)
+                    {
+                        <span class="ps-1" title="@_text.Lower("Working For")" data-tooltipster="true">
+                            @if (workingForCountry == "canada")
+                            {
+                                <img src="/files/language-en.png" style="width:20px;" />
+                            }
+                            else if (workingForCountry == "brazil" || workingForCountry == "brasil")
+                            {
+                                <img src="/files/language-pt_br.png" style="width:20px;" />
+                            }
+                            else if (workingForCountry == "portugal")
+                            {
+                                <img src="/files/language-pt_pt.png" style="width:20px;" />
+                            }
+                            else if (workingForCountry == "united states of america")
+                            {
+                                <img src="/files/language-en_us.png" style="width:20px;" />
+                            }
+                            else if (workingForCountry == "united kingdom")
+                            {
+                                <img src="/files/language-en_gb.png" style="width:20px;" />
+                            }
+                        </span>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+    @if (job.GoogleMaps.Any() == true)
+    {
+        var gm = job.GoogleMaps.First();
+        <iframe src="@gm" style="height: 200px;width:100%;border:0;"></iframe>
+    }
+    @if (job.Header.Has() == true)
+    {
+        <div class="pure-u-1 padding-20 box-shadow warning margin-u-b-20" style="color: #a94442;background-color: #f2dede;border-color: #ebccd1;">
+            <div class="clear text-center nocase" style="font-size: 16pt;">@((MarkupString)job.Header)</div>
+        </div>
+    }
+    <div class="pure-u-1 mt-3">
+        @if (string.IsNullOrWhiteSpace(job.Logo) == false)
+        {
+            <div class="pure-u-1 text-center">
+                <img alt="logo" src="@job.Logo" style="height:50px;" />
+            </div>
+        }
+        <div class="padding-u-b-10 text-center" style="font-size: 20pt;">
+            <strong>@job.Company</strong>
+            @if (string.IsNullOrWhiteSpace(job.Website) == false)
+            {
+                <div class="small">
+                    <a href="@job.Website" target="_blank" title="@_text.Lower("Go to the Website")">
+                        @job.Website
+                    </a>
+                </div>
+            }
+        </div>
+        <div class="pure-u-1 text-center text-lowercase">
+            <i class="fa-solid fa-user-tie"></i>
+            @job.Function
+        </div>
+        <div class="pure-u-1 text-center text-lowercase">
+            <i class="fa-solid fa-calendar"></i>
+            @job.Started.ToString("MMM yyyy", CultureInfo.CurrentUICulture)
+            • <i class="fa-solid fa-calendar"></i> @(job.Finished == DateTime.MinValue ? _text.Lower("Current") : job.Finished.ToString("MMM yyyy", CultureInfo.CurrentUICulture))
+        </div>
+    </div>
+    <div class="pure-u-1 padding-20">
+        <div class="clear text-center" style="font-size: 16pt;">@((MarkupString)job.Technologies)</div>
+    </div>
+    <div class="pure-u-1 tasks-frame">
+        @if (job.Tasks != null && job.Tasks.Count > 0)
+        {
+            <div class="task-list pure-u-1">
+                @foreach (var task in job.Tasks)
+                {
+                    <div class="task p-3 m-3 bg-light border">
+                        <div>
+                            <span class="bold">@(string.IsNullOrWhiteSpace(task.CompanyWorkedFor) == false ? string.Format("{0} • {1}", task.CompanyWorkedFor, task.Title) : task.Title)</span>
+                            @if (task.Website.Has() == true)
+                            {
+                                <div class="small">
+                                    <a href="@task.Website" target="_blank">@task.Website</a>
+                                </div>
+                            }
+                        </div>
+                        <div class="task-description mt-1" style="text-transform: initial;">@((MarkupString)task.Description)</div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+
+
+@code {
+    [Parameter] public Core.Models.Resume.Experience.Job job { get; set; } = new();
+}

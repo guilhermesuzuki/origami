@@ -1,0 +1,197 @@
+﻿@inherits Basic
+@inject IBlogRepository _blogRepository
+@implements ISave
+
+<div class="blog-list @Class">
+    <div class="actions">
+        <div class="btn-group">
+            <button class="btn btn-success text-white fw-bold" @onclick="Save">
+                <i class="fa-solid fa-floppy-disk"></i>
+                @Text.Lower("Save")
+            </button>
+            <button class="btn btn-secondary text-white fw-bold" @onclick="UndoChanges">
+                <i class="fa-solid fa-rotate-left"></i>
+                @Text.Lower("Undo changes")
+            </button>
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-info text-white fw-bold" @onclick="DefaultSorting">
+                <i class="fa-solid fa-list"></i>
+                @Text.Lower("Default sorting")
+            </button>
+            <button class="btn btn-info text-white fw-bold" @onclick="AlphabeticalSorting">
+                <i class="fa-solid fa-arrow-up-a-z"></i>
+                @Text.Lower("Alphabetical sorting")
+            </button>
+            <button class="btn btn-info text-white fw-bold" @onclick="AlphabeticalSortingInverted">
+                <i class="fa-solid fa-arrow-up-z-a"></i>
+                @Text.Lower("Alphabetical sorting inverted")
+            </button>
+        </div>
+    </div>
+    <MudDataGrid T="OrigamiBlog" Items="_blogs" Filterable="false" SortMode="SortMode.None" Class="border selectable mt-3" Bordered="true" SelectOnRowClick="false">
+        <Columns>
+            <SelectColumn T="OrigamiBlog"></SelectColumn>
+            <TemplateColumn Sortable="false" Filterable="false" CellClass="text-center fw-bold" CellStyle="width: 40px;">
+                <CellTemplate>
+                    @if (context.Item.Order.HasValue)
+                    {
+                        <span>#@context.Item.Order</span>
+                    }
+                </CellTemplate>
+            </TemplateColumn>
+            <TemplateColumn Title="@Text.Upper("Blog")">
+                <CellTemplate>
+                    <BlogHeaderLite Entity="context.Item"></BlogHeaderLite>
+                    <Id Class="d-block x-small" Entity="context.Item"></Id>
+                </CellTemplate>
+            </TemplateColumn>
+            <TemplateColumn Title="@Text.Upper("Primary")" Sortable="false" Filterable="false" CellClass="col-1 text-center">
+                <CellTemplate>
+                    @if (context.Item.IsPrimary)
+                    {
+                        <i class="fa-solid fa-thumbs-up"></i>
+                    }
+                </CellTemplate>
+            </TemplateColumn>
+            <TemplateColumn Sortable="false" Filterable="false" CellClass="col-1 text-center">
+                <CellTemplate>
+                    <div class="btn-group">
+                        <button class="btn btn-dark text-white" title="@Text.Lower("Moves up in the list")" @onclick="() => this.MovesUpInTheList(context.Item)">
+                            <i class="fa-solid fa-arrow-up"></i>
+                        </button>
+                        <button class="btn btn-dark text-white" title="@Text.Lower("Moves down in the list")" @onclick="() => this.MovesDownInTheList(context.Item)">
+                            <i class="fa-solid fa-arrow-down"></i>
+                        </button>
+                    </div>
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="OrigamiBlog" />
+        </PagerContent>
+        <NoRecordsContent>
+            <NoEntriesWereFound></NoEntriesWereFound>
+        </NoRecordsContent>
+    </MudDataGrid>
+</div>
+
+
+@code {
+    /// <summary>
+    /// Sorting enumeration
+    /// </summary>
+    protected enum Sorting
+    {
+        Default,
+        Alphabetical,
+        AlphabeticalInverted,
+        Custom,
+    }
+
+    private Sorting _sorting = Sorting.Default;
+    private List<OrigamiBlog> _blogs = new();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        this._blogs = this._blogRepository.ReadFromCache().GetFrontEnd();
+        this.ProcessList();
+    }
+
+    private void DefaultSorting()
+    {
+        _sorting = Sorting.Default;
+        _blogs = _blogs.Each(x => x.Order = null).DefaultSorting();
+        this.ProcessList();
+    }
+
+    private void AlphabeticalSorting()
+    {
+        _sorting = Sorting.Alphabetical;
+        _blogs = _blogs.OrderBy(x => x.Name).ToList();
+        this.ProcessList();
+    }
+
+    private void AlphabeticalSortingInverted()
+    {
+        _sorting = Sorting.AlphabeticalInverted;
+        _blogs = _blogs.OrderByDescending(x => x.Name).ToList();
+        this.ProcessList();
+    }
+
+    private void MovesUpInTheList(OrigamiBlog blog)
+    {
+        if (_blogs.First() == blog)
+        {
+            return;
+        }
+        try
+        {
+            var i = _blogs.IndexOf(blog);
+            _blogs.Remove(blog);
+            _blogs.Insert(i - 1, blog);
+        }
+        finally
+        {
+            _sorting = Sorting.Custom;
+            this.ProcessList();
+        }
+    }
+
+    private void MovesDownInTheList(OrigamiBlog blog)
+    {
+        if (_blogs.Last() == blog)
+        {
+            return;
+        }
+        try
+        {
+            var i = _blogs.IndexOf(blog);
+            _blogs.Remove(blog);
+            _blogs.Insert(i + 1, blog);
+        }
+        finally
+        {
+            _sorting = Sorting.Custom;
+            this.ProcessList();
+        }
+    }
+
+    private void ProcessList()
+    {
+        var index = 0;
+        _blogs.Each(x => x.Order = ++index);
+    }
+
+    public void Save()
+    {
+        var result = new Core.Models.Result();
+        var ids = _blogs.Select(x => x.Id);
+        using (var transaction = new TransactionScope())
+        {
+            var context = new DataOperationContext<IEnumerable<Guid>>(this.UserFacade.User, DateTime.UtcNow, ids);
+            switch (_sorting)
+            {
+                case Sorting.Default:
+                    result = _blogRepository.SortThemWithDefault(context, false);
+                    break;
+                case Sorting.Alphabetical:
+                case Sorting.AlphabeticalInverted:
+                case Sorting.Custom:
+                    result = _blogRepository.SortThem(context, false);
+                    break;
+            }
+            if (result.Ok)
+            {
+                transaction.Complete();
+            }
+        }
+        this.UserFacade.Result = result;
+    }
+
+    public void UndoChanges()
+    {
+        this.OnInitialized();
+    }
+}

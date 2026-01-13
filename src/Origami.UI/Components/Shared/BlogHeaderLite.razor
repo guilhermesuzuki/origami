@@ -1,0 +1,58 @@
+﻿@inherits Basic
+@implements IEntityNull<OrigamiBlog>
+
+@if (this.Entity != null)
+{
+    var info = this._blogInformation;
+    <span class="blog-header-lite @Class d-inline-flex align-items-center">
+        <i class="fa-solid fa-cube me-1"></i>
+        <span class="">@Entity.Name</span>
+        @if (ShowSlug)
+        {
+            @if (this.Entity.Slug.Equals(this.Entity.Name, StringComparison.InvariantCultureIgnoreCase) == false)
+            {
+                <span class="blog-slug ms-1 border-bottom" title="@Text.Lower("Slug")" style="opacity: 0.8; font-size: 0.8em;">
+                    @Entity.Slug
+                </span>
+            }
+        }
+        @if (Entity.IsPrimary)
+        {
+            <span class="bg-dark text-white fw-bold x-small ms-1 px-1" title="@Text.Lower("Primary")" style="">
+                @Text.Original("P")
+            </span>
+        }
+        @if (info.Has() == true)
+        {
+            <span class="bg-danger text-white fw-bold x-small px-1 ms-1">
+                @info
+            </span>
+        }
+    </span>
+}
+
+@code {
+    [Parameter] public OrigamiBlog? Entity { get; set; }
+    [Parameter] public bool ShowSlug { get; set; } = true;
+
+    private string _blogInformation
+    {
+        get
+        {
+            if (Entity != null)
+            {
+                var sb = new List<string>();
+                if (Entity.IsActive == false)
+                {
+                    sb.Add(Text.Lower("Deactivated"));
+                }
+                if (Entity.IsDeleted)
+                {
+                    sb.Add(Text.Lower("Deleted"));
+                }
+                return string.Join(", ", sb);
+            }
+            return string.Empty;
+        }
+    }
+}

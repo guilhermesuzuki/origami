@@ -1,0 +1,247 @@
+﻿@page "/socialprofiles"
+@inherits BasicAdminGrid<OrigamiSocialProfile>
+@inject ISubscriberRepository _subscriber
+@inject ISocialProfileRepository _socialProfile
+@inject ISocialProfileDeleteRepository _socialProfileForDeletion
+@inject IBlogRepository _blogs
+<Root Access="this.CanAccess()">
+    <HeaderTemplate>
+        <div class="p-3 border-bottom">
+            <div class="row">
+                <div class="d-inline-flex align-items-center col-12 col-xxl-8">
+                    <i class="fa-solid fa-id-badge pe-1"></i>
+                    <span class="me-3">@Text.Upper("Social Profiles")</span>
+                    <div class="btn-group pe-1">
+                        <button class="btn btn-danger text-white" title="@Text.Lower("Block User")" disabled="@this.DisableTheBlockButton" @onclick="this.BlockSelectedEntities">
+                            <i class="fa-solid fa-user-slash"></i>
+                        </button>
+                        <button class="btn btn-success text-white" title="@Text.Lower("Unblock User")" disabled="@this.DisableTheUnblockButton" @onclick="this.UnblockSelectedEntities">
+                            <i class="fa-solid fa-user"></i>
+                        </button>
+                    </div>
+                    <div class="btn-group pe-1">
+                        <button class="btn btn-success text-white" title="@Text.Lower("Grant Moderator To User")" disabled="@this.DisableTheGrantModeratorButton" @onclick="this.GrantModeratorToSelectedEntities">
+                            <i class="fa-solid fa-crown"></i>
+                        </button>
+                        <button class="btn btn-warning text-white" title="@Text.Lower("Revoke Moderator From User")" disabled="@this.DisableTheRevokeModeratorButton" @onclick="this.RevokeModeratorFromSelectedEntities">
+                            <i class="fa-solid fa-crown"></i>
+                            <i class="fa fa-ban" style="position: absolute; right: 8px; bottom: 8px; font-size: 8px;"></i>
+                        </button>
+                    </div>
+                    <div class="btn-group pe-1">
+                        <button class="btn btn-warning text-white" title="@Text.Lower("Unsubscribe User")" disabled="@this.DisableTheUnsubscribeButton" @onclick="this.UnsubscribeSelectedEntities">
+                            <i class="fa-solid fa-envelope"></i>
+                            <i class="fa fa-ban" style="position: absolute; right: 8px; bottom: 8px; font-size: 8px;"></i>
+                        </button>
+                        <button class="btn btn-danger text-white" title="@Text.Lower("Wipe Out User Data")" disabled="@this.DisableTheWipeOutDataButton" @onclick="this.WipeDataOutFromSelectedEntities">
+                            <i class="fa-solid fa-database"></i>
+                            <i class="fa fa-ban" style="position: absolute; right: 8px; bottom: 8px; font-size: 8px;"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-12 col-xxl-4">
+                    <BlogSelect Disabled="true" Style="visibility: hidden;"></BlogSelect>
+                </div>
+            </div>
+        </div>
+        <div class="p-3 border-bottom">
+            <div class="row">
+                <div class="col-12">
+                    <SearchLite T="OrigamiSocialProfile" OnHitSelected="this.OnSearchResultSelected"></SearchLite>
+                </div>
+            </div>
+        </div>
+    </HeaderTemplate>
+    <ContentTemplate>
+        <div class="p-3">
+            <div class="row">
+                <div class="social-profiles col-12 col-xxl-8">
+                    <MudDataGrid @ref="DataGrid" T="OrigamiSocialProfile" ServerData="GetEntities" Filterable="false" SortMode="SortMode.None" Class="border selectable" SelectedItems="this.SelectedEntities" MultiSelection="true" SelectedItemsChanged="this.SelectedEntitiesChanged"
+                                 RowClassFunc="RowClassFunc" Bordered="true" SelectOnRowClick="false">
+                        <Columns>
+                            <SelectColumn T="OrigamiSocialProfile"></SelectColumn>
+                            <TemplateColumn Title="@Text.Upper("Name")" Sortable="false" Filterable="false">
+                                <CellTemplate>
+                                    <div class="cursor-pointer" @onclick="() => OnEdit(context.Item)">
+                                        <SocialProfileHeaderLite Entity="context.Item" GoToProfileWhenClicking="false"></SocialProfileHeaderLite>
+                                        <Id Class="d-block x-small" Entity="context.Item"></Id>
+                                    </div>
+                                </CellTemplate>
+                            </TemplateColumn>
+                            <TemplateColumn Title="@Text.Upper("E-mail")" Sortable="false" Filterable="false" CellClass="col-3">
+                                <CellTemplate>
+                                    <span>@Text.Lower(context.Item.GetEmail())</span>
+                                </CellTemplate>
+                            </TemplateColumn>
+                        </Columns>
+                        <PagerContent>
+                            <MudDataGridPager T="OrigamiSocialProfile" />
+                        </PagerContent>
+                        <NoRecordsContent>
+                            <NoEntriesWereFound></NoEntriesWereFound>
+                        </NoRecordsContent>
+                    </MudDataGrid>
+                </div>
+                <div class="social-profiles-form col-12 col-xxl-4">
+                    <SocialProfileForm Class="p-3 shadow-sm border position-sticky" Entity="this.SelectedEntity" Saved="this.EntitySaved" Cancelled="this.EntityCancelled"></SocialProfileForm>
+                </div>
+            </div>
+        </div>
+    </ContentTemplate>
+</Root>
+@code {
+
+    protected override string DefaultOrdering => $"({nameof(OrigamiSocialProfile.Name)} != \"\" ? {nameof(OrigamiSocialProfile.Name)} : ({nameof(OrigamiSocialProfile.FirstName)} + {nameof(OrigamiSocialProfile.LastName)}))";
+
+    protected virtual bool DisableTheBlockButton => this.SelectedEntities.Any() == false;
+    protected virtual bool DisableTheUnblockButton => this.SelectedEntities.Any() == false;
+    protected virtual bool DisableTheUnsubscribeButton => this.SelectedEntities.Any() == false;
+    protected virtual bool DisableTheGrantModeratorButton => this.SelectedEntities.Any() == false;
+    protected virtual bool DisableTheRevokeModeratorButton => this.SelectedEntities.Any() == false;
+    protected virtual bool DisableTheWipeOutDataButton => this.SelectedEntities.Any() == false;
+
+    protected virtual Result<OrigamiSocialProfile> BlockEntity(OrigamiSocialProfile entity)
+    {
+        var context = new DataOperationContext<OrigamiSocialProfile>(this.UserFacade.User, DateTime.UtcNow, entity);
+        return _socialProfile.Block(context, true);
+    }
+
+    protected virtual Result<OrigamiSocialProfile> UnblockEntity(OrigamiSocialProfile entity)
+    {
+        var context = new DataOperationContext<OrigamiSocialProfile>(this.UserFacade.User, DateTime.UtcNow, entity);
+        return _socialProfile.Unblock(context, true);
+    }
+
+    protected virtual Result<OrigamiSocialProfile> GrantModerator(OrigamiSocialProfile entity)
+    {
+        var context = new DataOperationContext<OrigamiSocialProfile>(this.UserFacade.User, DateTime.UtcNow, entity);
+        return _socialProfile.GrantModerator(context, true);
+    }
+
+    protected virtual Result<OrigamiSocialProfile> RevokeModerator(OrigamiSocialProfile entity)
+    {
+        var context = new DataOperationContext<OrigamiSocialProfile>(this.UserFacade.User, DateTime.UtcNow, entity);
+        return _socialProfile.RevokeModerator(context, true);
+    }
+
+    /// <summary>
+    /// Blocks the selected users
+    /// </summary>
+    protected virtual async Task BlockSelectedEntities()
+    {
+        await this.ExecuteWithSelectedEntities(
+            async () =>
+            {
+                return await this.DialogService.ShowMessageBox(
+                    this.Text.Upper("Block {0} User(s)", this.SelectedEntities.Count),
+                    this.Text.Original("Are you sure?"),
+                    yesText: this.Text.Lower("Yes"),
+                    noText: this.Text.Lower("No"));
+            },
+            this.BlockEntity
+        );
+    }
+
+    /// <summary>
+    /// Grants moderator permissions to selected users
+    /// </summary>
+    protected virtual async Task GrantModeratorToSelectedEntities()
+    {
+        await this.ExecuteWithSelectedEntities(
+            async () =>
+            {
+                return await this.DialogService.ShowMessageBox(
+                    this.Text.Upper("Granting Moderator To {0} User(s)", this.SelectedEntities.Count),
+                    this.Text.Original("Are you sure?"),
+                    yesText: this.Text.Lower("Yes"),
+                    noText: this.Text.Lower("No"));
+            },
+            this.GrantModerator
+        );
+    }
+
+    /// <summary>
+    /// Revokes moderator permissions from selected users
+    /// </summary>
+    protected virtual async Task RevokeModeratorFromSelectedEntities()
+    {
+        await this.ExecuteWithSelectedEntities(
+            async () =>
+            {
+                return await this.DialogService.ShowMessageBox(
+                    this.Text.Upper("Revoking Moderator From {0} User(s)", this.SelectedEntities.Count),
+                    this.Text.Original("Are you sure?"),
+                    yesText: this.Text.Lower("Yes"),
+                    noText: this.Text.Lower("No"));
+            },
+            this.RevokeModerator
+        );
+    }
+
+    /// <summary>
+    /// Unblocks the selected users
+    /// </summary>
+    protected virtual async Task UnblockSelectedEntities()
+    {
+        await this.ExecuteWithSelectedEntities(
+            async () =>
+            {
+                return await this.DialogService.ShowMessageBox(
+                    this.Text.Upper("Unblocking {0} User(s)", this.SelectedEntities.Count),
+                    this.Text.Original("Are you sure?"),
+                    yesText: this.Text.Lower("Yes"),
+                    noText: this.Text.Lower("No"));
+            },
+            this.UnblockEntity
+        );
+    }
+
+    /// <summary>
+    /// Unsubscribe the selected users
+    /// </summary>
+    protected virtual async Task UnsubscribeSelectedEntities()
+    {
+        await this.ExecuteWithSelectedEntities(
+            async () =>
+            {
+                return await this.DialogService.ShowMessageBox(
+                    this.Text.Upper("Unsubscribe {0} User(s)", this.SelectedEntities.Count),
+                    this.Text.Original("Are you sure?"),
+                    yesText: this.Text.Lower("Yes"),
+                    noText: this.Text.Lower("No"));
+            },
+            this.Unsubscribe
+        );
+    }
+
+    protected virtual Result<OrigamiSocialProfile> Unsubscribe(OrigamiSocialProfile entity)
+    {
+        var ctx = entity.GetContext(this.UserFacade.User);
+        return new Result<OrigamiSocialProfile>(entity).Pull(this._subscriber.Unsubscribe(ctx, true));
+    }
+
+    /// <summary>
+    /// Wipe data out from selected users
+    /// </summary>
+    protected virtual async Task WipeDataOutFromSelectedEntities()
+    {
+        await this.ExecuteWithSelectedEntities(
+            async () =>
+            {
+                var answer = await this.DialogService.ShowMessageBox(
+                    this.Text.Upper("Wipe data out from {0} user(s)", this.SelectedEntities.Count),
+                    this.Text.Original("Are you sure?"),
+                    yesText: this.Text.Lower("Yes"),
+                    noText: this.Text.Lower("No"));
+                return answer;
+            },
+            this.WipeDataOut
+        );
+    }
+
+    protected virtual Result<OrigamiSocialProfile> WipeDataOut(OrigamiSocialProfile entity)
+    {
+        var context = new DataOperationContext<OrigamiSocialProfile>(this.UserFacade.User, DateTime.UtcNow, entity);
+        return new Result<OrigamiSocialProfile>(entity).Pull(this._socialProfileForDeletion.WipeDataOut(context, true));
+    }
+}

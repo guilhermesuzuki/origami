@@ -1,0 +1,122 @@
+﻿@using Origami.Core
+@using Origami.Core.Data
+@using Origami.Core.Models
+@inherits Basic
+@implements IBlogId
+@implements IShowFakes
+@inject IBlogRepository _blogRepository
+@inject IPostRepository _postRepository
+
+@if (Posts.Count > 0)
+{
+    <div class="post-list @Class position-relative">
+        <div class="row">
+            @for (int i = 1; i <= 5; i++)
+            {
+                <div class="col-12 col-xl-2"></div>
+            }
+            <div class="col-12 col-xl-2">
+                <MudSelect T="int" @bind-Value:get="this.OrderBy" @bind-Value:set="SetOrderBy">
+                    <MudSelectItem Value="1">@Text.Lower("By most recent")</MudSelectItem>
+                    <MudSelectItem Value="2">@Text.Lower("By title")</MudSelectItem>
+                    <MudSelectItem Value="3">@Text.Lower("By title desc.")</MudSelectItem>
+                    <MudSelectItem Value="4">@Text.Lower("By oldest")</MudSelectItem>
+                    <MudSelectItem Value="5">@Text.Lower("By language, title")</MudSelectItem>
+                    <MudSelectItem Value="6">@Text.Lower("By language, most recent")</MudSelectItem>
+                </MudSelect>
+            </div>
+        </div>
+        <div class="row mt-3">
+            @for (int i = 0; i < this.Page * this.PageSize; i++)
+            {
+                @if (Posts.Count > i)
+                {
+                    <div class="col-12 col-xl-4 mb-3">
+                        <PostHeader Entity="Posts[i]"></PostHeader>
+                    </div>
+                }
+            }
+        </div>
+        <div class="text-center">
+            <button class="text-center btn btn-light border" style="min-width: 250px; max-width: 100%" disabled="@_disableLoadMore" @onclick="() => { this.Page += 1; this.LoadPosts(); }">
+                <div><i class="fa-solid fa-file-lines fs-2"></i></div>
+                @Text.Lower("See more posts")
+            </button>
+        </div>
+    </div>
+}
+else if (this.ShowFakes == true)
+{
+    <div class="post-list fakes @Class position-relative">
+        <div class="row">
+            @foreach (var post in OrigamiPost.GetFakes())
+            {
+                <div class="col-12 col-xl-4 mb-3">
+                    <PostHeader Class="fake" Entity="post"></PostHeader>
+                </div>
+            }
+        </div>
+        <div class="text-center">
+            <button class="text-center btn btn-light border" style="min-width: 250px; max-width: 100%" disabled="disabled">
+                <div><i class="fa-solid fa-file-lines fs-2"></i></div>
+                @Text.Lower("See more posts")
+            </button>
+        </div>
+        <div class="position-absolute zeroes bg-white bg-opacity-75"></div>
+    </div>
+}
+
+@code {
+    [Parameter] public Guid BlogId { get; set; }
+    [Parameter] public int Page { get; set; } = 1;
+    [Parameter] public int PageSize { get; set; } = 9;
+    [Parameter] public int OrderBy { get; set; } = 1;
+    [Parameter] public bool ShowFakes { get; set; } = false;
+
+    protected List<OrigamiPost> Posts = [];
+
+    private bool _disableLoadMore
+    {
+        get => _postRepository.ReadFromCache()
+            .NonDeleted()
+            .Published()
+            .Blog(this.BlogId)
+            .Count() <= this.Page * this.PageSize;
+    }
+
+    /// <summary>
+    /// Loads the posts from the repository
+    /// </summary>
+    protected void LoadPosts()
+    {
+        var posts = _postRepository
+            .ReadFromCache()
+            .NonDeleted()
+            .Published()
+            .Blog(this.BlogId);
+
+        posts = this.OrderBy switch
+        {
+            2 => posts.OrderBy(x => x.Title),
+            3 => posts.OrderByDescending(x => x.Title),
+            4 => posts.OrderBy(x => x.DateCreated),
+            5 => posts.OrderBy(x => x.LanguageWrittenOn).ThenBy(x => x.Title),
+            6 => posts.OrderBy(x => x.LanguageWrittenOn).ThenByDescending(x => x.DateCreated),
+            _ => posts.OrderByDescending(x => x.DateCreated)
+        };
+
+        this.Posts = posts.Take(Page * PageSize).ToList();
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        this.LoadPosts();
+    }
+
+    private void SetOrderBy(int value)
+    {
+        this.OrderBy = value;
+        this.LoadPosts();
+    }
+}

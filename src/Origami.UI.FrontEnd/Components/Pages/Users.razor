@@ -1,0 +1,84 @@
+﻿@page "/users"
+@inherits BasicPage
+@inject IUserRepository _users
+@inject IUserContentRepository _userContents
+@inject IPageRepository _pages
+@inject IPostRepository _posts
+@inject IVideoRepository _videos
+
+<Root>
+    <MudDataGrid T="OrigamiUser" ServerData="this.GetEntities" SortMode="SortMode.None" Filterable="false">
+        <Columns>
+            <TemplateColumn>
+                <CellTemplate>
+                    @if (context.Item != null)
+                    {
+                        var user = this.Super.Users.ReadFromCache().Id(context.Item.Id);
+                        @if (user != null)
+                        {
+                            <div class="cursor-pointer" @onclick="() => _goToDetails(context.Item)">
+                                <ul class="inline-list">
+                                    <li style="width:25px;">
+                                        <HeaderImageLite Entity="user"></HeaderImageLite>
+                                    </li>
+                                    <li class="ps-2">
+                                        <div title="@Text.Lower("Display name")">@user.DisplayName</div>
+                                        <div>@user.FullName()</div>
+                                    </li>
+                                </ul>
+                            </div>
+                        }
+                    }
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="OrigamiUser" />
+        </PagerContent>
+    </MudDataGrid>
+</Root>
+
+@code {
+    [Parameter] public Guid UserId { get; set; } = Guid.Empty;
+
+    /// <summary>
+    /// This method should retrieve the Entities from database or memory
+    /// </summary>
+    /// <param name="state"></param>
+    /// <returns></returns>
+    protected virtual Task<GridData<OrigamiUser>> GetEntities(GridState<OrigamiUser> state)
+    {
+        var orders = new StringBuilder();
+
+        //iterates through every sort definition
+        foreach (var definition in state.SortDefinitions)
+        {
+            orders.AppendFormat(",{0} {1}", definition.SortBy, definition.Descending ? "DESC" : "ASC");
+        }
+
+        var filters = new StringBuilder("(true)");
+
+        //iterates through every filter definition
+        foreach (var definition in state.FilterDefinitions)
+        {
+            filters.AppendFormat(" && ({0})", definition.Filter());
+        }
+
+        var orderBy = orders.ToString();
+
+        //pulls information from cache
+        var result = _users.ReadFromDatabase().Query(
+            state.PageSize,
+            state.Page * state.PageSize,
+            filters.ToString(),
+            orderBy != string.Empty ? orderBy[1..] : $"{nameof(OrigamiUser.Username)}"
+        );
+
+        return Task.FromResult(new GridData<OrigamiUser> { Items = result.Rows, TotalItems = result.NumberOfRows, });
+    }
+
+    private void _goToDetails(OrigamiUser user)
+    {
+        this.NavigationManager!.NavigateTo($"/users/{user.Id}");
+    }
+}

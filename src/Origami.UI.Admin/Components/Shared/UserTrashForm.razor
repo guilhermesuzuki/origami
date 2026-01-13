@@ -1,0 +1,72 @@
+﻿@using System.Transactions
+@inherits BasicForm<OrigamiUserTrash>
+@inject IRoleRepository _roles
+
+<div class="trash-form @Class">
+    @if (this.Entity.New)
+    {
+        <div class="w-100 text-white bg-secondary text-center">
+            @Text.Lower("Select trash")
+        </div>
+    }
+    else
+    {
+        <style>
+            .trash-content [class^="col-"] { width: 100% !important; }
+        </style>
+        <div class="w-100 text-white bg-secondary text-center">
+            @Text.Lower("You are viewing an existing trash")
+        </div>
+        <div class="trash-content mt-3">
+            @if (Entity.Type.Like("Page") == true)
+            {
+                var entity = this.Super.Pages.ReadFromCache().Id(Entity.Id);
+                <TrashFormPage Entity="entity"></TrashFormPage>
+            }
+            else if (Entity.Type.Like("Post") == true)
+            {
+                var entity = this.Super.Posts.ReadFromCache().Id(Entity.Id);
+                <TrashFormPost Entity="entity"></TrashFormPost>
+            }
+            else if (Entity.Type.Like("Video") == true)
+            {
+                var entity = this.Super.Videos.ReadFromCache().Id(Entity.Id);
+                <TrashFormVideo Entity="entity"></TrashFormVideo>
+            }
+            else if (Entity.Type.Like("PostComment") == true)
+            {
+                var entity = this.Super.PostComments.ReadFromCache().Id(Entity.Id)!;
+                <TrashFormPostComment Entity="entity"></TrashFormPostComment>
+            }
+            else if (Entity.Type.Like("VideoComment") == true)
+            {
+                var entity = this.Super.VideoComments.ReadFromCache().Id(Entity.Id)!;
+                <TrashFormVideoComment Entity="entity"></TrashFormVideoComment>
+            }
+            else if (Entity.Type.Like("Category") == true)
+            {
+                var entity = this.Super.Categories.ReadFromCache().Id(Entity.Id)!;
+                <TrashFormCategory Entity="entity"></TrashFormCategory>
+            }
+            else if (Entity.Type.Like("User") == true)
+            {
+                var entity = this.Super.Users.ReadFromCache().Id(Entity.Id)!;
+                <TrashFormUser Entity="entity"></TrashFormUser>
+            }
+            else if (Entity.Type.Like("Role") == true)
+            {
+                var entity = _roles.ReadFromCache().Id(Entity.Id)!;
+                <TrashFormRole Entity="entity"></TrashFormRole>
+            }
+            else if (Entity.Type.Like("Blog") == true)
+            {
+                var entity = this.Super.Blogs.ReadFromCache().Id(Entity.Id)!;
+                <TrashFormBlog Entity="entity"></TrashFormBlog>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    
+}

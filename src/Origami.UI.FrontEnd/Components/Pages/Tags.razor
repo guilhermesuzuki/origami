@@ -1,0 +1,63 @@
+﻿@page "/blogs/{Slug}/tags"
+@inherits BasicPage
+@inject ISuperRepository _super
+
+<Root>
+    @if (this._blog != null)
+    {
+        var tags = this._super.Tags.ReadFromCache().Blog(_blog.Id);
+        <div class="tags pb-3">
+            <BlogHeaderLite2 Class="text-center fs-1" Entity="_blog" DisplayBlogNameEvenWithoutHeaderImage="false"></BlogHeaderLite2>
+            <div class="mt-3">
+                <div class="row">
+                    @if (tags.Any() == true)
+                    {
+                        @foreach (var tag in tags)
+                        {
+                            <div class="col-12 col-xl-3 cursor-pointer">
+                                <TagHeader Class="mb-3" Entity="tag"></TagHeader>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="col-12">
+                            <NothingToSeeHere Class="p-3 border shadow-sm" Subtitle="@Text.Lower("No tags whatsoever")"></NothingToSeeHere>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</Root>
+
+@code {
+    [Parameter] public string Slug { get; set; } = string.Empty;
+
+    // /// <summary>
+    // /// Blog ID based on the provided slug.
+    // /// </summary>
+    // private Guid BlogId => _super.Blogs.ReadFromCache().Slug(Slug)?.Id ?? Guid.Empty;
+
+    private OrigamiBlog _blog = new();
+    private IEnumerable<OrigamiBlog> _blogs = [];
+
+    private void LoadBlog()
+    {
+        this._blog = this.Super.Blogs.ReadFromCache().NonDeleted().Active().Slug(this.Slug) ?? new();
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        this.LoadBlog();
+    }
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        this.PageTitle.SetTitle(Text.Original("Tags"));
+        return base.OnAfterRenderAsync(firstRender);
+    }
+
+    public override Guid BlogId => this._blog.Id;
+}

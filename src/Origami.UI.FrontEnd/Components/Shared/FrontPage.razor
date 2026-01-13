@@ -1,0 +1,18 @@
+﻿@inherits Basic
+@implements IBlogId
+@inject IPageRepository _pageRepository
+
+@if (this.BlogId != Guid.Empty)
+{
+    var frontPage = _pageRepository.ReadFromCache().FrontPage(this.BlogId);
+    @if (frontPage != null)
+    {
+        <div class="front-page @Class">
+            <PagesDetails Page="frontPage"></PagesDetails>
+        </div>
+    }
+}
+    
+@code {
+    [Parameter] public Guid BlogId { get; set; }
+}

@@ -1,0 +1,36 @@
+﻿@inherits Basic
+@implements ITitle
+@implements ISubtitle
+
+<div class="nothing-to-see-here text-center @Class">
+    @if (this.TitleTemplate != null)
+    {
+        @this.TitleTemplate
+    }
+    else if (Title.Has() == true)
+    {
+        <i class="fs-1 fa-solid fa-face-grin-beam-sweat d-block m-auto"></i>
+        <span class="fs-2 header d-block">@this.Title</span>
+    }
+    else
+    {
+        <i class="fs-1 fa-solid fa-face-grin-beam-sweat d-block m-auto"></i>
+        <span class="fs-2 header d-block">@Text.Lower("Nothing to see here")</span>
+    }
+    @if (this.SubtitleTemplate != null)
+    {
+        @this.SubtitleTemplate
+    }
+    else if (Subtitle.Has() == true)
+    {
+        <span class="fs-5 title d-block">@this.Subtitle</span>
+    }
+</div>
+
+@code {
+    [Parameter] public RenderFragment? TitleTemplate { get; set; }
+    [Parameter] public RenderFragment? SubtitleTemplate { get; set; }
+    [Parameter] public string Title { get; set; } = string.Empty;
+    [Parameter] public string Subtitle { get; set; } = string.Empty;
+    [Parameter] public override string Class { get; set; } = "p-3 shadow-lg";
+}

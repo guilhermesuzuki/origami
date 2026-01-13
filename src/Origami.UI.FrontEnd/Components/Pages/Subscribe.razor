@@ -1,0 +1,99 @@
+﻿@page "/subscribe"
+@using Origami.UI.Components.Shared
+@inherits BasicPage
+
+<Root>
+    <div class="subscribe p-3 border shadow-lg">
+        <AuthorizeView>
+            <Authorized>
+                @if (this != null)
+                {
+                    var error = this.NavigationManager.Uri.QueryString("error");
+                    if (error.Has() == true)
+                    {
+                        <SomethingWentWrongTryAgain Error="@error"></SomethingWentWrongTryAgain>
+                    }
+                    else
+                    {
+                        if (this.UserFacade.SocialProfile.New)
+                        {
+                            <SomethingWentWrongTryAgain Error="@Text.Lower("Failed to authenticate you")"></SomethingWentWrongTryAgain>
+                        }
+                        else
+                        {
+                            <SocialProfileHeader Entity="this.UserFacade.SocialProfile"></SocialProfileHeader>
+                            var subscriber = this.Super.GetSubscriber(this.UserFacade.SocialProfile);
+                            if (subscriber != null)
+                            {
+                                <div class="fs-1 text-center mt-3 @Class">
+                                    <i class="fa-solid fa-face-laugh-wink"></i>
+                                    <span>
+                                        @Text.Lower("Congratulations")<span>!</span>
+                                        @Text.Lower("You subscribed to this website")
+                                    </span>
+                                </div>
+                            }
+                            else
+                            {
+                                <EmailForSubscription @ref="_emailForSubscription" Class="mt-3" Entity="this.UserFacade.SocialProfile" UserHasSubscribed="this.UserHasSubscribed"></EmailForSubscription>
+                                <div class="actions mt-3 btn-group">
+                                    <button class="btn btn-secondary" @onclick="this.ResetEmailForSubscription">@Text.Lower("Reset")</button>
+                                    <button class="btn btn-secondary" @onclick="this.MaybeLater">@Text.Lower("Maybe later")</button>
+                                </div>
+                            }
+                        }
+                    }
+                }
+            </Authorized>
+            <NotAuthorized>
+                <SomethingWentWrongTryAgain Error="@Text.Lower("Failed to authenticate you")"></SomethingWentWrongTryAgain>
+            </NotAuthorized>
+        </AuthorizeView>
+    </div>
+</Root>
+
+@code {
+    private bool _resetEmailForSubscription = false;
+    private EmailForSubscription _emailForSubscription = null!;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        this.PageTitle.SetTitle(Text.Original("Subscribe"));
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        this.TryToSubscribeUser();
+    }
+
+    private void MaybeLater()
+    {
+        this.NavigationManager.NavigateTo("/#content-start");
+    }
+
+    private void ResetEmailForSubscription()
+    {
+        this._emailForSubscription.Reset();
+    }
+
+    private void UserHasSubscribed(OrigamiSocialProfile socialProfile)
+    {
+        this.StateHasChanged();
+    }
+
+    private void TryToSubscribeUser()
+    {
+        var sub = this.Super.GetSubscriber(this.UserFacade.SocialProfile);
+        if (sub != null)
+        {
+            return;
+        }
+        if (this.UserFacade.SocialProfile.HasEmail() == true)
+        {
+            var hub = this.Super.Subscribers.Subscribe(new(OrigamiUser.AnonymousUser, DateTime.UtcNow, this.UserFacade.SocialProfile));
+            this.UserFacade.Result = hub;
+        }
+    }
+}

@@ -1,0 +1,139 @@
+﻿@inherits BasicPage
+@implements IItems<BaseContent>
+@implements IEntityNull<BaseContent>
+@page "/blogs/{Slug}/tags/{Tag}"
+@page "/blogs/{Slug}/tags/{Tag}/{ContentNanoId}"
+@inject ITagRepository _tags
+@inject IPostTagRepository _postTags
+@inject IVideoTagRepository _videoTags
+
+<Root>
+    <style>
+        .header .tag-header { border: none !important; box-shadow: none !important; }
+        .header .tag-header i { font-size: 80px !important; }
+        .header .tag-header .name { font-size: xx-large !important; }
+    </style>
+    @if (this.Entity is OrigamiPost _post)
+    {
+        <HeadContent>
+            <meta property="og:title" content="@Tag • @_post.Title" />
+            <meta property="og:description" content="@_post.Description" />
+            <meta property="og:image" content="@(NavigationManager.BaseUri.TrimEnd('/') + _post.Get().HeaderImage.NoHeader())" />
+            <meta property="og:url" content="@NavigationManager.BaseUri.TrimEnd('/')/tags/@Tag/@_post.NanoId" />
+        </HeadContent>
+    }
+    @if (this.Entity is OrigamiVideo _video)
+    {
+        <HeadContent>
+            <meta property="og:title" content="@Tag • @_video.Title" />
+            <meta property="og:description" content="@_video.Description" />
+            <meta property="og:image" content="@(NavigationManager.BaseUri.TrimEnd('/') + _video.Get().HeaderImage.NoHeader())" />
+            <meta property="og:url" content="@NavigationManager.BaseUri.TrimEnd('/')/tags/@Tag/@_video.NanoId" />
+        </HeadContent>
+    }
+    <div class="tag-details @Class">
+        <div class="header mb-3">
+            <TagHeader Class="cursor-pointer" Entity="this.GetTag()"></TagHeader>
+        </div>
+        @if (this.Items.Count > 0)
+        {
+            <div class="overflow-auto pb-1">
+                <table>
+                    <tr>
+                        @foreach (var content in Items)
+                        {
+                            <td>
+                                <div class="pe-1" style="width:300px;">
+                                    @if (content is OrigamiPost postHeader)
+                                    {
+                                        <PostHeader Class="@(this.Entity == postHeader ? "selected" : null)" Tag="@this.GetTag()" Entity="postHeader"></PostHeader>
+                                    }
+                                    @if (content is OrigamiVideo videoHeader)
+                                    {
+                                        <VideoHeader Class="@(this.Entity == videoHeader ? "selected" : null)" Tag="@this.GetTag()" Entity="videoHeader"></VideoHeader>
+                                    }
+                                </div>
+                            </td>
+                        }
+                    </tr>
+                </table>
+            </div>
+        }
+        @if (this.Entity != null && this.Entity is OrigamiPost post)
+        {
+            <PostsDetails OpenGraphMetaTags="false" Class="mt-3" Tag="@this.GetTag()" Post="post"></PostsDetails>
+        }
+        @if (this.Entity != null && this.Entity is OrigamiVideo video)
+        {
+            <VideosDetails OpenGraphMetaTags="false" Class="mt-3" Tag="@this.GetTag()" Video="video"></VideosDetails>
+        }
+        @if (this.Items.Count == 0)
+        {
+            <NothingToSeeHere></NothingToSeeHere>
+        }
+    </div>
+</Root>
+
+@code {
+    [Parameter] public string Slug { get; set; } = string.Empty;
+    [Parameter] public string ContentNanoId { get; set; } = string.Empty;
+    [Parameter] public string Tag { get; set; } = string.Empty;
+
+    /// <summary>
+    /// List of Content [Post-Tags,Video-Tags] from the Category
+    /// </summary>
+    public List<BaseContent> Items { get; set; } = new();
+
+    /// <summary>
+    /// Main Content (the one being displayed)
+    /// </summary>
+    public BaseContent? Entity { get; set; }
+
+    /// <summary>
+    /// Retrieves the blog from the given slug
+    /// </summary>
+    /// <returns></returns>
+    private OrigamiBlog GetBlog()
+    {
+        return this.Super.Blogs.ReadFromCache().Slug(this.Slug) ?? new();
+    }
+
+    /// <summary>
+    /// Core.Tag
+    /// </summary>
+    private OrigamiTag GetTag()
+    {
+        var blog = this.GetBlog();
+        return this.Super.Tags.ReadFromCache().Blog(blog.Id).Slug(this.Tag) ?? new();
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        this.LoadFromTag();
+        this.LoadContent();
+    }
+
+    protected void LoadFromTag()
+    {
+        var tag = this.GetTag();
+        Items = new();
+        Items.AddRange(this.Super.GetPosts(tag).Published());
+        Items.AddRange(this.Super.GetVideos(tag).Published());
+        Items = Items.DistinctBy(x => x.Id).OrderBy(x => x.Title).ToList();
+    }
+
+    protected void LoadContent()
+    {
+        if (this.ContentNanoId.Has() == false) this.Entity = Items.FirstOrDefault();
+        if (this.ContentNanoId.Has() == true) this.Entity = Items.NanoId(this.ContentNanoId);
+    }
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        this.PageTitle.SetTitle(GetTag(), this.Entity);
+        return base.OnAfterRenderAsync(firstRender);
+    }
+
+    public override Guid BlogId => this.GetBlog().Id;
+}

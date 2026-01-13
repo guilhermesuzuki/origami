@@ -1,0 +1,236 @@
+﻿@page "/user/profile"
+@page "/user/profile/{UserId:guid}"
+@inherits BasicFormFull<OrigamiUser>
+
+<MudFileUpload @ref="this.FileUpload" T="IBrowserFile" FilesChanged="this.UploadHeaderBase64" Accept=".png, .jpg, .bmp, .tiff" MaximumFileCount="1"></MudFileUpload>
+
+<div class="header p-3 border-bottom">
+    <div class="row">
+        <div class="d-inline-flex align-items-center col-12 col-xxl-8">
+            <i class="fa-solid fa-user pe-1"></i>
+            <span class="me-3">@Text.Upper("Profile")</span>
+        </div>
+        <div class="col-12 col-xxl-4">
+            <BlogSelect Disabled="true" Style="visibility: hidden;"></BlogSelect>
+        </div>
+    </div>
+</div>
+
+<div class="p-3">
+    <div class="row">
+        <div class="col-12 col-xxl-6">
+            <div class="border p-3">
+                <ul class="inline-list">
+                    <li class="text-center" style="width:30%;">
+                        @if (this.Entity.HeaderImage.Has() == true)
+                        {
+                            <HeaderImageLite Entity="Entity"></HeaderImageLite>
+                        }
+                        else
+                        {
+                            <i class="fa-solid fa-user" style="font-size: 100px;"></i>
+                        }
+                    </li>
+                    <li class="ps-6">
+                        <div>
+                            <div class="fs-3">@Entity.Username</div>
+                            <div class="small">
+                                <span>@Text.Original("Roles"):</span>
+                                <span>@string.Join(", ", from r in Roles select r.Name)</span>
+                            </div>
+                            <div class="btn-group mt-3 w-100 border">
+                                <button class="btn btn-light" @onclick="this.PickFile">
+                                    <i class="fa-solid fa-file-arrow-up"></i>
+                                    @Text.Lower("Upload picture")
+                                </button>
+                                <button class="btn btn-light" @onclick="() => this._fileManager = true">
+                                    <i class="fa-solid fa-folder"></i>
+                                    @Text.Lower("Pick from file manager")
+                                </button>
+                                <button class="btn btn-light" @onclick="this.ClearHeader">
+                                    <i class="fa-solid fa-circle-xmark"></i>
+                                    @Text.Lower("Remove picture")
+                                </button>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+
+                <ul class="inline-list mt-3">
+                    <li class="">
+                        <MudTextField @bind-Value="this.Entity.Username"
+                                      HelperText="@Text.Lower("Username (read-only)")"
+                                      ReadOnly="true"></MudTextField>
+                    </li>
+                    <li class="">
+                        <MudTextField @bind-Value="this.Entity.DisplayName"
+                                      Immediate="true"
+                                      Required="true"
+                                      HelperText="@Text.Lower("Display name")"></MudTextField>
+                    </li>
+                </ul>
+                <ul class="inline-list mt-3">
+                    <li class="">
+                        <MudTextField @bind-Value="this.Entity.EmailAddress"
+                                      HelperText="@Text.Lower("E-mail")"
+                                      InputType="InputType.Email"
+                                      Immediate="true"
+                                      Required="true"></MudTextField>
+                    </li>
+                </ul>
+                <ul class="inline-list mt-3">
+                    <li>
+                        <MudTextField @bind-Value="this.Entity.FirstName"
+                                      Immediate="true"
+                                      HelperText="@Text.Lower("First name")"></MudTextField>
+                    </li>
+                    <li>
+                        <MudTextField @bind-Value="this.Entity.LastName"
+                                      Immediate="true"
+                                      HelperText="@Text.Lower("Last name")"></MudTextField>
+                    </li>
+                </ul>
+                <ul class="inline-list mt-3">
+                    <li>
+                        <MudTextField @bind-Value="this.Entity.Website"
+                                      Immediate="true"
+                                      Adornment="Adornment.Start"
+                                      AdornmentIcon="@Icons.Material.Filled.Web"
+                                      HelperText="@Text.Lower("Website")"></MudTextField>
+                    </li>
+                </ul>
+                <ul class="inline-list mt-3">
+                    <li>
+                        <MudTextField @bind-Value="this.Entity.GitHub"
+                                      Immediate="true"
+                                      Adornment="Adornment.Start"
+                                      AdornmentIcon="@Icons.Custom.Brands.GitHub"
+                                      HelperText="@Text.Lower("GitHub")"></MudTextField>
+                    </li>
+                </ul>
+                <ul class="inline-list mt-3">
+                    <li>
+                        <MudTextField @bind-Value="this.Entity.LinkedIn"
+                                      Immediate="true"
+                                      Adornment="Adornment.Start"
+                                      AdornmentIcon="@Icons.Custom.Brands.LinkedIn"
+                                      HelperText="@Text.Lower("LinkedIn")"></MudTextField>
+                    </li>
+                </ul>
+                <ul class="inline-list mt-3">
+                    <li>
+                        <MudTextField @bind-Value="this.Entity.Facebook"
+                                      Immediate="true"
+                                      Adornment="Adornment.Start"
+                                      AdornmentIcon="@Icons.Custom.Brands.Facebook"
+                                      HelperText="@Text.Lower("Facebook")"></MudTextField>
+                    </li>
+                </ul>
+                <ul class="inline-list mt-3">
+                    <li>
+                        <MudTextField @bind-Value="this.Entity.Instagram"
+                                      Immediate="true"
+                                      Adornment="Adornment.Start"
+                                      AdornmentIcon="@Icons.Custom.Brands.Instagram"
+                                      HelperText="@Text.Lower("Instagram")"></MudTextField>
+                    </li>
+                </ul>
+                <div class="buttons btn-group mt-3 w-100">
+                    <button class="btn btn-success text-white fw-bold" @onclick="Save" disabled="@this.DisableTheSaveButton">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        @Text.Lower("Save")
+                    </button>
+                    <button class="btn btn-secondary text-white fw-bold" @onclick="UndoChanges" disabled="@this.Entity.New">
+                        <i class="fa-solid fa-rotate-left"></i>
+                        @Text.Lower("Undo changes")
+                    </button>
+                    <button class="btn btn-warning text-white fw-bold" @onclick="this._clear">
+                        <i class="fa-solid fa-broom"></i>
+                        @Text.Lower("Clear")
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (_fileManager)
+{
+    <div class="position-absolute popup-container">
+        <div class="border shadow-lg position-relative" style="width: 90%; height: 90%;">
+            <div class="overflow-auto" style="height:100%; padding-bottom: 70px;">
+                <FileManager Mode="Image" OnFileClicked="this.ImageFromFileManagerWillAssignEntityHeader"></FileManager>
+            </div>
+            <ul class="inline-list position-absolute w-100 border bg-white" style="bottom:0; z-index: 50;">
+                <li></li>
+                <li class="text-right">
+                    <div class="btn-group p-3">
+                        <button class="btn btn-secondary" @onclick="() => this._fileManager = false">
+                            <i class="fa-solid fa-circle-xmark"></i>
+                            @Text.Lower("Close window")
+                        </button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+}
+
+@code {
+    private bool _fileManager = false;
+
+    protected IEnumerable<OrigamiRole> Roles = [];
+    protected IEnumerable<OrigamiUserRole> UserRoles = [];
+
+    [Parameter] public Guid UserId { get; set; } = Guid.Empty;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        this._loadUser();
+        this._loadUserRoles();
+        this._loadRoles();
+    }
+
+    private void _loadUser()
+    {
+        var user = this.Super.Users.ReadFromCache().Id(this.UserId) ?? this.Super.Users.ReadFromCache().Id(this.UserFacade.User.Id) ?? new();
+        this.Entity = user.Clone();
+    }
+
+    private void _loadRoles()
+    {
+        this.Roles = from r in this.Super.Roles.ReadFromCache()
+                     join ur in this.UserRoles on r.Id equals ur.RoleId
+                     select r;
+    }
+
+    private void _loadUserRoles()
+    {
+        this.UserRoles = this.Super.UserRoles.ReadFromCache().Where(x => x.UserId == this.Entity.Id);
+    }
+
+    public override void UndoChanges()
+    {
+        this._loadUser();
+        this._loadUserRoles();
+    }
+
+    private void _clear()
+    {
+        this.Entity.DisplayName = string.Empty;
+        this.Entity.EmailAddress = string.Empty;
+        this.Entity.FirstName = string.Empty;
+        this.Entity.LastName = string.Empty;
+    }
+
+    protected override bool DisableTheSaveButton
+    {
+        get
+        {
+            if (this.Entity.DisplayName.Has() == false) return true;
+            if (this.Entity.EmailAddress.Has() == false) return true;
+            return false;
+        }
+    }
+}

@@ -1,0 +1,80 @@
+﻿@using Origami.Core.Data
+@using Origami.Core.Models
+@inherits Basic
+@implements IEntityNull<OrigamiSocialProfile>
+
+@if (Entity != null)
+{
+    <div class="wrapper d-inline-block @Class">
+        <span class="social-profile-header-lite cursor-pointer d-inline-flex align-items-center @(Actions ? "p-2" : null)" @onclick="this.GoToProfile" title="@Text.Lower("Go to Profile")">
+            @if (SocialNetwork)
+            {
+                @if (Entity.SocialNetwork == SocialNetworks.Google)
+                {
+                    <i class="fa-brands fa-google"></i>
+                }
+                else if (Entity.SocialNetwork == SocialNetworks.Facebook)
+                {
+                    <i class="fa-brands fa-facebook"></i>
+                }
+                else if (Entity.SocialNetwork == SocialNetworks.Twitter)
+                {
+                    <i class="fa-brands fa-twitter"></i>
+                }
+                else if (Entity.SocialNetwork == SocialNetworks.GitHub)
+                {
+                    <i class="fa-brands fa-github"></i>
+                }
+                else if (Entity.SocialNetwork == SocialNetworks.Microsoft)
+                {
+                    <i class="fa-brands fa-microsoft"></i>
+                }
+            }
+            @if (ProfilePicture)
+            {
+                <img class="ps-1 logo" src="@Entity.ProfilePicture()" height="12" onerror="this.src='@(OrigamiConstants.NoUser)'" style="border-radius:unset;" />
+            }
+            <span class="ps-1 fw-bold social-profile-name">@Entity.Name()</span>
+            <SocialProfileFeatures Entity="Entity"></SocialProfileFeatures>
+        </span>
+        @if (this.Actions == true)
+        {
+            @if (this.UserFacade.SocialProfile.Id == this.Entity.Id)
+            {
+                <button class="w-100 p-2 text-dark bg-light" @onclick="this.Logout" title="@Text.Lower("Log out")">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
+            }
+        }
+    </div>
+}
+
+@code {
+    [Parameter] public OrigamiSocialProfile? Entity { get; set; }
+
+    /// <summary>
+    /// User goes to user profile when clicking
+    /// </summary>
+    [Parameter] public bool GoToProfileWhenClicking { get; set; } = true;
+
+    /// <summary>
+    /// Whether or not to display the SocialNetwork icon
+    /// </summary>
+    [Parameter] public bool SocialNetwork { get; set; } = true;
+
+    /// <summary>
+    /// Whether or not to display the user's profile picture
+    /// </summary>
+    [Parameter] public bool ProfilePicture { get; set; } = true;
+
+    /// <summary>
+    /// Show the actions button
+    /// </summary>
+    [Parameter] public bool Actions { get; set; } = false;
+
+    private void GoToProfile()
+    {
+        if (this.GoToProfileWhenClicking == false) return;
+        this.NavigationManager!.NavigateTo($"/socialprofiles/{Entity?.Id}", true);
+    }
+}

@@ -1,0 +1,214 @@
+﻿@inherits BasicFormFull<Core.Models.OrigamiPage>
+@inject IPageRepository _page
+@inject IFileRepository _fileRepository
+
+<MudFileUpload @ref="this.FileUpload" T="IBrowserFile" FilesChanged="UploadHeader" Accept=".png, .jpg, .bmp, .tiff" MaximumFileCount="1"></MudFileUpload>
+<div class="form @Class">
+    <div class="row">
+        <div class="col-12">
+            <div class="p-3">
+                <MudTextField ReadOnly="true"
+                              Immediate="true"
+                              Value="@(Text.Lower(Entity.IsDraft.YesNo()))"
+                              HelperText="@Text.Lower("Still a draft?")"
+                              Class="cursor-pointer yes-no"
+                              title="@Text.Lower("Click here to change it")"
+                              @onclick="() => this.Entity.IsDraft = !this.Entity.IsDraft.GetValueOrDefault()"></MudTextField>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-xxl-6">
+            <div class="p-3">
+                <BasicHeaderNotes Entity="this.Entity"></BasicHeaderNotes>
+                <div class="parent-selector mt-3">
+                    @if (this.Entity.ParentId != null)
+                    {
+                        var parent = this.Repository.ReadFromCache().Id(this.Entity.ParentId.Value);
+                        <div class="p-3 border">
+                            <div class="p-3 border">
+                                <PageHeaderLite2 Class="" Entity="parent"></PageHeaderLite2>
+                            </div>
+                            <div class="btn-group mt-2 w-100">
+                                <button class="btn btn-light w-100" @onclick="() => this.ParentSelector = !this.ParentSelector">
+                                    <i class="fa-solid fa-square-check"></i>
+                                    @Text.Lower("Select parent page")
+                                </button>
+                                <button class="btn btn-light w-100" @onclick="() => this.Entity.ParentId = null">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                    @Text.Lower("Clear selection")
+                                </button>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="p-3 border">
+                            <div class="btn-group w-100">
+                                <button class="btn btn-light w-100" @onclick="() => this.ParentSelector = !this.ParentSelector">
+                                    <i class="fa-solid fa-square-check"></i>
+                                    @Text.Lower("Select parent page")
+                                </button>
+                            </div>
+                        </div>
+                    }
+                    @if (ParentSelector)
+                    {
+                        <div class="mt-3">
+                            <MudDataGrid T="OrigamiPage" Items="this.Parents()" Filterable="false" SortMode="SortMode.Single" Class="border" Bordered="true" SelectOnRowClick="false">
+                                <Columns>
+                                    <TemplateColumn Title="@Text.Upper("Title")" Sortable="true" Filterable="false" CellClass="col-8" SortBy="x => x.Title">
+                                        <CellTemplate>
+                                            <PageHeaderLite2 Class="" Entity="context.Item"></PageHeaderLite2>
+                                        </CellTemplate>
+                                    </TemplateColumn>
+                                    <TemplateColumn Sortable="false" Filterable="false" CellClass="col-1 text-center">
+                                        <CellTemplate>
+                                            <button class="cursor-pointer p-2" @onclick="() => { this.Parent(context.Item); this.ParentSelector = false; }"><i class="bi bi-check-square-fill"></i></button>
+                                        </CellTemplate>
+                                    </TemplateColumn>
+                                </Columns>
+                                <PagerContent>
+                                    <MudDataGridPager T="OrigamiPage" PageSizeOptions="[5]" />
+                                </PagerContent>
+                                <NoRecordsContent>
+                                    <NoEntriesWereFound></NoEntriesWereFound>
+                                </NoRecordsContent>
+                            </MudDataGrid>
+                        </div>
+                    }
+                </div>
+
+                <BasicHeader Class="mt-3" Entity="this.Entity"></BasicHeader>
+
+                <ul class="inline-list mt-3">
+                    <li>
+                        <MudTextField Immediate="true"
+                                      AdornmentIcon="@Icons.Material.Filled.Description"
+                                      Adornment="Adornment.Start"
+                                      @bind-Value="@Entity.Title"
+                                      HelperText="@Text.Lower("Title")"
+                                      Required="true"></MudTextField>
+                    </li>
+                    <li>
+                        <LanguageWrittenOn Entity="this.Entity"></LanguageWrittenOn>
+                    </li>
+                </ul>
+                <ul class="inline-list mt-3">
+                    <li class="pe-2">
+                        <MudTextField Immediate="true"
+                                      AdornmentIcon="@Icons.Material.Filled.Link"
+                                      Adornment="Adornment.Start"
+                                      @bind-Value="@Entity.Slug"
+                                      HelperText="@Text.Lower("Slug")"></MudTextField>
+                    </li>
+                    <li style="width:140px;">
+                        <button class="btn btn-secondary" @onclick="() => Entity.Slug = Entity.Title.GetSlug()" style="line-height: 15px;">
+                            @Text.Lower("Create slug")
+                            <span class="x-small">@Text.Lower("Based on title")</span>
+                        </button>
+                    </li>
+                </ul>
+                <ul class="inline-list mt-3">
+                    <li>
+                        <MudTextField Immediate="true"
+                                      @bind-Value="@(Entity.Keywords)"
+                                      HelperText="@Text.Lower("Keywords")"
+                                      AutoGrow="false"></MudTextField>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-12 col-xxl-6">
+            <div class="text-center p-3">
+                <HeaderImageLite Entity="@Entity"></HeaderImageLite>
+                <div class="btn-group mt-2 w-100">
+                    <button class="btn btn-light w-100" @onclick="PickFile">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <div>@Text.Lower("Only image files")</div>
+                        <div class="x-small">@Text.Lower("Create slug")</div>
+                    </button>
+                    <button class="btn btn-light w-100" @onclick="() => this.FileManagerForImages = true">
+                        <i class="fa-solid fa-folder"></i>
+                        @Text.Lower("Pick from file manager")
+                    </button>
+                    <button class="btn btn-light w-100" @onclick="ClearHeader">
+                        <i class="fa-solid fa-trash-can"></i>
+                        @Text.Lower("Clear header")
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="p-3">
+                <MudTextField FullWidth="true"
+                              Immediate="true"
+                              @bind-Value="@Entity.Description"
+                              AutoGrow="true"
+                              HelperText="@Text.Lower("Description")"></MudTextField>
+            </div>
+            <div class="p-3">
+                <TinyMCEContent Entity="Entity" Title="@Text.Lower("Content")"></TinyMCEContent>
+            </div>
+        </div>
+    </div>
+    <div class="buttons mt-3 p-3 text-center">
+        <div class="btn-group">
+            <button class="btn btn-success text-white fw-bold" @onclick="Save" disabled="@this.DisableTheSaveButton">
+                <i class="fa-solid fa-floppy-disk"></i>
+                @Text.Lower("Save")
+            </button>
+            <button class="btn btn-secondary text-white fw-bold" @onclick="UndoChanges" disabled="@this.Entity.New">
+                <i class="fa-solid fa-rotate-left"></i>
+                @Text.Lower("Undo changes")
+            </button>
+            <button class="btn btn-info text-white fw-bold" @onclick="CreateEntity">
+                <i class="fa-solid fa-square-plus"></i>
+                @Text.Lower("New")
+            </button>
+        </div>
+    </div>
+</div>
+@if (FileManagerForImages)
+{
+    <div class="position-fixed popup-container">
+        <div class="border shadow-lg position-relative" style="width: 90%; height: 90%;">
+            <div class="overflow-auto" style="height:100%; padding-bottom: 70px;">
+                <FileManager Mode="Image" OnFileClicked="this.ImageFromFileManagerWillAssignEntityHeader"></FileManager>
+            </div>
+            <ul class="inline-list position-absolute w-100 border bg-white" style="bottom:0; z-index: 50;">
+                <li></li>
+                <li class="text-right">
+                    <div class="btn-group p-3">
+                        <button class="btn btn-secondary" @onclick="() => this.FileManagerForImages = false">
+                            <i class="fa-solid fa-circle-xmark"></i>
+                            @Text.Lower("Close window")
+                        </button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+}
+@code {
+    protected override bool DisableTheSaveButton
+    {
+        get
+        {
+            if (this.Entity.Title.Has() == false) return true;
+            return false;
+        }
+    }
+
+    protected override IEnumerable<OrigamiPage> Parents()
+    {
+        return from x in this.Super.Pages.ReadFromCache()
+               where x.BlogId == this.UserFacade.BlogId
+               where x.IsDeleted == false
+               where this.Super.IsParentDeleted(x) == false
+               orderby x.Title
+               select x;
+    }
+}

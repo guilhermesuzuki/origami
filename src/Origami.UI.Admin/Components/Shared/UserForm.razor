@@ -1,0 +1,618 @@
+﻿@inherits BasicFormFull<OrigamiUser>
+
+<style>
+    .post-header-image, .video-header-image, .page-header-image { height: 200px; }
+</style>
+<style>
+    ul.expand { display: flex; list-style: none; padding: 0; margin: 0; }
+    ul.expand > li { display: flex; flex-direction: column; flex: 1; }
+</style>
+<MudFileUpload @ref="this.FileUpload" T="IBrowserFile" FilesChanged="UploadHeaderBase64" Accept=".png, .jpg, .bmp, .tiff" MaximumFileCount="1"></MudFileUpload>
+<div class="user-form @Class">
+    <div class="row">
+        <div class="col-12 col-xxl-6">
+            <div class="p-3">
+                <BasicHeaderNotes Entity="this.Entity"></BasicHeaderNotes>
+                <BasicHeader Class="mt-3" Entity="this.Entity"></BasicHeader>
+                @if (this.Entity.New)
+                {
+                    <ul class="inline-list mt-3">
+                        <li>
+                            <div class="border border-warning text-warning text-center p-3">
+                                <span class="fs-3">
+                                    <i class="fa-solid fa-triangle-exclamation"></i>
+                                </span>
+                                <br />
+                                <span class="fw-bold">
+                                    @Text.Original("Be careful when choosing a username, you won't be able to change it later.")
+                                    <br />
+                                    @Text.Original("You can change your display name at any time though.")
+                                </span>
+                            </div>
+                        </li>
+                    </ul>
+                }
+                <ul class="inline-list mt-3">
+                    <li class="">
+                        @if (this.Entity.New)
+                        {
+                            <MudTextField @bind-Value="this.Entity.Username"
+                                          HelperText="@Text.Lower("Username")"
+                                          Immediate="true"
+                                          Required="true"></MudTextField>
+                        }
+                        else
+                        {
+                            <MudTextField @bind-Value="this.Entity.Username"
+                                          HelperText="@Text.Lower("Username (read-only)")"
+                                          ReadOnly="true"
+                                          Required="true"></MudTextField>
+                        }
+                    </li>
+                    <li class="">
+                        <MudTextField @bind-Value="this.Entity.DisplayName"
+                                      Immediate="true"
+                                      Required="true"
+                                      HelperText="@Text.Lower("Display name")"></MudTextField>
+                    </li>
+                </ul>
+                <ul class="inline-list mt-3">
+                    <li class="">
+                        <MudTextField @bind-Value="this.Entity.EmailAddress"
+                                      HelperText="@Text.Lower("E-mail")"
+                                      InputType="InputType.Email"
+                                      Immediate="true"
+                                      Required="true"></MudTextField>
+                    </li>
+                    <li>
+                        <Filler></Filler>
+                    </li>
+                </ul>
+                <ul class="inline-list mt-3">
+                    <li>
+                        <MudTextField @bind-Value="this.Entity.FirstName"
+                                      Immediate="true"
+                                      HelperText="@Text.Lower("First name")"></MudTextField>
+                    </li>
+                    <li>
+                        <MudTextField @bind-Value="this.Entity.LastName"
+                                      Immediate="true"
+                                      HelperText="@Text.Lower("Last name")"></MudTextField>
+                    </li>
+                </ul>
+            </div>
+            <div class="text-center p-3 mt-3">
+                <ul class="expand padding-30 border">
+                    <li>
+                        <HeaderImageLite Entity="this.Entity" ImgMaxWidth="256px" Footer="true"></HeaderImageLite>
+                    </li>
+                    <li class="position-relative">
+                        <div class="position-absolute zeroes btn-group-vertical">
+                            <button class="btn btn-light w-100" @onclick="PickFile" style="height:34%;">
+                                <i class="fa-solid fa-cloud-arrow-up"></i>
+                                <div>@Text.Lower("Only image files")</div>
+                                <div class="x-small">@Text.Original("{0} MB max.", 2)</div>
+                            </button>
+                            <button class="btn btn-light w-100" @onclick="() => this.FileManagerForImages = true" style="height:33%;">
+                                <i class="fa-solid fa-folder"></i>
+                                <div>@Text.Lower("Pick from file manager")</div>
+                            </button>
+                            <button class="btn btn-light w-100" @onclick="ClearHeader" style="height:33%;">
+                                <i class="fa-solid fa-trash-can"></i>
+                                <div>@Text.Lower("Clear picture")</div>
+                            </button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-12 col-xxl-6">
+            <div class="misc p-3">
+                <div class="w-100 text-white bg-secondary text-center">
+                    <i class="fa-solid fa-circle-info"></i>
+                    @Text.Lower("Misc")
+                </div>
+                <ul class="inline-list mt-3">
+                    <li>
+                        <MudTextField @bind-Value="this.Entity.Website"
+                                      Immediate="true"
+                                      Adornment="Adornment.Start"
+                                      AdornmentIcon="@Icons.Material.Filled.Web"
+                                      HelperText="@Text.Lower("Website")"></MudTextField>
+                    </li>
+                </ul>
+                <ul class="inline-list mt-3">
+                    <li>
+                        <MudTextField @bind-Value="this.Entity.GitHub"
+                                      Immediate="true"
+                                      Adornment="Adornment.Start"
+                                      AdornmentIcon="@Icons.Custom.Brands.GitHub"
+                                      HelperText="@Text.Lower("GitHub")"></MudTextField>
+                    </li>
+                </ul>
+                <ul class="inline-list mt-3">
+                    <li>
+                        <MudTextField @bind-Value="this.Entity.LinkedIn"
+                                      Immediate="true"
+                                      Adornment="Adornment.Start"
+                                      AdornmentIcon="@Icons.Custom.Brands.LinkedIn"
+                                      HelperText="@Text.Lower("LinkedIn")"></MudTextField>
+                    </li>
+                </ul>
+                <ul class="inline-list mt-3">
+                    <li>
+                        <MudTextField @bind-Value="this.Entity.Facebook"
+                                      Immediate="true"
+                                      Adornment="Adornment.Start"
+                                      AdornmentIcon="@Icons.Custom.Brands.Facebook"
+                                      HelperText="@Text.Lower("Facebook")"></MudTextField>
+                    </li>
+                </ul>
+                <ul class="inline-list mt-3">
+                    <li>
+                        <MudTextField @bind-Value="this.Entity.Instagram"
+                                      Immediate="true"
+                                      Adornment="Adornment.Start"
+                                      AdornmentIcon="@Icons.Custom.Brands.Instagram"
+                                      HelperText="@Text.Lower("Instagram")"></MudTextField>
+                    </li>
+                </ul>
+            </div>
+            <div class="roles p-3">
+                <div class="w-100 text-white bg-secondary text-center">
+                    <i class="fa-solid fa-id-badge"></i>
+                    @Text.Lower("Roles")
+                </div>
+                <MudDataGrid T="OrigamiRole" Class="border mt-3" Items="this.Super.Roles.ReadFromCache().Blog(this.Entity.BlogId).NonDeleted().OrderBy(x => x.Name)" SortMode="SortMode.None" Filterable="false">
+                    <Columns>
+                        <TemplateColumn>
+                            <CellTemplate>
+                                <MudCheckBox T="bool" Value="@IsRoleSelected(context.Item)" @onclick="() => SelectRole(context.Item)"></MudCheckBox>
+                            </CellTemplate>
+                        </TemplateColumn>
+                        <TemplateColumn CellClass="w-100">
+                            <CellTemplate>
+                                <RoleHeaderLite Entity="context.Item"></RoleHeaderLite>
+                            </CellTemplate>
+                        </TemplateColumn>
+                        <TemplateColumn>
+                            <CellTemplate>
+                                @if (NewRole(context.Item) == true)
+                                {
+                                    <i class="fa-solid fa-circle-plus"></i>
+                                }
+                            </CellTemplate>
+                        </TemplateColumn>
+                    </Columns>
+                    <PagerContent>
+                        <MudDataGridPager T="OrigamiRole" PageSizeOptions="[10, 25, 50, 100]" />
+                    </PagerContent>
+                </MudDataGrid>
+            </div>
+        </div>
+    </div>
+    @if (this.Entity.New == false)
+    {
+        <div class="p-3 mt-3">
+            <div class="row">
+                <div class="col-12">
+                    <div class="w-100 text-white bg-secondary text-center">
+                        <i class="fa-solid fa-user-gear"></i>
+                        @Text.Lower("User actions")
+                    </div>
+                    <div class="btn-group w-100 mt-3">
+                        <button class="btn btn-danger text-white fw-bold w-100" @onclick="BlockUser" disabled="@this.Entity.IsBlocked">
+                            <i class="fa-solid fa-user-slash"></i>
+                            @Text.Lower("Block user")
+                        </button>
+                        <button class="btn btn-danger text-white fw-bold w-100" @onclick="UnblockUser" disabled="@(this.Entity.IsBlocked == false)">
+                            <i class="fa-solid fa-user-check"></i>
+                            @Text.Lower("Unblock user")
+                        </button>
+                        <button class="btn btn-warning text-white fw-bold w-100" @onclick="ResetPassword">
+                            <i class="fa-solid fa-user-lock"></i>
+                            @Text.Lower("Reset password")
+                        </button>
+                        <button class="btn btn-secondary text-white fw-bold w-100" @onclick="() => this._showPasswordResetHistory = true">
+                            <i class="bi bi-person-lines-fill"></i>
+                            @Text.Lower("Password reset history")
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    @if (this.Entity.New == false)
+    {
+        <div class="p-3 mt-3">
+            <div class="row">
+                <div class="col-12 col-xxl-4">
+                    <div class="p-3 border mt-3">
+                        <div class="w-100 text-white bg-secondary text-center">
+                            <i class="bi bi-file-earmark-text-fill"></i>
+                            @Text.Lower("Pages")
+                        </div>
+                        <MudDataGrid Class="mt-3" T="OrigamiPage" Items="this.GetPages()" Filterable="false" SortMode="SortMode.None">
+                            <Columns>
+                                <TemplateColumn>
+                                    <CellTemplate>
+                                        <PageHeader Entity="context.Item" ShowRelatedPages="false"></PageHeader>
+                                    </CellTemplate>
+                                </TemplateColumn>
+                            </Columns>
+                            <PagerContent>
+                                <MudDataGridPager T="OrigamiPage" PageSizeOptions="new int[] { 5, 10, 25, }"></MudDataGridPager>
+                            </PagerContent>
+                        </MudDataGrid>
+                    </div>
+                </div>
+                <div class="col-12 col-xxl-4">
+                    <div class="p-3 border mt-3">
+                        <div class="w-100 text-white bg-secondary text-center">
+                            <i class="bi bi-file-earmark-text-fill"></i>
+                            @Text.Lower("Posts")
+                        </div>
+                        <MudDataGrid Class="mt-3" T="OrigamiPost" Items="this.GetPosts()" Filterable="false" SortMode="SortMode.None">
+                            <Columns>
+                                <TemplateColumn>
+                                    <CellTemplate>
+                                        <PostHeader Entity="context.Item"></PostHeader>
+                                    </CellTemplate>
+                                </TemplateColumn>
+                            </Columns>
+                            <PagerContent>
+                                <MudDataGridPager T="OrigamiPost" PageSizeOptions="new int[] { 5, 10, 25, }"></MudDataGridPager>
+                            </PagerContent>
+                        </MudDataGrid>
+                    </div>
+                </div>
+                <div class="col-12 col-xxl-4">
+                    <div class="p-3 border mt-3">
+                        <div class="w-100 text-white bg-secondary text-center">
+                            <i class="fa-solid fa-video"></i>
+                            @Text.Lower("Videos")
+                        </div>
+                        <MudDataGrid Class="mt-3" T="OrigamiVideo" Items="this.GetVideos()" Filterable="false" SortMode="SortMode.None">
+                            <Columns>
+                                <TemplateColumn>
+                                    <CellTemplate>
+                                        <VideoHeader Entity="context.Item"></VideoHeader>
+                                    </CellTemplate>
+                                </TemplateColumn>
+                            </Columns>
+                            <PagerContent>
+                                <MudDataGridPager T="OrigamiVideo" PageSizeOptions="new int[] { 5, 10, 25, }"></MudDataGridPager>
+                            </PagerContent>
+                        </MudDataGrid>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <div class="buttons mt-3 p-3 text-center">
+        <div class="btn-group">
+            <button class="btn btn-success text-white fw-bold" @onclick="Save" disabled="@this.DisableTheSaveButton">
+                <i class="fa-solid fa-floppy-disk"></i>
+                @Text.Lower("Save")
+            </button>
+            <button class="btn btn-secondary text-white fw-bold" @onclick="UndoChanges" disabled="@this.Entity.New">
+                <i class="fa-solid fa-rotate-left"></i>
+                @Text.Lower("Undo changes")
+            </button>
+            <button class="btn btn-info text-white fw-bold" @onclick="CreateEntity">
+                <i class="fa-solid fa-square-plus"></i>
+                @Text.Lower("New")
+            </button>
+        </div>
+    </div>
+</div>
+@if (this.FileUploading)
+{
+    <div class="position-fixed popup-container">
+        <div class="border p-3 shadow-lg" style="width: 50%; background-color:white;">
+            <div class="text-center">@Text.Lower("Uploading a file")...</div>
+            <!-- Progress bar for file upload -->
+            <div class="progress" style="height: 10px;">
+                <div class="progress-bar bg-secondary" role="progressbar" style="width: @this.FileUploadingProgress%;" aria-valuenow="@this.FileUploadingProgress" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+            <div class="actions text-right mt-3">
+                <div class="btn-group">
+                    <button class="btn btn-danger" @onclick="() => this.FileUploadingToken.Cancel()">
+                        <i class="fa-solid fa-stop"></i>
+                        @Text.Lower("Stop")
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@if (FileManagerForImages)
+{
+    <div class="position-fixed popup-container">
+        <div class="border shadow-lg position-relative" style="width: 90%; height: 90%;">
+            <div class="overflow-auto" style="height:100%; padding-bottom: 70px;">
+                <FileManager Mode="Image" OnFileClicked="this.ImageFromFileManagerWillAssignEntityHeader"></FileManager>
+            </div>
+            <ul class="inline-list position-absolute w-100 border bg-white" style="bottom:0; z-index: 50;">
+                <li></li>
+                <li class="text-right">
+                    <div class="btn-group p-3">
+                        <button class="btn btn-secondary" @onclick="() => this.FileManagerForImages = false">
+                            <i class="fa-solid fa-circle-xmark"></i>
+                            @Text.Lower("Close window")
+                        </button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+}
+@if (this._showPasswordResetHistory)
+{
+    <div class="position-fixed popup-container">
+        <div class="border shadow-lg position-relative" style="width: 90%; height: 90%;">
+            <div class="overflow-auto" style="height:100%; padding-bottom: 70px;">
+                <div class="p-3">
+                    <MudDataGrid T="OrigamiUserPasswordReset" Items="this.GetPasswordResetHistory()">
+                        <Columns>
+                            <TemplateColumn Title="@Text.Upper("Key")">
+                                <CellTemplate>
+                                    @context.Item.Key
+                                </CellTemplate>
+                            </TemplateColumn>
+                            <TemplateColumn Title="@Text.Upper("Date")">
+                                <CellTemplate>
+                                    @context.Item.DateCreated
+                                </CellTemplate>
+                            </TemplateColumn>
+                            <TemplateColumn>
+                                <CellTemplate>
+                                    @if (context.Item.IsDeleted)
+                                    {
+                                        <i class="bi bi-hand-thumbs-up-fill"></i>
+                                    }
+                                </CellTemplate>
+                            </TemplateColumn>
+                            <TemplateColumn Title="@Text.Upper("Requested by")">
+                                <CellTemplate>
+                                    @if (context.Item.AuthorId != Guid.Empty)
+                                    {
+                                        var author = this.Super.Users.ReadFromCache().Id(context.Item.AuthorId);
+                                        <ul class="inline-list">
+                                            <li class="pe-1" style="width:50px;">
+                                                <HeaderImageLite Entity="author"></HeaderImageLite>
+                                            </li>
+                                            <li>
+                                                <UserHeaderLite Entity="author"></UserHeaderLite>
+                                            </li>
+                                        </ul>
+                                    }
+                                </CellTemplate>
+                            </TemplateColumn>
+                        </Columns>
+                        <PagerContent>
+                            <MudDataGridPager T="OrigamiUserPasswordReset" PageSizeOptions="[5, 10, 25, 50, 100]" />
+                        </PagerContent>
+                    </MudDataGrid>
+                </div>
+            </div>
+            <ul class="inline-list position-absolute w-100 border bg-white" style="bottom:0; z-index: 50;">
+                <li></li>
+                <li class="text-right">
+                    <div class="btn-group p-3">
+                        <button class="btn btn-secondary" @onclick="() => this._showPasswordResetHistory = false">
+                            <i class="fa-solid fa-circle-xmark"></i>
+                            @Text.Lower("Close window")
+                        </button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+}
+@code {
+    private bool _showPasswordResetHistory = false;
+
+    /// <summary>
+    /// User roles associated with the user.
+    /// </summary>
+    protected List<OrigamiUserRole> UserRoles = [];
+
+    [Parameter] public EventCallback<OrigamiUser> OnUserBlocked { get; set; }
+    [Parameter] public EventCallback<OrigamiUser> OnUserUnblocked { get; set; }
+
+    protected override bool DisableTheSaveButton
+    {
+        get
+        {
+            if (this.Entity.Username.Has() == false) return true;
+            if (this.Entity.DisplayName.Has() == false) return true;
+            if (this.Entity.EmailAddress.Has() == false) return true;
+            if (this.Entity.EmailAddress.Email() == false) return true;
+            return false;
+        }
+    }
+
+    protected bool IsRoleSelected(OrigamiRole role)
+    {
+        return this.UserRoles.Any(x => x.RoleId == role.Id);
+    }
+
+    protected bool NewRole(OrigamiRole role)
+    {
+        if (IsRoleSelected(role) == false) return false;
+        return this.Super.UserRoles.ReadFromCache().Where(x => x.RoleId == role.Id).Where(x => x.UserId == this.Entity.Id).Any() == false;
+    }
+
+    protected override Result<OrigamiUser> BeforeSaving()
+    {
+        var result = base.BeforeSaving();
+
+        this.Entity.Username = this.Entity.Username.ToLower().Trim();
+        this.Entity.DisplayName = this.Entity.DisplayName.Trim();
+        this.Entity.FirstName = this.Entity.FirstName.Trim();
+        this.Entity.LastName = this.Entity.LastName.Trim();
+
+        //sets the FK Blog (or the save process will fail)
+        if (this.Entity.BlogId == Guid.Empty) this.Entity.BlogId = this.GetBlogFromUserFacade().Id;
+
+        return result;
+    }
+
+    protected void SelectRole(OrigamiRole role)
+    {
+        if (IsRoleSelected(role) == true)
+        {
+            this.UserRoles.RemoveAll(x => x.RoleId == role.Id);
+        }
+        else
+        {
+            this.UserRoles.Add(new()
+            {
+                UserId = this.Entity.Id,
+                RoleId = role.Id,
+            });
+        }
+    }
+
+    protected List<OrigamiPage> GetPages()
+    {
+        return this.Super.GetPages().Author(this.Entity).ToList();
+    }
+
+    protected List<OrigamiPost> GetPosts()
+    {
+        return this.Super.Posts.ReadFromCache().Published().Author(this.Entity).ToList();
+    }
+
+    protected List<OrigamiVideo> GetVideos()
+    {
+        return this.Super.Videos.ReadFromCache().Published().Author(this.Entity).ToList();
+    }
+
+    protected List<OrigamiUserPasswordReset> GetPasswordResetHistory()
+    {
+        return this.Super.UserPasswordResets.ReadFromDatabase().Where(x => x.UserId == this.Entity.Id).OrderByDescending(x => x.DateCreated).ToList();
+    }
+
+    protected void LoadUserRoles()
+    {
+        this.UserRoles = [.. from x in this.Super.UserRoles.ReadFromCache() where x.UserId == this.Entity.Id select x];
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        this.LoadUserRoles();
+    }
+
+    protected override Result<OrigamiUser> CreateOthers()
+    {
+        var hub = new Result<OrigamiUser>();
+        var ctx = new DataOperationContext<OrigamiUser>(this.UserFacade.User, this.Entity);
+        this.UserRoles.GetContexts(ctx).Each(x => this.Super.UserRoles.SmartSave(x, false).Push(hub));
+        return hub;
+    }
+
+    protected override Result<OrigamiUser> UpdateOthers()
+    {
+        var hub = new Result<OrigamiUser>();
+        var ctx = new DataOperationContext<OrigamiUser>(this.UserFacade.User, this.Entity);
+        var dbo = this.Super.UserRoles.ReadFromDatabase().Where(x => x.UserId == this.Entity.Id).ToList();
+        var merge = dbo.GetMerge(this.UserRoles);
+        return hub.OnSuccess(() => this.Super.UserRoles.Merge(ctx, merge));
+    }
+
+    public override void UndoChanges()
+    {
+        base.UndoChanges();
+        this.LoadUserRoles();
+    }
+
+    protected async Task BlockUser()
+    {
+        var yes = await this.DialogService.ShowMessageBox(
+            title: Text.Upper("Are you sure?"),
+            message: Text.Lower("This will block the user out from the website"),
+            yesText: Text.Lower("Yes"),
+            noText: Text.Lower("No")) ?? false;
+
+        if (yes == true)
+        {
+            using var transaction = new TransactionScope();
+            var ctx = new DataOperationContext<OrigamiUser>(this.UserFacade.User, this.Entity);
+            var hub = this.Super.Users.Block(ctx, true);
+            if (hub.Ok)
+            {
+                transaction.Complete();
+                await this.OnUserBlocked.InvokeAsync(this.Entity);
+            }
+            this.UserFacade.Result = hub;
+        }
+    }
+
+    protected async Task UnblockUser()
+    {
+        var yes = await this.DialogService.ShowMessageBox(
+            title: Text.Upper("Are you sure?"),
+            message: Text.Lower("This will unblock the user back to the website"),
+            yesText: Text.Lower("Yes"),
+            noText: Text.Lower("No")) ?? false;
+
+        if (yes == true)
+        {
+            using var transaction = new TransactionScope();
+            var ctx = new DataOperationContext<OrigamiUser>(this.UserFacade.User, this.Entity);
+            var hub = this.Super.Users.Unblock(ctx, true);
+            if (hub.Ok)
+            {
+                transaction.Complete();
+                await this.OnUserUnblocked.InvokeAsync(this.Entity);
+            }
+            this.UserFacade.Result = hub;
+        }
+    }
+
+    protected async Task ResetPassword()
+    {
+        try
+        {
+            var yes = await this.DialogService.ShowMessageBox(
+                    title: Text.Upper("Are you sure?"),
+                    message: Text.Lower("This will generate a link for the user to reset their own password"),
+                    yesText: Text.Lower("Yes"),
+                    noText: Text.Lower("No")) ?? false;
+
+            if (yes == true)
+            {
+                var key = string.Empty;
+                using (var transaction = new TransactionScope())
+                {
+                    var ctx = new DataOperationContext<OrigamiUser>(this.UserFacade.User, this.Entity);
+                    var hub = this.Super.Users.ResetPassword(ctx, true);
+                    if (hub.Ok == false)
+                    {
+                        this.UserFacade.Result = hub;
+                        return;
+                    }
+                    key = hub.Entity;
+                    transaction.Complete();
+                }
+                var client = this.GetHttpClient();
+                var response = await client.GetAsync($"/email/password/reset/{key}");
+                if (response.IsSuccessStatusCode == true)
+                {
+                    //reads the response content
+                    var html = await response.Content.ReadAsStringAsync();
+                    //send the email
+                    this.UserFacade.Result = this.Super.Emails.Send(Text.Original("Password reset link"), new() { HtmlBody = html }, [this.Entity.EmailAddress]);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            this.UserFacade.Result = new(ex);
+            return;
+        }
+    }
+}

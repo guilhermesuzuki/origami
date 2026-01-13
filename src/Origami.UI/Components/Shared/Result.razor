@@ -1,0 +1,45 @@
+﻿@inherits Basic
+@implements IEntityNull<Core.Models.Result>
+
+@if (this.Entity != null) 
+{
+    var entity = this.Entity.GetEntity();
+    <div class="result @Class">
+        <div class="result-header p-2 border-bottom">
+            <ul class="inline-list">
+                <li class="text-center" style="width: 40px; font-size:16px;">
+                    @if (this.Entity.Ok == true)
+                    {
+                        <i class="fa-solid fa-thumbs-up text-success"></i>
+                    }
+                    else
+                    {
+                        <i class="fa-solid fa-thumbs-down text-danger"></i>
+                    }
+                </li>
+                <li class="x-small">
+                    @if (entity != null) 
+                    {
+                        @if (entity is IId id)
+                        {
+                            <HeaderLite Class="d-block" Entity="id"></HeaderLite>
+                            <Id Class="d-block" Entity="id"></Id>
+                        }
+                    }
+                    else 
+                    {
+                        <span>@Text.Lower("No header information available")</span>
+                    }
+                </li>
+            </ul>
+        </div>
+        @foreach (var message in this.Entity.Messages)
+        {
+            <ResultMessage Entity="message"></ResultMessage>
+        }
+    </div>
+}
+
+@code {
+    [Parameter] public Core.Models.Result? Entity { get; set; }
+}

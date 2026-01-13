@@ -1,0 +1,277 @@
+﻿using FluentValidation;
+using Lucene.Net.Util;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
+using Org.BouncyCastle.Asn1.X509;
+using Origami.Core.Models;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO.Compression;
+using System.Text;
+
+namespace Origami.Core.Data
+{
+    public class BackupRestoreRepository : 
+        RepositoryOuterLayer<OrigamiBackup>, 
+        IBackupRestoreRepository
+    {
+        protected IConfiguration _configuration;
+        protected IFileRepository _fileRepository;
+        protected IUserRepository _userRepository;
+
+        public BackupRestoreRepository(
+            IConfiguration configuration,
+            IDbContextFactory<OrigamiDbContext> dbContextFactory,
+            IFileRepository fileRepository,
+            IMemoryCache memoryCache,
+            IUserRepository userRepository,
+            IWebRootPath wwwRoot,
+            Text text)
+            : base(text, dbContextFactory, memoryCache, wwwRoot)
+        {
+            _configuration = configuration;
+            _fileRepository = fileRepository;
+            _userRepository = userRepository;
+        }
+
+        public OrigamiBackup? CurrentProcess { get; set; }
+
+        public override string ReadPermission => nameof(OrigamiRole.ViewBackupRestoreSystem);
+
+        public async Task<Result<OrigamiBackup>> Backup(OrigamiUser user)
+        {
+            if (!Directory.Exists($"{WebRootPath.WebRootPath}/backups/"))
+            {
+                Directory.CreateDirectory($"{WebRootPath.WebRootPath}/backups/");
+            }
+
+            if (CurrentProcess != null)
+            {
+                return new() { ErrorMessage = Text.Original("A backup or restore process is already running. Please try again later.") };
+            }
+
+            try
+            {
+                CurrentProcess = new OrigamiBackup { UserId = user.Id, DateCreated = DateTime.UtcNow };
+                var backup = CurrentProcess.Clone();
+
+                var hub = await this.BackupTheDatabaseAsync();
+                if (hub.Ok == false)
+                {
+                    return new Result<OrigamiBackup>(backup).Pull(hub);
+                }
+
+                string sourceFolder = $"{WebRootPath.WebRootPath}/files/";
+                string zipPath = $"{WebRootPath.WebRootPath}/backups/{CurrentProcess.NanoId}.zip";
+
+                await ZipFile.CreateFromDirectoryAsync(
+                    sourceFolder,
+                    zipPath,
+                    CompressionLevel.Optimal,
+                    includeBaseDirectory: true
+                );
+
+                hub.SuccessMessage = Text.Original("Zip file created successfully.");
+
+                if (hub.Ok)
+                {
+                    var ctx = CurrentProcess.GetContext(user);
+                    this.SmartSave(ctx, false).Push(hub);
+                }
+
+                return new Result<OrigamiBackup>(backup).Pull(hub);
+            }
+            catch (Exception ex)
+            {
+                return new() { ErrorMessage = ex.GetMessage() };
+            }
+            finally
+            {
+                CurrentProcess = null; 
+            }
+        }
+
+        public async Task<Result<OrigamiBackupRestore>> Restore(OrigamiUser user, OrigamiBackup backup)
+        {
+            if (!Directory.Exists($"{WebRootPath.WebRootPath}/restores/"))
+            {
+                Directory.CreateDirectory($"{WebRootPath.WebRootPath}/restores/");
+            }
+
+            if (CurrentProcess != null)
+            {
+                return new() { ErrorMessage = Text.Original("A backup or restore process is already running. Please try again later.") };
+            }
+
+            if (backup is OrigamiBackupRestore)
+            {
+                return new() { ErrorMessage = Text.Original("This has already been restored.") };
+            }
+
+            try
+            {
+                CurrentProcess = new OrigamiBackupRestore() { UserId = user.Id, DateCreated = DateTime.UtcNow };
+                OrigamiBackupRestore restore = (OrigamiBackupRestore)CurrentProcess.Clone();
+                string zipPath = $"{WebRootPath.WebRootPath}/backups/{backup.NanoId}.zip";
+                string extractPath = $"{WebRootPath.WebRootPath}/restores/{backup.NanoId}/";
+                if (!File.Exists(zipPath))
+                {
+                    return new(restore) { ErrorMessage = Text.Original("Backup file not found.") };
+                }
+                await ZipFile.ExtractToDirectoryAsync(zipPath, extractPath);
+                var hub = await RestoreTheDatabaseAsync($"{extractPath}/files/db.bacpac");
+                if (hub.Ok == false)
+                {
+                    return new Result<OrigamiBackupRestore>(restore).Pull(hub);
+                }
+                hub.SuccessMessage = Text.Original("Database restored successfully.");
+
+                //update connection string inside appsettings.json
+
+                //rename current files folder to files_old_{CurrentProcess.NanoId}
+                Directory.Move($"{WebRootPath.WebRootPath}/files/", $"{WebRootPath.WebRootPath}/files_old_{CurrentProcess.NanoId}/");
+                Directory.Move($"{extractPath}/files/", $"{WebRootPath.WebRootPath}/files/");
+
+                //save the restore record
+                if (hub.Ok)
+                {
+                    var ctx = CurrentProcess.GetContext(user);
+                    this.SmartSave(ctx, false).Push(hub);
+                }
+
+                return new Result<OrigamiBackupRestore>(restore).Pull(hub);
+            }
+            catch (Exception ex)
+            {
+                return new() { ErrorMessage = ex.GetMessage() };
+            }
+            finally
+            {
+                CurrentProcess = null;
+            }
+        }
+
+        public override Result<OrigamiBackup> SmartPurge(DataOperationContext<OrigamiBackup> ctx, bool checkPermission)
+        {
+            var hub = base.SmartPurge(ctx, false);
+
+            if (hub.Ok)
+            {
+                try
+                {
+                    var filepath = $"{WebRootPath.WebRootPath}/backups/{ctx.Entity.NanoId}.zip";
+                    if (File.Exists(filepath))
+                    {
+                        File.Delete(filepath);
+                    }
+                    var bppath = $"{WebRootPath.WebRootPath}/backups/{ctx.Entity.NanoId}.bacpac";
+                    if (File.Exists(bppath))
+                    {
+                        File.Delete(bppath);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return new() { ErrorMessage = ex.GetMessage() };
+                }
+            }
+
+            return hub;
+        }
+
+        protected async Task<Result<string>> BackupTheDatabaseAsync()
+        {
+            if (CurrentProcess == null)
+            {
+                return new() { ErrorMessage = $"Current process hasn't started yet" };
+            }
+
+            var oi = _configuration.GetOrigamiConnectionString();
+            var target = $"{WebRootPath.WebRootPath}/files/db.bacpac";
+
+            using var process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = "sqlpackage",
+                    Arguments = $"/Action:Export " +
+                    $"/SourceConnectionString:\"{oi}\" " +
+                    $"/TargetFile:\"{target}\" " + 
+                    $"/OverwriteFiles:True",
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                }
+            };
+
+            process.Start();
+            string output = await process.StandardOutput.ReadToEndAsync();
+            string error = await process.StandardError.ReadToEndAsync();
+            await process.WaitForExitAsync();
+
+            if (process.ExitCode != 0)
+            {
+                return new() { ErrorMessage = $"BACPAC export failed: {error}" };
+            }
+
+            return new(target) { SuccessMessage = Text.Original("BACPAC file created successfully.") };
+        }
+
+        protected async Task<Result<string>> RestoreTheDatabaseAsync(string bacpacPath)
+        {
+            if (File.Exists(bacpacPath) == false)
+            {
+                return new() { ErrorMessage = "BACPAC file not found." };
+            }
+
+            if (CurrentProcess == null)
+            {
+                return new() { ErrorMessage = $"Current process hasn't started yet" };
+            }
+
+            var oi = _configuration.GetOrigamiConnectionString();
+            var builder = new Microsoft.Data.SqlClient.SqlConnectionStringBuilder(oi);
+            var database = $"origami_{CurrentProcess.NanoId}";
+
+            var args = $"""
+                /Action:Import
+                /SourceFile:"{bacpacPath}"
+                /TargetServerName:"{builder.DataSource}"
+                /TargetDatabaseName:"{database}"
+                /TargetUser:"{builder.UserID}"
+                /TargetPassword:"{builder.Password}"
+                /TargetEncryptConnection:False
+                """;
+
+            var process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = "sqlpackage",
+                    Arguments = args.Replace("\n", " "),
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            };
+
+            process.Start();
+
+            string output = await process.StandardOutput.ReadToEndAsync();
+            string error = await process.StandardError.ReadToEndAsync();
+
+            await process.WaitForExitAsync();
+
+            if (process.ExitCode != 0)
+            {
+                throw new Exception($"BACPAC import failed:\n{error}");
+            }
+
+            return new(database) { SuccessMessage = Text.Original("BACPAC file created successfully."), };
+        }
+    }
+}

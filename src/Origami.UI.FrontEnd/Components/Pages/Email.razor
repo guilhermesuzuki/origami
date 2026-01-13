@@ -1,0 +1,38 @@
+﻿@page "/email/user/{UserId:guid}"
+@page "/email/password/reset/{Key1}"
+@inherits BasicPage
+@layout EmailLayout
+
+@if (this.Key1.Has() == true)
+{
+    var pwd = this.Super.UserPasswordResets.ReadFromCache().NonDeleted().FirstOrDefault(x => x.Key == this.Key1);
+    if (pwd != null)
+    {
+        var user = this.Super.Users.ReadFromCache().FirstOrDefault(x => x.Id == pwd.UserId);
+        if (user != null)
+        {
+            var blog = this.Super.Blogs.ReadFromCache().Id(user.BlogId);
+            var link = this.NavigationManager.BaseUri.TrimEnd('/') + "/password/reset/" + Key1;
+            <div>
+                <div style="display: inline-block; width:50%;">
+                    <BlogHeaderLite2 Entity="blog"></BlogHeaderLite2>
+                </div>
+                <div style="display: inline-block; width:50%;">
+                    <UserHeaderLite2 Entity="user"></UserHeaderLite2>
+                </div>
+            </div>
+            <div>
+                <h1>@Text.Original("Password Reset")</h1>
+                <p>@Text.Original("You asked for a password reset and here's the link to paste in your browser: {0}", link)</p>
+                <p><a href="@link" class="">@Text.Original("Click here to reset password")</a></p>
+                <p>@Text.Original("Don't share that link with anybody else")<span>.</span></p>
+                <p>@Text.Original("If you did not request this, please ignore this email")<span>.</span></p>
+            </div>
+        }
+    }
+}
+
+@code {
+    [Parameter] public string Key1 { get; set; } = string.Empty;
+    [Parameter] public Guid UserId { get; set; } = Guid.Empty;
+}

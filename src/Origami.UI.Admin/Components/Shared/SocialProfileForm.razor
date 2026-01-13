@@ -1,0 +1,219 @@
+﻿@inherits BasicFormFull<OrigamiSocialProfile>
+
+@inject IUserActivityRepository _userActivity
+@inject ISocialProfileRepository _socialProfile
+@inject IPostCommentReactionRepository _postCommentReaction
+@inject IPostCommentRepository _postComment
+@inject IPostRatingRepository _postRating
+@inject IVideoCommentReactionRepository _videoCommentReaction
+@inject IVideoCommentRepository _videoComment
+@inject IVideoRatingRepository _videoRating
+
+<div class="social-profile-form @Class">
+    @if (this.Entity.New)
+    {
+        <div class="w-100 text-white bg-secondary text-center">
+            @Text.Lower("Select a profile")
+        </div>
+    }
+    else
+    {
+        <BasicHeaderNotes Entity="this.Entity"></BasicHeaderNotes>
+        <div class="mt-3 text-center py-2">
+            <div>
+                <img src="@this.Entity.ProfilePicture()" style="width:120px; height: 120px;" onerror="this.src='@(OrigamiConstants.NoUser)'" />
+            </div>
+            <div class="features">
+                <SocialProfileFeatures Entity="Entity"></SocialProfileFeatures>
+            </div>
+        </div>
+        <BasicHeader Class="mt-3" Entity="this.Entity"></BasicHeader>
+        <MudTextField FullWidth="true"
+                      Text="@Entity.Name()"
+                      HelperText="@Text.Lower("Name")"
+                      ReadOnly="true"
+                      AdornmentIcon="@Entity.SocialNetwork.Icon().Value"
+                      Adornment="Adornment.Start"
+                      Class="social-profile name mt-3"
+                      T="string"></MudTextField>
+
+        <MudTextField FullWidth="true"
+                      Text="@Text.Lower(this.Entity.GetEmail())"
+                      HelperText="@Text.Lower("E-mail")"
+                      ReadOnly="true"
+                      AdornmentIcon="@Icons.Material.Filled.AlternateEmail"
+                      Adornment="Adornment.Start"
+                      Class="social-profile e-mail mt-3"
+                      T="string"></MudTextField>
+
+        <MudTextField FullWidth="true"
+                      Text="@(SubscriberText())"
+                      HelperText="@Text.Lower("Subscriber")"
+                      ReadOnly="true"
+                      AdornmentIcon="@Icons.Material.Filled.ContactMail"
+                      Adornment="Adornment.Start"
+                      Class="social-profile subscriber mt-3"
+                      T="string"></MudTextField>
+
+        <div class="row mt-3">
+            <div class="col-12 col-xl-4">
+                <div class="fs-5">
+                    @Text.Lower("Ratings")
+                </div>
+                <div>
+                    <i class="bi bi-file-earmark-text-fill"></i>
+                    @Text.Lower("{0} On Posts", _postRating.RatingsFromProfile(this.Entity).Count())
+                </div>
+                <div>
+                    <i class="bi bi-file-earmark-play-fill"></i>
+                    @Text.Lower("{0} On Videos", _videoRating.RatingsFromProfile(this.Entity).Count())
+                </div>
+            </div>
+            <div class="col-12 col-xl-4">
+                <div class="fs-5">
+                    @Text.Lower("Comments")
+                </div>
+                <div>
+                    <i class="bi bi-file-earmark-text-fill"></i>
+                    @Text.Lower("{0} On Posts", _postComment.CommentsFromProfile(this.Entity, true).Count())
+                </div>
+                <div>
+                    <i class="bi bi-file-earmark-play-fill"></i>
+                    @Text.Lower("{0} On Videos", _videoComment.CommentsFromProfile(this.Entity, true).Count())
+                </div>
+            </div>
+            <div class="col-12 col-xl-4">
+                <div class="fs-5">
+                    @Text.Lower("Reactions")
+                </div>
+                <div>
+                    <i class="bi bi-file-earmark-text-fill"></i>
+                    @Text.Lower("{0} On Post Comments", _postCommentReaction.ReactionsFromProfile(this.Entity).Count())
+                </div>
+                <div>
+                    <i class="bi bi-file-earmark-play-fill"></i>
+                    @Text.Lower("{0} On Video Comments", _videoCommentReaction.ReactionsFromProfile(this.Entity).Count())
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="mt-3">
+                <label class="w-100 text-center fs-4 p-2">
+                    <i class="fa-solid fa-bolt"></i>
+                    @Text.Lower("User Activity")
+                </label>
+                <MudDataGrid @ref="_userActivities" T="OrigamiUserActivity" Class="border-top" ServerData="this.UserActivities" SortMode="SortMode.None" Filterable="false">
+                    <Columns>
+                        <TemplateColumn>
+                            <CellTemplate>
+                                <div class="fw-bold text-center">
+                                    <i class="fa-solid fa-calendar"></i>
+                                    @context.Item.Date
+                                </div>
+                                @if (context.Item.Type.Like("PostCommentReaction") == true)
+                                {
+                                    <UserActivityPostCommentReaction Id="@context.Item.Id"></UserActivityPostCommentReaction>
+                                }
+                                else if (context.Item.Type.Like("PostComment") == true)
+                                {
+                                    <UserActivityPostComment Id="@context.Item.Id"></UserActivityPostComment>
+                                }
+                                else if (context.Item.Type.Like("PostRating") == true)
+                                {
+                                    <UserActivityPostRating Id="@context.Item.Id"></UserActivityPostRating>
+                                }
+                                else if (context.Item.Type.Like("VideoCommentReaction") == true)
+                                {
+                                    <UserActivityVideoCommentReaction Id="@context.Item.Id"></UserActivityVideoCommentReaction>
+                                }
+                                else if (context.Item.Type.Like("VideoComment") == true)
+                                {
+                                    <UserActivityVideoComment Id="@context.Item.Id"></UserActivityVideoComment>
+                                }
+                                else if (context.Item.Type.Like("VideoRating") == true)
+                                {
+                                    <UserActivityVideoRating Id="@context.Item.Id"></UserActivityVideoRating>
+                                }
+                                else if (context.Item.Type.Like("SocialProfileDelete") == true)
+                                {
+                                    <UserActivitySocialProfileDelete Id="@context.Item.Id"></UserActivitySocialProfileDelete>
+                                }
+                            </CellTemplate>
+                        </TemplateColumn>
+                    </Columns>
+                    <PagerContent>
+                        <MudDataGridPager T="OrigamiUserActivity" PageSizeOptions="[5, 10, 25, 50, 100]"></MudDataGridPager>
+                    </PagerContent>
+                </MudDataGrid>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    /// <summary>
+    /// User Activities DataGrid
+    /// </summary>
+    private MudDataGrid<OrigamiUserActivity>? _userActivities;
+
+    protected override bool DisableTheSaveButton => true;
+
+    /// <summary>
+    /// Do not call this function
+    /// </summary>
+    /// <exception cref="InvalidOperationException"></exception>
+    public override void Save()
+    {
+        throw new InvalidOperationException();
+    }
+
+    protected Task<GridData<OrigamiUserActivity>> UserActivities(GridState<OrigamiUserActivity> state)
+    {
+        var orders = new StringBuilder();
+
+        //iterates through every sort definition
+        foreach (var definition in state.SortDefinitions)
+        {
+            orders.AppendFormat(",{0} {1}",
+                definition.SortBy,
+                definition.Descending ? "DESC" : "ASC");
+        }
+
+        var filters = new StringBuilder($"({nameof(OrigamiUserActivity.SocialProfileId)} == \"{Entity.Id}\")");
+
+        //iterates through every filter definition
+        foreach (var definition in state.FilterDefinitions)
+        {
+            filters.AppendFormat("&& ({0})", definition.Filter());
+        }
+
+        var orderBy = orders.ToString();
+
+        //calls the REST API
+        var result = this._userActivity.ReadFromDatabase().Query(
+            state.PageSize,
+            state.Page * state.PageSize,
+            filters.ToString(),
+            orderBy != string.Empty ? orderBy[1..] : $"{nameof(OrigamiUserActivity.Date)} DESC"
+        );
+
+        return Task.FromResult(new GridData<OrigamiUserActivity> { Items = result.Rows, TotalItems = (int)result.NumberOfRows, });
+    }
+
+    private string SubscriberText()
+    {
+        var sub = this.Super.GetSubscriber(this.Entity);
+        if (sub != null)
+        {
+            return $"{Text.Lower("Yes, since")}: {sub.GetDate()}";
+        }
+        return Text.Lower("No");
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        this._userActivities?.ReloadServerData();
+    }
+}

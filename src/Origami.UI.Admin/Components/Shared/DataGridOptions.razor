@@ -1,0 +1,30 @@
+﻿@inherits Basic
+@inject IUserTrashRepository _userTrashRepository
+
+<ul class="data-grid-options inline-list @Class">
+    @if (_canReadTrash.Ok == true)
+    {
+        <li>
+            <MudToggleIconButton Toggled="Deleted"
+                                 ToggledChanged="DeletedChanged"
+                                 Icon="@Icons.Material.Filled.DeleteOutline"
+                                 Color="@Color.Dark"
+                                 ToggledIcon="@Icons.Material.Filled.Delete"
+                                 Size="Size.Small"
+                                 ClickPropagation="false" 
+                                 />
+        </li>
+    }
+</ul>
+
+@code {
+    private Core.Models.Result _canReadTrash = new();
+    [Parameter] public bool Deleted { get; set; }
+    [Parameter] public EventCallback<bool> DeletedChanged { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _canReadTrash = _userTrashRepository.CanRead(this.UserFacade.User.Id);
+    }
+}

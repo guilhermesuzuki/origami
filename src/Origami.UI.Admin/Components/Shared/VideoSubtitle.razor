@@ -1,0 +1,175 @@
+﻿@inherits Basic
+@implements IEntityNull<OrigamiFile>
+@inject IDirectoryRepository directoryRepository
+@inject IFileRepository fileRepository
+
+<div class="video-subtitle @Class">
+    <MudFileUpload @ref="FileUpload" T="IBrowserFile" FilesChanged="UploadSubtitle" Accept=".vtt" MaximumFileCount="1"></MudFileUpload>
+    <ul class="inline-list">
+        <li class="w-50">
+            @if (this.Entity != null && this.Entity.WebPath.Has() == true)
+            {
+                <span>
+                    <i class="fa-solid fa-comment-dots"></i>
+                    @this.Entity.FileName
+                </span>
+                @if (fileRepository.FileExists(this.Entity.WebPath) == true) 
+                {
+                    <div class="x-small">@fileRepository.GetFile(this.Entity.WebPath)!.FileSize.SizeInBytes()</div>
+                }
+            }
+            else
+            {
+                <span>@Text.Lower("No subtitle file")</span>
+            }
+        </li>
+        <li style="width:38%;">
+            <MudSelect T="string" @bind-Value:get="_language" @bind-Value:set="LanguageWasSelected">
+                <MudSelectItem Value="string.Empty">@Text.Lower("Not specified")</MudSelectItem>
+                @foreach (var cinfo in OrigamiConstants.AllLanguages())
+                {
+                    <MudSelectItem Value="@cinfo.Name">@cinfo.NativeName [@cinfo.Name]</MudSelectItem>
+                }
+            </MudSelect>
+        </li>
+        <li style="width:12%;">
+            <ul class="inline-list text-center ps-2">
+                <li>
+                    <button class="p-2" title="@Text.Original("Delete Subtitle")" @onclick="this.DeleteSubtitle" disabled="@(this.Entity == null)">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </li>
+                <li>
+                    <button class="p-2" title="@Text.Original("Upload Subtitle")" @onclick="this.PickSubtitle">
+                        <i class="fa-solid fa-file-arrow-up"></i>
+                    </button>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+@code {
+    [Parameter] public OrigamiVideo Video { get; set; } = new();
+    [Parameter] public OrigamiFile? Entity { get; set; }
+
+    [Parameter] public EventCallback<Core.Models.OrigamiFile> FileSaved { get; set; }
+    [Parameter] public EventCallback<Core.Models.OrigamiFile> FileDeleted { get; set; }
+
+    /// <summary>
+    /// Selected Language
+    /// </summary>
+    private string? _language
+    {
+        get
+        {
+            return this.Entity != null
+                ? this.Entity.Language
+                : string.Empty;
+        }
+    }
+
+    /// <summary>
+    /// Component for file uploading (occasionally Header images, etc.)
+    /// </summary>
+    protected MudFileUpload<IBrowserFile>? FileUpload;
+
+    /// <summary>
+    /// Upload subtitle file
+    /// </summary>
+    /// <param name="file"></param>
+    /// <returns></returns>
+    protected virtual async Task UploadSubtitle(IBrowserFile file)
+    {
+        try
+        {
+            var webPath = directoryRepository.WebPathForFiles(this.Video);
+            var directory = directoryRepository.GetDirectory(webPath, true);
+            var subtitle = directory.Files.FirstOrDefault(x => x.Name.Equals(file.Name, StringComparison.InvariantCultureIgnoreCase) == true);
+            var finalPath = Path.Combine(directory.LocalPath, file.Name);
+
+            if (subtitle != null)
+            {
+                var index = 1;
+                var split = file.Name.Split('.');
+                var fileNameNoExtension = string.Join('.', split[0..(split.Length - 1)]);
+                var newFileName = $"{fileNameNoExtension}.{index}.{split.Last()}";
+
+                subtitle = directory.Files.FirstOrDefault(x => x.Name.Equals(newFileName, StringComparison.InvariantCultureIgnoreCase) == true);
+                while (subtitle != null)
+                {
+                    index++;
+                    newFileName = $"{fileNameNoExtension}.{index}.{split.Last()}";
+                    subtitle = directory.Files.FirstOrDefault(x => x.Name.Equals(newFileName, StringComparison.InvariantCultureIgnoreCase) == true);
+                }
+
+                finalPath = Path.Combine(directory.LocalPath, newFileName);
+            }
+
+            using (var fileStream = new FileStream(Path.Combine(finalPath), FileMode.Create))
+            {
+                await file.OpenReadStream().CopyToAsync(fileStream);
+            }
+
+            await this.FileSaved.InvokeAsync(new OrigamiFile { LocalPath = finalPath, WebPath = $"{webPath}{file.Name}", Language = this._language });
+
+            this.UserFacade.Result = new();
+        }
+        catch (Exception ex)
+        {
+            this.UserFacade.Result = new(ex);
+        }
+    }
+
+    /// <summary>
+    /// Deletes the subtitle
+    /// </summary>
+    protected async Task DeleteSubtitle()
+    {
+        if (this.Entity != null)
+        {
+            if (System.IO.File.Exists(this.Entity.LocalPath) == true)
+            {
+                var result = await this.DialogService.ShowMessageBox(Text.Original("Delete subtitle"), Text.Original("Are you sure?"), yesText: Text.Lower("Yes"), noText: Text.Lower("No"));
+                if (result.GetValueOrDefault() == true)
+                {
+                    try
+                    {
+                        System.IO.File.Delete(this.Entity.LocalPath);
+                        await this.FileDeleted.InvokeAsync(this.Entity);
+                        this.UserFacade.Result = new();
+                    }
+                    catch (Exception ex)
+                    {
+                        this.UserFacade.Result = new(ex);
+                    }
+                }
+            }
+            else
+            {
+                await this.FileDeleted.InvokeAsync(this.Entity);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Picks a file, using <see cref="FileUpload"/>
+    /// </summary>
+    /// <returns></returns>
+    protected async Task PickSubtitle()
+    {
+        if (this.FileUpload != null)
+        {
+            await this.FileUpload.OpenFilePickerAsync();
+        }
+    }
+
+    protected void LanguageWasSelected(string? value)
+    {
+        if (value.Has() == true)
+        {
+            this.Entity = this.Entity ?? new();
+            this.Entity.Language = value;
+        }
+    }
+}

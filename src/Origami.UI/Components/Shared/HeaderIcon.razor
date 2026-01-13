@@ -1,0 +1,77 @@
+﻿@using Origami.Core.Models.FileSystem
+@inherits Basic
+@implements IEntity<Object>
+
+<span class="header-icon @Class">
+    @if (this.Entity is OrigamiBlog blog)
+    {
+        <i class="fa-solid fa-cube"></i>
+    }
+    else if (this.Entity is OrigamiPost post)
+    {
+        <i class="fa-solid fa-file-lines"></i>
+    }
+    else if (this.Entity is OrigamiVideo video)
+    {
+        <i class="fa-solid fa-video"></i>
+    }
+    else if (this.Entity is OrigamiPage page)
+    {
+        <i class="fa-solid fa-file-lines"></i>
+    }
+    else if (this.Entity is OrigamiCategory category)
+    {
+        <i class="fa-solid fa-layer-group"></i>
+    }
+    else if (this.Entity is OrigamiRole role)
+    {
+        <i class="fa-solid fa-id-badge"></i>
+    }
+    else if (this.Entity is OrigamiSettings settings)
+    {
+        <i class="fa-solid fa-gear"></i>
+    }
+    else if (this.Entity is OrigamiSocialProfile profile)
+    {
+        <i class="fa-solid fa-user"></i>
+    }
+    else if (this.Entity is OrigamiTag tag)
+    {
+        <i class="fa-solid fa-tag"></i>
+    }
+    else if (this.Entity is OrigamiUser user)
+    {
+        <i class="fa-solid fa-user"></i>
+    }
+    else if (this.Entity is OrigamiSystemFile file)
+    {
+        @if (file.IsImage)
+        {
+            <i class="fa-solid fa-image"></i>
+        }
+        else if (file.IsVideo)
+        {
+            <i class="fa-solid fa-video"></i>
+        }
+        else if (file.IsAudio)
+        {
+            <i class="fa-solid fa-file-audio"></i>
+        }
+        else
+        {
+            <i class="fa-solid fa-file"></i>
+        }
+    }
+    else if (this.Entity is OrigamiSystemDirectory directory)
+    {
+        <i class="fa-solid fa-folder"></i>
+    }
+    else
+    {
+        <i class="fa-solid fa-circle-question"></i>
+    }
+</span>
+
+@code {
+    [Parameter] public Object Entity { get; set; } = new();
+}

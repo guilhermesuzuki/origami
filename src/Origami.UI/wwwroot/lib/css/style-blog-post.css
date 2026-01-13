@@ -1,0 +1,39 @@
+﻿.post-header { }
+.post-header a:hover, .post-header a:hover span { color: var(--site-highlight) !important; }
+.post-header-image { height: calc(250px / 0.65); background-repeat: no-repeat; background-position: center; background-size: cover; }
+.post-header-title { text-align: center; bottom: 0px; top: 0; background-color: #00000077; display: inline-grid; align-items: center; border-top: none !important; }
+.post-header-title * { color: white; border-color: white !important; }
+
+.post-header-title .title { font-size: 14pt; }
+.post-content img { max-width: 100% !important; height: auto !important; border: 1px solid #dee2e6; }
+
+.post-content .pure-g { margin-bottom: 1em; }
+.post-content .pure-g img { min-width: 100% !important; }
+.post-content > .pure-u-1 { margin-bottom: 1em; display: flex; flex-flow: row wrap; align-content: flex-start; }
+.post-content > .pure-u-1 img { min-width: 100% !important; }
+.post-content > video, .post-content > p > video { width: 600px; max-width: 100%; height: auto; }
+.post-content > * { margin-bottom: 1rem !important; }
+.post-content > *:last-child { margin-bottom: 0 !important; }
+.post-content > ul { padding-left: 1rem; }
+.post-content iframe { min-height: 500px !important; }
+.post-content a { border-bottom: 1px solid var(--site-highlight); }
+
+.post-category table .post-header-title .title { font-size: 14pt; }
+.post-tag table .post-header-title .title { font-size: 14pt; }
+.post-most-popular table .post-header-title .title { font-size: 14pt; }
+
+.post-category table .language { width: 13px; height: 13px; }
+.post-tag table .language { width: 13px; height: 13px; }
+.post-most-popular table .language { width: 13px; height: 13px; }
+
+.post-comment-in-reply-to { border: 1px dotted var(--site-highlight) !important; border-left: 5px solid var(--site-highlight) !important; }
+.post-comment-in-reply-to a { display: inline-flex; align-items:center; }
+.post-comment-in-reply-to .logo { display: none !important; }
+.post-comment-in-reply-to .social-profile-header { text-align: left !important; }
+.post-comment-in-reply-to .social-profile-header * { font-size: 11pt !important; font-weight: bold; }
+
+.post-comment-text p:first-child { margin-top: 0px !important; }
+.post-comment-text p { margin-top: 7px !important; margin-bottom: 0 !important; }
+
+ul.post-rating, .post-rating ul { margin-bottom: 0; }
+.post-ratings .logo { height: 29px !important; }

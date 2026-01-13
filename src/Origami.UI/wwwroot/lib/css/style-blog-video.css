@@ -1,0 +1,39 @@
+﻿.video-header { }
+.video-header a:hover, .video-header a:hover span { color: var(--site-highlight) !important; }
+.video-header-image { height: calc(250px / 0.65); background-repeat: no-repeat; background-position: center; background-size: cover; }
+.video-header-title { text-align: center; bottom: 0px; top: 0; background-color: #00000077; display: inline-grid; align-items: center; border-top: none !important; }
+.video-header-title * { color: white; border-color: white !important; }
+
+.video-header-title .title { font-size: 14pt; }
+.video-content img { max-width: 100% !important; height: auto !important; border: 1px solid #dee2e6; }
+
+.video-content .pure-g { margin-bottom: 1em; }
+.video-content .pure-g img { min-width: 100% !important; }
+.video-content > .pure-u-1 { margin-bottom: 1em; display: flex; flex-flow: row wrap; align-content: flex-start; }
+.video-content > .pure-u-1 img { min-width: 100% !important; }
+.video-content > video, .video-content > p > video { width: 600px; max-width: 100%; height: auto; }
+.video-content > * { margin-bottom: 1rem !important; }
+.video-content > *:last-child { margin-bottom: 0 !important; }
+.video-content > ul { padding-left: 1rem; }
+.video-content iframe { min-height: 500px !important; }
+.video-content a { border-bottom: 1px solid var(--site-highlight); }
+
+.video-category table .video-header-title .title { font-size: 14pt; }
+.video-tag table .video-header-title .title { font-size: 14pt; }
+.video-most-popular table .video-header-title .title { font-size: 14pt; }
+
+.video-category table .language { width: 13px; height: 13px; }
+.video-tag table .language { width: 13px; height: 13px; }
+.video-most-popular table .language { width: 13px; height: 13px; }
+
+.video-comment-in-reply-to { border: 1px dotted var(--site-highlight) !important; border-left: 5px solid var(--site-highlight) !important; }
+.video-comment-in-reply-to a { display: inline-flex; align-items: center; }
+.video-comment-in-reply-to .logo { display: none !important; }
+.video-comment-in-reply-to .social-profile-header { text-align: left !important; }
+.video-comment-in-reply-to .social-profile-header * { font-size: 11pt !important; font-weight: bold; }
+
+.video-comment-text p:first-child { margin-top: 0px !important; }
+.video-comment-text p { margin-top: 7px !important; margin-bottom: 0 !important; }
+
+ul.video-rating, .video-rating ul { margin-bottom: 0; }
+.video-ratings .logo { height: 29px !important; }

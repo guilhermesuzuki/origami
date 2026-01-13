@@ -1,0 +1,529 @@
+﻿@page "/settings"
+@using SixLabors.ImageSharp
+@using System.Net.Mail
+@inherits BasicFormFull<OrigamiSettings>
+@inject IEmailStatusRepository _emailStatusRepository
+
+<Root Access="this.CanAccess()">
+    <HeaderTemplate>
+        <div class="p-3 border-bottom">
+            <div class="row">
+                <div class="d-inline-flex align-items-center col-12 col-xxl-8">
+                    <ul class="inline-list w-100">
+                        <li style="width:80%;">
+                            <i class="fa-solid fa-gear pe-1"></i>
+                            <span class="me-3">@Text.Get("Settings", Text.Styles.Uppercase)</span>
+                        </li>
+                        <li style="width:20%;">
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-12 col-xxl-4">
+                    <BlogSelect Disabled="true" Style="visibility: hidden;"></BlogSelect>
+                </div>
+            </div>
+        </div>
+    </HeaderTemplate>
+    <ContentTemplate>
+        <div class="p-3">
+            <div class="row">
+                <div class="col-12 col-xxl-4">
+                    <div class="basic p-3">
+                        <div class="text-center fs-5">@Text.Lower("Basic")</div>
+                        <div class="position-relative p-3 border mt-3">
+                            <div class="w-100 text-white bg-secondary text-center">
+                                <i class="bi bi-image"></i>
+                                @Text.Lower("Logo")
+                            </div>
+                            <HeaderImageLite Entity="@Entity"></HeaderImageLite>
+                            <ImageCropper OnImageWasCropped="this.UploadHeader" OnClearImage="this.ClearHeader" OnPickImageFromFileManager="() => this.FileManagerForImages = true"></ImageCropper>
+                        </div>
+                        <ul class="inline-list mt-3">
+                            <li>
+                                <MudSelect FullWidth="true"
+                                           Immediate="true"
+                                           MultiSelection="false"
+                                           InputClass="d-inline-flex align-items-center"
+                                           @bind-Value:get="@Entity.Language"
+                                           @bind-Value:set="(language) => this.Entity.Language = language"
+                                           HelperText="@Text.Lower("Language")">
+                                    @foreach (var language in OrigamiConstants.ContentLanguages())
+                                    {
+                                        <MudSelectItem Value="language.Language">
+                                            <img class="pe-1" src="@language.Flag" width="20" title="@language.Name" />
+                                            <span>@language.Name</span>
+                                        </MudSelectItem>
+                                    }
+                                </MudSelect>
+                            </li>
+                        </ul>
+                        <ul class="inline-list">
+                            <li>
+                                <MudTextField FullWidth="true"
+                                              Immediate="true"
+                                              @bind-Value="@this.Entity.Name"
+                                              HelperText="@Text.Lower("Name (website)")"></MudTextField>
+                            </li>
+                        </ul>
+                        <ul class="inline-list">
+                            <li>
+                                <MudSelect FullWidth="true"
+                                           Immediate="true"
+                                           MultiSelection="false"
+                                           @bind-Value="this.Entity.TimeZoneId"
+                                           HelperText="@Text.Lower("Timezone")">
+                                    @foreach (var zone in TimeZoneInfo.GetSystemTimeZones())
+                                    {
+                                        <MudSelectItem Value="@zone.Id">
+                                            @zone.DisplayName
+                                        </MudSelectItem>
+                                    }
+                                </MudSelect>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="oltp p-3 mt-3">
+                        <div class="text-center fs-5">@Text.Lower("Open Telemetry")</div>
+                        <ul class="inline-list">
+                            <li>
+                                <MudTextField ReadOnly="true"
+                                              FullWidth="true"
+                                              Immediate="true"
+                                              Value="@(Text.Lower(Entity.OpenTelemetry.Enabled.YesNo()))"
+                                              HelperText="@Text.Lower("Enable?")"
+                                              Class="cursor-pointer"
+                                              title="@Text.Lower("Click here to change it")"
+                                              @onclick="() => this.Entity.OpenTelemetry.Enabled = !this.Entity.OpenTelemetry.Enabled"></MudTextField>
+                            </li>
+                        </ul>
+                        <ul class="inline-list">
+                            <li>
+                                <MudTextField FullWidth="true"
+                                              Immediate="true"
+                                              @bind-Value="@this.Entity.OpenTelemetry.Endpoint"
+                                              HelperText="@Text.Lower("Endpoint (URL)")"></MudTextField>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-12 col-xxl-8">
+                    <div class="e-mail p-3">
+                        <div class="text-center fs-5">@Text.Lower("E-mail")</div>
+                        <ul class="inline-list mt-3">
+                            <li>
+                                <div class="p-2 border shadow-sm">
+                                    <EmailStatusOk></EmailStatusOk>
+                                    <MudTextField ReadOnly="true"
+                                                  FullWidth="true"
+                                                  Immediate="true"
+                                                  Value="@(Text.Lower(Entity.KeepTestingTheSmtpServerConnectivity.YesNo()))"
+                                                  HelperText="@Text.Lower("Keep testing SMTP server connectivity in the background?")"
+                                                  Class="cursor-pointer"
+                                                  title="@Text.Lower("Click here to change it")"
+                                                  @onclick="() => this.Entity.KeepTestingTheSmtpServerConnectivity = !this.Entity.KeepTestingTheSmtpServerConnectivity"></MudTextField>
+                                </div>
+                            </li>
+                        </ul>
+                        <ul class="inline-list mt-3">
+                            <li>
+                                <MudTextField FullWidth="true"
+                                              Immediate="true"
+                                              @bind-Value="@this.Entity.Email"
+                                              HelperText="@Text.Lower("E-mail")"
+                                              InputType="InputType.Email"></MudTextField>
+                            </li>
+                        </ul>
+                        <ul class="inline-list">
+                            <li>
+                                <MudTextField FullWidth="true"
+                                              Immediate="true"
+                                              @bind-Value="@this.Entity.SmtpUserName"
+                                              HelperText="@Text.Lower("SMTP username")"></MudTextField>
+                            </li>
+                        </ul>
+                        <ul class="inline-list">
+                            <li>
+                                <MudTextField FullWidth="true"
+                                              Immediate="true"
+                                              @bind-Value="@this.Entity.SmtpPassword"
+                                              HelperText="@Text.Lower("SMTP password")"
+                                              InputType="InputType.Password"></MudTextField>
+                            </li>
+                        </ul>
+                        <ul class="inline-list">
+                            <li>
+                                <MudTextField FullWidth="true"
+                                              Immediate="true"
+                                              @bind-Value="@this.Entity.SmtpServer"
+                                              HelperText="@Text.Lower("SMTP server")"></MudTextField>
+                            </li>
+                        </ul>
+                        <ul class="inline-list">
+                            <li>
+                                <MudTextField FullWidth="true"
+                                              Immediate="true"
+                                              @bind-Value="@this.Entity.SmtpServerPort"
+                                              HelperText="@Text.Lower("SMTP server port")"></MudTextField>
+                            </li>
+                        </ul>
+                        <ul class="inline-list">
+                            <li>
+                                <MudTextField ReadOnly="true"
+                                              FullWidth="true"
+                                              Immediate="true"
+                                              Value="@(Text.Lower(Entity.EnableSsl.YesNo()))"
+                                              HelperText="@Text.Lower("Enable SSL?")"
+                                              Class="cursor-pointer"
+                                              title="@Text.Lower("Click here to change it")"
+                                              @onclick="() => this.Entity.EnableSsl = !this.Entity.EnableSsl"></MudTextField>
+                            </li>
+                        </ul>
+                        <ul class="inline-list mt-3">
+                            <li>
+                                <div class="btn-group">
+                                    <button class="btn btn-success" @onclick="_testEmail">
+                                        <i class="fa-solid fa-square-check"></i>
+                                        @Text.Lower("Test connection")
+                                    </button>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="advanced p-3">
+                        <div class="text-center fs-5">@Text.Lower("Feeds")</div>
+                        <ul class="inline-list mt-3">
+                            <li>
+                                <MudTextField FullWidth="true"
+                                              Immediate="true"
+                                              @bind-Value="@this.Entity.RssFeed1"
+                                              HelperText="@Text.Lower("RSS feed #1")"></MudTextField>
+                            </li>
+                        </ul>
+                        <ul class="inline-list">
+                            <li>
+                                <MudTextField FullWidth="true"
+                                              Immediate="true"
+                                              @bind-Value="@this.Entity.RssFeed2"
+                                              HelperText="@Text.Lower("RSS feed #2")"></MudTextField>
+                            </li>
+                        </ul>
+                        <ul class="inline-list">
+                            <li>
+                                <MudTextField FullWidth="true"
+                                              Immediate="true"
+                                              @bind-Value="@this.Entity.RssFeed3"
+                                              HelperText="@Text.Lower("RSS feed #3")"></MudTextField>
+                            </li>
+                        </ul>
+                        <ul class="inline-list">
+                            <li>
+                                <MudTextField FullWidth="true"
+                                              Immediate="true"
+                                              @bind-Value="@this.Entity.RssFeed4"
+                                              HelperText="@Text.Lower("RSS feed #4")"></MudTextField>
+                            </li>
+                        </ul>
+                        <ul class="inline-list">
+                            <li>
+                                <MudTextField FullWidth="true"
+                                              Immediate="true"
+                                              @bind-Value="@this.Entity.RssFeed5"
+                                              HelperText="@Text.Lower("RSS feed #5")"></MudTextField>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="p-3">
+                        <ul class="inline-list">
+                            <li>
+                                <MudTextField FullWidth="true"
+                                              Immediate="true"
+                                              @bind-Value="@this.Entity.Description"
+                                              HelperText="@Text.Lower("Description of the website (for meta tags)")"
+                                              AutoGrow="true"></MudTextField>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="social-networks p-3">
+                <div class="text-center fs-5 mb-3">@Text.Lower("Social network logins")</div>
+                <div class="row">
+                    <div class="col-12 col-xxl-6">
+                        <div class="border mb-3">
+                            <div class="bg-light p-2">
+                                <i class="bi bi-facebook"></i>
+                                @Text.Lower("Facebook")
+                            </div>
+                            <div class="p-3">
+                                <ul class="inline-list">
+                                    <li>
+                                        <MudTextField ReadOnly="true"
+                                                      FullWidth="true"
+                                                      Immediate="true"
+                                                      Value="@(Text.Lower(Entity.SocialNetwork.Facebook.Enabled.YesNo()))"
+                                                      HelperText="@Text.Lower("Enabled?")"
+                                                      Class="cursor-pointer"
+                                                      title="@Text.Lower("Click here to change it")"
+                                                      @onclick="() => this.Entity.SocialNetwork.Facebook.Enabled = !this.Entity.SocialNetwork.Facebook.Enabled"></MudTextField>
+                                    </li>
+                                </ul>
+                                <ul class="inline-list">
+                                    <li>
+                                        <MudTextField FullWidth="true"
+                                                      Immediate="true"
+                                                      @bind-Value="@this.Entity.SocialNetwork.Facebook.AppId"
+                                                      HelperText="@Text.Lower("App Id")"></MudTextField>
+                                    </li>
+                                </ul>
+                                <ul class="inline-list">
+                                    <li>
+                                        <MudTextField FullWidth="true"
+                                                      Immediate="true"
+                                                      @bind-Value="@this.Entity.SocialNetwork.Facebook.AppSecret"
+                                                      HelperText="@Text.Lower("App Secret")"></MudTextField>
+                                    </li>
+                                </ul>
+                                <ul class="inline-list">
+                                    <li>
+                                        <MudTextField FullWidth="true"
+                                                      ReadOnly="true"
+                                                      @bind-Value="@this.Entity.SocialNetwork.Facebook.CallbackPath"
+                                                      HelperText="@Text.Lower("Callback Path")"></MudTextField>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-xxl-6">
+                        <div class="border mb-3">
+                            <div class="bg-light p-2">
+                                <i class="bi bi-github"></i>
+                                @Text.Lower("GitHub")
+                            </div>
+                            <div class="p-3">
+                                <ul class="inline-list">
+                                    <li>
+                                        <MudTextField ReadOnly="true"
+                                                      FullWidth="true"
+                                                      Immediate="true"
+                                                      Value="@(Text.Lower(Entity.SocialNetwork.GitHub.Enabled.YesNo()))"
+                                                      HelperText="@Text.Lower("Enabled?")"
+                                                      Class="cursor-pointer"
+                                                      title="@Text.Lower("Click here to change it")"
+                                                      @onclick="() => this.Entity.SocialNetwork.GitHub.Enabled = !this.Entity.SocialNetwork.GitHub.Enabled"></MudTextField>
+                                    </li>
+                                </ul>
+                                <ul class="inline-list">
+                                    <li>
+                                        <MudTextField FullWidth="true"
+                                                      Immediate="true"
+                                                      @bind-Value="@this.Entity.SocialNetwork.GitHub.AppName"
+                                                      HelperText="@Text.Lower("App Name")"></MudTextField>
+                                    </li>
+                                </ul>
+                                <ul class="inline-list">
+                                    <li>
+                                        <MudTextField FullWidth="true"
+                                                      Immediate="true"
+                                                      @bind-Value="@this.Entity.SocialNetwork.GitHub.ClientId"
+                                                      HelperText="@Text.Lower("Client Id")"></MudTextField>
+                                    </li>
+                                </ul>
+                                <ul class="inline-list">
+                                    <li>
+                                        <MudTextField FullWidth="true"
+                                                      Immediate="true"
+                                                      @bind-Value="@this.Entity.SocialNetwork.GitHub.ClientSecret"
+                                                      HelperText="@Text.Lower("Client Secret")"></MudTextField>
+                                    </li>
+                                </ul>
+                                <ul class="inline-list">
+                                    <li>
+                                        <MudTextField FullWidth="true"
+                                                      ReadOnly="true"
+                                                      @bind-Value="@this.Entity.SocialNetwork.GitHub.CallbackPath"
+                                                      HelperText="@Text.Lower("Callback Path")"></MudTextField>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-xxl-6">
+                        <div class="border mb-3">
+                            <div class="bg-light p-2">
+                                <i class="bi bi-google"></i>
+                                @Text.Lower("Google")
+                            </div>
+                            <div class="p-3">
+                                <ul class="inline-list">
+                                    <li>
+                                        <MudTextField ReadOnly="true"
+                                                      FullWidth="true"
+                                                      Immediate="true"
+                                                      Value="@(Text.Lower(Entity.SocialNetwork.Google.Enabled.YesNo()))"
+                                                      HelperText="@Text.Lower("Enabled?")"
+                                                      Class="cursor-pointer"
+                                                      title="@Text.Lower("Click here to change it")"
+                                                      @onclick="() => this.Entity.SocialNetwork.Google.Enabled = !this.Entity.SocialNetwork.Google.Enabled"></MudTextField>
+                                    </li>
+                                </ul>
+                                <ul class="inline-list">
+                                    <li>
+                                        <MudTextField FullWidth="true"
+                                                      Immediate="true"
+                                                      @bind-Value="@this.Entity.SocialNetwork.Google.ApiKey"
+                                                      HelperText="@Text.Lower("Api Key")"></MudTextField>
+                                    </li>
+                                </ul>
+                                <ul class="inline-list">
+                                    <li>
+                                        <MudTextField FullWidth="true"
+                                                      Immediate="true"
+                                                      @bind-Value="@this.Entity.SocialNetwork.Google.ClientId"
+                                                      HelperText="@Text.Lower("Client Id")"></MudTextField>
+                                    </li>
+                                </ul>
+                                <ul class="inline-list">
+                                    <li>
+                                        <MudTextField FullWidth="true"
+                                                      Immediate="true"
+                                                      @bind-Value="@this.Entity.SocialNetwork.Google.ClientSecret"
+                                                      HelperText="@Text.Lower("Client Secret")"></MudTextField>
+                                    </li>
+                                </ul>
+                                <ul class="inline-list">
+                                    <li>
+                                        <MudTextField FullWidth="true"
+                                                      ReadOnly="true"
+                                                      @bind-Value="@this.Entity.SocialNetwork.Google.CallbackPath"
+                                                      HelperText="@Text.Lower("Callback Path")"></MudTextField>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-xxl-6">
+                        <div class="border mb-3">
+                            <div class="bg-light p-2">
+                                <i class="bi bi-microsoft"></i>
+                                @Text.Lower("Microsoft")
+                            </div>
+                            <div class="p-3">
+                                <ul class="inline-list">
+                                    <li>
+                                        <MudTextField ReadOnly="true"
+                                                      FullWidth="true"
+                                                      Immediate="true"
+                                                      Value="@(Text.Lower(Entity.SocialNetwork.Microsoft.Enabled.YesNo()))"
+                                                      HelperText="@Text.Lower("Enabled?")"
+                                                      Class="cursor-pointer"
+                                                      title="@Text.Lower("Click here to change it")"
+                                                      @onclick="() => this.Entity.SocialNetwork.Microsoft.Enabled = !this.Entity.SocialNetwork.Microsoft.Enabled"></MudTextField>
+                                    </li>
+                                </ul>
+                                <ul class="inline-list">
+                                    <li>
+                                        <MudTextField FullWidth="true"
+                                                      Immediate="true"
+                                                      @bind-Value="@this.Entity.SocialNetwork.Microsoft.TenantId"
+                                                      HelperText="@Text.Lower("Tenant Id")"></MudTextField>
+                                    </li>
+                                </ul>
+                                <ul class="inline-list">
+                                    <li>
+                                        <MudTextField FullWidth="true"
+                                                      Immediate="true"
+                                                      @bind-Value="@this.Entity.SocialNetwork.Microsoft.ClientId"
+                                                      HelperText="@Text.Lower("Client Id")"></MudTextField>
+                                    </li>
+                                </ul>
+                                <ul class="inline-list">
+                                    <li>
+                                        <MudTextField FullWidth="true"
+                                                      Immediate="true"
+                                                      @bind-Value="@this.Entity.SocialNetwork.Microsoft.ClientSecret"
+                                                      HelperText="@Text.Lower("Client Secret")"></MudTextField>
+                                    </li>
+                                </ul>
+                                <ul class="inline-list">
+                                    <li>
+                                        <MudTextField FullWidth="true"
+                                                      ReadOnly="true"
+                                                      @bind-Value="@this.Entity.SocialNetwork.Microsoft.CallbackPath"
+                                                      HelperText="@Text.Lower("Callback Path")"></MudTextField>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="position-sticky p-3 bg-light border" style="bottom:0; left:0; right:0; height: 70px;">
+            <div class="text-center">
+                <div class="btn-group">
+                    <button class="btn btn-success text-white fw-bold" @onclick="Save" disabled="@this.DisableTheSaveButton">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        @Text.Lower("Save")
+                    </button>
+                    <button class="btn btn-secondary text-white fw-bold" @onclick="UndoChanges" disabled="@this.Entity.New">
+                        <i class="fa-solid fa-rotate-left"></i>
+                        @Text.Lower("Undo changes")
+                    </button>
+                </div>
+            </div>
+        </div>
+        @if (FileManagerForImages)
+        {
+            <div class="position-fixed popup-container">
+                <div class="border shadow-lg position-relative" style="width: 90%; height: 90%;">
+                    <div class="overflow-auto" style="height:100%; padding-bottom: 70px;">
+                        <FileManager Mode="Image" OnFileClicked="this.ImageFromFileManagerWillAssignEntityHeader"></FileManager>
+                    </div>
+                    <ul class="inline-list position-absolute w-100 border bg-white" style="bottom:0; z-index: 50;">
+                        <li></li>
+                        <li class="text-right">
+                            <div class="btn-group p-3">
+                                <button class="btn btn-secondary" @onclick="() => this.FileManagerForImages = false">
+                                    <i class="fa-solid fa-circle-xmark"></i>
+                                    @Text.Lower("Close window")
+                                </button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        }
+    </ContentTemplate>
+</Root>
+
+@code {
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        this.Entity = this.Super.Settings.GetSettings().Clone();
+    }
+
+    private void _testEmail()
+    {
+        this.UserFacade.Result = this.Super.Emails.ConnectWithTheseSettings(this.Entity);
+    }
+
+    private Core.Models.Result CanAccess()
+    {
+        return this.Super.Settings.CanRead(this.UserFacade.User.Id);
+    }
+
+    public override void Save()
+    {
+        base.Save();
+        this.Super.Settings.RefreshCache();
+    }
+}

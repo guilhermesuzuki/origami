@@ -1,0 +1,137 @@
+﻿@inherits Basic
+
+@if (UserFacade.Results.Any() == true)
+{
+    <div class="wrapper p-3 position-fixed overflow-auto" style="z-index:100; left: 50%; transform: translateX(-50%); max-height: 100%;">
+        <div class="process-result fs-5 bg-white border shadow-sm" style="min-width: 600px; max-width:100%;" @onmouseover="_focusIn" @onmouseout="_focusOut">
+            <ul class="inline-list p-2 text-white @(this.UserFacade.Results.Ok() ? "bg-success" : "bg-danger")">
+                <li>
+                    @if (UserFacade.Results.Ok() == true)
+                    {
+                        <div class="text-center">
+                            <label>
+                                <span>
+                                    @Text.Lower(Text.OperationCompletedSuccessfully)
+                                    @if (this._mustStopTimer == false)
+                                    {
+                                        <span class="ps-1">(@(this._secondsToDisappear)s)</span>
+                                    }
+                                </span>
+                            </label>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center">
+                            <label>
+                                <span>
+                                    @Text.Lower(Text.SomethingWentWrongPleaseTryAgain)
+                                    @if (this._mustStopTimer == false)
+                                    {
+                                        <span class="ps-1">(@(this._secondsToDisappear)s)</span>
+                                    }
+                                </span>
+                            </label>
+                        </div>
+                    }
+                </li>
+                <li class="w-25">
+                    <div class="buttons text-right">
+                        <div class="btn-group">
+                            <button class="btn text-white fw-bold" @onclick="_stopTimer" title="@Text.Original("Stops the timer")" disabled="@(this._mustStopTimer)">
+                                <i class="fa-solid fa-circle-stop"></i>
+                            </button>
+                            <button class="btn text-white fw-bold" @onclick="_close" title="@Text.Original("Closes the window")">
+                                <i class="fa-solid fa-circle-xmark"></i>
+                            </button>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            @foreach (var result in UserFacade.Results.DistinctBy(x => x.Id))
+            {
+                <Result Class="m-2 border" Entity="result"></Result>
+            }
+        </div>
+    </div>
+}
+else 
+{
+    this._mustStopTimer = false;
+    this._secondsToDisappear = this.SecondsToDisappear;
+}
+
+@code {
+    private byte _secondsToDisappear;
+    private bool _mustStopTimer = false;
+    private System.Timers.Timer _timer = new();
+
+    /// <summary>
+    /// Seconds the result disappears.
+    /// </summary>
+    [Parameter] public byte SecondsToDisappear { get; set; } = (OrigamiConstants.ResultTimer_Interval / 1000);
+
+    private void _focusIn()
+    {
+        this._secondsToDisappear = this.SecondsToDisappear;
+        this._timer.Stop();
+    }
+
+    private void _focusOut()
+    {
+        if (this._mustStopTimer == false)
+        {
+            this._timer.Start();
+        }
+    }
+
+    /// <summary>
+    /// Loads the timer and starts it.
+    /// </summary>
+    protected virtual void LoadTimer()
+    {
+        if (this._mustStopTimer == true) return;
+        this._secondsToDisappear = this.SecondsToDisappear;
+        _timer.Stop();
+        _timer = new() { AutoReset = true, Enabled = false, Interval = 1000 };
+        _timer.Elapsed += this.TimerHasElapsed;
+        _timer.Start();
+    }
+
+    protected override void OnInitialized()
+    {
+        this.UserFacade.Changed += (sender, p) =>
+        {
+            if (p.PropertyName == nameof(IUserFacade.Results))
+            {
+                this.LoadTimer();
+                this.InvokeAsync(this.StateHasChanged);
+            }
+        };
+
+        base.OnInitialized();
+    }
+
+    protected virtual void TimerHasElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        this._secondsToDisappear -= 1;
+        this.InvokeAsync(this.StateHasChanged);
+        if (this._secondsToDisappear <= 0)
+        {
+            this.UserFacade.Results.Clear();
+            this.InvokeAsync(this.StateHasChanged);
+            _timer.Stop();
+        }
+    }
+
+    private void _close() 
+    {
+        this.UserFacade.Results.Clear();
+    }
+
+    private void _stopTimer() 
+    {
+        this._mustStopTimer = true;
+        this._timer.Stop();
+    }
+}

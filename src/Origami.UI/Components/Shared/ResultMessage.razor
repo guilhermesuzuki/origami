@@ -1,0 +1,37 @@
+﻿@inherits Basic
+@implements IEntityNull<Core.Models.ResultMessage>
+
+@if (this.Entity != null) 
+{
+    <div class="result-message p-2 @Class">
+        <ul class="inline-list">
+            <li class="text-center" style="width: 40px; font-size:16px;">
+                @if (this.Entity.MessageType == Core.Models.ResultMessage.MessageTypes.Success) 
+                {
+                    <i class="fa-solid fa-circle-check"></i>
+                }
+                else if (this.Entity.MessageType == Core.Models.ResultMessage.MessageTypes.Error)
+                {
+                    <i class="fa-solid fa-circle-xmark"></i>
+                }
+                else if (this.Entity.MessageType == Core.Models.ResultMessage.MessageTypes.Warning)
+                {
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                }
+                else if (this.Entity.MessageType == Core.Models.ResultMessage.MessageTypes.Info)
+                {
+                    <i class="fa-solid fa-circle-info"></i>
+                }
+                else if (this.Entity.MessageType == Core.Models.ResultMessage.MessageTypes.Simple)
+                {
+                    <i class="fa-solid fa-message"></i>
+                }
+            </li>
+            <li class="x-small">@Entity.Message</li>
+        </ul>
+    </div>
+}
+
+@code {
+    [Parameter] public Core.Models.ResultMessage? Entity { get; set; }
+}

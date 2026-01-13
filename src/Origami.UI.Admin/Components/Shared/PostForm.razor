@@ -1,0 +1,234 @@
+﻿@inherits BasicFormFullContent<OrigamiPost, OrigamiPostCategory, OrigamiPostTag>
+@inject ICategoryRepository _category
+@inject IPostCategoryRepository _postCategory
+@inject IPostTagRepository _postTag
+@inject IVideoTagRepository _videoTag
+@inject IFileRepository _fileRepository
+
+<MudFileUpload @ref="this.FileUpload" T="IBrowserFile" FilesChanged="UploadHeader" Accept=".png, .jpg, .bmp, .tiff" MaximumFileCount="1"></MudFileUpload>
+<div class="post-form @Class">
+    <div class="row">
+        <div class="col-12">
+            <div class="p-3">
+                <MudTextField ReadOnly="true"
+                              Immediate="true"
+                              Value="@(Text.Lower(Entity.IsDraft.YesNo()))"
+                              HelperText="@Text.Lower("Still a draft?")"
+                              Class="cursor-pointer yes-no"
+                              title="@Text.Lower("Click here to change it")"
+                              @onclick="() => this.Entity.IsDraft = !this.Entity.IsDraft.GetValueOrDefault()"></MudTextField>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-xxl-6">
+            <div class="p-3">
+                <BasicHeaderNotes Entity="this.Entity"></BasicHeaderNotes>
+                <BasicHeader Class="mt-3" Entity="this.Entity"></BasicHeader>
+                <ul class="inline-list mt-3">
+                    <li>
+                        <LanguageWrittenOn Entity="this.Entity"></LanguageWrittenOn>
+                    </li>
+                    <li>
+                        <MudTextField ReadOnly="true"
+                                      Immediate="true"
+                                      AdornmentIcon="@Icons.Material.Filled.Comment"
+                                      Adornment="Adornment.Start"
+                                      Value="@(Text.Lower(Entity.IsCommentEnabled.YesNo()))"
+                                      HelperText="@Text.Lower("Are comments enabled?")"
+                                      Class="cursor-pointer"
+                                      title="@Text.Lower("Click here to change it")"
+                                      @onclick="() => this.Entity.IsCommentEnabled = !this.Entity.IsCommentEnabled"></MudTextField>
+                    </li>
+                </ul>
+                <ul class="inline-list mt-3">
+                    <li>
+                        <MudTextField Immediate="true"
+                                      AdornmentIcon="@Icons.Material.Filled.Description"
+                                      Adornment="Adornment.Start"
+                                      @bind-Value="@Entity.Title"
+                                      HelperText="@Text.Lower("Title")"
+                                      Required="true"></MudTextField>
+                    </li>
+                </ul>
+                <ul class="inline-list mt-3">
+                    <li class="pe-2">
+                        <MudTextField Immediate="true"
+                                      AdornmentIcon="@Icons.Material.Filled.Link"
+                                      Adornment="Adornment.Start"
+                                      @bind-Value="@Entity.Slug"
+                                      HelperText="@Text.Lower("Slug")"></MudTextField>
+                    </li>
+                    <li style="width:140px;">
+                        <button class="btn btn-secondary" @onclick="() => Entity.Slug = Entity.Title.GetSlug()" style="line-height: 15px;">
+                            @Text.Lower("Create slug")
+                            <span class="x-small">@Text.Lower("Based on title")</span>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-12 col-xxl-6">
+            <div class="text-center p-3">
+                <HeaderImageLite Entity="@Entity"></HeaderImageLite>
+                <div class="btn-group mt-2 w-100">
+                    <button class="btn btn-light" @onclick="PickFile">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <div>@Text.Lower("Only image files")</div>
+                        <div class="x-small">@Text.Original("{0} MB max.", 6)</div>
+                    </button>
+                    <button class="btn btn-light" @onclick="() => this.FileManagerForImages = true">
+                        <i class="fa-solid fa-folder"></i>
+                        @Text.Lower("Pick from file manager")
+                    </button>
+                    <button class="btn btn-light" @onclick="ClearHeader">
+                        <i class="fa-solid fa-trash-can"></i>
+                        @Text.Lower("Clear header")
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-xxl-6">
+            <div class="categories p-3">
+                <div class="w-100 text-white bg-secondary text-center">
+                    <i class="fa-solid fa-layer-group"></i>
+                    @Text.Lower("Categories")
+                </div>
+                <MudDataGrid T="OrigamiCategory" Class="border mt-3" Items="this.GetAllCategories()" SortMode="SortMode.None" Filterable="false">
+                    <Columns>
+                        <TemplateColumn>
+                            <CellTemplate>
+                                <MudCheckBox T="bool" Value="@IsCategorySelected(context.Item.Id)" @onclick="() => SelectCategory(context.Item)"></MudCheckBox>
+                            </CellTemplate>
+                        </TemplateColumn>
+                        <TemplateColumn CellClass="w-100">
+                            <CellTemplate>
+                                <CategoryHeaderLite Entity="@context.Item"></CategoryHeaderLite>
+                            </CellTemplate>
+                        </TemplateColumn>
+                        <TemplateColumn>
+                            <CellTemplate>
+                                @if (NewCategory(context.Item.Id) == true)
+                                {
+                                    <i class="fa-solid fa-circle-plus"></i>
+                                }
+                            </CellTemplate>
+                        </TemplateColumn>
+                    </Columns>
+                    <PagerContent>
+                        <MudDataGridPager T="OrigamiCategory" PageSizeOptions="[10, 25, 50, 100]" />
+                    </PagerContent>
+                </MudDataGrid>
+            </div>
+        </div>
+        <div class="col-12 col-xxl-6">
+            <div class="tags p-3">
+                <div class="w-100 text-white bg-secondary text-center">
+                    <i class="fa-solid fa-tag"></i>
+                    @Text.Lower("Tags")
+                </div>
+                <MudDataGrid T="OrigamiPostTag" Class="border mt-3" Items="this.Tags" SortMode="SortMode.None" Filterable="false">
+                    <Columns>
+                        <TemplateColumn CellClass="w-100">
+                            <CellTemplate>
+                                <i class="fa-solid fa-tag"></i>
+                                <span class="pe-1">@context.Item.Tag</span>
+                                <span class="pe-1 x-small">[@context.Item.Slug]</span>
+                            </CellTemplate>
+                        </TemplateColumn>
+                        <TemplateColumn>
+                            <CellTemplate>
+                                <i class="fa-solid fa-trash cursor-pointer" @onclick="() => RemoveTag(context.Item)"></i>
+                            </CellTemplate>
+                        </TemplateColumn>
+                    </Columns>
+                    <PagerContent>
+                        <MudDataGridPager T="OrigamiPostTag" PageSizeOptions="[10,25,50,100]" />
+                    </PagerContent>
+                </MudDataGrid>
+                <TagAutoComplete @ref="_tagAutoComplete" Class="border p-3 mt-3" TagEntered="this.TagEntered"></TagAutoComplete>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="p-3">
+                <MudTextField FullWidth="true"
+                              Immediate="true"
+                              @bind-Value="@Entity.Description"
+                              AutoGrow="true"
+                              HelperText="@Text.Lower("Description")"></MudTextField>
+            </div>
+            <div class="p-3">
+                <TinyMCEContent Entity="Entity" Title="@Text.Lower("Content")"></TinyMCEContent>
+            </div>
+        </div>
+    </div>
+    <div class="buttons mt-3 p-3 text-center">
+        <div class="btn-group">
+            <button class="btn btn-success text-white fw-bold" @onclick="Save" disabled="@this.DisableTheSaveButton">
+                <i class="fa-solid fa-floppy-disk"></i>
+                @Text.Lower("Save")
+            </button>
+            <button class="btn btn-secondary text-white fw-bold" @onclick="UndoChanges" disabled="@this.Entity.New">
+                <i class="fa-solid fa-rotate-left"></i>
+                @Text.Lower("Undo changes")
+            </button>
+            <button class="btn btn-info text-white fw-bold" @onclick="CreateEntity">
+                <i class="fa-solid fa-square-plus"></i>
+                @Text.Lower("New")
+            </button>
+        </div>
+    </div>
+</div>
+@if (this.FileUploading)
+{
+    <div class="position-fixed popup-container">
+        <div class="border p-3 shadow-lg" style="width: 50%; background-color:white;">
+            <div class="text-center">@Text.Lower("Uploading a file")...</div>
+            <!-- Progress bar for file upload -->
+            <div class="progress" style="height: 10px;">
+                <div class="progress-bar bg-secondary" role="progressbar" style="width: @this.FileUploadingProgress%;" aria-valuenow="@this.FileUploadingProgress" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+            <div class="actions text-right mt-3">
+                <div class="btn-group">
+                    <button class="btn btn-danger" @onclick="() => this.FileUploadingToken.Cancel()">
+                        <i class="fa-solid fa-stop"></i>
+                        @Text.Lower("Stop")
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@if (FileManagerForImages)
+{
+    <div class="position-fixed popup-container">
+        <div class="border shadow-lg position-relative" style="width: 90%; height: 90%;">
+            <div class="overflow-auto" style="height:100%; padding-bottom: 70px;">
+                <FileManager Mode="Image" OnFileClicked="this.ImageFromFileManagerWillAssignEntityHeader"></FileManager>
+            </div>
+            <ul class="inline-list position-absolute w-100 border bg-white" style="bottom:0; z-index: 50;">
+                <li></li>
+                <li class="text-right">
+                    <div class="btn-group p-3">
+                        <button class="btn btn-secondary" @onclick="() => this.FileManagerForImages = false">
+                            <i class="fa-solid fa-circle-xmark"></i>
+                            @Text.Lower("Close window")
+                        </button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+}
+@code {
+    private TagAutoComplete? _tagAutoComplete;
+
+    protected override void CreateEntityBeforeEvent(OrigamiPost entity)
+    {
+        this._tagAutoComplete!.Clear();
+    }
+}

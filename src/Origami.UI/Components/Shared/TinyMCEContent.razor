@@ -1,0 +1,19 @@
+﻿@inherits Basic
+@implements IEntityNull<IContent>
+@implements ITitle
+
+@if (Entity != null)
+{
+    <div class="@Class">
+        <TinyMCE.Blazor.Editor ClassName="tinymce tinymce-content"
+                               Value="@this.Entity.Content"
+                               ValueChanged="(value) => this.Entity.Content = value"
+                               Conf="@OrigamiConstants.TinyMCE.Configuration"
+                               ScriptSrc="_content/Origami.UI/lib/tinymce-5.10.7/tinymce.min.js"></TinyMCE.Blazor.Editor>
+    </div>
+}
+
+@code {
+    [Parameter] public IContent? Entity { get; set; }
+    [Parameter] public string Title { get; set; } = string.Empty;
+}

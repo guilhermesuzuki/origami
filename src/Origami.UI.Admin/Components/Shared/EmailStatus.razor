@@ -1,0 +1,22 @@
+﻿@inherits Basic
+@inject IEmailStatusRepository _emailStatusRepository
+@if (_emailStatusRepository.Status?.Ok == false)
+{
+    <div class="email-status border m-2 shadow-sm @Class">
+        <div class="p-2 text-center">@Text.Original("Failed to connect to email server with default settings")</div>
+        <Result Class="border-top border-bottom" Entity="_emailStatusRepository.Status"></Result>
+    </div>
+}
+@code {
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        this.AppFacade.RefreshingTheUI += (obj, args) =>
+        {
+            if (obj is string s)
+            {
+                if (s.Like(OrigamiConstants.Events.EmailStatus) == true) this.InvokeAsync(this.StateHasChanged);
+            }
+        };
+    }
+}

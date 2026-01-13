@@ -1,0 +1,25 @@
+﻿@inherits Basic
+@inject IEmailStatusRepository _emailStatusRepository
+@if (_emailStatusRepository.Status?.Ok == true)
+{
+    <div class="text-success mb-2">
+        <i class="bi bi-check-square-fill"></i>
+        <span>
+            @_emailStatusRepository.Status.DateCreated:
+            @Text.Lower("Email settings are fine")
+        </span>
+    </div>
+}
+@code {
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        this.AppFacade.RefreshingTheUI += (obj, args) =>
+        {
+            if (obj is string s)
+            {
+                if (s.Like(OrigamiConstants.Events.EmailStatus) == true) this.InvokeAsync(this.StateHasChanged);
+            }
+        };
+    }
+}

@@ -1,0 +1,15 @@
+﻿@inherits Basic
+@implements IEntityNull<IDraft>
+@if (this.Entity != null)
+{
+    @if (this.Entity.IsDraft.GetValueOrDefault() == true)
+    {
+        <span class="draft @Class" title="@Text.Original("The author marked this as draft")">
+            <i class="bi bi-exclamation-diamond-fill"></i>
+            @Text.Lower("Draft")
+        </span>
+    }
+}
+@code {
+    [Parameter] public IDraft? Entity { get; set; }
+}

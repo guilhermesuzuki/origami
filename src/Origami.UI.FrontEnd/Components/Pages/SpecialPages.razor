@@ -1,0 +1,10 @@
+﻿@page "/specialpages"
+@inherits BasicPage
+
+<Root>
+    <SpecialPageList Class="mt-3" BlogId="@this.BlogId" Page="@Page" ShowFakes="true"></SpecialPageList>
+</Root>
+
+@code {
+    [Parameter] public int Page { get; set; } = 1;
+}

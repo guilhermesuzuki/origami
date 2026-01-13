@@ -1,0 +1,195 @@
+﻿@page "/specialmessages"
+@inherits BasicAdminGrid<OrigamiSpecialMessage>
+@implements IFilter
+@inject IBlogRepository _blogs
+@inject ICategoryRepository _category
+@inject IPostCategoryRepository _postCategory
+@inject IVideoCategoryRepository _videoCategory
+@inject ISpecialMessageRepository _messages
+
+<Root Access="this.CanAccess()">
+    <HeaderTemplate>
+        <div class="p-3 border-bottom">
+            <div class="row">
+                <div class="d-inline-flex align-items-center col-12 col-xxl-8">
+                    <ul class="inline-list w-100">
+                        <li style="width:80%;">
+                            @* <i class="fa-solid fa-file-lines pe-1"></i> *@
+                            <i class="fa-solid fa-bullhorn me-1"></i>
+                            <span class="pe-3">@Text.Get("Special messages", Text.Styles.Uppercase)</span>
+                            <div class="btn-group pe-1">
+                                <button class="btn btn-light text-danger border border-danger" disabled="@this.DisableTheDeleteButton" @onclick="this.DeleteSelectedEntities">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            </div>
+                            <div class="btn-group pe-1">
+                                <button class="btn btn-success text-white" title="@Text.Lower("Publish message(s)")" disabled="@this.DisableTheDeleteButton" @onclick="this.PublishSelectedEntities">
+                                    <i class="fa-solid fa-file-arrow-up"></i>
+                                </button>
+                                <button class="btn btn-warning text-white" title="@Text.Lower("Unpublish message(s)")" disabled="@this.DisableTheDeleteButton" @onclick="this.UnpublishSelectedEntities">
+                                    <i class="fa-solid fa-file-arrow-down"></i>
+                                </button>
+                            </div>
+                        </li>
+                        <li style="width:20%;">
+                            <MudSelect T="string" HelperText="@Text.Lower("Filter")" @bind-Value:get="Filter" @bind-Value:set="(filter) => SetFilterAndRefreshUI(filter)">
+                                <MudSelectItem T="string" Value="@(new string("all"))">@Text.Original("All")</MudSelectItem>
+                                <MudSelectItem T="string" Value="@(new string("published"))">@Text.Original("Published")</MudSelectItem>
+                                <MudSelectItem T="string" Value="@(new string("drafts"))">@Text.Original("Drafts")</MudSelectItem>
+                            </MudSelect>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-12 col-xxl-4">
+                    <BlogSelect></BlogSelect>
+                </div>
+            </div>
+        </div>
+        <div class="p-3 border-bottom">
+            <div class="row">
+                <div class="col-12">
+                    <SearchLite T="OrigamiSpecialMessage" OnHitSelected="this.OnSearchResultSelected"></SearchLite>
+                </div>
+            </div>
+        </div>
+    </HeaderTemplate>
+    <ContentTemplate>
+        <div class="p-3">
+            <div class="row">
+                <div class="datagrid-options col-12 text-right mb-1">
+                    <DataGridOptions Deleted="this.IncludeDeletedEntitiesInDataGrid" DeletedChanged="this.OnIncludeDeletedEntitiesChanged"></DataGridOptions>
+                </div>
+                <div class="pages col-12">
+                    <MudDataGrid @ref="DataGrid" T="OrigamiSpecialMessage" ServerData="GetEntities" Filterable="false" SortMode="SortMode.None" Class="border selectable" SelectedItems="this.SelectedEntities" MultiSelection="true" SelectedItemsChanged="this.SelectedEntitiesChanged"
+                                 RowClassFunc="this.RowClassFunc" Bordered="true" SelectOnRowClick="false">
+                        <Columns>
+                            <SelectColumn T="OrigamiSpecialMessage"></SelectColumn>
+                            <TemplateColumn Title="@Text.Upper("Title")">
+                                <CellTemplate>
+                                    <div class="cursor-pointer" @onclick="() => OnEdit(context.Item)">
+                                        <SpecialMessageHeaderLite Entity="context.Item"></SpecialMessageHeaderLite>
+                                    </div>
+                                </CellTemplate>
+                            </TemplateColumn>
+                            <TemplateColumn Title="@Text.Upper("Start Date")" Sortable="false" Filterable="false" CellClass="col-1 text-center">
+                                <CellTemplate>
+                                    @if (context.Item.MB_StartDate.HasValue)
+                                    {
+                                        <i class="fa-solid fa-calendar"></i>
+                                        <div class="small">@context.Item.MB_StartDate</div>
+                                    }
+                                </CellTemplate>
+                            </TemplateColumn>
+                            <TemplateColumn Title="@Text.Upper("End Date")" Sortable="false" Filterable="false" CellClass="col-1 text-center">
+                                <CellTemplate>
+                                    @if (context.Item.MB_EndDate.HasValue)
+                                    {
+                                        <i class="fa-solid fa-calendar"></i>
+                                        <div class="small">@context.Item.MB_EndDate</div>
+                                    }
+                                </CellTemplate>
+                            </TemplateColumn>
+                            <TemplateColumn Title="@Text.Upper("Published")" Sortable="false" Filterable="false" CellClass="col-1 text-center">
+                                <CellTemplate>
+                                    @if (context.Item.IsPublished)
+                                    {
+                                        <i class="fa-solid fa-thumbs-up"></i>
+                                        @if (context.Item.DatePublished != null)
+                                        {
+                                            <div class="small">@context.Item.DatePublished</div>
+                                        }
+                                    }
+                                </CellTemplate>
+                            </TemplateColumn>
+                            <TemplateColumn Title="@Text.Upper("Date")" Sortable="false" Filterable="false" CellClass="col-1 text-center">
+                                <CellTemplate>
+                                    <i class="fa-solid fa-calendar"></i>
+                                    <div class="small">@context.Item.GetDate()</div>
+                                </CellTemplate>
+                            </TemplateColumn>
+                        </Columns>
+                        <PagerContent>
+                            <MudDataGridPager T="OrigamiSpecialMessage" />
+                        </PagerContent>
+                        <NoRecordsContent>
+                            <NoEntriesWereFound></NoEntriesWereFound>
+                        </NoRecordsContent>
+                    </MudDataGrid>
+                </div>
+                <div class="pages-form col-12 mt-3">
+                    <SpecialMessageForm Class="p-3 shadow-sm border position-sticky" Entity="this.SelectedEntity" Saved="this.EntitySaved" Cancelled="this.EntityCancelled"></SpecialMessageForm>
+                </div>
+            </div>
+        </div>
+    </ContentTemplate>
+</Root>
+@code {
+
+    protected override string DefaultOrdering => $"{nameof(OrigamiSpecialMessage.Title)}";
+
+    /// <summary>
+    /// Can the user delete the selected entities?
+    /// </summary>
+    protected virtual bool DisableTheFrontPageButton => SelectedEntities.Any() == false;
+
+    protected virtual Result<OrigamiSpecialMessage> PublishEntity(OrigamiSpecialMessage entity)
+    {
+        var context = new DataOperationContext<OrigamiSpecialMessage>(this.UserFacade.User, DateTime.UtcNow, entity);
+        return this._messages.SmartPublish(context, true);
+    }
+
+    protected virtual Result<OrigamiSpecialMessage> UnpublishEntity(OrigamiSpecialMessage entity)
+    {
+        var context = new DataOperationContext<OrigamiSpecialMessage>(this.UserFacade.User, DateTime.UtcNow, entity);
+        return this._messages.SmartUnpublish(context, true);
+    }
+
+    protected async Task PublishSelectedEntities()
+    {
+        await ExecuteWithSelectedEntities(
+            async () =>
+            {
+                return await DialogService.ShowMessageBox(
+                    Text.Upper("Publish {0} item(s)", SelectedEntities.Count),
+                    Text.Original("Are you sure?"),
+                    yesText: Text.Lower("Yes"),
+                    noText: Text.Lower("No"));
+            },
+            this.PublishEntity
+        );
+    }
+
+    protected async Task UnpublishSelectedEntities()
+    {
+        await ExecuteWithSelectedEntities(
+            async () =>
+            {
+                return await DialogService.ShowMessageBox(
+                    Text.Upper("Unpublish {0} item(s)", SelectedEntities.Count),
+                    Text.Original("Are you sure?"),
+                    yesText: Text.Lower("Yes"),
+                    noText: Text.Lower("No"));
+            },
+            this.UnpublishEntity
+        );
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        var filter = this.NavigationManager!.Uri.QueryString("filter");
+        this.Filter = filter.Has() ? filter : this.Filter;
+    }
+
+    protected override IEnumerable<OrigamiSpecialMessage> GetItems()
+    {
+        if (this.IncludeDeletedEntitiesInDataGrid)
+        {
+            return base.GetItems();
+        }
+
+        return from x in base.GetItems() 
+               where x.IsDeleted == false
+               select x;
+    }
+}

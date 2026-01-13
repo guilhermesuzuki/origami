@@ -1,0 +1,10 @@
+﻿@inherits Basic
+
+@code {
+    protected override void OnAfterRender(bool firstRender)
+    {
+        var returnUrl = new Uri(this.NavigationManager!.Uri);
+        var login = "/login".QueryString("returnUrl", returnUrl.PathAndQuery);
+        this.NavigationManager!.NavigateTo(login, true);
+    }
+}

@@ -1,0 +1,60 @@
+﻿@page "/blogs/{Slug}/categories"
+
+@inherits BasicPage
+@inject ICategoryRepository _category
+@inject IPostCategoryRepository _postCategory
+@inject IVideoCategoryRepository _videoCategory
+
+<Root>
+    @if (this._blog != null)
+    {
+        var categories = this.Super.GetCategories().Blog(this._blog.Id);
+        <div class="categories pb-3">
+            <BlogHeaderLite2 Class="text-center fs-1" Entity="_blog" DisplayBlogNameEvenWithoutHeaderImage="false"></BlogHeaderLite2>
+            <div class="mt-3">
+                <div class="row">
+                    @if (categories.Any() == true)
+                    {
+                        @foreach (var category in categories)
+                        {
+                            <div class="col-12 col-xl-3 cursor-pointer">
+                                <CategoryHeader Class="mb-3" Entity="category"></CategoryHeader>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="col-12">
+                            <NothingToSeeHere Class="p-3 border shadow-sm" Subtitle="@Text.Lower("No categories whatsoever")"></NothingToSeeHere>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</Root>
+
+@code {
+    [Parameter] public string Slug { get; set; } = string.Empty;
+
+    private OrigamiBlog _blog = new();
+
+    public override Guid BlogId => this._blog.Id;
+
+    private void LoadBlog()
+    {
+        this._blog = this.Super.Blogs.ReadFromCache().NonDeleted().Active().Slug(this.Slug) ?? new();
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        this.LoadBlog();
+    }
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        this.PageTitle.SetTitle(Text.Get("Categories"));
+        return base.OnAfterRenderAsync(firstRender);
+    }
+}

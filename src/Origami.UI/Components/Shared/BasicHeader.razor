@@ -1,0 +1,139 @@
+﻿@inherits Basic
+@implements IEntityNull<IId>
+
+@inject IUserRepository _userRepository
+
+@if (this.Entity != null)
+{
+    <div class="@Class basic-header">
+        @if (this.Entity is INanoId nanoId)
+        {
+            <ul class="inline-list line-0">
+                <li class="nano-id">
+                    <MudTextField ReadOnly="true"
+                                  FullWidth="true"
+                                  Immediate="true"
+                                  AdornmentIcon="@Icons.Material.Filled.Key"
+                                  Adornment="Adornment.Start"
+                                  Value="@nanoId.NanoId"
+                                  HelperText="@Text.Lower("Nano-Id")"></MudTextField>
+                </li>
+                @if (this.Entity is IVersion version)
+                {
+                    <li class="version">
+                        <MudTextField ReadOnly="true"
+                                      FullWidth="true"
+                                      Immediate="true"
+                                      AdornmentIcon="@Icons.Material.Filled.Info"
+                                      Adornment="Adornment.Start"
+                                      Value="@(version.Version.HexString())"
+                                      HelperText="@Text.Lower("Version")"></MudTextField>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <ul class="inline-list line-1">
+                <li class="id">
+                    <MudTextField ReadOnly="true"
+                                  FullWidth="true"
+                                  Immediate="true"
+                                  AdornmentIcon="@Icons.Material.Filled.Key"
+                                  Adornment="Adornment.Start"
+                                  Value="@(Entity.Id.ToString())"
+                                  HelperText="@Text.Lower("Id")"></MudTextField>
+                </li>
+                @if (this.Entity is IVersion version)
+                {
+                    <li class="version">
+                        <MudTextField ReadOnly="true"
+                                      FullWidth="true"
+                                      Immediate="true"
+                                      AdornmentIcon="@Icons.Material.Filled.Info"
+                                      Adornment="Adornment.Start"
+                                      Value="@(version.Version.HexString())"
+                                      HelperText="@Text.Lower("Version")"></MudTextField>
+                    </li>
+                }
+            </ul>
+        }
+        @if (this.Entity is IDateCreated || this.Entity is IDateModified)
+        {
+            <ul class="mt-3 inline-list line-2">
+                @if (this.Entity is IDateCreated dateCreated)
+                {
+                    <li class="date-created">
+                        <MudTextField ReadOnly="true"
+                                      FullWidth="true"
+                                      Immediate="true"
+                                      AdornmentIcon="@Icons.Material.Filled.CalendarMonth"
+                                      Adornment="Adornment.Start"
+                                      Value="@(dateCreated.DateCreated.GetText())"
+                                      HelperText="@Text.Lower("Created")"></MudTextField>
+                    </li>
+                }
+                @if (this.Entity is IDateModified dateModified)
+                {
+                    <li class="date-modified">
+                        <MudTextField ReadOnly="true"
+                                      FullWidth="true"
+                                      Immediate="true"
+                                      AdornmentIcon="@Icons.Material.Filled.CalendarMonth"
+                                      Adornment="Adornment.Start"
+                                      Value="@(dateModified.DateModified.GetText())"
+                                      HelperText="@Text.Lower("Modified")"></MudTextField>
+                    </li>
+                }
+            </ul>
+        }
+        @if (this.Entity is IPublished || this.Entity is IAuthorId)
+        {
+            <ul class="mt-3 inline-list line-3">
+                @if (this.Entity is IPublished published)
+                {
+                    <li class="date-published">
+                        <MudTextField ReadOnly="true"
+                                      FullWidth="true"
+                                      Immediate="true"
+                                      AdornmentIcon="@Icons.Material.Filled.CalendarMonth"
+                                      Adornment="Adornment.Start"
+                                      Value="@((published, Text!).Published())"
+                                      HelperText="@Text.Lower("Published")"></MudTextField>
+                    </li>
+                }
+                @if (this._author.New == false)
+                {
+                    <li class="author">
+                        <MudTextField ReadOnly="true"
+                                      FullWidth="true"
+                                      Immediate="true"
+                                      AdornmentIcon="@Icons.Material.Filled.Person"
+                                      Adornment="Adornment.Start"
+                                      Value="@(this._author.Username.ToLower())"
+                                      HelperText="@Text.Lower("Author")"></MudTextField>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+}
+
+@code {
+    [Parameter] public IId? Entity { get; set; }
+
+    /// <summary>
+    /// Author (when available)
+    /// </summary>
+    private OrigamiUser _author
+    {
+        get
+        {
+            if (this.Entity is IAuthorId author)
+            {
+                return this._userRepository.ReadFromCache().Id(author.AuthorId) ?? new();
+            }
+            return new();
+        }
+    }
+}

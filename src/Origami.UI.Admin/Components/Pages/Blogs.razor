@@ -1,0 +1,204 @@
+﻿@page "/blogs"
+@inherits BasicAdminGrid<OrigamiBlog>
+<Root Access="this.CanAccess()">
+    <HeaderTemplate>
+        <div class="header p-3 border-bottom">
+            <div class="row">
+                <div class="d-inline-flex align-items-center col-12 col-xxl-8">
+                    <ul class="inline-list w-100">
+                        <li style="width:80%;">
+                            <i class="fa-solid fa-cubes pe-1"></i>
+                            <span class="me-3">@Text.Get("Blogs", Text.Styles.Uppercase)</span>
+                            <div class="btn-group pe-1">
+                                <button class="btn btn-light text-danger border border-danger" disabled="@this.DisableTheDeleteButton" @onclick="this.DeleteSelectedEntities">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            </div>
+                            <div class="btn-group pe-1">
+                                <button class="btn btn-success text-white" title="@Text.Lower("Activate blog")" disabled="@this.DisableTheActivateButton" @onclick="this.ActivateSelectedEntities">
+                                    <i class="fa-solid fa-cube"></i>
+                                    <i class="fa-solid fa-circle-check" style="position: absolute; right: 8px; bottom: 8px; font-size: 8px;"></i>
+                                </button>
+                                <button class="btn btn-danger text-white" title="@Text.Lower("Deactivate blog")" disabled="@this.DisableTheDeactivateButton" @onclick="this.DeactivateSelectedEntities">
+                                    <i class="fa-solid fa-cube"></i>
+                                    <i class="fa fa-ban" style="position: absolute; right: 8px; bottom: 8px; font-size: 8px;"></i>
+                                </button>
+                            </div>
+                            <div class="btn-group pe-1">
+                                <button class="btn btn-dark text-white" title="@Text.Lower("List of blogs in the front-end")" @onclick="() => this._showBlogList = true">
+                                    <i class="fa-solid fa-arrow-up-wide-short"></i>
+                                </button>
+                            </div>
+                        </li>
+                        <li>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-12 col-xxl-4">
+                    <BlogSelect Disabled="true" Style="visibility: hidden;"></BlogSelect>
+                </div>
+            </div>
+        </div>
+        <div class="p-3 border-bottom">
+            <div class="row">
+                <div class="col-12">
+                    <SearchLite T="OrigamiBlog" OnHitSelected="this.OnSearchResultSelected"></SearchLite>
+                </div>
+            </div>
+        </div>
+    </HeaderTemplate>
+    <ContentTemplate>
+        <div class="p-3">
+            <div class="row">
+                <div class="datagrid-options col-12 text-right mb-1">
+                    <DataGridOptions Deleted="this.IncludeDeletedEntitiesInDataGrid" DeletedChanged="this.OnIncludeDeletedEntitiesChanged"></DataGridOptions>
+                </div>
+                <div class="blogs col-12">
+                    <MudDataGrid @ref="DataGrid" T="OrigamiBlog" ServerData="GetEntities" Filterable="false" SortMode="SortMode.None" Class="border selectable" SelectedItems="this.SelectedEntities" MultiSelection="true" SelectedItemsChanged="this.SelectedEntitiesChanged"
+                                 RowClassFunc="this.RowClassFunc" Bordered="true" SelectOnRowClick="false">
+                        <Columns>
+                            <SelectColumn T="OrigamiBlog"></SelectColumn>
+                            <TemplateColumn Title="@Text.Upper("Blog")">
+                                <CellTemplate>
+                                    <div class="cursor-pointer" @onclick="() => OnEdit(context.Item)">
+                                        <ul class="inline-list">
+                                            <li>
+                                                <BlogHeaderLite Entity="context.Item"></BlogHeaderLite>
+                                                <Id Class="d-block x-small" Entity="context.Item"></Id>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </CellTemplate>
+                            </TemplateColumn>
+                            <TemplateColumn Title="@Text.Upper("Primary")" Sortable="false" Filterable="false" CellClass="col-1 text-center">
+                                <CellTemplate>
+                                    @if (context.Item.IsPrimary)
+                                    {
+                                        <i class="fa-solid fa-thumbs-up"></i>
+                                    }
+                                    else
+                                    {
+                                        <button class="border x-small p-2 btn btn-dark text-white fw-bold" @onclick="() => this.SetPrimary(context.Item)">@Text.Lower("Make primary")</button>
+                                    }
+                                </CellTemplate>
+                            </TemplateColumn>
+                            <TemplateColumn Title="@Text.Upper("Active")" Sortable="false" Filterable="false" CellClass="col-1 text-center">
+                                <CellTemplate>
+                                    @if (context.Item.IsActive)
+                                    {
+                                        <i class="fa-solid fa-thumbs-up"></i>
+                                    }
+                                </CellTemplate>
+                            </TemplateColumn>
+                        </Columns>
+                        <PagerContent>
+                            <MudDataGridPager T="OrigamiBlog" />
+                        </PagerContent>
+                        <NoRecordsContent>
+                            <NoEntriesWereFound></NoEntriesWereFound>
+                        </NoRecordsContent>
+                    </MudDataGrid>
+                </div>
+                <div class="blogs-form col-12 mt-3">
+                    <BlogForm Class="p-3 shadow-sm border" Entity="this.SelectedEntity" Saved="this.EntitySaved" Cancelled="this.EntityCancelled" Created="this.EntityCreated"></BlogForm>
+                </div>
+            </div>
+        </div>
+        @if (_showBlogList)
+        {
+            <div class="position-fixed popup-container">
+                <div class="border shadow-lg position-relative" style="width: 90%; height: 90%;">
+                    <div class="overflow-auto" style="height:100%; padding-bottom: 70px;">
+                        <BlogList Class="p-3"></BlogList>
+                    </div>
+                    <ul class="inline-list position-absolute w-100 border bg-white" style="bottom:0; z-index: 50;">
+                        <li></li>
+                        <li class="text-right">
+                            <div class="btn-group p-3">
+                                <button class="btn btn-secondary" @onclick="() => this._showBlogList = false">
+                                    <i class="fa-solid fa-circle-xmark"></i>
+                                    @Text.Lower("Close window")
+                                </button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        }
+    </ContentTemplate>
+</Root>
+@code {
+    private bool _showBlogList = false;
+
+    protected override string DefaultOrdering => $"{nameof(OrigamiBlog.Name)}";
+
+    private bool DisableTheActivateButton => this.SelectedEntities.Any() == false;
+    private bool DisableTheDeactivateButton => this.SelectedEntities.Any() == false;
+
+    /// <summary>
+    /// Activate the selected blogs
+    /// </summary>
+    protected virtual async Task ActivateSelectedEntities()
+    {
+        await this.ExecuteWithSelectedEntities(
+            async () =>
+            {
+                return await this.DialogService.ShowMessageBox(
+                    this.Text.Upper("Activate {0} blog(s)", this.SelectedEntities.Count),
+                    this.Text.Original("Are you sure?"),
+                    yesText: this.Text.Lower("Yes"),
+                    noText: this.Text.Lower("No"));
+            },
+            this.Activate
+        );
+    }
+
+    /// <summary>
+    /// Deactivate the selected blogs
+    /// </summary>
+    protected virtual async Task DeactivateSelectedEntities()
+    {
+        await this.ExecuteWithSelectedEntities(
+            async () =>
+            {
+                return await this.DialogService.ShowMessageBox(
+                    this.Text.Upper("Deactivate {0} blog(s)", this.SelectedEntities.Count),
+                    this.Text.Original("Are you sure?"),
+                    yesText: this.Text.Lower("Yes"),
+                    noText: this.Text.Lower("No"));
+            },
+            this.Deactivate
+        );
+    }
+
+    protected virtual Result<OrigamiBlog> Activate(OrigamiBlog entity)
+    {
+        var context = new DataOperationContext<OrigamiBlog>(this.UserFacade.User, DateTime.UtcNow, entity);
+        return new Result<OrigamiBlog>(entity).Pull(this.Super.Blogs.Activate(context, true));
+    }
+
+    protected virtual Result<OrigamiBlog> Deactivate(OrigamiBlog entity)
+    {
+        var context = new DataOperationContext<OrigamiBlog>(this.UserFacade.User, DateTime.UtcNow, entity);
+        return new Result<OrigamiBlog>(entity).Pull(this.Super.Blogs.Deactivate(context, true));
+    }
+
+    protected virtual async Task SetPrimary(OrigamiBlog entity)
+    {
+        var answer = await this.DialogService.ShowMessageBox(
+            this.Text.Upper("Make {0} blog primary", entity.Name),
+            this.Text.Original("Are you sure?"),
+            yesText: this.Text.Lower("Yes"),
+            noText: this.Text.Lower("No"));
+
+        if (answer.GetValueOrDefault() == true)
+        {
+            using var transaction = new TransactionScope();
+            var ctx = new DataOperationContext<OrigamiBlog>(this.UserFacade.User, DateTime.UtcNow, entity);
+            var hub = this.Super.Blogs.SetPrimary(ctx, true);
+            if (hub.Ok) transaction.Complete();
+            this.UserFacade.Result = hub;
+            await this.ReloadDataGrid();
+        }
+    }
+}

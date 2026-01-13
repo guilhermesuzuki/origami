@@ -1,0 +1,72 @@
+﻿@inherits Basic
+@implements IEntityNull<IId>
+
+@if (this.Entity != null)
+{
+    var type = Entity.GetType().Name;
+
+    if (type.StartsWith("Origami") == true)
+    {
+        type = type[7..];
+    }
+
+    if (this.Entity is OrigamiPostComment || this.Entity is OrigamiVideoComment)
+    {
+        type = "Comment";
+    }
+    else if (this.Entity is OrigamiSocialProfile)
+    {
+        type = "Social Profile";
+    }
+    else if (this.Entity is OrigamiSpecialMessage)
+    {
+        type = "Special Message";
+    }
+    else if (this.Entity is OrigamiSpecialPage)
+    {
+        type = "Special Page";
+    }
+
+    <div class="@Class basic-header-notes">
+        @if (this.Entity is OrigamiPage { IsFrontPage: true })
+        {
+            <div class="bg-warning text-white mb-3 text-center border">
+                @Text.Lower("this is a front-page")
+            </div>
+        }
+        @if (this.Entity is INew { New: true })
+        {
+            <div class="w-100 text-white bg-info text-center message">
+                @Text.Lower("You are adding a new {0}", type)
+            </div>
+        }
+        else if (this.Entity is IDeleted { IsDeleted: true })
+        {
+            <div class="w-100 text-white bg-danger text-center message">
+                @Text.Lower("You are viewing a deleted {0}", type)
+            </div>
+        }
+        else if (this.Entity is OrigamiCategory category && this.Super.IsParentDeleted(category) == true)
+        {
+            <div class="w-100 text-white bg-danger text-center message">
+                @Text.Lower("You are viewing a deleted {0}", type)
+            </div>
+        }
+        else if (this.Entity is OrigamiPage page && this.Super.IsParentDeleted(page) == true)
+        {
+            <div class="w-100 text-white bg-danger text-center message">
+                @Text.Lower("You are viewing a deleted {0}", type)
+            </div>
+        }
+        else
+        {
+            <div class="w-100 text-white bg-secondary text-center message">
+                @Text.Lower("You are viewing an existing {0}", type)
+            </div>
+        }
+    </div>
+}
+
+@code {
+    [Parameter] public IId? Entity { get; set; }
+}

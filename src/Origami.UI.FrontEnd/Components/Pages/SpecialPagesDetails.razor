@@ -1,0 +1,57 @@
+﻿@page "/specialpages/{NanoId}"
+
+@inherits BasicPage
+
+@using Microsoft.AspNetCore.Authentication.Google;
+@using Microsoft.AspNetCore.Identity;
+@using System.Text;
+@using Microsoft.Extensions.Options;
+
+@inject IPageRepository _pageRepository
+@inject IHttpClientFactory _httpClientFactory
+
+<Root>
+    @if (this._page.New == false)
+    {
+        <div class="page-details @Class">
+            <SpecialPageHeader Entity="_page"></SpecialPageHeader>
+            <SpecialPageContent Class="mt-3 p-4 border shadow-sm" Entity="_page"></SpecialPageContent>
+        </div>
+    }
+    else
+    {
+        <NothingToSeeHere></NothingToSeeHere>
+    }
+</Root>
+
+@code {
+    [Parameter] public string NanoId { get; set; } = string.Empty;
+    [Parameter] public Core.Models.OrigamiSpecialPage? Page { get; set; }
+
+    /// <summary>
+    /// Current Page
+    /// </summary>
+    private Core.Models.OrigamiSpecialPage _page = new();
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        this._page = this.Page ?? this.Super.SpecialPages.ReadFromCache().Published().NanoId(NanoId) ?? new();
+    }
+
+    protected override async Task PageViewAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            if (await this.JSRuntime.IncognitoModeAsync() == true) return;
+            await this.JSRuntime.InvokeVoidAsync("origami.specialpages.view", this._page.Id);
+            await this.InvokeAsync(this.StateHasChanged);
+        }
+    }
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        this.PageTitle.SetTitle(this._page);
+        return base.OnAfterRenderAsync(firstRender);
+    }
+}

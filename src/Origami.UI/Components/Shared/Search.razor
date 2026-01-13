@@ -1,0 +1,294 @@
+﻿@inherits Basic
+@inject ISuperRepository _super
+
+<div class="search @Class">
+    <div class="search-field position-relative">
+        <ul class="expand-size p-3 border shadow-sm">
+            <li>
+                <MudTextField T="string"
+                              FullWidth="true"
+                              Immediate="true"
+                              HelperText="@Text.Lower("Type in here to search")"
+                              @bind-Value:get="@this.UserFacade.Search"
+                              @bind-Value:set="@_startQuery"></MudTextField>
+            </li>
+            <li class="position-relative ms-3" style="flex:none;">
+                <button class="m-auto" @onclick="() => this._startQuery(string.Empty)" disabled="@(this.UserFacade.Search.Has() ? false : true)">
+                    <i class="fa-solid fa-broom"></i>
+                </button>
+            </li>
+        </ul>
+    </div>
+    @if (this._hasResults() == true)
+    {
+        <div class="search-results mt-3 border shadow-lg p-3">
+            @if (this._posts.Any() == true)
+            {
+                <div class="search-posts">
+                    <label class="fs-3 w-100 text-center">@Text.Lower("Posts found in the search")</label>
+                    <div class="row mt-3">
+                        @foreach (var post in _posts)
+                        {
+                            <div class="col-12 col-xl-4">
+                                <PostHeader Class="mb-3" Entity="post"></PostHeader>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+            @if (this._videos.Any() == true)
+            {
+                <div class="search-videos">
+                    <label class="fs-3 w-100 text-center">@Text.Lower("Videos found in the search")</label>
+                    <div class="row mt-3">
+                        @foreach (var video in _videos)
+                        {
+                            <div class="col-12 col-xl-4">
+                                <VideoHeader Class="mb-3" Entity="video"></VideoHeader>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+            @if (this._pages.Any() == true)
+            {
+                <div class="search-pages">
+                    <label class="fs-3 w-100 text-center mt-6">@Text.Lower("Pages found in the search")</label>
+                    <div class="row mt-3">
+                        @foreach (var page in _pages)
+                        {
+                            <div class="col-12 col-xl-4">
+                                <PageHeader Class="mb-3" Entity="page" ShowRelatedPages="false"></PageHeader>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+            @if (this._categories.Any() == true)
+            {
+                <div class="search-categories mt-6">
+                    <label class="fs-3 w-100 text-center">@Text.Lower("Categories found in the search")</label>
+                    <div class="row mt-3">
+                        @foreach (var category in _categories)
+                        {
+                            <div class="col-12 col-xl-4">
+                                <CategoryHeader Class="mb-3" Entity="category"></CategoryHeader>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+            @if (this._postComments.Any() == true)
+            {
+                <div class="search-post-comments">
+                    <label class="fs-3 w-100 text-center">@Text.Lower("Comments from posts found In the search")</label>
+                    <div class="row mt-3">
+                        @foreach (var comment in _postComments)
+                        {
+                            <div class="col-12 col-xl-6">
+                                <PostComment Class="mb-3" Comment="comment"></PostComment>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+            @if (this._videoComments.Any() == true)
+            {
+                <div class="search-video-comments">
+                    <label class="fs-3 w-100 text-center">@Text.Lower("Comments from videos found In the search")</label>
+                    <div class="row mt-3">
+                        @foreach (var comment in _videoComments)
+                        {
+                            <div class="col-12 col-xl-6">
+                                <VideoComment Class="mb-3" Comment="comment"></VideoComment>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+            @if (this._tags.Any() == true)
+            {
+                <div class="search-tags mt-6">
+                    <label class="fs-3 w-100 text-center">@Text.Lower("Tags found in the search")</label>
+                    <div class="row mt-3">
+                        @foreach (var tag in _tags)
+                        {
+                            <div class="col-12 col-xl-4 fs-4 text-center">
+                                <TagHeader Class="mb-3" Entity="@tag"></TagHeader>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+            @if (this._socialProfiles.Any() == true)
+            {
+                <div class="search-social-profiles mt-6">
+                    <label class="fs-3 w-100 text-center">@Text.Lower("Social profiles found in the search")</label>
+                    <div class="row mt-3">
+                        @foreach (var socialProfile in _socialProfiles)
+                        {
+                            <div class="col-12 col-xl-4 fs-4 text-center">
+                                <SocialProfileHeader Class="mb-3 p-3 border shadow-sm" Entity="socialProfile"></SocialProfileHeader>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+            @if (this._blogs.Any() == true)
+            {
+                <div class="search-blogs">
+                    <label class="fs-3 w-100 text-center">@Text.Lower("Blogs found in the search")</label>
+                    <div class="row mt-3">
+                        @foreach (var blog in _blogs)
+                        {
+                            <div class="col-12 col-xl-4 fs-4 text-center">
+                                <BlogHeaderLite Class="mb-3 p-3 border shadow-sm" Entity="blog"></BlogHeaderLite>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else if (this.UserFacade.Search.Has() == true)
+    {
+        <NothingToSeeHere Class="mt-3 shadow-lg p-3 border"></NothingToSeeHere>
+    }
+</div>
+
+@code {
+    /// <summary>
+    /// List of blogs found in the search
+    /// </summary>
+    private IEnumerable<OrigamiBlog> _blogs = [];
+
+    /// <summary>
+    /// List of categories found in the search
+    /// </summary>
+    private IEnumerable<OrigamiCategory> _categories = [];
+
+    /// <summary>
+    /// List of pages found in the search
+    /// </summary>
+    private IEnumerable<OrigamiPage> _pages = [];
+
+    /// <summary>
+    /// List of posts found in the search
+    /// </summary>
+    private IEnumerable<OrigamiPost> _posts = [];
+
+    /// <summary>
+    /// List of social profiles found in the search
+    /// </summary>
+    private IEnumerable<OrigamiSocialProfile> _socialProfiles = [];
+
+    /// <summary>
+    /// List of videos found in the search
+    /// </summary>
+    private IEnumerable<OrigamiVideo> _videos = [];
+
+    /// <summary>
+    /// List of post comments found in the search
+    /// </summary>
+    private IEnumerable<OrigamiPostComment> _postComments = [];
+
+    /// <summary>
+    /// List of video comments found in the search
+    /// </summary>
+    private IEnumerable<OrigamiVideoComment> _videoComments = [];
+
+    /// <summary>
+    /// List of tags found in the search
+    /// </summary>
+    private IEnumerable<OrigamiTag> _tags = [];
+
+    /// <summary>
+    /// Search timer
+    /// </summary>
+    private System.Timers.Timer? _searchTimer;
+
+    private void _clearHits()
+    {
+        this._blogs = [];
+        this._categories = [];
+        this._pages = [];
+        this._posts = [];
+        this._socialProfiles = [];
+        this._videos = [];
+        this._postComments = [];
+        this._videoComments = [];
+        this._tags = [];
+    }
+
+    /// <summary>
+    /// Whether the search has results or not
+    /// </summary>
+    /// <returns></returns>
+    private bool _hasResults()
+    {
+        if (this._blogs.Any() == true) return true;
+        if (this._categories.Any() == true) return true;
+        if (this._pages.Any() == true) return true;
+        if (this._posts.Any() == true) return true;
+        if (this._socialProfiles.Any() == true) return true;
+        if (this._videos.Any() == true) return true;
+        if (this._postComments.Any() == true) return true;
+        if (this._videoComments.Any() == true) return true;
+        if (this._tags.Any() == true) return true;
+        return false;
+    }
+
+    /// <summary>
+    /// User has typed-in and will start the timer
+    /// </summary>
+    /// <param name="queryTerm"></param>
+    private void _startQuery(string queryTerm)
+    {
+        this.UserFacade.Search = queryTerm;
+        this._clearHits();
+
+        if (_searchTimer != null)
+        {
+            _searchTimer.Stop();
+            _searchTimer = null;
+        }
+
+        _searchTimer = new();
+        _searchTimer.Enabled = true;
+        _searchTimer.AutoReset = false;
+        _searchTimer.Interval = 750;
+        _searchTimer.Elapsed += (o, e) =>
+        {
+            this._queryLucene(queryTerm);
+        };
+
+        _searchTimer.Start();
+    }
+
+    /// <summary>
+    /// Searches for the <paramref name="queryTerm"/>
+    /// </summary>
+    /// <param name="queryTerm"></param>
+    /// <returns></returns>
+    private void _queryLucene(string queryTerm)
+    {
+        queryTerm = queryTerm.Trim();
+
+        this._clearHits();
+
+        if (queryTerm.Length >= 2)
+        {
+            this._blogs = this.Super.Blogs.Search(queryTerm).NonDeleted().Active().OrderBy(x => x.Name);
+            this._categories = _super.Categories.Search(queryTerm).NonDeleted().Where(x => this.Super.IsParentDeleted(x) == false).OrderBy(x => x.Name);
+            this._pages = _super.Pages.Search(queryTerm).Published().Where(x => this.Super.IsParentDeleted(x) == false).OrderBy(x => x.Title);
+            this._posts = _super.Posts.Search(queryTerm).Published().OrderBy(x => x.Title);
+            this._videos = _super.Videos.Search(queryTerm).Published().OrderBy(x => x.Title);
+            this._socialProfiles = _super.SocialProfiles.Search(queryTerm).OrderBy(x => x.SocialNetwork.ToString()).ThenBy(x => x.Name());
+            this._postComments = _super.PostComments.Search(queryTerm).NonDeleted().Where(x => this.Super.IsParentDeleted(x) == false).OrderByDescending(x => x.GetDate());
+            this._videoComments = _super.VideoComments.Search(queryTerm).NonDeleted().Where(x => this.Super.IsParentDeleted(x) == false).OrderByDescending(x => x.GetDate());
+            this._tags = _super.Tags.Search(queryTerm).OrderBy(x => x.Name);
+        }
+
+        this.InvokeAsync(this.StateHasChanged);
+    }
+}

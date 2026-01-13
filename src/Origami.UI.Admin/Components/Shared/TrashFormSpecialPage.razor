@@ -1,0 +1,43 @@
+﻿@inherits Basic
+@implements IEntityNull<OrigamiSpecialPage>
+
+@if (this.Entity != null)
+{
+    <div class="trash-form-page @Class">
+        <BasicHeaderNotes Entity="Entity"></BasicHeaderNotes>
+        <SpecialPageHeaderLite Class="mt-3" Entity="Entity"></SpecialPageHeaderLite>
+        <BasicHeader Class="mt-3" Entity="Entity"></BasicHeader>
+        <ul class="inline-list mt-3">
+            <li>
+                <MudTextField @bind-Value="this.Entity.Title"
+                              HelperText="@Text.Lower("Title")"
+                              AdornmentIcon="@Icons.Material.Filled.Description"
+                              Adornment="Adornment.Start"
+                              ReadOnly="true"></MudTextField>
+            </li>
+            <li>
+                <MudTextField ReadOnly="true"
+                              AdornmentIcon="@Icons.Material.Filled.Link"
+                              Adornment="Adornment.Start"
+                              @bind-Value="@Entity.Slug"
+                              HelperText="@Text.Lower("Slug")"></MudTextField>
+            </li>
+        </ul>
+        @if (Entity.Description.Has() == true)
+        {
+            <div class="border-top border-bottom mt-3 p-3 bg-light bg-gradient" style="margin-left: -1rem; margin-right: -1rem;">
+                @Entity.Description
+            </div>
+        }
+        @if (Entity.Content.Has() == true)
+        {
+            <div class="border-top border-bottom mt-3 p-3 bg-light bg-gradient page-comment-text" style="margin-left: -1rem; margin-right: -1rem;">
+                @Entity.Content.Markup()
+            </div>
+        }
+    </div>
+}
+
+@code {
+    [Parameter] public OrigamiSpecialPage? Entity { get; set; }
+}

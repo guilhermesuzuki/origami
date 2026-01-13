@@ -1,0 +1,110 @@
+﻿@using Microsoft.Extensions.Options
+@inherits Basic
+@inject IOptionsMonitor<SocialNetwork> socialNetwork
+<div class="position-relative login @Class">
+    <AuthorizeView>
+        <Authorized>
+            <SocialProfileHeader Entity="this.UserFacade.SocialProfile"></SocialProfileHeader>
+            <div class="social-profile-actions position-absolute" style="right:0;top:0;">
+                <MudMenu AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" Icon="@Icons.Material.Filled.Menu">
+                    @if (System.Diagnostics.Debugger.IsAttached)
+                    {
+                        <MudMenuItem @onclick="this.TestSubscribeEmail">
+                            <button class="fw-bold text-success">
+                                @Text.Lower("*** [Test] Subscribe to the website ***")
+                            </button>
+                        </MudMenuItem>
+                    }
+                    @if (this.Subscriber() == null || this.Subscriber()!.IsDeleted == true)
+                    {
+                        <MudMenuItem @onclick="this.Subscribe">
+                            <button class="text-success">
+                                <i class="fa-solid fa-right-to-bracket pe-1"></i>
+                                @Text.Lower("Subscribe to the website")
+                            </button>
+                        </MudMenuItem>
+                    }
+                    <MudMenuItem @onclick="this.Logout">
+                        <button class="text-danger">
+                            <i class="fa-solid fa-right-from-bracket pe-1"></i>
+                            @Text.Lower("Log Out")
+                        </button>
+                    </MudMenuItem>
+                </MudMenu>
+            </div>
+        </Authorized>
+        <NotAuthorized>
+            <div class="text-center">
+                <div class="btn-group">
+                    @if (socialNetwork.CurrentValue.Microsoft.Enabled)
+                    {
+                        <button class="btn btn-light border p-3" @onclick="this.Microsoft">
+                            <i class="fa-brands fa-microsoft"></i>
+                        </button>
+                    }
+                    @if (socialNetwork.CurrentValue.Google.Enabled)
+                    {
+                        <button class="btn btn-light border p-3" @onclick="this.Google">
+                            <i class="fa-brands fa-google"></i>
+                        </button>
+                    }
+                    @if (socialNetwork.CurrentValue.Facebook.Enabled)
+                    {
+                        <button class="btn btn-light border p-3" @onclick="this.Facebook">
+                            <i class="fa-brands fa-facebook"></i>
+                        </button>
+                    }
+                    @if (socialNetwork.CurrentValue.GitHub.Enabled)
+                    {
+                        <button class="btn btn-light border p-3" @onclick="this.GitHub">
+                            <i class="fa-brands fa-github"></i>
+                        </button>
+                    }
+                </div>
+            </div>
+        </NotAuthorized>
+    </AuthorizeView>
+</div>
+
+@code {
+    private void Microsoft()
+    {
+        var returnUrl = Uri.EscapeDataString(this.NavigationManager.Uri);
+        this.NavigationManager.NavigateTo($"/login/openidconnect?returnUrl={returnUrl}", true);
+    }
+
+    private void Google()
+    {
+        var returnUrl = Uri.EscapeDataString(this.NavigationManager.Uri);
+        this.NavigationManager.NavigateTo($"/login/google?returnUrl={returnUrl}", true);
+    }
+
+    private void Facebook()
+    {
+        var returnUrl = Uri.EscapeDataString(this.NavigationManager.Uri);
+        this.NavigationManager.NavigateTo($"/login/facebook?returnUrl={returnUrl}", true);
+    }
+
+    private void GitHub()
+    {
+        var returnUrl = Uri.EscapeDataString(this.NavigationManager.Uri);
+        this.NavigationManager.NavigateTo($"/login/github?returnUrl={returnUrl}", true);
+    }
+
+    private void GoToProfile()
+    {
+        this.NavigationManager.NavigateTo($"/socialprofiles/{this.UserFacade.SocialProfile.Id}", true);
+    }
+
+    private void TestSubscribeEmail()
+    {
+        this.UserFacade.SocialProfile.Email = string.Empty;
+        this.UserFacade.SocialProfile.EmailFromSocialNetwork = string.Empty;
+        this.Subscribe();
+    }
+
+    private OrigamiSubscriber? Subscriber()
+    {
+        return this.Super.Subscribers.ReadFromCache().Where(x => x.SocialProfileId == this.UserFacade.SocialProfile.Id).FirstOrDefault();
+    }
+}

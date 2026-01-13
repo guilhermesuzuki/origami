@@ -1,0 +1,41 @@
+﻿@inherits Basic
+@inject IUserFacade _userFacade
+
+@if (this.Super != null)
+{
+    var maintenance = this.Super.Settings.ReadFromCache().First().MaintenanceMode;
+    <div class="root @Class">
+        @if (maintenance == false)
+        {
+            @ChildContent
+        }
+        else
+        {
+            var page = this.GetMaintenancePage();
+            <div class="shadow-sm border-bottom d-inline-flex align-items-center w-100 position-relative" style="min-height:450px;background-color:#333;">
+                <Slides></Slides>
+                <Logo BlogId="this._userFacade.BlogId"></Logo>
+            </div>
+            <div class="maintenance-page p-4">
+                <SpecialPageHeader Entity="page"></SpecialPageHeader>
+                <SpecialPageContent Class="mt-3 p-4 border shadow-sm" Entity="page"></SpecialPageContent>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    protected OrigamiSpecialPage GetMaintenancePage()
+    {
+        var page = this.Super.GetMaintenancePages().FirstOrDefault();
+        var path = new Uri(this.NavigationManager.Uri).AbsolutePath.Split("/");
+        if (path.Length >= 3 && path.Any(x => x.Like("specialpages")) == true)
+        {
+            var nano = path[2].Trim('/');
+            page = this.Super.GetMaintenancePages().NanoId(nano);
+        }
+        return page ?? OrigamiSpecialPage.Maintenance;
+    }
+}

@@ -1,0 +1,17 @@
+﻿@using System.IO;
+@using Origami.Core.Models.FileSystem
+@inject IDirectoryRepository _directory
+@inject ISlideRepository _slideRepository
+
+@if (_slideRepository.GetSlide() != null)
+{
+    var file = _slideRepository.GetSlide()!;
+    <div class="position-absolute zeroes">
+        <div class="slide w-100 h-100" style="background-image:url(@file.WebPath);"></div>
+        <div class="slide-overlay w-100 h-100"></div>
+    </div>
+}
+
+@code {
+
+}

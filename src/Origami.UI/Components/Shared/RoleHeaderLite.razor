@@ -1,0 +1,15 @@
+﻿@inherits Basic
+@implements IEntityNull<OrigamiRole>
+
+@if (Entity != null)
+{
+    <div class="role-header-lite @Class">
+        <i class="fa-solid fa-id-badge" title="@Text.Original("Role")"></i>
+        <span>@Entity.Name</span>
+        <Id Class="d-block x-small" Entity="Entity"></Id>
+    </div>
+}
+
+@code {
+    [Parameter] public OrigamiRole? Entity { get; set; }
+}

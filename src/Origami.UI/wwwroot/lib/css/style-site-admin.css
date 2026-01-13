@@ -1,0 +1,35 @@
+﻿html, body { width: 100%; height: 100%; }
+#home svg { margin-bottom: unset !important; }
+#home .logo-container { height: 120px !important; }
+.main-menu.border { border-bottom: unset !important; }
+
+html body .main-menu,
+html body .main-menu * { border-color: #353535 !important; }
+
+.category-parent .category-child.mb-1:last-child { margin-bottom: unset !important; }
+.parent .child.mb-1:last-child { margin-bottom: unset !important; }
+.form.position-sticky { top: 0.75rem; }
+.entity-for-editing span { text-decoration: underline; }
+
+.mud-input-control svg { width: 18px; height: 18px; }
+
+.selectable .mud-table-head tr { border-left: 2px solid transparent !important; border-right: 2px solid transparent !important; }
+.selectable .mud-table-body tr { border-left: 2px solid #e5e5e5 !important; border-right: 2px solid #e5e5e5 !important; }
+.selectable .mud-table-body tr.selected-row { border-left: 2px solid var(--site-highlight) !important; border-right: 2px solid var(--site-highlight) !important; }
+.selectable .mud-table-body tr.frontend { border-left: 2px solid var(--site-highlight) !important; border-right: 2px solid var(--site-highlight) !important; }
+.selectable .mud-table-body tr.admin { background-color: var(--site-highlight-faded-plus-plus); }
+
+
+.site-name { font-size: 1.75rem !important; }
+.site-name-container { margin-top: -10px !important; }
+
+
+/*navmenu*/
+.menu { padding-left: 30px; line-height: 30px; position: relative; }
+.menu i { position: absolute; left: 0; top: 0; bottom: 0; width: 30px; line-height: 30px; text-align: center; }
+.sub-menu { padding-left: 30px; line-height: 30px; position: relative; }
+.sub-menu i { position: absolute; left: 0; top: 0; bottom: 0; width: 30px; line-height: 30px; text-align: center; }
+.menu, .sub-menu { cursor: pointer; }
+
+
+.email-status .result-header { display: none !important; }

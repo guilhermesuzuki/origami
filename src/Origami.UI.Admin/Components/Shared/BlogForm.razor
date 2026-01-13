@@ -1,0 +1,226 @@
+﻿@inherits BasicFormFull<OrigamiBlog>
+
+<style>
+    .basic-header .line-1 { display: block; }
+</style>
+<MudFileUpload @ref="this.FileUpload" T="IBrowserFile" FilesChanged="UploadHeader" Accept=".png, .jpg, .bmp, .tiff" MaximumFileCount="1"></MudFileUpload>
+<div class="blog-form @Class">
+    <div class="row">
+        <div class="col-12 col-xxl-4">
+            <div class="p-3">
+                <BasicHeader Entity="this.Entity"></BasicHeader>
+                <ul class="inline-list mt-3">
+                    <li>
+                        <MudTextField Immediate="true"
+                                      FullWidth="true"
+                                      @bind-Value="@Entity.Name"
+                                      HelperText="@Text.Lower("Name")"></MudTextField>
+                    </li>
+                    <li>
+                        <MudTextField Immediate="true"
+                                      FullWidth="true"
+                                      ReadOnly="true"
+                                      Value="@Entity.Slug"
+                                      HelperText="@Text.Lower("Slug")"></MudTextField>
+                    </li>
+                </ul>
+                <ul class="inline-list mt-3">
+                    <li>
+                        <MudTextField ReadOnly="true"
+                                      FullWidth="true"
+                                      Immediate="true"
+                                      Value="@(Text.Lower(Entity.IsPrimary.YesNo()))"
+                                      HelperText="@Text.Lower("Primary?")"></MudTextField>
+                    </li>
+                    <li>
+                        <MudTextField ReadOnly="true"
+                                      FullWidth="true"
+                                      Immediate="true"
+                                      Value="@(Text.Lower(Entity.IsActive.YesNo()))"
+                                      HelperText="@Text.Lower("Active?")"></MudTextField>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-12 col-xxl-8">
+            <div class="row">
+                <div class="col-12">
+                    <div class="text-center p-3">
+                        <HeaderImageLite Entity="@Entity"></HeaderImageLite>
+                        <div class="btn-group mt-2 w-100">
+                            <button class="btn btn-light w-100" @onclick="PickFile">
+                                <i class="fa-solid fa-cloud-arrow-up"></i>
+                                <div>@Text.Lower("Only image files")</div>
+                                <div class="x-small">@Text.Original("{0} MB max.", 6)</div>
+                            </button>
+                            <button class="btn btn-light w-100" @onclick="() => this.FileManagerForImages = true">
+                                <i class="fa-solid fa-folder"></i>
+                                @Text.Lower("Pick from file manager")
+                            </button>
+                            <button class="btn btn-light w-100" @onclick="ClearHeader">
+                                <i class="fa-solid fa-trash-can"></i>
+                                @Text.Lower("Clear header")
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="row">
+                <div class="col-12 col-xxl-4">
+                    <div class="pages p-3">
+                        <div class="w-100 text-white bg-secondary text-center">
+                            <i class="bi bi-file-earmark-text-fill"></i>
+                            @Text.Lower("Pages")
+                        </div>
+                        <MudDataGrid T="OrigamiPage" Class="border mt-3" Items="_getPages()" SortMode="SortMode.None" Filterable="false">
+                            <Columns>
+                                <TemplateColumn CellClass="w-100">
+                                    <CellTemplate>
+                                        <PageHeaderLite2 Entity="context.Item"></PageHeaderLite2>
+                                    </CellTemplate>
+                                </TemplateColumn>
+                            </Columns>
+                            <PagerContent>
+                                <MudDataGridPager T="OrigamiPage" PageSizeOptions="[10,25,50,100]" />
+                            </PagerContent>
+                        </MudDataGrid>
+                    </div>
+                </div>
+                <div class="col-12 col-xxl-4">
+                    <div class="posts p-3">
+                        <div class="w-100 text-white bg-secondary text-center">
+                            <i class="bi bi-file-earmark-text-fill"></i>
+                            @Text.Lower("Posts")
+                        </div>
+                        <MudDataGrid T="OrigamiPost" Class="border mt-3" Items="_getPosts()" SortMode="SortMode.None" Filterable="false">
+                            <Columns>
+                                <TemplateColumn CellClass="w-100">
+                                    <CellTemplate>
+                                        <PostHeaderLite2 Entity="context.Item"></PostHeaderLite2>
+                                    </CellTemplate>
+                                </TemplateColumn>
+                            </Columns>
+                            <PagerContent>
+                                <MudDataGridPager T="OrigamiPost" PageSizeOptions="[10,25,50,100]" />
+                            </PagerContent>
+                        </MudDataGrid>
+                    </div>
+                </div>
+                <div class="col-12 col-xxl-4">
+                    <div class="videos p-3">
+                        <div class="w-100 text-white bg-secondary text-center">
+                            <i class="fa-solid fa-video"></i>
+                            @Text.Lower("Videos")
+                        </div>
+                        <MudDataGrid T="OrigamiVideo" Class="border mt-3" Items="_getVideos()" SortMode="SortMode.None" Filterable="false">
+                            <Columns>
+                                <TemplateColumn CellClass="w-100">
+                                    <CellTemplate>
+                                        <VideoHeaderLite2 Entity="context.Item"></VideoHeaderLite2>
+                                    </CellTemplate>
+                                </TemplateColumn>
+                            </Columns>
+                            <PagerContent>
+                                <MudDataGridPager T="OrigamiVideo" PageSizeOptions="[10,25,50,100]" />
+                            </PagerContent>
+                        </MudDataGrid>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="buttons mt-3 p-3 text-center">
+        <div class="btn-group">
+            <button class="btn btn-success text-white fw-bold" @onclick="Save" disabled="@this.DisableTheSaveButton">
+                <i class="fa-solid fa-floppy-disk"></i>
+                @Text.Lower("Save")
+            </button>
+            <button class="btn btn-secondary text-white fw-bold" @onclick="UndoChanges" disabled="@this.Entity.New">
+                <i class="fa-solid fa-rotate-left"></i>
+                @Text.Lower("Undo changes")
+            </button>
+            <button class="btn btn-info text-white fw-bold" @onclick="CreateEntity">
+                <i class="fa-solid fa-square-plus"></i>
+                @Text.Lower("New")
+            </button>
+        </div>
+    </div>
+</div>
+@if (FileManagerForImages)
+{
+    <div class="position-fixed popup-container">
+        <div class="border shadow-lg position-relative" style="width: 90%; height: 90%;">
+            <div class="overflow-auto" style="height:100%; padding-bottom: 70px;">
+                <FileManager Mode="Image" OnFileClicked="this.ImageFromFileManagerWillAssignEntityHeader"></FileManager>
+            </div>
+            <ul class="inline-list position-absolute w-100 border bg-white" style="bottom:0; z-index: 50;">
+                <li></li>
+                <li class="text-right">
+                    <div class="btn-group p-3">
+                        <button class="btn btn-secondary" @onclick="() => this.FileManagerForImages = false">
+                            <i class="fa-solid fa-circle-xmark"></i>
+                            @Text.Lower("Close window")
+                        </button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+}
+@code {
+    protected override bool DisableTheSaveButton
+    {
+        get
+        {
+            if (this.Entity.Name.Has() == false) return true;
+            return false;
+        }    
+    }
+
+    private IEnumerable<OrigamiPage> _getPages()
+    {
+        return this.Super.Pages.ReadFromCache().NonDeleted().Blog(this.Entity.Id).OrderBy(x => x.Title);
+    }
+
+    private IEnumerable<OrigamiPost> _getPosts()
+    {
+        return this.Super.Posts.ReadFromCache().NonDeleted().Blog(this.Entity.Id).OrderBy(x => x.Title);
+    }
+
+    private IEnumerable<OrigamiVideo> _getVideos()
+    {
+        return this.Super.Videos.ReadFromCache().NonDeleted().Blog(this.Entity.Id).OrderBy(x => x.Title);
+    }
+
+    protected override Result<OrigamiBlog> CreateOthers()
+    {
+        var hub = base.CreateOthers();
+
+        if (hub.Ok)
+        {
+            var administrators = OrigamiRole.GetSystemRole<OrigamiRole.Administrators>(this.Entity.Id);
+            var basic = OrigamiRole.GetSystemRole<OrigamiRole.BasicAccess>(this.Entity.Id);
+            var editors = OrigamiRole.GetSystemRole<OrigamiRole.Editors>(this.Entity.Id);
+            // var managers = OrigamiRole.GetSystemRole<OrigamiRole.Managers>(this.Entity.Id);
+            // var managersSocialMedia = OrigamiRole.GetSystemRole<OrigamiRole.ManagersSocialMedia>(this.Entity.Id);
+            // var managersTrash = OrigamiRole.GetSystemRole<OrigamiRole.ManagersTrash>(this.Entity.Id);
+            // var publishers = OrigamiRole.GetSystemRole<OrigamiRole.Publishers>(this.Entity.Id);
+            // var superEditors = OrigamiRole.GetSystemRole<OrigamiRole.SuperEditors>(this.Entity.Id);
+            // var superPublishers = OrigamiRole.GetSystemRole<OrigamiRole.SuperPublishers>(this.Entity.Id);
+
+            hub.OnSuccess(() => this.Super.Roles.SmartSave(administrators.GetContext(), false).Push(hub));
+            hub.OnSuccess(() => this.Super.Roles.SmartSave(basic.GetContext(), false).Push(hub));
+            hub.OnSuccess(() => this.Super.Roles.SmartSave(editors.GetContext(), false).Push(hub));
+            // hub.OnSuccess(() => this.Super.Roles.SmartSave(managers.GetContext(), false).Push(hub));
+            // hub.OnSuccess(() => this.Super.Roles.SmartSave(managersSocialMedia.GetContext(), false).Push(hub));
+            // hub.OnSuccess(() => this.Super.Roles.SmartSave(managersTrash.GetContext(), false).Push(hub));
+            // hub.OnSuccess(() => this.Super.Roles.SmartSave(publishers.GetContext(), false).Push(hub));
+            // hub.OnSuccess(() => this.Super.Roles.SmartSave(superEditors.GetContext(), false).Push(hub));
+            // hub.OnSuccess(() => this.Super.Roles.SmartSave(superPublishers.GetContext(), false).Push(hub));
+        }
+
+        return hub;
+    }
+}

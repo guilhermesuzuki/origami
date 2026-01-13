@@ -1,0 +1,29 @@
+﻿@inherits Basic
+@implements IHyperlink
+@implements IEntityNull<Core.Models.OrigamiPostTag>
+@if (Entity != null)
+{
+    <span class="post-tag m-1 @Class d-inline-block">
+        <a class="p-1 text-uppercase cursor-pointer" href="@this.Hyperlink" @onclick:stopPropagation="true">
+            @Entity.Tag
+        </a>
+    </span>
+}
+
+@code {
+    [Parameter] public Core.Models.OrigamiPostTag? Entity { get; set; }
+
+    public string Hyperlink
+    {
+        get
+        {
+            if (Entity != null)
+            {
+                var post = this.Super.Posts.ReadFromCache().Id(Entity.PostId)!;
+                var blog = this.Super.Blogs.ReadFromCache().Id(post.BlogId)!;
+                return $"/blogs/{blog.Slug}/tags/{Entity.Slug}/{post.NanoId}#content-start";
+            }
+            return string.Empty;
+        }
+    }
+}

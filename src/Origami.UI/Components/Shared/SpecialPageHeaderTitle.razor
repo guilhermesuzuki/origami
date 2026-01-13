@@ -1,0 +1,14 @@
+﻿@inherits Basic
+@implements IEntityNull<OrigamiSpecialPage>
+@*to avoid repetition inside PageHeader*@
+@if (this.Entity != null)
+{
+    <div class="specialpage-header-title d-inline-flex align-items-center">
+        <span class="d-inline-block language @Entity.Get().LanguageWrittenOn"></span>
+    </div>
+    <span class="d-block" style="margin-top:-10px;">@Entity.Title</span>
+}
+
+@code {
+    [Parameter] public OrigamiSpecialPage? Entity { get; set; }
+}

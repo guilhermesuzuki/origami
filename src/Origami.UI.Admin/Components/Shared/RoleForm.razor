@@ -1,0 +1,976 @@
+﻿@inherits BasicFormFull<OrigamiRole>
+
+<div class="role-form @Class">
+    <div class="row">
+        <div class="col-12 col-xxl-6">
+            <BasicHeaderNotes Entity="this.Entity"></BasicHeaderNotes>
+            <BasicHeader Class="mt-3" Entity="this.Entity"></BasicHeader>
+            <ul class="inline-list mt-3">
+                <li>
+                    <MudTextField @bind-Value="this.Entity.Name"
+                                  HelperText="@Text.Lower("Name")"
+                                  AdornmentIcon="@Icons.Material.Filled.Description"
+                                  Adornment="Adornment.Start"
+                                  Immediate="true"
+                                  Required="true"></MudTextField>
+                </li>
+            </ul>
+            <div class="general mt-3">
+                <div class="w-100 text-white bg-secondary text-center mb-3">
+                    @Text.Lower("General")
+                </div>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.ViewDashboard">
+                            <span>@Text.Lower("View dashboard")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.ViewSettings">
+                            <span>@Text.Lower("View settings")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.EnterMaintenanceMode">
+                            <span>@Text.Lower("Enter maintenance mode")</span>
+                        </MudCheckBox>
+                    </li>
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.LeaveMaintenanceMode">
+                            <span>@Text.Lower("Leave maintenance mode")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.ViewBackupRestoreSystem">
+                            <span>@Text.Lower("View backup and restore system")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.BackupSystem">
+                            <span>@Text.Lower("Backup system")</span>
+                        </MudCheckBox>
+                    </li>
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.RestoreSystem">
+                            <span>@Text.Lower("Restore system")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+            </div>
+            <div class="blogs mt-3">
+                <div class="w-100 text-white bg-secondary text-center mb-3">
+                    @Text.Lower("Blogs")
+                </div>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.ViewBlogs">
+                            <span>@Text.Lower("View blogs")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.CreateNewBlogs">
+                            <span>@Text.Lower("Create blogs")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.EditBlogs">
+                            <span>@Text.Lower("Edit blogs")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.DeleteBlogs">
+                            <span>@Text.Lower("Delete blogs")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.ActivateBlogs">
+                            <span>@Text.Lower("Activate blogs")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.DeactivateBlogs">
+                            <span>@Text.Lower("Deactivate blogs")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+            </div>
+            <div class="pages mt-3">
+                <div class="w-100 text-white bg-secondary text-center mb-3">
+                    @Text.Lower("Pages")
+                </div>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.ViewPages">
+                            <span>@Text.Lower("View pages")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.CreateNewPages">
+                            <span>@Text.Lower("Create new pages")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.EditOwnPages">
+                            <span>@Text.Lower("Edit own pages")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.EditOtherUsersPages">
+                            <span>@Text.Lower("Edit other users pages")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.DeleteOwnPages">
+                            <span>@Text.Lower("Delete own pages")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.DeleteOtherUsersPages">
+                            <span>@Text.Lower("Delete other users pages")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.PublishOwnPages">
+                            <span>@Text.Lower("Publish own pages")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.PublishOtherUsersPages">
+                            <span>@Text.Lower("Publish other users pages")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.UnpublishOwnPages">
+                            <span>@Text.Lower("Unpublish own pages")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.UnpublishOtherUsersPages">
+                            <span>@Text.Lower("Unpublish other users pages")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.MarkAsFrontPage">
+                            <span>@Text.Lower("Mark as front-page")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.UnmarkAsFrontPage">
+                            <span>@Text.Lower("Unmark as front-page")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+            </div>
+            <div class="posts mt-3">
+                <div class="w-100 text-white bg-secondary text-center mb-3">
+                    @Text.Lower("Posts")
+                </div>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.ViewPosts">
+                            <span>@Text.Lower("View posts")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.CreateNewPosts">
+                            <span>@Text.Lower("Create new posts")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.EditOwnPosts">
+                            <span>@Text.Lower("Edit own posts")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.EditOtherUsersPosts">
+                            <span>@Text.Lower("Edit other users posts")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.DeleteOwnPosts">
+                            <span>@Text.Lower("Delete own posts")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.DeleteOtherUsersPosts">
+                            <span>@Text.Lower("Delete other users posts")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.PublishOwnPosts">
+                            <span>@Text.Lower("Publish own posts")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.PublishOtherUsersPosts">
+                            <span>@Text.Lower("Publish other users posts")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.UnpublishOwnPosts">
+                            <span>@Text.Lower("Unpublish own posts")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.UnpublishOtherUsersPosts">
+                            <span>@Text.Lower("Unpublish other users posts")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+            </div>
+            <div class="videos mt-3">
+                <div class="w-100 text-white bg-secondary text-center mb-3">
+                    @Text.Lower("Videos")
+                </div>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.ViewVideos">
+                            <span>@Text.Lower("View videos")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.CreateNewVideos">
+                            <span>@Text.Lower("Create new videos")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.EditOwnVideos">
+                            <span>@Text.Lower("Edit own videos")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.EditOtherUsersVideos">
+                            <span>@Text.Lower("Edit other users videos")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.DeleteOwnVideos">
+                            <span>@Text.Lower("Delete own videos")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.DeleteOtherUsersVideos">
+                            <span>@Text.Lower("Delete other users videos")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.PublishOwnVideos">
+                            <span>@Text.Lower("Publish own videos")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.PublishOtherUsersVideos">
+                            <span>@Text.Lower("Publish other users videos")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.UnpublishOwnVideos">
+                            <span>@Text.Lower("Unpublish own videos")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.UnpublishOtherUsersVideos">
+                            <span>@Text.Lower("Unpublish other users videos")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-12 col-xxl-6">
+            <div class="comments">
+                <div class="w-100 text-white bg-secondary text-center mb-3">
+                    @Text.Lower("Comments")
+                </div>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.ViewComments">
+                            <span>@Text.Lower("View comments")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.ModerateComments">
+                            <span>@Text.Lower("Moderate comments")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+            </div>
+            <div class="categories mt-3">
+                <div class="w-100 text-white bg-secondary text-center mb-3">
+                    @Text.Lower("Categories")
+                </div>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.ViewCategories">
+                            <span>@Text.Lower("View categories")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.CreateNewCategories">
+                            <span>@Text.Lower("Create categories")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.EditCategories">
+                            <span>@Text.Lower("Edit categories")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.DeleteCategories">
+                            <span>@Text.Lower("Delete categories")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+            </div>
+            <div class="roles mt-3">
+                <div class="w-100 text-white bg-secondary text-center mb-3">
+                    @Text.Lower("Roles")
+                </div>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.ViewRoles">
+                            <span>@Text.Lower("View roles")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.CreateNewRoles">
+                            <span>@Text.Lower("Create new roles")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.EditRoles">
+                            <span>@Text.Lower("Edit roles")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.EditSystemRoles">
+                            <span>@Text.Lower("Edit system roles")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.DeleteRoles">
+                            <span>@Text.Lower("Delete roles")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+            </div>
+            <div class="social-profiles mt-3">
+                <div class="w-100 text-white bg-secondary text-center mb-3">
+                    @Text.Lower("Social Profiles")
+                </div>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.ViewSocialProfiles">
+                            <span>@Text.Lower("View social profiles")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.BlockSocialProfiles">
+                            <span>@Text.Lower("Block social profiles")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.UnblockSocialProfiles">
+                            <span>@Text.Lower("Unblock social profiles")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.TurnSocialProfilesIntoModerators">
+                            <span>@Text.Lower("Turn social profiles into moderators")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.RevokeModeratorRolesFromSocialProfiles">
+                            <span>@Text.Lower("Revoke moderator roles from social profiles")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.UnsubcribeSocialProfiles">
+                            <span>@Text.Lower("Unsubscribe social profiles")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.WipeDataOutFromSocialProfiles">
+                            <span>@Text.Lower("Wipe data out from social profiles")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+            </div>
+            <div class="users mt-3">
+                <div class="w-100 text-white bg-secondary text-center mb-3">
+                    @Text.Lower("Users")
+                </div>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.BlockUserSelf">
+                            <span>@Text.Lower("Block user self")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.BlockUsersOtherThanSelf">
+                            <span>@Text.Lower("Block users other than self")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.UnblockUsers">
+                            <span>@Text.Lower("Unblock users")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.ViewUsers">
+                            <span>@Text.Lower("View users")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.CreateNewUsers">
+                            <span>@Text.Lower("Create new users")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.EditOwnUser">
+                            <span>@Text.Lower("Edit own user")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.EditOtherUsers">
+                            <span>@Text.Lower("Edit other users")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.DeleteUserSelf">
+                            <span>@Text.Lower("Delete user self")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.DeleteUsersOtherThanSelf">
+                            <span>@Text.Lower("Delete users other than self")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.ResetOwnPassword">
+                            <span>@Text.Lower("Reset own password")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.ResetOtherUsersPasswords">
+                            <span>@Text.Lower("Reset other users passwords")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+            </div>
+            <div class="tags mt-3">
+                <div class="w-100 text-white bg-secondary text-center mb-3">
+                    @Text.Lower("Tags")
+                </div>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.ViewTags">
+                            <span>@Text.Lower("View tags")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.EditTags">
+                            <span>@Text.Lower("Edit tags")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.DeleteTags">
+                            <span>@Text.Lower("Delete tags")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.PurgeTags">
+                            <span>@Text.Lower("Purge tags")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+            </div>
+            <div class="custom mt-3">
+                <div class="w-100 text-white bg-secondary text-center mb-3">
+                    @Text.Lower("Custom")
+                </div>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.ManageFiles">
+                            <span>@Text.Lower("Manage files")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.ManageExtensions">
+                            <span>@Text.Lower("Manage extensions")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.ManageWidgets">
+                            <span>@Text.Lower("Manage widgets")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.ManageThemes">
+                            <span>@Text.Lower("Manage themes")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.ManagePackages">
+                            <span>@Text.Lower("Manage packages")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+            </div>
+            <div class="trash mt-3">
+                <div class="w-100 text-white bg-secondary text-center mb-3">
+                    @Text.Lower("Trash")
+                </div>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.ViewTrashes">
+                            <span>@Text.Lower("View trashes")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.PurgeBlogs">
+                            <span>@Text.Lower("Purge blogs")</span>
+                        </MudCheckBox>
+                    </li>
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.RestoreBlogs">
+                            <span>@Text.Lower("Restore blogs")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.PurgeCategories">
+                            <span>@Text.Lower("Purge categories")</span>
+                        </MudCheckBox>
+                    </li>
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.RestoreCategories">
+                            <span>@Text.Lower("Restore categories")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.PurgeComments">
+                            <span>@Text.Lower("Purge comments")</span>
+                        </MudCheckBox>
+                    </li>
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.RestoreComments">
+                            <span>@Text.Lower("Restore comments")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.PurgePages">
+                            <span>@Text.Lower("Purge pages")</span>
+                        </MudCheckBox>
+                    </li>
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.RestorePages">
+                            <span>@Text.Lower("Restore pages")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.PurgePosts">
+                            <span>@Text.Lower("Purge posts")</span>
+                        </MudCheckBox>
+                    </li>
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.RestorePosts">
+                            <span>@Text.Lower("Restore posts")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.PurgeRoles">
+                            <span>@Text.Lower("Purge roles")</span>
+                        </MudCheckBox>
+                    </li>
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.RestoreRoles">
+                            <span>@Text.Lower("Restore roles")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.PurgeUsers">
+                            <span>@Text.Lower("Purge users")</span>
+                        </MudCheckBox>
+                    </li>
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.RestoreUsers">
+                            <span>@Text.Lower("Restore users")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.PurgeVideos">
+                            <span>@Text.Lower("Purge videos")</span>
+                        </MudCheckBox>
+                    </li>
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.RestoreVideos">
+                            <span>@Text.Lower("Restore videos")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.PurgeSpecialPages">
+                            <span>@Text.Lower("Purge special pages")</span>
+                        </MudCheckBox>
+                    </li>
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.RestoreSpecialPages">
+                            <span>@Text.Lower("Restore special pages")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.PurgeSpecialMessages">
+                            <span>@Text.Lower("Purge special messages")</span>
+                        </MudCheckBox>
+                    </li>
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.RestoreSpecialMessages">
+                            <span>@Text.Lower("Restore special messages")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-xxl-6">
+            <div class="special-pages mt-3">
+                <div class="w-100 text-white bg-secondary text-center mb-3">
+                    @Text.Lower("Special pages")
+                </div>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.ViewSpecialPages">
+                            <span>@Text.Lower("View pages")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.CreateNewSpecialPages">
+                            <span>@Text.Lower("Create new pages")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.EditOwnSpecialPages">
+                            <span>@Text.Lower("Edit own pages")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.EditOtherUsersSpecialPages">
+                            <span>@Text.Lower("Edit other users pages")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.DeleteOwnSpecialPages">
+                            <span>@Text.Lower("Delete own pages")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.DeleteOtherUsersSpecialPages">
+                            <span>@Text.Lower("Delete other users pages")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.PublishOwnSpecialPages">
+                            <span>@Text.Lower("Publish own pages")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.PublishOtherUsersSpecialPages">
+                            <span>@Text.Lower("Publish other users pages")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.UnpublishOwnSpecialPages">
+                            <span>@Text.Lower("Unpublish own pages")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.UnpublishOtherUsersSpecialPages">
+                            <span>@Text.Lower("Unpublish other users pages")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-12 col-xxl-6">
+            <div class="special-messages mt-3">
+                <div class="w-100 text-white bg-secondary text-center mb-3">
+                    @Text.Lower("Special messages")
+                </div>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.ViewSpecialMessages">
+                            <span>@Text.Lower("View messages")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.CreateNewSpecialMessages">
+                            <span>@Text.Lower("Create new messages")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.EditOwnSpecialMessages">
+                            <span>@Text.Lower("Edit own messages")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.EditOtherUsersSpecialMessages">
+                            <span>@Text.Lower("Edit other users messages")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.DeleteOwnSpecialMessages">
+                            <span>@Text.Lower("Delete own messages")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.DeleteOtherUsersSpecialMessages">
+                            <span>@Text.Lower("Delete other users messages")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.PublishOwnSpecialMessages">
+                            <span>@Text.Lower("Publish own messages")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.PublishOtherUsersSpecialMessages">
+                            <span>@Text.Lower("Publish other users messages")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.UnpublishOwnSpecialMessages">
+                            <span>@Text.Lower("Unpublish own messages")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.UnpublishOtherUsersSpecialMessages">
+                            <span>@Text.Lower("Unpublish other users messages")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="buttons mt-3 p-3 text-center">
+        <div class="btn-group">
+            <button class="btn btn-success text-white fw-bold" @onclick="Save" disabled="@this.DisableTheSaveButton">
+                <i class="fa-solid fa-floppy-disk"></i>
+                @Text.Lower("Save")
+            </button>
+            <button class="btn btn-secondary text-white fw-bold" @onclick="UndoChanges" disabled="@this.Entity.New">
+                <i class="fa-solid fa-rotate-left"></i>
+                @Text.Lower("Undo changes")
+            </button>
+            <button class="btn btn-info text-white fw-bold" @onclick="CreateEntity">
+                <i class="fa-solid fa-square-plus"></i>
+                @Text.Lower("New")
+            </button>
+        </div>
+    </div>
+</div>
+
+@code {
+    protected override Result<OrigamiRole> BeforeSaving()
+    {
+        var hub = new Result<OrigamiRole>();
+
+        hub.Pull(this.Super.Rights.KeepUpToDate());
+        hub.Pull(base.BeforeSaving());
+
+        return hub;
+    }
+}
