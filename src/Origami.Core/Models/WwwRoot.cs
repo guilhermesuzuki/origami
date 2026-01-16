@@ -4,7 +4,7 @@
     {
         public WwwRoot(string wwwRootPath)
         {
-            WebRootPath = wwwRootPath;
+            this.WebRootPath = Path.GetFullPath("..\\Origami.Files\\");
         }
 
         public string WebRootPath { get; init; }
