@@ -183,7 +183,7 @@
                     if (hub.Ok)
                     {
                         transaction.Complete();
-                        this.DataGrid?.ReloadServerData();
+                        await this.InvokeAsync(() => this.DataGrid!.ReloadServerData());
                     }
                     UserFacade.Result = hub;
                 }
