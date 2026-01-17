@@ -98,18 +98,18 @@
                             <TemplateColumn Title="@Text.Upper("Title")">
                                 <CellTemplate>
                                     <div>
-                                        @if (context.Item is OrigamiBackup)
-                                        {
-                                            <div>
-                                                <i class="bi bi-database-fill-add"></i>
-                                                @Text.Original("Backup")
-                                            </div>
-                                        }
                                         @if (context.Item is OrigamiBackupRestore)
                                         {
                                             <div>
                                                 <i class="bi bi-database-fill-exclamation"></i>
                                                 @Text.Original("Restore")
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div>
+                                                <i class="bi bi-database-fill-add"></i>
+                                                @Text.Original("Backup")
                                             </div>
                                         }
                                         <Id Class="x-small" Entity="context.Item"></Id>
@@ -136,7 +136,7 @@
                                         <button @onclick="() => DownloadFile(file)" @onclick:stopPropagation="true">
                                             <i class="fa-solid fa-file-arrow-down"></i>
                                         </button>
-                                        <div class="x-small">@context.Item.File</div>
+                                        @* <div class="x-small">@context.Item.File</div> *@
                                     }
                                 </CellTemplate>
                             </TemplateColumn>

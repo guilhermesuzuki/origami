@@ -4,9 +4,10 @@ namespace Origami.Core.Models
 {
     public class AppFacade : IAppFacade
     {
-        public AppFacade(bool admin) : base()
+        public AppFacade(bool admin, string environmentName) : base()
         {
             this.Admin = admin;
+            this.EnvironmentName = environmentName;
             this.OnlineUsers = [];
         }
 
@@ -14,8 +15,9 @@ namespace Origami.Core.Models
 
         public bool? Admin { get; }
 
-        public IList<string> OnlineUsers { get; }
+        public string EnvironmentName { get; }
 
+        public IList<string> OnlineUsers { get; }
         public void RefreshUI(string key)
         {
             this.RefreshingTheUI?.Invoke(key, EventArgs.Empty);

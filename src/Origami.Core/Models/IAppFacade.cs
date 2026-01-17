@@ -5,6 +5,11 @@
         event EventHandler<object>? RefreshingTheUI;
 
         /// <summary>
+        /// Environment name the application is running in.
+        /// </summary>
+        string EnvironmentName { get; }
+
+        /// <summary>
         /// List of online users in the application.
         /// </summary>
         IList<string> OnlineUsers { get; }

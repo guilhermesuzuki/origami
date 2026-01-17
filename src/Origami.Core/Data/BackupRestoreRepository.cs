@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO.Compression;
 using System.Text;
+using System.Text.Json.Nodes;
 
 namespace Origami.Core.Data
 {
@@ -132,6 +133,7 @@ namespace Origami.Core.Data
                     Directory.CreateDirectory(WebRootPath.WebRootPathForRestores);
                 }
 
+                var zipPath = Path.Combine(WebRootPath.WebRootPathForBackups, $"{backup.NanoId}.zip");
                 var extractPath = Path.Combine(WebRootPath.WebRootPathForRestores, backup.NanoId);
 
                 if (Directory.Exists(extractPath) == true)
@@ -144,7 +146,6 @@ namespace Origami.Core.Data
                 //asks to refresh the UI
                 _appFacade.RefreshUI(OrigamiConstants.Events.Restore);
 
-                string zipPath = Path.Combine(WebRootPath.WebRootPathForBackups, $"{backup.NanoId}.zip");
                 if (File.Exists(zipPath) == false)
                 {
                     return new(restore) { ErrorMessage = Text.Original("Backup file not found.") };
@@ -163,12 +164,13 @@ namespace Origami.Core.Data
                 hub.SuccessMessage = Text.Original("Database restored successfully.");
 
                 //update connection string inside appsettings.json
+                UpdateConnectionStringInsideAppSettings($"origami-{Current.NanoId}");
 
                 //asks to refresh the UI
                 _appFacade.RefreshUI(OrigamiConstants.Events.Restore);
 
                 //rename current files folder to files_old_{CurrentProcess.NanoId}
-                Directory.Move($"{WebRootPath.WebRootPath}/files/", $"{WebRootPath.WebRootPath}/files_old_{Current.NanoId}/");
+                Directory.Move($"{WebRootPath.WebRootPath}/files/", $"{WebRootPath.WebRootPath}/files-old-{Current.NanoId}/");
                 Directory.Move($"{extractPath}/files/", $"{WebRootPath.WebRootPath}/files/");
 
                 //asks to refresh the UI
@@ -281,8 +283,8 @@ namespace Origami.Core.Data
                 $"/SourceFile:\"{bacpacPath}\" " +
                 $"/TargetServerName:\"{builder.DataSource}\" " +
                 $"/TargetDatabaseName:\"{database}\" " +
-                $"/TargetUser:\"{builder.UserID}\" " +
-                $"/TargetPassword:\"{builder.Password}\" " +
+                $"/TargetUser:\"origami-backup\" " +
+                $"/TargetPassword:\"zwREK18C7kDDoLXREGWs\" " +
                 $"/TargetEncryptConnection:False";
 
             var process = new Process
@@ -311,6 +313,27 @@ namespace Origami.Core.Data
             }
 
             return new(database) { SuccessMessage = Text.Original("BACPAC file created successfully."), };
+        }
+
+        private void UpdateConnectionStringInsideAppSettings(string newDatabase)
+        {
+            var oi = _configuration.GetOrigamiConnectionString();
+            var builder = new Microsoft.Data.SqlClient.SqlConnectionStringBuilder(oi)
+            {
+                InitialCatalog = newDatabase
+            };
+
+            var file = $"appsettings.{_appFacade.EnvironmentName}.json";
+            file = File.Exists(file) ? file : "appsettings.json";
+
+            var json = File.ReadAllText(file);
+            var node = JsonNode.Parse(json);
+
+            if (node != null)
+            {
+                node["ConnectionStrings"]!["origami"] = builder.ToString();
+                File.WriteAllText(file, node.ToJsonString(new() { WriteIndented = true, }));
+            }
         }
     }
 }

@@ -87,7 +87,7 @@ namespace Origami.UI
             builder.Services.AddScoped<OrigamiLocationMiddleware>();
 
             builder.Services.AddSingleton<Text>();
-            builder.Services.AddSingleton<IAppFacade, AppFacade>(provider => new AppFacade(admin));
+            builder.Services.AddSingleton<IAppFacade, AppFacade>(provider => new AppFacade(admin, builder.Environment.EnvironmentName));
             builder.Services.AddSingleton<ISlideRepository, SlideRepository>();
             builder.Services.AddSingleton<IEmailStatusRepository, EmailStatusRepository>();
             builder.Services.AddSingleton<IBackupRestoreRepository, BackupRestoreRepository>();
