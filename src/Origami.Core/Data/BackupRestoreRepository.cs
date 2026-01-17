@@ -168,8 +168,6 @@ namespace Origami.Core.Data
                     return new Result<OrigamiBackupRestore>(restore).Pull(hub);
                 }
 
-                hub.SuccessMessage = Text.Original("Database restored successfully.");
-
                 //update connection string inside appsettings.json
                 var cs = await UpdateConnectionStringInsideDbSettings();
 
@@ -183,8 +181,6 @@ namespace Origami.Core.Data
                 {
                     return new Result<OrigamiBackupRestore>(restore).Pull(hub);
                 }
-
-                hub.SuccessMessage = Text.Original("Db settings file updated successfully.");
 
                 //asks to refresh the UI
                 _appFacade.RefreshUI(OrigamiConstants.Events.Restore);
@@ -331,7 +327,7 @@ namespace Origami.Core.Data
                 throw new Exception($"BACPAC import failed:\n{error}");
             }
 
-            return new() { SuccessMessage = Text.Original("BACPAC file created successfully."), };
+            return new() { SuccessMessage = Text.Original("Database restored successfully."), };
         }
 
         private async Task<Result> UpdateConnectionStringInsideDbSettings()
@@ -355,7 +351,7 @@ namespace Origami.Core.Data
                 {
                     node["ConnectionStrings"]!["origami"] = builder.ToString();
                     await File.WriteAllTextAsync(file, node.ToJsonString(new() { WriteIndented = true, }));
-                    return new() { SuccessMessage = Text.Original("Connection string updated successfully.") };
+                    return new() { SuccessMessage = Text.Original("Db settings file updated successfully..") };
                 }
 
                 return new() { ErrorMessage = Text.Original("Error parsing the JSON file.") };
