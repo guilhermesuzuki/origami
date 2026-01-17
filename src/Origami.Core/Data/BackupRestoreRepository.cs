@@ -171,7 +171,7 @@ namespace Origami.Core.Data
                 hub.SuccessMessage = Text.Original("Database restored successfully.");
 
                 //update connection string inside appsettings.json
-                var cs = await UpdateConnectionStringInsideAppSettings();
+                var cs = await UpdateConnectionStringInsideDbSettings();
 
                 //asks to refresh the UI
                 _appFacade.RefreshUI(OrigamiConstants.Events.Restore);
@@ -183,6 +183,8 @@ namespace Origami.Core.Data
                 {
                     return new Result<OrigamiBackupRestore>(restore).Pull(hub);
                 }
+
+                hub.SuccessMessage = Text.Original("Db settings file updated successfully.");
 
                 //asks to refresh the UI
                 _appFacade.RefreshUI(OrigamiConstants.Events.Restore);
@@ -332,7 +334,7 @@ namespace Origami.Core.Data
             return new() { SuccessMessage = Text.Original("BACPAC file created successfully."), };
         }
 
-        private async Task<Result> UpdateConnectionStringInsideAppSettings()
+        private async Task<Result> UpdateConnectionStringInsideDbSettings()
         {
             try
             {
@@ -342,8 +344,9 @@ namespace Origami.Core.Data
                     InitialCatalog = this.DatabaseName,
                 };
 
-                var file = $"appsettings.{_appFacade.EnvironmentName}.json";
-                file = File.Exists(file) ? file : "appsettings.json";
+                var path = Path.GetFullPath("..\\Origami.Files\\");
+                var file = Path.Combine(path, $"dbsettings.{_appFacade.EnvironmentName}.json");
+                file = File.Exists(file) ? file : Path.Combine(path, "dbsettings.json");
 
                 var json = await File.ReadAllTextAsync(file);
                 var node = JsonNode.Parse(json);

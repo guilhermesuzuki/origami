@@ -38,6 +38,11 @@ namespace Origami.UI
     {
         public static void AddOrigami(this WebApplicationBuilder builder, string[] args, bool admin = false)
         {
+            var files = Path.GetFullPath("..\\Origami.Files\\");
+
+            builder.Configuration.AddJsonFile(Path.Combine(files, "dbsettings.json"), false, reloadOnChange: true);
+            builder.Configuration.AddJsonFile(Path.Combine(files, $"dbsettings.{builder.Environment.EnvironmentName}.json"), true, reloadOnChange: true);
+
             // Add services to the container.
             builder.Services.AddRazorPages();
             builder.Services.AddMvc(options => options.EnableEndpointRouting = false);
