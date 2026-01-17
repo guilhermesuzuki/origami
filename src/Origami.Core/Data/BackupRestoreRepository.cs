@@ -47,6 +47,11 @@ namespace Origami.Core.Data
 
         public override string ReadPermission => nameof(OrigamiRole.ViewBackupRestoreSystem);
 
+        /// <summary>
+        /// New database name from the current process
+        /// </summary>
+        private string DatabaseName => $"origami-{Current?.NanoId}";
+
         public async Task<Result<OrigamiBackup>> Backup(OrigamiUser user)
         {
             if (Current != null)
@@ -124,7 +129,7 @@ namespace Origami.Core.Data
                 return new() { ErrorMessage = Text.Original("This has already been restored.") };
             }
 
-            var hub = new Result<string>();
+            var hub = new Result();
             var restore = new OrigamiBackupRestore() { UserId = user.Id, DateCreated = DateTime.UtcNow };
 
             try
@@ -162,10 +167,11 @@ namespace Origami.Core.Data
                 {
                     return new Result<OrigamiBackupRestore>(restore).Pull(hub);
                 }
+
                 hub.SuccessMessage = Text.Original("Database restored successfully.");
 
                 //update connection string inside appsettings.json
-                var cs = await UpdateConnectionStringInsideAppSettings($"origami-{Current.NanoId}");
+                var cs = await UpdateConnectionStringInsideAppSettings();
 
                 //asks to refresh the UI
                 _appFacade.RefreshUI(OrigamiConstants.Events.Restore);
@@ -275,7 +281,7 @@ namespace Origami.Core.Data
             return new(target) { SuccessMessage = Text.Original("BACPAC file created successfully.") };
         }
 
-        protected async Task<Result<string>> RestoreTheDatabaseAsync(string bacpacPath)
+        protected async Task<Result> RestoreTheDatabaseAsync(string bacpacPath)
         {
             if (File.Exists(bacpacPath) == false)
             {
@@ -288,13 +294,12 @@ namespace Origami.Core.Data
             }
 
             var oi = _configuration.GetOrigamiConnectionString();
-            var builder = new Microsoft.Data.SqlClient.SqlConnectionStringBuilder(oi);
-            var database = $"origami_{Current.NanoId}";
+            var builder = new SqlConnectionStringBuilder(oi);
 
             var args = $"/Action:Import " +
                 $"/SourceFile:\"{bacpacPath}\" " +
                 $"/TargetServerName:\"{builder.DataSource}\" " +
-                $"/TargetDatabaseName:\"{database}\" " +
+                $"/TargetDatabaseName:\"{this.DatabaseName}\" " +
                 $"/TargetUser:\"origami-backup\" " +
                 $"/TargetPassword:\"zwREK18C7kDDoLXREGWs\" " +
                 $"/TargetEncryptConnection:False";
@@ -324,17 +329,17 @@ namespace Origami.Core.Data
                 throw new Exception($"BACPAC import failed:\n{error}");
             }
 
-            return new(database) { SuccessMessage = Text.Original("BACPAC file created successfully."), };
+            return new() { SuccessMessage = Text.Original("BACPAC file created successfully."), };
         }
 
-        private async Task<Result> UpdateConnectionStringInsideAppSettings(string newDatabase)
+        private async Task<Result> UpdateConnectionStringInsideAppSettings()
         {
             try
             {
                 var oi = _configuration.GetOrigamiConnectionString();
                 var builder = new SqlConnectionStringBuilder(oi)
                 {
-                    InitialCatalog = newDatabase
+                    InitialCatalog = this.DatabaseName,
                 };
 
                 var file = $"appsettings.{_appFacade.EnvironmentName}.json";
