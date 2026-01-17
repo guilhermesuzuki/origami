@@ -417,3 +417,5 @@ FodyWeavers.xsd
 *.msm
 *.msp
 /src/Origami.Files/files/blogs/scaling
+/src/Origami.Files/files/db.bacpac
+/src/Origami.Files/files-backup
