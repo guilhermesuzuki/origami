@@ -65,6 +65,26 @@
         </div> *@
     </HeaderTemplate>
     <ContentTemplate>
+        @if (this.Repository is IBackupRestoreRepository backupRestoreRepository && backupRestoreRepository.Current != null)
+        {
+            <div class="p-3">
+                <div class="p-3 mb-3 border border-warning rounded bg-light bg-gradient">
+                    <div class="row">
+                        <div class="col-12">
+                            <i class="bi bi-exclamation-triangle-fill text-warning pe-1"></i>
+                            @if (backupRestoreRepository.Current is OrigamiBackupRestore)
+                            {
+                                @Text.Original("A restore process is currently running. Some actions are disabled until the process is complete.")
+                            }
+                            else
+                            {
+                                @Text.Original("A backup process is currently running. Some actions are disabled until the process is complete.")
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
         <div class="p-3">
             <div class="row">
                 @* <div class="datagrid-options col-12 text-right mb-1">
@@ -113,7 +133,7 @@
                                     @if (this.Super.Files.FileExists(context.Item.File) == true)
                                     {
                                         var file = this.Super.Files.GetFile(context.Item.File)!;
-                                        <button @onclick="() => _downloadFile(file)" @onclick:stopPropagation="true">
+                                        <button @onclick="() => DownloadFile(file)" @onclick:stopPropagation="true">
                                             <i class="fa-solid fa-file-arrow-down"></i>
                                         </button>
                                         <div class="x-small">@context.Item.File</div>
@@ -201,11 +221,6 @@
         }
     }
 
-    private async Task _downloadFile(OrigamiSystemFile file)
-    {
-        await this.JSRuntime.InvokeVoidAsync("origami.common.downloadFileFromUrl", file.WebPath);
-    }
-
     protected override void OnInitialized()
     {
         base.OnInitialized();
@@ -214,6 +229,7 @@
             if (obj is string s)
             {
                 if (s.Like(OrigamiConstants.Events.Backup) == true) this.InvokeAsync(this.StateHasChanged);
+                if (s.Like(OrigamiConstants.Events.BackupComplete) == true) this.InvokeAsync(this.StateHasChanged);
             }
         };
     }

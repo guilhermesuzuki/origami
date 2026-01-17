@@ -69,13 +69,13 @@ namespace Origami.UI.FrontEnd.Controllers
         }
 
         [HttpGet]
-        [Route("~/files/{*path}")]
-        public async Task<IActionResult> IndexAsync(string path, [FromQuery] string? size)
+        [Route("~/{folder}/{*path}")]
+        public async Task<IActionResult> IndexAsync([FromRoute] string folder, [FromRoute] string path, [FromQuery] string? size)
         {
             try
             {
                 //adds the files web directory to the virtual path
-                var virtualpath = $"/files/{path.TrimStart('/')}";
+                var virtualpath = $"/{folder}/{path.TrimStart('/')}";
                 var file = _fileRepository.GetFile(virtualpath);
                 if (file != null)
                 {

@@ -7,6 +7,7 @@ using MudBlazor;
 using Origami.Core;
 using Origami.Core.Data;
 using Origami.Core.Models;
+using Origami.Core.Models.FileSystem;
 using System.Globalization;
 
 namespace Origami.UI
@@ -38,6 +39,11 @@ namespace Origami.UI
         public OrigamiBlog GetBlogFromUserFacade()
         {
             return Super.Blogs.ReadFromCache().Id(UserFacade.BlogId) ?? throw new InvalidOperationException("Blog could not be found");
+        }
+
+        protected async Task DownloadFile(OrigamiSystemFile file)
+        {
+            await this.JSRuntime.InvokeVoidAsync("origami.common.downloadFileFromUrl", file.WebPath);
         }
 
         /// <summary>
