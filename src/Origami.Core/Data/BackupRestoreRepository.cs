@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Lucene.Net.Util;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
@@ -164,7 +165,18 @@ namespace Origami.Core.Data
                 hub.SuccessMessage = Text.Original("Database restored successfully.");
 
                 //update connection string inside appsettings.json
-                UpdateConnectionStringInsideAppSettings($"origami-{Current.NanoId}");
+                var cs = await UpdateConnectionStringInsideAppSettings($"origami-{Current.NanoId}");
+
+                //asks to refresh the UI
+                _appFacade.RefreshUI(OrigamiConstants.Events.Restore);
+
+                //pushes the result to hub
+                cs.Push(hub);
+
+                if (hub.Ok == false)
+                {
+                    return new Result<OrigamiBackupRestore>(restore).Pull(hub);
+                }
 
                 //asks to refresh the UI
                 _appFacade.RefreshUI(OrigamiConstants.Events.Restore);
@@ -315,24 +327,34 @@ namespace Origami.Core.Data
             return new(database) { SuccessMessage = Text.Original("BACPAC file created successfully."), };
         }
 
-        private void UpdateConnectionStringInsideAppSettings(string newDatabase)
+        private async Task<Result> UpdateConnectionStringInsideAppSettings(string newDatabase)
         {
-            var oi = _configuration.GetOrigamiConnectionString();
-            var builder = new Microsoft.Data.SqlClient.SqlConnectionStringBuilder(oi)
+            try
             {
-                InitialCatalog = newDatabase
-            };
+                var oi = _configuration.GetOrigamiConnectionString();
+                var builder = new SqlConnectionStringBuilder(oi)
+                {
+                    InitialCatalog = newDatabase
+                };
 
-            var file = $"appsettings.{_appFacade.EnvironmentName}.json";
-            file = File.Exists(file) ? file : "appsettings.json";
+                var file = $"appsettings.{_appFacade.EnvironmentName}.json";
+                file = File.Exists(file) ? file : "appsettings.json";
 
-            var json = File.ReadAllText(file);
-            var node = JsonNode.Parse(json);
+                var json = await File.ReadAllTextAsync(file);
+                var node = JsonNode.Parse(json);
 
-            if (node != null)
+                if (node != null)
+                {
+                    node["ConnectionStrings"]!["origami"] = builder.ToString();
+                    await File.WriteAllTextAsync(file, node.ToJsonString(new() { WriteIndented = true, }));
+                    return new() { SuccessMessage = Text.Original("Connection string updated successfully.") };
+                }
+
+                return new() { ErrorMessage = Text.Original("Error parsing the JSON file.") };
+            }
+            catch (Exception ex)
             {
-                node["ConnectionStrings"]!["origami"] = builder.ToString();
-                File.WriteAllText(file, node.ToJsonString(new() { WriteIndented = true, }));
+                return new() { ErrorMessage = ex.GetMessage() };
             }
         }
     }
