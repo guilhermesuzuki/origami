@@ -47,9 +47,9 @@ namespace Origami.Core.Data
 
         public async Task<Result<OrigamiBackup>> Backup(OrigamiUser user)
         {
-            if (!Directory.Exists($"{WebRootPath.WebRootPath}/backups/"))
+            if (Directory.Exists(WebRootPath.WebRootPathForBackups) == false)
             {
-                Directory.CreateDirectory($"{WebRootPath.WebRootPath}/backups/");
+                Directory.CreateDirectory(WebRootPath.WebRootPathForBackups);
             }
 
             if (Current != null)
@@ -77,7 +77,7 @@ namespace Origami.Core.Data
                 _appFacade.RefreshUI(OrigamiConstants.Events.Backup);
 
                 string sourceFolder = $"{WebRootPath.WebRootPath}/files/";
-                string zipPath = $"{WebRootPath.WebRootPath}/backups/{Current.NanoId}.zip";
+                string zipPath = $"{WebRootPath.WebRootPathForBackups}/{Current.NanoId}.zip";
 
                 await ZipFile.CreateFromDirectoryAsync(
                     sourceFolder,
