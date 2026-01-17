@@ -22,7 +22,7 @@
                                     <i class="bi bi-database-fill-add"></i>
                                     <span>@Text.Lower("Backup")</span>
                                 </button>
-                                <button class="btn btn-warning text-white" title="@Text.Lower("Restore files and database from a backup in the list below")" disabled="@this.DisableTheRestoreButton">
+                                <button class="btn btn-warning text-white" title="@Text.Lower("Restore files and database from a backup in the list below")" disabled="@this.DisableTheRestoreButton" @onclick="this.RestoreOrigami">
                                     <i class="bi bi-database-fill-exclamation"></i>
                                     <span>@Text.Lower("Restore from list")</span>
                                 </button>
@@ -203,6 +203,14 @@
 
     protected async Task BackupOrigami()
     {
+        var ok = await DialogService.ShowMessageBox(
+            Text.Upper("Backup files and database"),
+            Text.Original("Are you sure?"),
+            yesText: Text.Lower("Yes"),
+            noText: Text.Lower("No"));
+
+        if (ok == false) return;
+
         if (this.Repository is IBackupRestoreRepository backupRestoreRepository)
         {
             backupRestoreRepository.BackupRestoreTask = Task.Run(async () =>
@@ -210,6 +218,34 @@
                 using (var transaction = new TransactionScope())
                 {
                     var hub = await backupRestoreRepository.Backup(this.UserFacade.User);
+                    if (hub.Ok)
+                    {
+                        transaction.Complete();
+                        await this.InvokeAsync(() => this.DataGrid!.ReloadServerData());
+                    }
+                    UserFacade.Result = hub;
+                }
+            });
+        }
+    }
+
+    protected async Task RestoreOrigami()
+    {
+        var ok = await DialogService.ShowMessageBox(
+            Text.Upper("Restore files and database"),
+            Text.Original("Are you sure?"),
+            yesText: Text.Lower("Yes"),
+            noText: Text.Lower("No"));
+
+        if (ok == false) return;
+
+        if (this.Repository is IBackupRestoreRepository backupRestoreRepository)
+        {
+            backupRestoreRepository.BackupRestoreTask = Task.Run(async () =>
+            {
+                using (var transaction = new TransactionScope())
+                {
+                    var hub = await backupRestoreRepository.Restore(this.UserFacade.User, this.SelectedEntities.First());
                     if (hub.Ok)
                     {
                         transaction.Complete();

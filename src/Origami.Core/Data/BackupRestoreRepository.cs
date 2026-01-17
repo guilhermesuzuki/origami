@@ -47,22 +47,22 @@ namespace Origami.Core.Data
 
         public async Task<Result<OrigamiBackup>> Backup(OrigamiUser user)
         {
-            if (Directory.Exists(WebRootPath.WebRootPathForBackups) == false)
-            {
-                Directory.CreateDirectory(WebRootPath.WebRootPathForBackups);
-            }
-
             if (Current != null)
             {
                 return new() { ErrorMessage = Text.Original("A backup or restore process is already running. Please try again later.") };
             }
 
             var hub = new Result<string>();
+            var backup = new OrigamiBackup { UserId = user.Id, DateCreated = DateTime.UtcNow };
 
             try
             {
-                Current = new OrigamiBackup { UserId = user.Id, DateCreated = DateTime.UtcNow };
-                var backup = Current.Clone();
+                if (Directory.Exists(WebRootPath.WebRootPathForBackups) == false)
+                {
+                    Directory.CreateDirectory(WebRootPath.WebRootPathForBackups);
+                }
+
+                Current = backup.Clone();
 
                 //asks to refresh the UI
                 _appFacade.RefreshUI(OrigamiConstants.Events.Backup);
@@ -112,11 +112,6 @@ namespace Origami.Core.Data
 
         public async Task<Result<OrigamiBackupRestore>> Restore(OrigamiUser user, OrigamiBackup backup)
         {
-            if (!Directory.Exists($"{WebRootPath.WebRootPath}/restores/"))
-            {
-                Directory.CreateDirectory($"{WebRootPath.WebRootPath}/restores/");
-            }
-
             if (Current != null)
             {
                 return new() { ErrorMessage = Text.Original("A backup or restore process is already running. Please try again later.") };
@@ -127,18 +122,30 @@ namespace Origami.Core.Data
                 return new() { ErrorMessage = Text.Original("This has already been restored.") };
             }
 
+            var restore = new OrigamiBackupRestore() { UserId = user.Id, DateCreated = DateTime.UtcNow };
+
             try
             {
-                Current = new OrigamiBackupRestore() { UserId = user.Id, DateCreated = DateTime.UtcNow };
-                OrigamiBackupRestore restore = (OrigamiBackupRestore)Current.Clone();
-                string zipPath = $"{WebRootPath.WebRootPath}/backups/{backup.NanoId}.zip";
-                string extractPath = $"{WebRootPath.WebRootPath}/restores/{backup.NanoId}/";
-                if (!File.Exists(zipPath))
+                if (Directory.Exists(WebRootPath.WebRootPathForRestores) == false)
+                {
+                    Directory.CreateDirectory(WebRootPath.WebRootPathForRestores);
+                }
+
+                var extractPath = Path.Combine(WebRootPath.WebRootPathForRestores, backup.NanoId);
+
+                if (Directory.Exists(extractPath) == true)
+                {
+                    Directory.Delete(extractPath, true);
+                }
+                
+                Current = restore.Clone();
+                string zipPath = Path.Combine(WebRootPath.WebRootPathForBackups, $"{backup.NanoId}.zip");
+                if (File.Exists(zipPath) == false)
                 {
                     return new(restore) { ErrorMessage = Text.Original("Backup file not found.") };
                 }
                 await ZipFile.ExtractToDirectoryAsync(zipPath, extractPath);
-                var hub = await RestoreTheDatabaseAsync($"{extractPath}/files/db.bacpac");
+                var hub = await RestoreTheDatabaseAsync(Path.Combine(extractPath, "files", "db.bacpac"));
                 if (hub.Ok == false)
                 {
                     return new Result<OrigamiBackupRestore>(restore).Pull(hub);
@@ -253,15 +260,13 @@ namespace Origami.Core.Data
             var builder = new Microsoft.Data.SqlClient.SqlConnectionStringBuilder(oi);
             var database = $"origami_{Current.NanoId}";
 
-            var args = $"""
-                /Action:Import
-                /SourceFile:"{bacpacPath}"
-                /TargetServerName:"{builder.DataSource}"
-                /TargetDatabaseName:"{database}"
-                /TargetUser:"{builder.UserID}"
-                /TargetPassword:"{builder.Password}"
-                /TargetEncryptConnection:False
-                """;
+            var args = $"/Action:Import " +
+                $"/SourceFile:\"{bacpacPath}\" " +
+                $"/TargetServerName:\"{builder.DataSource}\" " +
+                $"/TargetDatabaseName:\"{database}\" " +
+                $"/TargetUser:\"{builder.UserID}\" " +
+                $"/TargetPassword:\"{builder.Password}\" " +
+                $"/TargetEncryptConnection:False";
 
             var process = new Process
             {

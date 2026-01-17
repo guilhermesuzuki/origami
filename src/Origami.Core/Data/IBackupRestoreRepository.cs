@@ -23,5 +23,13 @@ namespace Origami.Core.Data
         /// <param name="userId"></param>
         /// <returns></returns>
         Task<Result<OrigamiBackup>> Backup(OrigamiUser user);
+
+        /// <summary>
+        /// Starts a restore for the specified backup
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="backup"></param>
+        /// <returns></returns>
+        Task<Result<OrigamiBackupRestore>> Restore(OrigamiUser user, OrigamiBackup backup);
     }
 }
