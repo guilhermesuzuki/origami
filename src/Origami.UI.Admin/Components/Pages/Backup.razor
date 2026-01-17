@@ -28,7 +28,7 @@
                                 </button>
                             </div>
                             <div class="btn-group pe-1">
-                                <button class="btn btn-danger text-white" title="@Text.Lower("Restore files and database from a zip file")">
+                                <button class="btn btn-danger text-white" title="@Text.Lower("Restore files and database from a zip file")" disabled="@this.DisableTheRestoreZipButton">
                                     <i class="bi bi-database-fill-exclamation"></i>
                                     <span>@Text.Lower("Restore from a zip file")</span>
                                 </button>
@@ -140,18 +140,13 @@
     protected override string DefaultOrdering => $"{nameof(OrigamiBackup.DateCreated)}";
 
     /// <summary>
-    /// Backup task
-    /// </summary>
-    protected Task BackupTask = null!;
-
-    /// <summary>
     /// Disables the restore button if a restore process is currently running.
     /// </summary>
     protected override bool DisableTheRestoreButton
     {
         get
         {
-            if (this.Repository is IBackupRestoreRepository backupRestoreRepository && backupRestoreRepository.CurrentProcess != null)
+            if (this.Repository is IBackupRestoreRepository backupRestoreRepository && backupRestoreRepository.Current != null)
             {
                 return true;
             }
@@ -159,13 +154,28 @@
         }
     }
 
+    /// <summary>
+    /// Disables the restore zip file button.
+    /// </summary>
+    protected bool DisableTheRestoreZipButton
+    {
+        get
+        {
+            if (this.Repository is IBackupRestoreRepository backupRestoreRepository && backupRestoreRepository.Current != null)
+            {
+                return true;
+            }
+            return false;
+        }
+    }
+
     protected bool DisableTheBackupButton
     {
         get
         {
-            if (this.Repository is IBackupRestoreRepository backupRestoreRepository)
+            if (this.Repository is IBackupRestoreRepository backupRestoreRepository && backupRestoreRepository.Current != null)
             {
-                return backupRestoreRepository.CurrentProcess != null;
+                return true;
             }
             return false;
         }
@@ -175,7 +185,7 @@
     {
         if (this.Repository is IBackupRestoreRepository backupRestoreRepository)
         {
-            this.BackupTask = Task.Run(async () =>
+            backupRestoreRepository.BackupRestoreTask = Task.Run(async () =>
             {
                 using (var transaction = new TransactionScope())
                 {

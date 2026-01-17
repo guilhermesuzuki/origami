@@ -8,9 +8,14 @@ namespace Origami.Core.Data
     public interface IBackupRestoreRepository : IRepository<OrigamiBackup>
     {
         /// <summary>
+        /// Backup/restore task
+        /// </summary>
+        Task? BackupRestoreTask { get; set; }
+
+        /// <summary>
         /// Current backup or restore process
         /// </summary>
-        OrigamiBackup? CurrentProcess { get; set; }
+        OrigamiBackup? Current { get; set; }
 
         /// <summary>
         /// Starts a backup for the specified user

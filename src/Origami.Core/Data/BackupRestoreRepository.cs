@@ -39,7 +39,9 @@ namespace Origami.Core.Data
             _userRepository = userRepository;
         }
 
-        public OrigamiBackup? CurrentProcess { get; set; }
+        public Task? BackupRestoreTask { get; set; }
+
+        public OrigamiBackup? Current { get; set; }
 
         public override string ReadPermission => nameof(OrigamiRole.ViewBackupRestoreSystem);
 
@@ -50,7 +52,7 @@ namespace Origami.Core.Data
                 Directory.CreateDirectory($"{WebRootPath.WebRootPath}/backups/");
             }
 
-            if (CurrentProcess != null)
+            if (Current != null)
             {
                 return new() { ErrorMessage = Text.Original("A backup or restore process is already running. Please try again later.") };
             }
@@ -59,8 +61,8 @@ namespace Origami.Core.Data
 
             try
             {
-                CurrentProcess = new OrigamiBackup { UserId = user.Id, DateCreated = DateTime.UtcNow };
-                var backup = CurrentProcess.Clone();
+                Current = new OrigamiBackup { UserId = user.Id, DateCreated = DateTime.UtcNow };
+                var backup = Current.Clone();
 
                 //asks to refresh the UI
                 _appFacade.RefreshUI(OrigamiConstants.Events.Backup);
@@ -75,7 +77,7 @@ namespace Origami.Core.Data
                 _appFacade.RefreshUI(OrigamiConstants.Events.Backup);
 
                 string sourceFolder = $"{WebRootPath.WebRootPath}/files/";
-                string zipPath = $"{WebRootPath.WebRootPath}/backups/{CurrentProcess.NanoId}.zip";
+                string zipPath = $"{WebRootPath.WebRootPath}/backups/{Current.NanoId}.zip";
 
                 await ZipFile.CreateFromDirectoryAsync(
                     sourceFolder,
@@ -88,7 +90,7 @@ namespace Origami.Core.Data
 
                 if (hub.Ok)
                 {
-                    var ctx = CurrentProcess.GetContext(user);
+                    var ctx = Current.GetContext(user);
                     this.SmartSave(ctx, false).Push(hub);
                 }
 
@@ -103,7 +105,7 @@ namespace Origami.Core.Data
             }
             finally
             {
-                CurrentProcess = null;
+                Current = null;
                 _appFacade.RefreshUI(OrigamiConstants.Events.BackupComplete, hub);
             }
         }
@@ -115,7 +117,7 @@ namespace Origami.Core.Data
                 Directory.CreateDirectory($"{WebRootPath.WebRootPath}/restores/");
             }
 
-            if (CurrentProcess != null)
+            if (Current != null)
             {
                 return new() { ErrorMessage = Text.Original("A backup or restore process is already running. Please try again later.") };
             }
@@ -127,8 +129,8 @@ namespace Origami.Core.Data
 
             try
             {
-                CurrentProcess = new OrigamiBackupRestore() { UserId = user.Id, DateCreated = DateTime.UtcNow };
-                OrigamiBackupRestore restore = (OrigamiBackupRestore)CurrentProcess.Clone();
+                Current = new OrigamiBackupRestore() { UserId = user.Id, DateCreated = DateTime.UtcNow };
+                OrigamiBackupRestore restore = (OrigamiBackupRestore)Current.Clone();
                 string zipPath = $"{WebRootPath.WebRootPath}/backups/{backup.NanoId}.zip";
                 string extractPath = $"{WebRootPath.WebRootPath}/restores/{backup.NanoId}/";
                 if (!File.Exists(zipPath))
@@ -146,13 +148,13 @@ namespace Origami.Core.Data
                 //update connection string inside appsettings.json
 
                 //rename current files folder to files_old_{CurrentProcess.NanoId}
-                Directory.Move($"{WebRootPath.WebRootPath}/files/", $"{WebRootPath.WebRootPath}/files_old_{CurrentProcess.NanoId}/");
+                Directory.Move($"{WebRootPath.WebRootPath}/files/", $"{WebRootPath.WebRootPath}/files_old_{Current.NanoId}/");
                 Directory.Move($"{extractPath}/files/", $"{WebRootPath.WebRootPath}/files/");
 
                 //save the restore record
                 if (hub.Ok)
                 {
-                    var ctx = CurrentProcess.GetContext(user);
+                    var ctx = Current.GetContext(user);
                     this.SmartSave(ctx, false).Push(hub);
                 }
 
@@ -164,7 +166,7 @@ namespace Origami.Core.Data
             }
             finally
             {
-                CurrentProcess = null;
+                Current = null;
             }
         }
 
@@ -198,7 +200,7 @@ namespace Origami.Core.Data
 
         protected async Task<Result<string>> BackupTheDatabaseAsync()
         {
-            if (CurrentProcess == null)
+            if (Current == null)
             {
                 return new() { ErrorMessage = $"Current process hasn't started yet" };
             }
@@ -242,14 +244,14 @@ namespace Origami.Core.Data
                 return new() { ErrorMessage = "BACPAC file not found." };
             }
 
-            if (CurrentProcess == null)
+            if (Current == null)
             {
                 return new() { ErrorMessage = $"Current process hasn't started yet" };
             }
 
             var oi = _configuration.GetOrigamiConnectionString();
             var builder = new Microsoft.Data.SqlClient.SqlConnectionStringBuilder(oi);
-            var database = $"origami_{CurrentProcess.NanoId}";
+            var database = $"origami_{Current.NanoId}";
 
             var args = $"""
                 /Action:Import
