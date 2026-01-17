@@ -266,6 +266,8 @@
             {
                 if (s.Like(OrigamiConstants.Events.Backup) == true) this.InvokeAsync(this.StateHasChanged);
                 if (s.Like(OrigamiConstants.Events.BackupComplete) == true) this.InvokeAsync(this.StateHasChanged);
+                if (s.Like(OrigamiConstants.Events.Restore) == true) this.InvokeAsync(this.StateHasChanged);
+                if (s.Like(OrigamiConstants.Events.RestoreComplete) == true) this.InvokeAsync(this.StateHasChanged);
             }
         };
     }

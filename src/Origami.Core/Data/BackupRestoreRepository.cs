@@ -122,6 +122,7 @@ namespace Origami.Core.Data
                 return new() { ErrorMessage = Text.Original("This has already been restored.") };
             }
 
+            var hub = new Result<string>();
             var restore = new OrigamiBackupRestore() { UserId = user.Id, DateCreated = DateTime.UtcNow };
 
             try
@@ -139,13 +140,22 @@ namespace Origami.Core.Data
                 }
                 
                 Current = restore.Clone();
+
+                //asks to refresh the UI
+                _appFacade.RefreshUI(OrigamiConstants.Events.Restore);
+
                 string zipPath = Path.Combine(WebRootPath.WebRootPathForBackups, $"{backup.NanoId}.zip");
                 if (File.Exists(zipPath) == false)
                 {
                     return new(restore) { ErrorMessage = Text.Original("Backup file not found.") };
                 }
+
                 await ZipFile.ExtractToDirectoryAsync(zipPath, extractPath);
-                var hub = await RestoreTheDatabaseAsync(Path.Combine(extractPath, "files", "db.bacpac"));
+
+                //asks to refresh the UI
+                _appFacade.RefreshUI(OrigamiConstants.Events.Restore);
+
+                hub = await RestoreTheDatabaseAsync(Path.Combine(extractPath, "files", "db.bacpac"));
                 if (hub.Ok == false)
                 {
                     return new Result<OrigamiBackupRestore>(restore).Pull(hub);
@@ -154,9 +164,15 @@ namespace Origami.Core.Data
 
                 //update connection string inside appsettings.json
 
+                //asks to refresh the UI
+                _appFacade.RefreshUI(OrigamiConstants.Events.Restore);
+
                 //rename current files folder to files_old_{CurrentProcess.NanoId}
                 Directory.Move($"{WebRootPath.WebRootPath}/files/", $"{WebRootPath.WebRootPath}/files_old_{Current.NanoId}/");
                 Directory.Move($"{extractPath}/files/", $"{WebRootPath.WebRootPath}/files/");
+
+                //asks to refresh the UI
+                _appFacade.RefreshUI(OrigamiConstants.Events.Restore);
 
                 //save the restore record
                 if (hub.Ok)
@@ -174,6 +190,7 @@ namespace Origami.Core.Data
             finally
             {
                 Current = null;
+                _appFacade.RefreshUI(OrigamiConstants.Events.RestoreComplete, hub);
             }
         }
 
