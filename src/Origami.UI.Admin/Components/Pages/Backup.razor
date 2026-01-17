@@ -18,7 +18,7 @@
                                 </button>
                             </div>
                             <div class="btn-group pe-1">
-                                <button class="btn btn-success text-white" title="@Text.Lower("Backup files and database")" disabled="@this.DisableTheBackupButton" @onclick="this.BackupTheSystem">
+                                <button class="btn btn-success text-white" title="@Text.Lower("Backup files and database")" disabled="@this.DisableTheBackupButton" @onclick="this.BackupOrigami">
                                     <i class="bi bi-database-fill-add"></i>
                                     <span>@Text.Lower("Backup")</span>
                                 </button>
@@ -140,17 +140,22 @@
     protected override string DefaultOrdering => $"{nameof(OrigamiBackup.DateCreated)}";
 
     /// <summary>
+    /// Backup task
+    /// </summary>
+    protected Task BackupTask = null!;
+
+    /// <summary>
     /// Disables the restore button if a restore process is currently running.
     /// </summary>
     protected override bool DisableTheRestoreButton
     {
         get
         {
-            if (this.Repository is IBackupRestoreRepository backupRestoreRepository)
+            if (this.Repository is IBackupRestoreRepository backupRestoreRepository && backupRestoreRepository.CurrentProcess != null)
             {
-                return base.DisableTheRestoreButton && backupRestoreRepository.CurrentProcess != null;
+                return true;
             }
-            throw new InvalidOperationException();
+            return base.DisableTheRestoreButton;
         }
     }
 
@@ -166,25 +171,40 @@
         }
     }
 
-    protected async Task BackupTheSystem()
+    protected async Task BackupOrigami()
     {
         if (this.Repository is IBackupRestoreRepository backupRestoreRepository)
         {
-            using (var transaction = new TransactionScope())
+            this.BackupTask = Task.Run(async () =>
             {
-                var hub = await backupRestoreRepository.Backup(this.UserFacade.User);
-                if (hub.Ok)
+                using (var transaction = new TransactionScope())
                 {
-                    transaction.Complete();
-                    this.DataGrid?.ReloadServerData();
+                    var hub = await backupRestoreRepository.Backup(this.UserFacade.User);
+                    if (hub.Ok)
+                    {
+                        transaction.Complete();
+                        this.DataGrid?.ReloadServerData();
+                    }
+                    UserFacade.Result = hub;
                 }
-                UserFacade.Result = hub;
-            }
+            });
         }
     }
 
     private async Task _downloadFile(OrigamiSystemFile file)
     {
         await this.JSRuntime.InvokeVoidAsync("origami.common.downloadFileFromUrl", file.WebPath);
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        this.AppFacade.RefreshingTheUI += (obj, args) =>
+        {
+            if (obj is string s)
+            {
+                if (s.Like(OrigamiConstants.Events.Backup) == true) this.InvokeAsync(this.StateHasChanged);
+            }
+        };
     }
 }

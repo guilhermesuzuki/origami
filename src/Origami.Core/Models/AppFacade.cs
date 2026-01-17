@@ -10,7 +10,7 @@ namespace Origami.Core.Models
             this.OnlineUsers = [];
         }
 
-        public event EventHandler? RefreshingTheUI;
+        public event EventHandler<object>? RefreshingTheUI;
 
         public bool? Admin { get; }
 
@@ -24,6 +24,16 @@ namespace Origami.Core.Models
         public void RefreshUI(string connectionId, string key)
         {
             this.RefreshingTheUI?.Invoke(new[] { connectionId, key }, EventArgs.Empty);
+        }
+
+        public void RefreshUI(string key, object data)
+        {
+            this.RefreshingTheUI?.Invoke(key, data);
+        }
+
+        public void RefreshUI(string connectionId, string key, object data)
+        {
+            this.RefreshingTheUI?.Invoke(new[] { connectionId, key }, data);
         }
     }
 }

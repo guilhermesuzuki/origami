@@ -17,11 +17,13 @@ namespace Origami.Core.Data
         RepositoryOuterLayer<OrigamiBackup>, 
         IBackupRestoreRepository
     {
-        protected IConfiguration _configuration;
-        protected IFileRepository _fileRepository;
-        protected IUserRepository _userRepository;
+        protected readonly IAppFacade _appFacade;
+        protected readonly IConfiguration _configuration;
+        protected readonly IFileRepository _fileRepository;
+        protected readonly IUserRepository _userRepository;
 
         public BackupRestoreRepository(
+            IAppFacade appFacade,
             IConfiguration configuration,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IFileRepository fileRepository,
@@ -31,6 +33,7 @@ namespace Origami.Core.Data
             Text text)
             : base(text, dbContextFactory, memoryCache, wwwRoot)
         {
+            _appFacade = appFacade;
             _configuration = configuration;
             _fileRepository = fileRepository;
             _userRepository = userRepository;
@@ -52,16 +55,24 @@ namespace Origami.Core.Data
                 return new() { ErrorMessage = Text.Original("A backup or restore process is already running. Please try again later.") };
             }
 
+            var hub = new Result<string>();
+
             try
             {
                 CurrentProcess = new OrigamiBackup { UserId = user.Id, DateCreated = DateTime.UtcNow };
                 var backup = CurrentProcess.Clone();
 
-                var hub = await this.BackupTheDatabaseAsync();
+                //asks to refresh the UI
+                _appFacade.RefreshUI(OrigamiConstants.Events.Backup);
+
+                hub = await this.BackupTheDatabaseAsync();
                 if (hub.Ok == false)
                 {
                     return new Result<OrigamiBackup>(backup).Pull(hub);
                 }
+
+                //asks to refresh the UI
+                _appFacade.RefreshUI(OrigamiConstants.Events.Backup);
 
                 string sourceFolder = $"{WebRootPath.WebRootPath}/files/";
                 string zipPath = $"{WebRootPath.WebRootPath}/backups/{CurrentProcess.NanoId}.zip";
@@ -73,13 +84,16 @@ namespace Origami.Core.Data
                     includeBaseDirectory: true
                 );
 
-                hub.SuccessMessage = Text.Original("Zip file created successfully.");
+                hub.SuccessMessage = Text.Original("ZIP file created successfully.");
 
                 if (hub.Ok)
                 {
                     var ctx = CurrentProcess.GetContext(user);
                     this.SmartSave(ctx, false).Push(hub);
                 }
+
+                //asks to refresh the UI
+                _appFacade.RefreshUI(OrigamiConstants.Events.Backup);
 
                 return new Result<OrigamiBackup>(backup).Pull(hub);
             }
@@ -89,7 +103,8 @@ namespace Origami.Core.Data
             }
             finally
             {
-                CurrentProcess = null; 
+                CurrentProcess = null;
+                _appFacade.RefreshUI(OrigamiConstants.Events.BackupComplete, hub);
             }
         }
 
