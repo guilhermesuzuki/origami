@@ -168,6 +168,11 @@ namespace Origami.Core
         public static T Clone<T>(this T? entity)
             where T : class, new()
         {
+            //TODO: workaround for OrigamiBackupRestore, find a better way to do this
+            if (entity is OrigamiBackupRestore restore)
+            {
+                return restore.GetClone() as T ?? new T();
+            }
             return entity != null ? entity.GetClone() : new();
         }
 
