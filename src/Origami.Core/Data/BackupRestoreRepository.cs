@@ -139,7 +139,7 @@ namespace Origami.Core.Data
                     Directory.CreateDirectory(WebRootPath.WebRootPathForRestores);
                 }
 
-                var zipPath = Path.Combine(WebRootPath.WebRootPathForBackups, $"{backup.NanoId}.zip");
+                var zipPath = Path.Combine(WebRootPath.WebRootPathForBackups, backup.Filename);
                 var extractPath = Path.Combine(WebRootPath.WebRootPathForRestores, backup.NanoId);
 
                 if (Directory.Exists(extractPath) == true)

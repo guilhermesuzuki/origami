@@ -221,14 +221,18 @@
 
         if (this.Repository is IBackupRestoreRepository backupRestoreRepository)
         {
+            var scope = new TransactionScope(
+                TransactionScopeOption.Required,
+                TransactionScopeAsyncFlowOption.Enabled);
+
             backupRestoreRepository.BackupRestoreTask = Task.Run(async () =>
             {
-                using (var transaction = new TransactionScope())
+                using (scope)
                 {
                     var hub = await backupRestoreRepository.Restore(this.UserFacade.User, this.SelectedEntities.First());
                     if (hub.Ok)
                     {
-                        transaction.Complete();
+                        scope.Complete();
                         await this.InvokeAsync(() => this.DataGrid!.ReloadServerData());
                     }
                     UserFacade.Result = hub;
