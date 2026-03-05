@@ -33,21 +33,8 @@
                                     <span>@Text.Lower("Restore from a zip file")</span>
                                 </button>
                             </div>
-                            @* <div class="btn-group pe-1">
-                                <button class="btn btn-success text-white" title="@Text.Lower("Mark as front-page")" disabled="@this.DisableTheFrontPageButton" @onclick="this.MarkAsFrontPage">
-                                    <i class="fa-solid fa-file-circle-check"></i>
-                                </button>
-                                <button class="btn btn-warning text-white" title="@Text.Lower("Unmark as front-page")" disabled="@this.DisableTheFrontPageButton" @onclick="this.UnmarkAsFrontPage">
-                                    <i class="fa-solid fa-file-circle-xmark"></i>
-                                </button>
-                            </div> *@
                         </li>
                         <li style="width:20%;">
-                            @* <MudSelect T="string" HelperText="@Text.Lower("Filter")" @bind-Value:get="Filter" @bind-Value:set="(filter) => SetFilterAndRefreshUI(filter)">
-                                <MudSelectItem T="string" Value="@(new string("all"))">@Text.Original("All")</MudSelectItem>
-                                <MudSelectItem T="string" Value="@(new string("published"))">@Text.Original("Published")</MudSelectItem>
-                                <MudSelectItem T="string" Value="@(new string("drafts"))">@Text.Original("Drafts")</MudSelectItem>
-                            </MudSelect> *@
                         </li>
                     </ul>
                 </div>
@@ -56,13 +43,6 @@
                 </div>
             </div>
         </div>
-        @* <div class="p-3 border-bottom">
-            <div class="row">
-                <div class="col-12">
-                    <SearchLite T="OrigamiBackup" OnHitSelected="this.OnSearchResultSelected"></SearchLite>
-                </div>
-            </div>
-        </div> *@
     </HeaderTemplate>
     <ContentTemplate>
         @if (this.Repository is IBackupRestoreRepository backupRestoreRepository && backupRestoreRepository.Current != null)
@@ -87,9 +67,6 @@
         }
         <div class="p-3">
             <div class="row">
-                @* <div class="datagrid-options col-12 text-right mb-1">
-                    <DataGridOptions Deleted="this.IncludeDeletedEntitiesInDataGrid" DeletedChanged="this.OnIncludeDeletedEntitiesChanged"></DataGridOptions>
-                </div> *@
                 <div class="pages col-12">
                     <MudDataGrid @ref="DataGrid" T="OrigamiBackup" ServerData="GetEntities" Filterable="false" SortMode="SortMode.None" Class="border" SelectedItems="this.SelectedEntities" MultiSelection="false" SelectedItemsChanged="this.SelectedEntitiesChanged"
                                  RowClassFunc="this.RowClassFunc" Bordered="true" SelectOnRowClick="false">
@@ -136,7 +113,6 @@
                                         <button @onclick="() => DownloadFile(file)" @onclick:stopPropagation="true">
                                             <i class="fa-solid fa-file-arrow-down"></i>
                                         </button>
-                                        @* <div class="x-small">@context.Item.File</div> *@
                                     }
                                 </CellTemplate>
                             </TemplateColumn>
