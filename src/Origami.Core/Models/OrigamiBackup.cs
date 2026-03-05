@@ -70,6 +70,11 @@ namespace Origami.Core.Models
         /// <summary>
         /// Gets the relative file path of the backup archive associated with this instance.
         /// </summary>
-        public string File => $"/files-backup/{NanoId}.zip";
+        public string File => $"/files-backup/{Filename}";
+
+        /// <summary>
+        /// Gets only the filename of the backup
+        /// </summary>
+        public string Filename => $"origami-backup-{NanoId}.zip";
     }
 }

@@ -84,7 +84,7 @@ namespace Origami.Core.Data
                 _appFacade.RefreshUI(OrigamiConstants.Events.Backup);
 
                 string sourceFolder = $"{WebRootPath.WebRootPath}/files/";
-                string zipPath = $"{WebRootPath.WebRootPathForBackups}/{Current.NanoId}.zip";
+                string zipPath = $"{WebRootPath.WebRootPathForBackups}/{Current.Filename}";
 
                 await ZipFile.CreateFromDirectoryAsync(
                     sourceFolder,
