@@ -2,7 +2,7 @@
 @page "/user/profile/{UserId:guid}"
 @inherits BasicFormFull<OrigamiUser>
 
-<MudFileUpload @ref="this.FileUpload" T="IBrowserFile" FilesChanged="this.UploadHeaderBase64" Accept=".png, .jpg, .bmp, .tiff" MaximumFileCount="1"></MudFileUpload>
+
 
 <div class="header p-3 border-bottom">
     <div class="row">
@@ -38,20 +38,25 @@
                                 <span>@Text.Original("Roles"):</span>
                                 <span>@string.Join(", ", from r in Roles select r.Name)</span>
                             </div>
-                            <div class="btn-group mt-3 w-100 border">
-                                <button class="btn btn-light" @onclick="this.PickFile">
-                                    <i class="fa-solid fa-file-arrow-up"></i>
-                                    @Text.Lower("Upload picture")
-                                </button>
-                                <button class="btn btn-light" @onclick="() => this._fileManager = true">
-                                    <i class="fa-solid fa-folder"></i>
-                                    @Text.Lower("Pick from file manager")
-                                </button>
-                                <button class="btn btn-light" @onclick="this.ClearHeader">
-                                    <i class="fa-solid fa-circle-xmark"></i>
-                                    @Text.Lower("Remove picture")
-                                </button>
-                            </div>
+                            <MudFileUpload T="IBrowserFile" FilesChanged="this.UploadHeaderBase64" Accept=".png, .jpg, .bmp, .tiff" MaximumFileCount="1">
+                                <CustomContent>
+                                    <div class="btn-group mt-3 w-100 border">
+                                        <button class="btn btn-light" @onclick="context.OpenFilePickerAsync">
+                                            <i class="fa-solid fa-file-arrow-up"></i>
+                                            @Text.Lower("Upload picture")
+                                        </button>
+                                        <button class="btn btn-light" @onclick="() => this._fileManager = true">
+                                            <i class="fa-solid fa-folder"></i>
+                                            @Text.Lower("Pick from file manager")
+                                        </button>
+                                        <button class="btn btn-light" @onclick="this.ClearHeader">
+                                            <i class="fa-solid fa-circle-xmark"></i>
+                                            @Text.Lower("Remove picture")
+                                        </button>
+                                    </div>
+                                </CustomContent>
+                                <SelectedTemplate></SelectedTemplate>
+                            </MudFileUpload>
                         </div>
                     </li>
                 </ul>

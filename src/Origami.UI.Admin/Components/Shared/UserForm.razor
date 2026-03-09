@@ -2,12 +2,12 @@
 
 <style>
     .post-header-image, .video-header-image, .page-header-image { height: 200px; }
+    .mud-file-upload, .mud-file-upload > * { height:100%; }
 </style>
 <style>
     ul.expand { display: flex; list-style: none; padding: 0; margin: 0; }
     ul.expand > li { display: flex; flex-direction: column; flex: 1; }
 </style>
-<MudFileUpload @ref="this.FileUpload" T="IBrowserFile" FilesChanged="UploadHeaderBase64" Accept=".png, .jpg, .bmp, .tiff" MaximumFileCount="1"></MudFileUpload>
 <div class="user-form @Class">
     <div class="row">
         <div class="col-12 col-xxl-6">
@@ -87,21 +87,26 @@
                         <HeaderImageLite Entity="this.Entity" ImgMaxWidth="256px" Footer="true"></HeaderImageLite>
                     </li>
                     <li class="position-relative">
-                        <div class="position-absolute zeroes btn-group-vertical">
-                            <button class="btn btn-light w-100" @onclick="PickFile" style="height:34%;">
-                                <i class="fa-solid fa-cloud-arrow-up"></i>
-                                <div>@Text.Lower("Only image files")</div>
-                                <div class="x-small">@Text.Original("{0} MB max.", 2)</div>
-                            </button>
-                            <button class="btn btn-light w-100" @onclick="() => this.FileManagerForImages = true" style="height:33%;">
-                                <i class="fa-solid fa-folder"></i>
-                                <div>@Text.Lower("Pick from file manager")</div>
-                            </button>
-                            <button class="btn btn-light w-100" @onclick="ClearHeader" style="height:33%;">
-                                <i class="fa-solid fa-trash-can"></i>
-                                <div>@Text.Lower("Clear picture")</div>
-                            </button>
-                        </div>
+                        <MudFileUpload T="IBrowserFile" FilesChanged="UploadHeaderBase64" Accept=".png, .jpg, .bmp, .tiff" MaximumFileCount="1">
+                            <CustomContent>
+                                <div class="position-absolute zeroes btn-group-vertical">
+                                    <button class="btn btn-light w-100" @onclick="context.OpenFilePickerAsync" style="height:34%;">
+                                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                                        <div>@Text.Lower("Only image files")</div>
+                                        <div class="x-small">@Text.Original("{0} MB max.", 2)</div>
+                                    </button>
+                                    <button class="btn btn-light w-100" @onclick="() => this.FileManagerForImages = true" style="height:33%;">
+                                        <i class="fa-solid fa-folder"></i>
+                                        <div>@Text.Lower("Pick from file manager")</div>
+                                    </button>
+                                    <button class="btn btn-light w-100" @onclick="ClearHeader" style="height:33%;">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                        <div>@Text.Lower("Clear picture")</div>
+                                    </button>
+                                </div>
+                            </CustomContent>
+                            <SelectedTemplate></SelectedTemplate>
+                        </MudFileUpload>
                     </li>
                 </ul>
             </div>

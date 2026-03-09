@@ -4,8 +4,6 @@
 @inject ICategoryRepository _repository
 @inject IFileRepository _fileRepository
 
-<MudFileUpload @ref="this.FileUpload" T="IBrowserFile" FilesChanged="UploadHeaderBase64" Accept=".png, .jpg, .bmp, .tiff, .gif" MaximumFileCount="1"></MudFileUpload>
-
 <div class="category-form @Class">
     <BasicHeaderNotes Entity="Entity"></BasicHeaderNotes>
     <div class="parent-selector mt-3">
@@ -67,21 +65,26 @@
         <div>
             <HeaderImageLite Entity="this.Entity" Footer="true" ImgMaxWidth="120px;"></HeaderImageLite>
         </div>
-        <div class="btn-group mt-2 w-100">
-            <button class="btn btn-light w-100" @onclick="PickFile">
-                <i class="fa-solid fa-cloud-arrow-up"></i>
-                <div>@Text.Lower("Only image files")</div>
-                <div class="x-small">@Text.Original("{0}KB max.", 512)</div>
-            </button>
-            <button class="btn btn-light w-100" @onclick="() => this._fileManager = true">
-                <i class="fa-solid fa-folder"></i>
-                @Text.Lower("Pick from file manager")
-            </button>
-            <button class="btn btn-light w-100" @onclick="this.ClearHeader">
-                <i class="fa-solid fa-trash-can"></i>
-                @Text.Lower("Clear icon")
-            </button>
-        </div>
+        <MudFileUpload T="IBrowserFile" FilesChanged="UploadHeaderBase64" Accept=".png, .jpg, .bmp, .tiff, .gif" MaximumFileCount="1">
+            <CustomContent>
+                <div class="btn-group mt-2 w-100">
+                    <button class="btn btn-light w-100" @onclick="context.OpenFilePickerAsync">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <div>@Text.Lower("Only image files")</div>
+                        <div class="x-small">@Text.Original("{0}KB max.", 512)</div>
+                    </button>
+                    <button class="btn btn-light w-100" @onclick="() => this._fileManager = true">
+                        <i class="fa-solid fa-folder"></i>
+                        @Text.Lower("Pick from file manager")
+                    </button>
+                    <button class="btn btn-light w-100" @onclick="this.ClearHeader">
+                        <i class="fa-solid fa-trash-can"></i>
+                        @Text.Lower("Clear icon")
+                    </button>
+                </div>
+            </CustomContent>
+            <SelectedTemplate></SelectedTemplate>
+        </MudFileUpload>
     </div>
     <BasicHeader Class="mt-3" Entity="this.Entity"></BasicHeader>
     <ul class="inline-list mt-3">
