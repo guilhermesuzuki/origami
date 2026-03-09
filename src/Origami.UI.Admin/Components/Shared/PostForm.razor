@@ -5,7 +5,7 @@
 @inject IVideoTagRepository _videoTag
 @inject IFileRepository _fileRepository
 
-<MudFileUpload @ref="this.FileUpload" T="IBrowserFile" FilesChanged="UploadHeader" Accept=".png, .jpg, .bmp, .tiff" MaximumFileCount="1"></MudFileUpload>
+
 <div class="post-form @Class">
     <div class="row">
         <div class="col-12">
@@ -71,21 +71,26 @@
         <div class="col-12 col-xxl-6">
             <div class="text-center p-3">
                 <HeaderImageLite Entity="@Entity"></HeaderImageLite>
-                <div class="btn-group mt-2 w-100">
-                    <button class="btn btn-light" @onclick="PickFile">
-                        <i class="fa-solid fa-cloud-arrow-up"></i>
-                        <div>@Text.Lower("Only image files")</div>
-                        <div class="x-small">@Text.Original("{0} MB max.", 6)</div>
-                    </button>
-                    <button class="btn btn-light" @onclick="() => this.FileManagerForImages = true">
-                        <i class="fa-solid fa-folder"></i>
-                        @Text.Lower("Pick from file manager")
-                    </button>
-                    <button class="btn btn-light" @onclick="ClearHeader">
-                        <i class="fa-solid fa-trash-can"></i>
-                        @Text.Lower("Clear header")
-                    </button>
-                </div>
+                <MudFileUpload T="IBrowserFile" FilesChanged="UploadHeader" Accept=".png, .jpg, .bmp, .tiff" MaximumFileCount="1">
+                    <CustomContent>
+                        <div class="btn-group mt-2 w-100">
+                            <button class="btn btn-light" @onclick="context.OpenFilePickerAsync">
+                                <i class="fa-solid fa-cloud-arrow-up"></i>
+                                <div>@Text.Lower("Only image files")</div>
+                                <div class="x-small">@Text.Original("{0} MB max.", 6)</div>
+                            </button>
+                            <button class="btn btn-light" @onclick="() => this.FileManagerForImages = true">
+                                <i class="fa-solid fa-folder"></i>
+                                @Text.Lower("Pick from file manager")
+                            </button>
+                            <button class="btn btn-light" @onclick="ClearHeader">
+                                <i class="fa-solid fa-trash-can"></i>
+                                @Text.Lower("Clear header")
+                            </button>
+                        </div>
+                    </CustomContent>
+                    <SelectedTemplate></SelectedTemplate>
+                </MudFileUpload>
             </div>
         </div>
     </div>

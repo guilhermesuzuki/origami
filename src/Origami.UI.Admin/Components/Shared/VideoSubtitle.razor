@@ -4,7 +4,6 @@
 @inject IFileRepository fileRepository
 
 <div class="video-subtitle @Class">
-    <MudFileUpload @ref="FileUpload" T="IBrowserFile" FilesChanged="UploadSubtitle" Accept=".vtt" MaximumFileCount="1"></MudFileUpload>
     <ul class="inline-list">
         <li class="w-50">
             @if (this.Entity != null && this.Entity.WebPath.Has() == true)
@@ -40,9 +39,14 @@
                     </button>
                 </li>
                 <li>
-                    <button class="p-2" title="@Text.Original("Upload Subtitle")" @onclick="this.PickSubtitle">
-                        <i class="fa-solid fa-file-arrow-up"></i>
-                    </button>
+                    <MudFileUpload T="IBrowserFile" FilesChanged="UploadSubtitle" Accept=".vtt" MaximumFileCount="1">
+                        <CustomContent>
+                            <button class="p-2" title="@Text.Original("Upload Subtitle")" @onclick="context.OpenFilePickerAsync">
+                                <i class="fa-solid fa-file-arrow-up"></i>
+                            </button>
+                        </CustomContent>
+                        <SelectedTemplate></SelectedTemplate>
+                    </MudFileUpload>
                 </li>
             </ul>
         </li>
