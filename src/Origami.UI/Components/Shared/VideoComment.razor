@@ -253,7 +253,7 @@
     {
         if (this.Comment != null)
         {
-            var yes = await _dialogService.ShowMessageBox(
+            var yes = await DialogService.ShowMessageBoxAsync(
                 Text.Upper("Delete comment"),
                 Text.Lower("Would you like to delete this comment?"),
                 Text.Lower("Yes"),

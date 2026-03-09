@@ -109,7 +109,7 @@ namespace Origami.UI.Admin
             await ExecuteWithSelectedEntities(
                 async () =>
                 {
-                    return await DialogService.ShowMessageBox(
+                    return await DialogService.ShowMessageBoxAsync(
                         Text.Upper("Deleting {0} Item(s)", SelectedEntities.Count),
                         Text.Original("Are you sure?"),
                         yesText: Text.Lower("Yes"),
@@ -206,8 +206,9 @@ namespace Origami.UI.Admin
         /// This method should retrieve the Entities from database or memory
         /// </summary>
         /// <param name="state"></param>
+        /// <param name="token"></param>
         /// <returns></returns>
-        protected virtual Task<GridData<T>> GetEntities(GridState<T> state)
+        protected virtual Task<GridData<T>> GetEntities(GridState<T> state, CancellationToken token)
         {
             var orders = new StringBuilder();
 
@@ -383,7 +384,7 @@ namespace Origami.UI.Admin
             await ExecuteWithSelectedEntities(
                 async () =>
                 {
-                    return await DialogService.ShowMessageBox(
+                    return await DialogService.ShowMessageBoxAsync(
                         Text.Upper("Purging {0} Item(s)", SelectedEntities.Count),
                         Text.Original("Are you sure? You will NOT be able to recover these items."),
                         yesText: Text.Lower("Yes"),
@@ -435,7 +436,7 @@ namespace Origami.UI.Admin
             await ExecuteWithSelectedEntities(
                 async () =>
                 {
-                    return await DialogService.ShowMessageBox(
+                    return await DialogService.ShowMessageBoxAsync(
                         Text.Upper("Restoring {0} Item(s)", SelectedEntities.Count),
                         Text.Original("Are you sure?"),
                         yesText: Text.Lower("Yes"),

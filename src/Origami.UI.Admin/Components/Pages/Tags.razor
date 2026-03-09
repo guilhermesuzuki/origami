@@ -87,7 +87,7 @@
         await ExecuteWithSelectedEntities(
             async () =>
             {
-                return await DialogService.ShowMessageBox(
+                return await DialogService.ShowMessageBoxAsync(
                     Text.Upper("Deleting {0} Item(s)", SelectedEntities.Count),
                     Text.Original("Are you sure?"),
                     yesText: Text.Lower("Yes"),

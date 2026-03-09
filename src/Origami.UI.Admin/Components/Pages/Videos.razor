@@ -155,7 +155,7 @@
         await ExecuteWithSelectedEntities(
             async () =>
             {
-                return await DialogService.ShowMessageBox(
+                return await DialogService.ShowMessageBoxAsync(
                     Text.Upper("Publish {0} item(s)", SelectedEntities.Count),
                     Text.Original("Are you sure?"),
                     yesText: Text.Lower("Yes"),
@@ -170,7 +170,7 @@
         await ExecuteWithSelectedEntities(
             async () =>
             {
-                return await DialogService.ShowMessageBox(
+                return await DialogService.ShowMessageBoxAsync(
                     Text.Upper("Unpublish {0} item(s)", SelectedEntities.Count),
                     Text.Original("Are you sure?"),
                     yesText: Text.Lower("Yes"),

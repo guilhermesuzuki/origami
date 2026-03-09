@@ -168,15 +168,16 @@
     }
 </Root>
 
-@code {
+    @code {
     [Parameter] public Guid UserId { get; set; } = Guid.Empty;
 
     /// <summary>
     /// This method should retrieve the Entities from database or memory
     /// </summary>
     /// <param name="state"></param>
+    /// <param name="token"></param>
     /// <returns></returns>
-    protected virtual Task<GridData<Core.Models.OrigamiPage>> GetPages(GridState<Core.Models.OrigamiPage> state)
+    protected virtual Task<GridData<Core.Models.OrigamiPage>> GetPages(GridState<Core.Models.OrigamiPage> state, CancellationToken token)
     {
         var orders = new StringBuilder();
 
@@ -211,8 +212,9 @@
     /// This method should retrieve the Entities from database or memory
     /// </summary>
     /// <param name="state"></param>
+    /// <param name="token"></param>
     /// <returns></returns>
-    protected virtual Task<GridData<OrigamiPost>> GetPosts(GridState<OrigamiPost> state)
+    protected virtual Task<GridData<OrigamiPost>> GetPosts(GridState<OrigamiPost> state, CancellationToken token)
     {
         var orders = new StringBuilder();
 
@@ -247,8 +249,9 @@
     /// This method should retrieve the Entities from database or memory
     /// </summary>
     /// <param name="state"></param>
+    /// <param name="token"></param>
     /// <returns></returns>
-    protected virtual Task<GridData<OrigamiVideo>> GetVideos(GridState<OrigamiVideo> state)
+    protected virtual Task<GridData<OrigamiVideo>> GetVideos(GridState<OrigamiVideo> state, CancellationToken token)
     {
         var orders = new StringBuilder();
 

@@ -130,7 +130,7 @@
         {
             if (System.IO.File.Exists(this.Entity.LocalPath) == true)
             {
-                var result = await this.DialogService.ShowMessageBox(Text.Original("Delete subtitle"), Text.Original("Are you sure?"), yesText: Text.Lower("Yes"), noText: Text.Lower("No"));
+                var result = await this.DialogService.ShowMessageBoxAsync(Text.Original("Delete subtitle"), Text.Original("Are you sure?"), yesText: Text.Lower("Yes"), noText: Text.Lower("No"));
                 if (result.GetValueOrDefault() == true)
                 {
                     try

@@ -168,7 +168,7 @@
         throw new InvalidOperationException();
     }
 
-    protected Task<GridData<OrigamiUserActivity>> UserActivities(GridState<OrigamiUserActivity> state)
+    protected Task<GridData<OrigamiUserActivity>> UserActivities(GridState<OrigamiUserActivity> state, CancellationToken token)
     {
         var orders = new StringBuilder();
 

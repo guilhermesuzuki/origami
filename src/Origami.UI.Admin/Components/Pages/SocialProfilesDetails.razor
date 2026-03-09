@@ -333,7 +333,7 @@ else
     /// </summary>
     private async Task WipeData()
     {
-        var answer = await this._dialogService.ShowMessageBox(
+        var answer = await this.DialogService.ShowMessageBoxAsync(
             title: Text.Lower("Are You Sure?"),
             message: Text.Lower("This Will Delete All Your Data From The Website"),
             yesText: Text.Lower("Yes"),

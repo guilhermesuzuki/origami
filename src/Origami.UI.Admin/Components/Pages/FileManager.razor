@@ -439,7 +439,7 @@
 
     private async Task _deleteFile(OrigamiSystemFile file)
     {
-        var result = await this.DialogService.ShowMessageBox(
+        var result = await this.DialogService.ShowMessageBoxAsync(
             Text.Upper("Delete File"),
             Text.Original("Are you sure?"),
             yesText: Text.Original("Yes"),
@@ -462,7 +462,7 @@
 
     private async Task _deleteFolder(OrigamiSystemDirectory dir)
     {
-        var result = await this.DialogService.ShowMessageBox(
+        var result = await this.DialogService.ShowMessageBoxAsync(
             Text.Upper("Delete Folder"),
             Text.Original("Are you sure?"),
             yesText: Text.Original("Yes"),
@@ -485,7 +485,7 @@
 
     private async Task _deleteItems()
     {
-        var result = await this.DialogService.ShowMessageBox(
+        var result = await this.DialogService.ShowMessageBoxAsync(
             Text.Upper("Delete selected items"),
             Text.Original("Are you sure?"),
             yesText: Text.Original("Yes"),

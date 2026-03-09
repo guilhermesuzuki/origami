@@ -40,7 +40,7 @@
 
     private async Task UploadBackup(IBrowserFile file)
     {
-        var ok = await DialogService.ShowMessageBox(
+        var ok = await DialogService.ShowMessageBoxAsync(
             Text.Upper("Restore files and database"),
             Text.Original("Are you sure?"),
             yesText: Text.Lower("Yes"),

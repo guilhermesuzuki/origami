@@ -203,7 +203,7 @@
     {
         if (this.SelectedEntities.Count != 1)
         {
-            await this.DialogService.ShowMessageBox(
+            await this.DialogService.ShowMessageBoxAsync(
                 Text.Upper("Marking as front-page"),
                 Text.Original("You need to select one page"),
                 Text.Lower("Ok")
@@ -214,7 +214,7 @@
         await ExecuteWithSelectedEntities(
             async () =>
             {
-                return await DialogService.ShowMessageBox(
+                return await DialogService.ShowMessageBoxAsync(
                     Text.Upper("Marking as front-page"),
                     Text.Original("Are you sure?"),
                     yesText: Text.Lower("Yes"),
@@ -228,7 +228,7 @@
     {
         if (this.SelectedEntities.Count != 1)
         {
-            await this.DialogService.ShowMessageBox(
+            await this.DialogService.ShowMessageBoxAsync(
                 Text.Upper("Unmarking front-page"),
                 Text.Original("You need to select one page"),
                 Text.Lower("Ok")
@@ -239,7 +239,7 @@
         await ExecuteWithSelectedEntities(
             async () =>
             {
-                return await DialogService.ShowMessageBox(
+                return await DialogService.ShowMessageBoxAsync(
                     Text.Upper("Unmarking front-page", SelectedEntities.Count),
                     Text.Original("Are you sure?"),
                     yesText: Text.Lower("Yes"),
@@ -254,7 +254,7 @@
         await ExecuteWithSelectedEntities(
             async () =>
             {
-                return await DialogService.ShowMessageBox(
+                return await DialogService.ShowMessageBoxAsync(
                     Text.Upper("Publish {0} item(s)", SelectedEntities.Count),
                     Text.Original("Are you sure?"),
                     yesText: Text.Lower("Yes"),
@@ -269,7 +269,7 @@
         await ExecuteWithSelectedEntities(
             async () =>
             {
-                return await DialogService.ShowMessageBox(
+                return await DialogService.ShowMessageBoxAsync(
                     Text.Upper("Unpublish {0} item(s)", SelectedEntities.Count),
                     Text.Original("Are you sure?"),
                     yesText: Text.Lower("Yes"),

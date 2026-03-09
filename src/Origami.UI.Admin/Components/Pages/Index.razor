@@ -261,7 +261,7 @@
                                 <div class="text-center fw-bold">
                                     @Text.Original("Platforms")
                                 </div>
-                                <MudChart Class="mt-3" InputData="_platformsData" InputLabels="_platformsLabels" ChartType="ChartType.Pie" Width="100%" Height="300px" />
+                                <MudChart Class="mt-3" ChartSeries="_platformsData.AsChartDataSet()" ChartLabels="_platformsLabels" ChartType="ChartType.Pie" Width="100%" Height="300px" />
                             </div>
                         }
                     </div>
@@ -272,7 +272,7 @@
                                 <div class="text-center fw-bold">
                                     @Text.Original("Browsers")
                                 </div>
-                                <MudChart Class="mt-3" InputData="_browsersData" InputLabels="_browsersLabels" ChartType="ChartType.Pie" Width="100%" Height="300px" />
+                                <MudChart Class="mt-3" ChartSeries="_browsersData.AsChartDataSet()" ChartLabels="_browsersLabels" ChartType="ChartType.Pie" Width="100%" Height="300px" />
                             </div>
                         }
                     </div>
@@ -284,7 +284,7 @@
                             <div class="text-center fw-bold">
                                 @Text.Original("History")
                             </div>
-                            <MudChart Class="mt-3" ChartSeries="@_series" XAxisLabels="@_xAxisLabels" ChartType="ChartType.Line" Width="100%" Height="450px" />
+                            <MudChart Class="mt-3" ChartSeries="@_series" ChartLabels="@_xAxisLabels" ChartType="ChartType.Line" Width="100%" Height="450px" />
                         </div>
                     }
                 </div>
@@ -506,8 +506,9 @@
     /// This method should retrieve the Entities from database or memory
     /// </summary>
     /// <param name="state"></param>
+    /// <param name="token"></param>
     /// <returns></returns>
-    protected virtual Task<GridData<OrigamiUserView>> UserViews(GridState<OrigamiUserView> state)
+    protected virtual Task<GridData<OrigamiUserView>> UserViews(GridState<OrigamiUserView> state, CancellationToken token)
     {
         var orders = new StringBuilder();
 
@@ -628,14 +629,14 @@
     /// <summary>
     /// ChartSeries for the History Line Chart
     /// </summary>
-    private List<ChartSeries> _series
+    private List<ChartSeries<double>> _series
     {
         get
         {
-            return new List<ChartSeries>()
+            return new List<ChartSeries<double>>()
             {
-                new() { Name = Text.Original("Views"), Index = 0, Visible = true, Data = this._history.Where(x => x.IsBot == false).Select(x => (double)x.Count).ToArray() },
-                new() { Name = Text.Original("Bot Views"), Index = 1, Visible = true, Data = this._history.Where(x => x.IsBot == true).Select(x => (double)x.Count).ToArray() },
+                new() { Name = Text.Original("Views"), Visible = true, Data = this._history.Where(x => x.IsBot == false).Select(x => (double)x.Count).ToArray() },
+                new() { Name = Text.Original("Bot Views"), Visible = true, Data = this._history.Where(x => x.IsBot == true).Select(x => (double)x.Count).ToArray() },
             };
         }
     }
@@ -668,7 +669,7 @@
 
     protected async Task EnterMaintenanceMode()
     {
-        var ok = await DialogService.ShowMessageBox(
+        var ok = await DialogService.ShowMessageBoxAsync(
             Text.Upper("Entering maintenance mode"),
             Text.Original("Are you sure?"),
             yesText: Text.Lower("Yes"),
@@ -688,7 +689,7 @@
 
     protected async Task LeaveMaintenanceMode()
     {
-        var ok = await DialogService.ShowMessageBox(
+        var ok = await DialogService.ShowMessageBoxAsync(
             Text.Upper("Leaving maintenance mode"),
             Text.Original("Are you sure?"),
             yesText: Text.Lower("Yes"),

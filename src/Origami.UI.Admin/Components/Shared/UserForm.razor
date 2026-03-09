@@ -531,7 +531,7 @@
 
     protected async Task BlockUser()
     {
-        var yes = await this.DialogService.ShowMessageBox(
+        var yes = await this.DialogService.ShowMessageBoxAsync(
             title: Text.Upper("Are you sure?"),
             message: Text.Lower("This will block the user out from the website"),
             yesText: Text.Lower("Yes"),
@@ -553,7 +553,7 @@
 
     protected async Task UnblockUser()
     {
-        var yes = await this.DialogService.ShowMessageBox(
+        var yes = await this.DialogService.ShowMessageBoxAsync(
             title: Text.Upper("Are you sure?"),
             message: Text.Lower("This will unblock the user back to the website"),
             yesText: Text.Lower("Yes"),
@@ -577,7 +577,7 @@
     {
         try
         {
-            var yes = await this.DialogService.ShowMessageBox(
+            var yes = await this.DialogService.ShowMessageBoxAsync(
                     title: Text.Upper("Are you sure?"),
                     message: Text.Lower("This will generate a link for the user to reset their own password"),
                     yesText: Text.Lower("Yes"),

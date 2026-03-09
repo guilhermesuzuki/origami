@@ -97,7 +97,7 @@
         var current = this.SelectedEntities.FirstOrDefault(x => x.Id == this.UserFacade.User.Id);
         if (current != null)
         {
-            var answer = await DialogService.ShowMessageBox(
+            var answer = await DialogService.ShowMessageBoxAsync(
                 Text.Upper("Deleting {0} item(s), including yourself", SelectedEntities.Count),
                 Text.Original("Are you sure?") + " " + Text.Original("You will be logged out at the end"),
                 yesText: Text.Lower("Yes"),

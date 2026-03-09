@@ -143,7 +143,7 @@
         await this.ExecuteWithSelectedEntities(
             async () =>
             {
-                return await this.DialogService.ShowMessageBox(
+                return await this.DialogService.ShowMessageBoxAsync(
                     this.Text.Upper("Activate {0} blog(s)", this.SelectedEntities.Count),
                     this.Text.Original("Are you sure?"),
                     yesText: this.Text.Lower("Yes"),
@@ -161,7 +161,7 @@
         await this.ExecuteWithSelectedEntities(
             async () =>
             {
-                return await this.DialogService.ShowMessageBox(
+                return await this.DialogService.ShowMessageBoxAsync(
                     this.Text.Upper("Deactivate {0} blog(s)", this.SelectedEntities.Count),
                     this.Text.Original("Are you sure?"),
                     yesText: this.Text.Lower("Yes"),
@@ -185,7 +185,7 @@
 
     protected virtual async Task SetPrimary(OrigamiBlog entity)
     {
-        var answer = await this.DialogService.ShowMessageBox(
+        var answer = await this.DialogService.ShowMessageBoxAsync(
             this.Text.Upper("Make {0} blog primary", entity.Name),
             this.Text.Original("Are you sure?"),
             yesText: this.Text.Lower("Yes"),

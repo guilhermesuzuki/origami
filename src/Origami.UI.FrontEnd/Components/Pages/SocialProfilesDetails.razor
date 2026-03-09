@@ -377,7 +377,7 @@
     /// </summary>
     private async Task WipeData()
     {
-        var answer = await this._dialogService.ShowMessageBox(
+        var answer = await this._dialogService.ShowMessageBoxAsync(
             title: Text.Upper("Are you sure?"),
             message: Text.Lower("This will delete all your data from the website"),
             yesText: Text.Lower("Yes"),

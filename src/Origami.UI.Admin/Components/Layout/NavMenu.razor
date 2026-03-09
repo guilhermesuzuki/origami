@@ -159,7 +159,7 @@
     /// </summary>
     private async Task ClearCache()
     {
-        var answer = await this.DialogService.ShowMessageBox(
+        var answer = await this.DialogService.ShowMessageBoxAsync(
             this.Text.Upper("Clear cache of the admin website"),
             this.Text.Original("Are you sure?"),
             yesText: this.Text.Lower("Yes"),
@@ -177,7 +177,7 @@
 
     protected async Task LogoutAsync()
     {
-        var answer = await this.DialogService.ShowMessageBox(
+        var answer = await this.DialogService.ShowMessageBoxAsync(
             this.Text.Upper("Log Out"),
             this.Text.Original("Are you sure?"),
             yesText: this.Text.Lower("Yes"),
@@ -313,7 +313,7 @@
 
     private async Task RegenerateNanoIds()
     {
-        var answer = await this.DialogService.ShowMessageBox(
+        var answer = await this.DialogService.ShowMessageBoxAsync(
             this.Text.Upper("Regenerate nano-ids"),
             this.Text.Original("Are you sure?"),
             yesText: this.Text.Lower("Yes"),

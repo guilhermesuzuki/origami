@@ -45,8 +45,9 @@
     /// This method should retrieve the Entities from database or memory
     /// </summary>
     /// <param name="state"></param>
+    /// <param name="token"></param>
     /// <returns></returns>
-    protected virtual Task<GridData<OrigamiUser>> GetEntities(GridState<OrigamiUser> state)
+    protected virtual Task<GridData<OrigamiUser>> GetEntities(GridState<OrigamiUser> state, CancellationToken token)
     {
         var orders = new StringBuilder();
 
