@@ -5,6 +5,8 @@ using NanoidDotNet;
 using Origami.Core;
 using Origami.Core.Models;
 using Origami.Core.Models.FileSystem;
+using Polly;
+using Polly.Retry;
 using SixLabors.ImageSharp;
 using System.Buffers;
 
@@ -324,16 +326,35 @@ namespace Origami.UI
             using var timer = new Timer(_ => InvokeAsync(StateHasChanged));
             timer.Change(TimeSpan.FromMilliseconds(100), TimeSpan.FromMilliseconds(100));
 
+            filename = filename ?? file.Name;
+
             string basePath = Super.Directories.LocalPathForFiles(Entity);
             string tempPath = Path.Combine(basePath, $"{Guid.NewGuid()}.tmp");
-            string finalPath = Path.Combine(basePath, filename ?? file.Name);
+            string finalPath = Path.Combine(basePath, filename);
 
-            while(File.Exists(finalPath) == true)
+            try
             {
-                var nameFileExists = $"{Path.GetFileNameWithoutExtension(filename)}.{Nanoid.Generate(Nanoid.Alphabets.UppercaseLettersAndDigits, 4)}{Path.GetExtension(filename)}";
-                finalPath = Path.Combine(basePath, nameFileExists);
-            }
+                var pipeline = new ResiliencePipelineBuilder()
+                    .AddRetry(new RetryStrategyOptions { MaxRetryAttempts = 1024, Delay = TimeSpan.FromMilliseconds(10), })
+                    .Build();
 
+                await pipeline.ExecuteAsync(token =>
+                {
+                    if (File.Exists(finalPath) == true)
+                    {
+                        var newFilename = $"{Path.GetFileNameWithoutExtension(filename)}.{Nanoid.Generate(Nanoid.Alphabets.UppercaseLettersAndDigits, 4)}{Path.GetExtension(filename)}";
+                        finalPath = Path.Combine(basePath, newFilename);
+                        throw new Exception("File already exists");
+                    }
+                    return ValueTask.CompletedTask;
+                });
+            }
+            catch (Exception ex)
+            {
+                UserFacade.Result = new(ex);
+                return (false, string.Empty, string.Empty);
+            }
+            
             await using Stream stream = file.OpenReadStream(file.Size, FileUploadingToken.Token);
 
             const int bufferSize = 1024 * 1024; // 1 MB
@@ -344,7 +365,7 @@ namespace Origami.UI
             try
             {
                 Directory.CreateDirectory(basePath);
-                using (FileStream fs = System.IO.File.Create(tempPath))
+                using (FileStream fs = File.Create(tempPath))
                 {
                     int bytesRead;
                     while ((bytesRead = await stream.ReadAsync(buffer, FileUploadingToken.Token)) != 0)
@@ -364,7 +385,7 @@ namespace Origami.UI
                 }
                 else
                 {
-                    System.IO.File.Copy(tempPath, finalPath, true);
+                    File.Copy(tempPath, finalPath, true);
                 }
 
                 FileUploadingProgress = 100;
@@ -384,7 +405,7 @@ namespace Origami.UI
                 timer.Change(Timeout.Infinite, Timeout.Infinite);
                 FileUploading = false;
                 FileUploadingProgress = 0;
-                System.IO.File.Delete(tempPath);
+                File.Delete(tempPath);
             }
         }
 
