@@ -1,16 +1,10 @@
-﻿using FluentValidation;
-using Lucene.Net.Util;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
-using Org.BouncyCastle.Asn1.X509;
 using Origami.Core.Models;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO.Compression;
-using System.Text;
 using System.Text.Json.Nodes;
 
 namespace Origami.Core.Data
@@ -117,7 +111,7 @@ namespace Origami.Core.Data
             }
         }
 
-        public async Task<Result<OrigamiBackupRestore>> Restore(OrigamiUser user, OrigamiBackup backup)
+        public async Task<Result<OrigamiBackupRestore>> Restore(OrigamiUser user, OrigamiBackup backup, string? filepathOverride = null)
         {
             if (Current != null)
             {
@@ -139,7 +133,7 @@ namespace Origami.Core.Data
                     Directory.CreateDirectory(WebRootPath.WebRootPathForRestores);
                 }
 
-                var zipPath = Path.Combine(WebRootPath.WebRootPathForBackups, backup.Filename);
+                var zipPath = filepathOverride ?? Path.Combine(WebRootPath.WebRootPathForBackups, backup.Filename);
                 var extractPath = Path.Combine(WebRootPath.WebRootPathForRestores, backup.NanoId);
 
                 if (Directory.Exists(extractPath) == true)
@@ -186,7 +180,7 @@ namespace Origami.Core.Data
                 _appFacade.RefreshUI(OrigamiConstants.Events.Restore);
 
                 //rename current files folder to files_old_{CurrentProcess.NanoId}
-                Directory.Move($"{WebRootPath.WebRootPath}/files/", $"{WebRootPath.WebRootPath}/files-old-{Current.NanoId}/");
+                Directory.Move($"{WebRootPath.WebRootPath}/files/", $"{WebRootPath.WebRootPath}/files-previous-{Current.NanoId}/");
                 Directory.Move($"{extractPath}/files/", $"{WebRootPath.WebRootPath}/files/");
 
                 //asks to refresh the UI

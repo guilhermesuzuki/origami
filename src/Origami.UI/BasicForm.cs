@@ -303,7 +303,7 @@ namespace Origami.UI
         /// avoid overwriting. The method updates the upload progress and ensures proper cleanup in case of
         /// errors.</remarks>
         /// <param name="file">The file to be uploaded. Must implement <see cref="IBrowserFile"/>.</param>
-        /// <param name="fileName">The name to assign to the uploaded file. If the file already exists, a unique name will be generated.</param>
+        /// <param name="filename">The name to assign to the uploaded file. If the file already exists, a unique name will be generated.</param>
         /// <param name="fileLimit">The maximum allowed file size, in bytes. Files exceeding this limit will result in an exception.</param>
         /// <returns>A tuple containing the following: <list type="bullet"> <item><term><c>Ok</c></term><description><see
         /// langword="true"/> if the upload was successful; otherwise, <see langword="false"/>.</description></item>
@@ -311,7 +311,7 @@ namespace Origami.UI
         /// upload failed.</description></item> <item><term><c>WebPath</c></term><description>The web-accessible path
         /// for the uploaded file. Empty if the upload failed.</description></item> </list></returns>
         /// <exception cref="InvalidOperationException">Thrown if the file size exceeds <paramref name="fileLimit"/>.</exception>
-        protected async Task<(bool Ok, string LocalPath, string WebPath)> UploadFile(IBrowserFile file, string fileName, long fileLimit)
+        protected async Task<(bool Ok, string LocalPath, string WebPath)> UploadFile(IBrowserFile file, long fileLimit, string? filename = null)
         {
             if (file.Size > fileLimit)
             {
@@ -326,16 +326,12 @@ namespace Origami.UI
 
             string basePath = Super.Directories.LocalPathForFiles(Entity);
             string tempPath = Path.Combine(basePath, $"{Guid.NewGuid()}.tmp");
-            string finalPath = Path.Combine(basePath, file.Name);
+            string finalPath = Path.Combine(basePath, filename ?? file.Name);
 
-            if (System.IO.File.Exists(finalPath) == true)
+            while(File.Exists(finalPath) == true)
             {
-                finalPath = Path.Combine(basePath, fileName);
-            }
-
-            if (System.IO.File.Exists(finalPath) == true)
-            {
-                throw new InvalidOperationException("File with the same name exists. Please, try again");
+                var nameFileExists = $"{Path.GetFileNameWithoutExtension(filename)}.{Nanoid.Generate(Nanoid.Alphabets.UppercaseLettersAndDigits, 4)}{Path.GetExtension(filename)}";
+                finalPath = Path.Combine(basePath, nameFileExists);
             }
 
             await using Stream stream = file.OpenReadStream(file.Size, FileUploadingToken.Token);
@@ -443,13 +439,11 @@ namespace Origami.UI
         /// <returns></returns>
         protected virtual async Task UploadHeader(IBrowserFile file)
         {
-            var fileName = $"{Path.GetFileNameWithoutExtension(file.Name)}.{Nanoid.Generate(Nanoid.Alphabets.UppercaseLettersAndDigits, 4)}{Path.GetExtension(file.Name)}";
-
             try
             {
                 if (Entity is IHeaderImage headerImage)
                 {
-                    var status = await this.UploadFile(file, fileName, OrigamiConstants.MaximumFileSizeForHeaderImages);
+                    var status = await this.UploadFile(file, OrigamiConstants.MaximumFileSizeForHeaderImages);
                     if (status.Ok)
                     {
                         headerImage.HeaderImage = status.WebPath;
@@ -499,10 +493,9 @@ namespace Origami.UI
         {
             if (Entity is OrigamiVideo video)
             {
-                var filename = $"{Path.GetFileNameWithoutExtension(file.Name)}.{Nanoid.Generate(Nanoid.Alphabets.UppercaseLettersAndDigits, 4)}{Path.GetExtension(file.Name)}";
                 try
                 {
-                    var status = await UploadFile(file, filename, OrigamiConstants.MaximumFileSizeForVideos);
+                    var status = await UploadFile(file, OrigamiConstants.MaximumFileSizeForVideos);
                     if (status.Ok)
                     {
                         video.MediaFile.LocalPath = status.LocalPath;

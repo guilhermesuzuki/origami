@@ -97,6 +97,11 @@ namespace Origami.Core.Data
                 return $"/files/blogs/settings/";
             }
 
+            if (entity is OrigamiBackup)
+            {
+                return $"/files-backup/";
+            }
+
             var plural = typeof(T).GetPlural().ToLower();
             var directory = entity is INanoId nanoId ? nanoId.NanoId : entity.Id.ToString();
 

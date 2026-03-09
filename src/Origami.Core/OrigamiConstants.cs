@@ -153,6 +153,7 @@ namespace Origami.Core
         public const int MaximumFileSizeForHeaderImages = 6291456;
         public const int MaximumBase64StringForHeaderImages = 524288;
         public const long MaximumFileSizeForVideos = 2147483648;
+        public const long MaximumFileSizeForBackupRestore = 549755813888; // 512 GB
 
         /// <summary>
         /// Cache options (2 minutes expiration)

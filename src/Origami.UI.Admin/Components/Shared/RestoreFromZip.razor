@@ -1,0 +1,65 @@
+﻿@inherits BasicFormFull<OrigamiBackup>
+
+<MudFileUpload @ref="this.FileUpload" T="IBrowserFile" FilesChanged="UploadBackup" Accept=".zip" MaximumFileCount="1" Class="d-none"></MudFileUpload>
+<div class="btn-group @Class">
+    <button class="btn btn-danger text-white" title="@Text.Lower("Restore files and database from a zip file")" disabled="@this.DisableTheRestoreZipButton" @onclick="PickBackup">
+        <i class="bi bi-database-fill-exclamation"></i>
+        <span>@Text.Lower("Restore from a zip file")</span>
+    </button>
+</div>
+@if (this.FileUploading)
+{
+    <div class="position-fixed popup-container">
+        <div class="border p-3 shadow-lg" style="width: 50%; background-color:white;">
+            <div class="text-center">@Text.Lower("Uploading a file")...</div>
+            <div class="progress" style="height: 10px;">
+                <div class="progress-bar bg-secondary" role="progressbar" style="width: @this.FileUploadingProgress%;" aria-valuenow="@this.FileUploadingProgress" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+            <div class="actions text-right mt-3">
+                <div class="btn-group">
+                    <button class="btn btn-danger" @onclick="() => this.FileUploadingToken.Cancel()">
+                        <i class="fa-solid fa-stop"></i>
+                        @Text.Lower("Stop")
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@code {
+    [Parameter] public bool DisableTheRestoreZipButton { get; set; } = false;
+
+    private async Task PickBackup()
+    {
+        if (FileUpload != null)
+        {
+            FileUploadingToken = new();
+            await FileUpload.OpenFilePickerAsync();
+        }
+    }
+
+    private async Task UploadBackup(IBrowserFile file)
+    {
+        var ok = await DialogService.ShowMessageBox(
+            Text.Upper("Restore files and database"),
+            Text.Original("Are you sure?"),
+            yesText: Text.Lower("Yes"),
+            noText: Text.Lower("No"));
+
+        if (ok == false) return;
+
+        var result = await this.UploadFile(file, OrigamiConstants.MaximumFileSizeForBackupRestore, Entity.Filename);
+
+        if (result.Ok)
+        {
+            if (this.Repository is IBackupRestoreRepository backupRestoreRepository)
+            {
+                var hub = await backupRestoreRepository.Restore(UserFacade.User, this.Entity, result.LocalPath);
+                UserFacade.Result = hub;
+            }
+            return;
+        }
+
+        this.UserFacade.Result = new() { ErrorMessage = Text.Original("Failed to upload the backup file."), };
+    }
+}

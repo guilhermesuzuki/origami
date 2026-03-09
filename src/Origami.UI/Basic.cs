@@ -35,6 +35,7 @@ namespace Origami.UI
         [Inject] protected ISuperRepository Super { get; set; } = null!;
         [Inject] protected Text Text { get; set; } = null!;
         [Inject] protected IUserFacade UserFacade { get; set; } = null!;
+        [Inject] protected IWebRootPath WebRootPath { get; set; } = null!;
 
         public OrigamiBlog GetBlogFromUserFacade()
         {
