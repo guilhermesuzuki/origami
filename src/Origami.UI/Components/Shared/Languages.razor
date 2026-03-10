@@ -1,19 +1,22 @@
 ﻿@inherits Basic
 
 <style>
+    .languages .mud-select-input { text-align: center; }
     .mud-list-item-text .culture-info { color: var(--mud-palette-black) !important; }
 </style>
-<MudSelect T="string" @bind-Value:get="@CultureInfo.CurrentUICulture.Name" @bind-Value:set="SetLanguage" Modal="true" Adornment="Adornment.None">
-    @foreach (var cinfo in OrigamiConstants.AllLanguages())
-    {
-        <MudSelectItem Value="@cinfo.Name">
-            <div class="d-inline-flex align-items-center culture-info text-white">
-                <span class="language @cinfo.Name me-1"></span>
-                <span>@cinfo.DisplayName</span>
-            </div>
-        </MudSelectItem>
-    }
-</MudSelect>
+<div class="languages @Class">
+    <MudSelect T="string" @bind-Value:get="@CultureInfo.CurrentUICulture.Name" @bind-Value:set="SetLanguage" Modal="true" Adornment="Adornment.None">
+        @foreach (var cinfo in OrigamiConstants.AllLanguages())
+        {
+            <MudSelectItem Value="@cinfo.Name">
+                <div class="d-inline-flex align-items-center culture-info text-white">
+                    <span class="language @cinfo.Name me-1"></span>
+                    <span>@cinfo.DisplayName</span>
+                </div>
+            </MudSelectItem>
+        }
+    </MudSelect>
+</div>
 @code {
     protected override async Task<Core.Models.Result> SetLanguage(string language)
     {
