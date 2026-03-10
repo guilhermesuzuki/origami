@@ -66,7 +66,7 @@
         <div class="col-12 col-xxl-6">
             <div class="text-center p-3">
                 <HeaderImageLite Entity="@Entity"></HeaderImageLite>
-                <MudFileUpload @ref="this.FileUpload" T="IBrowserFile" FilesChanged="UploadHeader" Accept=".png, .jpg, .bmp, .tiff" MaximumFileCount="1">
+                <MudFileUpload T="IBrowserFile" FilesChanged="UploadHeader" Accept=".png, .jpg, .bmp, .tiff" MaximumFileCount="1">
                     <CustomContent>
                         <div class="btn-group mt-2 w-100">
                             <button class="btn btn-light w-100" @onclick="context.OpenFilePickerAsync">

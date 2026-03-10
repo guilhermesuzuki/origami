@@ -1,12 +1,15 @@
 ﻿@inherits BasicFormFull<OrigamiBackup>
 
-<MudFileUpload @ref="this.FileUpload" T="IBrowserFile" FilesChanged="UploadBackup" Accept=".zip" MaximumFileCount="1" Class="d-none"></MudFileUpload>
-<div class="btn-group @Class">
-    <button class="btn btn-danger text-white" title="@Text.Lower("Restore files and database from a zip file")" disabled="@this.DisableTheRestoreZipButton" @onclick="PickBackup">
-        <i class="bi bi-database-fill-exclamation"></i>
-        <span>@Text.Lower("Restore from a zip file")</span>
-    </button>
-</div>
+<MudFileUpload T="IBrowserFile" FilesChanged="UploadBackup" Accept=".zip" MaximumFileCount="1" Class="d-inline-block">
+    <CustomContent>
+        <div class="btn-group @Class">
+            <button class="btn btn-danger text-white" title="@Text.Lower("Restore files and database from a zip file")" disabled="@this.DisableTheRestoreZipButton" @onclick="context.OpenFilePickerAsync">
+                <i class="bi bi-database-fill-exclamation"></i>
+                <span>@Text.Lower("Restore from a zip file")</span>
+            </button>
+        </div>
+    </CustomContent>
+</MudFileUpload>
 @if (this.FileUploading)
 {
     <div class="position-fixed popup-container">
@@ -28,15 +31,6 @@
 }
 @code {
     [Parameter] public bool DisableTheRestoreZipButton { get; set; } = false;
-
-    private async Task PickBackup()
-    {
-        if (FileUpload != null)
-        {
-            FileUploadingToken = new();
-            await FileUpload.OpenFilePickerAsync();
-        }
-    }
 
     private async Task UploadBackup(IBrowserFile file)
     {

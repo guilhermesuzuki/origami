@@ -30,11 +30,6 @@ namespace Origami.UI
         protected bool FileManagerForVideos;
 
         /// <summary>
-        /// Component for file uploading (occasionally Header images, etc.)
-        /// </summary>
-        protected MudFileUpload<IBrowserFile>? FileUpload;
-
-        /// <summary>
         /// Indicates whether a file upload operation is currently in progress.
         /// </summary>
         /// <remarks>This field is intended for use within derived classes to track the state of file
@@ -50,11 +45,6 @@ namespace Origami.UI
         /// This <see cref="CancellationTokenSource"/> is used to control the process of uploading a video
         /// </summary>
         protected CancellationTokenSource FileUploadingToken = new();
-
-        /// <summary>
-        /// Component for video uploading
-        /// </summary>
-        protected MudFileUpload<IBrowserFile>? VideoUpload;
 
         [Parameter] public EventCallback<T> Cancelled { get; set; }
         [Parameter] public EventCallback<T> Created { get; set; }
@@ -73,18 +63,6 @@ namespace Origami.UI
                     return Super.Users.ReadFromCache().Id(author.AuthorId) ?? new();
                 }
                 return new();
-            }
-        }
-
-        /// <summary>
-        /// Rules for disabling the Cancel button
-        /// </summary>
-        protected virtual bool DisableTheCancelButton
-        {
-            get
-            {
-                if (Entity is INew { New: false }) return false;
-                return true;
             }
         }
 
@@ -270,31 +248,6 @@ namespace Origami.UI
             base.OnParametersSet();
             Entity.SetAuthor(UserFacade.User);
             Entity.SetBlog(GetBlogFromUserFacade());
-        }
-
-        /// <summary>
-        /// Picks a file, using <see cref="FileUpload"/>
-        /// </summary>
-        /// <returns></returns>
-        protected async Task PickFile()
-        {
-            if (FileUpload != null)
-            {
-                await FileUpload.OpenFilePickerAsync();
-            }
-        }
-
-        /// <summary>
-        /// Picks a video, using <see cref="VideoUpload"/>
-        /// </summary>
-        /// <returns></returns>
-        protected async Task PickVideo()
-        {
-            if (VideoUpload != null)
-            {
-                FileUploadingToken = new();
-                await VideoUpload.OpenFilePickerAsync();
-            }
         }
 
         /// <summary>
