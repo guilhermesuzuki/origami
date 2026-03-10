@@ -418,10 +418,10 @@ namespace Origami.UI
             app.UseAuthentication();
             app.UseForwardedHeaders();
 
-            var supportedCultures = new[] { "en-US", "pt-BR", "ja-JP", "es-ES" };
+            var supportedCultures = OrigamiConstants.AllLanguages().Select(x => x.Name).ToArray();
             var localizationOptions = new RequestLocalizationOptions()
-                .SetDefaultCulture(supportedCultures[0])
-                .AddSupportedCultures(supportedCultures[0])
+                .SetDefaultCulture("en-US")
+                .AddSupportedCultures("en-US")
                 .AddSupportedUICultures(supportedCultures);
 
             app.UseRequestLocalization(localizationOptions);

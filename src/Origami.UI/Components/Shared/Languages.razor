@@ -1,0 +1,26 @@
+﻿@inherits Basic
+
+<MudSelect T="string" @bind-Value:get="@CultureInfo.CurrentUICulture.Name" @bind-Value:set="SetLanguage" Modal="true" Adornment="Adornment.None">
+    @foreach (var cinfo in OrigamiConstants.AllLanguages())
+    {
+        <MudSelectItem Value="@cinfo.Name">
+            <div class="d-inline-flex align-items-center language">
+                <span class="flag flag-@cinfo.Name.ToLower()"></span>
+                <span>@cinfo.DisplayName</span>
+            </div>
+        </MudSelectItem>
+    }
+</MudSelect>
+
+@code {
+    protected override async Task<Core.Models.Result> SetLanguage(string language)
+    {
+        var hub = await base.SetLanguage(language);
+        if (hub.Ok)
+        {
+            this.NavigationManager.Refresh(true);
+        }
+        this.UserFacade.Result = hub;
+        return hub;
+    }
+}

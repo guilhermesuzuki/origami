@@ -65,25 +65,20 @@ namespace Origami.Core
         public static IEnumerable<CultureInfo> AllLanguages()
         {
             return [
-                new CultureInfo("pt"),
-                new CultureInfo("pt-BR"),
-                new CultureInfo("pt-PT"),
-                new CultureInfo("en"),
+                new CultureInfo("de-DE"),
+                new CultureInfo("en-CA"),
                 new CultureInfo("en-UK"),
                 new CultureInfo("en-US"),
-                new CultureInfo("en-CA"),
-                new CultureInfo("es"),
                 new CultureInfo("es-ES"),
-                new CultureInfo("fr"),
-                new CultureInfo("fr-FR"),
                 new CultureInfo("fr-CA"),
-                new CultureInfo("de"),
-                new CultureInfo("de-DE"),
-                new CultureInfo("zh-Hans"),
-                new CultureInfo("zh-Hant"),
+                new CultureInfo("fr-FR"),
+                new CultureInfo("hi-IN"),
                 new CultureInfo("ja-JP"),
                 new CultureInfo("ko-KR"),
-                new CultureInfo("hi-IN"),
+                new CultureInfo("pt-BR"),
+                new CultureInfo("pt-PT"),
+                new CultureInfo("zh-Hans"),
+                new CultureInfo("zh-Hant"),
                 ];
         }
 
