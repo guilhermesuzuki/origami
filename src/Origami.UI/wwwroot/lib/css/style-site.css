@@ -75,8 +75,6 @@ main { flex: 1; }
 
 .embed-iframe iframe { min-height: 500px; }
 
-.mud-list-item-text .language { color: var(--mud-palette-black) !important; }
-
 @media (max-width: 576px) {
     html body .footer { display:block!important; }
     html body .footer > * { display: block !important; margin: 0px !important; margin-bottom:10px!important; }
