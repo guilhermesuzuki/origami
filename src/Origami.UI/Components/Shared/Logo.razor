@@ -7,25 +7,8 @@
 @implements IBlogId
 @inject ISettingsRepository _settingsRepository
 
-@{
-    var blog = this.Super.Blogs.ReadFromCache().Id(this.BlogId);
-}
 <div class="m-auto wrapper">
     <div class="@Class logo cursor-pointer position-relative" style="z-index:25;" @onclick="GoHome">
-        @* <ul class="inline-list text-center m-auto" style="max-width: 200px;z-index:50;">
-            <li class="pt-BR">
-                <div class="language pt-BR m-auto" style="height:35px;width:35px;" @onclick="this._OnPtBr" @onclick:stopPropagation="true"></div>
-            </li>
-            <li class="en-US">
-                <div class="language en-US m-auto" style="height:35px;width:35px;" @onclick="this._OnEnUs" @onclick:stopPropagation="true"></div>
-            </li>
-            <li class="ja-JP">
-                <div class="language ja-JP m-auto" style="height:35px;width:35px;" @onclick="this._OnJaJp" @onclick:stopPropagation="true"></div>
-            </li>
-            <li class="es-ES">
-                <div class="language es-ES m-auto" style="height:35px;width:35px;" @onclick="this._OnEsEs" @onclick:stopPropagation="true"></div>
-            </li>
-        </ul> *@
         <Languages></Languages>
         @if (this._blogSettings.LogoUrl.Has() == true)
         {
@@ -48,32 +31,8 @@
 @code {
     private OrigamiSettings _blogSettings = new();
 
-    [Parameter] public Guid BlogId { get; set; }
+    [Parameter] public new Guid BlogId { get; set; }
     [Parameter] public RenderFragment? SubtitleTemplate { get; set; }
-
-    private async Task _OnEnUs()
-    {
-        await this.SetLanguage("en-US");
-        NavigationManager.NavigateTo(NavigationManager.Uri.NoLanguage(), true);
-    }
-
-    private async Task _OnEsEs()
-    {
-        await this.SetLanguage("es-ES");
-        NavigationManager.NavigateTo(NavigationManager.Uri.NoLanguage(), true);
-    }
-
-    private async Task _OnJaJp()
-    {
-        await this.SetLanguage("ja-JP");
-        NavigationManager.NavigateTo(NavigationManager.Uri.NoLanguage(), true);
-    }
-
-    private async Task _OnPtBr()
-    {
-        await this.SetLanguage("pt-BR");
-        NavigationManager.NavigateTo(NavigationManager.Uri.NoLanguage(), true);
-    }
 
     private void GoHome()
     {

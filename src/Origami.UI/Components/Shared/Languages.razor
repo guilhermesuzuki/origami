@@ -4,14 +4,13 @@
     @foreach (var cinfo in OrigamiConstants.AllLanguages())
     {
         <MudSelectItem Value="@cinfo.Name">
-            <div class="d-inline-flex align-items-center language">
+            <div class="d-inline-flex align-items-center language text-white">
                 <span class="flag flag-@cinfo.Name.ToLower()"></span>
                 <span>@cinfo.DisplayName</span>
             </div>
         </MudSelectItem>
     }
 </MudSelect>
-
 @code {
     protected override async Task<Core.Models.Result> SetLanguage(string language)
     {
