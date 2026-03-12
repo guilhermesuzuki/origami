@@ -64,10 +64,13 @@
                                 <CellTemplate>
                                     @if (context.Item != null)
                                     {
-                                        var userRoles = this.Super.UserRoles.ReadFromCache().Where(x => x.UserId == context.Item.Id).ToList();
-                                        @foreach (var userRole in userRoles)
+                                        var query = from ur in this.Super.UserRoles.ReadFromCache()
+                                                    join ro in this.Super.Roles.ReadFromCache() on ur.RoleId equals ro.Id
+                                                    where ur.UserId == context.Item.Id
+                                                    orderby ro.Name
+                                                    select ro;
+                                        @foreach (var role in query)
                                         {
-                                            var role = this.Super.Roles.ReadFromCache().NonDeleted().FirstOrDefault(x => x.Id == userRole.RoleId);
                                             <RoleHeaderLite Class="shadow-sm mb-1 border p-2" Entity="role"></RoleHeaderLite>
                                         }
                                     }
