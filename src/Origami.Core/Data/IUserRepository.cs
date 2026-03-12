@@ -55,7 +55,7 @@ namespace Origami.Core.Data
         /// <param name="username"></param>
         /// <param name="cleanPassword"></param>
         /// <returns></returns>
-        OrigamiUser? LookupUserInDatabase(OrigamiBlog blog, string username, string cleanPassword);
+        OrigamiUser? LookupUserInDatabase(string username, string cleanPassword);
 
         /// <summary>
         /// Unblocks a user in the specified data operation context.

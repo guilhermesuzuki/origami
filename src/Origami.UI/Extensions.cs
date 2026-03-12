@@ -135,6 +135,7 @@ namespace Origami.UI
             builder.Services.AddTransient<ITagRepository, TagRepository>();
             builder.Services.AddTransient<ITrashRepository, TrashRepository>();
             builder.Services.AddTransient<IUserActivityRepository, UserActivityRepository>();
+            builder.Services.AddTransient<IUserBlogRepository, UserBlogRepository>();
             builder.Services.AddTransient<IUserContentRepository, UserContentRepository>();
             builder.Services.AddTransient<IUserPasswordResetRepository, UserPasswordResetRepository>();
             builder.Services.AddTransient<IUserRepository, UserRepository>();

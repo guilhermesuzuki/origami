@@ -125,7 +125,7 @@
         var blog = this.Super.Blogs.ReadFromCache().Id(this.UserFacade.BlogId);
         if (blog != null)
         {
-            var user = this.Super.Users.LookupUserInDatabase(blog, _username, _password);
+            var user = this.Super.Users.LookupUserInDatabase(_username, _password);
             if (user != null)
             {
                 this.UserFacade.User = user;

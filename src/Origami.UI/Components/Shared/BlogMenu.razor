@@ -189,8 +189,6 @@
 </div>
 
 @code {
-    [Parameter] public Guid BlogId { get; set; }
-
     private OrigamiBlog _blog = new();
     private IEnumerable<OrigamiCategory> _categories = [];
     private IEnumerable<OrigamiPage> _pages = [];

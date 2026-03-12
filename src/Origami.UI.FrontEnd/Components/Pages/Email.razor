@@ -11,16 +11,8 @@
         var user = this.Super.Users.ReadFromCache().FirstOrDefault(x => x.Id == pwd.UserId);
         if (user != null)
         {
-            var blog = this.Super.Blogs.ReadFromCache().Id(user.BlogId);
             var link = this.NavigationManager.BaseUri.TrimEnd('/') + "/password/reset/" + Key1;
-            <div>
-                <div style="display: inline-block; width:50%;">
-                    <BlogHeaderLite2 Entity="blog"></BlogHeaderLite2>
-                </div>
-                <div style="display: inline-block; width:50%;">
-                    <UserHeaderLite2 Entity="user"></UserHeaderLite2>
-                </div>
-            </div>
+            <UserHeaderLite2 Entity="user"></UserHeaderLite2>
             <div>
                 <h1>@Text.Original("Password Reset")</h1>
                 <p>@Text.Original("You asked for a password reset and here's the link to paste in your browser: {0}", link)</p>

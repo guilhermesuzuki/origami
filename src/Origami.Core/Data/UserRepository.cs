@@ -67,7 +67,7 @@ namespace Origami.Core.Data
             return this.SmartUpdate(ctx, false);
         }
 
-        public Result<OrigamiUser> ChangePassword(DataOperationContext<OrigamiUser> ctx, string oldPassword, string newPassword, string newPassword2)
+        public Result<OrigamiUser> ChangePassword(DataOperationContext<OrigamiUser> ctx, string oldPassword, string newPassword1, string newPassword2)
         {
             // this is necessary because of ReadFromDatabase
             var hash = oldPassword.SHA256Hash();
@@ -78,15 +78,15 @@ namespace Origami.Core.Data
                 .FirstOrDefault();
 
             if (user == null) return new() { ErrorMessage = Text.Original("Username and current password do NOT exist in the database") };
-            if (newPassword != newPassword2) return new() { ErrorMessage = Text.Original("New passwords do NOT match, they differ from each other") };
-            if (oldPassword == newPassword) return new() { ErrorMessage = Text.Original("You did NOT change passwords, current and new are the same") };
+            if (newPassword1 != newPassword2) return new() { ErrorMessage = Text.Original("New passwords do NOT match, they differ from each other") };
+            if (oldPassword == newPassword1) return new() { ErrorMessage = Text.Original("You did NOT change passwords, current and new are the same") };
 
-            var result = new Result<OrigamiUser>(user).Pull(newPassword.IsPasswordStrong());
+            var result = new Result<OrigamiUser>(user).Pull(newPassword1.IsPasswordStrong());
             if (result.Ok == false) return result;
 
             // sets the new password
             user.MustChangePassword = false;
-            user.Password = newPassword.SHA256Hash();
+            user.Password = newPassword1.SHA256Hash();
 
             var userContext = new DataOperationContext<OrigamiUser>(ctx.User, ctx.DateTime, user);
             if (result.Ok == true) base.SmartUpdate(userContext, false).Push(result);
@@ -137,7 +137,7 @@ namespace Origami.Core.Data
             return new(password) { RowsAffected = row };
         }
 
-        public OrigamiUser? LookupUserInDatabase(OrigamiBlog blog, string username, string cleanPassword)
+        public OrigamiUser? LookupUserInDatabase(string username, string cleanPassword)
         {
             username = username.ToLower().Trim();
             var hash = cleanPassword.SHA256Hash();
@@ -145,7 +145,6 @@ namespace Origami.Core.Data
             var query = from x in ReadFromDatabase().NonDeleted()
                         where x.IsDeleted == false
                         where x.IsBlocked == false
-                        where x.BlogId == blog.Id
                         where x.Username.ToLower() == username
                         where x.Password == hash
                         select x;

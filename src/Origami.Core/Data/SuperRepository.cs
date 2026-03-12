@@ -41,6 +41,7 @@ namespace Origami.Core.Data
             ITagRepository tagRepository,
             ITrashRepository trashRepository,
             IUserActivityRepository userActivityRepository,
+            IUserBlogRepository userBlogRepository,
             IUserContentRepository userContentRepository,
             IUserPasswordResetRepository userPasswordResetRepository,
             IUserRepository userRepository,
@@ -89,6 +90,7 @@ namespace Origami.Core.Data
             Tags = tagRepository;
             Trashes = trashRepository;
             UserActivities = userActivityRepository;
+            UserBlogs = userBlogRepository;
             UserContents = userContentRepository;
             UserPasswordResets = userPasswordResetRepository;
             UserRoles = userRoleRepository;
@@ -137,6 +139,7 @@ namespace Origami.Core.Data
         public ITagRepository Tags { get; }
         public ITrashRepository Trashes { get; }
         public IUserActivityRepository UserActivities { get; }
+        public IUserBlogRepository UserBlogs { get; }
         public IUserContentRepository UserContents { get; }
         public IUserPasswordResetRepository UserPasswordResets { get; }
         public IUserRoleRepository UserRoles { get; }
@@ -151,6 +154,7 @@ namespace Origami.Core.Data
         public IVideoTagRepository VideoTags { get; }
         public IVideoViewRepository VideoViews { get; }
         public IWhatToSeeNextRepository WhatToSeeNext { get; }
+
         public bool EmptyHome(Guid blogId)
         {
             if (Pages.ReadFromCache().FrontPage(blogId) != null) return false;
@@ -433,6 +437,7 @@ namespace Origami.Core.Data
                 Tags.RefreshCache();
                 UserPasswordResets.RefreshCache();
                 Users.RefreshCache();
+                UserBlogs.RefreshCache();
                 VideoCategories.RefreshCache();
                 VideoCommentReactions.RefreshCache();
                 VideoComments.RefreshCache();

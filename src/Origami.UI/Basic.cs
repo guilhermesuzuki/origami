@@ -17,13 +17,13 @@ namespace Origami.UI
         IClass,
         IId
     {
-        public virtual Guid BlogId => Guid.Empty;
+        [Parameter] public virtual Guid BlogId { get; set; }
         [Parameter] public virtual string Class { get; set; } = string.Empty;
 
         /// <summary>
         /// Identifier for this instance.
         /// </summary>
-        public virtual Guid Id { get; set; } = Guid.Empty;
+        [Parameter] public virtual Guid Id { get; set; } = Guid.Empty;
 
         [Inject] protected IAppFacade AppFacade { get; set; } = null!;
         [Inject] protected IConfiguration Configuration { get; set; } = null!;

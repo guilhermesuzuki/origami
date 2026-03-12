@@ -16,13 +16,19 @@
     }
 </MudSelect>
 
-@code {
+    @code {
     [Parameter] public bool Disabled { get; set; }
 
     [Parameter] public string Style { get; set; } = string.Empty;
 
     private IEnumerable<OrigamiBlog> _getBlogs()
     {
-        return this.Super.Blogs.ReadFromCache().NonDeleted().OrderBy(x => x.Name);
+        var blogs = from ub in this.Super.UserBlogs.ReadFromCache()
+                    join b in this.Super.Blogs.ReadFromCache() on ub.BlogId equals b.Id
+                    where b.IsDeleted == false
+                    where ub.UserId == this.UserFacade.User.Id
+                    select b;
+
+        return blogs;
     }
 }

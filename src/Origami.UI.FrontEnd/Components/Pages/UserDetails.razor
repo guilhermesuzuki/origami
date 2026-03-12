@@ -168,7 +168,7 @@
     }
 </Root>
 
-    @code {
+@code {
     [Parameter] public Guid UserId { get; set; } = Guid.Empty;
 
     /// <summary>
@@ -198,7 +198,7 @@
         var orderBy = orders.ToString();
 
         //pulls information from cache
-        var result = _pages.ReadFromCache().Published().Query(
+        var result = this.Super.Pages.ReadFromCache().Published().Query(
             state.PageSize,
             state.Page * state.PageSize,
             filters.ToString(),
@@ -235,7 +235,7 @@
         var orderBy = orders.ToString();
 
         //pulls information from cache
-        var result = _posts.ReadFromCache().Published().Query(
+        var result = this.Super.Posts.ReadFromCache().Published().Query(
             state.PageSize,
             state.Page * state.PageSize,
             filters.ToString(),
@@ -272,7 +272,7 @@
         var orderBy = orders.ToString();
 
         //pulls information from cache
-        var result = _videos.ReadFromCache().Published().Query(
+        var result = this.Super.Videos.ReadFromCache().Published().Query(
             state.PageSize,
             state.Page * state.PageSize,
             filters.ToString(),
@@ -286,6 +286,4 @@
     {
         return this.Super.Users.ReadFromCache().Id(this.UserId) ?? new();
     }
-
-    public override Guid BlogId => this.GetUser().BlogId;
 }

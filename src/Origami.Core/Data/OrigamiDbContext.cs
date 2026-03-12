@@ -232,6 +232,11 @@ namespace Origami.Core.Data
         public DbSet<OrigamiUserActivity> UserActivities { get; set; }
 
         /// <summary>
+        /// User blogs
+        /// </summary>
+        public DbSet<OrigamiUserBlog> UserBlogs { get; set; }
+
+        /// <summary>
         /// User password resets
         /// </summary>
         public DbSet<OrigamiUserPasswordReset> UserPasswordResets { get; set; }
@@ -240,11 +245,11 @@ namespace Origami.Core.Data
         /// User Roles
         /// </summary>
         public DbSet<OrigamiUserRole> UserRoles { get; set; }
+
         /// <summary>
         /// Users
         /// </summary>
         public DbSet<OrigamiUser> Users { get; set; }
-
         /// <summary>
         /// User Trashes
         /// </summary>
@@ -511,12 +516,6 @@ namespace Origami.Core.Data
                 .HasForeignKey(x => x.RoleId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<OrigamiRole>()
-                .HasOne<OrigamiBlog>()
-                .WithMany()
-                .HasForeignKey(x => x.BlogId)
-                .OnDelete(DeleteBehavior.Restrict);
-
             modelBuilder.Entity<OrigamiPostCommentReaction>().Property(c => c.Reaction).UseCollation("Latin1_General_BIN2");
             modelBuilder.Entity<OrigamiVideoCommentReaction>().Property(c => c.Reaction).UseCollation("Latin1_General_BIN2");
             modelBuilder.Entity<OrigamiPhysicalPageReaction>().Property(c => c.Reaction).UseCollation("Latin1_General_BIN2");
@@ -554,6 +553,18 @@ namespace Origami.Core.Data
                 .HasDiscriminator<bool>("Backup")
                 .HasValue<OrigamiBackup>(true)
                 .HasValue<OrigamiBackupRestore>(false);
+
+            modelBuilder.Entity<OrigamiUserBlog>()
+                .HasOne<OrigamiBlog>()
+                .WithMany()
+                .HasForeignKey(x => x.BlogId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<OrigamiUserBlog>()
+                .HasOne<OrigamiUser>()
+                .WithMany()
+                .HasForeignKey(x => x.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

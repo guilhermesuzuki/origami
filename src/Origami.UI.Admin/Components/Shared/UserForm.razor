@@ -168,7 +168,7 @@
                     <i class="fa-solid fa-id-badge"></i>
                     @Text.Lower("Roles")
                 </div>
-                <MudDataGrid T="OrigamiRole" Class="border mt-3" Items="this.Super.Roles.ReadFromCache().Blog(this.Entity.BlogId).NonDeleted().OrderBy(x => x.Name)" SortMode="SortMode.None" Filterable="false">
+                <MudDataGrid T="OrigamiRole" Class="border mt-3" Items="this.Super.Roles.ReadFromCache().NonDeleted().OrderBy(x => x.Name)" SortMode="SortMode.None" Filterable="false">
                     <Columns>
                         <TemplateColumn>
                             <CellTemplate>
@@ -457,9 +457,6 @@
         this.Entity.DisplayName = this.Entity.DisplayName.Trim();
         this.Entity.FirstName = this.Entity.FirstName.Trim();
         this.Entity.LastName = this.Entity.LastName.Trim();
-
-        //sets the FK Blog (or the save process will fail)
-        if (this.Entity.BlogId == Guid.Empty) this.Entity.BlogId = this.GetBlogFromUserFacade().Id;
 
         return result;
     }

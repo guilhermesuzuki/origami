@@ -9,7 +9,6 @@ namespace Origami.Core.Models
     public class OrigamiRole :
         IChanged,
         IId,
-        IBlogId,
         IName,
         IVersion,
         INew,
@@ -17,7 +16,6 @@ namespace Origami.Core.Models
         IDateCreated,
         IDateModified
     {
-        private Guid _blogId;
         private DateTime _dateCreated;
         private DateTime? _dateModified;
         private Guid _id = Guid.NewGuid();
@@ -32,12 +30,6 @@ namespace Origami.Core.Models
         }
 
         public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) => { };
-
-        public Guid BlogId
-        {
-            get { return _blogId; }
-            set { this.Set(ref _blogId, value, Changed); }
-        }
 
         public DateTime DateCreated
         {
@@ -1204,7 +1196,7 @@ namespace Origami.Core.Models
 
         public static OrigamiRole GetSystemRole<T>(Guid blogId) where T : Attribute
         {
-            var role = new OrigamiRole { BlogId = blogId, IsSystemRole = true };
+            var role = new OrigamiRole { IsSystemRole = true };
 
             role.Name = typeof(T).Name switch
             {

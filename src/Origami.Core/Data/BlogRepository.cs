@@ -247,16 +247,12 @@ namespace Origami.Core.Data
             var pages = _pageRepository.ReadFromCache().Blog(entity.Id).ToList();
             var pingServices = _pingServiceRepository.ReadFromCache().Blog(entity.Id).ToList();
             var posts = _postRepository.ReadFromCache().Blog(entity.Id).ToList();
-            var roles = _roleRepository.ReadFromCache().Blog(entity.Id).ToList();
-            var users = _userRepository.ReadFromCache().Blog(entity.Id).ToList();
             var videos = _videoRepository.ReadFromCache().Blog(entity.Id).ToList();
 
             categories.Each(_categoryRepository.PurgeCache);
             pages.Each(_pageRepository.PurgeCache);
             pingServices.Each(_pingServiceRepository.PurgeCache);
             posts.Each(_postRepository.PurgeCache);
-            roles.Each(_roleRepository.PurgeCache);
-            users.Each(_userRepository.PurgeCache);
             videos.Each(_videoRepository.PurgeCache);
         }
 
@@ -268,16 +264,12 @@ namespace Origami.Core.Data
             var pages = _pageRepository.ReadFromDatabase().Blog(ctx.Entity.Id).ToList();
             var pingServices = _pingServiceRepository.ReadFromDatabase().Blog(ctx.Entity.Id).ToList();
             var posts = _postRepository.ReadFromDatabase().Blog(ctx.Entity.Id).ToList();
-            var roles = _roleRepository.ReadFromDatabase().Blog(ctx.Entity.Id).ToList();
-            var users = _userRepository.ReadFromDatabase().Blog(ctx.Entity.Id).ToList();
             var videos = _videoRepository.ReadFromDatabase().Blog(ctx.Entity.Id).ToList();
 
             categories.GetContexts(ctx).Call(_categoryRepository.SmartPurge, false).Push(hub);
             pages.GetContexts(ctx).Call(_pageRepository.SmartPurge, false).Push(hub);
             pingServices.GetContexts(ctx).Call(_pingServiceRepository.SmartPurge, false).Push(hub);
             posts.GetContexts(ctx).Call(_postRepository.SmartPurge, false).Push(hub);
-            roles.GetContexts(ctx).Call(_roleRepository.SmartPurge, false).Push(hub);
-            users.GetContexts(ctx).Call(_userRepository.SmartPurge, false).Push(hub);
             videos.GetContexts(ctx).Call(_videoRepository.SmartPurge, false).Push(hub);
 
             using (var db = DbContextFactory.CreateDbContext())

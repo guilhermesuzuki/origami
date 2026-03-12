@@ -10,7 +10,6 @@ namespace Origami.Core.Models
         BaseModel,
         IModel,
         IChanged,
-        IFKBlog,
         IDeleted,
         IDateCreated,
         IDateModified,
@@ -33,8 +32,6 @@ namespace Origami.Core.Models
         public static OrigamiUser AnonymousUser = new() { Id = Guid.Empty };
 
         protected string? _additionalInfo = string.Empty;
-        protected OrigamiBlog? _blog;
-        protected Guid _blogId;
         protected DateTime? _dateBlocked;
         protected DateTime _dateCreated = DateTime.UtcNow;
         protected DateTime? _dateModified;
@@ -59,19 +56,6 @@ namespace Origami.Core.Models
         {
             get => _additionalInfo;
             set => this.Set(ref _additionalInfo, value, Changed);
-        }
-
-        [ForeignKey(nameof(BlogId))]
-        public OrigamiBlog? Blog
-        {
-            get => _blog;
-            set => this.Set(ref _blog, value, Changed);
-        }
-
-        public Guid BlogId
-        {
-            get => _blogId;
-            set => this.Set(ref _blogId, value, Changed);
         }
 
         public DateTime? DateBlocked
