@@ -17,7 +17,6 @@
 <div class="login-wrapper mt-3">
     @if (this._mustChangePassword == false)
     {
-        <BlogSelect></BlogSelect>
         <ul class="inline-list mt-3">
             <li>
                 <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("Username")" @bind-Value="_username" OnKeyUp="this._onLogin"></MudTextField>
