@@ -36,10 +36,6 @@
 
 @code {
     private OrigamiBlog _blog => this.GetBlogFromSlug();
-
-    protected override Task OnAfterRenderAsync(bool firstRender)
-    {
-        this.PageTitle.SetTitle(Text.Get("Categories"));
-        return base.OnAfterRenderAsync(firstRender);
-    }
+    protected override void SetPageTitle() => this.PageTitle.SetTitle(Text.Get("Categories"));
+}
 }

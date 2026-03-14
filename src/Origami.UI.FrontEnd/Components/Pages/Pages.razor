@@ -15,4 +15,9 @@
         base.OnParametersSet();
         this.BlogId = this.GetBlogFromSlug().Id;
     }
+
+    protected override void SetPageTitle()
+    {
+        this.PageTitle.SetTitle(Text.Get("Pages"));
+    }
 }

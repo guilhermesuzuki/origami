@@ -33,7 +33,6 @@
 
 @code {
     private OrigamiBlog _blog => this.GetBlogFromSlug();
-    private IEnumerable<OrigamiBlog> _blogs = [];
 
     protected override void OnParametersSet()
     {
@@ -41,9 +40,8 @@
         this.BlogId = this._blog.Id;
     }
 
-    protected override Task OnAfterRenderAsync(bool firstRender)
+    protected override void SetPageTitle()
     {
         this.PageTitle.SetTitle(Text.Original("Tags"));
-        return base.OnAfterRenderAsync(firstRender);
     }
 }

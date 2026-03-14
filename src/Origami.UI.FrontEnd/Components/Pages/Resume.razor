@@ -227,9 +227,8 @@
         return "100%";
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override void SetPageTitle()
     {
-        this.PageTitle.SetTitle(Text.Original("Resume"));
-        await base.OnAfterRenderAsync(firstRender);
+        this.PageTitle.SetTitle(Text.Original("Résumé"));
     }
 }

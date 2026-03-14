@@ -122,9 +122,8 @@
         if (this.ContentNanoId.Has() == true) this.Entity = Items.NanoId(this.ContentNanoId);
     }
 
-    protected override Task OnAfterRenderAsync(bool firstRender)
+    protected override void SetPageTitle()
     {
         this.PageTitle.SetTitle(this.GetCategory(), this.Entity);
-        return base.OnAfterRenderAsync(firstRender);
     }
 }

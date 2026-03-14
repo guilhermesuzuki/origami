@@ -7,4 +7,9 @@
 
 @code {
     [Parameter] public int Page { get; set; } = 1;
+
+    protected override void SetPageTitle()
+    {
+        this.PageTitle.SetTitle(Text.Get("Special pages"));
+    }
 }

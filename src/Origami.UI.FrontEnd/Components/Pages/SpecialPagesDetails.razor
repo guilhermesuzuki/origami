@@ -24,7 +24,7 @@
     }
 </Root>
 
-@code {
+    @code {
     [Parameter] public string NanoId { get; set; } = string.Empty;
     [Parameter] public Core.Models.OrigamiSpecialPage? Page { get; set; }
 
@@ -49,9 +49,8 @@
         }
     }
 
-    protected override Task OnAfterRenderAsync(bool firstRender)
+    protected override void SetPageTitle()
     {
         this.PageTitle.SetTitle(this._page);
-        return base.OnAfterRenderAsync(firstRender);
     }
 }

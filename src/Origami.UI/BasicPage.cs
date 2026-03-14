@@ -72,6 +72,7 @@ namespace Origami.UI
 
         protected virtual async Task PageTitleAsync(bool firstRender)
         {
+            this.SetPageTitle();
             var title = PageTitle.GetTitle();
             await JSRuntime.InvokeVoidAsync("origami.common.title", title);
         }
@@ -86,6 +87,11 @@ namespace Origami.UI
                     await JSRuntime.InvokeVoidAsync("origami.physicalpages.viewByPath", uri.AbsolutePath);
                 }
             }
+        }
+
+        protected virtual void SetPageTitle()
+        {
+            this.PageTitle.SetTitle();
         }
     }
 }

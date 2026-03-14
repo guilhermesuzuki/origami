@@ -24,12 +24,6 @@
     protected int PostPage { get; set; } = 1;
     protected int VideoPage { get; set; } = 1;
 
-    protected override Task OnAfterRenderAsync(bool firstRender)
-    {
-        this.PageTitle.SetTitle();
-        return base.OnAfterRenderAsync(firstRender);
-    }
-
     protected override void OnParametersSet()
     {
         base.OnParametersSet();

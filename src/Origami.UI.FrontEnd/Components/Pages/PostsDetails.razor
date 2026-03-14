@@ -128,7 +128,7 @@
     }
 </Root>
 
-@code {
+    @code {
     [Parameter] public OrigamiTag? Tag { get; set; }
     [Parameter] public OrigamiCategory? Category { get; set; }
     [Parameter] public OrigamiPost? Post { get; set; }
@@ -211,9 +211,8 @@
         }
     }
 
-    protected override Task OnAfterRenderAsync(bool firstRender)
+    protected override void SetPageTitle()
     {
         this.PageTitle.SetTitle(Tag, Category, _post);
-        return base.OnAfterRenderAsync(firstRender);
     }
 }
