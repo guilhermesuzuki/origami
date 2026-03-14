@@ -18,8 +18,9 @@ namespace Origami.UI
         IId,
         IBlogId
     {
-        [Parameter] public virtual Guid BlogId { get; set; }
-        [Parameter] public virtual string Class { get; set; } = string.Empty;
+        [Parameter] public Guid BlogId { get; set; }
+        [Parameter] public string BlogSlug { get; set; } = string.Empty;
+        [Parameter] public string Class { get; set; } = string.Empty;
 
         /// <summary>
         /// Identifier for this instance.
@@ -37,6 +38,11 @@ namespace Origami.UI
         [Inject] protected Text Text { get; set; } = null!;
         [Inject] protected IUserFacade UserFacade { get; set; } = null!;
         [Inject] protected IWebRootPath WebRootPath { get; set; } = null!;
+
+        public OrigamiBlog GetBlogFromSlug()
+        {
+            return Super.Blogs.ReadFromCache().Slug(BlogSlug) ?? Super.Blogs.GetPrimary();
+        }
 
         public OrigamiBlog GetBlogFromUserFacade()
         {
