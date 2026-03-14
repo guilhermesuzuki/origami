@@ -15,7 +15,8 @@ namespace Origami.UI
     public abstract class Basic :
         ComponentBase,
         IClass,
-        IId
+        IId,
+        IBlogId
     {
         [Parameter] public virtual Guid BlogId { get; set; }
         [Parameter] public virtual string Class { get; set; } = string.Empty;
