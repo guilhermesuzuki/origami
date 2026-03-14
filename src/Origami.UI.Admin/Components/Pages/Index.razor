@@ -136,7 +136,7 @@
                             <div class="p-3 border-bottom bg-light bg-gradient fw-bold">@Text.Upper("Latest comments")</div>
                             @foreach (var comment in this.Super.GetComments(this.UserFacade.BlogId).Where(x => x.IsDeleted == false && this.Super.IsParentDeleted(x) == false).OrderByDescending(x => x.DateCreated).Take(5))
                             {
-                                <CommentLite Class="border-bottom p-3" Entity="comment"></CommentLite>
+                                <CommentLite Class="border-bottom p-3" Entity="comment" ShowParentHeader="true"></CommentLite>
                             }
                         </div>
                     </div>
