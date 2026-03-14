@@ -1,24 +1,18 @@
-﻿@page "/blogs/{Slug}/videos"
+﻿@page "/blogs/{BlogSlug}/videos"
 @inherits BasicPage
 @inject ISuperRepository _super
 
 <Root>
-    <BlogHeaderLite2 Class="text-center fs-1" Entity="this.GetBlog()" DisplayBlogNameEvenWithoutHeaderImage="false"></BlogHeaderLite2>
+    <BlogHeaderLite2 Class="text-center fs-1" Entity="this.GetBlogFromSlug()" DisplayBlogNameEvenWithoutHeaderImage="false"></BlogHeaderLite2>
     <VideoList BlogId="this.BlogId" Class="mt-3" Page="this.Page" ShowFakes="true"></VideoList>
 </Root>
 
 @code {
-    [Parameter] public string Slug { get; set; } = string.Empty;
     [Parameter] public int Page { get; set; } = 1;
-
-    /// <summary>
-    /// Blog ID based on the provided slug.
-    /// </summary>
-    private OrigamiBlog GetBlog() => _super.Blogs.ReadFromCache().Slug(Slug) ?? new();
 
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        this.BlogId = this.GetBlog().Id;
+        this.BlogId = this.GetBlogFromSlug().Id;
     }
 }
