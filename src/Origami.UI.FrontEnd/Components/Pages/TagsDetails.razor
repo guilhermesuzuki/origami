@@ -112,6 +112,7 @@
         base.OnParametersSet();
         this.LoadFromTag();
         this.LoadContent();
+        this.BlogId = this.GetBlog().Id;
     }
 
     protected void LoadFromTag()
@@ -134,6 +135,4 @@
         this.PageTitle.SetTitle(GetTag(), this.Entity);
         return base.OnAfterRenderAsync(firstRender);
     }
-
-    public override Guid BlogId => this.GetBlog().Id;
 }

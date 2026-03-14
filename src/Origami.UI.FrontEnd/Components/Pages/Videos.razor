@@ -16,5 +16,9 @@
     /// </summary>
     private OrigamiBlog GetBlog() => _super.Blogs.ReadFromCache().Slug(Slug) ?? new();
 
-    public override Guid BlogId => this.GetBlog().Id;
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        this.BlogId = this.GetBlog().Id;
+    }
 }

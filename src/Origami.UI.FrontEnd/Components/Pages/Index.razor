@@ -17,7 +17,7 @@
         <NothingToSeeHere Class="p-3 border shadow-sm" Subtitle="@Text.Lower("No content for now")"></NothingToSeeHere>
     }
 </Root>
-@code {
+    @code {
     private OrigamiBlog _blog = new();
 
     [Parameter] public string Slug { get; set; } = string.Empty;
@@ -40,7 +40,6 @@
     {
         base.OnParametersSet();
         this._blog = this.GetBlog();
+        this.BlogId = this._blog.Id;
     }
-
-    public override Guid BlogId => this._blog.Id;
 }

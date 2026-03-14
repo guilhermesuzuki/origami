@@ -78,7 +78,6 @@ namespace Origami.Core
                 new CultureInfo("pt-BR"),
                 new CultureInfo("pt-PT"),
                 new CultureInfo("zh-Hans"),
-                new CultureInfo("zh-Hant"),
                 ];
         }
 

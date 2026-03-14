@@ -173,6 +173,7 @@
         base.OnParametersSet();
         this._video = this.Video ?? this.Super.Videos.ReadFromCache().NanoId(NanoId) ?? new();
         this._comments = this.Super.VideoComments.AllComments(_video);
+        this.BlogId = this._video.BlogId;
     }
 
     private void CreateComment()
@@ -224,6 +225,4 @@
         this.PageTitle.SetTitle(Tag, Category, _video);
         return base.OnAfterRenderAsync(firstRender);
     }
-
-    public override Guid BlogId => this._video.BlogId;
 }

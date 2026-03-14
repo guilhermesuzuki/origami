@@ -164,6 +164,7 @@
         base.OnParametersSet();
         this._post = this.Post ?? this.Super.Posts.ReadFromCache().Published().NanoId(NanoId) ?? new();
         this._comments = this._postComment.AllComments(_post);
+        this.BlogId = this._post.BlogId;
     }
 
     private void CreateComment()
@@ -215,6 +216,4 @@
         this.PageTitle.SetTitle(Tag, Category, _post);
         return base.OnAfterRenderAsync(firstRender);
     }
-
-    public override Guid BlogId => this._post.BlogId;
 }

@@ -417,7 +417,6 @@ namespace Origami.Core.Data
         {
             try
             {
-                BackupAndRestores.RefreshCache();
                 Blogs.RefreshCache();
                 Settings.RefreshCache();
                 Categories.RefreshCache();
@@ -435,15 +434,20 @@ namespace Origami.Core.Data
                 SpecialPages.RefreshCache();
                 Subscribers.RefreshCache();
                 Tags.RefreshCache();
-                UserPasswordResets.RefreshCache();
-                Users.RefreshCache();
-                UserBlogs.RefreshCache();
                 VideoCategories.RefreshCache();
                 VideoCommentReactions.RefreshCache();
                 VideoComments.RefreshCache();
                 VideoRatings.RefreshCache();
                 Videos.RefreshCache();
                 VideoTags.RefreshCache();
+
+                if (this.AppFacade.Admin.GetValueOrDefault() == true)
+                {
+                    BackupAndRestores.RefreshCache();
+                    UserPasswordResets.RefreshCache();
+                    Users.RefreshCache();
+                    UserBlogs.RefreshCache();
+                }
 
                 var pageViews = PageViews.FastRead().ConfigureAwait(false).GetAwaiter().GetResult();
                 var postViews = PostViews.FastRead().ConfigureAwait(false).GetAwaiter().GetResult();

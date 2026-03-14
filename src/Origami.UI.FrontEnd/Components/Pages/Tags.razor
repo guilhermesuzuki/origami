@@ -51,6 +51,7 @@
     {
         base.OnParametersSet();
         this.LoadBlog();
+        this.BlogId = this._blog.Id;
     }
 
     protected override Task OnAfterRenderAsync(bool firstRender)
@@ -58,6 +59,4 @@
         this.PageTitle.SetTitle(Text.Original("Tags"));
         return base.OnAfterRenderAsync(firstRender);
     }
-
-    public override Guid BlogId => this._blog.Id;
 }
