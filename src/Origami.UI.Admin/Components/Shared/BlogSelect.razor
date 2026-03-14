@@ -16,8 +16,10 @@
     }
 </MudSelect>
 
-    @code {
+@code {
     [Parameter] public bool Disabled { get; set; }
+
+    [Parameter] public bool IncludeDeletedBlogs { get; set; } = false;
 
     [Parameter] public string Style { get; set; } = string.Empty;
 
@@ -25,9 +27,15 @@
     {
         var blogs = from ub in this.Super.UserBlogs.ReadFromCache()
                     join b in this.Super.Blogs.ReadFromCache() on ub.BlogId equals b.Id
-                    where b.IsDeleted == false
                     where ub.UserId == this.UserFacade.User.Id
                     select b;
+
+        if (this.IncludeDeletedBlogs == false)
+        {
+            blogs = from b in blogs
+                    where b.IsDeleted == false
+                    select b;
+        }
 
         return blogs;
     }
