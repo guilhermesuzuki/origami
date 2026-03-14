@@ -17,10 +17,9 @@
         <NothingToSeeHere Class="p-3 border shadow-sm" Subtitle="@Text.Lower("No content for now")"></NothingToSeeHere>
     }
 </Root>
-    @code {
+@code {
+    
     private OrigamiBlog _blog => this.GetBlogFromSlug();
-
-    [Parameter] public string Slug { get; set; } = string.Empty;
 
     protected int PostPage { get; set; } = 1;
     protected int VideoPage { get; set; } = 1;
