@@ -1,5 +1,5 @@
 ﻿@page "/"
-@page "/blogs/{Slug}"
+@page "/blogs/{BlogSlug}"
 @inherits BasicPage
 <Root>
     <HeadContent>
@@ -18,17 +18,12 @@
     }
 </Root>
     @code {
-    private OrigamiBlog _blog = new();
+    private OrigamiBlog _blog => this.GetBlogFromSlug();
 
     [Parameter] public string Slug { get; set; } = string.Empty;
 
     protected int PostPage { get; set; } = 1;
     protected int VideoPage { get; set; } = 1;
-
-    /// <summary>
-    /// Blog ID based on the provided slug.
-    /// </summary>
-    private OrigamiBlog GetBlog() => this.Super.Blogs.ReadFromCache().Slug(Slug) ?? this.Super.Blogs.GetPrimary();
 
     protected override Task OnAfterRenderAsync(bool firstRender)
     {
@@ -39,7 +34,6 @@
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        this._blog = this.GetBlog();
         this.BlogId = this._blog.Id;
     }
 }

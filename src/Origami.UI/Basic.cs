@@ -20,7 +20,7 @@ namespace Origami.UI
     {
         [Parameter] public Guid BlogId { get; set; }
         [Parameter] public string BlogSlug { get; set; } = string.Empty;
-        [Parameter] public string Class { get; set; } = string.Empty;
+        [Parameter] public virtual string Class { get; set; } = string.Empty;
 
         /// <summary>
         /// Identifier for this instance.
