@@ -39,8 +39,6 @@
 
     private OrigamiBlog _blog = new();
 
-    public override Guid BlogId => this._blog.Id;
-
     private void LoadBlog()
     {
         this._blog = this.Super.Blogs.ReadFromCache().NonDeleted().Active().Slug(this.Slug) ?? new();
@@ -50,6 +48,7 @@
     {
         base.OnParametersSet();
         this.LoadBlog();
+        this.BlogId = this._blog.Id;
     }
 
     protected override Task OnAfterRenderAsync(bool firstRender)

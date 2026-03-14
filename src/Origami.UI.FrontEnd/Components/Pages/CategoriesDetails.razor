@@ -114,6 +114,7 @@
         base.OnParametersSet();
         this.LoadFromCategory();
         this.LoadContent();
+        this.BlogId = this.GetBlog().Id;
     }
 
     protected void LoadFromCategory()
@@ -136,6 +137,4 @@
         this.PageTitle.SetTitle(this.GetCategory(), this.Entity);
         return base.OnAfterRenderAsync(firstRender);
     }
-
-    public override Guid BlogId => this.GetBlog().Id;
 }
