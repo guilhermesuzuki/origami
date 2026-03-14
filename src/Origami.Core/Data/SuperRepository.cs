@@ -418,7 +418,6 @@ namespace Origami.Core.Data
             try
             {
                 Blogs.RefreshCache();
-                Settings.RefreshCache();
                 Categories.RefreshCache();
                 Pages.RefreshCache();
                 PostCategories.RefreshCache();
@@ -429,11 +428,13 @@ namespace Origami.Core.Data
                 PostTags.RefreshCache();
                 Resumes.RefreshCache();
                 Roles.RefreshCache();
+                Settings.RefreshCache();
                 SocialProfiles.RefreshCache();
                 SpecialMessages.RefreshCache();
                 SpecialPages.RefreshCache();
                 Subscribers.RefreshCache();
                 Tags.RefreshCache();
+                Users.RefreshCache();
                 VideoCategories.RefreshCache();
                 VideoCommentReactions.RefreshCache();
                 VideoComments.RefreshCache();
@@ -445,7 +446,6 @@ namespace Origami.Core.Data
                 {
                     BackupAndRestores.RefreshCache();
                     UserPasswordResets.RefreshCache();
-                    Users.RefreshCache();
                     UserBlogs.RefreshCache();
                 }
 
