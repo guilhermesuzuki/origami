@@ -192,7 +192,7 @@
             {
                 using (scope)
                 {
-                    var hub = await backupRestoreRepository.Backup(this.UserFacade.User);
+                    var hub = await backupRestoreRepository.BackupAsync(this.UserFacade.User);
                     if (hub.Ok)
                     {
                         scope.Complete();
@@ -224,7 +224,7 @@
             {
                 using (scope)
                 {
-                    var hub = await backupRestoreRepository.Restore(this.UserFacade.User, this.SelectedEntities.First());
+                    var hub = await backupRestoreRepository.RestoreAsync(this.UserFacade.User, this.SelectedEntities.First());
                     if (hub.Ok)
                     {
                         scope.Complete();

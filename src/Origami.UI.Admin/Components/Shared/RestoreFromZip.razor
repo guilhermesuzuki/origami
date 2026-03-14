@@ -48,7 +48,7 @@
         {
             if (this.Repository is IBackupRestoreRepository backupRestoreRepository)
             {
-                var hub = await backupRestoreRepository.Restore(UserFacade.User, this.Entity, result.LocalPath);
+                var hub = await backupRestoreRepository.RestoreAsync(UserFacade.User, this.Entity, result.LocalPath);
                 UserFacade.Result = hub;
             }
             return;

@@ -46,7 +46,7 @@ namespace Origami.Core.Data
         /// </summary>
         private string DatabaseName => $"origami-{Current?.NanoId}";
 
-        public async Task<Result<OrigamiBackup>> Backup(OrigamiUser user)
+        public async Task<Result<OrigamiBackup>> BackupAsync(OrigamiUser user)
         {
             if (Current != null)
             {
@@ -111,7 +111,7 @@ namespace Origami.Core.Data
             }
         }
 
-        public async Task<Result<OrigamiBackupRestore>> Restore(OrigamiUser user, OrigamiBackup backup, string? filepathOverride = null)
+        public async Task<Result<OrigamiBackupRestore>> RestoreAsync(OrigamiUser user, OrigamiBackup backup, string? filepathOverride = null)
         {
             if (Current != null)
             {

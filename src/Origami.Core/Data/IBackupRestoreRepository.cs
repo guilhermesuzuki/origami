@@ -22,7 +22,7 @@ namespace Origami.Core.Data
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        Task<Result<OrigamiBackup>> Backup(OrigamiUser user);
+        Task<Result<OrigamiBackup>> BackupAsync(OrigamiUser user);
 
         /// <summary>
         /// Starts a restore for the specified backup
@@ -31,6 +31,6 @@ namespace Origami.Core.Data
         /// <param name="backup"></param>
         /// <param name="filepathOverride"></param>
         /// <returns></returns>
-        Task<Result<OrigamiBackupRestore>> Restore(OrigamiUser user, OrigamiBackup backup, string? filepathOverride = null);
+        Task<Result<OrigamiBackupRestore>> RestoreAsync(OrigamiUser user, OrigamiBackup backup, string? filepathOverride = null);
     }
 }
