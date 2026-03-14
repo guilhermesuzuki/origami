@@ -64,7 +64,8 @@ namespace Origami.Core.Models
             get => _isSystemRole;
             set => this.Set(ref _isSystemRole, value, Changed);
         }
-        [StringLength(100)]
+
+        [StringLength(255)]
         public string Name
         {
             get { return _name; }

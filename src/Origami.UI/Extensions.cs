@@ -203,12 +203,13 @@ namespace Origami.UI
             builder.Services.AddSingleton<IValidator<OrigamiPage>, OrigamiPageValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiPost>, OrigamiPostValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiPostComment>, OrigamiPostCommentValidator>();
+            builder.Services.AddSingleton<IValidator<OrigamiRole>, OrigamiRoleValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiSettings>, OrigamiSettingsValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiSpecialMessage>, OrigamiSpecialMessageValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiSpecialPage>, OrigamiSpecialPageValidator>();
+            builder.Services.AddSingleton<IValidator<OrigamiUser>, OrigamiUserValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiVideo>, OrigamiVideoValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiVideoComment>, OrigamiVideoCommentValidator>();
-            builder.Services.AddSingleton<IValidator<OrigamiUser>, OrigamiUserValidator>();
 
             //jwt configuration
             builder.Services.Configure<JwtConfiguration>(builder.Configuration.GetSection("Jwt"));

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Origami.Core.Models;
 
@@ -11,6 +12,7 @@ namespace Origami.Core.Data
         protected readonly IRightRepository _rightRepository;
         protected readonly IRightRoleRepository _rightRoleRepository;
         protected readonly IUserRoleRepository _userRoleRepository;
+        protected readonly IValidator<OrigamiRole> _validator;
 
         /// <summary>
         /// Default constructor with DI
@@ -18,6 +20,7 @@ namespace Origami.Core.Data
         /// <param name="dbContext"></param>
         /// <param name="distributedCache"></param>
         public RoleRepository(
+            IValidator<OrigamiRole> validator,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IMemoryCache memoryCache,
             IRightRepository rightRepository,
@@ -27,6 +30,7 @@ namespace Origami.Core.Data
             IWebRootPath wwwRoot)
             : base(text, dbContextFactory, memoryCache, wwwRoot)
         {
+            _validator = validator;
             _rightRepository = rightRepository;
             _rightRoleRepository = rightRoleRepository;
             _userRoleRepository = userRoleRepository;
@@ -38,6 +42,23 @@ namespace Origami.Core.Data
         public override string ReadPermission => nameof(OrigamiRole.ViewRoles);
         public override string RestorePermission => nameof(OrigamiRole.RestoreRoles);
         public override string UpdatePermission => nameof(OrigamiRole.EditRoles);
+
+        public override Result<OrigamiRole> CanUpdate(DataOperationContext<OrigamiRole> ctx)
+        {
+            var hub = base.CanUpdate(ctx);
+
+            var fresh = ReadFromDatabase().Id(ctx.Entity.Id)!;
+            if (fresh.IsSystemRole)
+            {
+                var permission = CheckPermission(ctx, nameof(OrigamiRole.EditSystemRoles));
+                if (permission.Ok == false)
+                {
+                    hub.ErrorMessage = Text.Original("You cannot edit system roles");
+                }
+            }
+
+            return hub;
+        }
 
         public override Result<OrigamiRole> Create(DataOperationContext<OrigamiRole> ctx)
         {
@@ -51,6 +72,16 @@ namespace Origami.Core.Data
             var rights = _rightRepository.ReadFromDatabase().ToList();
             entity.GetRightRoles(rights).Each(_rightRoleRepository.CreateCache);
             base.CreateCache(entity);
+        }
+
+        public override Result<OrigamiRole> CreateValidation(DataOperationContext<OrigamiRole> ctx)
+        {
+            return new Result<OrigamiRole>(ctx.Entity, _validator);
+        }
+
+        public override Result<OrigamiRole> DeleteValidation(DataOperationContext<OrigamiRole> ctx)
+        {
+            return new Result<OrigamiRole>(ctx.Entity, _validator);
         }
 
         public override void PurgeRelationshipsFromCache(OrigamiRole entity)
@@ -132,22 +163,9 @@ namespace Origami.Core.Data
             merge.Purge.Each(_rightRoleRepository.PurgeCache);
             merge.Create.Each(_rightRoleRepository.CreateCache);
         }
-
-        public override Result<OrigamiRole> CanUpdate(DataOperationContext<OrigamiRole> ctx)
+        public override Result<OrigamiRole> UpdateValidation(DataOperationContext<OrigamiRole> ctx)
         {
-            var hub = base.CanUpdate(ctx);
-
-            var fresh = ReadFromDatabase().Id(ctx.Entity.Id)!;
-            if (fresh.IsSystemRole)
-            {
-                var permission = CheckPermission(ctx, nameof(OrigamiRole.EditSystemRoles));
-                if (permission.Ok == false)
-                {
-                    hub.ErrorMessage = Text.Original("You cannot edit system roles");
-                }
-            }
-
-            return hub;
+            return new Result<OrigamiRole>(ctx.Entity, _validator);
         }
     }
 }

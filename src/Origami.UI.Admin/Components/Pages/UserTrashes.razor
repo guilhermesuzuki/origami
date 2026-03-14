@@ -70,12 +70,12 @@
                                         else if (context.Item.Type.Like("PostComment") == true)
                                         {
                                             var comment = this.Super.PostComments.ReadFromCache().Id(context.Item.Id);
-                                            <CommentLite Entity="comment"></CommentLite>
+                                            <CommentLite Entity="comment" ShowParentHeader="true"></CommentLite>
                                         }
                                         else if (context.Item.Type.Like("VideoComment") == true)
                                         {
                                             var comment = this.Super.VideoComments.ReadFromCache().Id(context.Item.Id);
-                                            <CommentLite Entity="comment"></CommentLite>
+                                            <CommentLite Entity="comment" ShowParentHeader="true"></CommentLite>
                                         }
                                         else if (context.Item.Type.Like("Category") == true)
                                         {
