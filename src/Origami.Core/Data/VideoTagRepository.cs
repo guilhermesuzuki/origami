@@ -40,17 +40,17 @@ namespace Origami.Core.Data
                    select x.Video;
         }
 
-        public Result RefreshCache(Guid blog, string previous, string current)
+        public Result RefreshCache(Guid blog, string before, string current)
         {
             var q1 = from b in this.ReadFromCache<OrigamiBlog>()
-                     join v in this.ReadFromCache<OrigamiPost>() on b.Id equals v.BlogId
+                     join v in this.ReadFromCache<OrigamiVideo>() on b.Id equals v.BlogId
                      join t in this.ReadFromCache() on v.Id equals t.VideoId
                      where b.Id == blog
-                     where t.Tag == previous
+                     where t.Tag == before
                      select t;
 
             var q2 = from b in this.ReadFromCache<OrigamiBlog>()
-                     join v in this.ReadFromCache<OrigamiPost>() on b.Id equals v.BlogId
+                     join v in this.ReadFromCache<OrigamiVideo>() on b.Id equals v.BlogId
                      join t in this.ReadFromDatabase() on v.Id equals t.VideoId
                      where b.Id == blog
                      where t.Tag == current

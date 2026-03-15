@@ -11,10 +11,9 @@ namespace Origami.Core.Models
         IId,
         IName,
         INew,
-        IFKBlog,
+        IBlogId,
         ISlug
     {
-        private OrigamiBlog? _blog;
         private Guid _blogId;
         private Guid _id = Guid.NewGuid();
         private string _name = string.Empty;
@@ -22,13 +21,6 @@ namespace Origami.Core.Models
         public OrigamiTag() { }
 
         public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) => { };
-
-        [ForeignKey(nameof(BlogId))]
-        public OrigamiBlog? Blog
-        {
-            get => _blog;
-            set => this.Set(ref _blog, value, Changed);
-        }
 
         public Guid BlogId
         {

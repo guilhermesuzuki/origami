@@ -11,6 +11,9 @@ namespace Origami.Core.Data
         RepositoryOuterLayer<OrigamiTag>,
         ITagRepository
     {
+        protected readonly IPostTagRepository _postTagRepository;
+        protected readonly IVideoTagRepository _videoTagRepository;
+
         /// <summary>
         /// Default constructor with DI
         /// </summary>
@@ -19,11 +22,14 @@ namespace Origami.Core.Data
         public TagRepository(
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IMemoryCache memoryCache,
+            IPostTagRepository postTagRepository,
+            IVideoTagRepository videoTagRepository,
             Text text,
             IWebRootPath wwwRoot)
             : base(text, dbContextFactory, memoryCache, wwwRoot)
         {
-
+            this._postTagRepository = postTagRepository;
+            this._videoTagRepository = videoTagRepository;
         }
 
         public override string DeletePermission => nameof(OrigamiRole.DeleteTags);
@@ -75,6 +81,21 @@ namespace Origami.Core.Data
                 return new(ctx.Entity);
             }
             return new(ctx.Entity, "Entity before modifications is null, update cannot proceed");
+        }
+
+        public override void UpdateCache(OrigamiTag entity)
+        {
+            base.UpdateCache(entity);
+
+            var before = this.ReadFromCache().Id(entity.Id);
+            if (before != null)
+            {
+                _postTagRepository.RefreshCache(entity.BlogId, before.Name, entity.Name);
+                _videoTagRepository.RefreshCache(entity.BlogId, before.Name, entity.Name);
+                return;
+            }
+
+            throw new InvalidOperationException("Entity not found in cache, cache update cannot proceed");
         }
     }
 }

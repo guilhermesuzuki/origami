@@ -49,13 +49,13 @@ namespace Origami.Core.Data
             return ReadFromDatabase().Where(x => x.Tag == tagToBeUpdated).GetContexts(ctx).Call(this.SmartUpdate, false);
         }
 
-        public Result RefreshCache(Guid blog, string previous, string current)
+        public Result RefreshCache(Guid blog, string before, string current)
         {
             var q1 = from b in this.ReadFromCache<OrigamiBlog>()
                      join p in this.ReadFromCache<OrigamiPost>() on b.Id equals p.BlogId
                      join t in this.ReadFromCache() on p.Id equals t.PostId
                      where b.Id == blog
-                     where t.Tag == previous
+                     where t.Tag == before
                      select t;
 
             var q2 = from b in this.ReadFromCache<OrigamiBlog>()
