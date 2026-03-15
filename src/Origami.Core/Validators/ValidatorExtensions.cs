@@ -11,6 +11,13 @@ namespace Origami.Core.Validators
     {
         private static Regex iframeRegex = new(@"^<iframe\b[^>]*>(.*?)</iframe>$", RegexOptions.Singleline);
 
+        public static IRuleBuilderOptions<T, Guid> BlogId<T>(this IRuleBuilder<T, Guid> ruleBuilder, Text text)
+        {
+            return ruleBuilder
+                .NotEmpty()
+                .WithMessage(text.Original("Blog is required"));
+        }
+
         public static IRuleBuilderOptions<T, string?> Description<T>(this IRuleBuilder<T, string?> ruleBuilder, Text text)
         {
             return ruleBuilder
@@ -121,7 +128,6 @@ namespace Origami.Core.Validators
                 })
                 .WithMessage(text.Original("Content must be a valid HTML"));
         }
-
         public static IRuleBuilderOptions<T, Guid> Id<T>(this IRuleBuilder<T, Guid> ruleBuilder, Text text)
         {
             return ruleBuilder

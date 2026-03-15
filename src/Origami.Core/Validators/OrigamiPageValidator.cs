@@ -6,6 +6,7 @@ namespace Origami.Core.Validators
     {
         public OrigamiPageValidator(Text text, IWebRootPath webRootPath) : base(text, webRootPath)
         {
+            RuleFor(x => x.BlogId).BlogId(text);
             RuleFor(x => x.Id).Id(text);
             RuleFor(x => x.NanoId).NanoId(text);
             RuleFor(x => x.Title).Title(text);

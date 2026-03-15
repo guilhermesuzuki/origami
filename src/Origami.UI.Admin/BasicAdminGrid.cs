@@ -283,37 +283,13 @@ namespace Origami.UI.Admin
                 items = items.NonDeleted();
             }
 
-            //needs to filter by blog
-            if (this.UserFacade.BlogId != Guid.Empty)
+            if (typeof(T).Implements<IBlogId>() == true)
             {
-                if (typeof(T).Implements<IBlogId>() == true)
-                {
-                    var query = from a in items.Cast<IBlogId>()
-                                where a.BlogId == this.UserFacade.BlogId
-                                select a;
+                var query = from a in items.Cast<IBlogId>()
+                            where a.BlogId == this.UserFacade.BlogId
+                            select a;
 
-                    items = query.Cast<T>();
-                }
-
-                if (typeof(T).Implements<IPostId>() == true)
-                {
-                    var query = from a in items.Cast<IPostId>()
-                                join b in this.Super.Posts.ReadFromCache() on a.PostId equals b.Id
-                                where b.BlogId == this.UserFacade.BlogId
-                                select a;
-
-                    items = query.Cast<T>();
-                }
-
-                if (typeof(T).Implements<IVideoId>() == true)
-                {
-                    var query = from a in items.Cast<IVideoId>()
-                                join b in this.Super.Videos.ReadFromCache() on a.VideoId equals b.Id
-                                where b.BlogId == this.UserFacade.BlogId
-                                select a;
-
-                    items = query.Cast<T>();
-                }
+                items = query.Cast<T>();
             }
 
             return items;

@@ -46,7 +46,7 @@ namespace Origami.UI
 
         public OrigamiBlog GetBlogFromUserFacade()
         {
-            return Super.Blogs.ReadFromCache().Id(UserFacade.BlogId) ?? throw new InvalidOperationException("Blog could not be found");
+            return Super.Blogs.ReadFromCache().Id(UserFacade.BlogId) ?? OrigamiBlog.Empty;
         }
 
         protected async Task DownloadFile(OrigamiSystemFile file)

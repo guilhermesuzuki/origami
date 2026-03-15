@@ -121,41 +121,33 @@
 
     private async Task _login()
     {
-        var blog = this.Super.Blogs.ReadFromCache().Id(this.UserFacade.BlogId);
-        if (blog != null)
+        var user = this.Super.Users.LookupUserInDatabase(_username, _password);
+        if (user != null)
         {
-            var user = this.Super.Users.LookupUserInDatabase(_username, _password);
-            if (user != null)
+            this.UserFacade.User = user;
+            this.userRepository.UpdateCache(user);
+
+            if (user.MustChangePassword == true)
             {
-                this.UserFacade.User = user;
-                this.userRepository.UpdateCache(user);
-
-                if (user.MustChangePassword == true)
-                {
-                    this._mustChangePassword = true;
-                    this.UserFacade.Result = new() { ErrorMessage = Text.Original("You must change your password") };
-                    return;
-                }
-
-                var token = this._generateJwtToken(user);
-                await this.JSRuntime.InvokeVoidAsync("$.cookie", this.Configuration.GetUserCookieKey(), token, new { path = "/", expires = 365, });
-
-                var returnUrl = this.NavigationManager!.Uri.QueryString("ReturnUrl");
-                this.NavigationManager!.NavigateTo(returnUrl.Has() ? returnUrl : "/", true);
+                this._mustChangePassword = true;
+                this.UserFacade.Result = new() { ErrorMessage = Text.Original("You must change your password") };
+                return;
             }
-            else
-            {
-                var hub = new Result<OrigamiUser>();
 
-                hub.ErrorMessage = Text.Original("Username and password do not exist in the database");
-                hub.ErrorMessage = Text.Original("User may have been deleted or blocked");
+            var token = this._generateJwtToken(user);
+            await this.JSRuntime.InvokeVoidAsync("$.cookie", this.Configuration.GetUserCookieKey(), token, new { path = "/", expires = 365, });
 
-                this.UserFacade.Result = hub;
-            }
+            var returnUrl = this.NavigationManager!.Uri.QueryString("ReturnUrl");
+            this.NavigationManager!.NavigateTo(returnUrl.Has() ? returnUrl : "/", true);
         }
         else
         {
-            this.UserFacade.Result = new() { ErrorMessage = Text.Original("Blog could not be found") };
+            var hub = new Result<OrigamiUser>();
+
+            hub.ErrorMessage = Text.Original("Username and password do not exist in the database");
+            hub.ErrorMessage = Text.Original("User may have been deleted or blocked");
+
+            this.UserFacade.Result = hub;
         }
     }
 

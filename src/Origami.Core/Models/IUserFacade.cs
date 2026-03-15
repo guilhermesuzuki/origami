@@ -36,6 +36,11 @@
         OrigamiUser User { get; set; }
 
         /// <summary>
+        /// Blogs the user has access to. This is used for the blog switcher in the admin area and for filtering content in the front-end. It should be set when the user logs in and whenever their permissions change.
+        /// </summary>
+        IEnumerable<OrigamiBlog> BlogsTheUserHasAccessTo { get; set; }
+
+        /// <summary>
         /// Method that calls <see cref="EntityHasChanged"/> event
         /// </summary>
         /// <param name="sender"></param>

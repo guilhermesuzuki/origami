@@ -181,8 +181,8 @@ namespace Origami.UI
             //sets the blog as the primary one
             builder.Services.AddScoped<IUserFacade, UserFacade>(provider =>
             {
-                var blog = provider.GetRequiredService<IBlogRepository>();
-                return new() { BlogId = blog.GetPrimary().Id };
+                var super = provider.GetRequiredService<ISuperRepository>();
+                return new(super) { BlogId = Guid.Empty };
             });
 
             //really important workaround

@@ -559,7 +559,7 @@
             if (p.PropertyName.Like(nameof(IUserFacade.BlogId)) == true)
             {
                 await this._loadCharts();
-                await this._userViews!.ReloadServerData();
+                if (this._userViews != null) await this._userViews.ReloadServerData();
                 await this.InvokeAsync(this.StateHasChanged);
             }
         };
