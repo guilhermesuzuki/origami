@@ -218,9 +218,6 @@ namespace Origami.Core.Data
                 return new(ctx.Entity) { ErrorMessage = Text.Original("You cannot edit this comment") };
             }
 
-            var html = HTMLValidation(ctx);
-            if (html.Ok == false) return html;
-
             return base.SmartUpdate(ctx, false);
         }
 
