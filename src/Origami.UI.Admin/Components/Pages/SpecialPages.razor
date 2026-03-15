@@ -33,30 +33,17 @@
                                     <i class="fa-solid fa-file-arrow-down"></i>
                                 </button>
                             </div>
-                            @* <div class="btn-group pe-1">
-                                <button class="btn btn-danger text-white" title="@Text.Lower("Enter maintenance mode")" disabled="@this.DisableEnterMaintenanceModeButton" @onclick="this.EnterMaintenanceMode">
-                                    <i class="fa-solid fa-person-digging"></i>
-                                    <i class="fa-solid fa-arrow-down"></i>
-                                    <span class="x-small">@Text.Lower("Enter")</span>
-                                </button>
-                                <button class="btn btn-success text-white" title="@Text.Lower("Leave maintenance mode")" disabled="@this.DisableLeaveMaintenanceModeButton" @onclick="this.LeaveMaintenanceMode">
-                                    <i class="fa-solid fa-person-digging"></i>
-                                    <i class="fa-solid fa-arrow-up"></i>
-                                    <span class="x-small">@Text.Lower("Leave")</span>
-                                </button>
-                            </div> *@
                         </li>
                         <li style="width:20%;">
-                            <MudSelect T="string" HelperText="@Text.Lower("Filter")" @bind-Value:get="Filter" @bind-Value:set="(filter) => SetFilterAndRefreshUI(filter)">
-                                <MudSelectItem T="string" Value="@(new string("all"))">@Text.Original("All")</MudSelectItem>
-                                <MudSelectItem T="string" Value="@(new string("published"))">@Text.Original("Published")</MudSelectItem>
-                                <MudSelectItem T="string" Value="@(new string("drafts"))">@Text.Original("Drafts")</MudSelectItem>
-                            </MudSelect>
                         </li>
                     </ul>
                 </div>
                 <div class="col-12 col-xxl-4">
-                    <BlogSelect></BlogSelect>
+                    <MudSelect T="string" HelperText="@Text.Lower("Filter")" @bind-Value:get="Filter" @bind-Value:set="(filter) => SetFilterAndRefreshUI(filter)">
+                        <MudSelectItem T="string" Value="@(new string("all"))">@Text.Original("All")</MudSelectItem>
+                        <MudSelectItem T="string" Value="@(new string("published"))">@Text.Original("Published")</MudSelectItem>
+                        <MudSelectItem T="string" Value="@(new string("drafts"))">@Text.Original("Drafts")</MudSelectItem>
+                    </MudSelect>
                 </div>
             </div>
         </div>

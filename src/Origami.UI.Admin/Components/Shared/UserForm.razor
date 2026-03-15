@@ -168,7 +168,7 @@
                     <i class="fa-solid fa-id-badge"></i>
                     @Text.Lower("Blogs this user has access to")
                 </div>
-                <MudDataGrid T="OrigamiBlog" Class="border mt-3" Items="this.Super.Blogs.ReadFromCache().NonDeleted().OrderBy(x => x.Name)" SortMode="SortMode.None" Filterable="false">
+                <MudDataGrid T="OrigamiBlog" Class="border mt-3" Items="this.Super.Blogs.ReadFromCache().OrderBy(x => x.Name)" SortMode="SortMode.None" Filterable="false">
                     <Columns>
                         <TemplateColumn>
                             <CellTemplate>
