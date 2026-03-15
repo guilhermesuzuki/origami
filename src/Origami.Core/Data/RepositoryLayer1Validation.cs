@@ -5,7 +5,7 @@ using Origami.Core.Models;
 namespace Origami.Core.Data
 {
     public abstract class RepositoryLayer1Validation<T> :
-        RepositoryBaseLayer<T>,
+        RepositoryLayer0Data<T>,
         ICreateValidation<T>,
         IUpdateValidation<T>,
         IDeleteValidation<T>,

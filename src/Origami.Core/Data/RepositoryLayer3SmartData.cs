@@ -5,12 +5,12 @@ using System.Diagnostics;
 
 namespace Origami.Core.Data
 {
-    public abstract class RepositoryLayer3Data<T> :
+    public abstract class RepositoryLayer3SmartData<T> :
         RepositoryLayer2Permission<T>,
         IMerge<T>
         where T : class, IId, new()
     {
-        protected RepositoryLayer3Data(
+        protected RepositoryLayer3SmartData(
             Text text,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IMemoryCache memoryCache,

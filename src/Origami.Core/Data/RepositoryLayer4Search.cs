@@ -13,7 +13,7 @@ using Origami.Core.Models;
 namespace Origami.Core.Data
 {
     public abstract class RepositoryLayer4Search<T> :
-        RepositoryLayer3Data<T>,
+        RepositoryLayer3SmartData<T>,
         ISearch<T>
         where T : class, IId, new()
     {
