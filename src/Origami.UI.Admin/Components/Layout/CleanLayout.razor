@@ -2,16 +2,16 @@
 @using System.Security.Claims
 @inherits LayoutComponentBase
 
-@inject Text _text
+@inject AuthenticationStateProvider _authenticationStateProvider
 @inject IBlogRepository _blog
 @inject IConfiguration _configuration
 @inject IJSRuntime _jsRuntime
-@inject NavigationManager _navigationManager
-@inject IUserFacade _userFacade
-@inject UserManager<IdentityUser> _userManager
-@inject AuthenticationStateProvider _authenticationStateProvider
-@inject IUserRepository _userRepository
 @inject ISettingsRepository _settings
+@inject IUserFacade _userFacade
+@inject IUserRepository _userRepository
+@inject NavigationManager _navigationManager
+@inject Text _text
+@inject UserManager<IdentityUser> _userManager
 
 <CustomHeadContent>
     <link rel="stylesheet" href="_content/Origami.UI/lib/css/style-site-admin.css" />
