@@ -163,6 +163,37 @@
                     </li>
                 </ul>
             </div>
+            <div class="blogs p-3">
+                <div class="w-100 text-white bg-secondary text-center">
+                    <i class="fa-solid fa-id-badge"></i>
+                    @Text.Lower("Blogs this user has access to")
+                </div>
+                <MudDataGrid T="OrigamiBlog" Class="border mt-3" Items="this.Super.Blogs.ReadFromCache().NonDeleted().OrderBy(x => x.Name)" SortMode="SortMode.None" Filterable="false">
+                    <Columns>
+                        <TemplateColumn>
+                            <CellTemplate>
+                                <MudCheckBox T="bool" Value="@IsBlogSelected(context.Item)" @onclick="() => SelectBlog(context.Item)"></MudCheckBox>
+                            </CellTemplate>
+                        </TemplateColumn>
+                        <TemplateColumn CellClass="w-100">
+                            <CellTemplate>
+                                <BlogHeaderLite Entity="context.Item"></BlogHeaderLite>
+                            </CellTemplate>
+                        </TemplateColumn>
+                        <TemplateColumn>
+                            <CellTemplate>
+                                @if (NewBlog(context.Item) == true)
+                                {
+                                    <i class="fa-solid fa-circle-plus"></i>
+                                }
+                            </CellTemplate>
+                        </TemplateColumn>
+                    </Columns>
+                    <PagerContent>
+                        <MudDataGridPager T="OrigamiBlog" PageSizeOptions="[10, 25, 50, 100]" />
+                    </PagerContent>
+                </MudDataGrid>
+            </div>
             <div class="roles p-3">
                 <div class="w-100 text-white bg-secondary text-center">
                     <i class="fa-solid fa-id-badge"></i>
@@ -423,6 +454,11 @@
     /// </summary>
     protected List<OrigamiUserRole> UserRoles = [];
 
+    /// <summary>
+    /// User blogs associated with the user.
+    /// </summary>
+    protected List<OrigamiUserBlog> UserBlogs = [];
+
     [Parameter] public EventCallback<OrigamiUser> OnUserBlocked { get; set; }
     [Parameter] public EventCallback<OrigamiUser> OnUserUnblocked { get; set; }
 
@@ -436,6 +472,17 @@
             if (this.Entity.EmailAddress.Email() == false) return true;
             return false;
         }
+    }
+
+    protected bool IsBlogSelected(OrigamiBlog blog)
+    {
+        return this.UserBlogs.Any(x => x.BlogId == blog.Id);
+    }
+
+    protected bool NewBlog(OrigamiBlog blog)
+    {
+        if (IsBlogSelected(blog) == false) return false;
+        return this.Super.UserBlogs.ReadFromCache().Where(x => x.BlogId == blog.Id).Where(x => x.UserId == this.Entity.Id).Any() == false;
     }
 
     protected bool IsRoleSelected(OrigamiRole role)
@@ -459,6 +506,22 @@
         this.Entity.LastName = this.Entity.LastName.Trim();
 
         return result;
+    }
+
+    protected void SelectBlog(OrigamiBlog blog)
+    {
+        if (IsBlogSelected(blog) == true)
+        {
+            this.UserBlogs.RemoveAll(x => x.BlogId == blog.Id);
+        }
+        else
+        {
+            this.UserBlogs.Add(new()
+            {
+                UserId = this.Entity.Id,
+                BlogId = blog.Id,
+            });
+        }
     }
 
     protected void SelectRole(OrigamiRole role)
@@ -497,6 +560,11 @@
         return this.Super.UserPasswordResets.ReadFromDatabase().Where(x => x.UserId == this.Entity.Id).OrderByDescending(x => x.DateCreated).ToList();
     }
 
+    protected void LoadUserBlogs()
+    {
+        this.UserBlogs = [.. from x in this.Super.UserBlogs.ReadFromCache() where x.UserId == this.Entity.Id select x];
+    }
+
     protected void LoadUserRoles()
     {
         this.UserRoles = [.. from x in this.Super.UserRoles.ReadFromCache() where x.UserId == this.Entity.Id select x];
@@ -505,6 +573,7 @@
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
+        this.LoadUserBlogs();
         this.LoadUserRoles();
     }
 
@@ -513,6 +582,7 @@
         var hub = new Result<OrigamiUser>();
         var ctx = new DataOperationContext<OrigamiUser>(this.UserFacade.User, this.Entity);
         this.UserRoles.GetContexts(ctx).Each(x => this.Super.UserRoles.SmartSave(x, false).Push(hub));
+        this.UserBlogs.GetContexts(ctx).Each(x => this.Super.UserBlogs.SmartSave(x, false).Push(hub));
         return hub;
     }
 
@@ -520,15 +590,20 @@
     {
         var hub = new Result<OrigamiUser>();
         var ctx = new DataOperationContext<OrigamiUser>(this.UserFacade.User, this.Entity);
-        var dbo = this.Super.UserRoles.ReadFromDatabase().Where(x => x.UserId == this.Entity.Id).ToList();
-        var merge = dbo.GetMerge(this.UserRoles);
-        return hub.OnSuccess(() => this.Super.UserRoles.Merge(ctx, merge));
+        var dbo1 = this.Super.UserRoles.ReadFromDatabase().Where(x => x.UserId == this.Entity.Id).ToList();
+        var merge1 = dbo1.GetMerge(this.UserRoles);
+        hub.OnSuccess(() => this.Super.UserRoles.Merge(ctx, merge1));
+        var dbo2 = this.Super.UserBlogs.ReadFromDatabase().Where(x => x.UserId == this.Entity.Id).ToList();
+        var merge2 = dbo2.GetMerge(this.UserBlogs);
+        hub.OnSuccess(() => this.Super.UserBlogs.Merge(ctx, merge2));
+        return hub;
     }
 
     public override void UndoChanges()
     {
         base.UndoChanges();
         this.LoadUserRoles();
+        this.LoadUserBlogs();
     }
 
     protected async Task BlockUser()
