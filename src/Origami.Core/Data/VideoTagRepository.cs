@@ -39,5 +39,27 @@ namespace Origami.Core.Data
                    where x.Tag.Like(tag.Name)
                    select x.Video;
         }
+
+        public Result RefreshCache(Guid blog, string previous, string current)
+        {
+            var q1 = from b in this.ReadFromCache<OrigamiBlog>()
+                     join v in this.ReadFromCache<OrigamiPost>() on b.Id equals v.BlogId
+                     join t in this.ReadFromCache() on v.Id equals t.VideoId
+                     where b.Id == blog
+                     where t.Tag == previous
+                     select t;
+
+            var q2 = from b in this.ReadFromCache<OrigamiBlog>()
+                     join v in this.ReadFromCache<OrigamiPost>() on b.Id equals v.BlogId
+                     join t in this.ReadFromDatabase() on v.Id equals t.VideoId
+                     where b.Id == blog
+                     where t.Tag == current
+                     select t;
+
+            q1.ToList().Each(this.PurgeCache);
+            q2.ToList().Each(this.CreateCache);
+
+            return new();
+        }
     }
 }

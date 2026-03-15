@@ -48,5 +48,27 @@ namespace Origami.Core.Data
             }
             return ReadFromDatabase().Where(x => x.Tag == tagToBeUpdated).GetContexts(ctx).Call(this.SmartUpdate, false);
         }
+
+        public Result RefreshCache(Guid blog, string previous, string current)
+        {
+            var q1 = from b in this.ReadFromCache<OrigamiBlog>()
+                     join p in this.ReadFromCache<OrigamiPost>() on b.Id equals p.BlogId
+                     join t in this.ReadFromCache() on p.Id equals t.PostId
+                     where b.Id == blog
+                     where t.Tag == previous
+                     select t;
+
+            var q2 = from b in this.ReadFromCache<OrigamiBlog>()
+                     join p in this.ReadFromCache<OrigamiPost>() on b.Id equals p.BlogId
+                     join t in this.ReadFromDatabase() on p.Id equals t.PostId
+                     where b.Id == blog
+                     where t.Tag == current
+                     select t;
+
+            q1.ToList().Each(this.PurgeCache);
+            q2.ToList().Each(this.CreateCache);
+
+            return new();
+        }
     }
 }
