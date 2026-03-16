@@ -163,6 +163,7 @@ namespace Origami.Core.Data
             if (Pages.ReadFromCache().FrontPage(blogId) != null) return false;
             if (Posts.ReadFromCache().Published().Blog(blogId).Any() == true) return false;
             if (Videos.ReadFromCache().Published().Blog(blogId).Any() == true) return false;
+            if (QuickNotes.ReadFromCache().Published().Blog(blogId).Any() == true) return false;
             return true;
         }
 
