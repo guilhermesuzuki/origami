@@ -57,6 +57,10 @@
                 <i class="fa-solid fa-folder-closed"></i>
                 <span>@Text.Lower("File manager")</span>
             </div>
+            <div class="sub-menu" @onclick="GoToQuickNotes">
+                <i class="bi bi-lightning-fill"></i>
+                <span>@Text.Lower("Quick notes")</span>
+            </div>
             <div class="sub-menu" @onclick="GoToPosts">
                 <i class="bi bi-file-earmark-text-fill"></i>
                 <span>@Text.Lower("Posts")</span>
@@ -309,6 +313,11 @@
     private void GoToUserProfile()
     {
         this.NavigationManager!.NavigateTo($"/user/profile");
+    }
+
+    private void GoToQuickNotes()
+    {
+        this.NavigationManager!.NavigateTo($"/quicknotes");
     }
 
     private async Task RegenerateNanoIds()

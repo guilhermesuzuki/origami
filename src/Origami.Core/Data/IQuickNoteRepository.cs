@@ -5,7 +5,9 @@ using System.Text;
 
 namespace Origami.Core.Data
 {
-    public interface IQuickNoteRepository : IRepository<OrigamiQuickNote>
+    public interface IQuickNoteRepository : 
+        IRepository<OrigamiQuickNote>, 
+        IPublish<OrigamiQuickNote>
     {
 
     }

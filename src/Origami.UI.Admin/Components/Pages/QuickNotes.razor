@@ -1,15 +1,11 @@
-﻿@page "/posts"
-@inherits BasicAdminGrid<OrigamiPost>
+﻿@page "/quicknotes"
+@inherits BasicAdminGrid<OrigamiQuickNote>
 @inject IPostCategoryRepository _postCategory
 @inject IBlogRepository _blogs
 @inject IPostRepository _posts
 @inject IPostCommentRepository _postComment
 @inject IPostViewRepository _postView
 
-<style>
-    .post-header-lite .language { display: none !important; }
-    .categories .id { display:none !important; }
-</style>
 <Root Access="this.CanAccess()">
     <HeaderTemplate>
         <div class="p-3 border-bottom">
@@ -18,7 +14,7 @@
                     <ul class="inline-list w-100">
                         <li style="width:80%;">
                             <i class="fa-solid fa-file-lines pe-1"></i>
-                            <span class="me-3">@Text.Get("Posts", Text.Styles.Uppercase)</span>
+                            <span class="me-3">@Text.Get("Quick notes", Text.Styles.Uppercase)</span>
                             <div class="btn-group pe-1">
                                 <button class="btn btn-light text-danger border border-danger" disabled="@this.DisableTheDeleteButton" @onclick="this.DeleteSelectedEntities">
                                     <i class="fa-solid fa-trash-can"></i>
@@ -37,7 +33,7 @@
                             <MudSelect T="string" HelperText="@Text.Lower("Filter")" @bind-Value:get="Filter" @bind-Value:set="(filter) => SetFilterAndRefreshUI(filter)">
                                 <MudSelectItem T="string" Value="@(new string("all"))">@Text.Original("All")</MudSelectItem>
                                 <MudSelectItem T="string" Value="@(new string("published"))">@Text.Original("Published")</MudSelectItem>
-                                <MudSelectItem T="string" Value="@(new string("drafts"))">@Text.Original("Drafts")</MudSelectItem>
+                                @* <MudSelectItem T="string" Value="@(new string("drafts"))">@Text.Original("Drafts")</MudSelectItem> *@
                             </MudSelect>
                         </li>
                     </ul>
@@ -50,7 +46,7 @@
         <div class="p-3 border-bottom">
             <div class="row">
                 <div class="col-12">
-                    <SearchLite T="OrigamiPost" OnHitSelected="this.OnSearchResultSelected"></SearchLite>
+                    <SearchLite T="OrigamiQuickNote" OnHitSelected="this.OnSearchResultSelected"></SearchLite>
                 </div>
             </div>
         </div>
@@ -61,42 +57,25 @@
                 <div class="datagrid-options col-12 text-right mb-1">
                     <DataGridOptions Deleted="this.IncludeDeletedEntitiesInDataGrid" DeletedChanged="this.OnIncludeDeletedEntitiesChanged"></DataGridOptions>
                 </div>
-                <div class="posts col-12">
-                    <MudDataGrid @ref="DataGrid" T="OrigamiPost" ServerData="GetEntities" Filterable="false" SortMode="SortMode.None" Class="border selectable" SelectedItems="this.SelectedEntities" MultiSelection="true" SelectedItemsChanged="this.SelectedEntitiesChanged"
+                <div class="quick-notes col-12 col-xxl-8">
+                    <MudDataGrid @ref="DataGrid" T="OrigamiQuickNote" ServerData="GetEntities" Filterable="false" SortMode="SortMode.None" Class="border selectable" SelectedItems="this.SelectedEntities" MultiSelection="true" SelectedItemsChanged="this.SelectedEntitiesChanged"
                                  RowClassFunc="this.RowClassFunc" Bordered="true" SelectOnRowClick="false">
                         <Columns>
-                            <SelectColumn T="OrigamiPost"></SelectColumn>
-                            <TemplateColumn Title="@Text.Upper("Title")">
+                            <SelectColumn T="OrigamiQuickNote"></SelectColumn>
+                            <TemplateColumn Title="@Text.Upper("Note")">
                                 <CellTemplate>
-                                    <div class="cursor-pointer" @onclick="() => OnEdit(context.Item)">
-                                        <PostRating Class="" Entity="context.Item" ShowLanguage="false"></PostRating><br />
-                                        <PostHeaderLite2 Entity="context.Item"></PostHeaderLite2>
+                                    <div class="cursor-pointer d-inline-flex align-items-center" @onclick="() => OnEdit(context.Item)">
+                                        <span class="language @context.Item.LanguageWrittenOn me-1"></span>
+                                        <span>@context.Item.Note</span>
                                     </div>
                                 </CellTemplate>
                             </TemplateColumn>
-                            <TemplateColumn Title="@Text.Upper("Header")" CellClass="col-2">
+                            <TemplateColumn Title="@Text.Upper("Author")" CellClass="col-2">
                                 <CellTemplate>
-                                    <div class="w-100" style="height:150px; background-image: url(@context.Item.Get().HeaderImage); background-size: cover; background-position: center;"></div>
-                                    <div class="mt-1 p-1 border">
-                                        <ul class="inline-list text-center">
-                                            <li>
-                                                <i class="fa-solid fa-eye"></i>
-                                                @_postView.GetViews(context.Item)
-                                            </li>
-                                            <li>
-                                                <i class="fa-solid fa-comment"></i>
-                                                @_postComment.GetComments(context.Item)
-                                            </li>
-                                        </ul>
+                                    <div class="cursor-pointer d-inline-flex align-items-center">
+                                        <i class="fa-solid fa-user"></i>
+                                        <span>@this.Super.GetAuthor(context.Item).FullName()</span>
                                     </div>
-                                </CellTemplate>
-                            </TemplateColumn>
-                            <TemplateColumn Title="@Text.Upper("Categories")" Sortable="false" Filterable="false" CellClass="col-2 categories">
-                                <CellTemplate>
-                                    @foreach (var category in this.Super.GetCategories(context.Item))
-                                    {
-                                        <CategoryHeaderLite Class="mb-1 p-2 shadow-sm border" Entity="category"></CategoryHeaderLite>
-                                    }
                                 </CellTemplate>
                             </TemplateColumn>
                             <TemplateColumn Title="@Text.Upper("Published")" Sortable="false" Filterable="false" CellClass="col-1 text-center">
@@ -119,15 +98,15 @@
                             </TemplateColumn>
                         </Columns>
                         <PagerContent>
-                            <MudDataGridPager T="OrigamiPost" />
+                            <MudDataGridPager T="OrigamiQuickNote" />
                         </PagerContent>
                         <NoRecordsContent>
                             <NoEntriesWereFound></NoEntriesWereFound>
                         </NoRecordsContent>
                     </MudDataGrid>
                 </div>
-                <div class="posts-form col-12 mt-3">
-                    <PostForm Class="p-3 shadow-sm border" Entity="this.SelectedEntity" Saved="this.EntitySaved" Cancelled="this.EntityCancelled" Created="this.EntityCreated"></PostForm>
+                <div class="quick-note-form col-12 col-xxl-4">
+                    <QuickNoteForm Class="p-3 shadow-sm border" Entity="this.SelectedEntity" Saved="this.EntitySaved" Cancelled="this.EntityCancelled" Created="this.EntityCreated"></QuickNoteForm>
                 </div>
             </div>
         </div>
@@ -135,18 +114,18 @@
 </Root>
 @code {
 
-    protected override string DefaultOrdering => $"{nameof(OrigamiPost.Title)}";
+    protected override string DefaultOrdering => $"{nameof(OrigamiQuickNote.DateCreated)}";
 
-    protected virtual Result<OrigamiPost> PublishEntity(OrigamiPost entity)
+    protected virtual Result<OrigamiQuickNote> PublishEntity(OrigamiQuickNote entity)
     {
-        var context = new DataOperationContext<OrigamiPost>(this.UserFacade.User, DateTime.UtcNow, entity);
-        return _posts.SmartPublish(context, true);
+        var context = new DataOperationContext<OrigamiQuickNote>(this.UserFacade.User, DateTime.UtcNow, entity);
+        return this.Super.QuickNotes.SmartPublish(context, true);
     }
 
-    protected virtual Result<OrigamiPost> UnpublishEntity(OrigamiPost entity)
+    protected virtual Result<OrigamiQuickNote> UnpublishEntity(OrigamiQuickNote entity)
     {
-        var context = new DataOperationContext<OrigamiPost>(this.UserFacade.User, DateTime.UtcNow, entity);
-        return _posts.SmartUnpublish(context, true);
+        var context = new DataOperationContext<OrigamiQuickNote>(this.UserFacade.User, DateTime.UtcNow, entity);
+        return this.Super.QuickNotes.SmartUnpublish(context, true);
     }
 
     protected async Task PublishSelectedEntities()

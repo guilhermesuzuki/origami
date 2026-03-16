@@ -1,7 +1,8 @@
 ﻿namespace Origami.Core.Models
 {
     /// <summary>
-    /// TODO: rename this
+    /// Interface for filtering content based on status (e.g., all, published, draft). 
+    /// The SetFilterAndRefreshUI method allows for setting the filter and then refreshing the UI to reflect the changes.
     /// </summary>
     public interface IFilter
     {

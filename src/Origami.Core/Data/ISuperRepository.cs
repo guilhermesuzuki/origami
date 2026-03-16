@@ -50,8 +50,8 @@ namespace Origami.Core.Data
         IUserBlogRepository UserBlogs { get; }
         IUserContentRepository UserContents { get; }
         IUserPasswordResetRepository UserPasswordResets { get; }
-        IUserRepository Users { get; }
         IUserRoleRepository UserRoles { get; }
+        IUserRepository Users { get; }
         IUserTrashRepository UserTrashes { get; }
         IUserViewRepository UserViews { get; }
         IVideoCategoryRepository VideoCategories { get; }
@@ -64,6 +64,8 @@ namespace Origami.Core.Data
         IWhatToSeeNextRepository WhatToSeeNext { get; }
 
         bool EmptyHome(Guid blogId);
+
+        OrigamiUser GetAuthor(IAuthorId authorId);
 
         /// <summary>
         /// Get active categories

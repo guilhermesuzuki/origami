@@ -1,5 +1,4 @@
 ﻿@inherits BasicForm<OrigamiQuickNote>
-@inject IPostRepository _post
 
 <div class="quick-note @Class">
     <ul class="inline-list">
@@ -14,19 +13,35 @@
             HelperText="@Text.Lower("Author")"></MudTextField>
         </li>
     </ul>
+
     <ul class="inline-list">
         <li>
             <MudTextField FullWidth="true"
             Immediate="true"
             @bind-Value="@Entity.Note"
-            HelperText="@Text.Lower("Type Here")"
+            HelperText="@Text.Lower("Type your note here")"
             Required="true"></MudTextField>
         </li>
     </ul>
-    <div class="btn-group w-100 mt-3">
-        <button class="btn btn-success" disabled="@DisableTheSaveButton" @onclick="Save">@Text.Upper("Save and Publish")</button>
+
+    <div class="buttons mt-3 p-3 text-center">
+        <div class="btn-group">
+            <button class="btn btn-success text-white fw-bold" @onclick="Save" disabled="@this.DisableTheSaveButton">
+                <i class="fa-solid fa-floppy-disk"></i>
+                @Text.Lower("Save")
+            </button>
+            <button class="btn btn-secondary text-white fw-bold" @onclick="UndoChanges" disabled="@this.Entity.New">
+                <i class="fa-solid fa-rotate-left"></i>
+                @Text.Lower("Undo changes")
+            </button>
+            <button class="btn btn-info text-white fw-bold" @onclick="CreateEntity">
+                <i class="fa-solid fa-square-plus"></i>
+                @Text.Lower("New")
+            </button>
+        </div>
     </div>
 </div>
+
 
 @code {
 
@@ -45,14 +60,11 @@
             using (var transaction = new TransactionScope())
             {
                 this.Super.QuickNotes.SmartSave(context, true).Push(hub);
-
                 if (hub.Ok)
                 {
                     transaction.Complete();
                 }
             }
-
-            this.Super.QuickNotes.SmartPublish(context, true).Push(hub);
 
             this.CreateEntity().Wait();
 

@@ -151,11 +151,13 @@ namespace Origami.Core.Models
         private bool _none;
         private bool _publishOtherUsersPages;
         private bool _publishOtherUsersPosts;
+        private bool _publishOtherUsersQuickNotes;
         private bool _publishOtherUsersSpecialMessages;
         private bool _publishOtherUsersSpecialPages;
         private bool _publishOtherUsersVideos;
         private bool _publishOwnPages;
         private bool _publishOwnPosts;
+        private bool _publishOwnQuickNotes;
         private bool _publishOwnSpecialMessages;
         private bool _publishOwnSpecialPages;
         private bool _publishOwnVideos;
@@ -194,11 +196,13 @@ namespace Origami.Core.Models
         private bool _unmarkAsFrontPage;
         private bool _unpublishOtherUsersPages;
         private bool _unpublishOtherUsersPosts;
+        private bool _unpublishOtherUsersQuickNotes;
         private bool _unpublishOtherUsersSpecialMessages;
         private bool _unpublishOtherUsersSpecialPages;
         private bool _unpublishOtherUsersVideos;
         private bool _unpublishOwnPages;
         private bool _unpublishOwnPosts;
+        private bool _unpublishOwnQuickNotes;
         private bool _unpublishOwnSpecialMessages;
         private bool _unpublishOwnSpecialPages;
         private bool _unpublishOwnVideos;
@@ -702,6 +706,13 @@ namespace Origami.Core.Models
         }
 
         [NotMapped]
+        public bool PublishOtherUsersQuickNotes
+        {
+            get => _publishOtherUsersQuickNotes;
+            set => this.Set(ref _publishOtherUsersQuickNotes, value, Changed);
+        }
+
+        [NotMapped]
         public bool PublishOtherUsersSpecialMessages
         {
             get => _publishOtherUsersSpecialMessages;
@@ -734,6 +745,13 @@ namespace Origami.Core.Models
         {
             get => _publishOwnPosts;
             set => this.Set(ref _publishOwnPosts, value, Changed);
+        }
+
+        [NotMapped]
+        public bool PublishOwnQuickNotes
+        {
+            get => _publishOwnQuickNotes;
+            set => this.Set(ref _publishOwnQuickNotes, value, Changed);
         }
 
         [NotMapped]
@@ -1003,6 +1021,13 @@ namespace Origami.Core.Models
         }
 
         [NotMapped]
+        public bool UnpublishOtherUsersQuickNotes
+        {
+            get => _unpublishOtherUsersQuickNotes;
+            set => this.Set(ref _unpublishOtherUsersQuickNotes, value, Changed);
+        }
+
+        [NotMapped]
         public bool UnpublishOtherUsersSpecialMessages
         {
             get => _unpublishOtherUsersSpecialMessages;
@@ -1037,6 +1062,12 @@ namespace Origami.Core.Models
             set => this.Set(ref _unpublishOwnPosts, value, Changed);
         }
 
+        [NotMapped]
+        public bool UnpublishOwnQuickNotes
+        {
+            get => _unpublishOwnQuickNotes;
+            set => this.Set(ref _unpublishOwnQuickNotes, value, Changed);
+        }
         [NotMapped]
         public bool UnpublishOwnSpecialMessages
         {

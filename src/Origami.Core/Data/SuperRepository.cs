@@ -166,6 +166,11 @@ namespace Origami.Core.Data
             return true;
         }
 
+        public OrigamiUser GetAuthor(IAuthorId authorId)
+        {
+            return this.Users.ReadFromCache().Id(authorId.AuthorId) ?? new();
+        }
+
         public IEnumerable<OrigamiCategory> GetCategories()
         {
             return from x in Categories.ReadFromCache()
@@ -429,6 +434,7 @@ namespace Origami.Core.Data
                 PostRatings.RefreshCache();
                 Posts.RefreshCache();
                 PostTags.RefreshCache();
+                QuickNotes.RefreshCache();
                 Resumes.RefreshCache();
                 Roles.RefreshCache();
                 Settings.RefreshCache();
@@ -493,6 +499,7 @@ namespace Origami.Core.Data
                 PostComments.CreateSearchIndex();
                 Posts.CreateSearchIndex();
                 PostTags.CreateSearchIndex();
+                QuickNotes.CreateSearchIndex();
                 Roles.CreateSearchIndex();
                 SocialProfiles.CreateSearchIndex();
                 Tags.CreateSearchIndex();
