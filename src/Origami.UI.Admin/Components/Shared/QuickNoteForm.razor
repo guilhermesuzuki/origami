@@ -60,6 +60,7 @@
             this.CreateEntity().Wait();
 
             this.UserFacade.Result = hub;
+            this.Saved.InvokeAsync(this.Entity);
         }
         catch (Exception e)
         {
