@@ -1,0 +1,95 @@
+﻿@inherits Basic
+@inject ISuperRepository _super
+
+@if (this.QuickNotes.Count > 0)
+{
+    <div class="quick-note-list @Class position-relative">
+        <div class="row">
+            @for (int i = 1; i <= 5; i++)
+            {
+                <div class="col-12 col-xl-2"></div>
+            }
+            <div class="col-12 col-xl-2">
+                <MudSelect T="int" @bind-Value:get="this.OrderBy" @bind-Value:set="SetOrderBy">
+                    <MudSelectItem Value="1">@Text.Lower("By most recent")</MudSelectItem>
+                    <MudSelectItem Value="2">@Text.Lower("By note")</MudSelectItem>
+                    <MudSelectItem Value="3">@Text.Lower("By note desc.")</MudSelectItem>
+                    <MudSelectItem Value="4">@Text.Lower("By oldest")</MudSelectItem>
+                    <MudSelectItem Value="5">@Text.Lower("By language, note")</MudSelectItem>
+                    <MudSelectItem Value="6">@Text.Lower("By language, most recent")</MudSelectItem>
+                </MudSelect>
+            </div>
+        </div>
+        <div class="row mt-3">
+            @for (int i = 0; i < this.Page * this.PageSize; i++)
+            {
+                @if (QuickNotes.Count > i)
+                {
+                    <div class="col-12 col-xl-4 mb-3">
+                        <QuickNoteHeader Entity="QuickNotes[i]" ShowRelatedPages="false"></QuickNoteHeader>
+                    </div>
+                }
+            }
+        </div>
+        <div class="text-center">
+            <button class="text-center btn btn-light border" style="min-width: 250px; max-width: 100%" disabled="@_disableLoadMore" @onclick="() => { this.Page += 1; this.LoadQuickNotes(); }">
+                <div><i class="fa-solid fa-file-lines fs-2"></i></div>
+                @Text.Lower("See more notes")
+            </button>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public int Page { get; set; } = 1;
+    [Parameter] public int PageSize { get; set; } = 9;
+    [Parameter] public int OrderBy { get; set; } = 1;
+
+    protected List<OrigamiQuickNote> QuickNotes = [];
+
+    private bool _disableLoadMore
+    {
+        get => _super.QuickNotes
+            .ReadFromCache()
+            .NonDeleted()
+            .Published()
+            .Blog(this.BlogId)
+            .Count() <= this.Page * this.PageSize;
+    }
+
+    /// <summary>
+    /// Loads the posts from the repository
+    /// </summary>
+    protected void LoadQuickNotes()
+    {
+        var pages = _super.QuickNotes
+            .ReadFromCache()
+            .NonDeleted()
+            .Published()
+            .Blog(this.BlogId);
+
+        pages = this.OrderBy switch
+        {
+            2 => pages.OrderBy(x => x.Note),
+            3 => pages.OrderByDescending(x => x.Note),
+            4 => pages.OrderBy(x => x.DateCreated),
+            5 => pages.OrderBy(x => x.LanguageWrittenOn).ThenBy(x => x.Note),
+            6 => pages.OrderBy(x => x.LanguageWrittenOn).ThenByDescending(x => x.DateCreated),
+            _ => pages.OrderByDescending(x => x.DateCreated)
+        };
+
+        this.QuickNotes = pages.Take(Page * PageSize).ToList();
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        this.LoadQuickNotes();
+    }
+
+    private void SetOrderBy(int value)
+    {
+        this.OrderBy = value;
+        this.LoadQuickNotes();
+    }
+}

@@ -16,7 +16,8 @@ namespace Origami.Core.Models
         ILanguageWrittenOn,
         IVersion,
         INew,
-        IPublished
+        IPublished,
+        IDraft
     {
         private Guid _authorId;
         private Guid _blogId;
@@ -72,6 +73,11 @@ namespace Origami.Core.Models
         {
             get { return _isDeleted; }
             set { this.Set(ref _isDeleted, value, Changed); }
+        }
+
+        public bool? IsDraft
+        {
+            get => false; set { }
         }
 
         public bool IsPublished

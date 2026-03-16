@@ -84,21 +84,6 @@
         return result;
     }
 
-    protected override async Task DeleteSelectedEntities()
-    {
-        await ExecuteWithSelectedEntities(
-            async () =>
-            {
-                return await DialogService.ShowMessageBoxAsync(
-                    Text.Upper("Deleting {0} Item(s)", SelectedEntities.Count),
-                    Text.Original("Are you sure?"),
-                    yesText: Text.Lower("Yes"),
-                    noText: Text.Lower("No"));
-            },
-            this.DeleteEntity
-        );
-    }
-
     protected override string RowClassFunc(OrigamiTag entity, int index)
     {
         var result = base.RowClassFunc(entity, index);

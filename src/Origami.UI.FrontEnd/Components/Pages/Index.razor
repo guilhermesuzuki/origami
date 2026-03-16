@@ -8,6 +8,7 @@
         <meta property="og:image" content="@this.Super.Settings.GetSettings().LogoUrl" />
     </HeadContent>
     <FrontPage BlogId="this.BlogId" Class="mb-6"></FrontPage>
+    <QuickNoteList BlogId="this.BlogId" Class="mb-6" Page="this.QuickNotePage"></QuickNoteList>
     <VideoMostPopular BlogId="this.BlogId" Class="mb-6"></VideoMostPopular>
     <VideoList BlogId="this.BlogId" Class="mb-6" Page="this.VideoPage"></VideoList>
     <PostMostPopular BlogId="this.BlogId" Class="mb-6"></PostMostPopular>
@@ -18,15 +19,13 @@
     }
 </Root>
 @code {
-    
-    private OrigamiBlog _blog => this.GetBlogFromSlug();
-
     protected int PostPage { get; set; } = 1;
     protected int VideoPage { get; set; } = 1;
+    protected int QuickNotePage { get; set; } = 1;
 
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        this.BlogId = this._blog.Id;
+        this.BlogId = this.GetBlogFromSlug().Id;
     }
 }
