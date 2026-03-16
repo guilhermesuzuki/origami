@@ -184,7 +184,7 @@ namespace Origami.UI
             builder.Services.AddScoped<IUserFacade, UserFacade>(provider =>
             {
                 var super = provider.GetRequiredService<ISuperRepository>();
-                return new(super) { BlogId = Guid.Empty };
+                return new(super) { BlogId = admin ? Guid.Empty : super.Blogs.GetPrimary().Id, };
             });
 
             //really important workaround
