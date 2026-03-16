@@ -1,26 +1,20 @@
 ﻿@inherits BasicForm<OrigamiQuickNote>
 
 <div class="quick-note @Class">
-    <ul class="inline-list">
-        <li class="w-50">
+    <BasicHeaderNotes Entity="this.Entity"></BasicHeaderNotes>
+    <BasicHeader Class="mt-3" Entity="this.Entity"></BasicHeader>
+    <ul class="inline-list mt-3">
+        <li>
             <LanguageWrittenOn Entity="this.Entity"></LanguageWrittenOn>
-        </li>
-        <li class="w-50">
-            <MudTextField ReadOnly="true"
-            FullWidth="true"
-            Immediate="true"
-            Value="@Author.Username.ToLower()"
-            HelperText="@Text.Lower("Author")"></MudTextField>
         </li>
     </ul>
 
-    <ul class="inline-list">
+    <ul class="inline-list mt-3">
         <li>
             <MudTextField FullWidth="true"
-            Immediate="true"
-            @bind-Value="@Entity.Note"
-            HelperText="@Text.Lower("Type your note here")"
-            Required="true"></MudTextField>
+                          Immediate="true"
+                          @bind-Value="@Entity.Note"
+                          HelperText="@Text.Lower("Type your note here")"></MudTextField>
         </li>
     </ul>
 

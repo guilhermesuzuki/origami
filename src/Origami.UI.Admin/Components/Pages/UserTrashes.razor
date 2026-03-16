@@ -92,6 +92,11 @@
                                             var role = this.Super.Roles.ReadFromCache().Id(context.Item.Id);
                                             <RoleHeaderLite Entity="role"></RoleHeaderLite>
                                         }
+                                        else if (context.Item.Type.Like("QuickNote") == true)
+                                        {
+                                            var note = this.Super.QuickNotes.ReadFromCache().Id(context.Item.Id);
+                                            <QuickNoteHeaderLite Entity="note"></QuickNoteHeaderLite>
+                                        }
                                     </div>
                                 </CellTemplate>
                             </TemplateColumn>
@@ -105,6 +110,10 @@
                                         else if (context.Item.Type.Like("VideoComment") == true)
                                         {
                                             <span>@Text.Original("Comment in video")</span>
+                                        }
+                                        else if (context.Item.Type.Like("QuickNote") == true)
+                                        {
+                                            <span>@Text.Original("Quick note")</span>
                                         }
                                         else
                                         {

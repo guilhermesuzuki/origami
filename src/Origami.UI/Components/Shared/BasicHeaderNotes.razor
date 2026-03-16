@@ -16,15 +16,19 @@
     }
     else if (this.Entity is OrigamiSocialProfile)
     {
-        type = "Social Profile";
+        type = "Social profile";
     }
     else if (this.Entity is OrigamiSpecialMessage)
     {
-        type = "Special Message";
+        type = "Special message";
     }
     else if (this.Entity is OrigamiSpecialPage)
     {
-        type = "Special Page";
+        type = "Special page";
+    }
+    else if (this.Entity is OrigamiQuickNote)
+    {
+        type = "Quick note";
     }
 
     <div class="@Class basic-header-notes">

@@ -65,8 +65,7 @@
                             <TemplateColumn Title="@Text.Upper("Note")">
                                 <CellTemplate>
                                     <div class="cursor-pointer d-inline-flex align-items-center" @onclick="() => OnEdit(context.Item)">
-                                        <span class="language @context.Item.LanguageWrittenOn me-1"></span>
-                                        <span>@context.Item.Note</span>
+                                        <QuickNoteHeaderLite Entity="context.Item"></QuickNoteHeaderLite>
                                     </div>
                                 </CellTemplate>
                             </TemplateColumn>
