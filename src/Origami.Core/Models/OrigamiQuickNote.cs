@@ -12,14 +12,17 @@ namespace Origami.Core.Models
         IAuthorId,
         IDateCreated,
         IDateModified,
-        IDeleted
+        IDeleted,
+        ILanguageWrittenOn
     {
         private Guid _authorId;
         private Guid _blogId;
         private DateTime _dateCreated;
         private DateTime? _dateModified;
         private bool _isDeleted = false;
+        private string _languageWrittenOn = string.Empty;
         private string _note = string.Empty;
+
         /// <summary>
         /// Default constructor
         /// </summary>
@@ -58,6 +61,13 @@ namespace Origami.Core.Models
         {
             get { return _isDeleted; }
             set { this.Set(ref _isDeleted, value, Changed); }
+        }
+
+        [StringLength(5)]
+        public string LanguageWrittenOn
+        {
+            get { return _languageWrittenOn; }
+            set { this.Set(ref _languageWrittenOn, value, Changed); }
         }
 
         [StringLength(256)]

@@ -29,6 +29,7 @@ namespace Origami.Core.Data
             IPostRepository postRepository,
             IPostTagRepository postTagRepository,
             IPostViewRepository postViewRepository,
+            IQuickNoteRepository quickNoteRepository,
             IResumeRepository resumeRepository,
             IRightRepository rightRepository,
             IRoleRepository roleRepository,
@@ -78,6 +79,7 @@ namespace Origami.Core.Data
             Posts = postRepository;
             PostTags = postTagRepository;
             PostViews = postViewRepository;
+            QuickNotes = quickNoteRepository;
             Resumes = resumeRepository;
             Rights = rightRepository;
             Roles = roleRepository;
@@ -127,6 +129,7 @@ namespace Origami.Core.Data
         public IPostRepository Posts { get; }
         public IPostTagRepository PostTags { get; }
         public IPostViewRepository PostViews { get; }
+        public IQuickNoteRepository QuickNotes { get; }
         public IResumeRepository Resumes { get; }
         public IRightRepository Rights { get; }
         public IRoleRepository Roles { get; }

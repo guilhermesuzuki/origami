@@ -1,4 +1,4 @@
-﻿@inherits BasicForm<OrigamiPost>
+﻿@inherits BasicForm<OrigamiQuickNote>
 @inject IPostRepository _post
 
 <div class="quick-post @Class">
@@ -19,17 +19,7 @@
         <li>
             <MudTextField FullWidth="true"
             Immediate="true"
-            @bind-Value="@Entity.Title"
-            HelperText="@Text.Lower("Title")"
-            Required="true"></MudTextField>
-        </li>
-    </ul>
-
-    <ul class="inline-list">
-        <li>
-            <MudTextField FullWidth="true"
-            Immediate="true"
-            @bind-Value="@Entity.Content"
+            @bind-Value="@Entity.Note"
             HelperText="@Text.Lower("Type Here")"
             Required="true"></MudTextField>
         </li>
@@ -43,32 +33,21 @@
 
 @code {
 
-    protected override bool DisableTheSaveButton
-    {
-        get
-        {
-            if (this.Entity.Title.Has() == false) return true;
-            if (this.Entity.Content.Has() == false) return true;
-            return false;
-        }
-    }
-
     public override void Save()
     {
         try
         {
-            var result = new Core.Models.Result<OrigamiPost>(Entity);
+            var result = new Core.Models.Result<OrigamiQuickNote>(Entity);
 
+            Entity.AuthorId = this.UserFacade.User.Id;
             Entity.BlogId = this.UserFacade.BlogId;
-            Entity.IsPublished = true;
             Entity.DateCreated = DateTime.UtcNow;
-            Entity.DatePublished = DateTime.UtcNow;
 
-            var context = new DataOperationContext<OrigamiPost>(this.UserFacade.User, DateTime.UtcNow, this.Entity);
+            var context = new DataOperationContext<OrigamiQuickNote>(this.UserFacade.User, DateTime.UtcNow, this.Entity);
 
             using (var transaction = new TransactionScope())
             {
-                _post.SmartSave(context, true).Push(result);
+                this.Super.QuickNotes.SmartSave(context, true).Push(result);
                 if (result.Ok)
                 {
                     transaction.Complete();
