@@ -166,5 +166,29 @@ namespace Origami.Core
             public const string EmailStatus = "email-status";
             public const string RssFeeds = "rss-feeds";
         }
+
+        public static readonly string[] BackgroundGradients =
+        {
+            "linear-gradient(135deg,#ff0080,#ff8c00)", // neon sunset
+            "linear-gradient(135deg,#ff3cac,#784ba0,#2b86c5)", // vibrant purple mix
+            "linear-gradient(135deg,#00f260,#0575e6)", // neon green → blue
+            "linear-gradient(135deg,#ff416c,#ff4b2b)", // hot red
+            "linear-gradient(135deg,#36d1dc,#5b86e5)", // aqua blue
+            "linear-gradient(135deg,#f7971e,#ffd200)", // bright orange yellow
+            "linear-gradient(135deg,#c94b4b,#4b134f)", // wine red
+            "linear-gradient(135deg,#00c9ff,#92fe9d)", // cyan lime
+            "linear-gradient(135deg,#fc466b,#3f5efb)", // pink blue
+            "linear-gradient(135deg,#f953c6,#b91d73)", // magenta
+            "linear-gradient(135deg,#43e97b,#38f9d7)", // neon mint
+            "linear-gradient(135deg,#fa709a,#fee140)", // pink yellow
+            "linear-gradient(135deg,#30cfd0,#330867)", // teal purple
+            "linear-gradient(135deg,#ff5858,#f09819)", // orange fire
+            "linear-gradient(135deg,#00dbde,#fc00ff)", // cyber neon
+            "linear-gradient(135deg,#7f00ff,#e100ff)", // deep violet
+            "linear-gradient(135deg,#00b09b,#96c93d)", // green energy
+            "linear-gradient(135deg,#fc4a1a,#f7b733)", // orange heat
+            "linear-gradient(135deg,#ee0979,#ff6a00)", // pink flame
+            "linear-gradient(135deg,#11998e,#38ef7d)"  // emerald glow
+        };
     }
 }

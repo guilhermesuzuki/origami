@@ -75,6 +75,7 @@ namespace Origami.Core.Models
             set { this.Set(ref _isDeleted, value, Changed); }
         }
 
+        [NotMapped]
         public bool? IsDraft
         {
             get => false; set { }
