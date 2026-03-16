@@ -14,65 +14,78 @@
 @inject IUserRoleRepository userRoleRepository
 @inject IOptions<JwtConfiguration> jwtConfiguration
 
-<div class="login-wrapper mt-3">
-    @if (this._mustChangePassword == false)
-    {
-        <ul class="inline-list mt-3">
-            <li>
-                <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("Username")" @bind-Value="_username" OnKeyUp="this._onLogin"></MudTextField>
-            </li>
-            <li>
-                <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("Password")" InputType="InputType.Password" @bind-Value="_password" OnKeyUp="this._onLogin"></MudTextField>
-            </li>
-        </ul>
-        <div class="btn-group mt-3 w-100">
-            <button class="btn btn-success text-white w-100" disabled="@_disableLogin" @onclick="_login" type="submit">
-                <i class="fa-solid fa-right-to-bracket"></i>
-                @Text.Lower("Login")
-            </button>
-            <button class="btn btn-warning text-white w-100" @onclick="_clear">
-                <i class="fa-solid fa-broom"></i>
-                @Text.Lower("Clear")
-            </button>
-            <button class="btn btn-danger text-white w-100" @onclick="_forgotPassword">
-                <i class="fa-solid fa-user-lock"></i>
-                @Text.Lower("Forgot password")
-            </button>
-        </div>
-    }
-    else
-    {
-        <ul class="inline-list">
-            <li>
-                <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("New password")" InputType="InputType.Password" @bind-Value="_newPassword1"></MudTextField>
-            </li>
-            <li>
-                <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("Confirm password")" InputType="InputType.Password" @bind-Value="_newPassword2"></MudTextField>
-            </li>
-        </ul>
-        <div class="btn-group mt-3 w-100">
-            <button class="btn btn-success text-white" disabled="@_disableLogin" @onclick="_changePassword">
-                <i class="fa-solid fa-floppy-disk"></i>
-                @Text.Lower("Save")
-            </button>
-            <button class="btn btn-warning text-white" @onclick="() => { this._newPassword1 = this._newPassword2 = string.Empty; }">
-                <i class="fa-solid fa-broom"></i>
-                @Text.Lower("Clear")
-            </button>
-            <button class="btn btn-secondary text-white" @onclick="_clear">
-                <i class="fa-solid fa-circle-chevron-left"></i>
-                @Text.Lower("Go back")
-            </button>
-        </div>
-    }
-</div>
+@if (SyncRoot != null)
+{
+    var step = this._currentStep.Count > 0 ? this._currentStep.Peek() : Steps.Step0_Credentials;
+    <div class="login-wrapper mt-3">
+        @if (step == Steps.Step0_Credentials)
+        {
+            <ul class="inline-list mt-3">
+                <li>
+                    <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("Username")" @bind-Value="_username" OnKeyUp="this._onLogin"></MudTextField>
+                </li>
+                <li>
+                    <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("Password")" InputType="InputType.Password" @bind-Value="_password" OnKeyUp="this._onLogin"></MudTextField>
+                </li>
+            </ul>
+            <div class="btn-group mt-3 w-100">
+                <button class="btn btn-success text-white w-100" disabled="@_disableLogin" @onclick="_login" type="submit">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    @Text.Lower("Login")
+                </button>
+                <button class="btn btn-warning text-white w-100" @onclick="_clear">
+                    <i class="fa-solid fa-broom"></i>
+                    @Text.Lower("Clear")
+                </button>
+                <button class="btn btn-danger text-white w-100" @onclick="_forgotPassword">
+                    <i class="fa-solid fa-user-lock"></i>
+                    @Text.Lower("Forgot password")
+                </button>
+            </div>
+        }
+        else if (step == Steps.Step1_MustChangePassword)
+        {
+            <ul class="inline-list">
+                <li>
+                    <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("New password")" InputType="InputType.Password" @bind-Value="_newPassword1"></MudTextField>
+                </li>
+                <li>
+                    <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("Confirm password")" InputType="InputType.Password" @bind-Value="_newPassword2"></MudTextField>
+                </li>
+            </ul>
+            <div class="btn-group mt-3 w-100">
+                <button class="btn btn-success text-white" disabled="@_disableLogin" @onclick="_changePassword">
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    @Text.Lower("Save")
+                </button>
+                <button class="btn btn-warning text-white" @onclick="() => { this._newPassword1 = this._newPassword2 = string.Empty; }">
+                    <i class="fa-solid fa-broom"></i>
+                    @Text.Lower("Clear")
+                </button>
+                <button class="btn btn-secondary text-white" @onclick="_goBack">
+                    <i class="fa-solid fa-circle-chevron-left"></i>
+                    @Text.Lower("Go back")
+                </button>
+            </div>
+        }
+    </div>
+}
 
 @code {
+
+    private enum Steps
+    {
+        Step0_Credentials = 0,
+        Step1_MustChangePassword = 1,
+        Step2_Enable2MFA = 2,
+    }
+
     private bool _mustChangePassword = false;
     private string _newPassword1 = string.Empty;
     private string _newPassword2 = string.Empty;
     private string _password = string.Empty;
     private string _username = string.Empty;
+    private Stack<Steps> _currentStep = new();
 
     private bool _disableLogin
     {
@@ -84,13 +97,19 @@
         }
     }
 
+    private void _goBack()
+    {
+        this._currentStep.TryPop(out _);
+    }
+
     private void _clear()
     {
-        _mustChangePassword = false;
         _username = string.Empty;
         _password = string.Empty;
         _newPassword1 = string.Empty;
         _newPassword2 = string.Empty;
+        _currentStep.Clear();
+        _currentStep.Push(Steps.Step0_Credentials);
     }
 
     private string _generateJwtToken(OrigamiUser user)
@@ -129,13 +148,13 @@
 
             if (user.MustChangePassword == true)
             {
-                this._mustChangePassword = true;
+                this._currentStep.Push(Steps.Step1_MustChangePassword);
                 this.UserFacade.Result = new() { ErrorMessage = Text.Original("You must change your password") };
                 return;
             }
 
             var token = this._generateJwtToken(user);
-            await this.JSRuntime.InvokeVoidAsync("$.cookie", this.Configuration.GetUserCookieKey(), token, new { path = "/", expires = 365, });
+            await this.JSRuntime.InvokeVoidAsync("$.cookie", this.Configuration.GetUserCookieKey(), token, new { path = "/", expires = 180, });
 
             var returnUrl = this.NavigationManager!.Uri.QueryString("ReturnUrl");
             this.NavigationManager!.NavigateTo(returnUrl.Has() ? returnUrl : "/", true);
@@ -184,5 +203,12 @@
     private void _forgotPassword()
     {
         this.NavigationManager.NavigateTo("/password/forgot", false);
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        this._currentStep.Clear();
+        this._currentStep.Push(Steps.Step0_Credentials);
     }
 }

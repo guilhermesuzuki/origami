@@ -18,6 +18,11 @@ namespace Origami.UI
         IId,
         IBlogId
     {
+        /// <summary>
+        /// Sync root object
+        /// </summary>
+        public static readonly object SyncRoot = new();
+
         [Parameter] public Guid BlogId { get; set; }
         [Parameter] public string BlogSlug { get; set; } = string.Empty;
         [Parameter] public virtual string Class { get; set; } = string.Empty;
