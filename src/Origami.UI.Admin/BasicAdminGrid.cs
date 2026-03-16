@@ -140,7 +140,7 @@ namespace Origami.UI.Admin
         /// <param name="entity"></param>
         protected virtual void EntitySaved(T entity)
         {
-            DataGrid!.ReloadServerData();
+            DataGrid?.ReloadServerData();
             SelectedEntity = entity.Clone();
         }
 
