@@ -13,7 +13,7 @@
     <ContentHeaderLite Entity="this.Entity"></ContentHeaderLite>
     <div class="page-header position-relative shadow-sm cursor-pointer @Class" @onclick="() => this.GoToPage()">
         <div class="page-header-image" style="background-image: url(@header)"></div>
-        <div class="page-header-title position-absolute overflow-auto zeroes">
+        <div class="page-header-title-wrapper position-absolute overflow-auto zeroes">
             <div class="p-3">
                 <a class="title fw-bold text-uppercase focusable text-center" href="@Entity.Hyperlink">
                     <PageHeaderTitle Entity="this.Entity"></PageHeaderTitle>
@@ -33,7 +33,14 @@
                     </div>
                 </li>
                 <li class="text-center">
-                    <Draft Entity="this.Entity"></Draft>
+                    <Draft Entity="this.Entity" Class="mx-1"></Draft>
+                    @if (this.Entity.IsFrontPage)
+                    {
+                        <span class="text-white text-lowercase mx-1">
+                            <i class="bi bi-globe"></i>
+                            @Text.Lower("Front-page")
+                        </span>
+                    }
                 </li>
                 <li class="text-right" style="width: 50px;">
                     <div class="p-2 cursor-pointer focusable" @onclick="() => _showHeaderImage = true" @onclick:stopPropagation="true">
