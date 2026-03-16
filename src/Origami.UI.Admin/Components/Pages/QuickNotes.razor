@@ -110,7 +110,7 @@
 </Root>
 @code {
 
-    protected override string DefaultOrdering => $"{nameof(OrigamiQuickNote.DateCreated)}";
+    protected override string DefaultOrdering => $"{nameof(OrigamiQuickNote.Note)}";
 
     protected virtual Result<OrigamiQuickNote> PublishEntity(OrigamiQuickNote entity)
     {
