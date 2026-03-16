@@ -9,10 +9,7 @@
         @foreach (var cinfo in OrigamiConstants.AllLanguages())
         {
             <MudSelectItem Value="@cinfo.Name">
-                <div class="d-inline-flex align-items-center culture-info text-white">
-                    <span class="language @cinfo.Name me-1"></span>
-                    <span>@cinfo.DisplayName</span>
-                </div>
+                <Language Class="text-white" Entity="cinfo"></Language>
             </MudSelectItem>
         }
     </MudSelect>

@@ -13,7 +13,9 @@ namespace Origami.Core.Models
         IDateCreated,
         IDateModified,
         IDeleted,
-        ILanguageWrittenOn
+        ILanguageWrittenOn,
+        IVersion,
+        INew
     {
         private Guid _authorId;
         private Guid _blogId;
@@ -22,13 +24,14 @@ namespace Origami.Core.Models
         private bool _isDeleted = false;
         private string _languageWrittenOn = string.Empty;
         private string _note = string.Empty;
+        private byte[] _version = [];
 
         /// <summary>
         /// Default constructor
         /// </summary>
         public OrigamiQuickNote() : base()
         {
-
+            this.LanguageWrittenOn = Thread.CurrentThread.CurrentUICulture.Name;
         }
 
         public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) => { };
@@ -70,11 +73,20 @@ namespace Origami.Core.Models
             set { this.Set(ref _languageWrittenOn, value, Changed); }
         }
 
+        public bool New => _version.SequenceEqual([]);
+
         [StringLength(256)]
         public string Note
         {
             get { return _note; }
             set { this.Set(ref _note, value, Changed); }
+        }
+
+        [Timestamp]
+        public byte[] Version
+        {
+            get { return _version; }
+            set { this.Set(ref _version, value, Changed); }
         }
     }
 }

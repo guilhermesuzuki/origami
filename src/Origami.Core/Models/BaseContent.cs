@@ -19,7 +19,8 @@ namespace Origami.Core.Models
         IDeleted,
         IAuthorId,
         IHyperlink,
-        IDraft
+        IDraft,
+        IVersion
     {
         protected string? _additionalInfo = string.Empty;
         protected Guid _authorId;
