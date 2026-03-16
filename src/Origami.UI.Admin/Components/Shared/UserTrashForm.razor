@@ -63,6 +63,11 @@
                 var entity = this.Super.Blogs.ReadFromCache().Id(Entity.Id)!;
                 <TrashFormBlog Entity="entity"></TrashFormBlog>
             }
+            else if (Entity.Type.Like("QuickNote") == true)
+            {
+                var entity = this.Super.QuickNotes.ReadFromCache().Id(Entity.Id)!;
+                <TrashFormQuickNote Entity="entity"></TrashFormQuickNote>
+            }
         </div>
     }
 </div>

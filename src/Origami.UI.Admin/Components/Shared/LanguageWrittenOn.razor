@@ -10,6 +10,7 @@
                InputClass="d-inline-flex align-items-center"
                @bind-Value:get="@Entity.LanguageWrittenOn"
                @bind-Value:set="(language) => this.Entity.LanguageWrittenOn = language"
+               ReadOnly="@ReadOnly"
                HelperText="@Text.Lower("Language")">
         @foreach (var language in OrigamiConstants.AllLanguages())
         {
@@ -22,6 +23,7 @@
 
 @code {
     [Parameter] public ILanguageWrittenOn? Entity { get; set; }
+    [Parameter] public bool ReadOnly { get; set; } = false;
 
     protected override void OnParametersSet()
     {

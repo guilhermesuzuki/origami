@@ -8,7 +8,6 @@
             <LanguageWrittenOn Entity="this.Entity"></LanguageWrittenOn>
         </li>
     </ul>
-
     <ul class="inline-list mt-3">
         <li>
             <MudTextField FullWidth="true"
@@ -17,7 +16,6 @@
                           HelperText="@Text.Lower("Type your note here")"></MudTextField>
         </li>
     </ul>
-
     <div class="buttons mt-3 p-3 text-center">
         <div class="btn-group">
             <button class="btn btn-success text-white fw-bold" @onclick="Save" disabled="@this.DisableTheSaveButton">
@@ -35,7 +33,6 @@
         </div>
     </div>
 </div>
-
 
 @code {
 
