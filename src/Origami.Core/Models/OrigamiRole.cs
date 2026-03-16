@@ -93,6 +93,7 @@ namespace Origami.Core.Models
         private bool _createNewCategories;
         private bool _createNewPages;
         private bool _createNewPosts;
+        private bool _createNewQuickNotes;
         private bool _createNewRoles;
         private bool _createNewSpecialMessages;
         private bool _createNewSpecialPages;
@@ -103,11 +104,13 @@ namespace Origami.Core.Models
         private bool _deleteCategories;
         private bool _deleteOtherUsersPages;
         private bool _deleteOtherUsersPosts;
+        private bool _deleteOtherUsersQuickNotes;
         private bool _deleteOtherUsersSpecialMessages;
         private bool _deleteOtherUsersSpecialPages;
         private bool _deleteOtherUsersVideos;
         private bool _deleteOwnPages;
         private bool _deleteOwnPosts;
+        private bool _deleteOwnQuickNotes;
         private bool _deleteOwnSpecialMessages;
         private bool _deleteOwnSpecialPages;
         private bool _deleteOwnVideos;
@@ -120,12 +123,14 @@ namespace Origami.Core.Models
         private bool _editOtherUsers;
         private bool _editOtherUsersPages;
         private bool _editOtherUsersPosts;
+        private bool _editOtherUsersQuickNotes;
         private bool _editOtherUsersRoles;
         private bool _editOtherUsersSpecialMessages;
         private bool _editOtherUsersSpecialPages;
         private bool _editOtherUsersVideos;
         private bool _editOwnPages;
         private bool _editOwnPosts;
+        private bool _editOwnQuickNotes;
         private bool _editOwnSpecialMessages;
         private bool _editOwnSpecialPages;
         private bool _editOwnUser;
@@ -159,6 +164,7 @@ namespace Origami.Core.Models
         private bool _purgeComments;
         private bool _purgePages;
         private bool _purgePosts;
+        private bool _purgeQuickNotes;
         private bool _purgeRoles;
         private bool _purgeSpecialMessages;
         private bool _purgeSpecialPages;
@@ -172,6 +178,7 @@ namespace Origami.Core.Models
         private bool _restoreComments;
         private bool _restorePages;
         private bool _restorePosts;
+        private bool _restoreQuickNotes;
         private bool _restoreRoles;
         private bool _restoreSpecialMessages;
         private bool _restoreSpecialPages;
@@ -204,6 +211,7 @@ namespace Origami.Core.Models
         private bool _viewDetailedErrorMessages;
         private bool _viewPages;
         private bool _viewPosts;
+        private bool _viewQuickNotes;
         private bool _viewRatingsOnPosts;
         private bool _viewRatingsOnVideos;
         private bool _viewRoles;
@@ -216,336 +224,372 @@ namespace Origami.Core.Models
         private bool _viewUsers;
         private bool _viewVideos;
         private bool _wipeDataOutFromSocialProfiles;
-        [NotMapped, Administrators, Managers]
+
+        [NotMapped]
         public bool AccessAdminPages
         {
             get => _accessAdminPages;
             set => this.Set(ref _accessAdminPages, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool ActivateBlogs
         {
             get => _activateBlogs;
             set => this.Set(ref _activateBlogs, value, Changed);
         }
 
-        [NotMapped, Administrators]
+        [NotMapped]
         public bool BackupSystem
         {
             get => _backupSystem;
             set => this.Set(ref _backupSystem, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers, ManagersSocialMedia]
+        [NotMapped]
         public bool BlockSocialProfiles
         {
             get => _blockSocialProfiles;
             set => this.Set(ref _blockSocialProfiles, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool BlockUserSelf
         {
             get => _blockUserSelf;
             set => this.Set(ref _blockUserSelf, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool BlockUsersOtherThanSelf
         {
             get => _blockUsersOtherThanSelf;
             set => this.Set(ref _blockUsersOtherThanSelf, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool CreateNewBlogs
         {
             get => _createNewBlogs;
             set => this.Set(ref _createNewBlogs, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers, SuperEditors]
+        [NotMapped]
         public bool CreateNewCategories
         {
             get => _createNewCategories;
             set => this.Set(ref _createNewCategories, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers, Editors, SuperEditors]
+        [NotMapped]
         public bool CreateNewPages
         {
             get => _createNewPages;
             set => this.Set(ref _createNewPages, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers, Editors, SuperEditors]
+        [NotMapped]
         public bool CreateNewPosts
         {
             get => _createNewPosts;
             set => this.Set(ref _createNewPosts, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
+        public bool CreateNewQuickNotes
+        {
+            get => _createNewQuickNotes;
+            set => this.Set(ref _createNewQuickNotes, value, Changed);
+        }
+
+        [NotMapped]
         public bool CreateNewRoles
         {
             get => _createNewRoles;
             set => this.Set(ref _createNewRoles, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool CreateNewSpecialMessages
         {
             get => _createNewSpecialMessages;
             set => this.Set(ref _createNewSpecialMessages, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool CreateNewSpecialPages
         {
             get => _createNewSpecialPages;
             set => this.Set(ref _createNewSpecialPages, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool CreateNewUsers
         {
             get => _createNewUsers;
             set => this.Set(ref _createNewUsers, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers, Editors, SuperEditors]
+        [NotMapped]
         public bool CreateNewVideos
         {
             get => _createNewVideos;
             set => this.Set(ref _createNewVideos, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool DeactivateBlogs
         {
             get => _deactivateBlogs;
             set => this.Set(ref _deactivateBlogs, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool DeleteBlogs
         {
             get => _deleteBlogs;
             set => this.Set(ref _deleteBlogs, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers, SuperEditors]
+        [NotMapped]
         public bool DeleteCategories
         {
             get => _deleteCategories;
             set => this.Set(ref _deleteCategories, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool DeleteOtherUsersPages
         {
             get => _deleteOtherUsersPages;
             set => this.Set(ref _deleteOtherUsersPages, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool DeleteOtherUsersPosts
         {
             get => _deleteOtherUsersPosts;
             set => this.Set(ref _deleteOtherUsersPosts, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
+        public bool DeleteOtherUsersQuickNotes
+        {
+            get => _deleteOtherUsersQuickNotes;
+            set => this.Set(ref _deleteOtherUsersQuickNotes, value, Changed);
+        }
+
+        [NotMapped]
         public bool DeleteOtherUsersSpecialMessages
         {
             get => _deleteOtherUsersSpecialMessages;
             set => this.Set(ref _deleteOtherUsersSpecialMessages, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool DeleteOtherUsersSpecialPages
         {
             get => _deleteOtherUsersSpecialPages;
             set => this.Set(ref _deleteOtherUsersSpecialPages, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool DeleteOtherUsersVideos
         {
             get => _deleteOtherUsersVideos;
             set => this.Set(ref _deleteOtherUsersVideos, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool DeleteOwnPages
         {
             get => _deleteOwnPages;
             set => this.Set(ref _deleteOwnPages, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool DeleteOwnPosts
         {
             get => _deleteOwnPosts;
             set => this.Set(ref _deleteOwnPosts, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
+        public bool DeleteOwnQuickNotes
+        {
+            get => _deleteOwnQuickNotes;
+            set => this.Set(ref _deleteOwnQuickNotes, value, Changed);
+        }
+
+        [NotMapped]
         public bool DeleteOwnSpecialMessages
         {
             get => _deleteOwnSpecialMessages;
             set => this.Set(ref _deleteOwnSpecialMessages, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool DeleteOwnSpecialPages
         {
             get => _deleteOwnSpecialPages;
             set => this.Set(ref _deleteOwnSpecialPages, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool DeleteOwnVideos
         {
             get => _deleteOwnVideos;
             set => this.Set(ref _deleteOwnVideos, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool DeleteRoles
         {
             get => _deleteRoles;
             set => this.Set(ref _deleteRoles, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers, SuperEditors]
+        [NotMapped]
         public bool DeleteTags
         {
             get => _deleteTags;
             set => this.Set(ref _deleteTags, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers, BasicAccess]
+        [NotMapped]
         public bool DeleteUserSelf
         {
             get => _deleteUserSelf;
             set => this.Set(ref _deleteUserSelf, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool DeleteUsersOtherThanSelf
         {
             get => _deleteUsersOtherThanSelf;
             set => this.Set(ref _deleteUsersOtherThanSelf, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool EditBlogs
         {
             get => _editBlogs;
             set => this.Set(ref _editBlogs, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers, SuperEditors]
+        [NotMapped]
         public bool EditCategories
         {
             get => _editCategories;
             set => this.Set(ref _editCategories, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool EditOtherUsers
         {
             get => _editOtherUsers;
             set => this.Set(ref _editOtherUsers, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers, SuperEditors]
+        [NotMapped]
         public bool EditOtherUsersPages
         {
             get => _editOtherUsersPages;
             set => this.Set(ref _editOtherUsersPages, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers, SuperEditors]
+        [NotMapped]
         public bool EditOtherUsersPosts
         {
             get => _editOtherUsersPosts;
             set => this.Set(ref _editOtherUsersPosts, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
+        public bool EditOtherUsersQuickNotes
+        {
+            get => _editOtherUsersQuickNotes;
+            set => this.Set(ref _editOtherUsersQuickNotes, value, Changed);
+        }
+
+        [NotMapped]
         public bool EditOtherUsersRoles
         {
             get => _editOtherUsersRoles;
             set => this.Set(ref _editOtherUsersRoles, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool EditOtherUsersSpecialMessages
         {
             get => _editOtherUsersSpecialMessages;
             set => this.Set(ref _editOtherUsersSpecialMessages, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool EditOtherUsersSpecialPages
         {
             get => _editOtherUsersSpecialPages;
             set => this.Set(ref _editOtherUsersSpecialPages, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers, SuperEditors]
+        [NotMapped]
         public bool EditOtherUsersVideos
         {
             get => _editOtherUsersVideos;
             set => this.Set(ref _editOtherUsersVideos, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers, Editors, SuperEditors]
+        [NotMapped]
         public bool EditOwnPages
         {
             get => _editOwnPages;
             set => this.Set(ref _editOwnPages, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers, Editors, SuperEditors]
+        [NotMapped]
         public bool EditOwnPosts
         {
             get => _editOwnPosts;
             set => this.Set(ref _editOwnPosts, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
+        public bool EditOwnQuickNotes
+        {
+            get => _editOwnQuickNotes;
+            set => this.Set(ref _editOwnQuickNotes, value, Changed);
+        }
+
+        [NotMapped]
         public bool EditOwnSpecialMessages
         {
             get => _editOwnSpecialMessages;
             set => this.Set(ref _editOwnSpecialMessages, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool EditOwnSpecialPages
         {
             get => _editOwnSpecialPages;
             set => this.Set(ref _editOwnSpecialPages, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers, BasicAccess]
+        [NotMapped]
         public bool EditOwnUser
         {
             get => _editOwnUser;
             set => this.Set(ref _editOwnUser, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers, Editors, SuperEditors]
+        [NotMapped]
         public bool EditOwnVideos
         {
             get => _editOwnVideos;
             set => this.Set(ref _editOwnVideos, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool EditRoles
         {
             get => _editRoles;
@@ -559,592 +603,619 @@ namespace Origami.Core.Models
             set => this.Set(ref _editSystemRoles, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers, SuperEditors]
+        [NotMapped]
         public bool EditTags
         {
             get => _editTags;
             set => this.Set(ref _editTags, value, Changed);
         }
 
-        [NotMapped, Administrators]
+        [NotMapped]
         public bool EnterMaintenanceMode
         {
             get => _enterMaintenanceMode;
             set => this.Set(ref _enterMaintenanceMode, value, Changed);
         }
 
-        [NotMapped, Administrators]
+        [NotMapped]
         public bool LeaveMaintenanceMode
         {
             get => _leaveMaintenanceMode;
             set => this.Set(ref _leaveMaintenanceMode, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool ManageExtensions
         {
             get => _manageExtensions;
             set => this.Set(ref _manageExtensions, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool ManageFiles
         {
             get => _manageFiles;
             set => this.Set(ref _manageFiles, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool ManagePackages
         {
             get => _managePackages;
             set => this.Set(ref _managePackages, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool ManageThemes
         {
             get => _manageThemes;
             set => this.Set(ref _manageThemes, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool ManageWidgets
         {
             get => _manageWidgets;
             set => this.Set(ref _manageWidgets, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool MarkAsFrontPage
         {
             get => _markAsFrontPage;
             set => this.Set(ref _markAsFrontPage, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool MarkBlogAsPrimary
         {
             get => _markBlogAsPrimary;
             set => this.Set(ref _markBlogAsPrimary, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers, ManagersSocialMedia]
+        [NotMapped]
         public bool ModerateComments
         {
             get => _moderateComments;
             set => this.Set(ref _moderateComments, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool None
         {
             get => _none;
             set => this.Set(ref _none, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers, SuperPublishers]
+        [NotMapped]
         public bool PublishOtherUsersPages
         {
             get => _publishOtherUsersPages;
             set => this.Set(ref _publishOtherUsersPages, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers, SuperPublishers]
+        [NotMapped]
         public bool PublishOtherUsersPosts
         {
             get => _publishOtherUsersPosts;
             set => this.Set(ref _publishOtherUsersPosts, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool PublishOtherUsersSpecialMessages
         {
             get => _publishOtherUsersSpecialMessages;
             set => this.Set(ref _publishOtherUsersSpecialMessages, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool PublishOtherUsersSpecialPages
         {
             get => _publishOtherUsersSpecialPages;
             set => this.Set(ref _publishOtherUsersSpecialPages, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers, SuperPublishers]
+        [NotMapped]
         public bool PublishOtherUsersVideos
         {
             get => _publishOtherUsersVideos;
             set => this.Set(ref _publishOtherUsersVideos, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers, Publishers, SuperPublishers]
+        [NotMapped]
         public bool PublishOwnPages
         {
             get => _publishOwnPages;
             set => this.Set(ref _publishOwnPages, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers, Publishers, SuperPublishers]
+        [NotMapped]
         public bool PublishOwnPosts
         {
             get => _publishOwnPosts;
             set => this.Set(ref _publishOwnPosts, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool PublishOwnSpecialMessages
         {
             get => _publishOwnSpecialMessages;
             set => this.Set(ref _publishOwnSpecialMessages, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool PublishOwnSpecialPages
         {
             get => _publishOwnSpecialPages;
             set => this.Set(ref _publishOwnSpecialPages, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers, Publishers, SuperPublishers]
+        [NotMapped]
         public bool PublishOwnVideos
         {
             get => _publishOwnVideos;
             set => this.Set(ref _publishOwnVideos, value, Changed);
         }
 
-        [NotMapped, Administrators, ManagersTrash]
+        [NotMapped]
         public bool PurgeBlogs
         {
             get => _purgeBlogs;
             set => this.Set(ref _purgeBlogs, value, Changed);
         }
 
-        [NotMapped, Administrators, ManagersTrash]
+        [NotMapped]
         public bool PurgeCategories
         {
             get => _purgeCategories;
             set => this.Set(ref _purgeCategories, value, Changed);
         }
 
-        [NotMapped, Administrators, ManagersTrash]
+        [NotMapped]
         public bool PurgeComments
         {
             get => _purgeComments;
             set => this.Set(ref _purgeComments, value, Changed);
         }
 
-        [NotMapped, Administrators, ManagersTrash]
+        [NotMapped]
         public bool PurgePages
         {
             get => _purgePages;
             set => this.Set(ref _purgePages, value, Changed);
         }
 
-        [NotMapped, Administrators, ManagersTrash]
+        [NotMapped]
         public bool PurgePosts
         {
             get => _purgePosts;
             set => this.Set(ref _purgePosts, value, Changed);
         }
 
-        [NotMapped, Administrators, ManagersTrash]
+        [NotMapped]
+        public bool PurgeQuickNotes
+        {
+            get => _purgeQuickNotes;
+            set => this.Set(ref _purgeQuickNotes, value, Changed);
+        }
+
+        [NotMapped]
         public bool PurgeRoles
         {
             get => _purgeRoles;
             set => this.Set(ref _purgeRoles, value, Changed);
         }
 
-        [NotMapped, Administrators, ManagersTrash]
+        [NotMapped]
         public bool PurgeSpecialMessages
         {
             get => _purgeSpecialMessages;
             set => this.Set(ref _purgeSpecialMessages, value, Changed);
         }
 
-        [NotMapped, Administrators, ManagersTrash]
+        [NotMapped]
         public bool PurgeSpecialPages
         {
             get => _purgeSpecialPages;
             set => this.Set(ref _purgeSpecialPages, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers, SuperEditors]
+        [NotMapped]
         public bool PurgeTags
         {
             get => _purgeTags;
             set => this.Set(ref _purgeTags, value, Changed);
         }
 
-        [NotMapped, Administrators, ManagersTrash]
+        [NotMapped]
         public bool PurgeUsers
         {
             get => _purgeUsers;
             set => this.Set(ref _purgeUsers, value, Changed);
         }
 
-        [NotMapped, Administrators, ManagersTrash]
+        [NotMapped]
         public bool PurgeVideos
         {
             get => _purgeVideos;
             set => this.Set(ref _purgeVideos, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool ResetOtherUsersPasswords
         {
             get => _resetOtherUsersPasswords;
             set => this.Set(ref _resetOtherUsersPasswords, value, Changed);
         }
 
-        [NotMapped, Administrators, BasicAccess, Managers]
+        [NotMapped]
         public bool ResetOwnPassword
         {
             get => _resetOwnPassword;
             set => this.Set(ref _resetOwnPassword, value, Changed);
         }
 
-        [NotMapped, Administrators, ManagersTrash]
+        [NotMapped]
         public bool RestoreBlogs
         {
             get => _restoreBlogs;
             set => this.Set(ref _restoreBlogs, value, Changed);
         }
 
-        [NotMapped, Administrators, ManagersTrash]
+        [NotMapped]
         public bool RestoreCategories
         {
             get => _restoreCategories;
             set => this.Set(ref _restoreCategories, value, Changed);
         }
 
-        [NotMapped, Administrators, ManagersTrash]
+        [NotMapped]
         public bool RestoreComments
         {
             get => _restoreComments;
             set => this.Set(ref _restoreComments, value, Changed);
         }
 
-        [NotMapped, Administrators, ManagersTrash]
+        [NotMapped]
         public bool RestorePages
         {
             get => _restorePages;
             set => this.Set(ref _restorePages, value, Changed);
         }
 
-        [NotMapped, Administrators, ManagersTrash]
+        [NotMapped]
         public bool RestorePosts
         {
             get => _restorePosts;
             set => this.Set(ref _restorePosts, value, Changed);
         }
 
-        [NotMapped, Administrators, ManagersTrash]
+        [NotMapped]
+        public bool RestoreQuickNotes
+        {
+            get => _restoreQuickNotes;
+            set => this.Set(ref _restoreQuickNotes, value, Changed);
+        }
+
+        [NotMapped]
         public bool RestoreRoles
         {
             get => _restoreRoles;
             set => this.Set(ref _restoreRoles, value, Changed);
         }
 
-        [NotMapped, Administrators, ManagersTrash]
+        [NotMapped]
         public bool RestoreSpecialMessages
         {
             get => _restoreSpecialMessages;
             set => this.Set(ref _restoreSpecialMessages, value, Changed);
         }
 
-        [NotMapped, Administrators, ManagersTrash]
+        [NotMapped]
         public bool RestoreSpecialPages
         {
             get => _restoreSpecialPages;
             set => this.Set(ref _restoreSpecialPages, value, Changed);
         }
 
-        [NotMapped, Administrators]
+        [NotMapped]
         public bool RestoreSystem
         {
             get => _restoreSystem;
             set => this.Set(ref _restoreSystem, value, Changed);
         }
 
-        [NotMapped, Administrators, ManagersTrash]
+        [NotMapped]
         public bool RestoreUsers
         {
             get => _restoreUsers;
             set => this.Set(ref _restoreUsers, value, Changed);
         }
 
-        [NotMapped, Administrators, ManagersTrash]
+        [NotMapped]
         public bool RestoreVideos
         {
             get => _restoreVideos;
             set => this.Set(ref _restoreVideos, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers, ManagersSocialMedia]
+        [NotMapped]
         public bool RevokeModeratorRolesFromSocialProfiles
         {
             get => _revokeModeratorRolesFromSocialProfiles;
             set => this.Set(ref _revokeModeratorRolesFromSocialProfiles, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool SubmitRatingsOnPosts
         {
             get => _submitRatingsOnPosts;
             set => this.Set(ref _submitRatingsOnPosts, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool SubmitRatingsOnVideos
         {
             get => _submitRatingsOnVideos;
             set => this.Set(ref _submitRatingsOnVideos, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers, ManagersSocialMedia]
+        [NotMapped]
         public bool TurnSocialProfilesIntoModerators
         {
             get => _turnSocialProfilesIntoModerators;
             set => this.Set(ref _turnSocialProfilesIntoModerators, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers, ManagersSocialMedia]
+        [NotMapped]
         public bool UnblockSocialProfiles
         {
             get => _unblockSocialProfiles;
             set => this.Set(ref _unblockSocialProfiles, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool UnblockUsers
         {
             get => _unblockUsers;
             set => this.Set(ref _unblockUsers, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool UnmarkAsFrontPage
         {
             get => _unmarkAsFrontPage;
             set => this.Set(ref _unmarkAsFrontPage, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers, SuperPublishers]
+        [NotMapped]
         public bool UnpublishOtherUsersPages
         {
             get => _unpublishOtherUsersPages;
             set => this.Set(ref _unpublishOtherUsersPages, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers, SuperPublishers]
+        [NotMapped]
         public bool UnpublishOtherUsersPosts
         {
             get => _unpublishOtherUsersPosts;
             set => this.Set(ref _unpublishOtherUsersPosts, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool UnpublishOtherUsersSpecialMessages
         {
             get => _unpublishOtherUsersSpecialMessages;
             set => this.Set(ref _unpublishOtherUsersSpecialMessages, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool UnpublishOtherUsersSpecialPages
         {
             get => _unpublishOtherUsersSpecialPages;
             set => this.Set(ref _unpublishOtherUsersSpecialPages, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers, SuperPublishers]
+        [NotMapped]
         public bool UnpublishOtherUsersVideos
         {
             get => _unpublishOtherUsersVideos;
             set => this.Set(ref _unpublishOtherUsersVideos, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers, Publishers, SuperPublishers]
+        [NotMapped]
         public bool UnpublishOwnPages
         {
             get => _unpublishOwnPages;
             set => this.Set(ref _unpublishOwnPages, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers, Publishers, SuperPublishers]
+        [NotMapped]
         public bool UnpublishOwnPosts
         {
             get => _unpublishOwnPosts;
             set => this.Set(ref _unpublishOwnPosts, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool UnpublishOwnSpecialMessages
         {
             get => _unpublishOwnSpecialMessages;
             set => this.Set(ref _unpublishOwnSpecialMessages, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool UnpublishOwnSpecialPages
         {
             get => _unpublishOwnSpecialPages;
             set => this.Set(ref _unpublishOwnSpecialPages, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers, Publishers, SuperPublishers]
+        [NotMapped]
         public bool UnpublishOwnVideos
         {
             get => _unpublishOwnVideos;
             set => this.Set(ref _unpublishOwnVideos, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers, ManagersSocialMedia]
+        [NotMapped]
         public bool UnsubcribeSocialProfiles
         {
             get => _unsubcribeSocialProfiles;
             set => this.Set(ref _unsubcribeSocialProfiles, value, Changed);
         }
 
-        [NotMapped, Administrators]
+        [NotMapped]
         public bool ViewBackupRestoreSystem
         {
             get => _viewBackupRestoreSystem;
             set => this.Set(ref _viewBackupRestoreSystem, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool ViewBlogs
         {
             get => _viewBlogs;
             set => this.Set(ref _viewBlogs, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers, SuperEditors]
+        [NotMapped]
         public bool ViewCategories
         {
             get => _viewCategories;
             set => this.Set(ref _viewCategories, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers, ManagersSocialMedia]
+        [NotMapped]
         public bool ViewComments
         {
             get => _viewComments;
             set => this.Set(ref _viewComments, value, Changed);
         }
 
-        [NotMapped, Administrators]
+        [NotMapped]
         public bool ViewDashboard
         {
             get => _viewDashboard;
             set => this.Set(ref _viewDashboard, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool ViewDetailedErrorMessages
         {
             get => _viewDetailedErrorMessages;
             set => this.Set(ref _viewDetailedErrorMessages, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers, Editors, SuperEditors, Publishers, SuperPublishers]
+        [NotMapped]
         public bool ViewPages
         {
             get => _viewPages;
             set => this.Set(ref _viewPages, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers, Editors, SuperEditors, Publishers, SuperPublishers]
+        [NotMapped]
         public bool ViewPosts
         {
             get => _viewPosts;
             set => this.Set(ref _viewPosts, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
+        public bool ViewQuickNotes
+        {
+            get => _viewQuickNotes;
+            set => this.Set(ref _viewQuickNotes, value, Changed);
+        }
+
+        [NotMapped]
         public bool ViewRatingsOnPosts
         {
             get => _viewRatingsOnPosts;
             set => this.Set(ref _viewRatingsOnPosts, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool ViewRatingsOnVideos
         {
             get => _viewRatingsOnVideos;
             set => this.Set(ref _viewRatingsOnVideos, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool ViewRoles
         {
             get => _viewRoles;
             set => this.Set(ref _viewRoles, value, Changed);
         }
 
-        [NotMapped, Administrators]
+        [NotMapped]
         public bool ViewSettings
         {
             get => _viewSettings;
             set => this.Set(ref _viewSettings, value, Changed);
         }
-        [NotMapped, Administrators, Managers, ManagersSocialMedia]
+
+        [NotMapped]
         public bool ViewSocialProfiles
         {
             get => _viewSocialProfiles;
             set => this.Set(ref _viewSocialProfiles, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool ViewSpecialMessages
         {
             get => _viewSpecialMessages;
             set => this.Set(ref _viewSpecialMessages, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool ViewSpecialPages
         {
             get => _viewSpecialPages;
             set => this.Set(ref _viewSpecialPages, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers, SuperEditors]
+        [NotMapped]
         public bool ViewTags
         {
             get => _viewTags;
             set => this.Set(ref _viewTags, value, Changed);
         }
 
-        [NotMapped, Administrators, ManagersTrash]
+        [NotMapped]
         public bool ViewTrashes
         {
             get => _viewTrashes;
             set => this.Set(ref _viewTrashes, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers]
+        [NotMapped]
         public bool ViewUsers
         {
             get => _viewUsers;
             set => this.Set(ref _viewUsers, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers, Editors, SuperEditors, Publishers, SuperPublishers]
+        [NotMapped]
         public bool ViewVideos
         {
             get => _viewVideos;
             set => this.Set(ref _viewVideos, value, Changed);
         }
 
-        [NotMapped, Administrators, Managers, ManagersSocialMedia]
+        [NotMapped]
         public bool WipeDataOutFromSocialProfiles
         {
             get => _wipeDataOutFromSocialProfiles;
             set => this.Set(ref _wipeDataOutFromSocialProfiles, value, Changed);
         }
+        /*
+        purge
+        restore
+        */
+
 
         /// <summary>
         /// Extracts all the rights based on the property names
@@ -1194,40 +1265,5 @@ namespace Origami.Core.Models
             return result;
         }
         #endregion
-
-        public static OrigamiRole GetSystemRole<T>(Guid blogId) where T : Attribute
-        {
-            var role = new OrigamiRole { IsSystemRole = true };
-
-            role.Name = typeof(T).Name switch
-            {
-                "BasicAccess" => "Basic Access",
-                "ManagersSocialMedia" => "Managers Social Media",
-                "ManagersTrash" => "Managers Trash",
-                "SuperEditors" => "Super Editors",
-                "SuperPublishers" => "Super Publishers",
-                _ => typeof(T).Name
-            };
-
-            foreach (var property in typeof(OrigamiRole).GetProperties())
-            {
-                if (property.CanWrite == false) continue;
-                if (property.PropertyType != typeof(bool)) continue;
-                if (property.GetCustomAttributes(true).OfType<T>().Any() == false) continue;
-                property.SetValue(role, true);
-            }
-
-            return role;
-        }
-
-        public class Administrators : Attribute { }
-        public class BasicAccess : Attribute { }
-        public class Editors : Attribute { }
-        public class Managers : Attribute { }
-        public class ManagersSocialMedia : Attribute { }
-        public class ManagersTrash : Attribute { }
-        public class Publishers : Attribute { }
-        public class SuperEditors : Attribute { }
-        public class SuperPublishers : Attribute { }
     }
 }

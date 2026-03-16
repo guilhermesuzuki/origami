@@ -43,23 +43,6 @@ namespace Origami.Core.Data
         public override string RestorePermission => nameof(OrigamiRole.RestoreRoles);
         public override string UpdatePermission => nameof(OrigamiRole.EditRoles);
 
-        public override Result<OrigamiRole> CanUpdate(DataOperationContext<OrigamiRole> ctx)
-        {
-            var hub = base.CanUpdate(ctx);
-
-            var fresh = ReadFromDatabase().Id(ctx.Entity.Id)!;
-            if (fresh.IsSystemRole)
-            {
-                var permission = CheckPermission(ctx, nameof(OrigamiRole.EditSystemRoles));
-                if (permission.Ok == false)
-                {
-                    hub.ErrorMessage = Text.Original("You cannot edit system roles");
-                }
-            }
-
-            return hub;
-        }
-
         public override Result<OrigamiRole> Create(DataOperationContext<OrigamiRole> ctx)
         {
             var hub = base.Create(ctx);

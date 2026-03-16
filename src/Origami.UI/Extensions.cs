@@ -118,6 +118,7 @@ namespace Origami.UI
             builder.Services.AddTransient<IPostRepository, PostRepository>();
             builder.Services.AddTransient<IPostTagRepository, PostTagRepository>();
             builder.Services.AddTransient<IPostViewRepository, PostViewRepository>();
+            builder.Services.AddTransient<IQuickNoteRepository, QuickNoteRepository>();
             builder.Services.AddTransient<IResumeRepository, ResumeRepository>();
             builder.Services.AddTransient<IRightRepository, RightRepository>();
             builder.Services.AddTransient<IRightRoleRepository, RightRoleRepository>();
@@ -164,6 +165,7 @@ namespace Origami.UI
             builder.Services.AddCrud<OrigamiPostCategory, PostCategoryRepository>();
             builder.Services.AddCrud<OrigamiPostComment, PostCommentRepository>();
             builder.Services.AddCrud<OrigamiPostTag, PostTagRepository>();
+            builder.Services.AddCrud<OrigamiQuickNote, QuickNoteRepository>();
             builder.Services.AddCrud<OrigamiRole, RoleRepository>();
             builder.Services.AddCrud<OrigamiSettings, SettingsRepository>();
             builder.Services.AddCrud<OrigamiSocialProfile, SocialProfileRepository>();
@@ -203,6 +205,7 @@ namespace Origami.UI
             builder.Services.AddSingleton<IValidator<OrigamiPage>, OrigamiPageValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiPost>, OrigamiPostValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiPostComment>, OrigamiPostCommentValidator>();
+            builder.Services.AddSingleton<IValidator<OrigamiQuickNote>, OrigamiQuickNoteValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiRole>, OrigamiRoleValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiSettings>, OrigamiSettingsValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiSpecialMessage>, OrigamiSpecialMessageValidator>();

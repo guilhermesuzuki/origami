@@ -197,34 +197,4 @@
     {
         return this.Super.Videos.ReadFromCache().NonDeleted().Blog(this.Entity.Id).OrderBy(x => x.Title);
     }
-
-    protected override Result<OrigamiBlog> CreateOthers()
-    {
-        var hub = base.CreateOthers();
-
-        if (hub.Ok)
-        {
-            var administrators = OrigamiRole.GetSystemRole<OrigamiRole.Administrators>(this.Entity.Id);
-            var basic = OrigamiRole.GetSystemRole<OrigamiRole.BasicAccess>(this.Entity.Id);
-            var editors = OrigamiRole.GetSystemRole<OrigamiRole.Editors>(this.Entity.Id);
-            // var managers = OrigamiRole.GetSystemRole<OrigamiRole.Managers>(this.Entity.Id);
-            // var managersSocialMedia = OrigamiRole.GetSystemRole<OrigamiRole.ManagersSocialMedia>(this.Entity.Id);
-            // var managersTrash = OrigamiRole.GetSystemRole<OrigamiRole.ManagersTrash>(this.Entity.Id);
-            // var publishers = OrigamiRole.GetSystemRole<OrigamiRole.Publishers>(this.Entity.Id);
-            // var superEditors = OrigamiRole.GetSystemRole<OrigamiRole.SuperEditors>(this.Entity.Id);
-            // var superPublishers = OrigamiRole.GetSystemRole<OrigamiRole.SuperPublishers>(this.Entity.Id);
-
-            hub.OnSuccess(() => this.Super.Roles.SmartSave(administrators.GetContext(), false).Push(hub));
-            hub.OnSuccess(() => this.Super.Roles.SmartSave(basic.GetContext(), false).Push(hub));
-            hub.OnSuccess(() => this.Super.Roles.SmartSave(editors.GetContext(), false).Push(hub));
-            // hub.OnSuccess(() => this.Super.Roles.SmartSave(managers.GetContext(), false).Push(hub));
-            // hub.OnSuccess(() => this.Super.Roles.SmartSave(managersSocialMedia.GetContext(), false).Push(hub));
-            // hub.OnSuccess(() => this.Super.Roles.SmartSave(managersTrash.GetContext(), false).Push(hub));
-            // hub.OnSuccess(() => this.Super.Roles.SmartSave(publishers.GetContext(), false).Push(hub));
-            // hub.OnSuccess(() => this.Super.Roles.SmartSave(superEditors.GetContext(), false).Push(hub));
-            // hub.OnSuccess(() => this.Super.Roles.SmartSave(superPublishers.GetContext(), false).Push(hub));
-        }
-
-        return hub;
-    }
 }

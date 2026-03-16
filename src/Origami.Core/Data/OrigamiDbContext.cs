@@ -571,6 +571,18 @@ namespace Origami.Core.Data
                 .WithMany()
                 .HasForeignKey(x => x.BlogId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<OrigamiQuickNote>()
+                .HasOne<OrigamiBlog>()
+                .WithMany()
+                .HasForeignKey(x => x.BlogId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<OrigamiQuickNote>()
+                .HasOne<OrigamiUser>()
+                .WithMany()
+                .HasForeignKey(x => x.AuthorId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

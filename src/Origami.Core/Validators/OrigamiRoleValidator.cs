@@ -16,6 +16,7 @@ namespace Origami.Core.Validators
                 if (Debugger.IsAttached) return true;
                 return system == false;
             }).WithMessage(text.Original("You can't modify a system role"));
+
             RuleFor(x => x.Id).Id(text);
             RuleFor(x => x.Name).Name(text);
         }

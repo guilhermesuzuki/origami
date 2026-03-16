@@ -5,19 +5,21 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Origami.Core.Models
 {
     [Table("oi_QuickNotes")]
-    public class OrigamiQuickNote :
+    public class OrigamiQuickNote : BaseModel,
         IChanged,
         IId,
-        IFKBlog
+        IBlogId,
+        IAuthorId,
+        IDateCreated,
+        IDateModified,
+        IDeleted
     {
-        private Guid _id = Guid.NewGuid();
+        private Guid _authorId;
         private Guid _blogId;
-        private string _userName = string.Empty;
+        private DateTime _dateCreated;
+        private DateTime? _dateModified;
+        private bool _isDeleted = false;
         private string _note = string.Empty;
-        private DateTime? _updated;
-
-        private OrigamiBlog? _blog;
-
         /// <summary>
         /// Default constructor
         /// </summary>
@@ -28,11 +30,10 @@ namespace Origami.Core.Models
 
         public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) => { };
 
-        [Key]
-        public Guid Id
+        public Guid AuthorId
         {
-            get { return _id; }
-            set { this.Set(ref _id, value, Changed); }
+            get { return _authorId; }
+            set { this.Set(ref _authorId, value, Changed); }
         }
 
         public Guid BlogId
@@ -41,30 +42,29 @@ namespace Origami.Core.Models
             set { this.Set(ref _blogId, value, Changed); }
         }
 
-        [ForeignKey(nameof(BlogId))]
-        public OrigamiBlog? Blog
+        public DateTime DateCreated
         {
-            get { return _blog; }
-            set { this.Set(ref _blog, value, Changed); }
+            get { return _dateCreated; }
+            set { this.Set(ref _dateCreated, value, Changed); }
         }
 
-        [StringLength(100)]
-        public string UserName
+        public DateTime? DateModified
         {
-            get { return _userName; }
-            set { this.Set(ref _userName, value, Changed); }
+            get { return _dateModified; }
+            set { this.Set(ref _dateModified, value, Changed); }
         }
 
+        public bool IsDeleted
+        {
+            get { return _isDeleted; }
+            set { this.Set(ref _isDeleted, value, Changed); }
+        }
+
+        [StringLength(256)]
         public string Note
         {
             get { return _note; }
             set { this.Set(ref _note, value, Changed); }
-        }
-
-        public DateTime? Updated
-        {
-            get { return _updated; }
-            set { this.Set(ref _updated, value, Changed); }
         }
     }
 }
