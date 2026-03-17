@@ -9,7 +9,8 @@ namespace Origami.Core.Models
         IDateCreated,
         IVersion,
         ISocialProfileIdNull,
-        ILocation
+        ILocation,
+        INew
     {
         private string _browser = string.Empty;
         private DateTime _dateCreated = DateTime.UtcNow;
@@ -95,6 +96,8 @@ namespace Origami.Core.Models
             get => _location;
             set => this.Set(ref _location, value, Changed);
         }
+
+        public bool New => this.Version.SequenceEqual(Array.Empty<byte>());
 
         /// <summary>
         /// Platform
