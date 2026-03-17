@@ -5,7 +5,7 @@
 {
     <div class="wrapper">
         <ContentHeaderLite Entity="this.Entity"></ContentHeaderLite>
-        <div class="quick-note-header position-relative shadow-sm @Class cursor-default" style="background: @OrigamiConstants.BackgroundGradients[_background]">
+        <div class="quick-note-header position-relative shadow-sm @Class cursor-default" style="background: @Entity.Background">
             <div class="quick-note-header-title position-absolute overflow-auto zeroes d-inline-flex align-items-center justify-content-center p-3">
                 <span class="note fw-bold">@Entity.Note</span>
                 <ul class="inline-list position-absolute w-100 z-index-middle p-2" style="top:0;">
@@ -23,8 +23,5 @@
 }
 
 @code {
-
-    private int _background = Random.Shared.Next(OrigamiConstants.BackgroundGradients.Length);
-
     [Parameter] public OrigamiQuickNote? Entity { get; set; }
 }

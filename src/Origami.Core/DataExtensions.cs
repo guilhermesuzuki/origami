@@ -162,7 +162,8 @@ namespace Origami.Core
                 .Published()
                 .Where(x => x.Type == type.ToString())
                 .ToList()
-                .OrderBy(x => x.LanguageWrittenOn.StartsWith(_getLanguage()) == true ? 0 : 1)
+                .OrderBy(x => x.LanguageWrittenOn.Like(CultureInfo.CurrentUICulture.Name) == true ? 0 : 1)
+                .ThenBy(x => x.LanguageWrittenOn.StartsWith(_getLanguage()) == true ? 2 : 3)
                 .ThenBy(x => x.LanguageWrittenOn);
         }
 

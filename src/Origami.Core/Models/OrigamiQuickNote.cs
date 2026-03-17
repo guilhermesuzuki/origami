@@ -29,6 +29,8 @@ namespace Origami.Core.Models
         private string _languageWrittenOn = string.Empty;
         private string _note = string.Empty;
         private byte[] _version = [];
+        private string _background = string.Empty;
+
         /// <summary>
         /// Default constructor
         /// </summary>
@@ -43,6 +45,13 @@ namespace Origami.Core.Models
         {
             get { return _authorId; }
             set { this.Set(ref _authorId, value, Changed); }
+        }
+
+        [StringLength(255)]
+        public string Background
+        {
+            get { return _background; }
+            set { this.Set(ref _background, value, Changed); }
         }
 
         public Guid BlogId

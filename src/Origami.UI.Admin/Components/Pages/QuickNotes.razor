@@ -65,6 +65,15 @@
                             <TemplateColumn Title="@Text.Upper("Note")">
                                 <CellTemplate>
                                     <div class="cursor-pointer d-inline-flex align-items-center" @onclick="() => OnEdit(context.Item)">
+                                        @if (context.Item.Background.Has() == true)
+                                        {
+                                            var style = $"background: {context.Item.Background}";
+                                            <MudAvatar Class="me-2"
+                                                       Size="Size.Small"
+                                                       Style="@style"
+                                                       Square="true">
+                                            </MudAvatar>
+                                        }
                                         <QuickNoteHeaderLite Entity="context.Item"></QuickNoteHeaderLite>
                                     </div>
                                 </CellTemplate>

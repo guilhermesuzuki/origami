@@ -1,4 +1,4 @@
-﻿@inherits BasicForm<OrigamiQuickNote>
+﻿@inherits BasicFormFull<OrigamiQuickNote>
 
 <div class="quick-note @Class">
     <BasicHeaderNotes Entity="this.Entity"></BasicHeaderNotes>
@@ -14,6 +14,29 @@
                           Immediate="true"
                           @bind-Value="@Entity.Note"
                           HelperText="@Text.Lower("Type your note here")"></MudTextField>
+        </li>
+    </ul>
+    <ul class="inline-list mt-3">
+        <li>
+            <div class="border p-3">
+                <div>@Text.Lower("Choose the background style")</div>
+                <div class="mt-2">
+                    @foreach (var bg in OrigamiConstants.BackgroundGradients)
+                    {
+                        var bgStyle = $"background: {bg}; width: 40px; height: 40px;";
+                        @if (Entity.Background == bg)
+                        {
+                            bgStyle += "border: 2px solid var(--site-highlight);";
+                        }
+                        <MudAvatar Class="me-2 mb-2 cursor-pointer"
+                                   Size="Size.Large"
+                                   Style="@bgStyle"
+                                   Square="true"
+                                   @onclick="@(() => Entity.Background = bg)">
+                        </MudAvatar>
+                    }
+                </div>
+            </div>
         </li>
     </ul>
     <div class="buttons mt-3 p-3 text-center">
@@ -46,6 +69,11 @@
             Entity.BlogId = this.UserFacade.BlogId;
             Entity.DateCreated = DateTime.UtcNow;
 
+            if (Entity.New && Entity.Background.Has() == false)
+            {
+                Entity.Background = OrigamiConstants.BackgroundGradients[Random.Shared.Next(OrigamiConstants.BackgroundGradients.Length)];
+            }
+
             var context = new DataOperationContext<OrigamiQuickNote>(this.UserFacade.User, DateTime.UtcNow, this.Entity);
 
             using (var transaction = new TransactionScope())
@@ -60,6 +88,7 @@
             this.CreateEntity().Wait();
 
             this.UserFacade.Result = hub;
+
             this.Saved.InvokeAsync(this.Entity);
         }
         catch (Exception e)

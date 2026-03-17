@@ -39,6 +39,7 @@
             Entity.AuthorId = this.UserFacade.User.Id;
             Entity.BlogId = this.UserFacade.BlogId;
             Entity.DateCreated = DateTime.UtcNow;
+            Entity.Background = OrigamiConstants.BackgroundGradients[Random.Shared.Next(OrigamiConstants.BackgroundGradients.Length)];
 
             var context = new DataOperationContext<OrigamiQuickNote>(this.UserFacade.User, DateTime.UtcNow, this.Entity);
 
