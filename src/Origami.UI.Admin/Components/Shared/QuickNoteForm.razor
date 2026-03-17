@@ -58,42 +58,18 @@
 </div>
 
 @code {
-
-    public override void Save()
+    protected override Result<OrigamiQuickNote> BeforeSaving()
     {
-        try
+        if (Entity.New)
         {
-            var hub = new Core.Models.Result<OrigamiQuickNote>(Entity);
-
             Entity.AuthorId = this.UserFacade.User.Id;
             Entity.BlogId = this.UserFacade.BlogId;
             Entity.DateCreated = DateTime.UtcNow;
-
-            if (Entity.New && Entity.Background.Has() == false)
+            if (Entity.Background.Has() == false)
             {
                 Entity.Background = OrigamiConstants.BackgroundGradients[Random.Shared.Next(OrigamiConstants.BackgroundGradients.Length)];
             }
-
-            var context = new DataOperationContext<OrigamiQuickNote>(this.UserFacade.User, DateTime.UtcNow, this.Entity);
-
-            using (var transaction = new TransactionScope())
-            {
-                this.Super.QuickNotes.SmartSave(context, true).Push(hub);
-                if (hub.Ok)
-                {
-                    transaction.Complete();
-                }
-            }
-
-            this.CreateEntity().Wait();
-
-            this.UserFacade.Result = hub;
-
-            this.Saved.InvokeAsync(this.Entity);
         }
-        catch (Exception e)
-        {
-            this.UserFacade.Result = new() { ErrorMessage = e.GetMessage() };
-        }
+        return new(Entity);
     }
 }
