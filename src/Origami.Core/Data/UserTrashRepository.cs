@@ -9,7 +9,6 @@ namespace Origami.Core.Data
         IUserTrashRepository
     {
         private readonly IBlogRepository _blogRepository;
-        private readonly ISettingsRepository _blogSettingsRepository;
         private readonly ICategoryRepository _categoryRepository;
         private readonly IDirectoryRepository _directoryRepository;
         private readonly IFileRepository _fileRepository;
@@ -24,7 +23,9 @@ namespace Origami.Core.Data
         private readonly IPostRepository _postRepository;
         private readonly IPostTagRepository _postTagRepository;
         private readonly IPostViewRepository _postViewRepository;
+        private readonly IQuickNoteRepository _quickNoteRepository;
         private readonly IRoleRepository _roleRepository;
+        private readonly ISettingsRepository _blogSettingsRepository;
         private readonly ISocialProfileRepository _socialProfileRepository;
         private readonly ISubscriberRepository _subscriberRepository;
         private readonly ITagRepository _tagRepository;
@@ -60,6 +61,7 @@ namespace Origami.Core.Data
             IPostRepository postRepository,
             IPostTagRepository postTagRepository,
             IPostViewRepository postViewRepository,
+            IQuickNoteRepository quickNoteRepository,
             IRoleRepository roleRepository,
             ISettingsRepository blogSettingsRepository,
             ISocialProfileRepository socialProfileRepository,
@@ -98,6 +100,7 @@ namespace Origami.Core.Data
             _postRepository = postRepository;
             _postTagRepository = postTagRepository;
             _postViewRepository = postViewRepository;
+            _quickNoteRepository = quickNoteRepository;
             _roleRepository = roleRepository;
             _socialProfileRepository = socialProfileRepository;
             _subscriberRepository = subscriberRepository;
@@ -179,6 +182,11 @@ namespace Origami.Core.Data
                 return _purge(_roleRepository, ctx);
             }
 
+            if (ctx.Entity.Type.Like("QuickNote") == true)
+            {
+                return _purge(_quickNoteRepository, ctx);
+            }
+
             throw new NotImplementedException();
         }
 
@@ -227,6 +235,11 @@ namespace Origami.Core.Data
             if (ctx.Entity.Type.Like("Role") == true)
             {
                 return _restore(_roleRepository, ctx);
+            }
+
+            if (ctx.Entity.Type.Like("QuickNote") == true)
+            {
+                return _restore(_quickNoteRepository, ctx);
             }
 
             throw new NotImplementedException();
