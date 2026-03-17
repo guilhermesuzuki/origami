@@ -63,7 +63,7 @@ namespace Origami.Core.Data
                         var minutes = int.Parse(utc.Substring(4, 2));
 
                         location.TimeZone = timeZone.GetProperty("id").GetString()!;
-                        location.UtcOffset = new TimeSpan(f * hours, minutes, 0);
+                        location.TimeZoneOffset = f * (hours * 60 + minutes);
 
                         return new(location);
                     }

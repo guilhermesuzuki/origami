@@ -51,7 +51,7 @@ namespace Origami.Core.Data
                         };
 
                         var offset = root.GetProperty("offset").GetInt32();
-                        location.UtcOffset = TimeSpan.FromSeconds(offset);
+                        location.TimeZoneOffset = offset / 60;
 
                         return new(location);
                     }
