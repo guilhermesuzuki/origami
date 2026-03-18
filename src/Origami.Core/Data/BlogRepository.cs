@@ -98,7 +98,12 @@ namespace Origami.Core.Data
             var fresh = ReadFromDatabase().Id(ctx.Entity.Id);
             if (fresh != null)
             {
-                if (fresh.IsActive == true)
+                if (fresh is { IsPrimary: true })
+                {
+                    return new(ctx.Entity, Text.Original("Primary blog cannot be deactivated"));
+                }
+
+                if (fresh is { IsActive: true })
                 {
                     ctx.Entity.IsActive = false;
                     return SmartUpdate(ctx, false);
@@ -122,7 +127,6 @@ namespace Origami.Core.Data
                 else if (fresh is { IsPrimary: true })
                 {
                     hub.ErrorMessage = Text.Original("Primary blog cannot be deleted");
-                    hub.InfoMessage = Text.Original("You can deactivate it though");
                 }
             }
             return hub;

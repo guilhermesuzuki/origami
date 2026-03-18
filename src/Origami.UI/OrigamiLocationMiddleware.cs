@@ -30,6 +30,7 @@ namespace Origami.UI
                     await next(context);
                     return;
                 }
+
                 var ip = context.Connection.RemoteIpAddress?.ToString();
                 if (ip == null || ip.Like("::1") || ip.Like("127.0.0.1"))
                 {

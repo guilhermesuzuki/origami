@@ -366,6 +366,17 @@ namespace Origami.Core
             return (rowNumber.Count(), query.ToList());
         }
 
+        public static OrigamiBlog? Slug(this IBlogRepository blogRepository, string slug)
+        {
+            var blogs = from b in blogRepository.ReadFromCache()
+                        where b.IsDeleted == false
+                        where b.IsActive == true
+                        where b.Slug == slug
+                        select b;
+
+            return blogs.FirstOrDefault();
+        }
+
         /// <summary>
         /// Terms and conditions (for the current language)
         /// </summary>

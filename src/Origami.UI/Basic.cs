@@ -46,7 +46,12 @@ namespace Origami.UI
 
         public OrigamiBlog GetBlogFromSlug()
         {
-            return Super.Blogs.ReadFromCache().Slug(BlogSlug) ?? Super.Blogs.GetPrimary();
+            if (this.BlogSlug.Has() == true)
+            {
+                return Super.Blogs.Slug(BlogSlug) ?? OrigamiBlog.Empty;
+            }
+
+            return Super.Blogs.GetPrimary();
         }
 
         public OrigamiBlog GetBlogFromUserFacade()
