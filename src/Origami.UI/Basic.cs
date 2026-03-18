@@ -92,6 +92,12 @@ namespace Origami.UI
             NavigationManager!.NavigateTo($"/login/out?returnUrl={returnUrl}", true);
         }
 
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+            this.UserFacade.Changed += _currentBlogIdChangedMustRefreshUI;
+        }
+
         /// <summary>
         /// Sets the new language
         /// </summary>
@@ -138,6 +144,14 @@ namespace Origami.UI
         {
             var ctx = this.UserFacade.SocialProfile.GetContext();
             UserFacade.Result = Super.Subscribers.Unsubscribe(ctx);
+        }
+
+        private void _currentBlogIdChangedMustRefreshUI(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(IUserFacade.BlogId))
+            {
+                this.InvokeAsync(this.StateHasChanged);
+            }
         }
     }
 }
