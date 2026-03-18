@@ -1,5 +1,4 @@
 ﻿@inherits Basic
-@inject ISuperRepository _super
 
 <style>
     .blog-menu .categories .id { display: none; }
@@ -236,9 +235,9 @@
 
     private void LoadCategories()
     {
-        _categories = this._super.GetCategories()
+        _categories = this.Super.GetCategories()
             .Blog(BlogId)
-            .OrderByDescending(x => { return _super.GetPosts(x).Published().Count() + _super.GetVideos(x).Published().Count(); })
+            .OrderByDescending(x => { return Super.GetPosts(x).Published().Count() + Super.GetVideos(x).Published().Count(); })
             .Take(7)
             .OrderBy(x => x.Name);
     }
@@ -246,7 +245,7 @@
     private void LoadPages(string order = "1")
     {
         var list = new List<Core.Models.OrigamiPage>();
-        var items = this._super.GetPages().Blog(BlogId);
+        var items = this.Super.GetPages().Blog(BlogId);
 
         switch (order)
         {
@@ -254,7 +253,7 @@
                 list.AddRange(items.OrderByDescending(x => x.DateCreated).Take(7));
                 break;
             default:
-                list.AddRange(items.OrderByDescending(x => this._super.PageViews.GetViews(x)).Take(7));
+                list.AddRange(items.OrderByDescending(x => this.Super.PageViews.GetViews(x)).Take(7));
                 break;
         }
 
@@ -269,7 +268,7 @@
 
     private void LoadPosts(string order = "1")
     {
-        var items = this._super.Posts.ReadFromCache().NonDeleted().Published().Blog(BlogId);
+        var items = this.Super.Posts.ReadFromCache().NonDeleted().Published().Blog(BlogId);
 
         switch (order)
         {
@@ -277,23 +276,23 @@
                 _posts = items.OrderByDescending(x => x.DateCreated).Take(7);
                 break;
             default:
-                _posts = items.OrderByDescending(x => this._super.PostViews.GetViews(x)).Take(7);
+                _posts = items.OrderByDescending(x => this.Super.PostViews.GetViews(x)).Take(7);
                 break;
         }
     }
 
     private void LoadTags()
     {
-        _tags = this._super.Tags.ReadFromCache()
+        _tags = this.Super.Tags.ReadFromCache()
             .Blog(BlogId)
-            .OrderByDescending(x => { return _super.GetPosts(x).Published().Count() + _super.GetVideos(x).Published().Count(); })
+            .OrderByDescending(x => { return Super.GetPosts(x).Published().Count() + Super.GetVideos(x).Published().Count(); })
             .Take(7)
             .OrderBy(x => x.Name);
     }
 
     private void LoadVideos(string order = "1")
     {
-        var items = this._super.Videos.ReadFromCache().NonDeleted().Published().Blog(BlogId);
+        var items = this.Super.Videos.ReadFromCache().NonDeleted().Published().Blog(BlogId);
 
         switch (order)
         {
@@ -301,7 +300,7 @@
                 _videos = items.OrderByDescending(x => x.DateCreated).Take(7);
                 break;
             default:
-                _videos = items.OrderByDescending(x => this._super.VideoViews.GetViews(x)).Take(7);
+                _videos = items.OrderByDescending(x => this.Super.VideoViews.GetViews(x)).Take(7);
                 break;
         }
     }
