@@ -381,12 +381,12 @@ namespace Origami.UI
                     var lpath = Super.Directories.LocalPath(wpath);
                     var filename = $"logo.png";
 
-                    if (System.IO.File.Exists(lpath + filename) == true)
+                    if (File.Exists(Path.Combine(lpath, filename)) == true)
                     {
                         filename = $"logo.{Nanoid.Generate(Nanoid.Alphabets.UppercaseLettersAndDigits, 4)}.png";
                     }
 
-                    if (System.IO.File.Exists(lpath + filename) == true)
+                    if (File.Exists(Path.Combine(lpath, filename)) == true)
                     {
                         throw new InvalidOperationException("File with the same name exists. Please, try again");
                     }
@@ -453,7 +453,7 @@ namespace Origami.UI
 
             if (Entity is IHeaderImage headerImage)
             {
-                var extension = file.Name.Extension();
+                var extension = Path.GetExtension(file.Name);
                 headerImage.HeaderImage = $"data:image/{extension};base64,{Convert.ToBase64String(imageBytes)}";
             }
         }

@@ -127,22 +127,6 @@ namespace Origami.Core
             return entities.Where(x => x.BlogId == blog);
         }
 
-        public static Result<T2> Call<T1, T2>(this IEnumerable<T1> entities, Func<T1, Result<T2>> function)
-        {
-            var result = new Result<T2>();
-
-            //bugfix: this is necessary
-            entities = entities.ToList();
-
-            foreach (var entity in entities)
-            {
-                function.Invoke(entity).Push(result);
-                if (result.Ok == false) return result;
-            }
-
-            return result;
-        }
-
         public static Result<T2> Call<T1, T2>(this IEnumerable<T1> entities, Func<T1, bool, Result<T2>> function, bool checkPermission)
         {
             var result = new Result<T2>();
@@ -224,22 +208,6 @@ namespace Origami.Core
         }
 
         /// <summary>
-        /// Filters the <paramref name="entities"/>, retrieving only deleted <paramref name="entities"/>
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="entities"></param>
-        /// <returns></returns>
-        public static IEnumerable<T> Deleted<T>(this IEnumerable<T> entities)
-        {
-            if (typeof(T).Implements<IDeleted>() == true)
-            {
-                return entities.OfType<IDeleted>().Where(x => x.IsDeleted() == true).Cast<T>();
-            }
-
-            return entities;
-        }
-
-        /// <summary>
         /// generic method using a class instance to perform deserialization
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -260,8 +228,6 @@ namespace Origami.Core
 
             return null;
         }
-
-
 
         /// <summary>
         /// Performs the specified action on each element of the <see cref="IEnumerable{T1}"/> and returns the original
@@ -333,22 +299,6 @@ namespace Origami.Core
             return false;
         }
 
-        /// TODO: comment this
-        /// </summary>
-        /// <param name="user"></param>
-        /// <param name="key"></param>
-        /// <param name="iv"></param>
-        /// <returns></returns>
-        public static string Encrypt(this OrigamiUser? user, string key, string iv)
-        {
-            if (user != null)
-            {
-                string json = JsonSerializer.Serialize(user.Id);
-                return json.Encrypt(key, iv);
-            }
-            return string.Empty;
-        }
-
         /// <summary>
         /// TODO: comment this
         /// </summary>
@@ -405,17 +355,6 @@ namespace Origami.Core
         }
 
         /// <summary>
-        /// Returns the file extension, when <paramref name="fileName"/> is a file name
-        /// </summary>
-        /// <param name="fileName"></param>
-        /// <returns>Returns only the extension, without a '.' in the beginning</returns>
-        public static string Extension(this string? fileName)
-        {
-            if (fileName.Has() == false) return string.Empty;
-            return fileName.Split(".").Last().ToLower();
-        }
-
-        /// <summary>
         /// Converts the <paramref name="entity"/> back into an XML in string form
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -444,21 +383,6 @@ namespace Origami.Core
 
             //returns the XML in string form
             return xml;
-        }
-
-        /// <summary>
-        /// Determines the front page status based on the provided page and text parameters.
-        /// </summary>
-        /// <remarks>The method uses the <see cref="Text.Lower"/> method to format the result
-        /// string.</remarks>
-        /// <param name="parameters">A tuple containing a <see cref="OrigamiPage"/> object and a <see cref="Text"/> object.  The <see cref="OrigamiPage"/>
-        /// represents the page to evaluate, and the <see cref="Text"/> provides the text to format the result.</param>
-        /// <returns>A string indicating the front page status. Returns the formatted string "Yes" if the page is published, 
-        /// "No" if it is not published, or an empty string if the page is null.</returns>
-        public static string FrontPage(this (OrigamiPage?, Text) parameters)
-        {
-            if (parameters.Item1 == null) return string.Empty;
-            return parameters.Item1.IsPublished ? parameters.Item2.Lower("Yes") : parameters.Item2.Lower("No");
         }
 
         /// <summary>
@@ -683,6 +607,7 @@ namespace Origami.Core
             }
             return string.Empty;
         }
+
         /// <summary>
         /// Extension for string.IsNullOrWhitespace.
         /// </summary>
@@ -704,16 +629,6 @@ namespace Origami.Core
         public static string HexString(this byte[] byteArray)
         {
             return BitConverter.ToString(byteArray).Replace("-", string.Empty).TrimStart('0');
-        }
-
-        /// <summary>
-        /// TODO: comment this
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public static string HRef(this string? value)
-        {
-            return value.Has() ? Uri.EscapeDataString(value.ToLower()) : string.Empty;
         }
 
         /// <summary>
@@ -898,18 +813,6 @@ namespace Origami.Core
         {
             if (nanoId == null) return null;
             return entities.FirstOrDefault(x => x.NanoId == nanoId);
-        }
-
-        /// <summary>
-        /// Removes the error query parameter from the specified URI.
-        /// </summary>
-        /// <param name="uri">The URI string from which to remove the error query parameter. Cannot be null.</param>
-        /// <returns>A new string with the error query parameter removed from the specified URI. If the error parameter is not
-        /// present, returns the original URI string.</returns>
-        public static string NoError(this string uri)
-        {
-            var regex = new Regex("[?|&]error=[\\w-]*", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase | RegexOptions.Singleline);
-            return regex.Replace(uri, "");
         }
 
         /// <summary>

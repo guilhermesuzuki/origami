@@ -38,7 +38,7 @@
         @if (ParentSelector)
         {
             <div class="mt-3">
-                <MudDataGrid T="OrigamiCategory" Items="this.Parents()" Filterable="false" SortMode="SortMode.Single" Class="border" Bordered="true" SelectOnRowClick="false">
+                <MudDataGrid T="OrigamiCategory" Items="this.GetParents()" Filterable="false" SortMode="SortMode.Single" Class="border" Bordered="true" SelectOnRowClick="false">
                     <Columns>
                         <TemplateColumn Title="@Text.Upper("Name")" Sortable="true" Filterable="false" CellClass="col-8" SortBy="x => x.Name">
                             <CellTemplate>
@@ -159,7 +159,7 @@
         }
     }
 
-    protected override IEnumerable<OrigamiCategory> Parents()
+    protected override IEnumerable<OrigamiCategory> GetParents()
     {
         return from x in this.Super.GetCategories().Blog(this.UserFacade.BlogId) select x;
     }
@@ -179,7 +179,7 @@
         await reader.CopyToAsync(memoryStream);
         var imageBytes = memoryStream.ToArray();
 
-        var extension = file.Name.Extension();
+        var extension = Path.GetExtension(file.Name).TrimStart('.');
         this.Entity.HeaderImage = $"data:image/{extension};base64,{Convert.ToBase64String(imageBytes)}";
 
         this._fileManager = false;
