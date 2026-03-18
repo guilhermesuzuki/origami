@@ -243,6 +243,34 @@ namespace Origami.UI
             }
         }
 
+        /// <summary>
+        /// An image was picked from the file manager and should be assigned in the entity as a header as base64 string
+        /// </summary>
+        /// <param name="image"></param>
+        protected async Task ImageFromFileManagerWillAssignEntityHeaderAsBase64(OrigamiSystemFile image)
+        {
+            if (image.IsImage == false)
+            {
+                this.UserFacade.Result = new() { ErrorMessage = Text.Original("You need to pick an image") };
+                return;
+            }
+
+            if (this.Entity is IHeaderImage header)
+            {
+                var localPath = this.Super.Files.LocalPath(image.WebPath);
+
+                using var reader = File.OpenRead(localPath);
+                using var memoryStream = new MemoryStream();
+                await reader.CopyToAsync(memoryStream);
+                var imageBytes = memoryStream.ToArray();
+
+                var extension = Path.GetExtension(image.Name).TrimStart('.');
+                header.HeaderImage = $"data:image/{extension};base64,{Convert.ToBase64String(imageBytes)}";
+            }
+
+            this.FileManagerForImages = false;
+        }
+
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
