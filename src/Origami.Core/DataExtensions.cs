@@ -253,26 +253,6 @@ namespace Origami.Core
 
             throw new Exception("The Origami connection string does NOT exist in the appsettings file");
         }
-        /// <summary>
-        /// Includes everything in the Query
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="query"></param>
-        /// <param name="includes"></param>
-        /// <returns></returns>
-        public static IQueryable<T> Includes<T>(this IQueryable<T> query, params string[] includes) where T : class
-        {
-            //includes the objects in the entities.
-            if (includes != null && includes.Length > 0)
-            {
-                foreach (var include in includes.Where(x => x.Has() == true))
-                {
-                    query = query.Include(include.Trim());
-                }
-            }
-
-            return query;
-        }
 
         /// <summary>
         /// Nulls the FK objects in order to persist the entity
@@ -351,17 +331,6 @@ namespace Origami.Core
             where T : IPublished, IDraft
         {
             return entities.Where(x => x.IsPublished == true).NonDeleted();
-        }
-
-        /// <summary>
-        /// Be careful when calling this method, because it will cast all <typeparamref name="T"/> to <see cref="IFKBlog"/>
-        /// </summary>
-        /// <param name="blog"></param>
-        /// <returns></returns>
-        public static IEnumerable<T> Published<T>(this IEnumerable<T> entities, OrigamiBlog blog)
-            where T : IPublished, IDraft, IBlogId
-        {
-            return entities.Published(blog.Id);
         }
 
         /// <summary>

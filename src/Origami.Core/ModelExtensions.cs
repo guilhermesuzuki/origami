@@ -924,19 +924,6 @@ namespace Origami.Core
         }
 
         /// <summary>
-        /// Removes the language query parameter from the specified URI.
-        /// </summary>
-        /// <remarks>This method removes the query parameter named "language" from the given URI string,
-        /// if present. The comparison is case-insensitive and culture-invariant.</remarks>
-        /// <param name="uri">The URI string from which to remove the language query parameter.</param>
-        /// <returns>A new string representing the URI without the language query parameter.</returns>
-        public static string NoLanguage(this string uri)
-        {
-            var regex = new Regex("[?|&]language=[\\w-]*", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase | RegexOptions.Singleline);
-            return regex.Replace(uri, "");
-        }
-
-        /// <summary>
         /// Filters the <paramref name="entities"/>, retrieving only non-deleted <paramref name="entities"/>
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -952,29 +939,6 @@ namespace Origami.Core
         }
 
         /// <summary>
-        /// Be careful when calling this method, because it will cast all <typeparamref name="T"/> to <see cref="IFKBlog"/>
-        /// </summary>
-        /// <param name="blog"></param>
-        /// <returns></returns>
-        public static IEnumerable<T> NonPublished<T>(this IEnumerable<T> entities, Guid blog)
-            where T : IPublished, IBlogId
-        {
-            return entities.Where(x => x.BlogId == blog).Where(x => x.IsPublished == false).NonDeleted();
-        }
-
-        /// <summary>
-        /// TODO: comment this
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        public static T? Null<T>(this T entity)
-            where T : struct
-        {
-            return entity;
-        }
-
-        /// <summary>
         /// Are all results ok?
         /// </summary>
         /// <param name="results"></param>
@@ -983,6 +947,7 @@ namespace Origami.Core
         {
             return results.All(x => x.Ok);
         }
+
         /// <summary>
         /// Profile picture (or no-icon.png)
         /// </summary>
@@ -1135,49 +1100,6 @@ namespace Origami.Core
         }
 
         /// <summary>
-        /// Sends a MailMessage object using the SMTP settings.
-        /// </summary>
-        /// <param name="message">
-        /// The message.
-        /// </param>
-        /// <param name="smtpServer">SMTP server</param>
-        /// <param name="smtpServerPort">SMTP server port</param>
-        /// <param name="smtpUserName">User name</param>
-        /// <param name="smtpPassword">Password</param>
-        /// <param name="enableSsl">Enable SSL</param>
-        /// <returns>
-        /// Error message, if any.
-        /// </returns>
-        public static Result<MailAddress> SendMailMessage(this MailMessage message, string smtpServer, int smtpServerPort, string smtpUserName, string smtpPassword, bool enableSsl = false)
-        {
-            if (message == null) throw new ArgumentNullException(nameof(message));
-
-            var result = new Result<MailAddress>();
-
-            try
-            {
-                message.IsBodyHtml = true;
-                message.BodyEncoding = Encoding.UTF8;
-                var smtp = new SmtpClient(smtpServer);
-                smtp.Credentials = new NetworkCredential(smtpUserName, smtpPassword);
-                smtp.Port = smtpServerPort;
-                smtp.EnableSsl = enableSsl;
-                smtp.Send(message);
-            }
-            catch (Exception ex)
-            {
-                result.ErrorMessage = ex.GetMessage();
-            }
-            finally
-            {
-                // Remove the pointer to the message object so the GC can close the thread.
-                message.Dispose();
-            }
-
-            return result;
-        }
-
-        /// <summary>
         /// Sets the reference's value to the parameter and invokes the eventHandler
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -1306,24 +1228,6 @@ namespace Origami.Core
             return entity;
         }
 
-        /// <summary>
-        /// TODO: comment this
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="entities"></param>
-        /// <param name="blogId"></param>
-        /// <returns></returns>
-        public static IEnumerable<T> SetBlogIfEmpty<T>(this IEnumerable<T> entities, Guid blogId)
-            where T : IBlogId
-        {
-            foreach (var entity in entities)
-            {
-                if (entity.BlogId == Guid.Empty) entity.BlogId = blogId;
-            }
-
-            return entities;
-        }
-
         public static T? SetDateCreated<T>(this T? entity, DateTime dateTime)
         {
             if (entity is IDateCreated dateCreated)
@@ -1355,33 +1259,6 @@ namespace Origami.Core
                 id.Id = Guid.NewGuid();
             }
             return entity;
-        }
-
-        /// <summary>
-        /// TODO: comment this
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="entities"></param>
-        /// <param name="username"></param>
-        /// <returns></returns>
-        public static IEnumerable<T> SetUsernameIfEmptyOrDifferent<T>(this IEnumerable<T> entities, string username)
-            where T : IUsername
-        {
-            foreach (var entity in entities)
-            {
-                if (entity.Username.Has() == false)
-                {
-                    entity.Username = username;
-                    continue;
-                }
-
-                if (entity.Username != username)
-                {
-                    entity.Username = username;
-                    continue;
-                }
-            }
-            return entities;
         }
 
         /// <summary>
