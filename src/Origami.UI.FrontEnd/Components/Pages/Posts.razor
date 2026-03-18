@@ -1,6 +1,5 @@
 ﻿@page "/blogs/{BlogSlug}/posts"
 @inherits BasicPage
-@inject ISuperRepository _super
 
 <Root>
     <BlogHeaderLite2 Class="text-center fs-1" Entity="this.GetBlogFromSlug()" DisplayBlogNameEvenWithoutHeaderImage="false"></BlogHeaderLite2>

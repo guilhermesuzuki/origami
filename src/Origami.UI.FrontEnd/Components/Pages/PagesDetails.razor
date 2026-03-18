@@ -1,14 +1,10 @@
 ﻿@page "/pages/{NanoId}"
-
 @inherits BasicPage
 
 @using Microsoft.AspNetCore.Authentication.Google;
 @using Microsoft.AspNetCore.Identity;
 @using System.Text;
 @using Microsoft.Extensions.Options;
-
-@inject IPageRepository _pageRepository
-@inject IHttpClientFactory _httpClientFactory
 
 <Root>
     @if (this._page.New == false)
@@ -36,7 +32,7 @@
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        this._page = this.Page ?? this._pageRepository.ReadFromCache().Published().NanoId(NanoId) ?? new();
+        this._page = this.Page ?? this.Super.Pages.ReadFromCache().Published().NanoId(NanoId) ?? new();
     }
 
     protected override async Task PageViewAsync(bool firstRender)
