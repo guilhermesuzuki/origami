@@ -481,7 +481,7 @@ namespace Origami.UI
 
             if (Entity is IHeaderImage headerImage)
             {
-                var extension = Path.GetExtension(file.Name);
+                var extension = Path.GetExtension(file.Name).TrimStart('.');
                 headerImage.HeaderImage = $"data:image/{extension};base64,{Convert.ToBase64String(imageBytes)}";
             }
         }
