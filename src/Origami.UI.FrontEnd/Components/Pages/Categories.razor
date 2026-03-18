@@ -1,9 +1,5 @@
 ﻿@page "/blogs/{BlogSlug}/categories"
-
 @inherits BasicPage
-@inject ICategoryRepository _category
-@inject IPostCategoryRepository _postCategory
-@inject IVideoCategoryRepository _videoCategory
 
 <Root>
     @if (this._blog != null)
