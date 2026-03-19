@@ -518,7 +518,7 @@ namespace Origami.Core.Models
         /// Additional info for Users
         /// </summary>
         [XmlRoot("additionalInfo")]
-        public class ForUsers : AdditionalInfo, IFirstName, ILastName, IFacebook, IInstagram, IGitHub, IPersonalWebsite, ILinkedIn
+        public class ForUsers : AdditionalInfo, IFirstName, ILastName, IFacebook, IInstagram, IGitHub, IPersonalWebsite, ILinkedIn, ITOTPSecret
         {
             /// <summary>
             /// Default constructor
@@ -533,6 +533,7 @@ namespace Origami.Core.Models
                 Instagram = string.Empty;
                 LastName = string.Empty;
                 LinkedIn = string.Empty;
+                TOTPSecret = Guid.Empty;
                 Website = string.Empty;
             }
 
@@ -559,6 +560,12 @@ namespace Origami.Core.Models
 
             [XmlElement("linkedin", IsNullable = true)]
             public string LinkedIn { get; set; }
+
+            [XmlElement("totp-secret", IsNullable = false)]
+            public Guid TOTPSecret { get; set; }
+
+            [XmlElement("totp-recovery-codes", IsNullable = true)]
+            public string TOTPRecoveryCodes { get; set; }
         }
 
         /// <summary>

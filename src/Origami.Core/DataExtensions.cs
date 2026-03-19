@@ -97,13 +97,15 @@ namespace Origami.Core
             if (frontpage != null)
             {
                 var lang = CultureInfo.CurrentUICulture.Name.Split('-').First();
-                var children = pages.NonDeleted().Published().Blog(blogId).Where(x => x.ParentId == frontpage.Id);
-                var translated = children
-                    .Where(x => x.LanguageWrittenOn.StartsWith(lang, StringComparison.CurrentCultureIgnoreCase))
-                    .OrderBy(x => x.LanguageWrittenOn.Like(CultureInfo.CurrentUICulture.Name) ? 0 : 1)
-                    .ThenBy(x => x.LanguageWrittenOn.Length)
-                    .FirstOrDefault();
-                return translated ?? frontpage;
+
+                var translated = from p in pages.NonDeleted().Published()
+                                 where p.BlogId == blogId
+                                 where p.ParentId == frontpage.Id
+                                 where p.LanguageWrittenOn.StartsWith(lang)
+                                 orderby p.LanguageWrittenOn.Like(CultureInfo.CurrentUICulture.Name) ? 0 : 1, p.LanguageWrittenOn
+                                 select p;
+
+                return translated.FirstOrDefault() ?? frontpage;
             }
             return null;
         }

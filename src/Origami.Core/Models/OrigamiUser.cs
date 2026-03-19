@@ -24,7 +24,8 @@ namespace Origami.Core.Models
         IInstagram,
         IGitHub,
         IPersonalWebsite,
-        ILinkedIn
+        ILinkedIn,
+        ITOTPSecret
     {
         /// <summary>
         /// Anonymous user
@@ -106,10 +107,24 @@ namespace Origami.Core.Models
         }
 
         [NotMapped]
+        public string Facebook
+        {
+            get => Get().Facebook;
+            set => Set(x => x.Facebook = value);
+        }
+
+        [NotMapped]
         public string FirstName
         {
             get => Get().FirstName;
             set => Set(x => x.FirstName = value);
+        }
+
+        [NotMapped]
+        public string GitHub
+        {
+            get => Get().GitHub;
+            set => Set(x => x.GitHub = value);
         }
 
         [NotMapped]
@@ -120,6 +135,13 @@ namespace Origami.Core.Models
         }
 
         public string Hyperlink => $"/users/{NanoId}/";
+
+        [NotMapped]
+        public string Instagram
+        {
+            get => Get().Instagram;
+            set => Set(x => x.Instagram = value);
+        }
 
         public bool IsBlocked
         {
@@ -149,6 +171,13 @@ namespace Origami.Core.Models
             set => Set(x => x.LastName = value);
         }
 
+        [NotMapped]
+        public string LinkedIn
+        {
+            get => Get().LinkedIn;
+            set => Set(x => x.LinkedIn = value);
+        }
+
         public bool MustChangePassword
         {
             get => _mustChangePassword;
@@ -167,6 +196,20 @@ namespace Origami.Core.Models
             set => this.Set(ref _password, value, Changed);
         }
 
+        [NotMapped]
+        public string TOTPRecoveryCodes
+        {
+            get => Get().TOTPRecoveryCodes;
+            set => Set(x => x.TOTPRecoveryCodes = value);
+        }
+
+        [NotMapped]
+        public Guid TOTPSecret
+        {
+            get => Get().TOTPSecret;
+            set => Set(x => x.TOTPSecret = value);
+        }
+
         /// <summary>
         /// Username
         /// </summary>
@@ -183,45 +226,20 @@ namespace Origami.Core.Models
             get => _version;
             set => this.Set(ref _version, value, Changed);
         }
-
-        [NotMapped]
-        public string Facebook
-        {
-            get => Get().Facebook;
-            set => Set(x => x.Facebook = value);
-        }
-
-        [NotMapped]
-        public string Instagram
-        {
-            get => Get().Instagram;
-            set => Set(x => x.Instagram = value);
-        }
-
-        [NotMapped]
-        public string GitHub
-        {
-            get => Get().GitHub;
-            set => Set(x => x.GitHub = value);
-        }
-
         [NotMapped]
         public string Website
         {
             get => Get().Website;
             set => Set(x => x.Website = value);
         }
-
-        [NotMapped]
-        public string LinkedIn
-        {
-            get => Get().LinkedIn;
-            set => Set(x => x.LinkedIn = value);
-        }
-
         public AdditionalInfo.ForUsers Get()
         {
             return AdditionalInfo.To<AdditionalInfo.ForUsers>();
+        }
+
+        public string[] GetTOTPRecoveryCodes()
+        {
+            return TOTPRecoveryCodes.Split(',', StringSplitOptions.RemoveEmptyEntries).ToArray();
         }
 
         public AdditionalInfo.ForUsers Set(Action<AdditionalInfo.ForUsers> action)
