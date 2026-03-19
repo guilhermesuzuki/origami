@@ -1,4 +1,5 @@
 ﻿using NanoidDotNet;
+using QRCoder;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -226,20 +227,38 @@ namespace Origami.Core.Models
             get => _version;
             set => this.Set(ref _version, value, Changed);
         }
+
         [NotMapped]
         public string Website
         {
             get => Get().Website;
             set => Set(x => x.Website = value);
         }
+
         public AdditionalInfo.ForUsers Get()
         {
             return AdditionalInfo.To<AdditionalInfo.ForUsers>();
         }
 
+        public string GetTOTPQrCode()
+        {
+            var uri = this.GetTOTPUri();
+            var qrGenerator = new QRCodeGenerator();
+            var qrData = qrGenerator.CreateQrCode(uri, QRCodeGenerator.ECCLevel.Q);
+            var qrCode = new Base64QRCode(qrData);
+            string qrImage = qrCode.GetGraphic(20);
+            return qrImage;
+        }
+
         public string[] GetTOTPRecoveryCodes()
         {
-            return TOTPRecoveryCodes.Split(',', StringSplitOptions.RemoveEmptyEntries).ToArray();
+            return TOTPRecoveryCodes.Split(',', StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        public string GetTOTPUri()
+        {
+            var app = "Origami";
+            return $"otpauth://totp/{app}:{Username}?secret={TOTPSecret}&issuer={app}";
         }
 
         public AdditionalInfo.ForUsers Set(Action<AdditionalInfo.ForUsers> action)

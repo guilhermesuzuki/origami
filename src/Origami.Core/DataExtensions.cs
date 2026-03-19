@@ -110,8 +110,18 @@ namespace Origami.Core
             return null;
         }
 
+        public static string[] GenerateTOTPRecoveryCodes(this IUserRepository userRepository)
+        {
+            var codes = new string[10];
+            for (int i = 0; i < codes.Length; i++)
+            {
+                codes[i] = NanoidDotNet.Nanoid.Generate(NanoidDotNet.Nanoid.Alphabets.Digits, 6);
+            }
+            return codes;
+        }
+
         public static IEnumerable<T> GetAllChildren<T>(this IEnumerable<T>? source, T entity)
-            where T : class, IId, new()
+                    where T : class, IId, new()
         {
             return source.GetAllChildren([entity]);
         }
@@ -368,6 +378,12 @@ namespace Origami.Core
             return (rowNumber.Count(), query.ToList());
         }
 
+        /// <summary>
+        /// Tries to retrieve a blog by its slug. Returns null if not found or if the blog is deleted or inactive.
+        /// </summary>
+        /// <param name="blogRepository"></param>
+        /// <param name="slug"></param>
+        /// <returns></returns>
         public static OrigamiBlog? Slug(this IBlogRepository blogRepository, string slug)
         {
             var blogs = from b in blogRepository.ReadFromCache()

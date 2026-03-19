@@ -81,17 +81,17 @@ namespace Origami.Core.Data
             if (newPassword1 != newPassword2) return new() { ErrorMessage = Text.Original("New passwords do NOT match, they differ from each other") };
             if (oldPassword == newPassword1) return new() { ErrorMessage = Text.Original("You did NOT change passwords, current and new are the same") };
 
-            var result = new Result<OrigamiUser>(user).Pull(newPassword1.IsPasswordStrong());
-            if (result.Ok == false) return result;
+            var hub = new Result<OrigamiUser>(user).Pull(newPassword1.IsPasswordStrong());
+            if (hub.Ok == false) return hub;
 
             // sets the new password
             user.MustChangePassword = false;
             user.Password = newPassword1.SHA256Hash();
 
             var userContext = new DataOperationContext<OrigamiUser>(ctx.User, ctx.DateTime, user);
-            if (result.Ok == true) base.SmartUpdate(userContext, false).Push(result);
+            if (hub.Ok == true) base.SmartUpdate(userContext, false).Push(hub);
 
-            return result;
+            return hub;
         }
 
         public override Result<OrigamiUser> CreateValidation(DataOperationContext<OrigamiUser> ctx)
@@ -140,13 +140,13 @@ namespace Origami.Core.Data
         public OrigamiUser? LookupUserInDatabase(string username, string cleanPassword)
         {
             username = username.ToLower().Trim();
-            var hash = cleanPassword.SHA256Hash();
+            var password = cleanPassword.SHA256Hash();
 
             var query = from x in ReadFromDatabase().NonDeleted()
                         where x.IsDeleted == false
                         where x.IsBlocked == false
                         where x.Username.ToLower() == username
-                        where x.Password == hash
+                        where x.Password == password
                         select x;
 
             return query.FirstOrDefault();
