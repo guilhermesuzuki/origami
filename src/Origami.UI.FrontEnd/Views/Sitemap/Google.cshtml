@@ -23,17 +23,17 @@
 
     var tags = _tag.ReadFromCache().ToList();
 
-    var privacyPolicy = this._page.ReadFromCache()
-        .Where(x => x.Keywords != null)
-        .Where(x => x.Keywords!.Contains("privacy-policy"));
+    var cookiePolicy = this._super.SpecialPages.ReadFromCache()
+        .Where(x => x.Type.Like("CookiePolicy"));
 
-    var termsAndConditions = this._page.ReadFromCache()
-        .Where(x => x.Keywords != null)
-        .Where(x => x.Keywords!.Contains("terms-and-conditions"));
+    var privacyPolicy = this._super.SpecialPages.ReadFromCache()
+        .Where(x => x.Type.Like("PrivacyPolicy"));
 
-    var termsOfService = this._page.ReadFromCache()
-        .Where(x => x.Keywords != null)
-        .Where(x => x.Keywords!.Contains("terms-of-service"));
+    var termsAndConditions = this._super.SpecialPages.ReadFromCache()
+        .Where(x => x.Type.Like("TermsAndConditions"));
+
+    var termsOfService = this._super.SpecialPages.ReadFromCache()
+        .Where(x => x.Type.Like("TermsOfService"));
 }
 
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
@@ -43,10 +43,10 @@
 
     <url>
         <loc>@oi?language=en-US</loc>
-        <xhtml:link rel="alternate" hreflang="en-US" href="@oi?language=en-US" />
-        <xhtml:link rel="alternate" hreflang="pt-BR" href="@oi?language=pt-BR" />
-        <xhtml:link rel="alternate" hreflang="es-ES" href="@oi?language=es-ES" />
-        <xhtml:link rel="alternate" hreflang="ja-JP" href="@oi?language=ja-JP" />
+        @foreach(var cinfo in OrigamiConstants.AllLanguages())
+        {
+            <xhtml:link rel="alternate" hreflang="@cinfo.Name" href="@oi?language=@cinfo.Name" />
+        }
     </url>
 
     @foreach (var post in _post.ReadFromCache().Published().OrderBy(x => x.Title))
@@ -58,10 +58,10 @@
             <image:image>
                 <image:loc>@header</image:loc>
             </image:image>
-            <xhtml:link rel="alternate" hreflang="en-US" href="@loc?language=en-US" />
-            <xhtml:link rel="alternate" hreflang="pt-BR" href="@loc?language=pt-BR" />
-            <xhtml:link rel="alternate" hreflang="es-ES" href="@loc?language=es-ES" />
-            <xhtml:link rel="alternate" hreflang="ja-JP" href="@loc?language=ja-JP" />
+            @foreach (var cinfo in OrigamiConstants.AllLanguages())
+            {
+                <xhtml:link rel="alternate" hreflang="@cinfo.Name" href="@loc?language=@cinfo.Name" />
+            }
         </url>
     }
 
@@ -78,10 +78,10 @@
                 <video:description>@video.Description</video:description>
                 <video:content_loc>@vid</video:content_loc>
             </video:video>
-            <xhtml:link rel="alternate" hreflang="en-US" href="@loc?language=en-US" />
-            <xhtml:link rel="alternate" hreflang="pt-BR" href="@loc?language=pt-BR" />
-            <xhtml:link rel="alternate" hreflang="es-ES" href="@loc?language=es-ES" />
-            <xhtml:link rel="alternate" hreflang="ja-JP" href="@loc?language=ja-JP" />
+            @foreach (var cinfo in OrigamiConstants.AllLanguages())
+            {
+                <xhtml:link rel="alternate" hreflang="@cinfo.Name" href="@loc?language=@cinfo.Name" />
+            }
         </url>
     }
 
@@ -100,10 +100,10 @@
                 <image:image>
                     <image:loc>@header</image:loc>
                 </image:image>
-                <xhtml:link rel="alternate" hreflang="en-US" href="@loc?language=en-US" />
-                <xhtml:link rel="alternate" hreflang="pt-BR" href="@loc?language=pt-BR" />
-                <xhtml:link rel="alternate" hreflang="es-ES" href="@loc?language=es-ES" />
-                <xhtml:link rel="alternate" hreflang="ja-JP" href="@loc?language=ja-JP" />
+                @foreach (var cinfo in OrigamiConstants.AllLanguages())
+                {
+                    <xhtml:link rel="alternate" hreflang="@cinfo.Name" href="@loc?language=@cinfo.Name" />
+                }
             </url>
         }
 
@@ -120,10 +120,10 @@
                     <video:description>@video.Description</video:description>
                     <video:content_loc>@vid</video:content_loc>
                 </video:video>
-                <xhtml:link rel="alternate" hreflang="en-US" href="@loc?language=en-US" />
-                <xhtml:link rel="alternate" hreflang="pt-BR" href="@loc?language=pt-BR" />
-                <xhtml:link rel="alternate" hreflang="es-ES" href="@loc?language=es-ES" />
-                <xhtml:link rel="alternate" hreflang="ja-JP" href="@loc?language=ja-JP" />
+                @foreach (var cinfo in OrigamiConstants.AllLanguages())
+                {
+                    <xhtml:link rel="alternate" hreflang="@cinfo.Name" href="@loc?language=@cinfo.Name" />
+                }
             </url>
         }
     }
@@ -143,10 +143,10 @@
                 <image:image>
                     <image:loc>@header</image:loc>
                 </image:image>
-                <xhtml:link rel="alternate" hreflang="en-US" href="@loc?language=en-US" />
-                <xhtml:link rel="alternate" hreflang="pt-BR" href="@loc?language=pt-BR" />
-                <xhtml:link rel="alternate" hreflang="es-ES" href="@loc?language=es-ES" />
-                <xhtml:link rel="alternate" hreflang="ja-JP" href="@loc?language=ja-JP" />
+                @foreach (var cinfo in OrigamiConstants.AllLanguages())
+                {
+                    <xhtml:link rel="alternate" hreflang="@cinfo.Name" href="@loc?language=@cinfo.Name" />
+                }
             </url>
         }
 
@@ -163,12 +163,25 @@
                     <video:description>@video.Description</video:description>
                     <video:content_loc>@vid</video:content_loc>
                 </video:video>
-                <xhtml:link rel="alternate" hreflang="en-US" href="@loc?language=en-US" />
-                <xhtml:link rel="alternate" hreflang="pt-BR" href="@loc?language=pt-BR" />
-                <xhtml:link rel="alternate" hreflang="es-ES" href="@loc?language=es-ES" />
-                <xhtml:link rel="alternate" hreflang="ja-JP" href="@loc?language=ja-JP" />
+                @foreach (var cinfo in OrigamiConstants.AllLanguages())
+                {
+                    <xhtml:link rel="alternate" hreflang="@cinfo.Name" href="@loc?language=@cinfo.Name" />
+                }
             </url>
         }
+    }
+
+    @foreach (var page in cookiePolicy)
+    {
+        var loc = $"{oi}{page.Hyperlink}";
+        <url>
+            <loc>@loc</loc>
+            @foreach (var _page in cookiePolicy)
+            {
+                var _loc = $"{oi}{_page.Hyperlink}";
+                <xhtml:link rel="alternate" hreflang="@_page.Get().LanguageWrittenOn" href="@_loc" />
+            }
+        </url>
     }
 
     @foreach (var page in privacyPolicy)
