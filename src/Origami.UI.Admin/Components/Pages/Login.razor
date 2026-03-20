@@ -1,4 +1,5 @@
 ﻿@page "/login"
+@using BootstrapBlazor.Components
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Identity
 @using System.Security.Claims
@@ -13,27 +14,27 @@
 @inject IUserRepository userRepository
 @inject IUserRoleRepository userRoleRepository
 @inject IOptions<JwtConfiguration> jwtConfiguration
+@inject ILoginRepository loginRepository
 
 @if (SyncRoot != null)
 {
-    var step = this._currentStep.Count > 0 ? this._currentStep.Peek() : Steps.Step0_Credentials;
     <div class="login-wrapper mt-3">
-        @if (step == Steps.Step0_Credentials)
+        @if (loginRepository.GetCurrentStep() == ILoginRepository.Steps.Step1_ValidateCredentials)
         {
             <ul class="inline-list mt-3">
                 <li>
-                    <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("Username")" @bind-Value="_username" OnKeyUp="this._onLogin"></MudTextField>
+                    <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("Username")" @bind-Value="loginRepository.Username" OnKeyUp="this._onLogin"></MudTextField>
                 </li>
                 <li>
-                    <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("Password")" InputType="InputType.Password" @bind-Value="_password" OnKeyUp="this._onLogin"></MudTextField>
+                    <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("Password")" InputType="InputType.Password" @bind-Value="loginRepository.Password" OnKeyUp="this._onLogin"></MudTextField>
                 </li>
             </ul>
             <div class="btn-group mt-3 w-100">
-                <button class="btn btn-success text-white w-100" disabled="@_disableLogin" @onclick="_login" type="submit">
+                <button class="btn btn-success text-white w-100" disabled="@loginRepository.ShouldDisableLogin" @onclick="loginRepository.GoNextAsync" type="submit">
                     <i class="fa-solid fa-right-to-bracket"></i>
                     @Text.Lower("Login")
                 </button>
-                <button class="btn btn-warning text-white w-100" @onclick="_clear">
+                <button class="btn btn-warning text-white w-100" @onclick="loginRepository.ClearCredentials">
                     <i class="fa-solid fa-broom"></i>
                     @Text.Lower("Clear")
                 </button>
@@ -43,26 +44,96 @@
                 </button>
             </div>
         }
-        else if (step == Steps.Step1_MustChangePassword)
+        else if (loginRepository.GetCurrentStep() == ILoginRepository.Steps.Step2_MustChangePassword)
         {
             <ul class="inline-list">
                 <li>
-                    <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("New password")" InputType="InputType.Password" @bind-Value="_newPassword1"></MudTextField>
+                    <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("New password")" InputType="InputType.Password" @bind-Value="loginRepository.NewPassword1"></MudTextField>
                 </li>
                 <li>
-                    <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("Confirm password")" InputType="InputType.Password" @bind-Value="_newPassword2"></MudTextField>
+                    <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("Confirm password")" InputType="InputType.Password" @bind-Value="loginRepository.NewPassword2"></MudTextField>
                 </li>
             </ul>
             <div class="btn-group mt-3 w-100">
-                <button class="btn btn-success text-white" disabled="@_disableLogin" @onclick="_changePassword">
+                <button class="btn btn-success text-white" disabled="@loginRepository.ShouldDisablePasswordChange" @onclick="loginRepository.GoNextAsync">
                     <i class="fa-solid fa-floppy-disk"></i>
-                    @Text.Lower("Save")
+                    @Text.Lower("Change password")
                 </button>
-                <button class="btn btn-warning text-white" @onclick="() => { this._newPassword1 = this._newPassword2 = string.Empty; }">
+                <button class="btn btn-warning text-white" @onclick="loginRepository.ClearChangePassword">
                     <i class="fa-solid fa-broom"></i>
                     @Text.Lower("Clear")
                 </button>
-                <button class="btn btn-secondary text-white" @onclick="_goBack">
+                <button class="btn btn-secondary text-white" @onclick="loginRepository.GoBackAsync">
+                    <i class="fa-solid fa-circle-chevron-left"></i>
+                    @Text.Lower("Go back")
+                </button>
+            </div>
+        }
+        else if (loginRepository.GetCurrentStep() == ILoginRepository.Steps.Step3_MustEnable2MFA)
+        {
+            <ul class="inline-list step3 must-enable-2fa">
+                <li class="text-center">
+                    <div class="qr-code-wrapper">
+                        <div>@Text.Original("Scan this QR code with your authenticator app")</div>
+                        <img class="qr-code" src="@this.loginRepository.User.GetTOTPQrCode()" />
+                    </div>
+                    <div class="uri-wrapper mt-3">
+                        <div>@Text.Original("Or use this URI")</div>
+                        <span class="uri">@this.loginRepository.User.GetTOTPUri()</span>
+                    </div>
+                </li>
+                <li class="text-center">
+                    <div class="recovery-codes row">
+                        @foreach (var recoveryCode in this.loginRepository.TOTPRecoveryCodes)
+                        {
+                            <div class="recovery-code col-6">
+                                <span>@recoveryCode</span>
+                            </div>
+                        }
+                    </div>
+                </li>
+            </ul>
+            <div class="step3 validate-code mt-3">
+                <ul class="inline-list">
+                    <li>
+                        <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("Enter the TOTP code here")" InputType="InputType.Password" @bind-Value="loginRepository.TOTPCodeForEnablement"></MudTextField>
+                    </li>
+                </ul>
+            </div>
+            <div class="btn-group mt-3 w-100">
+                <button class="btn btn-success text-white" disabled="@loginRepository.ShouldDisable2FAEnablement" @onclick="loginRepository.GoNextAsync">
+                    <i class="fa-solid fa-clipboard-check"></i>
+                    @Text.Lower("Validate the TOTP code and proceed")
+                </button>
+                <button class="btn btn-warning text-white" @onclick="loginRepository.ClearEnable2FA">
+                    <i class="fa-solid fa-broom"></i>
+                    @Text.Lower("Clear")
+                </button>
+                <button class="btn btn-secondary text-white" @onclick="loginRepository.GoBackAsync">
+                    <i class="fa-solid fa-circle-chevron-left"></i>
+                    @Text.Lower("Go back")
+                </button>
+            </div>
+        }
+        else if (_step == Steps.Step4_Validate2FA)
+        {
+            <div class="step4 validate-2fa">
+                <ul class="inline-list">
+                    <li>
+                        <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("2FA code")" InputType="InputType.Password" @bind-Value="loginRepository.TOTPCodeForValidation"></MudTextField>
+                    </li>
+                </ul>
+            </div>
+            <div class="btn-group mt-3 w-100">
+                <button class="btn btn-success text-white" disabled="@loginRepository.ShouldDisable2FAValidation" @onclick="loginRepository.GoNextAsync">
+                    <i class="fa-solid fa-check-to-slot"></i>
+                    @Text.Lower("Validate the 2FA code and login")
+                </button>
+                <button class="btn btn-warning text-white" @onclick="loginRepository.Clear2FA">
+                    <i class="fa-solid fa-broom"></i>
+                    @Text.Lower("Clear")
+                </button>
+                <button class="btn btn-secondary text-white" @onclick="loginRepository.GoBackAsync">
                     <i class="fa-solid fa-circle-chevron-left"></i>
                     @Text.Lower("Go back")
                 </button>
@@ -75,16 +146,21 @@
 
     private enum Steps
     {
-        Step0_Credentials = 0,
-        Step1_MustChangePassword = 1,
-        Step2_Enable2MFA = 2,
+        Step1_ValidateCredentials = 1,
+        Step2_MustChangePassword = 2,
+        Step3_MustEnable2MFA = 3,
+        Step4_Validate2FA = 4,
     }
 
+    private OrigamiUser _user = new();
+    private Stack<Steps> _currentStep = new();
     private string _newPassword1 = string.Empty;
     private string _newPassword2 = string.Empty;
     private string _password = string.Empty;
+    private string _totpCodeLogin = string.Empty;
+    private string _totpCodeValidation = string.Empty;
     private string _username = string.Empty;
-    private Stack<Steps> _currentStep = new();
+    private string[] _totpRecoveryCodes = [];
 
     private bool _disableLogin
     {
@@ -96,19 +172,86 @@
         }
     }
 
+    private bool _disablePasswordChange
+    {
+        get
+        {
+            if (_newPassword1.Has() == false) return true;
+            if (_newPassword2.Has() == false) return true;
+            return false;
+        }
+    }
+
+    private bool _disable2FAEnablement
+    {
+        get
+        {
+            if (_totpCodeValidation.Has() == false) return true;
+            return false;
+        }
+    }
+
+    private bool _disable2FAValidation
+    {
+        get
+        {
+            if (_totpCodeLogin.Has() == false) return true;
+            return false;
+        }
+    }
+
+    private Steps _step => this._currentStep.Count > 0 ? this._currentStep.Peek() : Steps.Step1_ValidateCredentials;
+
     private void _goBack()
     {
         this._currentStep.TryPop(out _);
     }
 
+    private async Task _goNext()
+    {
+        if (_step == Steps.Step1_ValidateCredentials)
+        {
+            if (_user.MustChangePassword == true)
+            {
+                _mustChangePassword();
+                return;
+            }
+
+            _2FA();
+        }
+        else if (_step == Steps.Step2_MustChangePassword)
+        {
+            _2FA();
+        }
+        else if (_step == Steps.Step3_MustEnable2MFA)
+        {
+            this._currentStep.Push(Steps.Step4_Validate2FA);
+        }
+        else if (_step == Steps.Step4_Validate2FA)
+        {
+            await _welcomeToTheApplication();
+        }
+    }
+
     private void _clear()
     {
-        _username = string.Empty;
-        _password = string.Empty;
-        _newPassword1 = string.Empty;
-        _newPassword2 = string.Empty;
-        _currentStep.Clear();
-        _currentStep.Push(Steps.Step0_Credentials);
+        switch (_step)
+        {
+            case Steps.Step1_ValidateCredentials:
+                _username = string.Empty;
+                _password = string.Empty;
+                break;
+            case Steps.Step2_MustChangePassword:
+                _newPassword1 = string.Empty;
+                _newPassword2 = string.Empty;
+                break;
+            case Steps.Step3_MustEnable2MFA:
+                _totpCodeValidation = string.Empty;
+                break;
+            case Steps.Step4_Validate2FA:
+                _totpCodeLogin = string.Empty;
+                break;
+        }
     }
 
     private string _generateJwtToken(OrigamiUser user)
@@ -137,39 +280,44 @@
         return jwtToken;
     }
 
+    private void _mustChangePassword()
+    {
+        this.UserFacade.Result = new() { Info = Text.Original("You must change your password") };
+        this._currentStep.Push(Steps.Step2_MustChangePassword);
+    }
+
+    private void _2FA()
+    {
+        if (_user.TOTPSecret == Guid.Empty)
+        {
+            this.UserFacade.Result = new() { Info = Text.Original("You must enable two-factor authentication") };
+            this._currentStep.Push(Steps.Step3_MustEnable2MFA);
+            return;
+        }
+
+        this._currentStep.Push(Steps.Step4_Validate2FA);
+    }
+
     private async Task _login()
     {
         var user = this.Super.Users.LookupUserInDatabase(_username, _password);
         if (user != null)
         {
-            this.UserFacade.User = user;
-            this.userRepository.UpdateCache(user);
-
-            if (user.MustChangePassword == true)
-            {
-                this._currentStep.Push(Steps.Step1_MustChangePassword);
-                this.UserFacade.Result = new() { ErrorMessage = Text.Original("You must change your password") };
-                return;
-            }
-
-            var token = this._generateJwtToken(user);
-            await this.JSRuntime.InvokeVoidAsync("$.cookie", this.Configuration.GetUserCookieKey(), token, new { path = "/", expires = 180, });
-
-            var returnUrl = this.NavigationManager!.Uri.QueryString("ReturnUrl");
-            this.NavigationManager!.NavigateTo(returnUrl.Has() ? returnUrl : "/", true);
+            this._user = user;
+            await _goNext();
         }
         else
         {
             var hub = new Result<OrigamiUser>();
 
-            hub.ErrorMessage = Text.Original("Username and password do not exist in the database");
-            hub.ErrorMessage = Text.Original("User may have been deleted or blocked");
+            hub.Error = Text.Original("Username and password do not exist in the database");
+            hub.Error = Text.Original("User may have been deleted or blocked");
 
             this.UserFacade.Result = hub;
         }
     }
 
-    private void _changePassword()
+    private async Task _changePassword()
     {
         var hub = this.Super.Users.ChangePassword(
             this.UserFacade.User.GetContext(),
@@ -181,8 +329,8 @@
         {
             if (hub.Ok)
             {
-                var returnUrl = this.NavigationManager!.Uri.QueryString("ReturnUrl");
-                this.NavigationManager!.NavigateTo(returnUrl.Has() ? returnUrl : "/", false);
+                await _goNext();
+                return;
             }
         }
         finally
@@ -204,10 +352,23 @@
         this.NavigationManager.NavigateTo("/password/forgot", false);
     }
 
-    protected override void OnParametersSet()
+    private async Task _welcomeToTheApplication()
     {
-        base.OnParametersSet();
+        this.UserFacade.User = this._user;
+        this.Super.Users.UpdateCache(this._user);
+
+        var token = this._generateJwtToken(this.UserFacade.User);
+        await this.JSRuntime.InvokeVoidAsync("$.cookie", this.Configuration.GetUserCookieKey(), token, new { path = "/", expires = 180, });
+
+        var returnUrl = this.NavigationManager!.Uri.QueryString("ReturnUrl");
+        this.NavigationManager!.NavigateTo(returnUrl.Has() ? returnUrl : "/", true);
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
         this._currentStep.Clear();
-        this._currentStep.Push(Steps.Step0_Credentials);
+        this._currentStep.Push(Steps.Step1_ValidateCredentials);
+        this._totpRecoveryCodes = this.Super.Users.GenerateTOTPRecoveryCodes();
     }
 }

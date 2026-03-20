@@ -61,7 +61,7 @@
     {
         if (args.File.Size > this.FileLimitInBytes)
         {
-            this.UserFacade.Result = new() { ErrorMessage = Text.Original("Image is too large") };
+            this.UserFacade.Result = new() { Error = Text.Original("Image is too large") };
             return;
         }
         this._base64Image = await args.File.GetBase64Image();

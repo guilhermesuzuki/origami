@@ -94,9 +94,9 @@ public class SettingsRepository :
         }
         finally
         {
-            hub.OnSuccess(() => hub.InfoMessage = Text.Original("Refresh your browser"));
-            hub.OnSuccess(() => hub.InfoMessage = Text.Original("If you changed social network settings, you have to restart front-end to take effect"));
-            hub.OnSuccess(() => hub.InfoMessage = Text.Original("If you changed open telemetry settings, you have to restart both admin and front-end to take effect"));
+            hub.OnSuccess(() => hub.Info = Text.Original("Refresh your browser"));
+            hub.OnSuccess(() => hub.Info = Text.Original("If you changed social network settings, you have to restart front-end to take effect"));
+            hub.OnSuccess(() => hub.Info = Text.Original("If you changed open telemetry settings, you have to restart both admin and front-end to take effect"));
         }
     }
 

@@ -35,12 +35,12 @@ namespace Origami.Core.Data
 
             if (merge.Create.Any() == false)
             {
-                hub.SimpleMessage = Text.Original("Roles are up-to-date");
+                hub.Simple = Text.Original("Roles are up-to-date");
                 return hub;
             }
 
             merge.Create.GetContexts(new(OrigamiUser.AnonymousUser, DateTime.UtcNow)).Call(SmartCreate, false).Push(hub);
-            hub.SimpleMessage = Text.Original("Roles have been created");
+            hub.Simple = Text.Original("Roles have been created");
 
             return hub;
         }

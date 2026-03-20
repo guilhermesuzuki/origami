@@ -50,7 +50,7 @@ namespace Origami.Core.Data
         {
             if (Current != null)
             {
-                return new() { ErrorMessage = Text.Original("A backup or restore process is already running. Please try again later.") };
+                return new() { Error = Text.Original("A backup or restore process is already running. Please try again later.") };
             }
 
             var hub = new Result<string>();
@@ -87,7 +87,7 @@ namespace Origami.Core.Data
                     includeBaseDirectory: true
                 );
 
-                hub.SuccessMessage = Text.Original("ZIP file created successfully.");
+                hub.Success = Text.Original("ZIP file created successfully.");
 
                 if (hub.Ok)
                 {
@@ -102,7 +102,7 @@ namespace Origami.Core.Data
             }
             catch (Exception ex)
             {
-                return new() { ErrorMessage = ex.GetMessage() };
+                return new() { Error = ex.GetMessage() };
             }
             finally
             {
@@ -115,12 +115,12 @@ namespace Origami.Core.Data
         {
             if (Current != null)
             {
-                return new() { ErrorMessage = Text.Original("A backup or restore process is already running. Please try again later.") };
+                return new() { Error = Text.Original("A backup or restore process is already running. Please try again later.") };
             }
 
             if (backup is OrigamiBackupRestore)
             {
-                return new() { ErrorMessage = Text.Original("This has already been restored.") };
+                return new() { Error = Text.Original("This has already been restored.") };
             }
 
             var hub = new Result();
@@ -148,7 +148,7 @@ namespace Origami.Core.Data
 
                 if (File.Exists(zipPath) == false)
                 {
-                    return new(restore) { ErrorMessage = Text.Original("Backup file not found.") };
+                    return new(restore) { Error = Text.Original("Backup file not found.") };
                 }
 
                 await ZipFile.ExtractToDirectoryAsync(zipPath, extractPath);
@@ -197,7 +197,7 @@ namespace Origami.Core.Data
             }
             catch (Exception ex)
             {
-                return new() { ErrorMessage = ex.GetMessage() };
+                return new() { Error = ex.GetMessage() };
             }
             finally
             {
@@ -227,7 +227,7 @@ namespace Origami.Core.Data
                 }
                 catch (Exception ex)
                 {
-                    return new() { ErrorMessage = ex.GetMessage() };
+                    return new() { Error = ex.GetMessage() };
                 }
             }
 
@@ -238,7 +238,7 @@ namespace Origami.Core.Data
         {
             if (Current == null)
             {
-                return new() { ErrorMessage = $"Current process hasn't started yet" };
+                return new() { Error = $"Current process hasn't started yet" };
             }
 
             var oi = _configuration.GetOrigamiConnectionString();
@@ -267,22 +267,22 @@ namespace Origami.Core.Data
 
             if (process.ExitCode != 0)
             {
-                return new() { ErrorMessage = $"BACPAC export failed: {error}" };
+                return new() { Error = $"BACPAC export failed: {error}" };
             }
 
-            return new(target) { SuccessMessage = Text.Original("BACPAC file created successfully.") };
+            return new(target) { Success = Text.Original("BACPAC file created successfully.") };
         }
 
         protected async Task<Result> RestoreTheDatabaseAsync(string bacpacPath)
         {
             if (File.Exists(bacpacPath) == false)
             {
-                return new() { ErrorMessage = "BACPAC file not found." };
+                return new() { Error = "BACPAC file not found." };
             }
 
             if (Current == null)
             {
-                return new() { ErrorMessage = $"Current process hasn't started yet" };
+                return new() { Error = $"Current process hasn't started yet" };
             }
 
             var oi = _configuration.GetOrigamiConnectionString();
@@ -321,7 +321,7 @@ namespace Origami.Core.Data
                 throw new Exception($"BACPAC import failed:\n{error}");
             }
 
-            return new() { SuccessMessage = Text.Original("Database restored successfully."), };
+            return new() { Success = Text.Original("Database restored successfully."), };
         }
 
         private async Task<Result> UpdateConnectionStringInsideDbSettings()
@@ -345,14 +345,14 @@ namespace Origami.Core.Data
                 {
                     node["ConnectionStrings"]!["origami"] = builder.ToString();
                     await File.WriteAllTextAsync(file, node.ToJsonString(new() { WriteIndented = true, }));
-                    return new() { SuccessMessage = Text.Original("Db settings file updated successfully..") };
+                    return new() { Success = Text.Original("Db settings file updated successfully..") };
                 }
 
-                return new() { ErrorMessage = Text.Original("Error parsing the JSON file.") };
+                return new() { Error = Text.Original("Error parsing the JSON file.") };
             }
             catch (Exception ex)
             {
-                return new() { ErrorMessage = ex.GetMessage() };
+                return new() { Error = ex.GetMessage() };
             }
         }
     }

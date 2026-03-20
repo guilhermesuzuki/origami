@@ -59,7 +59,7 @@ namespace Origami.Core.Data
 
             if (this.IsCycleDetected(ctx, []) == true)
             {
-                validation.ErrorMessage = $"Cycle detected: you must choose another parent";
+                validation.Error = $"Cycle detected: you must choose another parent";
             }
 
             this.ValidateSlug(ctx).Push(validation);
@@ -80,12 +80,12 @@ namespace Origami.Core.Data
             {
                 if (page.IsFrontPage)
                 {
-                    return new(ctx.Entity) { ErrorMessage = Text.Original("Page is already front-page") };
+                    return new(ctx.Entity) { Error = Text.Original("Page is already front-page") };
                 }
 
                 if (page.ParentId != null)
                 {
-                    return new(ctx.Entity) { ErrorMessage = Text.Original("Only a top-level page can become front-page") };
+                    return new(ctx.Entity) { Error = Text.Original("Only a top-level page can become front-page") };
                 }
 
                 try
@@ -118,7 +118,7 @@ namespace Origami.Core.Data
                     return new(ctx.Entity, ex.GetMessage());
                 }
             }
-            return new(ctx.Entity) { ErrorMessage = Text.Original($"Page cannot be retrieved") };
+            return new(ctx.Entity) { Error = Text.Original($"Page cannot be retrieved") };
         }
 
         public override Result<OrigamiPage> PurgeRelationshipsFromDatabase(DataOperationContext<OrigamiPage> ctx)
@@ -160,9 +160,9 @@ namespace Origami.Core.Data
                         return new(ctx.Entity, ex.GetMessage());
                     }
                 }
-                return new(ctx.Entity) { ErrorMessage = Text.Original($"Page is not front-page") };
+                return new(ctx.Entity) { Error = Text.Original($"Page is not front-page") };
             }
-            return new(ctx.Entity) { ErrorMessage = Text.Original($"Page does not exist") };
+            return new(ctx.Entity) { Error = Text.Original($"Page does not exist") };
         }
 
         public override Result<OrigamiPage> UpdateValidation(DataOperationContext<OrigamiPage> ctx)
@@ -171,7 +171,7 @@ namespace Origami.Core.Data
 
             if (this.IsCycleDetected(ctx, []) == true)
             {
-                validation.ErrorMessage = $"Cycle detected: you must choose another parent";
+                validation.Error = $"Cycle detected: you must choose another parent";
             }
 
             this.ValidateSlug(ctx).Push(validation);

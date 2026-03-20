@@ -54,6 +54,6 @@
             return;
         }
 
-        this.UserFacade.Result = new() { ErrorMessage = Text.Original("Failed to upload the backup file."), };
+        this.UserFacade.Result = new() { Error = Text.Original("Failed to upload the backup file."), };
     }
 }

@@ -121,7 +121,7 @@ namespace Origami.Core.Data
                 return hub;
             }
 
-            return new() { ErrorMessage = Text.Original(Text.SomethingWentWrongPleaseTryAgain) };
+            return new() { Error = Text.Original(Text.SomethingWentWrongPleaseTryAgain) };
         }
     }
 }

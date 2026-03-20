@@ -33,7 +33,7 @@ namespace Origami.Core.Data
             }
             catch (Exception ex)
             {
-                return new() { ErrorMessage = ex.GetMessage() };
+                return new() { Error = ex.GetMessage() };
             }
         }
 
@@ -45,7 +45,7 @@ namespace Origami.Core.Data
             }
             catch (Exception ex)
             {
-                return new() { ErrorMessage = ex.GetMessage() };
+                return new() { Error = ex.GetMessage() };
             }
         }
     }

@@ -93,14 +93,14 @@
             EmailIcon = Icons.Material.Filled.Error;
             EmailIconColor = Color.Error;
             this._startEmailTimer();
-            this.UserFacade.Result = new() { ErrorMessage = Text.Lower("Failed to send verification code. Please try again later."), };
+            this.UserFacade.Result = new() { Error = Text.Lower("Failed to send verification code. Please try again later."), };
         }
         catch 
         {
             EmailIcon = Icons.Material.Filled.Error;
             EmailIconColor = Color.Error;
             this._startEmailTimer();
-            this.UserFacade.Result = new() { ErrorMessage = Text.Lower("Failed to send verification code. Please try again later."), };
+            this.UserFacade.Result = new() { Error = Text.Lower("Failed to send verification code. Please try again later."), };
         }
     }
 
@@ -116,7 +116,7 @@
             this.UserHasSubscribed.InvokeAsync(this.UserFacade.SocialProfile);
             return;
         }
-        this.UserFacade.Result = new() { ErrorMessage = Text.Lower("The verification code is not valid"), };
+        this.UserFacade.Result = new() { Error = Text.Lower("The verification code is not valid"), };
     }
 
     private void _startEmailTimer()

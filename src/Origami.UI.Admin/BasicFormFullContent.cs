@@ -80,8 +80,8 @@ namespace Origami.UI.Admin
             }
             catch (Exception ex)
             {
-                hub.ErrorMessage = Text.Get(Text.SomethingWentWrongPleaseTryAgain);
-                hub.ErrorMessage = ex.GetMessage();
+                hub.Error = Text.Get(Text.SomethingWentWrongPleaseTryAgain);
+                hub.Error = ex.GetMessage();
             }
             finally
             {

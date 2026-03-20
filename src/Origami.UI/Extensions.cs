@@ -151,6 +151,7 @@ namespace Origami.UI
             builder.Services.AddTransient<IVideoTagRepository, VideoTagRepository>();
             builder.Services.AddTransient<IVideoViewRepository, VideoViewRepository>();
             builder.Services.AddTransient<IWhatToSeeNextRepository, WhatToSeeNextRepository>();
+            builder.Services.AddScoped<ILoginRepository, LoginRepository>();
 
             builder.Services.AddKeyedSingleton<IIpLocationRepository, IpApiComRepository>(IpApiComRepository.Host);
             builder.Services.AddKeyedSingleton<IIpLocationRepository, IpApiCoRepository>(IpApiCoRepository.Host);

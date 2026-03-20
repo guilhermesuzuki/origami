@@ -136,7 +136,7 @@ namespace Origami.Core.Data
                 return Update(ctx).OnSuccess(() => UpdateCache(ctx.Entity));
             }
 
-            return new(ctx.Entity) { ErrorMessage = Text.Original("Purge instead") };
+            return new(ctx.Entity) { Error = Text.Original("Purge instead") };
         }
 
         public Result<T> SmartPublish(DataOperationContext<T> ctx, bool checkPermission)
@@ -154,11 +154,11 @@ namespace Origami.Core.Data
 
                     if (db == null)
                     {
-                        return new(ctx.Entity) { ErrorMessage = Text.Original("{0} does NOT exist", published.GetType().Name) };
+                        return new(ctx.Entity) { Error = Text.Original("{0} does NOT exist", published.GetType().Name) };
                     }
                     if (db.IsPublished)
                     {
-                        return new(ctx.Entity) { ErrorMessage = Text.Original("{0} is already published", published.GetType().Name) };
+                        return new(ctx.Entity) { Error = Text.Original("{0} is already published", published.GetType().Name) };
                     }
 
                     published.IsPublished = true;
@@ -170,7 +170,7 @@ namespace Origami.Core.Data
             }
             catch (Exception ex)
             {
-                return new(ctx.Entity) { ErrorMessage = ex.GetMessage() };
+                return new(ctx.Entity) { Error = ex.GetMessage() };
             }
 
             throw new NotImplementedException();
@@ -204,7 +204,7 @@ namespace Origami.Core.Data
             }
             catch (Exception ex)
             {
-                hub.ErrorMessage = ex.GetMessage();
+                hub.Error = ex.GetMessage();
             }
 
             return hub;
@@ -224,7 +224,7 @@ namespace Origami.Core.Data
                 return Update(ctx).OnSuccess(() => UpdateCache(ctx.Entity));
             }
 
-            return new(ctx.Entity) { ErrorMessage = Text.Original("Unable to restore") };
+            return new(ctx.Entity) { Error = Text.Original("Unable to restore") };
         }
 
         public Result<T> SmartSave(DataOperationContext<T> ctx, bool checkPermission)
@@ -257,11 +257,11 @@ namespace Origami.Core.Data
                     var db = ReadFromDatabase().Id(ctx.Entity.Id) as IPublished;
                     if (db == null)
                     {
-                        return new(ctx.Entity) { ErrorMessage = Text.Original("{0} does NOT exist", published.GetType().Name) };
+                        return new(ctx.Entity) { Error = Text.Original("{0} does NOT exist", published.GetType().Name) };
                     }
                     if (db.IsPublished == false)
                     {
-                        return new(ctx.Entity) { ErrorMessage = Text.Original("{0} is already unpublished", published.GetType().Name) };
+                        return new(ctx.Entity) { Error = Text.Original("{0} is already unpublished", published.GetType().Name) };
                     }
                     published.IsPublished = false;
                     SmartUpdate(ctx, false);
@@ -270,7 +270,7 @@ namespace Origami.Core.Data
             }
             catch (Exception ex)
             {
-                return new(ctx.Entity) { ErrorMessage = ex.GetMessage() };
+                return new(ctx.Entity) { Error = ex.GetMessage() };
             }
             throw new NotImplementedException();
         }

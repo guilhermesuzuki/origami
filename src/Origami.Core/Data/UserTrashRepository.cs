@@ -264,7 +264,7 @@ namespace Origami.Core.Data
             {
                 return repo.SmartRestore(ctx, true).Push(hub);
             }
-            return new(trash.Entity) { ErrorMessage = Text.Original("Unable to restore trash") };
+            return new(trash.Entity) { Error = Text.Original("Unable to restore trash") };
         }
     }
 }

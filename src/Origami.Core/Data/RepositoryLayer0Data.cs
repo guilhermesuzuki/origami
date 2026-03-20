@@ -39,7 +39,7 @@ namespace Origami.Core.Data
             }
             catch (Exception ex)
             {
-                return new(ctx.Entity) { ErrorMessage = ex.GetMessage() };
+                return new(ctx.Entity) { Error = ex.GetMessage() };
             }
         }
 
@@ -62,15 +62,15 @@ namespace Origami.Core.Data
                     return new(ctx.Entity);
                 }
 
-                return new(ctx.Entity) { ErrorMessage = Text.Original("Purge instead") };
+                return new(ctx.Entity) { Error = Text.Original("Purge instead") };
             }
             catch (DbUpdateConcurrencyException ex)
             {
-                return new(ctx.Entity) { ErrorMessage = ex.GetMessage() };
+                return new(ctx.Entity) { Error = ex.GetMessage() };
             }
             catch (Exception ex)
             {
-                return new(ctx.Entity) { ErrorMessage = ex.GetMessage() };
+                return new(ctx.Entity) { Error = ex.GetMessage() };
             }
         }
 
@@ -88,11 +88,11 @@ namespace Origami.Core.Data
             }
             catch (DbUpdateConcurrencyException ex)
             {
-                return new(ctx.Entity) { ErrorMessage = ex.GetMessage() };
+                return new(ctx.Entity) { Error = ex.GetMessage() };
             }
             catch (Exception ex)
             {
-                return new(ctx.Entity) { ErrorMessage = ex.GetMessage() };
+                return new(ctx.Entity) { Error = ex.GetMessage() };
             }
         }
 
@@ -126,15 +126,15 @@ namespace Origami.Core.Data
                     return new(ctx.Entity);
                 }
 
-                return new(ctx.Entity) { ErrorMessage = Text.Original("Unable to restore") };
+                return new(ctx.Entity) { Error = Text.Original("Unable to restore") };
             }
             catch (DbUpdateConcurrencyException ex)
             {
-                return new(ctx.Entity) { ErrorMessage = ex.GetMessage() };
+                return new(ctx.Entity) { Error = ex.GetMessage() };
             }
             catch (Exception ex)
             {
-                return new(ctx.Entity) { ErrorMessage = ex.GetMessage() };
+                return new(ctx.Entity) { Error = ex.GetMessage() };
             }
         }
 

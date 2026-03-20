@@ -122,11 +122,11 @@ namespace Origami.Core.Data
                 var fresh = ReadFromDatabase().Id(ctx.Entity.Id);
                 if (fresh == null)
                 {
-                    hub.ErrorMessage = Text.Original("Blog could not be found");
+                    hub.Error = Text.Original("Blog could not be found");
                 }
                 else if (fresh is { IsPrimary: true })
                 {
-                    hub.ErrorMessage = Text.Original("Primary blog cannot be deleted");
+                    hub.Error = Text.Original("Primary blog cannot be deleted");
                 }
             }
             return hub;
@@ -180,7 +180,7 @@ namespace Origami.Core.Data
 
             if (ctx.Entity.Count() != blogs.Count())
             {
-                return new() { ErrorMessage = Text.Original("Invalid ids (may contain deleted, inactive blog ids)") };
+                return new() { Error = Text.Original("Invalid ids (may contain deleted, inactive blog ids)") };
             }
 
             try

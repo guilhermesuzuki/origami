@@ -423,7 +423,7 @@
         }
         catch (Exception ex)
         {
-            this.UserFacade.Result = new() { ErrorMessage = ex.GetMessage() };
+            this.UserFacade.Result = new() { Error = ex.GetMessage() };
         }
     }
 
@@ -455,7 +455,7 @@
             }
             catch (Exception ex)
             {
-                this.UserFacade.Result = new() { ErrorMessage = ex.GetMessage() };
+                this.UserFacade.Result = new() { Error = ex.GetMessage() };
             }
         }
     }
@@ -478,7 +478,7 @@
             }
             catch (Exception ex)
             {
-                this.UserFacade.Result = new() { ErrorMessage = ex.GetMessage() };
+                this.UserFacade.Result = new() { Error = ex.GetMessage() };
             }
         }
     }
@@ -521,11 +521,11 @@
                 this._loadFiles(true);
                 this._loadDirectories(true);
 
-                this.UserFacade.Result = new() { SuccessMessage = Text.Original("{0} item(s) deleted") };
+                this.UserFacade.Result = new() { Success = Text.Original("{0} item(s) deleted") };
             }
             catch (Exception ex)
             {
-                this.UserFacade.Result = new() { ErrorMessage = ex.GetMessage() };
+                this.UserFacade.Result = new() { Error = ex.GetMessage() };
             }
         }
     }
@@ -628,7 +628,7 @@
         }
         catch (Exception ex)
         {
-            this.UserFacade.Result = new() { ErrorMessage = ex.GetMessage(), };
+            this.UserFacade.Result = new() { Error = ex.GetMessage(), };
         }
     }
 
@@ -650,7 +650,7 @@
         }
         catch (Exception ex)
         {
-            this.UserFacade.Result = new() { ErrorMessage = ex.GetMessage(), };
+            this.UserFacade.Result = new() { Error = ex.GetMessage(), };
         }
     }
 

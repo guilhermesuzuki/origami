@@ -38,7 +38,7 @@ namespace Origami.Core.Models
         /// <param name="ex"></param>
         public Result(Exception ex) : this()
         {
-            ErrorMessage = ex.GetMessage();
+            Error = ex.GetMessage();
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace Origami.Core.Models
         /// <summary>
         /// Creates an error message
         /// </summary>
-        public virtual string? ErrorMessage
+        public virtual string? Error
         {
             set => AddMessage(ResultMessage.MessageTypes.Error, value);
         }
@@ -65,7 +65,7 @@ namespace Origami.Core.Models
         /// <summary>
         /// Creates an info message
         /// </summary>
-        public virtual string? InfoMessage
+        public virtual string? Info
         {
             set => AddMessage(ResultMessage.MessageTypes.Info, value);
         }
@@ -102,17 +102,19 @@ namespace Origami.Core.Models
             get => _rowsAffected;
             set => this.Set(ref _rowsAffected, value, Changed);
         }
+
         /// <summary>
         /// Creates a simple message
         /// </summary>
-        public virtual string? SimpleMessage
+        public virtual string? Simple
         {
             set => AddMessage(ResultMessage.MessageTypes.Simple, value);
         }
+
         /// <summary>
         /// Creates a success message
         /// </summary>
-        public virtual string? SuccessMessage
+        public virtual string? Success
         {
             set => AddMessage(ResultMessage.MessageTypes.Success, value);
         }
@@ -120,10 +122,11 @@ namespace Origami.Core.Models
         /// <summary>
         /// Creates a warning message
         /// </summary>
-        public virtual string? WarningMessage
+        public virtual string? Warning
         {
             set => AddMessage(ResultMessage.MessageTypes.Warning, value);
         }
+
         /// <summary>
         /// Gets the result's entity, if it exists (or if this instance is Result<>).
         /// </summary>
@@ -272,7 +275,7 @@ namespace Origami.Core.Models
         public Result(T entity, string errorMessage) : this()
         {
             Entity = entity;
-            ErrorMessage = errorMessage;
+            Error = errorMessage;
         }
 
         /// <summary>
@@ -283,7 +286,7 @@ namespace Origami.Core.Models
         public Result(T entity, ValidationResult validationResult) : this()
         {
             Entity = entity;
-            validationResult.Errors.Each(e => ErrorMessage = e.ErrorMessage);
+            validationResult.Errors.Each(e => Error = e.ErrorMessage);
         }
 
         /// <summary>
@@ -294,7 +297,7 @@ namespace Origami.Core.Models
         public Result(T entity, IValidator<T> validator) : this()
         {
             Entity = entity;
-            validator.Validate(entity).Errors.Each(e => ErrorMessage = e.ErrorMessage);
+            validator.Validate(entity).Errors.Each(e => Error = e.ErrorMessage);
         }
 
         /// <summary>

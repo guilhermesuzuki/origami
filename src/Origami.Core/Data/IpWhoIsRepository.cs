@@ -69,14 +69,14 @@ namespace Origami.Core.Data
                     }
                 }
 
-                return new() { ErrorMessage = $"HTTP {response.StatusCode} - {response.ReasonPhrase} from {Host}", };
+                return new() { Error = $"HTTP {response.StatusCode} - {response.ReasonPhrase} from {Host}", };
             }
             catch
             {
 
             }
 
-            return new() { ErrorMessage = Text.Original("Unable to retrieve IP location") };
+            return new() { Error = Text.Original("Unable to retrieve IP location") };
         }
     }
 }

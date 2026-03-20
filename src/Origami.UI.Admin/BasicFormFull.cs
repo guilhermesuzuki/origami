@@ -51,7 +51,7 @@ namespace Origami.UI.Admin
             }
             catch (Exception ex)
             {
-                hub.ErrorMessage = ex.GetMessage();
+                hub.Error = ex.GetMessage();
             }
             finally
             {

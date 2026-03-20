@@ -79,7 +79,7 @@ namespace Origami.Core.Data
             //if it's more than 20, timeout
             if (commentsMadeByTheUser >= 20)
             {
-                return new(ctx.Entity) { ErrorMessage = Text.Original(Text.YouMadeTooManyCommentsIn5Minutes) };
+                return new(ctx.Entity) { Error = Text.Original(Text.YouMadeTooManyCommentsIn5Minutes) };
             }
 
             return base.SmartCreate(ctx, false);
@@ -114,7 +114,7 @@ namespace Origami.Core.Data
                 }
             }
 
-            return new(ctx.Entity) { ErrorMessage = Text.Original(Text.SomethingWentWrongPleaseTryAgain) };
+            return new(ctx.Entity) { Error = Text.Original(Text.SomethingWentWrongPleaseTryAgain) };
         }
 
         public async Task<List<VideoCommentTotal>> FastRead()
@@ -151,7 +151,7 @@ namespace Origami.Core.Data
                 return new(ctx.Entity, ex.GetMessage());
             }
 
-            return new(ctx.Entity) { ErrorMessage = Text.Original(Text.SomethingWentWrongPleaseTryAgain) };
+            return new(ctx.Entity) { Error = Text.Original(Text.SomethingWentWrongPleaseTryAgain) };
         }
 
         public override void PurgeRelationshipsFromCache(OrigamiVideoComment entity)
@@ -190,10 +190,10 @@ namespace Origami.Core.Data
             }
             catch (Exception ex)
             {
-                return new(ctx.Entity, ex.GetMessage()) { ErrorMessage = Text.Original(Text.SomethingWentWrongPleaseTryAgain) };
+                return new(ctx.Entity, ex.GetMessage()) { Error = Text.Original(Text.SomethingWentWrongPleaseTryAgain) };
             }
 
-            return new(ctx.Entity) { ErrorMessage = Text.Original(Text.SomethingWentWrongPleaseTryAgain) };
+            return new(ctx.Entity) { Error = Text.Original(Text.SomethingWentWrongPleaseTryAgain) };
         }
 
         public Task Update(IEnumerable<VideoCommentTotal> entities)
@@ -215,7 +215,7 @@ namespace Origami.Core.Data
             // user must have created the comment to edit it
             if (ctx.SocialProfile.Id != ctx.Entity.SocialProfileId)
             {
-                return new(ctx.Entity) { ErrorMessage = Text.Original("You cannot edit this comment") };
+                return new(ctx.Entity) { Error = Text.Original("You cannot edit this comment") };
             }
 
             return base.SmartUpdate(ctx, false);

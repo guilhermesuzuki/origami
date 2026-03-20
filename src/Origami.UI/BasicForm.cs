@@ -183,7 +183,7 @@ namespace Origami.UI
         {
             if (image.IsImage == false)
             {
-                UserFacade.Result = new() { ErrorMessage = Text.Original("You need to pick an image") };
+                UserFacade.Result = new() { Error = Text.Original("You need to pick an image") };
                 return;
             }
 
@@ -192,7 +192,7 @@ namespace Origami.UI
                 if (image.WebPath.Like(header.HeaderImage) == true)
                 {
                     FileManagerForImages = false;
-                    UserFacade.Result = new() { InfoMessage = Text.Original("Source and destination images share the same location") };
+                    UserFacade.Result = new() { Info = Text.Original("Source and destination images share the same location") };
                     return;
                 }
 
@@ -239,7 +239,7 @@ namespace Origami.UI
             else
             {
                 FileManagerForImages = false;
-                UserFacade.Result = new() { ErrorMessage = Text.Original("Entity header cannot be updated") };
+                UserFacade.Result = new() { Error = Text.Original("Entity header cannot be updated") };
             }
         }
 
@@ -251,7 +251,7 @@ namespace Origami.UI
         {
             if (image.IsImage == false)
             {
-                this.UserFacade.Result = new() { ErrorMessage = Text.Original("You need to pick an image") };
+                this.UserFacade.Result = new() { Error = Text.Original("You need to pick an image") };
                 return;
             }
 
@@ -470,7 +470,7 @@ namespace Origami.UI
         {
             if (file.Size > OrigamiConstants.MaximumBase64StringForHeaderImages)
             {
-                UserFacade.Result = new() { ErrorMessage = Text.Original("File is too large") };
+                UserFacade.Result = new() { Error = Text.Original("File is too large") };
                 return;
             }
 
@@ -519,7 +519,7 @@ namespace Origami.UI
         {
             if (video.IsVideo == false)
             {
-                UserFacade.Result = new() { ErrorMessage = Text.Original("You need to pick a video") };
+                UserFacade.Result = new() { Error = Text.Original("You need to pick a video") };
                 return;
             }
 
@@ -528,7 +528,7 @@ namespace Origami.UI
                 if (video.WebPath.Like(oiVideo.MediaFile.WebPath) == true)
                 {
                     FileManagerForImages = false;
-                    UserFacade.Result = new() { InfoMessage = Text.Original("Source and destination images share the same location") };
+                    UserFacade.Result = new() { Info = Text.Original("Source and destination images share the same location") };
                     return;
                 }
 
@@ -575,7 +575,7 @@ namespace Origami.UI
             else
             {
                 FileManagerForImages = false;
-                UserFacade.Result = new() { ErrorMessage = Text.Original("Video cannot be updated") };
+                UserFacade.Result = new() { Error = Text.Original("Video cannot be updated") };
             }
         }
     }

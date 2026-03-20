@@ -96,7 +96,7 @@
                 {
                     this.UserFacade.Result = new()
                     {
-                        ErrorMessage = Text.Lower("Error while trying to retrieve feed {0}", url)
+                        Error = Text.Lower("Error while trying to retrieve feed {0}", url)
                     };
                 }
             }, token));

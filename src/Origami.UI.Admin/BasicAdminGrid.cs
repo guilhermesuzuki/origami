@@ -162,7 +162,7 @@ namespace Origami.UI.Admin
             //checks to see if there's entities
             if (entities.Count == 0)
             {
-                this.UserFacade.Result = new() { InfoMessage = Text.Original("No entities were selected") };
+                this.UserFacade.Result = new() { Info = Text.Original("No entities were selected") };
                 return;
             }
 
@@ -190,7 +190,7 @@ namespace Origami.UI.Admin
                 }
                 catch (Exception ex)
                 {
-                    hub.ErrorMessage = ex.GetMessage();
+                    hub.Error = ex.GetMessage();
                 }
                 finally
                 {

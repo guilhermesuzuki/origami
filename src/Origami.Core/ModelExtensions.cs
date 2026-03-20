@@ -714,17 +714,17 @@ namespace Origami.Core
 
             if (password.Has() == false)
             {
-                result.ErrorMessage = "Password is empty";
+                result.Error = "Password is empty";
             }
             else
             {
-                if (password.Length < 5) result.ErrorMessage = "Password too short";
-                if (Regex.IsMatch(password, "[0-9]+") == false) result.ErrorMessage = "Number was not found in password";
-                if (Regex.IsMatch(password, "[a-zA-Z]+") == false) result.ErrorMessage = "Character was not found in password";
-                if (Regex.IsMatch(password, @"[!@#$%^&*()_\-+=\[\]{}|\\:;\""<>,.?/~`]") == false) result.ErrorMessage = "Special character was not found in password";
+                if (password.Length < 5) result.Error = "Password too short";
+                if (Regex.IsMatch(password, "[0-9]+") == false) result.Error = "Number was not found in password";
+                if (Regex.IsMatch(password, "[a-zA-Z]+") == false) result.Error = "Character was not found in password";
+                if (Regex.IsMatch(password, @"[!@#$%^&*()_\-+=\[\]{}|\\:;\""<>,.?/~`]") == false) result.Error = "Special character was not found in password";
             }
 
-            return result.Ok ? new() { SuccessMessage = "Password is strong" } : result;
+            return result.Ok ? new() { Success = "Password is strong" } : result;
         }
 
         /// <summary>

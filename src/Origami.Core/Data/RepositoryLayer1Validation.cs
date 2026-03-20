@@ -81,7 +81,7 @@ namespace Origami.Core.Data
                 db = db.Where(x => x.Id != ctx.Entity.Id);
                 if (db.Any() == true)
                 {
-                    validation.ErrorMessage = Text.Original("Slug is already in use");
+                    validation.Error = Text.Original("Slug is already in use");
                 }
             }
             return validation;

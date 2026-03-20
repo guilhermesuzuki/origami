@@ -77,9 +77,9 @@ namespace Origami.Core.Data
                 .Where(x => x.Password == hash)
                 .FirstOrDefault();
 
-            if (user == null) return new() { ErrorMessage = Text.Original("Username and current password do NOT exist in the database") };
-            if (newPassword1 != newPassword2) return new() { ErrorMessage = Text.Original("New passwords do NOT match, they differ from each other") };
-            if (oldPassword == newPassword1) return new() { ErrorMessage = Text.Original("You did NOT change passwords, current and new are the same") };
+            if (user == null) return new() { Error = Text.Original("Username and current password do NOT exist in the database") };
+            if (newPassword1 != newPassword2) return new() { Error = Text.Original("New passwords do NOT match, they differ from each other") };
+            if (oldPassword == newPassword1) return new() { Error = Text.Original("You did NOT change passwords, current and new are the same") };
 
             var hub = new Result<OrigamiUser>(user).Pull(newPassword1.IsPasswordStrong());
             if (hub.Ok == false) return hub;
@@ -109,8 +109,8 @@ namespace Origami.Core.Data
                 {
                     var hub = new Result<string>();
 
-                    hub.ErrorMessage = Text.Original("You don't have permission to reset your own password");
-                    hub.SimpleMessage = Text.Original("Please, talk to a system administrator");
+                    hub.Error = Text.Original("You don't have permission to reset your own password");
+                    hub.Simple = Text.Original("Please, talk to a system administrator");
 
                     return hub;
                 }
@@ -130,7 +130,7 @@ namespace Origami.Core.Data
                 return new()
                 {
                     RowsAffected = row,
-                    ErrorMessage = Text.Original("Failed to reset password for user")
+                    Error = Text.Original("Failed to reset password for user")
                 };
             }
 
@@ -208,8 +208,8 @@ namespace Origami.Core.Data
                 {
                     var hub = new Result<string>();
 
-                    hub.ErrorMessage = Text.Original("You don't have permission to reset password");
-                    hub.SimpleMessage = Text.Original("Please, talk to a system administrator");
+                    hub.Error = Text.Original("You don't have permission to reset password");
+                    hub.Simple = Text.Original("Please, talk to a system administrator");
 
                     return hub;
                 }
@@ -231,7 +231,7 @@ namespace Origami.Core.Data
             return new(reset.Key)
             {
                 RowsAffected = row,
-                SimpleMessage = Text.Original("Password reset link has been created, please check your email for further instructions")
+                Simple = Text.Original("Password reset link has been created, please check your email for further instructions")
             };
         }
 
@@ -248,7 +248,7 @@ namespace Origami.Core.Data
             {
                 if (newPassword1 != newPassword2)
                 {
-                    hub.ErrorMessage = Text.Original("New passwords do NOT match, they differ from each other");
+                    hub.Error = Text.Original("New passwords do NOT match, they differ from each other");
                 }
             }
 
@@ -278,14 +278,14 @@ namespace Origami.Core.Data
                         this.SmartUpdate(userEntity.GetContext(ctx.User), false).Push(hub);
                         db.Update(resetEntity);
                         db.SaveChanges();
-                        hub.SuccessMessage = Text.Original("Password has been reset successfully");
+                        hub.Success = Text.Original("Password has been reset successfully");
                         return hub;
                     }
                 }
             }
 
-            hub.ErrorMessage = Text.Original("Failed to reset password");
-            hub.SimpleMessage = Text.Original("Please, try again later");
+            hub.Error = Text.Original("Failed to reset password");
+            hub.Simple = Text.Original("Please, try again later");
 
             return hub;
         }

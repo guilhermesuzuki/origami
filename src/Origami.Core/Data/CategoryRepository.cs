@@ -46,7 +46,7 @@ namespace Origami.Core.Data
 
             if (this.IsCycleDetected(ctx, []) == true)
             {
-                validation.ErrorMessage = $"Cycle detected: you must choose another parent";
+                validation.Error = $"Cycle detected: you must choose another parent";
             }
 
             this.ValidateSlug(ctx).Push(validation);
@@ -79,7 +79,7 @@ namespace Origami.Core.Data
 
             if (this.IsCycleDetected(ctx, []) == true)
             {
-                validation.ErrorMessage = $"Cycle detected: you must choose another parent";
+                validation.Error = $"Cycle detected: you must choose another parent";
             }
 
             this.ValidateSlug(ctx).Push(validation);

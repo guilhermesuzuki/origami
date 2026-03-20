@@ -61,7 +61,7 @@
         }
         catch (Exception e)
         {
-            this.UserFacade.Result = new() { ErrorMessage = e.GetMessage() };
+            this.UserFacade.Result = new() { Error = e.GetMessage() };
         }
     }
 }
