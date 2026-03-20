@@ -9,7 +9,7 @@ namespace Origami.Core.Models
         /// <summary>
         /// TOTP URI secret
         /// </summary>
-        Guid TOTPSecret { get; set; }
+        string TOTPSecret { get; set; }
 
         /// <summary>
         /// TOTP recovery codes, hashed to SHA256, separated by comma

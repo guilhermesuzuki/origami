@@ -533,7 +533,7 @@ namespace Origami.Core.Models
                 Instagram = string.Empty;
                 LastName = string.Empty;
                 LinkedIn = string.Empty;
-                TOTPSecret = Guid.Empty;
+                TOTPSecret = string.Empty;
                 Website = string.Empty;
                 TOTPRecoveryCodes = string.Empty;
             }
@@ -563,7 +563,7 @@ namespace Origami.Core.Models
             public string LinkedIn { get; set; }
 
             [XmlElement("totp-secret", IsNullable = false)]
-            public Guid TOTPSecret { get; set; }
+            public string TOTPSecret { get; set; }
 
             [XmlElement("totp-recovery-codes", IsNullable = true)]
             public string TOTPRecoveryCodes { get; set; }

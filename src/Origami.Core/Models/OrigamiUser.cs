@@ -1,4 +1,5 @@
 ﻿using NanoidDotNet;
+using OtpNet;
 using QRCoder;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -205,7 +206,7 @@ namespace Origami.Core.Models
         }
 
         [NotMapped]
-        public Guid TOTPSecret
+        public string TOTPSecret
         {
             get => Get().TOTPSecret;
             set => Set(x => x.TOTPSecret = value);
@@ -233,6 +234,14 @@ namespace Origami.Core.Models
         {
             get => Get().Website;
             set => Set(x => x.Website = value);
+        }
+
+        public void GenerateRandomTOTPSecret()
+        {
+            // Generate 20 bytes (160-bit secret)
+            var secretBytes = KeyGeneration.GenerateRandomKey(20);
+            var base32Secret = Base32Encoding.ToString(secretBytes);
+            TOTPSecret = base32Secret;
         }
 
         public AdditionalInfo.ForUsers Get()

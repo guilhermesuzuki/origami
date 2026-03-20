@@ -233,7 +233,7 @@ namespace Origami.Core.Data
 
         public void Regenerate2FASecret()
         {
-            this.User.TOTPSecret = Guid.NewGuid();
+            this.User.GenerateRandomTOTPSecret();
             this.RefreshUI?.Invoke(this, EventArgs.Empty);
         }
 
@@ -270,8 +270,9 @@ namespace Origami.Core.Data
 
         private void _2FA()
         {
-            if (this.User.TOTPSecret == Guid.Empty)
+            if (this.User.TOTPSecret.Has() == false || this.User.TOTPSecret == Guid.Empty.ToString())
             {
+                this.User.GenerateRandomTOTPSecret();
                 this._userFacade.Result = new() { Info = _text.Original("You must enable two-factor authentication") };
                 this.State.Push(ILoginRepository.Steps.Step3_MustEnable2MFA);
                 return;
