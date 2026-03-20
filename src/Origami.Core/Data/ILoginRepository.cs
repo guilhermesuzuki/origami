@@ -8,9 +8,7 @@ namespace Origami.Core.Data
     public interface ILoginRepository
     {
         event EventHandler CurrentStepChanged;
-
-        event EventHandler GenerateJWTToken;
-
+        event EventHandler RefreshUI;
         event EventHandler WelcomeToTheApplication;
 
         public enum Steps
@@ -55,8 +53,11 @@ namespace Origami.Core.Data
         Task GoBackAsync();
         Task GoNextAsync();
         Task LoginAsync();
-        Task ResetAsync();
+        
+        void Regenerate2FARecoveryCodes();
+        void Regenerate2FASecret();
 
+        Task ResetAsync();
         Task Validate2FAAsync();
     }
 }

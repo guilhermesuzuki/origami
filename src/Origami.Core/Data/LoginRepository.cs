@@ -7,19 +7,20 @@ namespace Origami.Core.Data
         protected readonly ISuperRepository _superRepository;
         protected readonly Text _text;
         protected readonly IUserFacade _userFacade;
+
         public LoginRepository(ISuperRepository superRepository, IUserFacade userFacade, Text text)
         {
             _superRepository = superRepository;
             _userFacade = userFacade;
             _text = text;
 
+            this.TOTPRecoveryCodes = _superRepository.Users.GenerateTOTPRecoveryCodes();
+
             this.ResetAsync().Wait();
         }
 
         public event EventHandler CurrentStepChanged = null!;
-
-        public event EventHandler GenerateJWTToken = null!;
-
+        public event EventHandler RefreshUI = null!;
         public event EventHandler WelcomeToTheApplication = null!;
 
         public string NewPassword1 { get; set; } = string.Empty;
@@ -66,7 +67,7 @@ namespace Origami.Core.Data
             }
         }
 
-        public Stack<ILoginRepository.Steps> State { get; private set; } = new Stack<ILoginRepository.Steps>();
+        public Stack<ILoginRepository.Steps> State { get; } = new Stack<ILoginRepository.Steps>();
 
         public string TOTPCodeForEnablement { get; set; } = string.Empty;
 
@@ -177,7 +178,6 @@ namespace Origami.Core.Data
                 {
                     await this.Validate2FAAsync();
                     this.State.Push(ILoginRepository.Steps.Step5_WelcomeToTheApplication);
-                    this.GenerateJWTToken?.Invoke(this, EventArgs.Empty);
                     this.WelcomeToTheApplication?.Invoke(this, EventArgs.Empty);
                 }
             }
@@ -188,6 +188,7 @@ namespace Origami.Core.Data
             finally 
             { 
                 this.CurrentStepChanged?.Invoke(this, EventArgs.Empty);
+                this.RefreshUI?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -203,6 +204,18 @@ namespace Origami.Core.Data
             throw new InvalidOperationException("Combination of username and password does not exist in the database");
         }
 
+        public void Regenerate2FARecoveryCodes()
+        {
+            this.TOTPRecoveryCodes = this._superRepository.Users.GenerateTOTPRecoveryCodes();
+            this.RefreshUI?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void Regenerate2FASecret()
+        {
+            this.User.TOTPSecret = Guid.NewGuid();
+            this.RefreshUI?.Invoke(this, EventArgs.Empty);
+        }
+
         public Task ResetAsync()
         {
             this.Username = string.Empty;
@@ -211,7 +224,7 @@ namespace Origami.Core.Data
             this.NewPassword2 = string.Empty;
             this.TOTPCodeForEnablement = string.Empty;
             this.TOTPCodeForValidation = string.Empty;
-            this.TOTPRecoveryCodes = [];
+            this.TOTPRecoveryCodes = this._superRepository.Users.GenerateTOTPRecoveryCodes();
             this.User = new OrigamiUser();
 
             this.State.Clear();
@@ -235,12 +248,6 @@ namespace Origami.Core.Data
             }
 
             this.State.Push(ILoginRepository.Steps.Step4_Validate2FA);
-        }
-
-        private void _mustChangePassword()
-        {
-            this._userFacade.Result = new() { Info = _text.Original("You must change your password") };
-            this.State.Push(ILoginRepository.Steps.Step2_MustChangePassword);
         }
     }
 }

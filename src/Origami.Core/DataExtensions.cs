@@ -112,12 +112,12 @@ namespace Origami.Core
 
         public static string[] GenerateTOTPRecoveryCodes(this IUserRepository userRepository)
         {
-            var codes = new string[10];
-            for (int i = 0; i < codes.Length; i++)
+            var codes = new List<string>();
+            while (codes.Distinct().Count() < 10)
             {
-                codes[i] = NanoidDotNet.Nanoid.Generate(NanoidDotNet.Nanoid.Alphabets.Digits, 6);
+                codes.Add(NanoidDotNet.Nanoid.Generate(NanoidDotNet.Nanoid.Alphabets.Digits, 6));
             }
-            return codes;
+            return codes.Distinct().Take(10).OrderBy(x => x).ToArray();
         }
 
         public static IEnumerable<T> GetAllChildren<T>(this IEnumerable<T>? source, T entity)
