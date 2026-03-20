@@ -581,6 +581,20 @@
                         </MudCheckBox>
                     </li>
                 </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.ResetOwn2FA">
+                            <span>@Text.Lower("Reset own 2FA")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.ResetOtherUsers2FA">
+                            <span>@Text.Lower("Reset other users 2FA")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
             </div>
             <div class="tags mt-3">
                 <div class="w-100 text-white bg-secondary text-center mb-3">

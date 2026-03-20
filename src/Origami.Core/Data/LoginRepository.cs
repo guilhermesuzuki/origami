@@ -132,9 +132,11 @@ namespace Origami.Core.Data
             var secretBytes = Base32Encoding.ToBytes(this.User.TOTPSecret.ToString());
             var totp = new Totp(secretBytes);
             var valid = totp.VerifyTotp(this.TOTPCodeForEnablement, out long timeStepMatched, VerificationWindow.RfcSpecifiedNetworkDelay);
+            var recoveryCodesInSHA256 = string.Join(",", this.TOTPRecoveryCodes.Select(x => x.SHA256Hash()));
 
             if (valid)
             {
+                this.User.TOTPRecoveryCodes = recoveryCodesInSHA256;
                 var ctx = this.User.GetContext();
                 var hub = this._superRepository.Users.SmartSave(ctx, false);
                 try
@@ -150,7 +152,7 @@ namespace Origami.Core.Data
                 }
             }
 
-            throw new InvalidOperationException("Failed to enable 2FA.");
+            throw new InvalidOperationException("Failed to enable 2FA");
         }
 
         public ILoginRepository.Steps GetCurrentStep()
@@ -258,14 +260,21 @@ namespace Origami.Core.Data
         {
             var secretBytes = Base32Encoding.ToBytes(this.User.TOTPSecret.ToString());
             var totp = new Totp(secretBytes);
+            
             var valid = totp.VerifyTotp(this.TOTPCodeForValidation, out long timeStepMatched, VerificationWindow.RfcSpecifiedNetworkDelay);
-
             if (valid)
             {
                 return Task.CompletedTask;
             }
 
-            throw new InvalidOperationException("Failed to validate 2FA.");
+            var recoveryCodeValid = this.User.ConsumeTOTPRecoveryCode(this.TOTPCodeForValidation);
+            if (recoveryCodeValid)
+            {
+                this._superRepository.Users.SmartSave(this.User.GetContext(), false);
+                return Task.CompletedTask;
+            }
+
+            throw new InvalidOperationException("Failed to validate 2FA");
         }
 
         private void _2FA()

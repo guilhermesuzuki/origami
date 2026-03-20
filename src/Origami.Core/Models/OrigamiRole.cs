@@ -173,7 +173,9 @@ namespace Origami.Core.Models
         private bool _purgeTags;
         private bool _purgeUsers;
         private bool _purgeVideos;
+        private bool _resetOtherUsers2FA;
         private bool _resetOtherUsersPasswords;
+        private bool _resetOwn2FA;
         private bool _resetOwnPassword;
         private bool _restoreBlogs;
         private bool _restoreCategories;
@@ -860,12 +862,25 @@ namespace Origami.Core.Models
         }
 
         [NotMapped]
+        public bool ResetOtherUsers2FA
+        {
+            get => _resetOtherUsers2FA;
+            set => this.Set(ref _resetOtherUsers2FA, value, Changed);
+        }
+
+        [NotMapped]
         public bool ResetOtherUsersPasswords
         {
             get => _resetOtherUsersPasswords;
             set => this.Set(ref _resetOtherUsersPasswords, value, Changed);
         }
 
+        [NotMapped]
+        public bool ResetOwn2FA
+        {
+            get => _resetOwn2FA;
+            set => this.Set(ref _resetOwn2FA, value, Changed);
+        }
         [NotMapped]
         public bool ResetOwnPassword
         {

@@ -236,6 +236,20 @@ namespace Origami.Core.Models
             set => Set(x => x.Website = value);
         }
 
+        public bool ConsumeTOTPRecoveryCode(string totpCodeForValidation)
+        {
+            var hash = totpCodeForValidation.SHA256Hash();
+            var recoveryCodes = GetTOTPRecoveryCodes();
+            var found = recoveryCodes.FirstOrDefault(x => x == hash);
+            if (found != null)
+            {
+                recoveryCodes = recoveryCodes.Where(x => x != hash).ToArray();
+                TOTPRecoveryCodes = string.Join(",", recoveryCodes);
+                return true;
+            }
+            return false;
+        }
+
         public void GenerateRandomTOTPSecret()
         {
             // Generate 20 bytes (160-bit secret)

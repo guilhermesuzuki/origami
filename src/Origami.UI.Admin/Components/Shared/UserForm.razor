@@ -253,6 +253,10 @@
                             <i class="bi bi-person-lines-fill"></i>
                             @Text.Lower("Password reset history")
                         </button>
+                        <button class="btn btn-warning text-white fw-bold w-100" @onclick="Reset2FA">
+                            <i class="fa-solid fa-check-to-slot"></i>
+                            @Text.Lower("Reset 2FA")
+                        </button>
                     </div>
                 </div>
             </div>
@@ -650,6 +654,38 @@
                 await this.OnUserUnblocked.InvokeAsync(this.Entity);
             }
             this.UserFacade.Result = hub;
+        }
+    }
+
+    protected async Task Reset2FA()
+    {
+        try
+        {
+            var yes = await this.DialogService.ShowMessageBoxAsync(
+                    title: Text.Upper("Are you sure?"),
+                    message: Text.Lower("This will force the user to setup 2FA once again"),
+                    yesText: Text.Lower("Yes"),
+                    noText: Text.Lower("No")) ?? false;
+
+            if (yes == true)
+            {
+                var key = string.Empty;
+                using (var transaction = new TransactionScope())
+                {
+                    var ctx = new DataOperationContext<OrigamiUser>(this.UserFacade.User, this.Entity);
+                    var hub = this.Super.Users.Reset2FA(ctx, true);
+                    if (hub.Ok == true)
+                    {
+                        transaction.Complete();
+                    }
+                    this.UserFacade.Result = hub;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            this.UserFacade.Result = new(ex);
+            return;
         }
     }
 

@@ -196,6 +196,36 @@ namespace Origami.Core.Data
             return hub;
         }
 
+        public Result Reset2FA(DataOperationContext<OrigamiUser> ctx, bool checkPermission)
+        {
+            if (checkPermission)
+            {
+                var permission = ctx.Entity.Id == ctx.User.Id
+                    ? this.CheckPermission(ctx.User.Id, nameof(OrigamiRole.ResetOwn2FA))
+                    : this.CheckPermission(ctx.User.Id, nameof(OrigamiRole.ResetOtherUsers2FA));
+
+                if (permission.Ok == false)
+                {
+                    var hub = new Result();
+
+                    hub.Error = Text.Original("You don't have permission to reset 2FA");
+                    hub.Simple = Text.Original("Please, talk to a system administrator");
+
+                    return hub;
+                }
+            }
+
+            var fresh = this.ReadFromDatabase().Id(ctx.Entity.Id);
+            if (fresh != null)
+            {
+                fresh.TOTPSecret = string.Empty;
+                fresh.TOTPRecoveryCodes = string.Empty;
+                return this.SmartUpdate(fresh.GetContext(ctx.User), false);
+            }
+
+            return new() { Error = Text.Original("Failed to reset 2FA for user") };
+        }
+
         public Result<string> ResetPassword(DataOperationContext<OrigamiUser> ctx, bool checkPermission)
         {
             if (checkPermission)
