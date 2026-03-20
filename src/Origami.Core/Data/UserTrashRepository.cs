@@ -27,6 +27,8 @@ namespace Origami.Core.Data
         private readonly IRoleRepository _roleRepository;
         private readonly ISettingsRepository _blogSettingsRepository;
         private readonly ISocialProfileRepository _socialProfileRepository;
+        private readonly ISpecialMessageRepository _specialMessageRepository;
+        private readonly ISpecialPageRepository _specialPageRepository;
         private readonly ISubscriberRepository _subscriberRepository;
         private readonly ITagRepository _tagRepository;
         private readonly IUserActivityRepository _userActivityRepository;
@@ -65,6 +67,8 @@ namespace Origami.Core.Data
             IRoleRepository roleRepository,
             ISettingsRepository blogSettingsRepository,
             ISocialProfileRepository socialProfileRepository,
+            ISpecialMessageRepository specialMessageRepository,
+            ISpecialPageRepository specialPageRepository,
             ISubscriberRepository subscriberRepository,
             ITagRepository tagRepository,
             IUserActivityRepository userActivityRepository,
@@ -103,6 +107,8 @@ namespace Origami.Core.Data
             _quickNoteRepository = quickNoteRepository;
             _roleRepository = roleRepository;
             _socialProfileRepository = socialProfileRepository;
+            _specialMessageRepository = specialMessageRepository;
+            _specialPageRepository = specialPageRepository;
             _subscriberRepository = subscriberRepository;
             _tagRepository = tagRepository;
             _userActivityRepository = userActivityRepository;
@@ -187,6 +193,16 @@ namespace Origami.Core.Data
                 return _purge(_quickNoteRepository, ctx);
             }
 
+            if (ctx.Entity.Type.Like("SpecialPage") == true)
+            {
+                return _purge(_specialPageRepository, ctx);
+            }
+
+            if (ctx.Entity.Type.Like("SpecialMessage") == true)
+            {
+                return _purge(_specialMessageRepository, ctx);
+            }
+
             throw new NotImplementedException();
         }
 
@@ -240,6 +256,16 @@ namespace Origami.Core.Data
             if (ctx.Entity.Type.Like("QuickNote") == true)
             {
                 return _restore(_quickNoteRepository, ctx);
+            }
+
+            if (ctx.Entity.Type.Like("SpecialPage") == true)
+            {
+                return _restore(_specialPageRepository, ctx);
+            }
+
+            if (ctx.Entity.Type.Like("SpecialMessage") == true)
+            {
+                return _restore(_specialMessageRepository, ctx);
             }
 
             throw new NotImplementedException();
