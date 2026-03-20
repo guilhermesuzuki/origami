@@ -1,4 +1,6 @@
-﻿using Origami.Core.Models;
+﻿using NanoidDotNet;
+using Origami.Core.Models;
+using OtpNet;
 
 namespace Origami.Core.Data
 {
@@ -127,7 +129,28 @@ namespace Origami.Core.Data
 
         public Task Enable2FAAsync()
         {
-            throw new NotImplementedException();
+            var secretBytes = Base32Encoding.ToBytes(this.User.TOTPSecret.ToString());
+            var totp = new Totp(secretBytes);
+            var valid = totp.VerifyTotp(this.TOTPCodeForEnablement, out long timeStepMatched, VerificationWindow.RfcSpecifiedNetworkDelay);
+
+            if (valid)
+            {
+                var ctx = this.User.GetContext();
+                var hub = this._superRepository.Users.SmartSave(ctx, false);
+                try
+                {
+                    if (hub.Ok)
+                    {
+                        return Task.CompletedTask;
+                    }
+                }
+                finally
+                {
+                    this._userFacade.Result = hub;
+                }
+            }
+
+            throw new InvalidOperationException("Failed to enable 2FA.");
         }
 
         public ILoginRepository.Steps GetCurrentStep()
@@ -138,11 +161,9 @@ namespace Origami.Core.Data
 
         public Task GoBackAsync()
         {
-            var step = this.GetCurrentStep();
-            switch (step)
-            {
-
-            }
+            this.State.Clear();
+            this.State.Push(ILoginRepository.Steps.Step1_ValidateCredentials);
+            this.RefreshUI?.Invoke(this, EventArgs.Empty);
             return Task.CompletedTask;
         }
 
@@ -235,7 +256,16 @@ namespace Origami.Core.Data
 
         public Task Validate2FAAsync()
         {
-            throw new NotImplementedException();
+            var secretBytes = Base32Encoding.ToBytes(this.User.TOTPSecret.ToString());
+            var totp = new Totp(secretBytes);
+            var valid = totp.VerifyTotp(this.TOTPCodeForValidation, out long timeStepMatched, VerificationWindow.RfcSpecifiedNetworkDelay);
+
+            if (valid)
+            {
+                return Task.CompletedTask;
+            }
+
+            throw new InvalidOperationException("Failed to validate 2FA.");
         }
 
         private void _2FA()
