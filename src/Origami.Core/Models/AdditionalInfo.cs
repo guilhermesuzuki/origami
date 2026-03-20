@@ -533,7 +533,7 @@ namespace Origami.Core.Models
                 Instagram = string.Empty;
                 LastName = string.Empty;
                 LinkedIn = string.Empty;
-                TOTPSecret = Guid.NewGuid();
+                TOTPSecret = Guid.Empty;
                 Website = string.Empty;
                 TOTPRecoveryCodes = string.Empty;
             }

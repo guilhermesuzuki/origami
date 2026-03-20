@@ -50,7 +50,6 @@ namespace Origami.Core.Models
         public OrigamiUser() : base()
         {
             NanoId = Nanoid.Generate(Nanoid.Alphabets.LettersAndDigits, 6);
-            TOTPSecret = Guid.NewGuid();
         }
 
         public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) => { };
