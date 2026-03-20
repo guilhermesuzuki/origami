@@ -393,7 +393,10 @@
                         <Columns>
                             <TemplateColumn Title="@Text.Upper("Key")">
                                 <CellTemplate>
-                                    @context.Item.Key
+                                    <span class="fs-4">@context.Item.Key</span>
+                                    <span class="fs-6 d-block">
+                                        @(this.NavigationManager.BaseUri.TrimEnd('/') + "/password/reset/" + context.Item.Key)
+                                    </span>
                                 </CellTemplate>
                             </TemplateColumn>
                             <TemplateColumn Title="@Text.Upper("Date")">
