@@ -81,8 +81,7 @@ namespace Origami.Core.Data
                 var clone = ctx.Entity.Clone().NullFKObjectsForPersistence();
                 using (var db = DbContextFactory.CreateDbContext())
                 {
-                    db.Remove(clone);
-                    db.SaveChanges();
+                    db.Set<T>().Where(x => x.Id == clone.Id).ExecuteDelete();
                 }
                 return new(ctx.Entity);
             }
