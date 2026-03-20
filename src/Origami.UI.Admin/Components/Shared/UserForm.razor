@@ -162,6 +162,22 @@
                                       HelperText="@Text.Lower("Instagram")"></MudTextField>
                     </li>
                 </ul>
+                <ul class="inline-list mt-3">
+                    <li>
+                        <MudTextField ReadOnly="true"
+                                      Immediate="true"
+                                      Value="@(Text.Lower(Entity.TOTPSecret.Has().YesNo()))"
+                                      HelperText="@Text.Lower("2FA secret?")"
+                                      Class="yes-no"></MudTextField>
+                    </li>
+                    <li>
+                        <MudTextField ReadOnly="true"
+                                      Immediate="true"
+                                      Value="@(Text.Lower(Entity.GetTOTPRecoveryCodes().Any().YesNo()))"
+                                      HelperText="@Text.Lower("2FA recovery codes?")"
+                                      Class="yes-no"></MudTextField>
+                    </li>
+                </ul>
             </div>
             <div class="blogs p-3">
                 <div class="w-100 text-white bg-secondary text-center">
