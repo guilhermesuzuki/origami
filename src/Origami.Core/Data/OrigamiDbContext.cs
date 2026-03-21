@@ -301,6 +301,7 @@ namespace Origami.Core.Data
 
             modelBuilder.Owned<Location>();
             modelBuilder.Owned<OrigamiFile>();
+            modelBuilder.Owned<Content>();
 
             modelBuilder.Entity<OrigamiCategory>()
                 .HasOne<OrigamiCategory>()

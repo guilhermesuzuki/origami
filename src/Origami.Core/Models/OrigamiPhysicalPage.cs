@@ -14,12 +14,11 @@ namespace Origami.Core.Models
         IVersion,
         INew
     {
+        private Content? _content;
         private DateTime _dateCreated;
         private Guid _id = Guid.NewGuid();
         private string _path = string.Empty;
         private byte[] _version = [];
-        public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) => { };
-
         public OrigamiPhysicalPage() : base()
         {
 
@@ -28,6 +27,17 @@ namespace Origami.Core.Models
         public OrigamiPhysicalPage(Guid id) : base()
         {
             Id = id;
+        }
+
+        public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) => { };
+
+        /// <summary>
+        /// Sometimes a physical page is tied to a page, post, video, etc.
+        /// </summary>
+        public Content? Content
+        {
+            get => _content;
+            set => this.Set(ref _content, value, Changed);
         }
 
         public DateTime DateCreated
