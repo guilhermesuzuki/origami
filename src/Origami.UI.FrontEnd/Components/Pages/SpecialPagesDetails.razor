@@ -13,7 +13,7 @@
 <Root>
     @if (this._page.New == false)
     {
-        <div class="page-details @Class">
+        <div class="special-page-details @Class">
             <SpecialPageHeader Entity="_page"></SpecialPageHeader>
             <SpecialPageContent Class="mt-3 p-4 border shadow-sm" Entity="_page"></SpecialPageContent>
         </div>
@@ -43,9 +43,11 @@
     {
         if (firstRender)
         {
-            if (await this.JSRuntime.IncognitoModeAsync() == true) return;
-            await this.JSRuntime.InvokeVoidAsync("origami.specialpages.view", this._page.Id);
-            await this.InvokeAsync(this.StateHasChanged);
+            if (this.UserFacade.IncognitoMode == false)
+            {
+                var uri = new Uri(NavigationManager.Uri);
+                await JSRuntime.InvokeVoidAsync("origami.physicalpages.viewByContent", uri.AbsolutePath, nameof(OrigamiSpecialPage), this._page.Id);
+            }
         }
     }
 
