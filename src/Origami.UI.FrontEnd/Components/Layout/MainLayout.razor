@@ -1,41 +1,23 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using System.Security.Claims
-@inherits LayoutComponentBase
-
-@inject AuthenticationStateProvider _authenticationStateProvider
-@inject IBlogRepository _blog
-@inject IConfiguration _configuration
-@inject IJSRuntime _jsRuntime
-@inject ISettingsRepository _settings
-@inject ISocialProfileRepository _socialProfile
-@inject IUserFacade _userFacade
-@inject NavigationManager _navigationManager
-@inject Text _text
-@inject UserManager<IdentityUser> _userManager
-@inject ISpecialMessageRepository _specialMessageRepository
+@inherits BasicLayout
 
 <CustomHeadContent>
     <AppLinks></AppLinks>
 </CustomHeadContent>
-<PageTitle>@_settings.GetSettings().Name.ToLower()</PageTitle>
+<PageTitle>@Super.Settings.GetSettings().Name.ToLower()</PageTitle>
 <ProcessResult></ProcessResult>
 <main class="overflow-x-hidden">
     <Root>
         <a id="top"></a>
-        @if (_incognitoMode)
-        {
-            <div class="shadow-sm border-bottom w-100 position-relative bg-info text-white p-3 fs-5 text-center" style="">
-                <i class="fa-solid fa-user-secret"></i>
-                @_text.Lower("Incognito Mode")
-            </div>
-        }
-        @foreach (var message in this._specialMessageRepository.GetSiteMessages())
+        <IncognitoMode></IncognitoMode>
+        @foreach (var message in this.Super.SpecialMessages.GetSiteMessages())
         {
             <SpecialMessageHeader Entity="message" Class="border-bottom border-light-subtle"></SpecialMessageHeader>
         }
         <div class="shadow-sm border-bottom d-inline-flex align-items-center w-100 position-relative" style="min-height:450px;background-color:#333;">
             <Slides></Slides>
-            <Logo BlogId="this._userFacade.BlogId"></Logo>
+            <Logo BlogId="this.UserFacade.BlogId"></Logo>
             <div class="position-absolute w-100 text-white text-center p-3" style="bottom:0;left:0;right:0;">
                 <div class="d-inline-flex align-items-center">
                     <SubscribeHere></SubscribeHere>
@@ -45,10 +27,10 @@
         <MainMenu Class="border-bottom"></MainMenu>
         <AuthorizeView>
             <Authorized>
-                @if (this._userFacade.SocialProfile.New == false)
+                @if (this.UserFacade.SocialProfile.New == false)
                 {
                     <div class="w-100 p-3 pb-0 text-center">
-                        <SocialProfileHeaderLite Class="shadow-sm border-light border border-2" Entity="this._userFacade.SocialProfile" Actions="true"></SocialProfileHeaderLite>
+                        <SocialProfileHeaderLite Class="shadow-sm border-light border border-2" Entity="this.UserFacade.SocialProfile" Actions="true"></SocialProfileHeaderLite>
                     </div>
                 }
             </Authorized>
@@ -63,7 +45,7 @@
         </div>
         <Footer Class="text-lowercase"></Footer>
     </Root>
-    @if (_showCookieConsent == true)
+    @if (UserFacade.ShowCookieConsent == true)
     {
         <div class="cookie-consent-wrapper bg-light border position-sticky z-index-middle" style="bottom: 0;">
             <CookieConsentForm Class="p-3 m-auto content-max-length"></CookieConsentForm>
@@ -78,88 +60,21 @@
 <BlazorErrorUi></BlazorErrorUi>
 
 @code {
-    private bool _showCookieConsent = false;
     private string _searchQuery = string.Empty;
-    private bool _incognitoMode = false;
-
-    protected async Task CookieConsent(bool firstRender)
-    {
-        if (firstRender)
-        {
-            var cookie = await _jsRuntime.InvokeAsync<string>("$.cookie", "cookie-consent");
-            this._showCookieConsent = cookie == null || new[] { "", "0", "false" }.Contains(cookie);
-        }
-    }
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
-        this._searchQuery = this._navigationManager.Uri.Split("query=").Length > 1
-            ? Uri.UnescapeDataString(this._navigationManager.Uri.Split("query=")[1])
+        this._searchQuery = this.NavigationManager.Uri.Split("query=").Length > 1
+            ? Uri.UnescapeDataString(this.NavigationManager.Uri.Split("query=")[1])
             : string.Empty;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await this.VerifyUser(firstRender);
-        await this.CookieConsent(firstRender);
-        await this.LoadIncognitoMode(firstRender);
         await base.OnAfterRenderAsync(firstRender);
-    }
-
-    /// <summary>
-    /// Loads the incognito mode from cookies
-    /// </summary>
-    /// <param name="firstRender"></param>
-    /// <returns></returns>
-    protected async Task LoadIncognitoMode(bool firstRender)
-    {
-        if (firstRender)
-        {
-            this._incognitoMode = await _jsRuntime.IncognitoModeAsync();
-            this.StateHasChanged();
-        }
-    }
-
-    protected async Task LoadUser()
-    {
-        var state = await this._authenticationStateProvider.GetAuthenticationStateAsync();
-
-        if (state == null) return;
-        if (state.User.Identity == null) return;
-        if (state.User.Identity.IsAuthenticated == false) return;
-
-        var id = state.User.FindFirstValue(ClaimTypes.Name);
-        if (id != null)
-        {
-            var method = state.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.AuthenticationMethod)?.Value;
-
-            if (Enum.TryParse<SocialNetworks>(method, out var socialNetwork) == true)
-            {
-                var socialProfile = this._socialProfile.ReadFromCache()
-                    .Where(x => x.SocialNetwork == socialNetwork)
-                    .Where(x => x.UserId == id)
-                    .FirstOrDefault();
-
-                this._userFacade.SocialProfile = socialProfile ?? new();
-            }
-            else if (method.Like("OpenIdConnect") == true)
-            {
-                var socialProfile = this._socialProfile.ReadFromCache()
-                    .Where(x => x.SocialNetwork == SocialNetworks.Microsoft)
-                    .Where(x => x.UserId == id)
-                    .FirstOrDefault();
-
-                this._userFacade.SocialProfile = socialProfile ?? new();
-            }
-        }
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        await this.LoadUser();
-        await base.OnInitializedAsync();
+        await this.VerifyUserAsync(firstRender);
     }
 
     /// <summary>
@@ -167,19 +82,19 @@
     /// </summary>
     /// <param name="firstRender"></param>
     /// <returns></returns>
-    protected async Task VerifyUser(bool firstRender)
+    protected async Task VerifyUserAsync(bool firstRender)
     {
-        var state = await this._authenticationStateProvider.GetAuthenticationStateAsync();
+        var state = await this.AuthenticationStateProvider.GetAuthenticationStateAsync();
 
         if (state == null) return;
         if (state.User.Identity == null) return;
         if (state.User.Identity.IsAuthenticated == false) return;
 
         //it failed to authenticate the user, must log them out
-        if (_userFacade.SocialProfile.New)
+        if (UserFacade.SocialProfile.New)
         {
-            var returnUrl = Uri.EscapeDataString(this._navigationManager.Uri);
-            this._navigationManager.NavigateTo("/login/out".QueryString("returnUrl", returnUrl), true);
+            var returnUrl = Uri.EscapeDataString(this.NavigationManager.Uri);
+            this.NavigationManager.NavigateTo("/login/out".QueryString("returnUrl", returnUrl), true);
         }
     }
 }

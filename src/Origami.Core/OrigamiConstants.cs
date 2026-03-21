@@ -161,10 +161,11 @@ namespace Origami.Core
         {
             public const string Backup = "backup";
             public const string BackupComplete = "backup-complete";
+            public const string EmailStatus = "email-status";
             public const string Restore = "restore";
             public const string RestoreComplete = "restore-complete";
-            public const string EmailStatus = "email-status";
             public const string RssFeeds = "rss-feeds";
+            public const string ShowCookieConsent = "show-cookie-consent";
         }
 
         public static readonly string[] BackgroundGradients =

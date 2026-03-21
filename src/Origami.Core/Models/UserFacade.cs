@@ -8,15 +8,16 @@ namespace Origami.Core.Models
         IUserFacade,
         IChanged
     {
+        protected readonly ISuperRepository _super;
         protected Guid _blogId = new();
         protected IEnumerable<OrigamiBlog> _blogsTheUserHasAccessTo = Enumerable.Empty<OrigamiBlog>();
         protected Guid _id = Guid.NewGuid();
+        protected bool _incognitoMode = false;
         protected ObservableCollection<Result> _results = new();
         protected string _search = string.Empty;
+        protected bool _showCookieConsent = false;
         protected OrigamiSocialProfile _socialProfile = new();
         protected OrigamiUser _user = OrigamiUser.AnonymousUser;
-        protected readonly ISuperRepository _super;
-
         /// <summary>
         /// Default constructor
         /// </summary>
@@ -32,7 +33,7 @@ namespace Origami.Core.Models
             {
                 if (e.PropertyName == nameof(IUserFacade.User))
                 {
-                    this.LoadBlogsTheUserHasAccessTo();      
+                    this.LoadBlogsTheUserHasAccessTo();
                 }
             };
         }
@@ -58,6 +59,12 @@ namespace Origami.Core.Models
             set => this.Set(ref _id, value, Changed);
         }
 
+        public bool IncognitoMode
+        {
+            get => _incognitoMode;
+            set => this.Set(ref _incognitoMode, value, Changed);
+        }
+
         public Result Result
         {
             set
@@ -77,6 +84,13 @@ namespace Origami.Core.Models
                 this.Set(ref _search, value, Changed);
             }
         }
+
+        public bool ShowCookieConsent
+        {
+            get => _showCookieConsent; 
+            set => this.Set(ref _showCookieConsent, value, Changed);
+        }
+
         public OrigamiSocialProfile SocialProfile
         {
             get => _socialProfile;
@@ -91,7 +105,6 @@ namespace Origami.Core.Models
             get => _user;
             set => this.Set(ref _user, value, Changed);
         }
-
         public void EntityChanged(object sender, EntityOperation operation)
         {
             EntityHasChanged?.Invoke(sender, operation);

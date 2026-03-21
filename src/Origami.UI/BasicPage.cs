@@ -81,7 +81,7 @@ namespace Origami.UI
         {
             if (firstRender)
             {
-                if (await JSRuntime.IncognitoModeAsync() == false)
+                if (this.UserFacade.IncognitoMode == false)
                 {
                     var uri = new Uri(NavigationManager.Uri);
                     await JSRuntime.InvokeVoidAsync("origami.physicalpages.viewByPath", uri.AbsolutePath);
