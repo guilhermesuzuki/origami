@@ -8,7 +8,6 @@
 @if (this.Entity != null)
 {
     var header = this.Entity.HeaderImage.NoHeader();
-    var hasHeader = header.Has() && header.Like(OrigamiConstants.NoHeader) == false;
     var views = _pageView.GetViews(this.Entity);
     <ContentHeaderLite Entity="this.Entity"></ContentHeaderLite>
     <div class="page-header position-relative shadow-sm cursor-pointer @Class" @onclick="() => this.GoToPage()">
@@ -55,24 +54,25 @@
         <div class="related-pages mt-3">
             <label class="w-100 text-center p-1 bg-light border">
                 <i class="fa-solid fa-earth-americas"></i>
-                @Text.Lower("Related Pages")
+                @Text.Lower("Related pages")
             </label>
             <div class="page-header page-header-children shadow-sm border cursor-pointer text-center @Class">
                 <div class="workaround overflow-hidden">
                     <div class="row">
                         @foreach (var child in this.RelatedPages)
                         {
+                            var childViews = @_pageView.GetViews(child);
                             <div class="related-page-header-title col-12 col-xxl-4 mh-100 overflow-auto m-auto" @onclick="() => this.GoToPage(child)" @onclick:stopPropagation="true">
                                 <div class="p-2">
                                     <a class="title fw-bold text-uppercase focusable text-center" href="@child.Hyperlink">
                                         <PageHeaderTitle Entity="child"></PageHeaderTitle>
                                     </a>
                                     <div>
-                                        <label class="page-date pe-1">@(child.DatePublished ?? child.DateModified ?? child.DateCreated)</label>
-                                        <label class="page-views pe-1">
+                                        <span class="page-date pe-1">@(child.DatePublished ?? child.DateModified ?? child.DateCreated)</span>
+                                        <span class="page-views pe-1 @(childViews > 0 ? null : "d-none")">
                                             <i class="fa-solid fa-eye"></i>
-                                            @_pageView.GetViews(child)
-                                        </label>
+                                            @childViews
+                                        </span>
                                     </div>
                                 </div>
                             </div>
