@@ -14,7 +14,6 @@ namespace Origami.Core.Models
         IVersion,
         INew
     {
-        private Content? _content;
         private DateTime _dateCreated;
         private Guid _id = Guid.NewGuid();
         private string _path = string.Empty;
@@ -30,15 +29,6 @@ namespace Origami.Core.Models
         }
 
         public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) => { };
-
-        /// <summary>
-        /// Sometimes a physical page is tied to a page, post, video, etc.
-        /// </summary>
-        public Content? Content
-        {
-            get => _content;
-            set => this.Set(ref _content, value, Changed);
-        }
 
         public DateTime DateCreated
         {

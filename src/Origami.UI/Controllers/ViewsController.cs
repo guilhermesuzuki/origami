@@ -114,9 +114,6 @@ namespace Origami.UI.FrontEnd.Controllers
 
             var pages = from p in _physicalPage.ReadFromDatabase()
                         where p.Path.Equals(path) == true
-                        where p.Content != null
-                        where p.Content!.Type.Equals(type) == true
-                        where p.Content!.Id.ToString().Equals(id) == true
                         select p;
 
             var page = pages.FirstOrDefault();
@@ -127,12 +124,8 @@ namespace Origami.UI.FrontEnd.Controllers
                     Id = Guid.NewGuid(),
                     Path = path,
                     DateCreated = DateTime.UtcNow,
-                    Content = new()
-                    {
-                        Type = type,
-                        Id = Guid.Parse(id)
-                    },
                 };
+
                 using (var transaction = new TransactionScope())
                 {
                     var result = _physicalPage.SmartSave(page.GetContext(), false);
@@ -154,6 +147,11 @@ namespace Origami.UI.FrontEnd.Controllers
                     Id = Guid.NewGuid(),
                     PhysicalPageId = page.Id,
                     Admin = _appFacade.Admin,
+                    Content = new()
+                    {
+                        Type = type,
+                        Id = Guid.Parse(id)
+                    },
                 };
                 this._fill(view, url, referrer);
                 _physicalPageView.SmartSave(view.GetContext(), false);

@@ -16,6 +16,8 @@ namespace Origami.Core.Models
         protected Guid _id = Guid.NewGuid();
         protected Guid _physicalPageId = Guid.Empty;
         protected Guid? _userId;
+        private Content? _content;
+
         public event EventHandler<PropertyChangedEventArgs> ViewChanged = (sender, e) => { };
 
         /// <summary>
@@ -25,6 +27,15 @@ namespace Origami.Core.Models
         {
             get => _admin;
             set => this.Set(ref _admin, value, ViewChanged);
+        }
+
+        /// <summary>
+        /// Sometimes a physical page view is tied to a page, post, video, etc.
+        /// </summary>
+        public Content? Content
+        {
+            get => _content;
+            set => this.Set(ref _content, value, ViewChanged);
         }
 
         [Key]
