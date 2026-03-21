@@ -18,7 +18,7 @@
                         </div>
                         @if (blog.IsSelected)
                         {
-                            <div class="position-absolute p-3 z-index-front" style="left:0; right:0;">
+                            <div class="position-absolute p-3 z-index-front" style="left:0; right:0;" @onclick="_mustCloseItself">
                                 <div class="shadow-lg border border-dark bg-white p-3 w-100 h-100" style="">
                                     <BlogMenu BlogId="@blog.Id" OnClose="() => blog.IsSelected = false"></BlogMenu>
                                 </div>
@@ -68,5 +68,11 @@
             }
             b.IsSelected = false;
         }
+    }
+
+    private void _mustCloseItself()
+    {
+        var blog = _blogs.FirstOrDefault(x => x.IsSelected);
+        blog?.IsSelected = false;
     }
 }
