@@ -18,7 +18,7 @@
                     <PageHeaderTitle Entity="this.Entity"></PageHeaderTitle>
                 </a>
                 <div>
-                    <span class="page-date pe-1">@(Entity.DatePublished ?? Entity.DateModified ?? Entity.DateCreated)</span>
+                    <span class="page-date pe-1">@(Entity.GetDate())</span>
                     <span class="page-views pe-1 @(views > 0 ? null : "d-none")">
                         <i class="fa-solid fa-eye"></i>
                         @views
@@ -68,7 +68,7 @@
                                         <PageHeaderTitle Entity="child"></PageHeaderTitle>
                                     </a>
                                     <div>
-                                        <span class="page-date pe-1">@(child.DatePublished ?? child.DateModified ?? child.DateCreated)</span>
+                                        <span class="page-date pe-1">@(child.GetDate())</span>
                                         <span class="page-views pe-1 @(childViews > 0 ? null : "d-none")">
                                             <i class="fa-solid fa-eye"></i>
                                             @childViews

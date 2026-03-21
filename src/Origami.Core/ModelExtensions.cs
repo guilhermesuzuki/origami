@@ -429,9 +429,19 @@ namespace Origami.Core
         /// <param name="entity"></param>
         /// <returns></returns>
         public static DateTime GetDate<T>(this T entity)
-            where T : IDateCreated, IDateModified
+            where T : IDateCreated
         {
-            return entity.DateModified != null ? entity.DateModified.Value : entity.DateCreated;
+            if (entity is IPublished published && published.DatePublished != null)
+            {
+                return published.DatePublished.Value;
+            }
+
+            if (entity is IDateModified modified && modified.DateModified != null)
+            {
+                return modified.DateModified.Value;
+            }
+
+            return entity.DateCreated;
         }
 
         /// <summary>
