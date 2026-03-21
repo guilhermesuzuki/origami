@@ -6,48 +6,27 @@
     var row = 4;
     var chunks = _blogs.Chunk(row);
     <div class="main-menu @Class position-relative text-center" style="">
-        <ul class="inline-list content-max-length">
-            @foreach (var blog in chunks.First())
-            {
-                <li>
-                    <div class="cursor-pointer focusable d-inline-flex align-items-center @(blog.Id == this.UserFacade.BlogId ? "fw-bolder" : "fw-light")"
-                         @onclick="() => this.GoToBlog(blog)">
-                        <BlogHeaderLite Class="p-3 text-uppercase" Entity="blog" ShowSlug="false"></BlogHeaderLite>
-                    </div>
-                    @if (blog.IsSelected)
-                    {
-                        <div class="position-fixed zeroes bg-white bg-opacity-50" style="z-index: 25;" @onclick="() => blog.IsSelected = false"></div>
-                        <div class="position-absolute p-3 z-index-front" style="left:0; right:0;" @onclick="() => blog.IsSelected = false">
-                            <div class="shadow-lg border border-dark bg-white p-3 w-100 h-100" style="">
-                                <BlogMenu BlogId="@blog.Id"></BlogMenu>
-                            </div>
-                        </div>
-                    }
-                </li>
-            }
-        </ul>
-        @for (int i = 1; i < chunks.Count(); i++)
+        @foreach (var chunk in chunks)
         {
-            <div class="row content-max-length m-auto">
-                @foreach (var blog in chunks.ElementAt(i))
+            <ul class="inline-list content-max-length">
+                @foreach (var blog in chunk)
                 {
-                    <div class="col-12 col-xxl-3">
+                    <li>
                         <div class="cursor-pointer focusable d-inline-flex align-items-center @(blog.Id == this.UserFacade.BlogId ? "fw-bolder" : "fw-light")"
                              @onclick="() => this.GoToBlog(blog)">
                             <BlogHeaderLite Class="p-3 text-uppercase" Entity="blog" ShowSlug="false"></BlogHeaderLite>
                         </div>
                         @if (blog.IsSelected)
                         {
-                            <div class="position-fixed zeroes bg-white bg-opacity-50" style="z-index: 25;" @onclick="() => blog.IsSelected = false"></div>
-                            <div class="position-absolute p-3 z-index-front" style="left:0; right:0;" @onclick="() => blog.IsSelected = false">
+                            <div class="position-absolute p-3 z-index-front" style="left:0; right:0;">
                                 <div class="shadow-lg border border-dark bg-white p-3 w-100 h-100" style="">
-                                    <BlogMenu BlogId="@blog.Id"></BlogMenu>
+                                    <BlogMenu BlogId="@blog.Id" OnClose="() => blog.IsSelected = false"></BlogMenu>
                                 </div>
                             </div>
                         }
-                    </div>
+                    </li>
                 }
-            </div>
+            </ul>
         }
     </div>
 }
@@ -72,7 +51,7 @@
     private void LoadBlogs()
     {
         _blogs = this._blogRepository.ReadFromCache().GetFrontEnd();
-    }   
+    }
 
     /// <summary>
     /// Goes to blog
@@ -80,7 +59,14 @@
     /// <param name="blog"></param>
     private void GoToBlog(OrigamiBlog blog)
     {
-        _blogs.Each(x => x.IsSelected = false);
-        blog.IsSelected = !blog.IsSelected;
+        foreach (var b in _blogs)
+        {
+            if (b == blog)
+            {
+                b.IsSelected = !b.IsSelected;
+                continue;
+            }
+            b.IsSelected = false;
+        }
     }
 }
