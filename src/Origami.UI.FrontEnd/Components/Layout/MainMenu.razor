@@ -17,7 +17,7 @@
                     @if (blog.IsSelected)
                     {
                         <div class="position-fixed zeroes bg-white bg-opacity-50" style="z-index: 25;" @onclick="() => blog.IsSelected = false"></div>
-                        <div class="position-absolute p-3" style="z-index: 50; left:0; right:0;" @onclick="() => blog.IsSelected = false">
+                        <div class="position-absolute p-3 z-index-front" style="left:0; right:0;" @onclick="() => blog.IsSelected = false">
                             <div class="shadow-lg border border-dark bg-white p-3 w-100 h-100" style="">
                                 <BlogMenu BlogId="@blog.Id"></BlogMenu>
                             </div>
@@ -39,7 +39,7 @@
                         @if (blog.IsSelected)
                         {
                             <div class="position-fixed zeroes bg-white bg-opacity-50" style="z-index: 25;" @onclick="() => blog.IsSelected = false"></div>
-                            <div class="position-absolute p-3" style="z-index: 50; left:0; right:0;" @onclick="() => blog.IsSelected = false">
+                            <div class="position-absolute p-3 z-index-front" style="left:0; right:0;" @onclick="() => blog.IsSelected = false">
                                 <div class="shadow-lg border border-dark bg-white p-3 w-100 h-100" style="">
                                     <BlogMenu BlogId="@blog.Id"></BlogMenu>
                                 </div>
@@ -80,14 +80,7 @@
     /// <param name="blog"></param>
     private void GoToBlog(OrigamiBlog blog)
     {
-        if (blog.IsSelected == true)
-        {
-            _blogs.Each(x => x.IsSelected = false);
-        }
-        else
-        {
-            _blogs.Each(x => x.IsSelected = false);
-            blog.IsSelected = true;
-        }
+        _blogs.Each(x => x.IsSelected = false);
+        blog.IsSelected = !blog.IsSelected;
     }
 }

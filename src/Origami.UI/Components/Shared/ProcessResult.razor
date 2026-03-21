@@ -2,7 +2,7 @@
 
 @if (UserFacade.Results.Any() == true)
 {
-    <div class="wrapper p-3 position-fixed overflow-auto" style="z-index:100; left: 50%; transform: translateX(-50%); max-height: 100%;">
+    <div class="wrapper p-3 position-fixed overflow-auto z-index-front" style="left: 50%; transform: translateX(-50%); max-height: 100%;">
         <div class="process-result fs-5 bg-white border shadow-sm" style="min-width: 600px; max-width:100%;" @onmouseover="_focusIn" @onmouseout="_focusOut">
             <ul class="inline-list p-2 text-white @(this.UserFacade.Results.Ok() ? "bg-success" : "bg-danger")">
                 <li>
