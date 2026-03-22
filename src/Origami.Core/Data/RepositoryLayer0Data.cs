@@ -103,7 +103,7 @@ namespace Origami.Core.Data
         public virtual IQueryable<X> ReadFromDatabase<X>()
             where X : class
         {
-            return DbContextFactory.CreateDbContext().Set<X>().AsQueryable();
+            return DbContextFactory.CreateDbContext().Set<X>().AsNoTracking();
         }
 
         public virtual Result<T> Restore(DataOperationContext<T> ctx)
