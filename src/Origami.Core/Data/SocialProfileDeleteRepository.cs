@@ -56,7 +56,9 @@ namespace Origami.Core.Data
                 if (permission.Ok == false) return permission;
             }
 
-            var socialProfile = _socialProfileRepository.ReadFromDatabase().Where(x => x.Id == ctx.Entity.Id).FirstOrDefault();
+            using var db = DbContextFactory.CreateDbContext();
+
+            var socialProfile = db.Set<OrigamiSocialProfile>().AsNoTracking().Where(x => x.Id == ctx.Entity.Id).FirstOrDefault();
             if (socialProfile != null)
             {
                 var postCommentReactions = _postCommentReactionRepository.ReactionsFromProfile(socialProfile).ToList();

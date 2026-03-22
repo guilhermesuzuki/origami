@@ -172,7 +172,9 @@
     /// <returns></returns>
     protected override IEnumerable<OrigamiUserTrash> GetItems()
     {
-        var query = from trash in this.Repository.ReadFromDatabase()
+        using var db = this.DbContextFactory.CreateDbContext();
+
+        var query = from trash in db.Set<OrigamiUserTrash>().AsNoTracking()
                     where new Guid[2] { Guid.Empty, this.UserFacade.BlogId }.Contains(trash.BlogId)
                     select trash;
 
