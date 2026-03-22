@@ -65,9 +65,10 @@ namespace Origami.Core.Data
 
         public override Result<OrigamiCategory> PurgeRelationshipsFromDatabase(DataOperationContext<OrigamiCategory> ctx)
         {
+            using var db = DbContextFactory.CreateDbContext();
             var hub = new Result<OrigamiCategory>(ctx.Entity);
-            var row1 = _postCategoryRepository.ReadFromDatabase().Where(x => x.CategoryId == ctx.Entity.Id).ExecuteDelete();
-            var row2 = _videoCategoryRepository.ReadFromDatabase().Where(x => x.CategoryId == ctx.Entity.Id).ExecuteDelete();
+            var row1 = db.Set<OrigamiPostCategory>().Where(x => x.CategoryId == ctx.Entity.Id).ExecuteDelete();
+            var row2 = db.Set<OrigamiVideoCategory>().Where(x => x.CategoryId == ctx.Entity.Id).ExecuteDelete();
             hub.RowsAffected += row1;
             hub.RowsAffected += row2;
             return hub;

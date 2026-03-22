@@ -186,17 +186,14 @@ namespace Origami.Core.Data
             try
             {
                 var hub = new Result();
-                using (var db = DbContextFactory.CreateDbContext())
+                var index = 0;
+                foreach (var blog in blogs)
                 {
-                    var index = 0;
-                    foreach (var blog in blogs)
-                    {
-                        if (hub.Ok == false) return hub;
-                        var before = ReadFromDatabase(blog.b)!;
-                        var update = ReadFromDatabase(blog.b)!;
-                        update.Order = ++index;
-                        SmartUpdate(new DataOperationContext<OrigamiBlog>(ctx.User, DateTime.UtcNow, update, before), false).Push(hub);
-                    }
+                    if (hub.Ok == false) return hub;
+                    var before = ReadFromDatabase(blog.b)!;
+                    var update = ReadFromDatabase(blog.b)!;
+                    update.Order = ++index;
+                    SmartUpdate(new DataOperationContext<OrigamiBlog>(ctx.User, DateTime.UtcNow, update, before), false).Push(hub);
                 }
                 return hub;
             }
@@ -264,20 +261,20 @@ namespace Origami.Core.Data
         {
             var hub = base.PurgeRelationshipsFromDatabase(ctx);
 
-            var categories = _categoryRepository.ReadFromDatabase().Blog(ctx.Entity.Id).ToList();
-            var pages = _pageRepository.ReadFromDatabase().Blog(ctx.Entity.Id).ToList();
-            var pingServices = _pingServiceRepository.ReadFromDatabase().Blog(ctx.Entity.Id).ToList();
-            var posts = _postRepository.ReadFromDatabase().Blog(ctx.Entity.Id).ToList();
-            var videos = _videoRepository.ReadFromDatabase().Blog(ctx.Entity.Id).ToList();
-
-            categories.GetContexts(ctx).Call(_categoryRepository.SmartPurge, false).Push(hub);
-            pages.GetContexts(ctx).Call(_pageRepository.SmartPurge, false).Push(hub);
-            pingServices.GetContexts(ctx).Call(_pingServiceRepository.SmartPurge, false).Push(hub);
-            posts.GetContexts(ctx).Call(_postRepository.SmartPurge, false).Push(hub);
-            videos.GetContexts(ctx).Call(_videoRepository.SmartPurge, false).Push(hub);
-
             using (var db = DbContextFactory.CreateDbContext())
             {
+                var categories = db.Set<OrigamiCategory>().AsNoTracking().Blog(ctx.Entity.Id).ToList();
+                var pages = db.Set<OrigamiPage>().AsNoTracking().Blog(ctx.Entity.Id).ToList();
+                var pingServices = db.Set<OrigamiPingService>().AsNoTracking().Blog(ctx.Entity.Id).ToList();
+                var posts = db.Set<OrigamiPost>().AsNoTracking().Blog(ctx.Entity.Id).ToList();
+                var videos = db.Set<OrigamiVideo>().AsNoTracking().Blog(ctx.Entity.Id).ToList();
+
+                categories.GetContexts(ctx).Call(_categoryRepository.SmartPurge, false).Push(hub);
+                pages.GetContexts(ctx).Call(_pageRepository.SmartPurge, false).Push(hub);
+                pingServices.GetContexts(ctx).Call(_pingServiceRepository.SmartPurge, false).Push(hub);
+                posts.GetContexts(ctx).Call(_postRepository.SmartPurge, false).Push(hub);
+                videos.GetContexts(ctx).Call(_videoRepository.SmartPurge, false).Push(hub);
+
                 hub.RowsAffected += db.CustomFields.Where(x => x.BlogId == ctx.Entity.Id).ExecuteDelete();
                 hub.RowsAffected += db.DataStoreSettings.Where(x => x.BlogId == ctx.Entity.Id).ExecuteDelete();
                 hub.RowsAffected += db.QuickNotes.Where(x => x.BlogId == ctx.Entity.Id).ExecuteDelete();

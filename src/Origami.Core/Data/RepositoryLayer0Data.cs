@@ -106,6 +106,7 @@ namespace Origami.Core.Data
             return this.ReadFromDatabase<T>();
         }
 
+        [Obsolete("This method has a memory leak")]
         public virtual IQueryable<X> ReadFromDatabase<X>()
             where X : class
         {

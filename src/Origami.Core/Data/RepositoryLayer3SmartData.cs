@@ -88,7 +88,8 @@ namespace Origami.Core.Data
                     {
                         if (MemoryCache.Get(key) == null)
                         {
-                            var list = this.ReadFromDatabase<X>().ToList();
+                            using var db = DbContextFactory.CreateDbContext();
+                            var list = db.Set<X>().AsNoTracking().ToList();
                             MemoryCache.Set(key, list);
                         }
                     }
