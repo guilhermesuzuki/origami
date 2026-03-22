@@ -90,9 +90,10 @@ namespace Origami.Core.Data
 
                 try
                 {
-                    var hub = new Result<OrigamiPage>(ctx.Entity);
-                    var row1 = ReadFromDatabase().Where(x => x.BlogId == ctx.Entity.BlogId).Where(x => x.IsFrontPage).ExecuteUpdate(x => x.SetProperty(y => y.IsFrontPage, false));
-                    var row2 = ReadFromDatabase().Where(x => x.BlogId == ctx.Entity.BlogId).Where(x => x.Id == ctx.Entity.Id).ExecuteUpdate(x => x.SetProperty(y => y.IsFrontPage, true));
+                    using var db = DbContextFactory.CreateDbContext();
+					var hub = new Result<OrigamiPage>(ctx.Entity);
+                    var row1 = db.Set<OrigamiPage>().Where(x => x.BlogId == ctx.Entity.BlogId).Where(x => x.IsFrontPage).ExecuteUpdate(x => x.SetProperty(y => y.IsFrontPage, false));
+                    var row2 = db.Set<OrigamiPage>().Where(x => x.BlogId == ctx.Entity.BlogId).Where(x => x.Id == ctx.Entity.Id).ExecuteUpdate(x => x.SetProperty(y => y.IsFrontPage, true));
 
                     hub.RowsAffected += row2;
                     hub.RowsAffected += row2;
@@ -123,7 +124,8 @@ namespace Origami.Core.Data
 
         public override Result<OrigamiPage> PurgeRelationshipsFromDatabase(DataOperationContext<OrigamiPage> ctx)
         {
-            var del = _pageViewRepository.ReadFromDatabase().Where(x => x.PageId == ctx.Entity.Id).ExecuteDelete();
+            using var db = DbContextFactory.CreateDbContext();
+            var del = db.Set<OrigamiPageView>().Where(x => x.PageId == ctx.Entity.Id).ExecuteDelete();
             return new Result<OrigamiPage>(ctx.Entity) { RowsAffected = del };
         }
 
@@ -141,9 +143,10 @@ namespace Origami.Core.Data
                 if (page.IsFrontPage)
                 {
                     try
-                    {
+                    {             
+                        using var db = DbContextFactory.CreateDbContext();
                         var hub = new Result<OrigamiPage>(ctx.Entity);
-                        var row = ReadFromDatabase().Where(x => x.BlogId == ctx.Entity.BlogId).Where(x => x.IsFrontPage).ExecuteUpdate(x => x.SetProperty(y => y.IsFrontPage, false));
+                        var row = db.Set<OrigamiPage>().Where(x => x.BlogId == ctx.Entity.BlogId).Where(x => x.IsFrontPage).ExecuteUpdate(x => x.SetProperty(y => y.IsFrontPage, false));
                         hub.RowsAffected = row;
 
                         var old = ReadFromCache().Blog(ctx.Entity.BlogId).FirstOrDefault(page => page.IsFrontPage);

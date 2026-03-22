@@ -47,7 +47,9 @@ namespace Origami.Core.Data
 
         public long GetViews<T>(T entity) where T : IId
         {
-            var query = from view in this.ReadFromDatabase()
+            using var db = DbContextFactory.CreateDbContext();
+
+            var query = from view in db.Set<OrigamiPhysicalPageView>()
                         where view.Content != null
                         where view.Content!.Id == entity.Id
                         where view.Content!.Type == typeof(T).Name
