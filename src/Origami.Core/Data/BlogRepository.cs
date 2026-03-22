@@ -174,8 +174,10 @@ namespace Origami.Core.Data
                 if (permission.Ok == false) return permission;
             }
 
+            using var db = DbContextFactory.CreateDbContext();
+
             var blogs = from i in ctx.Entity
-                        join b in ReadFromDatabase().NonDeleted().Active() on i equals b.Id
+                        join b in db.Set<OrigamiBlog>().AsNoTracking().NonDeleted().Active() on i equals b.Id
                         select new { b, i };
 
             if (ctx.Entity.Count() != blogs.Count())
@@ -211,22 +213,23 @@ namespace Origami.Core.Data
                 if (permission.Ok == false) return permission;
             }
 
-            var blogs = ReadFromDatabase().NonDeleted().Active();
+            using var db = DbContextFactory.CreateDbContext();
+
+            var blogs = db.Set<OrigamiBlog>().AsNoTracking().NonDeleted().Active();
 
             try
             {
                 var hub = new Result();
-                using (var db = DbContextFactory.CreateDbContext())
+
+                foreach (var blog in blogs)
                 {
-                    foreach (var blog in blogs)
-                    {
-                        if (hub.Ok == false) return hub;
-                        var before = ReadFromDatabase(blog)!;
-                        var update = ReadFromDatabase(blog)!;
-                        update.Order = null;
-                        SmartUpdate(new DataOperationContext<OrigamiBlog>(ctx.User, DateTime.UtcNow, update, before), false).Push(hub);
-                    }
+                    if (hub.Ok == false) return hub;
+                    var before = ReadFromDatabase(blog)!;
+                    var update = ReadFromDatabase(blog)!;
+                    update.Order = null;
+                    SmartUpdate(new DataOperationContext<OrigamiBlog>(ctx.User, DateTime.UtcNow, update, before), false).Push(hub);
                 }
+
                 return hub;
             }
             catch (Exception ex)

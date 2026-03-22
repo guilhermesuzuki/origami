@@ -57,10 +57,11 @@ namespace Origami.Core.Data
 
                 if (parent.ParentId != null)
                 {
-                    var db = ReadFromDatabase().Id(parent.ParentId.GetValueOrDefault());
-                    if (db != null)
+                    using var db = this.DbContextFactory.CreateDbContext();
+                    var fresh = db.Set<T>().AsNoTracking().Id(parent.ParentId.GetValueOrDefault());
+                    if (fresh != null)
                     {
-                        return this.IsCycleDetected(new(ctx.User, db), list);
+                        return this.IsCycleDetected(new(ctx.User, fresh), list);
                     }
                 }
             }
@@ -72,14 +73,15 @@ namespace Origami.Core.Data
             var validation = new Result<T>(ctx.Entity);
             if (ctx.Entity is ISlug slug && slug.Slug.Has() == true)
             {
-                IEnumerable<T> db = this.ReadFromDatabase().ToList();
+                using var db = this.DbContextFactory.CreateDbContext();
+                IEnumerable<T> fresh = db.Set<T>().AsNoTracking().ToList();
                 if (ctx.Entity is IBlogId blogId)
                 {
-                    db = db.OfType<IBlogId>().Where(x => x.BlogId == blogId.BlogId).OfType<T>();
+                    fresh = fresh.OfType<IBlogId>().Where(x => x.BlogId == blogId.BlogId).OfType<T>();
                 }
-                db = db.OfType<ISlug>().Where(x => x.Slug == slug.Slug).OfType<T>();
-                db = db.Where(x => x.Id != ctx.Entity.Id);
-                if (db.Any() == true)
+                fresh = fresh.OfType<ISlug>().Where(x => x.Slug == slug.Slug).OfType<T>();
+                fresh = fresh.Where(x => x.Id != ctx.Entity.Id);
+                if (fresh.Any() == true)
                 {
                     validation.Error = Text.Original("Slug is already in use");
                 }

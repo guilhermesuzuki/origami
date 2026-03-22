@@ -47,8 +47,9 @@ namespace Origami.Core.Data
 
         public Result<T> PurgeChildrenFromDatabase(DataOperationContext<T> main)
         {
+            using var db = this.DbContextFactory.CreateDbContext();
             var mainHub = new Result<T>(main.Entity);
-            var children = this.ReadFromDatabase().GetAllChildren(main.Entity);
+            var children = db.Set<T>().AsNoTracking().GetAllChildren(main.Entity);
             foreach (var child in children)
             {
                 var ctx = new DataOperationContext<T>(main.User, child);
@@ -151,13 +152,13 @@ namespace Origami.Core.Data
                 }
                 if (ctx.Entity is IPublished published)
                 {
-                    var db = ReadFromDatabase().Id(ctx.Entity.Id) as IPublished;
-
-                    if (db == null)
+                    using var db = DbContextFactory.CreateDbContext();
+                    var fresh = db.Set<T>().AsNoTracking().Id(ctx.Entity.Id) as IPublished;
+                    if (fresh == null)
                     {
                         return new(ctx.Entity) { Error = Text.Original("{0} does NOT exist", published.GetType().Name) };
                     }
-                    if (db.IsPublished)
+                    if (fresh.IsPublished)
                     {
                         return new(ctx.Entity) { Error = Text.Original("{0} is already published", published.GetType().Name) };
                     }
@@ -240,7 +241,8 @@ namespace Origami.Core.Data
                 return this.SmartUpdate(ctx, checkPermission);
             }
 
-            var fresh = ReadFromDatabase().FirstOrDefault(x => x.Id == ctx.Entity.Id);
+            using var db = this.DbContextFactory.CreateDbContext();
+            var fresh = db.Set<T>().AsNoTracking().FirstOrDefault(x => x.Id == ctx.Entity.Id);
             return fresh == null ? this.SmartCreate(ctx, checkPermission) : this.SmartUpdate(ctx, checkPermission);
         }
 
@@ -255,12 +257,13 @@ namespace Origami.Core.Data
                 }
                 if (ctx.Entity is IPublished published)
                 {
-                    var db = ReadFromDatabase().Id(ctx.Entity.Id) as IPublished;
-                    if (db == null)
+                    using var db = this.DbContextFactory.CreateDbContext();
+                    var fresh = db.Set<T>().AsNoTracking().Id(ctx.Entity.Id) as IPublished;
+                    if (fresh == null)
                     {
                         return new(ctx.Entity) { Error = Text.Original("{0} does NOT exist", published.GetType().Name) };
                     }
-                    if (db.IsPublished == false)
+                    if (fresh.IsPublished == false)
                     {
                         return new(ctx.Entity) { Error = Text.Original("{0} is already unpublished", published.GetType().Name) };
                     }
