@@ -50,7 +50,7 @@ else if (this.ShowFakes == true)
             .NonDeleted()
             .Published()
             .Blog(this.BlogId)
-            .OrderByDescending(x => _videoView.GetViews(x))
+            .OrderByDescending(x => Super.PhysicalPageViews.GetViews(x))
             .ThenBy(x => x.Title)
             .Take(10)
             .ToList();
