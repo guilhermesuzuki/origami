@@ -89,7 +89,6 @@
                         using var reader = XmlReader.Create(url);
                         var feed = SyndicationFeed.Load(reader);
                         this._feeds.Add(feed);
-
                         this.AppFacade.RefreshUI(this.HttpContextAccessor.HttpContext!.Connection.Id, OrigamiConstants.Events.RssFeeds);
                     }
                 }
