@@ -4,10 +4,11 @@
 
 @if (this.Key1.Has() == true)
 {
-    var pwd = this.Super.UserPasswordResets.ReadFromDatabase().NonDeleted().FirstOrDefault(x => x.Key == this.Key1);
+    using var db = this.DbContextFactory.CreateDbContext();
+    var pwd = db.Set<OrigamiUserPasswordReset>().AsNoTracking().NonDeleted().FirstOrDefault(x => x.Key == this.Key1);
     if (pwd != null)
     {
-        var user = this.Super.Users.ReadFromDatabase().FirstOrDefault(x => x.Id == pwd.UserId);
+        var user = db.Set<OrigamiUser>().AsNoTracking().FirstOrDefault(x => x.Id == pwd.UserId);
         if (user != null)
         {
             var link = this.NavigationManager.BaseUri.TrimEnd('/') + "/password/reset/" + Key1;
