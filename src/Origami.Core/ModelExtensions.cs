@@ -652,8 +652,7 @@ namespace Origami.Core
         public static T? Id<T>(this IEnumerable<T> entities, Guid? id)
             where T : class, IId, new()
         {
-            if (id == null) return null;
-            return entities.FirstOrDefault(x => x.Id == id.Value);
+            return entities.FirstOrDefault(x => x.Id == id.GetValueOrDefault());
         }
 
         /// <summary>
