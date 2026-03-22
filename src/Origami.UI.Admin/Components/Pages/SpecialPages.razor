@@ -132,9 +132,6 @@
     /// </summary>
     protected virtual bool DisableTheFrontPageButton => SelectedEntities.Any() == false;
 
-    protected bool DisableEnterMaintenanceModeButton => this.Super.Settings.ReadFromDatabase().First().MaintenanceMode == true;
-    protected bool DisableLeaveMaintenanceModeButton => this.Super.Settings.ReadFromDatabase().First().MaintenanceMode == false;
-
     protected virtual Result<OrigamiSpecialPage> PublishEntity(OrigamiSpecialPage entity)
     {
         var context = new DataOperationContext<OrigamiSpecialPage>(this.UserFacade.User, DateTime.UtcNow, entity);

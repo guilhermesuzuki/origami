@@ -508,7 +508,7 @@
     /// <param name="state"></param>
     /// <param name="token"></param>
     /// <returns></returns>
-    protected virtual Task<GridData<OrigamiUserView>> UserViews(GridState<OrigamiUserView> state, CancellationToken token)
+    protected virtual async Task<GridData<OrigamiUserView>> UserViews(GridState<OrigamiUserView> state, CancellationToken token)
     {
         var orders = new StringBuilder();
 
@@ -538,15 +538,17 @@
             ? $"{nameof(OrigamiUserView.DateCreated)} DESC"
             : orderBy[1..];
 
+        using var db = await DbContextFactory.CreateDbContextAsync();
+
         //pulls information from cache
-        var result = this.Super.UserViews.ReadFromDatabase().Query(
+        var result = db.Set<OrigamiUserView>().AsNoTracking().Query(
             state.PageSize,
             state.Page * state.PageSize,
             filters.ToString(),
             orderBy
         );
 
-        return Task.FromResult(new GridData<OrigamiUserView> { Items = result.Rows, TotalItems = (int)result.NumberOfRows, });
+        return new GridData<OrigamiUserView> { Items = result.Rows, TotalItems = (int)result.NumberOfRows, };
     }
 
     /// <summary>

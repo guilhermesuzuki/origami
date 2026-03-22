@@ -42,6 +42,8 @@ namespace Origami.Core.Data
 
         public Result RefreshCache(Guid blog, string before, string current)
         {
+            using var db = DbContextFactory.CreateDbContext();
+
             var q1 = from b in this.ReadFromCache<OrigamiBlog>()
                      join v in this.ReadFromCache<OrigamiVideo>() on b.Id equals v.BlogId
                      join t in this.ReadFromCache() on v.Id equals t.VideoId
@@ -51,7 +53,7 @@ namespace Origami.Core.Data
 
             var q2 = from b in this.ReadFromCache<OrigamiBlog>()
                      join v in this.ReadFromCache<OrigamiVideo>() on b.Id equals v.BlogId
-                     join t in this.ReadFromDatabase() on v.Id equals t.VideoId
+                     join t in db.Set<OrigamiVideoTag>().AsNoTracking() on v.Id equals t.VideoId
                      where b.Id == blog
                      where t.Tag == current
                      select t;
