@@ -163,6 +163,7 @@ namespace Origami.UI.Admin
         protected virtual IEnumerable<TCat> GetCategoriesFromDb()
         {
             using var db = DbContextFactory.CreateDbContext();
+
             IEnumerable<TCat> categoriesFromDb = [];
 
             switch (Category)
@@ -184,6 +185,7 @@ namespace Origami.UI.Admin
         protected virtual IEnumerable<TTag> GetTagsFromDb()
         {
             using var db = DbContextFactory.CreateDbContext();
+
             IEnumerable<TTag> tagsFromDb = [];
 
             switch (Tag)

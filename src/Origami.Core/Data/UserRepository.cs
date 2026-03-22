@@ -69,10 +69,12 @@ namespace Origami.Core.Data
 
         public Result<OrigamiUser> ChangePassword(DataOperationContext<OrigamiUser> ctx, string oldPassword, string newPassword1, string newPassword2)
         {
+            using var db = DbContextFactory.CreateDbContext();
+
             // this is necessary because of ReadFromDatabase
             var hash = oldPassword.SHA256Hash();
 
-            var user = ReadFromDatabase()
+            var user = db.Set<OrigamiUser>().AsNoTracking()
                 .Where(x => x.Username.ToLower() == ctx.Entity.Username.ToLower())
                 .Where(x => x.Password == hash)
                 .FirstOrDefault();
@@ -286,7 +288,9 @@ namespace Origami.Core.Data
 
             if (hub.Ok)
             {
-                var user = from x in this.ReadFromDatabase().NonDeleted()
+                using var db = DbContextFactory.CreateDbContext();
+
+				var user = from x in db.Set<OrigamiUser>().AsNoTracking().NonDeleted()
                            where x.IsBlocked == false
                            where x.Id == ctx.Entity.Id
                            select x;
@@ -295,8 +299,7 @@ namespace Origami.Core.Data
 
                 if (userEntity != null)
                 {
-                    using var db = DbContextFactory.CreateDbContext();
-                    var reset = from x in db.UserPasswordResets
+                    var reset = from x in db.UserPasswordResets.AsNoTracking()
                                 where x.Key == key
                                 where x.UserId == ctx.Entity.Id
                                 where x.IsDeleted == false
@@ -306,10 +309,12 @@ namespace Origami.Core.Data
                     if (resetEntity != null)
                     {
                         resetEntity.IsDeleted = true;
-                        userEntity.Password = newPassword1.SHA256Hash();
+						db.Update(resetEntity);
+						db.SaveChanges();
+
+						userEntity.Password = newPassword1.SHA256Hash();
                         this.SmartUpdate(userEntity.GetContext(ctx.User), false).Push(hub);
-                        db.Update(resetEntity);
-                        db.SaveChanges();
+                        
                         hub.Success = Text.Original("Password has been reset successfully");
                         return hub;
                     }

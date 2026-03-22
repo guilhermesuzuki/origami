@@ -130,7 +130,9 @@ namespace Origami.Core.Data
 
         public override List<OrigamiUserTrash> Search(string searchTerm)
         {
-            var query = from x in this.ReadFromDatabase()
+            using var db = DbContextFactory.CreateDbContext();
+
+            var query = from x in db.Set<OrigamiUserTrash>().AsNoTracking()
                         where x.Type.Contains(searchTerm) ||
                               x.Name.Contains(searchTerm) ||
                               x.Title.Contains(searchTerm) ||
@@ -275,7 +277,7 @@ namespace Origami.Core.Data
             where T : class, IId, new()
         {
             var hub = new Result<OrigamiUserTrash>(trash.Entity);
-            var entity = repo.ReadFromDatabase().Id(trash.Entity.Id);
+            var entity = repo.ReadFromDatabase(trash.Entity);
             var ctx = new DataOperationContext<T>(trash.User, trash.DateTime, entity ?? new());
             return repo.SmartPurge(ctx, true).Push(hub);
         }
@@ -284,7 +286,7 @@ namespace Origami.Core.Data
             where T : class, IId, new()
         {
             var hub = new Result<OrigamiUserTrash>(trash.Entity);
-            var entity = repo.ReadFromDatabase().Id(trash.Entity.Id);
+            var entity = repo.ReadFromDatabase(trash.Entity);
             var ctx = new DataOperationContext<T>(trash.User, trash.DateTime, entity ?? new());
             if (entity != null)
             {

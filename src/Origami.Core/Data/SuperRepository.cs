@@ -520,45 +520,46 @@ namespace Origami.Core.Data
         {
             try
             {
+                using var db = DbContextFactory.CreateDbContext();
                 using (var transaction = new TransactionScope())
                 {
                     // blogs
-                    foreach (var blog in Blogs.ReadFromDatabase().ToList())
+                    foreach (var blog in db.Set<OrigamiBlog>().AsNoTracking().ToList())
                     {
                         blog.NanoId = Nanoid.Generate(Nanoid.Alphabets.LettersAndDigits, 6);
                         var ctx = new DataOperationContext<OrigamiBlog>(OrigamiUser.AnonymousUser, blog);
                         Blogs.SmartSave(ctx, false);
                     }
                     // categories
-                    foreach (var category in Categories.ReadFromDatabase().ToList())
+                    foreach (var category in db.Set<OrigamiCategory>().AsNoTracking().ToList())
                     {
                         category.NanoId = Nanoid.Generate(Nanoid.Alphabets.LettersAndDigits, 6);
                         var ctx = new DataOperationContext<OrigamiCategory>(OrigamiUser.AnonymousUser, category);
                         Categories.SmartSave(ctx, false);
                     }
                     // pages
-                    foreach (var page in Pages.ReadFromDatabase().ToList())
+                    foreach (var page in db.Set<OrigamiPage>().AsNoTracking().ToList())
                     {
                         page.NanoId = Nanoid.Generate(Nanoid.Alphabets.LettersAndDigits, 6);
                         var ctx = new DataOperationContext<OrigamiPage>(OrigamiUser.AnonymousUser, page);
                         Pages.SmartSave(ctx, false);
                     }
                     // posts
-                    foreach (var post in Posts.ReadFromDatabase().ToList())
+                    foreach (var post in db.Set<OrigamiPost>().AsNoTracking().ToList())
                     {
                         post.NanoId = Nanoid.Generate(Nanoid.Alphabets.LettersAndDigits, 6);
                         var ctx = new DataOperationContext<OrigamiPost>(OrigamiUser.AnonymousUser, post);
                         Posts.SmartSave(ctx, false);
                     }
                     // videos
-                    foreach (var video in Videos.ReadFromDatabase().ToList())
+                    foreach (var video in db.Set<OrigamiVideo>().AsNoTracking().ToList())
                     {
                         video.NanoId = Nanoid.Generate(Nanoid.Alphabets.LettersAndDigits, 6);
                         var ctx = new DataOperationContext<OrigamiVideo>(OrigamiUser.AnonymousUser, video);
                         Videos.SmartSave(ctx, false);
                     }
                     // users
-                    foreach (var user in Users.ReadFromDatabase().ToList())
+                    foreach (var user in db.Set<OrigamiUser>().AsNoTracking().ToList())
                     {
                         user.NanoId = Nanoid.Generate(Nanoid.Alphabets.LettersAndDigits, 6);
                         var ctx = new DataOperationContext<OrigamiUser>(OrigamiUser.AnonymousUser, user);
