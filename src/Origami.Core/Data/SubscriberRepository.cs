@@ -71,7 +71,8 @@ namespace Origami.Core.Data
 
         public Result<OrigamiSubscriber> Unsubscribe(DataOperationContext<OrigamiSocialProfile> ctx)
         {
-            var subscriber = ReadFromDatabase().Where(x => x.SocialProfileId == ctx.Entity.Id).FirstOrDefault();
+            using var db = DbContextFactory.CreateDbContext();
+            var subscriber = db.Set<OrigamiSubscriber>().AsNoTracking().Where(x => x.SocialProfileId == ctx.Entity.Id).FirstOrDefault();
             if (subscriber != null)
             {
                 var subscribeContext = new DataOperationContext<OrigamiSubscriber>(ctx.User, ctx.DateTime, subscriber);

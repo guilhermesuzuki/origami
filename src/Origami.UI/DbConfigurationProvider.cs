@@ -23,7 +23,7 @@ public class DbConfigurationProvider : ConfigurationProvider, IDisposable
 
     public override void Load()
     {
-        var settings = this._superRepository.Settings.ReadFromDatabase().First();
+        var settings = this._superRepository.Settings.GetSettings();
 
         this.Data["Site:Name"] = settings.Name.ToLower();
         this.Data["OpenTelemetry:Enabled"] = settings.OpenTelemetry.Enabled.ToString();

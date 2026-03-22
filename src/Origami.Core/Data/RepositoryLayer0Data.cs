@@ -101,6 +101,7 @@ namespace Origami.Core.Data
             return db.Set<T>().AsNoTracking().FirstOrDefault(x => x.Id == id.Id);
         }
 
+        [Obsolete("This method has a memory leak")]
         public virtual IQueryable<T> ReadFromDatabase()
         {
             return this.ReadFromDatabase<T>();

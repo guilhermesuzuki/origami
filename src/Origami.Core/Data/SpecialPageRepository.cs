@@ -55,11 +55,14 @@ namespace Origami.Core.Data
             var permission = this.CheckPermission(context.User.Id, nameof(OrigamiRole.EnterMaintenanceMode));
             if (permission.Ok == false) return permission;
 
+            using var db = this.DbContextFactory.CreateDbContext();
+
             var hub = new Result();
-            var maintenancePages = this.ReadFromDatabase()
+            var maintenancePages = db.Set<OrigamiSpecialPage>().AsNoTracking()
                 .Where(x => x.IsPublished == false)
                 .Where(x => x.Type== OrigamiSpecialPageTypes.Maintenance.ToString())
                 .ToList();
+
             foreach (var page in maintenancePages)
             {
                 if (hub.Ok == false) break;
@@ -75,11 +78,14 @@ namespace Origami.Core.Data
             var permission = this.CheckPermission(context.User.Id, nameof(OrigamiRole.LeaveMaintenanceMode));
             if (permission.Ok == false) return permission;
 
+            using var db = this.DbContextFactory.CreateDbContext();
+
             var hub = new Result();
-            var maintenancePages = this.ReadFromDatabase()
+            var maintenancePages = db.Set<OrigamiSpecialPage>().AsNoTracking()
                 .Where(x => x.IsPublished)
                 .Where(x => x.Type == OrigamiSpecialPageTypes.Maintenance.ToString())
                 .ToList();
+
             foreach (var page in maintenancePages)
             {
                 if (hub.Ok == false) break;

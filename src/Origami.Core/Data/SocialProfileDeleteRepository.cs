@@ -94,7 +94,7 @@ namespace Origami.Core.Data
                         VideoRatings = videoRatings.Count,
                     };
 
-                    var exists = ReadFromDatabase()
+                    var exists = db.Set<OrigamiSocialProfileDelete>().AsNoTracking()
                         .Where(x => x.DateCreated == hub.Entity.DateCreated)
                         .Where(x => x.SocialProfileId == hub.Entity.SocialProfileId)
                         .Any() ? 1 : 0;

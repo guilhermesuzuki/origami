@@ -63,7 +63,8 @@ namespace Origami.Core.Data
         {
             try
             {
-                _socialProfileRepository.ReadFromDatabase().GetProfileThrowIfBlocked(ctx.SocialProfile.Id);
+                using var db = DbContextFactory.CreateDbContext();
+                db.Set<OrigamiSocialProfile>().AsNoTracking().GetProfileThrowIfBlocked(ctx.SocialProfile.Id);
             }
             catch (Exception ex)
             {
@@ -94,7 +95,8 @@ namespace Origami.Core.Data
         {
             try
             {
-                var profile = _socialProfileRepository.ReadFromDatabase().GetProfileThrowIfBlocked(ctx.SocialProfile.Id)!;
+                using var db = DbContextFactory.CreateDbContext();
+                var profile = db.Set<OrigamiSocialProfile>().AsNoTracking().GetProfileThrowIfBlocked(ctx.SocialProfile.Id);
                 if (profile.IsModerator)
                 {
                     return base.SmartDelete(ctx, false);
@@ -139,7 +141,8 @@ namespace Origami.Core.Data
         {
             try
             {
-                var profile = _socialProfileRepository.ReadFromDatabase().GetProfileThrowIfBlocked(ctx.SocialProfile.Id)!;
+                using var db = DbContextFactory.CreateDbContext();
+                var profile = db.Set<OrigamiSocialProfile>().AsNoTracking().GetProfileThrowIfBlocked(ctx.SocialProfile.Id);
                 if (profile.IsModerator)
                 {
                     ctx.Entity.PinnedById = ctx.SocialProfile.Id;
@@ -167,9 +170,9 @@ namespace Origami.Core.Data
 
         public override Result<OrigamiVideoComment> PurgeRelationshipsFromDatabase(DataOperationContext<OrigamiVideoComment> ctx)
         {
-            var hub = base.PurgeRelationshipsFromDatabase(ctx);
-            var reactions = (from x in _videoCommentReactionRepository.ReadFromDatabase() where x.CommentId == ctx.Entity.Id select x.Id).ToList();
             using var db = DbContextFactory.CreateDbContext();
+            var hub = base.PurgeRelationshipsFromDatabase(ctx);
+            var reactions = (from x in db.Set<OrigamiVideoCommentReaction>().AsNoTracking() where x.CommentId == ctx.Entity.Id select x.Id).ToList();
             hub.RowsAffected += db.PostCommentReactions.Where(x => reactions.Contains(x.Id)).ExecuteDelete();
 
             return hub;
@@ -181,7 +184,8 @@ namespace Origami.Core.Data
         {
             try
             {
-                var profile = _socialProfileRepository.ReadFromDatabase().GetProfileThrowIfBlocked(ctx.SocialProfile.Id)!;
+                using var db = DbContextFactory.CreateDbContext();
+                var profile = db.Set<OrigamiSocialProfile>().AsNoTracking().GetProfileThrowIfBlocked(ctx.SocialProfile.Id);
                 if (profile.IsModerator)
                 {
                     ctx.Entity.PinnedById = null;
@@ -205,7 +209,8 @@ namespace Origami.Core.Data
         {
             try
             {
-                _socialProfileRepository.ReadFromDatabase().GetProfileThrowIfBlocked(ctx.SocialProfile.Id);
+                using var db = DbContextFactory.CreateDbContext();
+                db.Set<OrigamiSocialProfile>().AsNoTracking().GetProfileThrowIfBlocked(ctx.SocialProfile.Id);
             }
             catch (Exception ex)
             {

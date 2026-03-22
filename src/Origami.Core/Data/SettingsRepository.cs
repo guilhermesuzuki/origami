@@ -63,7 +63,7 @@ public class SettingsRepository :
 
     public OrigamiSettings GetSettings()
     {
-        return ReadFromCache().FirstOrDefault() ?? throw new InvalidOperationException();
+        return this.ExtractSettings() ?? throw new InvalidOperationException();
     }
 
     public override IQueryable<OrigamiSettings> ReadFromDatabase()

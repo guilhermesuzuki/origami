@@ -421,8 +421,8 @@
     private IEnumerable<ProcessedUserView> _platforms = [];
     private IEnumerable<ProcessedUserViewForHistory> _history = [];
 
-    protected bool DisableEnterMaintenanceModeButton => this.Super.Settings.ReadFromDatabase().First().MaintenanceMode == true;
-    protected bool DisableLeaveMaintenanceModeButton => this.Super.Settings.ReadFromDatabase().First().MaintenanceMode == false;
+    protected bool DisableEnterMaintenanceModeButton => this.Super.Settings.GetSettings().MaintenanceMode == true;
+    protected bool DisableLeaveMaintenanceModeButton => this.Super.Settings.GetSettings().MaintenanceMode == false;
 
     /// <summary>
     /// Period of Time the user has selected
