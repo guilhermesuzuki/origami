@@ -1,0 +1,15 @@
+﻿@inherits Basic
+@implements IEntityNull<OrigamiPhysicalPage>
+
+@if (this.Entity != null)
+{
+    <div class="physical-page-header-lite-3 @Class">
+        <i class="fa-solid fa-globe"></i>
+        <span>@Entity.Path</span>
+        <Id Class="d-block x-small" Entity="@Entity"></Id>
+    </div>
+}
+
+@code {
+    [Parameter] public OrigamiPhysicalPage? Entity { get; set; }
+}
