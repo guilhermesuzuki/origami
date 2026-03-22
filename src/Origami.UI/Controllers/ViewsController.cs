@@ -196,6 +196,11 @@ namespace Origami.UI.FrontEnd.Controllers
                     Id = Guid.NewGuid(),
                     PhysicalPageId = page.Id,
                     Admin = _appFacade.Admin,
+                    Content = new()
+                    {
+                        Type = nameof(OrigamiPhysicalPage),
+                        Id = Guid.Empty
+                    },
                 };
                 this._fill(view, url, referrer);
                 _physicalPageView.SmartSave(view.GetContext(), false);
