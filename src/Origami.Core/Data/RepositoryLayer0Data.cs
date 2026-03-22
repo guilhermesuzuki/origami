@@ -95,6 +95,12 @@ namespace Origami.Core.Data
             }
         }
 
+        public virtual T? ReadFromDatabase(IId id)
+        {
+            using var db = DbContextFactory.CreateDbContext();
+            return db.Set<T>().AsNoTracking().FirstOrDefault(x => x.Id == id.Id);
+        }
+
         public virtual IQueryable<T> ReadFromDatabase()
         {
             return this.ReadFromDatabase<T>();

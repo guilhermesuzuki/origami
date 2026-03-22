@@ -75,7 +75,7 @@ namespace Origami.Core.Data
                 if (permission.Ok == false) return permission;
             }
 
-            var page = ReadFromDatabase().Id(ctx.Entity.Id);
+            var page = ReadFromDatabase(ctx.Entity);
             if (page != null)
             {
                 if (page.IsFrontPage)
@@ -102,12 +102,12 @@ namespace Origami.Core.Data
 
                     if (old != null)
                     {
-                        var update = ReadFromDatabase().Id(old.Id);
+                        var update = ReadFromDatabase(old);
                         this.UpdateCache(update ?? new());
                     }
                     if (neu != null)
                     {
-                        var update = ReadFromDatabase().Id(neu.Id);
+                        var update = ReadFromDatabase(neu);
                         this.UpdateCache(update ?? new());
                     }
 
@@ -135,7 +135,7 @@ namespace Origami.Core.Data
                 if (permission.Ok == false) return permission;
             }
 
-            var page = ReadFromDatabase().Id(ctx.Entity.Id);
+            var page = ReadFromDatabase(ctx.Entity);
             if (page != null)
             {
                 if (page.IsFrontPage)
@@ -149,7 +149,7 @@ namespace Origami.Core.Data
                         var old = ReadFromCache().Blog(ctx.Entity.BlogId).FirstOrDefault(page => page.IsFrontPage);
                         if (old != null)
                         {
-                            var update = ReadFromDatabase().Id(old.Id);
+                            var update = ReadFromDatabase(old);
                             this.UpdateCache(update ?? new());
                         }
 

@@ -26,5 +26,12 @@ namespace Origami.Core.Data
         /// <typeparam name="X"></typeparam>
         /// <returns></returns>
         IQueryable<X> ReadFromDatabase<X>() where X : class;
+
+        /// <summary>
+        /// Retrieves an entity from the database that matches the specified identifier.
+        /// </summary>
+        /// <param name="id">The identifier of the entity to retrieve. Cannot be null.</param>
+        /// <returns>The entity of type T that matches the specified identifier, or null if no matching entity is found.</returns>
+        T? ReadFromDatabase(IId id);
     }
 }

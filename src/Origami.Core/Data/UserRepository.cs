@@ -215,7 +215,7 @@ namespace Origami.Core.Data
                 }
             }
 
-            var fresh = this.ReadFromDatabase().Id(ctx.Entity.Id);
+            var fresh = this.ReadFromDatabase(ctx.Entity);
             if (fresh != null)
             {
                 fresh.TOTPSecret = string.Empty;

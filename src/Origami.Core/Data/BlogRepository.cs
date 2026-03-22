@@ -66,7 +66,7 @@ namespace Origami.Core.Data
                 if (permission.Ok == false) return permission;
             }
 
-            var fresh = ReadFromDatabase().Id(ctx.Entity.Id);
+            var fresh = ReadFromDatabase(ctx.Entity);
             if (fresh != null)
             {
                 if (fresh.IsActive == false)
@@ -95,7 +95,7 @@ namespace Origami.Core.Data
                 if (permission.Ok == false) return permission;
             }
 
-            var fresh = ReadFromDatabase().Id(ctx.Entity.Id);
+            var fresh = ReadFromDatabase(ctx.Entity);
             if (fresh != null)
             {
                 if (fresh is { IsPrimary: true })
@@ -119,7 +119,7 @@ namespace Origami.Core.Data
             var hub = base.DeleteValidation(ctx);
             if (hub.Ok)
             {
-                var fresh = ReadFromDatabase().Id(ctx.Entity.Id);
+                var fresh = ReadFromDatabase(ctx.Entity);
                 if (fresh == null)
                 {
                     hub.Error = Text.Original("Blog could not be found");
@@ -192,8 +192,8 @@ namespace Origami.Core.Data
                     foreach (var blog in blogs)
                     {
                         if (hub.Ok == false) return hub;
-                        var before = ReadFromDatabase().Id(blog.b.Id)!;
-                        var update = ReadFromDatabase().Id(blog.b.Id)!;
+                        var before = ReadFromDatabase(blog.b)!;
+                        var update = ReadFromDatabase(blog.b)!;
                         update.Order = ++index;
                         SmartUpdate(new DataOperationContext<OrigamiBlog>(ctx.User, DateTime.UtcNow, update, before), false).Push(hub);
                     }
@@ -224,8 +224,8 @@ namespace Origami.Core.Data
                     foreach (var blog in blogs)
                     {
                         if (hub.Ok == false) return hub;
-                        var before = ReadFromDatabase().Id(blog.Id)!;
-                        var update = ReadFromDatabase().Id(blog.Id)!;
+                        var before = ReadFromDatabase(blog)!;
+                        var update = ReadFromDatabase(blog)!;
                         update.Order = null;
                         SmartUpdate(new DataOperationContext<OrigamiBlog>(ctx.User, DateTime.UtcNow, update, before), false).Push(hub);
                     }
