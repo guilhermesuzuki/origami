@@ -35,7 +35,8 @@ namespace Origami.Core.Data
                 var permission = CanDelete(newContext);
                 if (permission.Ok == false) return permission;
             }
-            return ReadFromDatabase().Where(x => x.Tag == ctx.Entity).GetContexts(ctx).Call(this.SmartDelete, false);
+            using var db = DbContextFactory.CreateDbContext();
+            return db.Set<OrigamiPostTag>().AsNoTracking().Where(x => x.Tag == ctx.Entity).GetContexts(ctx).Call(this.SmartDelete, false);
         }
 
         public Result Update(DataOperationContext<string> ctx, string tagToBeUpdated, bool checkPermission)
@@ -46,11 +47,14 @@ namespace Origami.Core.Data
                 var permission = CanUpdate(newContext);
                 if (permission.Ok == false) return permission;
             }
-            return ReadFromDatabase().Where(x => x.Tag == tagToBeUpdated).GetContexts(ctx).Call(this.SmartUpdate, false);
+            using var db = DbContextFactory.CreateDbContext();
+            return db.Set<OrigamiPostTag>().AsNoTracking().Where(x => x.Tag == tagToBeUpdated).GetContexts(ctx).Call(this.SmartUpdate, false);
         }
 
         public Result RefreshCache(Guid blog, string before, string current)
         {
+            using var db = DbContextFactory.CreateDbContext();
+            
             var q1 = from b in this.ReadFromCache<OrigamiBlog>()
                      join p in this.ReadFromCache<OrigamiPost>() on b.Id equals p.BlogId
                      join t in this.ReadFromCache() on p.Id equals t.PostId
@@ -60,7 +64,7 @@ namespace Origami.Core.Data
 
             var q2 = from b in this.ReadFromCache<OrigamiBlog>()
                      join p in this.ReadFromCache<OrigamiPost>() on b.Id equals p.BlogId
-                     join t in this.ReadFromDatabase() on p.Id equals t.PostId
+                     join t in db.Set<OrigamiPostTag>().AsNoTracking() on p.Id equals t.PostId
                      where b.Id == blog
                      where t.Tag == current
                      select t;

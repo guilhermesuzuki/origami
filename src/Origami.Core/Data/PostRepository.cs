@@ -77,19 +77,20 @@ namespace Origami.Core.Data
 
         public override Result<OrigamiPost> PurgeRelationshipsFromDatabase(DataOperationContext<OrigamiPost> ctx)
         {
+            using var db = DbContextFactory.CreateDbContext();
             var hub = base.PurgeRelationshipsFromDatabase(ctx);
 
-            var categories = _postCategoryRepository.ReadFromDatabase().Where(x => x.PostId == ctx.Entity.Id).WithOnlyIds();
-            var comments = _postCommentRepository.ReadFromDatabase().Where(x => x.PostId == ctx.Entity.Id).WithOnlyIds();
-            var ratings = _postRatingRepository.ReadFromDatabase().Where(x => x.PostId == ctx.Entity.Id).WithOnlyIds();
-            var tags = _postTagRepository.ReadFromDatabase().Where(x => x.PostId == ctx.Entity.Id).WithOnlyIds();
+            var categories = db.Set<OrigamiPostCategory>().AsNoTracking().Where(x => x.PostId == ctx.Entity.Id).WithOnlyIds();
+            var comments = db.Set<OrigamiPostComment>().AsNoTracking().Where(x => x.PostId == ctx.Entity.Id).WithOnlyIds();
+            var ratings = db.Set<OrigamiPostRating>().AsNoTracking().Where(x => x.PostId == ctx.Entity.Id).WithOnlyIds();
+            var tags = db.Set<OrigamiPostTag>().AsNoTracking().Where(x => x.PostId == ctx.Entity.Id).WithOnlyIds();
 
             categories.GetContexts(ctx).Call(_postCategoryRepository.SmartPurge, false).Push(hub);
             comments.GetContexts(ctx).Call(_postCommentRepository.SmartPurge, false).Push(hub);
             ratings.GetContexts(ctx).Call(_postRatingRepository.SmartPurge, false).Push(hub);
             tags.GetContexts(ctx).Call(_postTagRepository.SmartPurge, false).Push(hub);
 
-            hub.RowsAffected += _postViewRepository.ReadFromDatabase().Where(x => x.PostId == ctx.Entity.Id).ExecuteDelete();
+            hub.RowsAffected += db.Set<OrigamiPostView>().AsNoTracking().Where(x => x.PostId == ctx.Entity.Id).ExecuteDelete();
 
             return hub;
         }
