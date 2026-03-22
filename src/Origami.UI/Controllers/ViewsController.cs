@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Origami.Core;
 using Origami.Core.Data;
@@ -13,6 +14,7 @@ namespace Origami.UI.FrontEnd.Controllers
     public class ViewsController : Controller
     {
         protected readonly IAppFacade _appFacade;
+        protected readonly IDbContextFactory<OrigamiDbContext> _dbContextFactory;
         protected readonly IHttpContextAccessor _httpContextAccessor;
         protected readonly IMemoryCache _memoryCache;
         protected readonly IPageRepository _page;
@@ -33,6 +35,7 @@ namespace Origami.UI.FrontEnd.Controllers
         public ViewsController(
             IMemoryCache memoryCache,
             IAppFacade appFacade,
+            IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IHttpContextAccessor httpContextAccessor,
             IPageRepository page,
             IPageViewRepository pageView,
@@ -46,9 +49,10 @@ namespace Origami.UI.FrontEnd.Controllers
             IVideoViewRepository videoView)
             : base()
         {
-            _memoryCache = memoryCache;
             _appFacade = appFacade;
+            _dbContextFactory = dbContextFactory;
             _httpContextAccessor = httpContextAccessor;
+            _memoryCache = memoryCache;
             _page = page;
             _pageView = pageView;
             _physicalPage = physicalPage;
@@ -112,9 +116,8 @@ namespace Origami.UI.FrontEnd.Controllers
         {
             if (path.Has() == false) path = "/";
 
-            var pages = from p in _physicalPage.ReadFromDatabase()
-                        where p.Path.Equals(path) == true
-                        select p;
+            using var db = this._dbContextFactory.CreateDbContext();
+            var pages = from p in db.Set<OrigamiPhysicalPage>().AsNoTracking() where p.Path.Equals(path) == true select p;
 
             var page = pages.FirstOrDefault();
             if (page == null)
@@ -167,7 +170,9 @@ namespace Origami.UI.FrontEnd.Controllers
         {
             if (path.Has() == false) path = "/";
 
-            var page = _physicalPage.ReadFromDatabase().FirstOrDefault(x => x.Path.Equals(path) == true);
+            using var db = this._dbContextFactory.CreateDbContext();
+
+            var page = db.Set<OrigamiPhysicalPage>().AsNoTracking().FirstOrDefault(x => x.Path.Equals(path) == true);
             if (page == null)
             {
                 page = new()

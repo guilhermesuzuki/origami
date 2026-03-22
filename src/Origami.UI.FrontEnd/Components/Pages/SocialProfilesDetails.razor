@@ -1,4 +1,5 @@
 ﻿@page "/socialprofiles/{SocialProfileId:guid}"
+@using Microsoft.EntityFrameworkCore
 @inherits BasicPage
 
 @inject ISocialProfileRepository _socialProfile
@@ -22,7 +23,7 @@
     @if (this.SocialProfile.New == false)
     {
         <style>
-            .social-profile ul { list-style: none; padding-left: 0; margin-bottom: 0; }
+                .social-profile ul { list-style: none; padding-left: 0; margin-bottom: 0; }
         </style>
         <div class="social-profile-details">
             <div class="row">
@@ -366,7 +367,9 @@
     {
         if (this.SocialProfile.Has() == false) return;
 
-        this.SocialProfileForDeletions = _socialProfileForDeletion.ReadFromDatabase()
+        using var db = this.DbContextFactory.CreateDbContext();
+
+        this.SocialProfileForDeletions = db.Set<OrigamiSocialProfileDelete>().AsNoTracking()
             .Where(x => x.SocialProfileId == this.SocialProfileId)
             .OrderByDescending(x => x.DateCreated)
             .ToList();

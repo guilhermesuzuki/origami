@@ -580,7 +580,8 @@
 
     protected List<OrigamiUserPasswordReset> GetPasswordResetHistory()
     {
-        return this.Super.UserPasswordResets.ReadFromDatabase().Where(x => x.UserId == this.Entity.Id).OrderByDescending(x => x.DateCreated).ToList();
+        using var db = this.DbContextFactory.CreateDbContext();
+        return db.Set<OrigamiUserPasswordReset>().AsNoTracking().Where(x => x.UserId == this.Entity.Id).OrderByDescending(x => x.DateCreated).ToList();
     }
 
     protected void LoadUserBlogs()
@@ -611,12 +612,13 @@
 
     protected override Result<OrigamiUser> UpdateOthers()
     {
+        using var db = this.DbContextFactory.CreateDbContext();
         var hub = new Result<OrigamiUser>();
         var ctx = new DataOperationContext<OrigamiUser>(this.UserFacade.User, this.Entity);
-        var dbo1 = this.Super.UserRoles.ReadFromDatabase().Where(x => x.UserId == this.Entity.Id).ToList();
+        var dbo1 = db.Set<OrigamiUserRole>().AsNoTracking().Where(x => x.UserId == this.Entity.Id).ToList();
         var merge1 = dbo1.GetMerge(this.UserRoles);
         hub.OnSuccess(() => this.Super.UserRoles.Merge(ctx, merge1));
-        var dbo2 = this.Super.UserBlogs.ReadFromDatabase().Where(x => x.UserId == this.Entity.Id).ToList();
+        var dbo2 = db.Set<OrigamiUserBlog>().AsNoTracking().Where(x => x.UserId == this.Entity.Id).ToList();
         var merge2 = dbo2.GetMerge(this.UserBlogs);
         hub.OnSuccess(() => this.Super.UserBlogs.Merge(ctx, merge2));
         return hub;

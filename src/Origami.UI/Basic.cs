@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.JSInterop;
 using MudBlazor;
@@ -34,6 +35,7 @@ namespace Origami.UI
 
         [Inject] protected IAppFacade AppFacade { get; set; } = null!;
         [Inject] protected IConfiguration Configuration { get; set; } = null!;
+        [Inject] protected IDbContextFactory<OrigamiDbContext> DbContextFactory { get; set; } = null!;
         [Inject] protected IDialogService DialogService { get; set; } = null!;
         [Inject] protected IHttpContextAccessor HttpContextAccessor { get; set; } = null!;
         [Inject] protected IJSRuntime JSRuntime { get; set; } = null!;

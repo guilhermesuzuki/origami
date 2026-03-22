@@ -1,4 +1,5 @@
 ﻿@page "/users"
+@using Microsoft.EntityFrameworkCore
 @inherits BasicPage
 @inject IUserRepository _users
 @inject IUserContentRepository _userContents
@@ -67,8 +68,10 @@
 
         var orderBy = orders.ToString();
 
+        using var db = _users.DbContextFactory.CreateDbContext();
+
         //pulls information from cache
-        var result = _users.ReadFromDatabase().Query(
+        var result = db.Set<OrigamiUser>().AsNoTracking().Query(
             state.PageSize,
             state.Page * state.PageSize,
             filters.ToString(),
