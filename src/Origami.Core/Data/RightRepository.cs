@@ -28,8 +28,10 @@ namespace Origami.Core.Data
 
         public Result KeepUpToDate()
         {
+            using var db = DbContextFactory.CreateDbContext();
+
             var hub = new Result();
-            var dbRoles = this.ReadFromDatabase().ToList();
+            var dbRoles = db.Set<OrigamiRight>().AsNoTracking().ToList();
             var uiRoles = OrigamiRole.GetRights();
             var merge = dbRoles.GetMergeRights(uiRoles);
 
@@ -54,8 +56,9 @@ namespace Origami.Core.Data
 
         public override Result<OrigamiRight> PurgeRelationshipsFromDatabase(DataOperationContext<OrigamiRight> ctx)
         {
+            using var db = DbContextFactory.CreateDbContext();
             var hub = base.PurgeRelationshipsFromDatabase(ctx);
-            var rightRoles = _rightRoleRepository.ReadFromDatabase().Where(x => x.RoleId == ctx.Entity.Id).ToList();
+            var rightRoles = db.Set<OrigamiRightRole>().AsNoTracking().Where(x => x.RoleId == ctx.Entity.Id).ToList();
             rightRoles.GetContexts(ctx).Call(_rightRoleRepository.SmartPurge, false).Push(hub);
             return hub;
         }

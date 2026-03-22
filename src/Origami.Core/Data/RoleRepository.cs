@@ -45,14 +45,16 @@ namespace Origami.Core.Data
 
         public override Result<OrigamiRole> Create(DataOperationContext<OrigamiRole> ctx)
         {
+            using var db = DbContextFactory.CreateDbContext();
             var hub = base.Create(ctx);
-            var rights = _rightRepository.ReadFromDatabase().ToList();
+            var rights = db.Set<OrigamiRight>().AsNoTracking().ToList();
             return ctx.Entity.GetRightRoles(rights).GetContexts(ctx).Call(_rightRoleRepository.SmartSave, false).Push(hub);
         }
 
         public override void CreateCache(OrigamiRole entity)
         {
-            var rights = _rightRepository.ReadFromDatabase().ToList();
+            using var db = DbContextFactory.CreateDbContext();
+            var rights = db.Set<OrigamiRight>().AsNoTracking().ToList();
             entity.GetRightRoles(rights).Each(_rightRoleRepository.CreateCache);
             base.CreateCache(entity);
         }
@@ -101,16 +103,16 @@ namespace Origami.Core.Data
 
         public override IQueryable<OrigamiRole> ReadFromDatabase()
         {
-            using (var ctx = this.DbContextFactory.CreateDbContext())
+            using (var db = this.DbContextFactory.CreateDbContext())
             {
-                var roles = ctx.Roles.ToList();
+                var roles = db.Roles.ToList();
 
                 foreach (var role in roles)
                 {
-                    var rightRoles = _rightRoleRepository.ReadFromDatabase().Where(x => x.RoleId == role.Id).ToList();
+                    var rightRoles = db.Set<OrigamiRightRole>().AsNoTracking().Where(x => x.RoleId == role.Id).ToList();
 
                     var match = from property in role.GetType().GetProperties()
-                                join rt in ctx.Rights on property.Name equals rt.Name
+                                join rt in db.Rights.AsNoTracking() on property.Name equals rt.Name
                                 join rr in rightRoles on rt.Id equals rr.RightId
                                 where property.CanWrite == true
                                 select property;
@@ -124,23 +126,26 @@ namespace Origami.Core.Data
 
         public override Result<OrigamiRole> Update(DataOperationContext<OrigamiRole> ctx)
         {
-            var result = base.Update(ctx);
-            var rights = _rightRepository.ReadFromDatabase().ToList();
+            using var db = DbContextFactory.CreateDbContext();
+            var hub = base.Update(ctx);
+            var rights = db.Set<OrigamiRight>().AsNoTracking().ToList();
             var ui = ctx.Entity.GetRightRoles(rights);
-            var db = _rightRoleRepository.ReadFromDatabase().Where(x => x.RoleId == ctx.Entity.Id).ToList();
-            var merge = db.GetMergeRightRoles(ui);
-            merge.Purge.GetContexts(ctx).Call(_rightRoleRepository.SmartPurge, false).Push(result);
-            merge.Create.GetContexts(ctx).Call(_rightRoleRepository.SmartSave, false).Push(result);
-            return result;
+            var fresh = db.Set<OrigamiRightRole>().AsNoTracking().Where(x => x.RoleId == ctx.Entity.Id).ToList();
+            var merge = fresh.GetMergeRightRoles(ui);
+            merge.Purge.GetContexts(ctx).Call(_rightRoleRepository.SmartPurge, false).Push(hub);
+            merge.Create.GetContexts(ctx).Call(_rightRoleRepository.SmartSave, false).Push(hub);
+            return hub;
         }
 
         public override void UpdateCache(OrigamiRole entity)
         {
             base.UpdateCache(entity);
 
-            var rights = _rightRepository.ReadFromDatabase().ToList();
+            using var db = DbContextFactory.CreateDbContext();
+
+            var rights = db.Set<OrigamiRight>().AsNoTracking().ToList();
             var uiRights = entity.GetRightRoles(rights);
-            var cache = _rightRoleRepository.ReadFromCache().Where(x => x.RoleId == entity.Id).ToList();
+            var cache = db.Set<OrigamiRightRole>().AsNoTracking().Where(x => x.RoleId == entity.Id).ToList();
             var merge = cache.GetMergeRightRoles(uiRights);
 
             merge.Purge.Each(_rightRoleRepository.PurgeCache);

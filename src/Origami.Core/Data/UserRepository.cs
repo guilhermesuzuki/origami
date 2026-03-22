@@ -142,7 +142,9 @@ namespace Origami.Core.Data
             username = username.ToLower().Trim();
             var password = cleanPassword.SHA256Hash();
 
-            var query = from x in ReadFromDatabase().NonDeleted()
+            using var db = DbContextFactory.CreateDbContext();
+
+			var query = from x in db.Set<OrigamiUser>().AsNoTracking().NonDeleted()
                         where x.IsDeleted == false
                         where x.IsBlocked == false
                         where x.Username.ToLower() == username
@@ -173,19 +175,19 @@ namespace Origami.Core.Data
 
         public override Result<OrigamiUser> PurgeRelationshipsFromDatabase(DataOperationContext<OrigamiUser> ctx)
         {
-            var hub = new Result<OrigamiUser>(ctx.Entity);
-
-            var pages = _pageRepository.ReadFromDatabase().Where(x => x.AuthorId == ctx.Entity.Id).ToList();
-            var posts = _postRepository.ReadFromDatabase().Where(x => x.AuthorId == ctx.Entity.Id).ToList();
-            var videos = _videoRepository.ReadFromDatabase().Where(x => x.AuthorId == ctx.Entity.Id).ToList();
-
-            pages.GetContexts(ctx).Call(_pageRepository.SmartPurge, false).Push(hub);
-            posts.GetContexts(ctx).Call(_postRepository.SmartPurge, false).Push(hub);
-            videos.GetContexts(ctx).Call(_videoRepository.SmartPurge, false).Push(hub);
-
+			var hub = new Result<OrigamiUser>(ctx.Entity);
+            
             using (var db = DbContextFactory.CreateDbContext())
             {
-                var del1 = db.UserRoles.Where(x => x.UserId == ctx.Entity.Id).ExecuteDelete();
+				var pages = db.Set<OrigamiPage>().AsNoTracking().Where(x => x.AuthorId == ctx.Entity.Id).ToList();
+				var posts = db.Set<OrigamiPost>().AsNoTracking().Where(x => x.AuthorId == ctx.Entity.Id).ToList();
+				var videos = db.Set<OrigamiVideo>().AsNoTracking().Where(x => x.AuthorId == ctx.Entity.Id).ToList();
+
+				pages.GetContexts(ctx).Call(_pageRepository.SmartPurge, false).Push(hub);
+				posts.GetContexts(ctx).Call(_postRepository.SmartPurge, false).Push(hub);
+				videos.GetContexts(ctx).Call(_videoRepository.SmartPurge, false).Push(hub);
+
+				var del1 = db.UserRoles.Where(x => x.UserId == ctx.Entity.Id).ExecuteDelete();
                 var del2 = db.UserPasswordResets.Where(x => x.UserId == ctx.Entity.Id).ExecuteDelete();
                 var del3 = db.UserPasswordResets.Where(x => x.AuthorId == ctx.Entity.Id).ExecuteDelete();
                 hub.RowsAffected += del1;

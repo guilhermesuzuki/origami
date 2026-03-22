@@ -27,7 +27,8 @@ namespace Origami.Core.Data
         {
             try
             {
-                var setting = this.ReadFromDatabase().FirstOrDefault(x => x.Name == key) ?? new OrigamiSetting() { Id = Guid.NewGuid(), Name = key };
+                using var db = this.DbContextFactory.CreateDbContext();
+                var setting = db.Set<OrigamiSetting>().AsNoTracking().FirstOrDefault(x => x.Name == key) ?? new OrigamiSetting() { Id = Guid.NewGuid(), Name = key };
                 setting.Value = value;
                 return this.UpdateOnlyThisSetting(setting.GetContext(ctx.User));
             }

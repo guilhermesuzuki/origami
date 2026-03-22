@@ -24,7 +24,8 @@ namespace Origami.Core.Data
             Console.WriteLine($"Refreshing cache for {k}");
             lock (OrigamiConstants.SyncRoot)
             {
-                var l = ReadFromDatabase().ToList();
+                using var db = DbContextFactory.CreateDbContext();
+                var l = db.Set<T>().AsNoTracking().ToList();
                 MemoryCache.Set(k, l);
             }
         }
