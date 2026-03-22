@@ -1,12 +1,5 @@
 ﻿@page "/specialpages"
 @inherits BasicAdminGrid<OrigamiSpecialPage>
-@implements IFilter
-@inject IBlogRepository _blogs
-@inject ICategoryRepository _category
-@inject IPostCategoryRepository _postCategory
-@inject IVideoCategoryRepository _videoCategory
-@inject ISpecialPageRepository _pages
-@inject ISpecialPageViewRepository _pageViews
 
 <style>
     .related-pages .id { display: none !important; }
@@ -80,7 +73,7 @@
                                         <ul class="inline-list text-center">
                                             <li>
                                                 <i class="fa-solid fa-eye"></i>
-                                                @_pageViews.GetViews(context.Item)
+                                                @this.Super.PhysicalPageViews.GetViews(context.Item)
                                             </li>
                                         </ul>
                                     </div>
@@ -145,13 +138,13 @@
     protected virtual Result<OrigamiSpecialPage> PublishEntity(OrigamiSpecialPage entity)
     {
         var context = new DataOperationContext<OrigamiSpecialPage>(this.UserFacade.User, DateTime.UtcNow, entity);
-        return this._pages.SmartPublish(context, true);
+        return this.Super.SpecialPages.SmartPublish(context, true);
     }
 
     protected virtual Result<OrigamiSpecialPage> UnpublishEntity(OrigamiSpecialPage entity)
     {
         var context = new DataOperationContext<OrigamiSpecialPage>(this.UserFacade.User, DateTime.UtcNow, entity);
-        return this._pages.SmartUnpublish(context, true);
+        return this.Super.SpecialPages.SmartUnpublish(context, true);
     }
 
     protected async Task PublishSelectedEntities()
@@ -213,7 +206,7 @@
             using (var transaction = new TransactionScope())
             {
                 var ctx = new DataOperationContext(this.UserFacade.User, DateTime.UtcNow);
-                var hub = this._pages.EnterMaintenanceMode(ctx);
+                var hub = this.Super.SpecialPages.EnterMaintenanceMode(ctx);
                 this.UserFacade.Result = hub;
                 if (hub.Ok) transaction.Complete();
             }
@@ -233,7 +226,7 @@
             using (var transaction = new TransactionScope())
             {
                 var ctx = new DataOperationContext(this.UserFacade.User, DateTime.UtcNow);
-                var hub = this._pages.LeaveMaintenanceMode(ctx);
+                var hub = this.Super.SpecialPages.LeaveMaintenanceMode(ctx);
                 this.UserFacade.Result = hub;
                 if (hub.Ok) transaction.Complete();
             }
