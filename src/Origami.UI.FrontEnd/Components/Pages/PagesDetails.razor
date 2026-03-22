@@ -1,14 +1,10 @@
 ﻿@page "/pages/{NanoId}"
-
 @inherits BasicPage
 
 @using Microsoft.AspNetCore.Authentication.Google;
 @using Microsoft.AspNetCore.Identity;
 @using System.Text;
 @using Microsoft.Extensions.Options;
-
-@inject IPageRepository _pageRepository
-@inject IHttpClientFactory _httpClientFactory
 
 <Root>
     @if (this._page.New == false)
@@ -24,7 +20,7 @@
     }
 </Root>
 
-@code {
+    @code {
     [Parameter] public string NanoId { get; set; } = string.Empty;
     [Parameter] public Core.Models.OrigamiPage? Page { get; set; }
 
@@ -36,24 +32,23 @@
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        this._page = this.Page ?? this._pageRepository.ReadFromCache().Published().NanoId(NanoId) ?? new();
+        this._page = this.Page ?? this.Super.Pages.ReadFromCache().Published().NanoId(NanoId) ?? new();
     }
 
     protected override async Task PageViewAsync(bool firstRender)
     {
         if (firstRender)
         {
-            if (await this.JSRuntime.IncognitoModeAsync() == true) return;
-            await this.JSRuntime.InvokeVoidAsync("origami.pages.view", this._page.Id);
-            await this.InvokeAsync(this.StateHasChanged);
+            if (this.UserFacade.IncognitoMode == false)
+            {
+                var uri = new Uri(NavigationManager.Uri);
+                await JSRuntime.InvokeVoidAsync("origami.physicalpages.viewByContent", uri.AbsolutePath, nameof(OrigamiPage), this._page.Id);
+            }
         }
     }
 
-    protected override Task OnAfterRenderAsync(bool firstRender)
+    protected override void SetPageTitle()
     {
         this.PageTitle.SetTitle(this._page);
-        return base.OnAfterRenderAsync(firstRender);
     }
-
-    public override Guid BlogId => this._page.BlogId;
 }

@@ -30,5 +30,14 @@ namespace Origami.UI.Admin
             var title = $"{Text.Lower("Admin")}: {PageTitle.GetTitle()}";
             await JSRuntime.InvokeVoidAsync("origami.common.title", title);
         }
+
+        protected override async Task PageViewAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                var uri = new Uri(NavigationManager.Uri);
+                await JSRuntime.InvokeVoidAsync("origami.physicalpages.viewByPath", uri.AbsolutePath);
+            }
+        }
     }
 }

@@ -4,8 +4,6 @@
 @inject ICategoryRepository _repository
 @inject IFileRepository _fileRepository
 
-<MudFileUpload @ref="this.FileUpload" T="IBrowserFile" FilesChanged="UploadHeaderBase64" Accept=".png, .jpg, .bmp, .tiff, .gif" MaximumFileCount="1"></MudFileUpload>
-
 <div class="category-form @Class">
     <BasicHeaderNotes Entity="Entity"></BasicHeaderNotes>
     <div class="parent-selector mt-3">
@@ -40,7 +38,7 @@
         @if (ParentSelector)
         {
             <div class="mt-3">
-                <MudDataGrid T="OrigamiCategory" Items="this.Parents()" Filterable="false" SortMode="SortMode.Single" Class="border" Bordered="true" SelectOnRowClick="false">
+                <MudDataGrid T="OrigamiCategory" Items="this.GetParents()" Filterable="false" SortMode="SortMode.Single" Class="border" Bordered="true" SelectOnRowClick="false">
                     <Columns>
                         <TemplateColumn Title="@Text.Upper("Name")" Sortable="true" Filterable="false" CellClass="col-8" SortBy="x => x.Name">
                             <CellTemplate>
@@ -67,21 +65,26 @@
         <div>
             <HeaderImageLite Entity="this.Entity" Footer="true" ImgMaxWidth="120px;"></HeaderImageLite>
         </div>
-        <div class="btn-group mt-2 w-100">
-            <button class="btn btn-light w-100" @onclick="PickFile">
-                <i class="fa-solid fa-cloud-arrow-up"></i>
-                <div>@Text.Lower("Only image files")</div>
-                <div class="x-small">@Text.Original("{0}KB max.", 512)</div>
-            </button>
-            <button class="btn btn-light w-100" @onclick="() => this._fileManager = true">
-                <i class="fa-solid fa-folder"></i>
-                @Text.Lower("Pick from file manager")
-            </button>
-            <button class="btn btn-light w-100" @onclick="this.ClearHeader">
-                <i class="fa-solid fa-trash-can"></i>
-                @Text.Lower("Clear icon")
-            </button>
-        </div>
+        <MudFileUpload T="IBrowserFile" FilesChanged="UploadHeaderBase64" Accept=".png, .jpg, .bmp, .tiff, .gif" MaximumFileCount="1">
+            <CustomContent>
+                <div class="btn-group mt-2 w-100">
+                    <button class="btn btn-light w-100" @onclick="context.OpenFilePickerAsync">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <div>@Text.Lower("Only image files")</div>
+                        <div class="x-small">@Text.Original("{0}KB max.", 512)</div>
+                    </button>
+                    <button class="btn btn-light w-100" @onclick="() => this.FileManagerForImages = true">
+                        <i class="fa-solid fa-folder"></i>
+                        @Text.Lower("Pick from file manager")
+                    </button>
+                    <button class="btn btn-light w-100" @onclick="this.ClearHeader">
+                        <i class="fa-solid fa-trash-can"></i>
+                        @Text.Lower("Clear icon")
+                    </button>
+                </div>
+            </CustomContent>
+            <SelectedTemplate></SelectedTemplate>
+        </MudFileUpload>
     </div>
     <BasicHeader Class="mt-3" Entity="this.Entity"></BasicHeader>
     <ul class="inline-list mt-3">
@@ -122,18 +125,18 @@
         </button>
     </div>
 </div>
-@if (_fileManager)
+@if (this.FileManagerForImages)
 {
     <div class="position-fixed popup-container">
         <div class="border shadow-lg position-relative" style="width: 90%; height: 90%;">
             <div class="overflow-auto" style="height:100%; padding-bottom: 70px;">
-                <FileManager Mode="Image" OnFileClicked="this._onFileClicked"></FileManager>
+                <FileManager Mode="Image" OnFileClicked="this.ImageFromFileManagerWillAssignEntityHeaderAsBase64"></FileManager>
             </div>
             <ul class="inline-list position-absolute w-100 border bg-white" style="bottom:0; z-index: 50;">
                 <li></li>
                 <li class="text-right">
                     <div class="btn-group p-3">
-                        <button class="btn btn-secondary" @onclick="() => this._fileManager = false">
+                        <button class="btn btn-secondary" @onclick="() => this.FileManagerForImages = false">
                             <i class="fa-solid fa-circle-xmark"></i>
                             @Text.Lower("Close window")
                         </button>
@@ -144,41 +147,8 @@
     </div>
 }
 @code {
-    private bool _fileManager = false;
-
-    protected override bool DisableTheSaveButton
-    {
-        get
-        {
-            if (this.Entity == null) return true;
-            if (this.Entity.Name.Has() == false) return true;
-            return false;
-        }
-    }
-
-    protected override IEnumerable<OrigamiCategory> Parents()
+    protected override IEnumerable<OrigamiCategory> GetParents()
     {
         return from x in this.Super.GetCategories().Blog(this.UserFacade.BlogId) select x;
-    }
-
-    private async Task _onFileClicked(OrigamiSystemFile file)
-    {
-        if (file.IsImage == false)
-        {
-            this.UserFacade.Result = new() { ErrorMessage = Text.Original("You need to pick an image") };
-            return;
-        }
-
-        var localPath = this._fileRepository.LocalPath(file.WebPath);
-
-        using var reader = System.IO.File.OpenRead(localPath);
-        using var memoryStream = new MemoryStream();
-        await reader.CopyToAsync(memoryStream);
-        var imageBytes = memoryStream.ToArray();
-
-        var extension = file.Name.Extension();
-        this.Entity.HeaderImage = $"data:image/{extension};base64,{Convert.ToBase64String(imageBytes)}";
-
-        this._fileManager = false;
     }
 }

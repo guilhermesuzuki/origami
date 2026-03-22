@@ -168,7 +168,7 @@
         throw new InvalidOperationException();
     }
 
-    protected Task<GridData<OrigamiUserActivity>> UserActivities(GridState<OrigamiUserActivity> state)
+    protected Task<GridData<OrigamiUserActivity>> UserActivities(GridState<OrigamiUserActivity> state, CancellationToken token)
     {
         var orders = new StringBuilder();
 
@@ -190,8 +190,9 @@
 
         var orderBy = orders.ToString();
 
-        //calls the REST API
-        var result = this._userActivity.ReadFromDatabase().Query(
+        using var db = DbContextFactory.CreateDbContext();
+
+        var result = db.Set<OrigamiUserActivity>().AsNoTracking().Query(
             state.PageSize,
             state.Page * state.PageSize,
             filters.ToString(),

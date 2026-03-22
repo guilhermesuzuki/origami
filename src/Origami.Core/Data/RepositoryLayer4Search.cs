@@ -13,7 +13,7 @@ using Origami.Core.Models;
 namespace Origami.Core.Data
 {
     public abstract class RepositoryLayer4Search<T> :
-        RepositoryLayer3Data<T>,
+        RepositoryLayer3SmartData<T>,
         ISearch<T>
         where T : class, IId, new()
     {
@@ -186,7 +186,6 @@ namespace Origami.Core.Data
                 queries.Add(new(new("comment_socialProfileLastName", searchTerm)));
                 queries.Add(new(new("comment_socialProfileName", searchTerm)));
                 queries.Add(new(new("comment_socialProfileSocialNetwork", searchTerm)));
-                queries.Add(new(new("comment_postTitle", searchTerm)));
             }
 
             if (t is OrigamiVideoComment vcomment)
@@ -195,7 +194,6 @@ namespace Origami.Core.Data
                 queries.Add(new(new("comment_socialProfileLastName", searchTerm)));
                 queries.Add(new(new("comment_socialProfileName", searchTerm)));
                 queries.Add(new(new("comment_socialProfileSocialNetwork", searchTerm)));
-                queries.Add(new(new("comment_videoTitle", searchTerm)));
             }
 
             return queries;

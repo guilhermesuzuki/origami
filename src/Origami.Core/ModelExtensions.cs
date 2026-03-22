@@ -127,22 +127,6 @@ namespace Origami.Core
             return entities.Where(x => x.BlogId == blog);
         }
 
-        public static Result<T2> Call<T1, T2>(this IEnumerable<T1> entities, Func<T1, Result<T2>> function)
-        {
-            var result = new Result<T2>();
-
-            //bugfix: this is necessary
-            entities = entities.ToList();
-
-            foreach (var entity in entities)
-            {
-                function.Invoke(entity).Push(result);
-                if (result.Ok == false) return result;
-            }
-
-            return result;
-        }
-
         public static Result<T2> Call<T1, T2>(this IEnumerable<T1> entities, Func<T1, bool, Result<T2>> function, bool checkPermission)
         {
             var result = new Result<T2>();
@@ -168,6 +152,11 @@ namespace Origami.Core
         public static T Clone<T>(this T? entity)
             where T : class, new()
         {
+            //TODO: workaround for OrigamiBackupRestore, find a better way to do this
+            if (entity is OrigamiBackupRestore restore)
+            {
+                return restore.GetClone() as T ?? new T();
+            }
             return entity != null ? entity.GetClone() : new();
         }
 
@@ -219,22 +208,6 @@ namespace Origami.Core
         }
 
         /// <summary>
-        /// Filters the <paramref name="entities"/>, retrieving only deleted <paramref name="entities"/>
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="entities"></param>
-        /// <returns></returns>
-        public static IEnumerable<T> Deleted<T>(this IEnumerable<T> entities)
-        {
-            if (typeof(T).Implements<IDeleted>() == true)
-            {
-                return entities.OfType<IDeleted>().Where(x => x.IsDeleted() == true).Cast<T>();
-            }
-
-            return entities;
-        }
-
-        /// <summary>
         /// generic method using a class instance to perform deserialization
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -255,8 +228,6 @@ namespace Origami.Core
 
             return null;
         }
-
-
 
         /// <summary>
         /// Performs the specified action on each element of the <see cref="IEnumerable{T1}"/> and returns the original
@@ -328,22 +299,6 @@ namespace Origami.Core
             return false;
         }
 
-        /// TODO: comment this
-        /// </summary>
-        /// <param name="user"></param>
-        /// <param name="key"></param>
-        /// <param name="iv"></param>
-        /// <returns></returns>
-        public static string Encrypt(this OrigamiUser? user, string key, string iv)
-        {
-            if (user != null)
-            {
-                string json = JsonSerializer.Serialize(user.Id);
-                return json.Encrypt(key, iv);
-            }
-            return string.Empty;
-        }
-
         /// <summary>
         /// TODO: comment this
         /// </summary>
@@ -400,17 +355,6 @@ namespace Origami.Core
         }
 
         /// <summary>
-        /// Returns the file extension, when <paramref name="fileName"/> is a file name
-        /// </summary>
-        /// <param name="fileName"></param>
-        /// <returns>Returns only the extension, without a '.' in the beginning</returns>
-        public static string Extension(this string? fileName)
-        {
-            if (fileName.Has() == false) return string.Empty;
-            return fileName.Split(".").Last().ToLower();
-        }
-
-        /// <summary>
         /// Converts the <paramref name="entity"/> back into an XML in string form
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -439,21 +383,6 @@ namespace Origami.Core
 
             //returns the XML in string form
             return xml;
-        }
-
-        /// <summary>
-        /// Determines the front page status based on the provided page and text parameters.
-        /// </summary>
-        /// <remarks>The method uses the <see cref="Text.Lower"/> method to format the result
-        /// string.</remarks>
-        /// <param name="parameters">A tuple containing a <see cref="OrigamiPage"/> object and a <see cref="Text"/> object.  The <see cref="OrigamiPage"/>
-        /// represents the page to evaluate, and the <see cref="Text"/> provides the text to format the result.</param>
-        /// <returns>A string indicating the front page status. Returns the formatted string "Yes" if the page is published, 
-        /// "No" if it is not published, or an empty string if the page is null.</returns>
-        public static string FrontPage(this (OrigamiPage?, Text) parameters)
-        {
-            if (parameters.Item1 == null) return string.Empty;
-            return parameters.Item1.IsPublished ? parameters.Item2.Lower("Yes") : parameters.Item2.Lower("No");
         }
 
         /// <summary>
@@ -500,9 +429,19 @@ namespace Origami.Core
         /// <param name="entity"></param>
         /// <returns></returns>
         public static DateTime GetDate<T>(this T entity)
-            where T : IDateCreated, IDateModified
+            where T : IDateCreated
         {
-            return entity.DateModified != null ? entity.DateModified.Value : entity.DateCreated;
+            if (entity is IPublished published && published.DatePublished != null)
+            {
+                return published.DatePublished.Value;
+            }
+
+            if (entity is IDateModified modified && modified.DateModified != null)
+            {
+                return modified.DateModified.Value;
+            }
+
+            return entity.DateCreated;
         }
 
         /// <summary>
@@ -678,6 +617,7 @@ namespace Origami.Core
             }
             return string.Empty;
         }
+
         /// <summary>
         /// Extension for string.IsNullOrWhitespace.
         /// </summary>
@@ -702,16 +642,6 @@ namespace Origami.Core
         }
 
         /// <summary>
-        /// TODO: comment this
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public static string HRef(this string? value)
-        {
-            return value.Has() ? Uri.EscapeDataString(value.ToLower()) : string.Empty;
-        }
-
-        /// <summary>
         /// Retrieves the first entity from the collection that matches the specified identifier.
         /// </summary>
         /// <typeparam name="T">The type of the entities in the collection, which must implement <see cref="IId"/>.</typeparam>
@@ -722,8 +652,7 @@ namespace Origami.Core
         public static T? Id<T>(this IEnumerable<T> entities, Guid? id)
             where T : class, IId, new()
         {
-            if (id == null) return null;
-            return entities.FirstOrDefault(x => x.Id == id.Value);
+            return entities.FirstOrDefault(x => x.Id == id.GetValueOrDefault());
         }
 
         /// <summary>
@@ -794,17 +723,17 @@ namespace Origami.Core
 
             if (password.Has() == false)
             {
-                result.ErrorMessage = "Password is empty";
+                result.Error = "Password is empty";
             }
             else
             {
-                if (password.Length < 5) result.ErrorMessage = "Password too short";
-                if (Regex.IsMatch(password, "[0-9]+") == false) result.ErrorMessage = "Number was not found in password";
-                if (Regex.IsMatch(password, "[a-zA-Z]+") == false) result.ErrorMessage = "Character was not found in password";
-                if (Regex.IsMatch(password, @"[!@#$%^&*()_\-+=\[\]{}|\\:;\""<>,.?/~`]") == false) result.ErrorMessage = "Special character was not found in password";
+                if (password.Length < 5) result.Error = "Password too short";
+                if (Regex.IsMatch(password, "[0-9]+") == false) result.Error = "Number was not found in password";
+                if (Regex.IsMatch(password, "[a-zA-Z]+") == false) result.Error = "Character was not found in password";
+                if (Regex.IsMatch(password, @"[!@#$%^&*()_\-+=\[\]{}|\\:;\""<>,.?/~`]") == false) result.Error = "Special character was not found in password";
             }
 
-            return result.Ok ? new() { SuccessMessage = "Password is strong" } : result;
+            return result.Ok ? new() { Success = "Password is strong" } : result;
         }
 
         /// <summary>
@@ -896,18 +825,6 @@ namespace Origami.Core
         }
 
         /// <summary>
-        /// Removes the error query parameter from the specified URI.
-        /// </summary>
-        /// <param name="uri">The URI string from which to remove the error query parameter. Cannot be null.</param>
-        /// <returns>A new string with the error query parameter removed from the specified URI. If the error parameter is not
-        /// present, returns the original URI string.</returns>
-        public static string NoError(this string uri)
-        {
-            var regex = new Regex("[?|&]error=[\\w-]*", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase | RegexOptions.Singleline);
-            return regex.Replace(uri, "");
-        }
-
-        /// <summary>
         /// Returns no image, if necessary
         /// </summary>
         /// <param name="source"></param>
@@ -916,19 +833,6 @@ namespace Origami.Core
         public static string NoHeader(this string? source, string noImage = OrigamiConstants.NoHeader)
         {
             return source.Has() ? source : noImage;
-        }
-
-        /// <summary>
-        /// Removes the language query parameter from the specified URI.
-        /// </summary>
-        /// <remarks>This method removes the query parameter named "language" from the given URI string,
-        /// if present. The comparison is case-insensitive and culture-invariant.</remarks>
-        /// <param name="uri">The URI string from which to remove the language query parameter.</param>
-        /// <returns>A new string representing the URI without the language query parameter.</returns>
-        public static string NoLanguage(this string uri)
-        {
-            var regex = new Regex("[?|&]language=[\\w-]*", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase | RegexOptions.Singleline);
-            return regex.Replace(uri, "");
         }
 
         /// <summary>
@@ -947,29 +851,6 @@ namespace Origami.Core
         }
 
         /// <summary>
-        /// Be careful when calling this method, because it will cast all <typeparamref name="T"/> to <see cref="IFKBlog"/>
-        /// </summary>
-        /// <param name="blog"></param>
-        /// <returns></returns>
-        public static IEnumerable<T> NonPublished<T>(this IEnumerable<T> entities, Guid blog)
-            where T : IPublished, IBlogId
-        {
-            return entities.Where(x => x.BlogId == blog).Where(x => x.IsPublished == false).NonDeleted();
-        }
-
-        /// <summary>
-        /// TODO: comment this
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        public static T? Null<T>(this T entity)
-            where T : struct
-        {
-            return entity;
-        }
-
-        /// <summary>
         /// Are all results ok?
         /// </summary>
         /// <param name="results"></param>
@@ -978,6 +859,7 @@ namespace Origami.Core
         {
             return results.All(x => x.Ok);
         }
+
         /// <summary>
         /// Profile picture (or no-icon.png)
         /// </summary>
@@ -1130,49 +1012,6 @@ namespace Origami.Core
         }
 
         /// <summary>
-        /// Sends a MailMessage object using the SMTP settings.
-        /// </summary>
-        /// <param name="message">
-        /// The message.
-        /// </param>
-        /// <param name="smtpServer">SMTP server</param>
-        /// <param name="smtpServerPort">SMTP server port</param>
-        /// <param name="smtpUserName">User name</param>
-        /// <param name="smtpPassword">Password</param>
-        /// <param name="enableSsl">Enable SSL</param>
-        /// <returns>
-        /// Error message, if any.
-        /// </returns>
-        public static Result<MailAddress> SendMailMessage(this MailMessage message, string smtpServer, int smtpServerPort, string smtpUserName, string smtpPassword, bool enableSsl = false)
-        {
-            if (message == null) throw new ArgumentNullException(nameof(message));
-
-            var result = new Result<MailAddress>();
-
-            try
-            {
-                message.IsBodyHtml = true;
-                message.BodyEncoding = Encoding.UTF8;
-                var smtp = new SmtpClient(smtpServer);
-                smtp.Credentials = new NetworkCredential(smtpUserName, smtpPassword);
-                smtp.Port = smtpServerPort;
-                smtp.EnableSsl = enableSsl;
-                smtp.Send(message);
-            }
-            catch (Exception ex)
-            {
-                result.ErrorMessage = ex.GetMessage();
-            }
-            finally
-            {
-                // Remove the pointer to the message object so the GC can close the thread.
-                message.Dispose();
-            }
-
-            return result;
-        }
-
-        /// <summary>
         /// Sets the reference's value to the parameter and invokes the eventHandler
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -1301,24 +1140,6 @@ namespace Origami.Core
             return entity;
         }
 
-        /// <summary>
-        /// TODO: comment this
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="entities"></param>
-        /// <param name="blogId"></param>
-        /// <returns></returns>
-        public static IEnumerable<T> SetBlogIfEmpty<T>(this IEnumerable<T> entities, Guid blogId)
-            where T : IBlogId
-        {
-            foreach (var entity in entities)
-            {
-                if (entity.BlogId == Guid.Empty) entity.BlogId = blogId;
-            }
-
-            return entities;
-        }
-
         public static T? SetDateCreated<T>(this T? entity, DateTime dateTime)
         {
             if (entity is IDateCreated dateCreated)
@@ -1350,33 +1171,6 @@ namespace Origami.Core
                 id.Id = Guid.NewGuid();
             }
             return entity;
-        }
-
-        /// <summary>
-        /// TODO: comment this
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="entities"></param>
-        /// <param name="username"></param>
-        /// <returns></returns>
-        public static IEnumerable<T> SetUsernameIfEmptyOrDifferent<T>(this IEnumerable<T> entities, string username)
-            where T : IUsername
-        {
-            foreach (var entity in entities)
-            {
-                if (entity.Username.Has() == false)
-                {
-                    entity.Username = username;
-                    continue;
-                }
-
-                if (entity.Username != username)
-                {
-                    entity.Username = username;
-                    continue;
-                }
-            }
-            return entities;
         }
 
         /// <summary>

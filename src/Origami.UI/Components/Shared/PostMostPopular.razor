@@ -40,7 +40,6 @@ else if (this.ShowFakes == true)
     </div>
 }
 @code {
-    [Parameter] public Guid BlogId { get; set; }
     [Parameter] public bool ShowFakes { get; set; } = false;
     protected List<OrigamiPost> MostPopular { get; set; } = new();
 

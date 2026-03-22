@@ -5,7 +5,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Origami.Core.Models
 {
-    [Owned]
     public class Location :
         IChanged
     {
@@ -17,6 +16,7 @@ namespace Origami.Core.Models
         protected string _region = string.Empty;
         protected string _regionCode = string.Empty;
         protected string _timeZone = string.Empty;
+        protected int? _timeZoneOffset = 0;
         protected TimeSpan _utcOffset = TimeSpan.Zero;
         protected string _zipCode = string.Empty;
 
@@ -75,6 +75,9 @@ namespace Origami.Core.Models
             set => this.Set(ref _longitude, value, Changed);
         }
 
+        [NotMapped]
+        public string Provider { get; set; } = string.Empty;
+
         /// <summary>
         /// Region Name
         /// </summary>
@@ -105,10 +108,13 @@ namespace Origami.Core.Models
             set => this.Set(ref _timeZone, value, Changed);
         }
 
-        public TimeSpan UtcOffset
+        /// <summary>
+        /// Time Zone Offset in minutes from UTC
+        /// </summary>
+        public int? TimeZoneOffset
         {
-            get => _utcOffset;
-            set => this.Set(ref _utcOffset, value, Changed);
+            get => _timeZoneOffset;
+            set => this.Set(ref _timeZoneOffset, value, Changed);
         }
 
         /// <summary>
@@ -120,8 +126,5 @@ namespace Origami.Core.Models
             get => _zipCode;
             set => this.Set(ref _zipCode, value, Changed);
         }
-
-        [NotMapped]
-        public string Provider { get; set; } = string.Empty;
     }
 }

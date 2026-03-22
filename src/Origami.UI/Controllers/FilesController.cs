@@ -70,7 +70,7 @@ namespace Origami.UI.FrontEnd.Controllers
 
         [HttpGet]
         [Route("~/files/{*path}")]
-        public async Task<IActionResult> IndexAsync(string path, [FromQuery] string? size)
+        public async Task<IActionResult> FilesAsync([FromRoute] string path, [FromQuery] string? size)
         {
             try
             {
@@ -84,10 +84,29 @@ namespace Origami.UI.FrontEnd.Controllers
                         var esize = ePictureSizes.original; Enum.TryParse(size, true, out esize);
                         return await PictureAsync(file, esize);
                     }
-
                     return PhysicalFile(file.LocalPath, file.ContentType, file.Name, true);
                 }
+                return NotFound();
+            }
+            catch (Exception)
+            {
+                return NotFound();
+            }
+        }
 
+        [HttpGet]
+        [Route("~/files-backup/{*path}")]
+        public async Task<IActionResult> FilesBackupAsync([FromRoute] string path, [FromQuery] string? size)
+        {
+            try
+            {
+                //adds the files web directory to the virtual path
+                var virtualpath = $"/files-backup/{path.TrimStart('/')}";
+                var file = _fileRepository.GetFile(virtualpath);
+                if (file != null)
+                {
+                    return PhysicalFile(file.LocalPath, file.ContentType, file.Name, true);
+                }
                 return NotFound();
             }
             catch (Exception)

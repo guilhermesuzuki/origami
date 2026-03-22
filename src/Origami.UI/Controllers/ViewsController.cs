@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Origami.Core;
 using Origami.Core.Data;
@@ -12,9 +13,10 @@ namespace Origami.UI.FrontEnd.Controllers
     [Route("views")]
     public class ViewsController : Controller
     {
-        protected readonly IMemoryCache _memoryCache;
         protected readonly IAppFacade _appFacade;
+        protected readonly IDbContextFactory<OrigamiDbContext> _dbContextFactory;
         protected readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly IMemoryCache _memoryCache;
         protected readonly IPageRepository _page;
         protected readonly IPageViewRepository _pageView;
         protected readonly IPhysicalPageRepository _physicalPage;
@@ -33,6 +35,7 @@ namespace Origami.UI.FrontEnd.Controllers
         public ViewsController(
             IMemoryCache memoryCache,
             IAppFacade appFacade,
+            IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IHttpContextAccessor httpContextAccessor,
             IPageRepository page,
             IPageViewRepository pageView,
@@ -46,9 +49,10 @@ namespace Origami.UI.FrontEnd.Controllers
             IVideoViewRepository videoView)
             : base()
         {
-            _memoryCache = memoryCache;
             _appFacade = appFacade;
+            _dbContextFactory = dbContextFactory;
             _httpContextAccessor = httpContextAccessor;
+            _memoryCache = memoryCache;
             _page = page;
             _pageView = pageView;
             _physicalPage = physicalPage;
@@ -59,28 +63,6 @@ namespace Origami.UI.FrontEnd.Controllers
             _userFacade = userFacade;
             _video = video;
             _videoView = videoView;
-        }
-
-        [HttpGet]
-        [Route("specialpages/{id:guid}")]
-        public IActionResult SpecialPages([FromRoute] Guid id, [FromQuery] string url, [FromQuery] string referrer)
-        {
-            var page = _superRepository.SpecialPages.ReadFromCache().FirstOrDefault(x => x.Id == id);
-            if (page != null)
-            {
-                var view = new OrigamiSpecialPageView
-                {
-                    Id = Guid.NewGuid(),
-                    SpecialPageId = page.Id,
-                };
-
-                this._fill(view, url, referrer);
-                _superRepository.SpecialPageViews.SmartSave(view.GetContext(), false);
-
-                return Ok();
-            }
-
-            return NotFound();
         }
 
         [HttpGet]
@@ -129,12 +111,68 @@ namespace Origami.UI.FrontEnd.Controllers
         }
 
         [HttpGet]
+        [Route("physicalpages/bycontent")]
+        public IActionResult PhysicalPagesByContent([FromQuery] string path, [FromQuery] string type, [FromQuery] string id, [FromQuery] string url, [FromQuery] string referrer)
+        {
+            if (path.Has() == false) path = "/";
+
+            using var db = this._dbContextFactory.CreateDbContext();
+            var pages = from p in db.Set<OrigamiPhysicalPage>().AsNoTracking() where p.Path.Equals(path) == true select p;
+
+            var page = pages.FirstOrDefault();
+            if (page == null)
+            {
+                page = new()
+                {
+                    Id = Guid.NewGuid(),
+                    Path = path,
+                    DateCreated = DateTime.UtcNow,
+                };
+
+                using (var transaction = new TransactionScope())
+                {
+                    var result = _physicalPage.SmartSave(page.GetContext(), false);
+                    if (result.Ok)
+                    {
+                        transaction.Complete();
+                    }
+                    else
+                    {
+                        return StatusCode(StatusCodes.Status500InternalServerError);
+                    }
+                }
+            }
+
+            if (page != null)
+            {
+                var view = new OrigamiPhysicalPageView
+                {
+                    Id = Guid.NewGuid(),
+                    PhysicalPageId = page.Id,
+                    Admin = _appFacade.Admin,
+                    Content = new()
+                    {
+                        Type = type,
+                        Id = Guid.Parse(id)
+                    },
+                };
+                this._fill(view, url, referrer);
+                _physicalPageView.SmartSave(view.GetContext(), false);
+                return Ok();
+            }
+
+            return NotFound();
+        }
+
+        [HttpGet]
         [Route("physicalpages/bypath")]
         public IActionResult PhysicalPagesByPath([FromQuery] string path, [FromQuery] string url, [FromQuery] string referrer)
         {
             if (path.Has() == false) path = "/";
 
-            var page = _physicalPage.ReadFromDatabase().FirstOrDefault(x => x.Path.Equals(path) == true);
+            using var db = this._dbContextFactory.CreateDbContext();
+
+            var page = db.Set<OrigamiPhysicalPage>().AsNoTracking().FirstOrDefault(x => x.Path.Equals(path) == true);
             if (page == null)
             {
                 page = new()
@@ -163,6 +201,11 @@ namespace Origami.UI.FrontEnd.Controllers
                     Id = Guid.NewGuid(),
                     PhysicalPageId = page.Id,
                     Admin = _appFacade.Admin,
+                    Content = new()
+                    {
+                        Type = nameof(OrigamiPhysicalPage),
+                        Id = Guid.Empty
+                    },
                 };
                 this._fill(view, url, referrer);
                 _physicalPageView.SmartSave(view.GetContext(), false);
@@ -196,6 +239,27 @@ namespace Origami.UI.FrontEnd.Controllers
             return NotFound();
         }
 
+        [HttpGet]
+        [Route("specialpages/{id:guid}")]
+        public IActionResult SpecialPages([FromRoute] Guid id, [FromQuery] string url, [FromQuery] string referrer)
+        {
+            var page = _superRepository.SpecialPages.ReadFromCache().FirstOrDefault(x => x.Id == id);
+            if (page != null)
+            {
+                var view = new OrigamiSpecialPageView
+                {
+                    Id = Guid.NewGuid(),
+                    SpecialPageId = page.Id,
+                };
+
+                this._fill(view, url, referrer);
+                _superRepository.SpecialPageViews.SmartSave(view.GetContext(), false);
+
+                return Ok();
+            }
+
+            return NotFound();
+        }
         [HttpGet]
         [Route("videos/{id:guid}")]
         public IActionResult Videos([FromRoute] Guid id, [FromQuery] string url, [FromQuery] string referrer)

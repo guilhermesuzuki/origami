@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.EntityFrameworkCore;
 using Origami.Core;
 using Origami.Core.Data;
 using Origami.Core.Models;
@@ -80,8 +81,8 @@ namespace Origami.UI.Admin
             }
             catch (Exception ex)
             {
-                hub.ErrorMessage = Text.Get(Text.SomethingWentWrongPleaseTryAgain);
-                hub.ErrorMessage = ex.GetMessage();
+                hub.Error = Text.Get(Text.SomethingWentWrongPleaseTryAgain);
+                hub.Error = ex.GetMessage();
             }
             finally
             {
@@ -161,15 +162,17 @@ namespace Origami.UI.Admin
         /// <returns></returns>
         protected virtual IEnumerable<TCat> GetCategoriesFromDb()
         {
+            using var db = DbContextFactory.CreateDbContext();
+
             IEnumerable<TCat> categoriesFromDb = [];
 
             switch (Category)
             {
                 case IRepository<OrigamiPostCategory> postCategories:
-                    categoriesFromDb = postCategories.ReadFromDatabase().Where(x => x.PostId == this.Entity.Id).Cast<TCat>().ToList();
+                    categoriesFromDb = db.Set<OrigamiPostCategory>().AsNoTracking().Where(x => x.PostId == this.Entity.Id).Cast<TCat>().ToList();
                     break;
                 case IRepository<OrigamiVideoCategory> videoCategories:
-                    categoriesFromDb = videoCategories.ReadFromDatabase().Where(x => x.VideoId == this.Entity.Id).Cast<TCat>().ToList();
+                    categoriesFromDb = db.Set<OrigamiVideoCategory>().AsNoTracking().Where(x => x.VideoId == this.Entity.Id).Cast<TCat>().ToList();
                     break;
             }
 
@@ -181,15 +184,17 @@ namespace Origami.UI.Admin
         /// <returns></returns>
         protected virtual IEnumerable<TTag> GetTagsFromDb()
         {
+            using var db = DbContextFactory.CreateDbContext();
+
             IEnumerable<TTag> tagsFromDb = [];
 
             switch (Tag)
             {
                 case IRepository<OrigamiPostTag> postTags:
-                    tagsFromDb = postTags.ReadFromDatabase().Where(x => x.PostId == this.Entity.Id).Cast<TTag>().ToList();
+                    tagsFromDb = db.Set<OrigamiPostTag>().AsNoTracking().Where(x => x.PostId == this.Entity.Id).Cast<TTag>().ToList();
                     break;
                 case IRepository<OrigamiVideoTag> videoTags:
-                    tagsFromDb = videoTags.ReadFromDatabase().Where(x => x.VideoId == this.Entity.Id).Cast<TTag>().ToList();
+                    tagsFromDb = db.Set<OrigamiVideoTag>().AsNoTracking().Where(x => x.VideoId == this.Entity.Id).Cast<TTag>().ToList();
                     break;
             }
 

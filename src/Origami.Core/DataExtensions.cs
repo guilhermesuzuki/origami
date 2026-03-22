@@ -97,19 +97,31 @@ namespace Origami.Core
             if (frontpage != null)
             {
                 var lang = CultureInfo.CurrentUICulture.Name.Split('-').First();
-                var children = pages.NonDeleted().Published().Blog(blogId).Where(x => x.ParentId == frontpage.Id);
-                var translated = children
-                    .Where(x => x.LanguageWrittenOn.StartsWith(lang, StringComparison.CurrentCultureIgnoreCase))
-                    .OrderBy(x => x.LanguageWrittenOn.Like(CultureInfo.CurrentUICulture.Name) ? 0 : 1)
-                    .ThenBy(x => x.LanguageWrittenOn.Length)
-                    .FirstOrDefault();
-                return translated ?? frontpage;
+
+                var translated = from p in pages.NonDeleted().Published()
+                                 where p.BlogId == blogId
+                                 where p.ParentId == frontpage.Id
+                                 where p.LanguageWrittenOn.StartsWith(lang)
+                                 orderby p.LanguageWrittenOn.Like(CultureInfo.CurrentUICulture.Name) ? 0 : 1, p.LanguageWrittenOn
+                                 select p;
+
+                return translated.FirstOrDefault() ?? frontpage;
             }
             return null;
         }
 
+        public static string[] GenerateTOTPRecoveryCodes(this IUserRepository userRepository)
+        {
+            var codes = new List<string>();
+            while (codes.Distinct().Count() < 10)
+            {
+                codes.Add(NanoidDotNet.Nanoid.Generate(NanoidDotNet.Nanoid.Alphabets.Digits, 6));
+            }
+            return codes.Distinct().Take(10).OrderBy(x => x).ToArray();
+        }
+
         public static IEnumerable<T> GetAllChildren<T>(this IEnumerable<T>? source, T entity)
-            where T : class, IId, new()
+                    where T : class, IId, new()
         {
             return source.GetAllChildren([entity]);
         }
@@ -162,7 +174,8 @@ namespace Origami.Core
                 .Published()
                 .Where(x => x.Type == type.ToString())
                 .ToList()
-                .OrderBy(x => x.LanguageWrittenOn.StartsWith(_getLanguage()) == true ? 0 : 1)
+                .OrderBy(x => x.LanguageWrittenOn.Like(CultureInfo.CurrentUICulture.Name) == true ? 0 : 1)
+                .ThenBy(x => x.LanguageWrittenOn.StartsWith(_getLanguage()) == true ? 2 : 3)
                 .ThenBy(x => x.LanguageWrittenOn);
         }
 
@@ -252,26 +265,6 @@ namespace Origami.Core
 
             throw new Exception("The Origami connection string does NOT exist in the appsettings file");
         }
-        /// <summary>
-        /// Includes everything in the Query
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="query"></param>
-        /// <param name="includes"></param>
-        /// <returns></returns>
-        public static IQueryable<T> Includes<T>(this IQueryable<T> query, params string[] includes) where T : class
-        {
-            //includes the objects in the entities.
-            if (includes != null && includes.Length > 0)
-            {
-                foreach (var include in includes.Where(x => x.Has() == true))
-                {
-                    query = query.Include(include.Trim());
-                }
-            }
-
-            return query;
-        }
 
         /// <summary>
         /// Nulls the FK objects in order to persist the entity
@@ -353,17 +346,6 @@ namespace Origami.Core
         }
 
         /// <summary>
-        /// Be careful when calling this method, because it will cast all <typeparamref name="T"/> to <see cref="IFKBlog"/>
-        /// </summary>
-        /// <param name="blog"></param>
-        /// <returns></returns>
-        public static IEnumerable<T> Published<T>(this IEnumerable<T> entities, OrigamiBlog blog)
-            where T : IPublished, IDraft, IBlogId
-        {
-            return entities.Published(blog.Id);
-        }
-
-        /// <summary>
         /// Returns all entities given a <paramref name="filter"/> and <paramref name="order"/> from <paramref name="entities"/>
         /// </summary>
         /// <param name="take"></param>
@@ -394,6 +376,23 @@ namespace Origami.Core
 
             //returns the result
             return (rowNumber.Count(), query.ToList());
+        }
+
+        /// <summary>
+        /// Tries to retrieve a blog by its slug. Returns null if not found or if the blog is deleted or inactive.
+        /// </summary>
+        /// <param name="blogRepository"></param>
+        /// <param name="slug"></param>
+        /// <returns></returns>
+        public static OrigamiBlog? Slug(this IBlogRepository blogRepository, string slug)
+        {
+            var blogs = from b in blogRepository.ReadFromCache()
+                        where b.IsDeleted == false
+                        where b.IsActive == true
+                        where b.Slug == slug
+                        select b;
+
+            return blogs.FirstOrDefault();
         }
 
         /// <summary>

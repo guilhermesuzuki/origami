@@ -30,7 +30,8 @@ namespace Origami.Core.Data
         {
             try
             {
-                _socialProfileRepository.ReadFromDatabase().GetProfileThrowIfBlocked(ctx.SocialProfile.Id);
+                using var db = DbContextFactory.CreateDbContext();
+                db.Set<OrigamiSocialProfile>().AsNoTracking().GetProfileThrowIfBlocked(ctx.SocialProfile.Id);
             }
             catch (Exception ex)
             {
@@ -44,7 +45,8 @@ namespace Origami.Core.Data
         {
             try
             {
-                _socialProfileRepository.ReadFromDatabase().GetProfileThrowIfBlocked(ctx.SocialProfile.Id);
+                using var db = DbContextFactory.CreateDbContext();
+                db.Set<OrigamiSocialProfile>().AsNoTracking().GetProfileThrowIfBlocked(ctx.SocialProfile.Id);
             }
             catch (Exception ex)
             {

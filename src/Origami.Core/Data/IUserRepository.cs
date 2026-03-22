@@ -31,6 +31,14 @@ namespace Origami.Core.Data
         Result<string> ForgotOwnPassword(DataOperationContext<OrigamiUser> ctx, bool checkPermission);
 
         /// <summary>
+        /// Resets the 2FA for a user, forcing it to go through the 2FA setup process again. This is typically used when a user has lost access to their 2FA device or needs to reconfigure their 2FA settings for security reasons.
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="checkPermission"></param>
+        /// <returns></returns>
+        Result Reset2FA(DataOperationContext<OrigamiUser> ctx, bool checkPermission);
+
+        /// <summary>
         /// Logged-out user forgot their password, system will generate a link to reset it
         /// </summary>
         /// <param name="ctx"></param>
@@ -55,7 +63,7 @@ namespace Origami.Core.Data
         /// <param name="username"></param>
         /// <param name="cleanPassword"></param>
         /// <returns></returns>
-        OrigamiUser? LookupUserInDatabase(OrigamiBlog blog, string username, string cleanPassword);
+        OrigamiUser? LookupUserInDatabase(string username, string cleanPassword);
 
         /// <summary>
         /// Unblocks a user in the specified data operation context.

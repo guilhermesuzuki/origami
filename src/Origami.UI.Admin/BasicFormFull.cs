@@ -51,7 +51,7 @@ namespace Origami.UI.Admin
             }
             catch (Exception ex)
             {
-                hub.ErrorMessage = ex.GetMessage();
+                hub.Error = ex.GetMessage();
             }
             finally
             {
@@ -91,7 +91,7 @@ namespace Origami.UI.Admin
         /// current entity. The result excludes the current entity and its descendants, as determined by the
         /// <c>EveryChildrenAndSelf</c> method.</remarks>
         /// <returns>An <see cref="IEnumerable{T}"/> containing the parent entities of the current entity.</returns>
-        protected virtual IEnumerable<T> Parents()
+        protected virtual IEnumerable<T> GetParents()
         {
             return Repository.ReadFromCache().NonDeleted().Where(x => x.Id != Entity.Id);
         }

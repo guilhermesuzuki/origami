@@ -11,7 +11,7 @@ namespace Origami.UI
             if (UserFacade.BlogId != BlogId)
             {
                 UserFacade.BlogId = BlogId;
-                UserFacade.Result = new() { InfoMessage = Text.Original("You switched to a different blog") };
+                UserFacade.Result = new() { Info = Text.Original("You switched to a different blog") };
             }
         }
 
@@ -25,7 +25,7 @@ namespace Origami.UI
                 UserFacade.Result = new()
                 {
                     Id = new Guid("43CA37CD-5AA4-4EBF-9A37-5019E054704F"),
-                    ErrorMessage = error,
+                    Error = error,
                 };
             }
         }
@@ -72,6 +72,7 @@ namespace Origami.UI
 
         protected virtual async Task PageTitleAsync(bool firstRender)
         {
+            this.SetPageTitle();
             var title = PageTitle.GetTitle();
             await JSRuntime.InvokeVoidAsync("origami.common.title", title);
         }
@@ -80,12 +81,17 @@ namespace Origami.UI
         {
             if (firstRender)
             {
-                if (await JSRuntime.IncognitoModeAsync() == false)
+                if (this.UserFacade.IncognitoMode == false)
                 {
                     var uri = new Uri(NavigationManager.Uri);
                     await JSRuntime.InvokeVoidAsync("origami.physicalpages.viewByPath", uri.AbsolutePath);
                 }
             }
+        }
+
+        protected virtual void SetPageTitle()
+        {
+            this.PageTitle.SetTitle();
         }
     }
 }

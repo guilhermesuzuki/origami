@@ -29,7 +29,7 @@ namespace Origami.Core.Data
             //first, it needs to check for email address
             if (ctx.Entity.HasEmail() == false)
             {
-                return new() { ErrorMessage = Text.Original("User did not share an e-mail address") };
+                return new() { Error = Text.Original("User did not share an e-mail address") };
             }
 
             var subscriber = ReadFromCache().Where(x => x.SocialProfileId == ctx.Entity.Id).FirstOrDefault();
@@ -71,7 +71,8 @@ namespace Origami.Core.Data
 
         public Result<OrigamiSubscriber> Unsubscribe(DataOperationContext<OrigamiSocialProfile> ctx)
         {
-            var subscriber = ReadFromDatabase().Where(x => x.SocialProfileId == ctx.Entity.Id).FirstOrDefault();
+            using var db = DbContextFactory.CreateDbContext();
+            var subscriber = db.Set<OrigamiSubscriber>().AsNoTracking().Where(x => x.SocialProfileId == ctx.Entity.Id).FirstOrDefault();
             if (subscriber != null)
             {
                 var subscribeContext = new DataOperationContext<OrigamiSubscriber>(ctx.User, ctx.DateTime, subscriber);
@@ -82,7 +83,7 @@ namespace Origami.Core.Data
                 return SmartDelete(subscribeContext, false);
             }
 
-            return new() { ErrorMessage = Text.Original("Social profile is not a subscriber"), };
+            return new() { Error = Text.Original("Social profile is not a subscriber"), };
         }
 
         public bool ValidateVerificationCode(DataOperationContext<OrigamiSocialProfile> ctx, string code)

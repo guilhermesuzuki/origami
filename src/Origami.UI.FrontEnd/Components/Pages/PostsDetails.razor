@@ -6,7 +6,6 @@
 @using System.Text;
 @using Microsoft.Extensions.Options;
 
-@inject IPostRatingRepository _postRating
 @inject IPostCommentRepository _postComment
 
 <Root>
@@ -128,7 +127,7 @@
     }
 </Root>
 
-@code {
+    @code {
     [Parameter] public OrigamiTag? Tag { get; set; }
     [Parameter] public OrigamiCategory? Category { get; set; }
     [Parameter] public OrigamiPost? Post { get; set; }
@@ -164,6 +163,7 @@
         base.OnParametersSet();
         this._post = this.Post ?? this.Super.Posts.ReadFromCache().Published().NanoId(NanoId) ?? new();
         this._comments = this._postComment.AllComments(_post);
+        this.BlogId = this._post.BlogId;
     }
 
     private void CreateComment()
@@ -204,17 +204,16 @@
     {
         if (firstRender)
         {
-            if (await this.JSRuntime.IncognitoModeAsync() == true) return;
-            await this.JSRuntime.InvokeVoidAsync("origami.posts.view", this._post.Id);
-            await this.InvokeAsync(this.StateHasChanged);
+            if (this.UserFacade.IncognitoMode == false)
+            {
+                var uri = new Uri(NavigationManager.Uri);
+                await JSRuntime.InvokeVoidAsync("origami.physicalpages.viewByContent", uri.AbsolutePath, nameof(OrigamiPost), this._post.Id);
+            }
         }
     }
 
-    protected override Task OnAfterRenderAsync(bool firstRender)
+    protected override void SetPageTitle()
     {
         this.PageTitle.SetTitle(Tag, Category, _post);
-        return base.OnAfterRenderAsync(firstRender);
     }
-
-    public override Guid BlogId => this._post.BlogId;
 }

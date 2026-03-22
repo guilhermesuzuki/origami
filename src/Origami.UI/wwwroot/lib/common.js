@@ -120,6 +120,12 @@ var origami = {
             var view = `/views/physicalpages/bypath/?path=${path}&url=${url}&referrer=${referrer}&v=${Math.random()}`;
             $.get(view);
         },
+        viewByContent: (path, type, id) => {
+            var url = encodeURIComponent(location.href);
+            var referrer = encodeURIComponent(document.referrer);
+            var view = `/views/physicalpages/bycontent/?path=${path}&type=${type}&id=${id}&url=${url}&referrer=${referrer}&v=${Math.random()}`;
+            $.get(view);
+        },
     },
     pages: {
         view: (id) => {

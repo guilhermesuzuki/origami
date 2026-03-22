@@ -81,19 +81,21 @@ namespace Origami.Core.Data
 
         public override Result<OrigamiVideo> PurgeRelationshipsFromDatabase(DataOperationContext<OrigamiVideo> ctx)
         {
+            using var db = this.DbContextFactory.CreateDbContext();
+
             var hub = base.PurgeRelationshipsFromDatabase(ctx);
 
-            var categories = _videoCategoryRepository.ReadFromDatabase().Where(x => x.VideoId == ctx.Entity.Id).WithOnlyIds();
-            var comments = _videoCommentRepository.ReadFromDatabase().Where(x => x.VideoId == ctx.Entity.Id).WithOnlyIds();
-            var ratings = _videoRatingRepository.ReadFromDatabase().Where(x => x.VideoId == ctx.Entity.Id).WithOnlyIds();
-            var tags = _videoTagRepository.ReadFromDatabase().Where(x => x.VideoId == ctx.Entity.Id).WithOnlyIds();
+            var categories = db.Set<OrigamiVideoCategory>().AsNoTracking().Where(x => x.VideoId == ctx.Entity.Id).WithOnlyIds();
+            var comments = db.Set<OrigamiVideoComment>().AsNoTracking().Where(x => x.VideoId == ctx.Entity.Id).WithOnlyIds();
+            var ratings = db.Set<OrigamiVideoRating>().AsNoTracking().Where(x => x.VideoId == ctx.Entity.Id).WithOnlyIds();
+            var tags = db.Set<OrigamiVideoTag>().AsNoTracking().Where(x => x.VideoId == ctx.Entity.Id).WithOnlyIds();
 
             categories.GetContexts(ctx).Call(_videoCategoryRepository.SmartPurge, false).Push(hub);
             comments.GetContexts(ctx).Call(_videoCommentRepository.SmartPurge, false).Push(hub);
             ratings.GetContexts(ctx).Call(_videoRatingRepository.SmartPurge, false).Push(hub);
             tags.GetContexts(ctx).Call(_videoTagRepository.SmartPurge, false).Push(hub);
 
-            hub.RowsAffected += _videoViewRepository.ReadFromDatabase().Where(x => x.VideoId == ctx.Entity.Id).ExecuteDelete();
+            hub.RowsAffected += db.Set<OrigamiVideoView>().AsNoTracking().Where(x => x.VideoId == ctx.Entity.Id).ExecuteDelete();
 
             return hub;
         }

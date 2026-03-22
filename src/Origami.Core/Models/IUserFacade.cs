@@ -11,6 +11,16 @@
         event EventHandler<EntityOperation>? EntityHasChanged;
 
         /// <summary>
+        /// Blogs the user has access to. This is used for the blog switcher in the admin area and for filtering content in the front-end. It should be set when the user logs in and whenever their permissions change.
+        /// </summary>
+        IEnumerable<OrigamiBlog> BlogsTheUserHasAccessTo { get; set; }
+
+        /// <summary>
+        /// Is the application in incognito mode?
+        /// </summary>
+        bool IncognitoMode { get; set; }
+
+        /// <summary>
         /// Process result for CRUD and other types of Operation
         /// </summary>
         Result Result { set; }
@@ -24,6 +34,11 @@
         /// Gets or sets the search query string used to filter or locate specific items.
         /// </summary>
         string Search { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the cookie consent banner should be displayed to the user.
+        /// </summary>
+        bool ShowCookieConsent { get; set; }
 
         /// <summary>
         /// Current logged-in user (front-end)

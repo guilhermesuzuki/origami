@@ -1,21 +1,25 @@
 ﻿@inherits Basic
 
-<MudFileUpload @ref="_fileUpload" T="IBrowserFile" Accept=".png, .jpg, .bmp, .tiff" OnFilesChanged="OnInputFileChanged"></MudFileUpload>
-<div class="image-cropper @Class btn-group mt-3 w-100 border">
-    <button class="btn btn-light w-100" @onclick="PickFile">
-        <i class="fa-solid fa-cloud-arrow-up"></i>
-        <div>@Text.Lower("Only image files")</div>
-        <div class="x-small">@Text.Original("{0} max.", this.FileLimitInBytes.SizeInBytes())</div>
-    </button>
-    <button class="btn btn-light w-100" @onclick="OnPickImageFromFileManager">
-        <i class="fa-solid fa-folder"></i>
-        @Text.Lower("Pick from file manager")
-    </button>
-    <button class="btn btn-light w-100" @onclick="ClearImage">
-        <i class="fa-solid fa-trash-can"></i>
-        @Text.Lower("Clear image")
-    </button>
-</div>
+<MudFileUpload T="IBrowserFile" Accept=".png, .jpg, .bmp, .tiff" OnFilesChanged="OnInputFileChanged">
+    <CustomContent>
+        <div class="image-cropper @Class btn-group mt-3 w-100 border">
+            <button class="btn btn-light w-100" @onclick="context.OpenFilePickerAsync">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                <div>@Text.Lower("Only image files")</div>
+                <div class="x-small">@Text.Original("{0} max.", this.FileLimitInBytes.SizeInBytes())</div>
+            </button>
+            <button class="btn btn-light w-100" @onclick="OnPickImageFromFileManager">
+                <i class="fa-solid fa-folder"></i>
+                @Text.Lower("Pick from file manager")
+            </button>
+            <button class="btn btn-light w-100" @onclick="ClearImage">
+                <i class="fa-solid fa-trash-can"></i>
+                @Text.Lower("Clear image")
+            </button>
+        </div>
+    </CustomContent>
+    <SelectedTemplate></SelectedTemplate>
+</MudFileUpload>
 @if (_base64Image.Has() == true)
 {
     <div class="position-fixed popup-container">
@@ -33,8 +37,6 @@
 </style>
 
 @code {
-    private MudFileUpload<IBrowserFile> _fileUpload = null!;
-
     [Parameter] public int Proportion { get; set; } = 1;
     [Parameter] public long FileLimitInBytes { get; set; } = 1024L * 1024L * 16L;
 
@@ -59,7 +61,7 @@
     {
         if (args.File.Size > this.FileLimitInBytes)
         {
-            this.UserFacade.Result = new() { ErrorMessage = Text.Original("Image is too large") };
+            this.UserFacade.Result = new() { Error = Text.Original("Image is too large") };
             return;
         }
         this._base64Image = await args.File.GetBase64Image();
@@ -71,15 +73,6 @@
         var crop = await this._cropper.Crop();
         await this.OnImageWasCropped.InvokeAsync(crop);
         _base64Image = string.Empty;
-    }
-
-    /// <summary>
-    /// Picks a file, using <see cref="FileUpload"/>
-    /// </summary>
-    /// <returns></returns>
-    protected async Task PickFile()
-    {
-        await this._fileUpload.OpenFilePickerAsync();
     }
 
     protected async Task ClearImage()

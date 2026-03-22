@@ -56,7 +56,9 @@ namespace Origami.Core.Data
                 if (permission.Ok == false) return permission;
             }
 
-            var socialProfile = _socialProfileRepository.ReadFromDatabase().Where(x => x.Id == ctx.Entity.Id).FirstOrDefault();
+            using var db = DbContextFactory.CreateDbContext();
+
+            var socialProfile = db.Set<OrigamiSocialProfile>().AsNoTracking().Where(x => x.Id == ctx.Entity.Id).FirstOrDefault();
             if (socialProfile != null)
             {
                 var postCommentReactions = _postCommentReactionRepository.ReactionsFromProfile(socialProfile).ToList();
@@ -92,7 +94,7 @@ namespace Origami.Core.Data
                         VideoRatings = videoRatings.Count,
                     };
 
-                    var exists = ReadFromDatabase()
+                    var exists = db.Set<OrigamiSocialProfileDelete>().AsNoTracking()
                         .Where(x => x.DateCreated == hub.Entity.DateCreated)
                         .Where(x => x.SocialProfileId == hub.Entity.SocialProfileId)
                         .Any() ? 1 : 0;
@@ -121,7 +123,7 @@ namespace Origami.Core.Data
                 return hub;
             }
 
-            return new() { ErrorMessage = Text.Original(Text.SomethingWentWrongPleaseTryAgain) };
+            return new() { Error = Text.Original(Text.SomethingWentWrongPleaseTryAgain) };
         }
     }
 }

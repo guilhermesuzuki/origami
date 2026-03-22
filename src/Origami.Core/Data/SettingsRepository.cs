@@ -63,7 +63,7 @@ public class SettingsRepository :
 
     public OrigamiSettings GetSettings()
     {
-        return ReadFromCache().FirstOrDefault() ?? throw new InvalidOperationException();
+        return this.ExtractSettings() ?? throw new InvalidOperationException();
     }
 
     public override IQueryable<OrigamiSettings> ReadFromDatabase()
@@ -71,22 +71,33 @@ public class SettingsRepository :
         return new List<OrigamiSettings>(1) { this.ExtractSettings() }.AsQueryable();
     }
 
+    public override IQueryable<X> ReadFromDatabase<X>()
+    {
+        var x = Activator.CreateInstance<X>();
+        if (x is OrigamiSettings)
+        {
+            return new List<X>(1) { (X)(object)this.ExtractSettings() }.AsQueryable();
+        }
+        return base.ReadFromDatabase<X>();
+    }
+
     public override Result<OrigamiSettings> Update(DataOperationContext<OrigamiSettings> ctx)
     {
+        using var db = DbContextFactory.CreateDbContext();
         var hub = new Result<OrigamiSettings>(ctx.Entity);
         try
         {
             var uiSettings = ctx.Entity.GetSettings();
-            var dbSettings = _settingRepository.ReadFromDatabase().ToList();
+            var dbSettings = db.Set<OrigamiSetting>().AsNoTracking().ToList();
             var merge = dbSettings.GetMerge(uiSettings);
             this._settingRepository.Merge(ctx, merge).Push(hub);
             return hub;
         }
         finally
         {
-            hub.OnSuccess(() => hub.InfoMessage = Text.Original("Refresh your browser"));
-            hub.OnSuccess(() => hub.InfoMessage = Text.Original("If you changed social network settings, you have to restart front-end to take effect"));
-            hub.OnSuccess(() => hub.InfoMessage = Text.Original("If you changed open telemetry settings, you have to restart both admin and front-end to take effect"));
+            hub.OnSuccess(() => hub.Info = Text.Original("Refresh your browser"));
+            hub.OnSuccess(() => hub.Info = Text.Original("If you changed social network settings, you have to restart front-end to take effect"));
+            hub.OnSuccess(() => hub.Info = Text.Original("If you changed open telemetry settings, you have to restart both admin and front-end to take effect"));
         }
     }
 
@@ -110,7 +121,8 @@ public class SettingsRepository :
 
     protected OrigamiSettings ExtractSettings()
     {
-        var dbSettings = _settingRepository.ReadFromDatabase().ToList();
+        using var db = DbContextFactory.CreateDbContext();
+        var dbSettings = db.Set<OrigamiSetting>().AsNoTracking().ToList();
         var settings = new OrigamiSettings() { Id = new Guid("9B44A384-4A6C-4095-A797-0C175DC8A4F6") };
 
         //iterates through all blogsetting's properties

@@ -66,7 +66,7 @@ namespace Origami.Core.Data
                 if (permission.Ok == false) return permission;
             }
 
-            var fresh = ReadFromDatabase().Id(ctx.Entity.Id);
+            var fresh = ReadFromDatabase(ctx.Entity);
             if (fresh != null)
             {
                 if (fresh.IsActive == false)
@@ -95,10 +95,15 @@ namespace Origami.Core.Data
                 if (permission.Ok == false) return permission;
             }
 
-            var fresh = ReadFromDatabase().Id(ctx.Entity.Id);
+            var fresh = ReadFromDatabase(ctx.Entity);
             if (fresh != null)
             {
-                if (fresh.IsActive == true)
+                if (fresh is { IsPrimary: true })
+                {
+                    return new(ctx.Entity, Text.Original("Primary blog cannot be deactivated"));
+                }
+
+                if (fresh is { IsActive: true })
                 {
                     ctx.Entity.IsActive = false;
                     return SmartUpdate(ctx, false);
@@ -114,15 +119,14 @@ namespace Origami.Core.Data
             var hub = base.DeleteValidation(ctx);
             if (hub.Ok)
             {
-                var fresh = ReadFromDatabase().Id(ctx.Entity.Id);
+                var fresh = ReadFromDatabase(ctx.Entity);
                 if (fresh == null)
                 {
-                    hub.ErrorMessage = Text.Original("Blog could not be found");
+                    hub.Error = Text.Original("Blog could not be found");
                 }
                 else if (fresh is { IsPrimary: true })
                 {
-                    hub.ErrorMessage = Text.Original("Primary blog cannot be deleted");
-                    hub.InfoMessage = Text.Original("You can deactivate it though");
+                    hub.Error = Text.Original("Primary blog cannot be deleted");
                 }
             }
             return hub;
@@ -170,29 +174,28 @@ namespace Origami.Core.Data
                 if (permission.Ok == false) return permission;
             }
 
+            using var db = DbContextFactory.CreateDbContext();
+
             var blogs = from i in ctx.Entity
-                        join b in ReadFromDatabase().NonDeleted().Active() on i equals b.Id
+                        join b in db.Set<OrigamiBlog>().AsNoTracking().NonDeleted().Active() on i equals b.Id
                         select new { b, i };
 
             if (ctx.Entity.Count() != blogs.Count())
             {
-                return new() { ErrorMessage = Text.Original("Invalid ids (may contain deleted, inactive blog ids)") };
+                return new() { Error = Text.Original("Invalid ids (may contain deleted, inactive blog ids)") };
             }
 
             try
             {
                 var hub = new Result();
-                using (var db = DbContextFactory.CreateDbContext())
+                var index = 0;
+                foreach (var blog in blogs)
                 {
-                    var index = 0;
-                    foreach (var blog in blogs)
-                    {
-                        if (hub.Ok == false) return hub;
-                        var before = ReadFromDatabase().Id(blog.b.Id)!;
-                        var update = ReadFromDatabase().Id(blog.b.Id)!;
-                        update.Order = ++index;
-                        SmartUpdate(new DataOperationContext<OrigamiBlog>(ctx.User, DateTime.UtcNow, update, before), false).Push(hub);
-                    }
+                    if (hub.Ok == false) return hub;
+                    var before = ReadFromDatabase(blog.b)!;
+                    var update = ReadFromDatabase(blog.b)!;
+                    update.Order = ++index;
+                    SmartUpdate(new DataOperationContext<OrigamiBlog>(ctx.User, DateTime.UtcNow, update, before), false).Push(hub);
                 }
                 return hub;
             }
@@ -210,22 +213,23 @@ namespace Origami.Core.Data
                 if (permission.Ok == false) return permission;
             }
 
-            var blogs = ReadFromDatabase().NonDeleted().Active();
+            using var db = DbContextFactory.CreateDbContext();
+
+            var blogs = db.Set<OrigamiBlog>().AsNoTracking().NonDeleted().Active();
 
             try
             {
                 var hub = new Result();
-                using (var db = DbContextFactory.CreateDbContext())
+
+                foreach (var blog in blogs)
                 {
-                    foreach (var blog in blogs)
-                    {
-                        if (hub.Ok == false) return hub;
-                        var before = ReadFromDatabase().Id(blog.Id)!;
-                        var update = ReadFromDatabase().Id(blog.Id)!;
-                        update.Order = null;
-                        SmartUpdate(new DataOperationContext<OrigamiBlog>(ctx.User, DateTime.UtcNow, update, before), false).Push(hub);
-                    }
+                    if (hub.Ok == false) return hub;
+                    var before = ReadFromDatabase(blog)!;
+                    var update = ReadFromDatabase(blog)!;
+                    update.Order = null;
+                    SmartUpdate(new DataOperationContext<OrigamiBlog>(ctx.User, DateTime.UtcNow, update, before), false).Push(hub);
                 }
+
                 return hub;
             }
             catch (Exception ex)
@@ -247,16 +251,12 @@ namespace Origami.Core.Data
             var pages = _pageRepository.ReadFromCache().Blog(entity.Id).ToList();
             var pingServices = _pingServiceRepository.ReadFromCache().Blog(entity.Id).ToList();
             var posts = _postRepository.ReadFromCache().Blog(entity.Id).ToList();
-            var roles = _roleRepository.ReadFromCache().Blog(entity.Id).ToList();
-            var users = _userRepository.ReadFromCache().Blog(entity.Id).ToList();
             var videos = _videoRepository.ReadFromCache().Blog(entity.Id).ToList();
 
             categories.Each(_categoryRepository.PurgeCache);
             pages.Each(_pageRepository.PurgeCache);
             pingServices.Each(_pingServiceRepository.PurgeCache);
             posts.Each(_postRepository.PurgeCache);
-            roles.Each(_roleRepository.PurgeCache);
-            users.Each(_userRepository.PurgeCache);
             videos.Each(_videoRepository.PurgeCache);
         }
 
@@ -264,24 +264,20 @@ namespace Origami.Core.Data
         {
             var hub = base.PurgeRelationshipsFromDatabase(ctx);
 
-            var categories = _categoryRepository.ReadFromDatabase().Blog(ctx.Entity.Id).ToList();
-            var pages = _pageRepository.ReadFromDatabase().Blog(ctx.Entity.Id).ToList();
-            var pingServices = _pingServiceRepository.ReadFromDatabase().Blog(ctx.Entity.Id).ToList();
-            var posts = _postRepository.ReadFromDatabase().Blog(ctx.Entity.Id).ToList();
-            var roles = _roleRepository.ReadFromDatabase().Blog(ctx.Entity.Id).ToList();
-            var users = _userRepository.ReadFromDatabase().Blog(ctx.Entity.Id).ToList();
-            var videos = _videoRepository.ReadFromDatabase().Blog(ctx.Entity.Id).ToList();
-
-            categories.GetContexts(ctx).Call(_categoryRepository.SmartPurge, false).Push(hub);
-            pages.GetContexts(ctx).Call(_pageRepository.SmartPurge, false).Push(hub);
-            pingServices.GetContexts(ctx).Call(_pingServiceRepository.SmartPurge, false).Push(hub);
-            posts.GetContexts(ctx).Call(_postRepository.SmartPurge, false).Push(hub);
-            roles.GetContexts(ctx).Call(_roleRepository.SmartPurge, false).Push(hub);
-            users.GetContexts(ctx).Call(_userRepository.SmartPurge, false).Push(hub);
-            videos.GetContexts(ctx).Call(_videoRepository.SmartPurge, false).Push(hub);
-
             using (var db = DbContextFactory.CreateDbContext())
             {
+                var categories = db.Set<OrigamiCategory>().AsNoTracking().Blog(ctx.Entity.Id).ToList();
+                var pages = db.Set<OrigamiPage>().AsNoTracking().Blog(ctx.Entity.Id).ToList();
+                var pingServices = db.Set<OrigamiPingService>().AsNoTracking().Blog(ctx.Entity.Id).ToList();
+                var posts = db.Set<OrigamiPost>().AsNoTracking().Blog(ctx.Entity.Id).ToList();
+                var videos = db.Set<OrigamiVideo>().AsNoTracking().Blog(ctx.Entity.Id).ToList();
+
+                categories.GetContexts(ctx).Call(_categoryRepository.SmartPurge, false).Push(hub);
+                pages.GetContexts(ctx).Call(_pageRepository.SmartPurge, false).Push(hub);
+                pingServices.GetContexts(ctx).Call(_pingServiceRepository.SmartPurge, false).Push(hub);
+                posts.GetContexts(ctx).Call(_postRepository.SmartPurge, false).Push(hub);
+                videos.GetContexts(ctx).Call(_videoRepository.SmartPurge, false).Push(hub);
+
                 hub.RowsAffected += db.CustomFields.Where(x => x.BlogId == ctx.Entity.Id).ExecuteDelete();
                 hub.RowsAffected += db.DataStoreSettings.Where(x => x.BlogId == ctx.Entity.Id).ExecuteDelete();
                 hub.RowsAffected += db.QuickNotes.Where(x => x.BlogId == ctx.Entity.Id).ExecuteDelete();

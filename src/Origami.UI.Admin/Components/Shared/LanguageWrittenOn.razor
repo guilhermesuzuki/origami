@@ -10,12 +10,12 @@
                InputClass="d-inline-flex align-items-center"
                @bind-Value:get="@Entity.LanguageWrittenOn"
                @bind-Value:set="(language) => this.Entity.LanguageWrittenOn = language"
+               ReadOnly="@ReadOnly"
                HelperText="@Text.Lower("Language")">
-        @foreach (var language in OrigamiConstants.ContentLanguages())
+        @foreach (var language in OrigamiConstants.AllLanguages())
         {
-            <MudSelectItem Value="language.Language">
-                <img class="pe-1" src="@language.Flag" width="20" title="@language.Name" />
-                <span>@language.Name</span>
+            <MudSelectItem Value="language.Name">
+                <Language Entity="language"></Language>
             </MudSelectItem>
         }
     </MudSelect>
@@ -23,6 +23,7 @@
 
 @code {
     [Parameter] public ILanguageWrittenOn? Entity { get; set; }
+    [Parameter] public bool ReadOnly { get; set; } = false;
 
     protected override void OnParametersSet()
     {

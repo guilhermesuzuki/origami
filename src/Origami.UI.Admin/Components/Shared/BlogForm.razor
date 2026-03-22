@@ -3,7 +3,6 @@
 <style>
     .basic-header .line-1 { display: block; }
 </style>
-<MudFileUpload @ref="this.FileUpload" T="IBrowserFile" FilesChanged="UploadHeader" Accept=".png, .jpg, .bmp, .tiff" MaximumFileCount="1"></MudFileUpload>
 <div class="blog-form @Class">
     <div class="row">
         <div class="col-12 col-xxl-4">
@@ -47,21 +46,26 @@
                 <div class="col-12">
                     <div class="text-center p-3">
                         <HeaderImageLite Entity="@Entity"></HeaderImageLite>
-                        <div class="btn-group mt-2 w-100">
-                            <button class="btn btn-light w-100" @onclick="PickFile">
-                                <i class="fa-solid fa-cloud-arrow-up"></i>
-                                <div>@Text.Lower("Only image files")</div>
-                                <div class="x-small">@Text.Original("{0} MB max.", 6)</div>
-                            </button>
-                            <button class="btn btn-light w-100" @onclick="() => this.FileManagerForImages = true">
-                                <i class="fa-solid fa-folder"></i>
-                                @Text.Lower("Pick from file manager")
-                            </button>
-                            <button class="btn btn-light w-100" @onclick="ClearHeader">
-                                <i class="fa-solid fa-trash-can"></i>
-                                @Text.Lower("Clear header")
-                            </button>
-                        </div>
+                        <MudFileUpload T="IBrowserFile" FilesChanged="UploadHeader" Accept=".png, .jpg, .bmp, .tiff" MaximumFileCount="1">
+                            <CustomContent>
+                                <div class="btn-group mt-2 w-100">
+                                    <button class="btn btn-light w-100" @onclick="context.OpenFilePickerAsync">
+                                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                                        <div>@Text.Lower("Only image files")</div>
+                                        <div class="x-small">@Text.Original("{0} MB max.", 6)</div>
+                                    </button>
+                                    <button class="btn btn-light w-100" @onclick="() => this.FileManagerForImages = true">
+                                        <i class="fa-solid fa-folder"></i>
+                                        @Text.Lower("Pick from file manager")
+                                    </button>
+                                    <button class="btn btn-light w-100" @onclick="ClearHeader">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                        @Text.Lower("Clear header")
+                                    </button>
+                                </div>
+                            </CustomContent>
+                            <SelectedTemplate></SelectedTemplate>
+                        </MudFileUpload>
                     </div>
                 </div>
             </div>
@@ -192,35 +196,5 @@
     private IEnumerable<OrigamiVideo> _getVideos()
     {
         return this.Super.Videos.ReadFromCache().NonDeleted().Blog(this.Entity.Id).OrderBy(x => x.Title);
-    }
-
-    protected override Result<OrigamiBlog> CreateOthers()
-    {
-        var hub = base.CreateOthers();
-
-        if (hub.Ok)
-        {
-            var administrators = OrigamiRole.GetSystemRole<OrigamiRole.Administrators>(this.Entity.Id);
-            var basic = OrigamiRole.GetSystemRole<OrigamiRole.BasicAccess>(this.Entity.Id);
-            var editors = OrigamiRole.GetSystemRole<OrigamiRole.Editors>(this.Entity.Id);
-            // var managers = OrigamiRole.GetSystemRole<OrigamiRole.Managers>(this.Entity.Id);
-            // var managersSocialMedia = OrigamiRole.GetSystemRole<OrigamiRole.ManagersSocialMedia>(this.Entity.Id);
-            // var managersTrash = OrigamiRole.GetSystemRole<OrigamiRole.ManagersTrash>(this.Entity.Id);
-            // var publishers = OrigamiRole.GetSystemRole<OrigamiRole.Publishers>(this.Entity.Id);
-            // var superEditors = OrigamiRole.GetSystemRole<OrigamiRole.SuperEditors>(this.Entity.Id);
-            // var superPublishers = OrigamiRole.GetSystemRole<OrigamiRole.SuperPublishers>(this.Entity.Id);
-
-            hub.OnSuccess(() => this.Super.Roles.SmartSave(administrators.GetContext(), false).Push(hub));
-            hub.OnSuccess(() => this.Super.Roles.SmartSave(basic.GetContext(), false).Push(hub));
-            hub.OnSuccess(() => this.Super.Roles.SmartSave(editors.GetContext(), false).Push(hub));
-            // hub.OnSuccess(() => this.Super.Roles.SmartSave(managers.GetContext(), false).Push(hub));
-            // hub.OnSuccess(() => this.Super.Roles.SmartSave(managersSocialMedia.GetContext(), false).Push(hub));
-            // hub.OnSuccess(() => this.Super.Roles.SmartSave(managersTrash.GetContext(), false).Push(hub));
-            // hub.OnSuccess(() => this.Super.Roles.SmartSave(publishers.GetContext(), false).Push(hub));
-            // hub.OnSuccess(() => this.Super.Roles.SmartSave(superEditors.GetContext(), false).Push(hub));
-            // hub.OnSuccess(() => this.Super.Roles.SmartSave(superPublishers.GetContext(), false).Push(hub));
-        }
-
-        return hub;
     }
 }

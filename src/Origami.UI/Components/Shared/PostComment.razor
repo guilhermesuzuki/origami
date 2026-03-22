@@ -1,7 +1,6 @@
 ﻿@using System.Text;
 @inherits Basic
 
-@inject IDialogService _dialogService
 @inject IPostCommentRepository _postComment
 @inject IPostCommentReactionRepository _postCommentReaction
 @inject ISocialProfileRepository _socialProfile
@@ -253,7 +252,7 @@
     {
         if (this.Comment != null)
         {
-            var yes = await _dialogService.ShowMessageBox(
+            var yes = await DialogService.ShowMessageBoxAsync(
                 Text.Upper("Delete comment"),
                 Text.Lower("Would you like to delete this comment?"),
                 Text.Lower("Yes"),

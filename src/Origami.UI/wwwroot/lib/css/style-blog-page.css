@@ -3,16 +3,12 @@
 .page-header { }
 .page-header a:hover, .page-header a:hover span { color: var(--site-highlight) !important; }
 .page-header-image { height: calc(250px / 0.65); background-repeat: no-repeat; background-position: center; background-size: cover; }
-.page-header-title { text-align: center; bottom: 0px; top: 0; background-color: #00000077; display: inline-grid; align-items: center; border-top: none !important; }
-.page-header-title * { color: white; border-color: white !important; }
+.page-header-title-wrapper { text-align: center; bottom: 0px; top: 0; background-color: #00000077; display: inline-grid; align-items: center; border-top: none !important; }
+.page-header-title-wrapper * { color: white; border-color: white !important; }
 
-.page-header-title .title { font-size: 14pt; }
-.page-content img { max-width: 100% !important; height: auto !important; border: 1px solid #dee2e6; }
-
-.page-content .pure-g { margin-bottom: 1em; }
-.page-content .pure-g img { min-width: 100% !important; }
-.page-content > .pure-u-1 { margin-bottom: 1em; display: flex; flex-flow: row wrap; align-content: flex-start; }
-.page-content > .pure-u-1 img { min-width: 100% !important; }
+.page-header-title-wrapper .title { font-size: 14pt; }
+.page-content { font-size: 1.25rem; }
+.page-content img { max-width: 100% !important; width: 600px !important; height: auto !important; border: 1px solid #dee2e6; }
 .page-content > video, .page-content > p > video { width: 600px; max-width: 100%; height: auto; }
 .page-content > * { margin-bottom: 1rem !important; }
 .page-content > *:last-child { margin-bottom: 0 !important; }
@@ -22,39 +18,13 @@
 
 /*end TODO: review CSS rules*/
 
-.page-header-container.has-header-image .page-header-title * { color: white; }
-.page-header { }
-.page-header a:hover, .page-header a:hover span { color: var(--site-highlight) !important; }
-.page-header-image { height: calc(250px / 0.65); background-repeat: no-repeat; background-position: center; background-size: cover; }
-.page-header-title { text-align: center; bottom: 0px; top: 0; display: inline-grid; align-items: center; border-top: none !important; }
-
-.page-header-title .title { font-size: 14pt; }
-
-.page-content { font-size: 1.25rem; }
-.page-content img { max-width: 100% !important; width: 600px !important; height: auto !important; border: 1px solid #dee2e6; }
-.page-content .pure-g { margin-bottom: 1em; }
-.page-content .pure-g img { min-width: 100% !important; }
-.page-content > .pure-u-1 { margin-bottom: 1em; display: flex; flex-flow: row wrap; align-content: flex-start; }
-.page-content > .pure-u-1 img { min-width: 100% !important; }
-.page-content > video, .page-content > p > video { width: 600px; max-width: 100%; height: auto; }
-.page-content > * { margin-bottom: 1rem !important; }
-.page-content > *:last-child { margin-bottom: 0 !important; }
-.page-content > ul { padding-left: 1rem; }
-.page-content iframe { min-height: 500px !important; }
-.page-content a { border-bottom: 1px solid var(--site-highlight); }
-
-.page-category table .page-header-title .title { font-size: 14pt; }
-.page-tag table .page-header-title .title { font-size: 14pt; }
-.page-most-read table .page-header-title .title { font-size: 14pt; }
+.page-category table .page-header-title-wrapper .title { font-size: 14pt; }
+.page-tag table .page-header-title-wrapper .title { font-size: 14pt; }
+.page-most-read table .page-header-title-wrapper .title { font-size: 14pt; }
 
 .page-category table .language { width: 13px; height: 13px; }
 .page-tag table .language { width: 13px; height: 13px; }
 .page-most-read table .language { width: 13px; height: 13px; }
-
-.page-comment-in-reply-to { border: 1px dotted var(--site-highlight) !important; border-left: 5px solid var(--site-highlight) !important; }
-.page-comment-in-reply-to .logo { display: none !important; }
-.page-comment-in-reply-to .social-profile-header { text-align: left !important; }
-.page-comment-in-reply-to .social-profile-header * { font-size: 11pt !important; font-weight: bold; }
 
 .page-comment-text p:first-child { margin-top: 0px !important; }
 .page-comment-text p { margin-top: 7px !important; margin-bottom: 0 !important; }

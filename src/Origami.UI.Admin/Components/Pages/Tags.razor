@@ -32,7 +32,7 @@
         <div class="p-3">
             <div class="row">
                 <div class="tags col-12 col-xxl-8">
-                    <MudDataGrid @ref="DataGrid" T="OrigamiTag" Items="GetItems()" Filterable="false" SortMode="SortMode.None" Class="border selectable" SelectedItems="this.SelectedEntities" MultiSelection="true"
+                    <MudDataGrid @ref="DataGrid" T="OrigamiTag" ServerData="GetEntities" Filterable="false" SortMode="SortMode.None" Class="border selectable" SelectedItems="this.SelectedEntities" MultiSelection="true"
                                  SelectedItemsChanged="this.SelectedEntitiesChanged" RowClassFunc="RowClassFunc" Bordered="true" SelectOnRowClick="false">
                         <Columns>
                             <SelectColumn T="OrigamiTag"></SelectColumn>
@@ -70,6 +70,8 @@
     </ContentTemplate>
 </Root>
 @code {
+    protected override string DefaultOrdering => $"{nameof(OrigamiTag.Name)}";
+
     protected override Result<OrigamiTag> RemoveEntityFromCache(OrigamiTag entity)
     {
         var result = new Result<OrigamiTag>();
@@ -80,21 +82,6 @@
         SelectedEntity = SelectedEntity.Id == entity.Id ? this.CreateEntity() : SelectedEntity;
 
         return result;
-    }
-
-    protected override async Task DeleteSelectedEntities()
-    {
-        await ExecuteWithSelectedEntities(
-            async () =>
-            {
-                return await DialogService.ShowMessageBox(
-                    Text.Upper("Deleting {0} Item(s)", SelectedEntities.Count),
-                    Text.Original("Are you sure?"),
-                    yesText: Text.Lower("Yes"),
-                    noText: Text.Lower("No"));
-            },
-            this.DeleteEntity
-        );
     }
 
     protected override string RowClassFunc(OrigamiTag entity, int index)

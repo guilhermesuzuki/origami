@@ -8,22 +8,21 @@
 @if (this.Entity != null)
 {
     var header = this.Entity.HeaderImage.NoHeader();
-    var hasHeader = header.Has() && header.Like(OrigamiConstants.NoHeader) == false;
-    var views = _pageView.GetViews(this.Entity);
+    var views = this.Super.PhysicalPageViews.GetViews(this.Entity);
     <ContentHeaderLite Entity="this.Entity"></ContentHeaderLite>
     <div class="page-header position-relative shadow-sm cursor-pointer @Class" @onclick="() => this.GoToPage()">
         <div class="page-header-image" style="background-image: url(@header)"></div>
-        <div class="page-header-title position-absolute overflow-auto zeroes">
+        <div class="page-header-title-wrapper position-absolute overflow-auto zeroes">
             <div class="p-3">
                 <a class="title fw-bold text-uppercase focusable text-center" href="@Entity.Hyperlink">
                     <PageHeaderTitle Entity="this.Entity"></PageHeaderTitle>
                 </a>
                 <div>
-                    <label class="page-date pe-1">@(Entity.DatePublished ?? Entity.DateModified ?? Entity.DateCreated)</label>
-                    <label class="page-views pe-1 @(views > 0 ? null : "d-none")">
+                    <span class="page-date pe-1">@(Entity.GetDate())</span>
+                    <span class="page-views pe-1 @(views > 0 ? null : "d-none")">
                         <i class="fa-solid fa-eye"></i>
                         @views
-                    </label>
+                    </span>
                 </div>
             </div>
             <ul class="inline-list position-absolute w-100 z-index-middle" style="top:0;">
@@ -33,7 +32,14 @@
                     </div>
                 </li>
                 <li class="text-center">
-                    <Draft Entity="this.Entity"></Draft>
+                    <Draft Entity="this.Entity" Class="mx-1"></Draft>
+                    @if (this.Entity.IsFrontPage)
+                    {
+                        <span class="text-white text-lowercase mx-1">
+                            <i class="bi bi-globe"></i>
+                            @Text.Lower("Front-page")
+                        </span>
+                    }
                 </li>
                 <li class="text-right" style="width: 50px;">
                     <div class="p-2 cursor-pointer focusable" @onclick="() => _showHeaderImage = true" @onclick:stopPropagation="true">
@@ -48,24 +54,25 @@
         <div class="related-pages mt-3">
             <label class="w-100 text-center p-1 bg-light border">
                 <i class="fa-solid fa-earth-americas"></i>
-                @Text.Lower("Related Pages")
+                @Text.Lower("Related pages")
             </label>
             <div class="page-header page-header-children shadow-sm border cursor-pointer text-center @Class">
                 <div class="workaround overflow-hidden">
                     <div class="row">
                         @foreach (var child in this.RelatedPages)
                         {
+                            var childViews = @_pageView.GetViews(child);
                             <div class="related-page-header-title col-12 col-xxl-4 mh-100 overflow-auto m-auto" @onclick="() => this.GoToPage(child)" @onclick:stopPropagation="true">
                                 <div class="p-2">
                                     <a class="title fw-bold text-uppercase focusable text-center" href="@child.Hyperlink">
                                         <PageHeaderTitle Entity="child"></PageHeaderTitle>
                                     </a>
                                     <div>
-                                        <label class="page-date pe-1">@(child.DatePublished ?? child.DateModified ?? child.DateCreated)</label>
-                                        <label class="page-views pe-1">
+                                        <span class="page-date pe-1">@(child.GetDate())</span>
+                                        <span class="page-views pe-1 @(childViews > 0 ? null : "d-none")">
                                             <i class="fa-solid fa-eye"></i>
-                                            @_pageView.GetViews(child)
-                                        </label>
+                                            @childViews
+                                        </span>
                                     </div>
                                 </div>
                             </div>

@@ -109,7 +109,7 @@ namespace Origami.UI.Admin
             await ExecuteWithSelectedEntities(
                 async () =>
                 {
-                    return await DialogService.ShowMessageBox(
+                    return await DialogService.ShowMessageBoxAsync(
                         Text.Upper("Deleting {0} Item(s)", SelectedEntities.Count),
                         Text.Original("Are you sure?"),
                         yesText: Text.Lower("Yes"),
@@ -140,7 +140,7 @@ namespace Origami.UI.Admin
         /// <param name="entity"></param>
         protected virtual void EntitySaved(T entity)
         {
-            DataGrid!.ReloadServerData();
+            DataGrid?.ReloadServerData();
             SelectedEntity = entity.Clone();
         }
 
@@ -162,7 +162,7 @@ namespace Origami.UI.Admin
             //checks to see if there's entities
             if (entities.Count == 0)
             {
-                this.UserFacade.Result = new() { InfoMessage = Text.Original("No entities were selected") };
+                this.UserFacade.Result = new() { Info = Text.Original("No entities were selected") };
                 return;
             }
 
@@ -190,7 +190,7 @@ namespace Origami.UI.Admin
                 }
                 catch (Exception ex)
                 {
-                    hub.ErrorMessage = ex.GetMessage();
+                    hub.Error = ex.GetMessage();
                 }
                 finally
                 {
@@ -206,8 +206,9 @@ namespace Origami.UI.Admin
         /// This method should retrieve the Entities from database or memory
         /// </summary>
         /// <param name="state"></param>
+        /// <param name="token"></param>
         /// <returns></returns>
-        protected virtual Task<GridData<T>> GetEntities(GridState<T> state)
+        protected virtual Task<GridData<T>> GetEntities(GridState<T> state, CancellationToken token)
         {
             var orders = new StringBuilder();
 
@@ -282,37 +283,13 @@ namespace Origami.UI.Admin
                 items = items.NonDeleted();
             }
 
-            //needs to filter by blog
-            if (this.UserFacade.BlogId != Guid.Empty)
+            if (typeof(T).Implements<IBlogId>() == true)
             {
-                if (typeof(T).Implements<IBlogId>() == true)
-                {
-                    var query = from a in items.Cast<IBlogId>()
-                                where a.BlogId == this.UserFacade.BlogId
-                                select a;
+                var query = from a in items.Cast<IBlogId>()
+                            where a.BlogId == this.UserFacade.BlogId
+                            select a;
 
-                    items = query.Cast<T>();
-                }
-
-                if (typeof(T).Implements<IPostId>() == true)
-                {
-                    var query = from a in items.Cast<IPostId>()
-                                join b in this.Super.Posts.ReadFromCache() on a.PostId equals b.Id
-                                where b.BlogId == this.UserFacade.BlogId
-                                select a;
-
-                    items = query.Cast<T>();
-                }
-
-                if (typeof(T).Implements<IVideoId>() == true)
-                {
-                    var query = from a in items.Cast<IVideoId>()
-                                join b in this.Super.Videos.ReadFromCache() on a.VideoId equals b.Id
-                                where b.BlogId == this.UserFacade.BlogId
-                                select a;
-
-                    items = query.Cast<T>();
-                }
+                items = query.Cast<T>();
             }
 
             return items;
@@ -383,7 +360,7 @@ namespace Origami.UI.Admin
             await ExecuteWithSelectedEntities(
                 async () =>
                 {
-                    return await DialogService.ShowMessageBox(
+                    return await DialogService.ShowMessageBoxAsync(
                         Text.Upper("Purging {0} Item(s)", SelectedEntities.Count),
                         Text.Original("Are you sure? You will NOT be able to recover these items."),
                         yesText: Text.Lower("Yes"),
@@ -435,7 +412,7 @@ namespace Origami.UI.Admin
             await ExecuteWithSelectedEntities(
                 async () =>
                 {
-                    return await DialogService.ShowMessageBox(
+                    return await DialogService.ShowMessageBoxAsync(
                         Text.Upper("Restoring {0} Item(s)", SelectedEntities.Count),
                         Text.Original("Are you sure?"),
                         yesText: Text.Lower("Yes"),

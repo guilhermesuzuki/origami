@@ -37,7 +37,7 @@ namespace Origami.Core.Data
                 if (result.Ok) return result;
                 result.Push(hub);
             }
-            hub.ErrorMessage = _text.Original("All location providers failed");
+            hub.Error = _text.Original("All location providers failed");
             return hub;
         }
     }

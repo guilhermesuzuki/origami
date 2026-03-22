@@ -1,4 +1,4 @@
-﻿@page "/blogs/{Slug}/tags"
+﻿@page "/blogs/{BlogSlug}/tags"
 @inherits BasicPage
 @inject ISuperRepository _super
 
@@ -32,32 +32,16 @@
 </Root>
 
 @code {
-    [Parameter] public string Slug { get; set; } = string.Empty;
-
-    // /// <summary>
-    // /// Blog ID based on the provided slug.
-    // /// </summary>
-    // private Guid BlogId => _super.Blogs.ReadFromCache().Slug(Slug)?.Id ?? Guid.Empty;
-
-    private OrigamiBlog _blog = new();
-    private IEnumerable<OrigamiBlog> _blogs = [];
-
-    private void LoadBlog()
-    {
-        this._blog = this.Super.Blogs.ReadFromCache().NonDeleted().Active().Slug(this.Slug) ?? new();
-    }
+    private OrigamiBlog _blog => this.GetBlogFromSlug();
 
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        this.LoadBlog();
+        this.BlogId = this._blog.Id;
     }
 
-    protected override Task OnAfterRenderAsync(bool firstRender)
+    protected override void SetPageTitle()
     {
         this.PageTitle.SetTitle(Text.Original("Tags"));
-        return base.OnAfterRenderAsync(firstRender);
     }
-
-    public override Guid BlogId => this._blog.Id;
 }

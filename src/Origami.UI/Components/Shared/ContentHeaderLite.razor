@@ -1,6 +1,5 @@
 ﻿@inherits Basic
-@implements IEntityNull<BaseContent>
-@inject IUserRepository _user
+@implements IEntityNull<IAuthorId>
 @if (this.Entity != null)
 {
     var author = this.Super.Users.ReadFromCache().Id(this.Entity.AuthorId);
@@ -16,5 +15,5 @@
     }
 }
 @code {
-    [Parameter] public BaseContent? Entity { get; set; }
+    [Parameter] public IAuthorId? Entity { get; set; }
 }

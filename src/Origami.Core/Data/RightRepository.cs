@@ -28,19 +28,21 @@ namespace Origami.Core.Data
 
         public Result KeepUpToDate()
         {
+            using var db = DbContextFactory.CreateDbContext();
+
             var hub = new Result();
-            var dbRoles = this.ReadFromDatabase().ToList();
+            var dbRoles = db.Set<OrigamiRight>().AsNoTracking().ToList();
             var uiRoles = OrigamiRole.GetRights();
             var merge = dbRoles.GetMergeRights(uiRoles);
 
             if (merge.Create.Any() == false)
             {
-                hub.SimpleMessage = Text.Original("Roles are up-to-date");
+                hub.Simple = Text.Original("Roles are up-to-date");
                 return hub;
             }
 
             merge.Create.GetContexts(new(OrigamiUser.AnonymousUser, DateTime.UtcNow)).Call(SmartCreate, false).Push(hub);
-            hub.SimpleMessage = Text.Original("Roles have been created");
+            hub.Simple = Text.Original("Roles have been created");
 
             return hub;
         }
@@ -54,8 +56,9 @@ namespace Origami.Core.Data
 
         public override Result<OrigamiRight> PurgeRelationshipsFromDatabase(DataOperationContext<OrigamiRight> ctx)
         {
+            using var db = DbContextFactory.CreateDbContext();
             var hub = base.PurgeRelationshipsFromDatabase(ctx);
-            var rightRoles = _rightRoleRepository.ReadFromDatabase().Where(x => x.RoleId == ctx.Entity.Id).ToList();
+            var rightRoles = db.Set<OrigamiRightRole>().AsNoTracking().Where(x => x.RoleId == ctx.Entity.Id).ToList();
             rightRoles.GetContexts(ctx).Call(_rightRoleRepository.SmartPurge, false).Push(hub);
             return hub;
         }

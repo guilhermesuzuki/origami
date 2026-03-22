@@ -1,9 +1,5 @@
-﻿@page "/blogs/{Slug}/categories"
-
+﻿@page "/blogs/{BlogSlug}/categories"
 @inherits BasicPage
-@inject ICategoryRepository _category
-@inject IPostCategoryRepository _postCategory
-@inject IVideoCategoryRepository _videoCategory
 
 <Root>
     @if (this._blog != null)
@@ -35,26 +31,6 @@
 </Root>
 
 @code {
-    [Parameter] public string Slug { get; set; } = string.Empty;
-
-    private OrigamiBlog _blog = new();
-
-    public override Guid BlogId => this._blog.Id;
-
-    private void LoadBlog()
-    {
-        this._blog = this.Super.Blogs.ReadFromCache().NonDeleted().Active().Slug(this.Slug) ?? new();
-    }
-
-    protected override void OnParametersSet()
-    {
-        base.OnParametersSet();
-        this.LoadBlog();
-    }
-
-    protected override Task OnAfterRenderAsync(bool firstRender)
-    {
-        this.PageTitle.SetTitle(Text.Get("Categories"));
-        return base.OnAfterRenderAsync(firstRender);
-    }
+    private OrigamiBlog _blog => this.GetBlogFromSlug();
+    protected override void SetPageTitle() => this.PageTitle.SetTitle(Text.Get("Categories"));
 }

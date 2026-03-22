@@ -2,12 +2,12 @@
 
 <style>
     .post-header-image, .video-header-image, .page-header-image { height: 200px; }
+    .mud-file-upload, .mud-file-upload > * { height:100%; }
 </style>
 <style>
     ul.expand { display: flex; list-style: none; padding: 0; margin: 0; }
     ul.expand > li { display: flex; flex-direction: column; flex: 1; }
 </style>
-<MudFileUpload @ref="this.FileUpload" T="IBrowserFile" FilesChanged="UploadHeaderBase64" Accept=".png, .jpg, .bmp, .tiff" MaximumFileCount="1"></MudFileUpload>
 <div class="user-form @Class">
     <div class="row">
         <div class="col-12 col-xxl-6">
@@ -82,26 +82,31 @@
                 </ul>
             </div>
             <div class="text-center p-3 mt-3">
-                <ul class="expand padding-30 border">
+                <ul class="expand p-3 border">
                     <li>
                         <HeaderImageLite Entity="this.Entity" ImgMaxWidth="256px" Footer="true"></HeaderImageLite>
                     </li>
-                    <li class="position-relative">
-                        <div class="position-absolute zeroes btn-group-vertical">
-                            <button class="btn btn-light w-100" @onclick="PickFile" style="height:34%;">
-                                <i class="fa-solid fa-cloud-arrow-up"></i>
-                                <div>@Text.Lower("Only image files")</div>
-                                <div class="x-small">@Text.Original("{0} MB max.", 2)</div>
-                            </button>
-                            <button class="btn btn-light w-100" @onclick="() => this.FileManagerForImages = true" style="height:33%;">
-                                <i class="fa-solid fa-folder"></i>
-                                <div>@Text.Lower("Pick from file manager")</div>
-                            </button>
-                            <button class="btn btn-light w-100" @onclick="ClearHeader" style="height:33%;">
-                                <i class="fa-solid fa-trash-can"></i>
-                                <div>@Text.Lower("Clear picture")</div>
-                            </button>
-                        </div>
+                    <li class="position-relative ms-3">
+                        <MudFileUpload T="IBrowserFile" FilesChanged="UploadHeaderBase64" Accept=".png, .jpg, .bmp, .tiff" MaximumFileCount="1">
+                            <CustomContent>
+                                <div class="position-absolute zeroes btn-group-vertical">
+                                    <button class="btn btn-light w-100" @onclick="context.OpenFilePickerAsync" style="height:34%;">
+                                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                                        <div>@Text.Lower("Only image files")</div>
+                                        <div class="x-small">@Text.Original("{0} MB max.", 2)</div>
+                                    </button>
+                                    <button class="btn btn-light w-100" @onclick="() => this.FileManagerForImages = true" style="height:33%;">
+                                        <i class="fa-solid fa-folder"></i>
+                                        <div>@Text.Lower("Pick from file manager")</div>
+                                    </button>
+                                    <button class="btn btn-light w-100" @onclick="ClearHeader" style="height:33%;">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                        <div>@Text.Lower("Clear picture")</div>
+                                    </button>
+                                </div>
+                            </CustomContent>
+                            <SelectedTemplate></SelectedTemplate>
+                        </MudFileUpload>
                     </li>
                 </ul>
             </div>
@@ -157,13 +162,60 @@
                                       HelperText="@Text.Lower("Instagram")"></MudTextField>
                     </li>
                 </ul>
+                <ul class="inline-list mt-3">
+                    <li>
+                        <MudTextField ReadOnly="true"
+                                      Immediate="true"
+                                      Value="@(Text.Lower(Entity.TOTPSecret.Has().YesNo()))"
+                                      HelperText="@Text.Lower("2FA secret?")"
+                                      Class="yes-no"></MudTextField>
+                    </li>
+                    <li>
+                        <MudTextField ReadOnly="true"
+                                      Immediate="true"
+                                      Value="@(Text.Lower(Entity.GetTOTPRecoveryCodes().Any().YesNo()))"
+                                      HelperText="@Text.Lower("2FA recovery codes?")"
+                                      Class="yes-no"></MudTextField>
+                    </li>
+                </ul>
+            </div>
+            <div class="blogs p-3">
+                <div class="w-100 text-white bg-secondary text-center">
+                    <i class="fa-solid fa-id-badge"></i>
+                    @Text.Lower("Blogs this user has access to")
+                </div>
+                <MudDataGrid T="OrigamiBlog" Class="border mt-3" Items="this.Super.Blogs.ReadFromCache().OrderBy(x => x.Name)" SortMode="SortMode.None" Filterable="false">
+                    <Columns>
+                        <TemplateColumn>
+                            <CellTemplate>
+                                <MudCheckBox T="bool" Value="@IsBlogSelected(context.Item)" @onclick="() => SelectBlog(context.Item)"></MudCheckBox>
+                            </CellTemplate>
+                        </TemplateColumn>
+                        <TemplateColumn CellClass="w-100">
+                            <CellTemplate>
+                                <BlogHeaderLite Entity="context.Item"></BlogHeaderLite>
+                            </CellTemplate>
+                        </TemplateColumn>
+                        <TemplateColumn>
+                            <CellTemplate>
+                                @if (NewBlog(context.Item) == true)
+                                {
+                                    <i class="fa-solid fa-circle-plus"></i>
+                                }
+                            </CellTemplate>
+                        </TemplateColumn>
+                    </Columns>
+                    <PagerContent>
+                        <MudDataGridPager T="OrigamiBlog" PageSizeOptions="[10, 25, 50, 100]" />
+                    </PagerContent>
+                </MudDataGrid>
             </div>
             <div class="roles p-3">
                 <div class="w-100 text-white bg-secondary text-center">
                     <i class="fa-solid fa-id-badge"></i>
                     @Text.Lower("Roles")
                 </div>
-                <MudDataGrid T="OrigamiRole" Class="border mt-3" Items="this.Super.Roles.ReadFromCache().Blog(this.Entity.BlogId).NonDeleted().OrderBy(x => x.Name)" SortMode="SortMode.None" Filterable="false">
+                <MudDataGrid T="OrigamiRole" Class="border mt-3" Items="this.Super.Roles.ReadFromCache().NonDeleted().OrderBy(x => x.Name)" SortMode="SortMode.None" Filterable="false">
                     <Columns>
                         <TemplateColumn>
                             <CellTemplate>
@@ -216,6 +268,10 @@
                         <button class="btn btn-secondary text-white fw-bold w-100" @onclick="() => this._showPasswordResetHistory = true">
                             <i class="bi bi-person-lines-fill"></i>
                             @Text.Lower("Password reset history")
+                        </button>
+                        <button class="btn btn-warning text-white fw-bold w-100" @onclick="Reset2FA">
+                            <i class="fa-solid fa-check-to-slot"></i>
+                            @Text.Lower("Reset 2FA")
                         </button>
                     </div>
                 </div>
@@ -357,7 +413,10 @@
                         <Columns>
                             <TemplateColumn Title="@Text.Upper("Key")">
                                 <CellTemplate>
-                                    @context.Item.Key
+                                    <span class="fs-4">@context.Item.Key</span>
+                                    <span class="fs-6 d-block">
+                                        @(this.NavigationManager.BaseUri.TrimEnd('/') + "/password/reset/" + context.Item.Key)
+                                    </span>
                                 </CellTemplate>
                             </TemplateColumn>
                             <TemplateColumn Title="@Text.Upper("Date")">
@@ -418,6 +477,11 @@
     /// </summary>
     protected List<OrigamiUserRole> UserRoles = [];
 
+    /// <summary>
+    /// User blogs associated with the user.
+    /// </summary>
+    protected List<OrigamiUserBlog> UserBlogs = [];
+
     [Parameter] public EventCallback<OrigamiUser> OnUserBlocked { get; set; }
     [Parameter] public EventCallback<OrigamiUser> OnUserUnblocked { get; set; }
 
@@ -431,6 +495,17 @@
             if (this.Entity.EmailAddress.Email() == false) return true;
             return false;
         }
+    }
+
+    protected bool IsBlogSelected(OrigamiBlog blog)
+    {
+        return this.UserBlogs.Any(x => x.BlogId == blog.Id);
+    }
+
+    protected bool NewBlog(OrigamiBlog blog)
+    {
+        if (IsBlogSelected(blog) == false) return false;
+        return this.Super.UserBlogs.ReadFromCache().Where(x => x.BlogId == blog.Id).Where(x => x.UserId == this.Entity.Id).Any() == false;
     }
 
     protected bool IsRoleSelected(OrigamiRole role)
@@ -453,10 +528,23 @@
         this.Entity.FirstName = this.Entity.FirstName.Trim();
         this.Entity.LastName = this.Entity.LastName.Trim();
 
-        //sets the FK Blog (or the save process will fail)
-        if (this.Entity.BlogId == Guid.Empty) this.Entity.BlogId = this.GetBlogFromUserFacade().Id;
-
         return result;
+    }
+
+    protected void SelectBlog(OrigamiBlog blog)
+    {
+        if (IsBlogSelected(blog) == true)
+        {
+            this.UserBlogs.RemoveAll(x => x.BlogId == blog.Id);
+        }
+        else
+        {
+            this.UserBlogs.Add(new()
+            {
+                UserId = this.Entity.Id,
+                BlogId = blog.Id,
+            });
+        }
     }
 
     protected void SelectRole(OrigamiRole role)
@@ -492,7 +580,13 @@
 
     protected List<OrigamiUserPasswordReset> GetPasswordResetHistory()
     {
-        return this.Super.UserPasswordResets.ReadFromDatabase().Where(x => x.UserId == this.Entity.Id).OrderByDescending(x => x.DateCreated).ToList();
+        using var db = this.DbContextFactory.CreateDbContext();
+        return db.Set<OrigamiUserPasswordReset>().AsNoTracking().Where(x => x.UserId == this.Entity.Id).OrderByDescending(x => x.DateCreated).ToList();
+    }
+
+    protected void LoadUserBlogs()
+    {
+        this.UserBlogs = [.. from x in this.Super.UserBlogs.ReadFromCache() where x.UserId == this.Entity.Id select x];
     }
 
     protected void LoadUserRoles()
@@ -503,6 +597,7 @@
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
+        this.LoadUserBlogs();
         this.LoadUserRoles();
     }
 
@@ -511,27 +606,34 @@
         var hub = new Result<OrigamiUser>();
         var ctx = new DataOperationContext<OrigamiUser>(this.UserFacade.User, this.Entity);
         this.UserRoles.GetContexts(ctx).Each(x => this.Super.UserRoles.SmartSave(x, false).Push(hub));
+        this.UserBlogs.GetContexts(ctx).Each(x => this.Super.UserBlogs.SmartSave(x, false).Push(hub));
         return hub;
     }
 
     protected override Result<OrigamiUser> UpdateOthers()
     {
+        using var db = this.DbContextFactory.CreateDbContext();
         var hub = new Result<OrigamiUser>();
         var ctx = new DataOperationContext<OrigamiUser>(this.UserFacade.User, this.Entity);
-        var dbo = this.Super.UserRoles.ReadFromDatabase().Where(x => x.UserId == this.Entity.Id).ToList();
-        var merge = dbo.GetMerge(this.UserRoles);
-        return hub.OnSuccess(() => this.Super.UserRoles.Merge(ctx, merge));
+        var dbo1 = db.Set<OrigamiUserRole>().AsNoTracking().Where(x => x.UserId == this.Entity.Id).ToList();
+        var merge1 = dbo1.GetMerge(this.UserRoles);
+        hub.OnSuccess(() => this.Super.UserRoles.Merge(ctx, merge1));
+        var dbo2 = db.Set<OrigamiUserBlog>().AsNoTracking().Where(x => x.UserId == this.Entity.Id).ToList();
+        var merge2 = dbo2.GetMerge(this.UserBlogs);
+        hub.OnSuccess(() => this.Super.UserBlogs.Merge(ctx, merge2));
+        return hub;
     }
 
     public override void UndoChanges()
     {
         base.UndoChanges();
         this.LoadUserRoles();
+        this.LoadUserBlogs();
     }
 
     protected async Task BlockUser()
     {
-        var yes = await this.DialogService.ShowMessageBox(
+        var yes = await this.DialogService.ShowMessageBoxAsync(
             title: Text.Upper("Are you sure?"),
             message: Text.Lower("This will block the user out from the website"),
             yesText: Text.Lower("Yes"),
@@ -553,7 +655,7 @@
 
     protected async Task UnblockUser()
     {
-        var yes = await this.DialogService.ShowMessageBox(
+        var yes = await this.DialogService.ShowMessageBoxAsync(
             title: Text.Upper("Are you sure?"),
             message: Text.Lower("This will unblock the user back to the website"),
             yesText: Text.Lower("Yes"),
@@ -573,11 +675,43 @@
         }
     }
 
+    protected async Task Reset2FA()
+    {
+        try
+        {
+            var yes = await this.DialogService.ShowMessageBoxAsync(
+                    title: Text.Upper("Are you sure?"),
+                    message: Text.Lower("This will force the user to setup 2FA once again"),
+                    yesText: Text.Lower("Yes"),
+                    noText: Text.Lower("No")) ?? false;
+
+            if (yes == true)
+            {
+                var key = string.Empty;
+                using (var transaction = new TransactionScope())
+                {
+                    var ctx = new DataOperationContext<OrigamiUser>(this.UserFacade.User, this.Entity);
+                    var hub = this.Super.Users.Reset2FA(ctx, true);
+                    if (hub.Ok == true)
+                    {
+                        transaction.Complete();
+                    }
+                    this.UserFacade.Result = hub;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            this.UserFacade.Result = new(ex);
+            return;
+        }
+    }
+
     protected async Task ResetPassword()
     {
         try
         {
-            var yes = await this.DialogService.ShowMessageBox(
+            var yes = await this.DialogService.ShowMessageBoxAsync(
                     title: Text.Upper("Are you sure?"),
                     message: Text.Lower("This will generate a link for the user to reset their own password"),
                     yesText: Text.Lower("Yes"),

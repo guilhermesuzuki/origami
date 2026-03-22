@@ -9,7 +9,6 @@ namespace Origami.Core.Data
         IUserTrashRepository
     {
         private readonly IBlogRepository _blogRepository;
-        private readonly ISettingsRepository _blogSettingsRepository;
         private readonly ICategoryRepository _categoryRepository;
         private readonly IDirectoryRepository _directoryRepository;
         private readonly IFileRepository _fileRepository;
@@ -24,8 +23,12 @@ namespace Origami.Core.Data
         private readonly IPostRepository _postRepository;
         private readonly IPostTagRepository _postTagRepository;
         private readonly IPostViewRepository _postViewRepository;
+        private readonly IQuickNoteRepository _quickNoteRepository;
         private readonly IRoleRepository _roleRepository;
+        private readonly ISettingsRepository _blogSettingsRepository;
         private readonly ISocialProfileRepository _socialProfileRepository;
+        private readonly ISpecialMessageRepository _specialMessageRepository;
+        private readonly ISpecialPageRepository _specialPageRepository;
         private readonly ISubscriberRepository _subscriberRepository;
         private readonly ITagRepository _tagRepository;
         private readonly IUserActivityRepository _userActivityRepository;
@@ -60,9 +63,12 @@ namespace Origami.Core.Data
             IPostRepository postRepository,
             IPostTagRepository postTagRepository,
             IPostViewRepository postViewRepository,
+            IQuickNoteRepository quickNoteRepository,
             IRoleRepository roleRepository,
             ISettingsRepository blogSettingsRepository,
             ISocialProfileRepository socialProfileRepository,
+            ISpecialMessageRepository specialMessageRepository,
+            ISpecialPageRepository specialPageRepository,
             ISubscriberRepository subscriberRepository,
             ITagRepository tagRepository,
             IUserActivityRepository userActivityRepository,
@@ -98,8 +104,11 @@ namespace Origami.Core.Data
             _postRepository = postRepository;
             _postTagRepository = postTagRepository;
             _postViewRepository = postViewRepository;
+            _quickNoteRepository = quickNoteRepository;
             _roleRepository = roleRepository;
             _socialProfileRepository = socialProfileRepository;
+            _specialMessageRepository = specialMessageRepository;
+            _specialPageRepository = specialPageRepository;
             _subscriberRepository = subscriberRepository;
             _tagRepository = tagRepository;
             _userActivityRepository = userActivityRepository;
@@ -121,7 +130,9 @@ namespace Origami.Core.Data
 
         public override List<OrigamiUserTrash> Search(string searchTerm)
         {
-            var query = from x in this.ReadFromDatabase()
+            using var db = DbContextFactory.CreateDbContext();
+
+            var query = from x in db.Set<OrigamiUserTrash>().AsNoTracking()
                         where x.Type.Contains(searchTerm) ||
                               x.Name.Contains(searchTerm) ||
                               x.Title.Contains(searchTerm) ||
@@ -179,6 +190,21 @@ namespace Origami.Core.Data
                 return _purge(_roleRepository, ctx);
             }
 
+            if (ctx.Entity.Type.Like("QuickNote") == true)
+            {
+                return _purge(_quickNoteRepository, ctx);
+            }
+
+            if (ctx.Entity.Type.Like("SpecialPage") == true)
+            {
+                return _purge(_specialPageRepository, ctx);
+            }
+
+            if (ctx.Entity.Type.Like("SpecialMessage") == true)
+            {
+                return _purge(_specialMessageRepository, ctx);
+            }
+
             throw new NotImplementedException();
         }
 
@@ -229,6 +255,21 @@ namespace Origami.Core.Data
                 return _restore(_roleRepository, ctx);
             }
 
+            if (ctx.Entity.Type.Like("QuickNote") == true)
+            {
+                return _restore(_quickNoteRepository, ctx);
+            }
+
+            if (ctx.Entity.Type.Like("SpecialPage") == true)
+            {
+                return _restore(_specialPageRepository, ctx);
+            }
+
+            if (ctx.Entity.Type.Like("SpecialMessage") == true)
+            {
+                return _restore(_specialMessageRepository, ctx);
+            }
+
             throw new NotImplementedException();
         }
 
@@ -236,7 +277,7 @@ namespace Origami.Core.Data
             where T : class, IId, new()
         {
             var hub = new Result<OrigamiUserTrash>(trash.Entity);
-            var entity = repo.ReadFromDatabase().Id(trash.Entity.Id);
+            var entity = repo.ReadFromDatabase(trash.Entity);
             var ctx = new DataOperationContext<T>(trash.User, trash.DateTime, entity ?? new());
             return repo.SmartPurge(ctx, true).Push(hub);
         }
@@ -245,13 +286,13 @@ namespace Origami.Core.Data
             where T : class, IId, new()
         {
             var hub = new Result<OrigamiUserTrash>(trash.Entity);
-            var entity = repo.ReadFromDatabase().Id(trash.Entity.Id);
+            var entity = repo.ReadFromDatabase(trash.Entity);
             var ctx = new DataOperationContext<T>(trash.User, trash.DateTime, entity ?? new());
             if (entity != null)
             {
                 return repo.SmartRestore(ctx, true).Push(hub);
             }
-            return new(trash.Entity) { ErrorMessage = Text.Original("Unable to restore trash") };
+            return new(trash.Entity) { Error = Text.Original("Unable to restore trash") };
         }
     }
 }

@@ -1,0 +1,163 @@
+﻿@page "/quicknotes"
+@inherits BasicAdminGrid<OrigamiQuickNote>
+
+<Root Access="this.CanAccess()">
+    <HeaderTemplate>
+        <div class="p-3 border-bottom">
+            <div class="row">
+                <div class="d-inline-flex align-items-center col-12 col-xxl-8">
+                    <ul class="inline-list w-100">
+                        <li style="width:80%;">
+                            <i class="fa-solid fa-file-lines pe-1"></i>
+                            <span class="me-3">@Text.Get("Quick notes", Text.Styles.Uppercase)</span>
+                            <div class="btn-group pe-1">
+                                <button class="btn btn-light text-danger border border-danger" disabled="@this.DisableTheDeleteButton" @onclick="this.DeleteSelectedEntities">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            </div>
+                            <div class="btn-group">
+                                <button class="btn btn-success text-white" title="@Text.Lower("Publish post(s)")" disabled="@this.DisableTheDeleteButton" @onclick="this.PublishSelectedEntities">
+                                    <i class="fa-solid fa-file-arrow-up"></i>
+                                </button>
+                                <button class="btn btn-warning text-white" title="@Text.Lower("Unpublish post(s)")" disabled="@this.DisableTheDeleteButton" @onclick="this.UnpublishSelectedEntities">
+                                    <i class="fa-solid fa-file-arrow-down"></i>
+                                </button>
+                            </div>
+                        </li>
+                        <li style="width:20%;">
+                            <MudSelect T="string" HelperText="@Text.Lower("Filter")" @bind-Value:get="Filter" @bind-Value:set="(filter) => SetFilterAndRefreshUI(filter)">
+                                <MudSelectItem T="string" Value="@(new string("all"))">@Text.Original("All")</MudSelectItem>
+                                <MudSelectItem T="string" Value="@(new string("published"))">@Text.Original("Published")</MudSelectItem>
+                                @* <MudSelectItem T="string" Value="@(new string("drafts"))">@Text.Original("Drafts")</MudSelectItem> *@
+                            </MudSelect>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-12 col-xxl-4">
+                    <BlogSelect></BlogSelect>
+                </div>
+            </div>
+        </div>
+        <div class="p-3 border-bottom">
+            <div class="row">
+                <div class="col-12">
+                    <SearchLite T="OrigamiQuickNote" OnHitSelected="this.OnSearchResultSelected"></SearchLite>
+                </div>
+            </div>
+        </div>
+    </HeaderTemplate>
+    <ContentTemplate>
+        <div class="p-3">
+            <div class="row">
+                <div class="datagrid-options col-12 text-right mb-1">
+                    <DataGridOptions Deleted="this.IncludeDeletedEntitiesInDataGrid" DeletedChanged="this.OnIncludeDeletedEntitiesChanged"></DataGridOptions>
+                </div>
+                <div class="quick-notes col-12 col-xxl-8">
+                    <MudDataGrid @ref="DataGrid" T="OrigamiQuickNote" ServerData="GetEntities" Filterable="false" SortMode="SortMode.None" Class="border selectable" SelectedItems="this.SelectedEntities" MultiSelection="true" SelectedItemsChanged="this.SelectedEntitiesChanged"
+                                 RowClassFunc="this.RowClassFunc" Bordered="true" SelectOnRowClick="false">
+                        <Columns>
+                            <SelectColumn T="OrigamiQuickNote"></SelectColumn>
+                            <TemplateColumn Title="@Text.Upper("Note")">
+                                <CellTemplate>
+                                    <div class="cursor-pointer d-inline-flex align-items-center" @onclick="() => OnEdit(context.Item)">
+                                        @if (context.Item.Background.Has() == true)
+                                        {
+                                            var style = $"background: {context.Item.Background}";
+                                            <MudAvatar Class="me-2"
+                                                       Size="Size.Small"
+                                                       Style="@style"
+                                                       Square="true">
+                                            </MudAvatar>
+                                        }
+                                        <QuickNoteHeaderLite Entity="context.Item"></QuickNoteHeaderLite>
+                                    </div>
+                                </CellTemplate>
+                            </TemplateColumn>
+                            <TemplateColumn Title="@Text.Upper("Author")" CellClass="col-2">
+                                <CellTemplate>
+                                    <UserHeaderLite2 Entity="this.Super.GetAuthor(context.Item)"></UserHeaderLite2>
+                                </CellTemplate>
+                            </TemplateColumn>
+                            <TemplateColumn Title="@Text.Upper("Published")" Sortable="false" Filterable="false" CellClass="col-1 text-center">
+                                <CellTemplate>
+                                    @if (context.Item.IsPublished)
+                                    {
+                                        <i class="fa-solid fa-thumbs-up"></i>
+                                    }
+                                </CellTemplate>
+                            </TemplateColumn>
+                            <TemplateColumn Title="@Text.Upper("Date")" Sortable="false" Filterable="false" CellClass="col-1 text-center">
+                                <CellTemplate>
+                                    <i class="fa-solid fa-calendar"></i>
+                                    <div class="small">@context.Item.GetDate()</div>
+                                </CellTemplate>
+                            </TemplateColumn>
+                        </Columns>
+                        <PagerContent>
+                            <MudDataGridPager T="OrigamiQuickNote" />
+                        </PagerContent>
+                        <NoRecordsContent>
+                            <NoEntriesWereFound></NoEntriesWereFound>
+                        </NoRecordsContent>
+                    </MudDataGrid>
+                </div>
+                <div class="quick-note-form col-12 col-xxl-4">
+                    <QuickNoteForm Class="p-3 shadow-sm border" Entity="this.SelectedEntity" Saved="this.EntitySaved" Cancelled="this.EntityCancelled" Created="this.EntityCreated"></QuickNoteForm>
+                </div>
+            </div>
+        </div>
+    </ContentTemplate>
+</Root>
+@code {
+
+    protected override string DefaultOrdering => $"{nameof(OrigamiQuickNote.Note)}";
+
+    protected virtual Result<OrigamiQuickNote> PublishEntity(OrigamiQuickNote entity)
+    {
+        var context = new DataOperationContext<OrigamiQuickNote>(this.UserFacade.User, DateTime.UtcNow, entity);
+        return this.Super.QuickNotes.SmartPublish(context, true);
+    }
+
+    protected virtual Result<OrigamiQuickNote> UnpublishEntity(OrigamiQuickNote entity)
+    {
+        var context = new DataOperationContext<OrigamiQuickNote>(this.UserFacade.User, DateTime.UtcNow, entity);
+        return this.Super.QuickNotes.SmartUnpublish(context, true);
+    }
+
+    protected async Task PublishSelectedEntities()
+    {
+        await ExecuteWithSelectedEntities(
+            async () =>
+            {
+                return await DialogService.ShowMessageBoxAsync(
+                    Text.Upper("Publish {0} item(s)", SelectedEntities.Count),
+                    Text.Original("Are you sure?"),
+                    yesText: Text.Lower("Yes"),
+                    noText: Text.Lower("No"));
+            },
+            this.PublishEntity
+        );
+    }
+
+    protected async Task UnpublishSelectedEntities()
+    {
+        await ExecuteWithSelectedEntities(
+            async () =>
+            {
+                return await DialogService.ShowMessageBoxAsync(
+                    Text.Upper("Unpublish {0} item(s)", SelectedEntities.Count),
+                    Text.Original("Are you sure?"),
+                    yesText: Text.Lower("Yes"),
+                    noText: Text.Lower("No"));
+            },
+            this.UnpublishEntity
+        );
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        var filter = this.NavigationManager!.Uri.QueryString("filter");
+        this.Filter = filter.Has() ? filter : this.Filter;
+    }
+}

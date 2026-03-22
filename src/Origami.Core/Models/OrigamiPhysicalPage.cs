@@ -18,8 +18,6 @@ namespace Origami.Core.Models
         private Guid _id = Guid.NewGuid();
         private string _path = string.Empty;
         private byte[] _version = [];
-        public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) => { };
-
         public OrigamiPhysicalPage() : base()
         {
 
@@ -29,6 +27,8 @@ namespace Origami.Core.Models
         {
             Id = id;
         }
+
+        public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) => { };
 
         public DateTime DateCreated
         {

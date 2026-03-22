@@ -1,4 +1,5 @@
 ﻿@page "/login"
+@using BootstrapBlazor.Components
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Identity
 @using System.Security.Claims
@@ -13,85 +14,166 @@
 @inject IUserRepository userRepository
 @inject IUserRoleRepository userRoleRepository
 @inject IOptions<JwtConfiguration> jwtConfiguration
+@inject ILoginRepository loginRepository
 
-<div class="login-wrapper mt-3">
-    @if (this._mustChangePassword == false)
-    {
-        <BlogSelect></BlogSelect>
-        <ul class="inline-list mt-3">
-            <li>
-                <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("Username")" @bind-Value="_username" OnKeyUp="this._onLogin"></MudTextField>
-            </li>
-            <li>
-                <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("Password")" InputType="InputType.Password" @bind-Value="_password" OnKeyUp="this._onLogin"></MudTextField>
-            </li>
-        </ul>
-        <div class="btn-group mt-3 w-100">
-            <button class="btn btn-success text-white w-100" disabled="@_disableLogin" @onclick="_login" type="submit">
-                <i class="fa-solid fa-right-to-bracket"></i>
-                @Text.Lower("Login")
-            </button>
-            <button class="btn btn-warning text-white w-100" @onclick="_clear">
-                <i class="fa-solid fa-broom"></i>
-                @Text.Lower("Clear")
-            </button>
-            <button class="btn btn-danger text-white w-100" @onclick="_forgotPassword">
-                <i class="fa-solid fa-user-lock"></i>
-                @Text.Lower("Forgot password")
-            </button>
-        </div>
-    }
-    else
-    {
-        <ul class="inline-list">
-            <li>
-                <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("New password")" InputType="InputType.Password" @bind-Value="_newPassword1"></MudTextField>
-            </li>
-            <li>
-                <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("Confirm password")" InputType="InputType.Password" @bind-Value="_newPassword2"></MudTextField>
-            </li>
-        </ul>
-        <div class="btn-group mt-3 w-100">
-            <button class="btn btn-success text-white" disabled="@_disableLogin" @onclick="_changePassword">
-                <i class="fa-solid fa-floppy-disk"></i>
-                @Text.Lower("Save")
-            </button>
-            <button class="btn btn-warning text-white" @onclick="() => { this._newPassword1 = this._newPassword2 = string.Empty; }">
-                <i class="fa-solid fa-broom"></i>
-                @Text.Lower("Clear")
-            </button>
-            <button class="btn btn-secondary text-white" @onclick="_clear">
-                <i class="fa-solid fa-circle-chevron-left"></i>
-                @Text.Lower("Go back")
-            </button>
-        </div>
-    }
-</div>
+@if (SyncRoot != null)
+{
+    <div class="login-wrapper mt-3">
+        @if (loginRepository.GetCurrentStep() == ILoginRepository.Steps.Step1_ValidateCredentials)
+        {
+            <ul class="inline-list mt-3">
+                <li>
+                    <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("Username")" @bind-Value="loginRepository.Username" OnKeyUp="this._onLogin"></MudTextField>
+                </li>
+                <li>
+                    <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("Password")" InputType="InputType.Password" @bind-Value="loginRepository.Password" OnKeyUp="this._onLogin"></MudTextField>
+                </li>
+            </ul>
+            <div class="btn-group mt-3 w-100">
+                <button class="btn btn-success text-white w-100" disabled="@loginRepository.ShouldDisableLogin" @onclick="loginRepository.GoNextAsync" type="submit">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    @Text.Lower("Login")
+                </button>
+                <button class="btn btn-warning text-white w-100" @onclick="loginRepository.ClearCredentials">
+                    <i class="fa-solid fa-broom"></i>
+                    @Text.Lower("Clear")
+                </button>
+                <button class="btn btn-danger text-white w-100" @onclick="_forgotPassword">
+                    <i class="fa-solid fa-user-lock"></i>
+                    @Text.Lower("Forgot password")
+                </button>
+            </div>
+        }
+        else if (loginRepository.GetCurrentStep() == ILoginRepository.Steps.Step2_MustChangePassword)
+        {
+            <div class="step2 must-change-password-header">
+                <div class="pb-1 fs-4 text-center">@Text.Original("You must change your password")</div>
+            </div>
+            <ul class="inline-list">
+                <li>
+                    <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("New password")" InputType="InputType.Password" @bind-Value="loginRepository.NewPassword1"></MudTextField>
+                </li>
+                <li>
+                    <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("Confirm password")" InputType="InputType.Password" @bind-Value="loginRepository.NewPassword2"></MudTextField>
+                </li>
+            </ul>
+            <div class="btn-group mt-3 w-100">
+                <button class="btn btn-success text-white" disabled="@loginRepository.ShouldDisablePasswordChange" @onclick="loginRepository.GoNextAsync">
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    @Text.Lower("Change password")
+                </button>
+                <button class="btn btn-warning text-white" @onclick="loginRepository.ClearChangePassword">
+                    <i class="fa-solid fa-broom"></i>
+                    @Text.Lower("Clear")
+                </button>
+                <button class="btn btn-secondary text-white" @onclick="loginRepository.GoBackAsync">
+                    <i class="fa-solid fa-circle-chevron-left"></i>
+                    @Text.Lower("Go back")
+                </button>
+            </div>
+        }
+        else if (loginRepository.GetCurrentStep() == ILoginRepository.Steps.Step3_MustEnable2MFA)
+        {
+            <div class="step3 must-enable-2fa-header">
+                <div class="pb-1 fs-4 text-center">@Text.Original("2FA setup")</div>
+                <ul class="inline-list">
+                    <li class="text-center">
+                        <div class="border-bottom pb-1">@Text.Original("Scan this QR code with your authenticator app")</div>
+                    </li>
+                    <li class="text-center">
+                        <div class="border-bottom pb-1">@Text.Original("Keep these recovery codes somewhere safe")</div>
+                    </li>
+                </ul>
+            </div>
+            <ul class="inline-list step3 must-enable-2fa p-3">
+                <li class="text-center">
+                    <div class="qr-code-wrapper">
+                        <img class="qr-code w-100" src="data:image/png;base64,@this.loginRepository.User.GetTOTPQrCode()" />
+                    </div>
+                    <div class="uri-wrapper mt-3">
+                        <div>@Text.Original("Or paste this URI")</div>
+                        <span class="uri">@this.loginRepository.User.GetTOTPUri()</span>
+                    </div>
+                </li>
+                <li class="text-center">
+                    <div class="recovery-codes row">
+                        @foreach (var recoveryCode in this.loginRepository.TOTPRecoveryCodes)
+                        {
+                            <div class="recovery-code col-6">
+                                <span class="fs-5">@recoveryCode</span>
+                            </div>
+                        }
+                    </div>
+                </li>
+            </ul>
+            <ul class="inline-list step3 must-enable-2fa-actions mt-3">
+                <li class="text-center">
+                    <div class="btn-group w-100">
+                        <button class="btn btn-secondary text-white w-50" @onclick="loginRepository.Regenerate2FASecret">
+                            <i class="fa-solid fa-arrows-rotate"></i>
+                            @Text.Lower("Regenerate secret")
+                        </button>
+                        <button class="btn btn-secondary text-white w-50" @onclick="loginRepository.Regenerate2FARecoveryCodes">
+                            <i class="fa-solid fa-arrows-rotate"></i>
+                            @Text.Lower("Regenerate recovery codes")
+                        </button>
+                    </div>
+                </li>
+            </ul>
+            <div class="step3 validate-code mt-3">
+                <ul class="inline-list">
+                    <li>
+                        <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("Enter the TOTP code here")" InputType="InputType.Password" @bind-Value="loginRepository.TOTPCodeForEnablement"></MudTextField>
+                    </li>
+                </ul>
+            </div>
+            <div class="btn-group mt-3 w-100">
+                <button class="btn btn-success text-white" disabled="@loginRepository.ShouldDisable2FAEnablement" @onclick="loginRepository.GoNextAsync">
+                    <i class="fa-solid fa-clipboard-check"></i>
+                    @Text.Lower("Validate the TOTP code and proceed")
+                </button>
+                <button class="btn btn-warning text-white" @onclick="loginRepository.ClearEnable2FA">
+                    <i class="fa-solid fa-broom"></i>
+                    @Text.Lower("Clear")
+                </button>
+                <button class="btn btn-secondary text-white" @onclick="loginRepository.GoBackAsync">
+                    <i class="fa-solid fa-circle-chevron-left"></i>
+                    @Text.Lower("Go back")
+                </button>
+            </div>
+        }
+        else if (loginRepository.GetCurrentStep() == ILoginRepository.Steps.Step4_Validate2FA)
+        {
+            <div class="step4 validate-2fa">
+                <ul class="inline-list">
+                    <li>
+                        <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("2FA code")" InputType="InputType.Password" @bind-Value="loginRepository.TOTPCodeForValidation"></MudTextField>
+                    </li>
+                </ul>
+            </div>
+            <div class="btn-group mt-3 w-100">
+                <button class="btn btn-success text-white" disabled="@loginRepository.ShouldDisable2FAValidation" @onclick="loginRepository.GoNextAsync">
+                    <i class="fa-solid fa-check-to-slot"></i>
+                    @Text.Lower("Validate the 2FA code and login")
+                </button>
+                <button class="btn btn-warning text-white" @onclick="loginRepository.Clear2FA">
+                    <i class="fa-solid fa-broom"></i>
+                    @Text.Lower("Clear")
+                </button>
+                <button class="btn btn-secondary text-white" @onclick="loginRepository.GoBackAsync">
+                    <i class="fa-solid fa-circle-chevron-left"></i>
+                    @Text.Lower("Go back")
+                </button>
+            </div>
+        }
+    </div>
+}
 
 @code {
-    private bool _mustChangePassword = false;
-    private string _newPassword1 = string.Empty;
-    private string _newPassword2 = string.Empty;
-    private string _password = string.Empty;
-    private string _username = string.Empty;
 
-    private bool _disableLogin
+    private void _forgotPassword()
     {
-        get
-        {
-            if (_username.Has() == false) return true;
-            if (_password.Has() == false) return true;
-            return false;
-        }
-    }
-
-    private void _clear()
-    {
-        _mustChangePassword = false;
-        _username = string.Empty;
-        _password = string.Empty;
-        _newPassword1 = string.Empty;
-        _newPassword2 = string.Empty;
+        this.NavigationManager.NavigateTo("/password/forgot", false);
     }
 
     private string _generateJwtToken(OrigamiUser user)
@@ -120,78 +202,36 @@
         return jwtToken;
     }
 
-    private async Task _login()
+    private void _onLogin(KeyboardEventArgs args)
     {
-        var blog = this.Super.Blogs.ReadFromCache().Id(this.UserFacade.BlogId);
-        if (blog != null)
+        if (args.Key == "Enter" && loginRepository.ShouldDisableLogin == false)
         {
-            var user = this.Super.Users.LookupUserInDatabase(blog, _username, _password);
-            if (user != null)
-            {
-                this.UserFacade.User = user;
-                this.userRepository.UpdateCache(user);
-
-                if (user.MustChangePassword == true)
-                {
-                    this._mustChangePassword = true;
-                    this.UserFacade.Result = new() { ErrorMessage = Text.Original("You must change your password") };
-                    return;
-                }
-
-                var token = this._generateJwtToken(user);
-                await this.JSRuntime.InvokeVoidAsync("$.cookie", this.Configuration.GetUserCookieKey(), token, new { path = "/", expires = 365, });
-
-                var returnUrl = this.NavigationManager!.Uri.QueryString("ReturnUrl");
-                this.NavigationManager!.NavigateTo(returnUrl.Has() ? returnUrl : "/", true);
-            }
-            else
-            {
-                var hub = new Result<OrigamiUser>();
-
-                hub.ErrorMessage = Text.Original("Username and password do not exist in the database");
-                hub.ErrorMessage = Text.Original("User may have been deleted or blocked");
-
-                this.UserFacade.Result = hub;
-            }
-        }
-        else
-        {
-            this.UserFacade.Result = new() { ErrorMessage = Text.Original("Blog could not be found") };
+            loginRepository.GoNextAsync().Wait();
         }
     }
 
-    private void _changePassword()
+    private async Task _welcomeToTheApplication(object? sender, EventArgs e)
     {
-        var hub = this.Super.Users.ChangePassword(
-            this.UserFacade.User.GetContext(),
-            this._password,
-            this._newPassword1,
-            this._newPassword2);
+        this.UserFacade.User = this.loginRepository.User;
+        this.Super.Users.UpdateCache(this.UserFacade.User);
 
-        try
-        {
-            if (hub.Ok)
-            {
-                var returnUrl = this.NavigationManager!.Uri.QueryString("ReturnUrl");
-                this.NavigationManager!.NavigateTo(returnUrl.Has() ? returnUrl : "/", false);
-            }
-        }
-        finally
-        {
-            this.UserFacade.Result = hub;
-        }
+        var token = this._generateJwtToken(this.UserFacade.User);
+        await this.JSRuntime.InvokeVoidAsync("$.cookie", this.Configuration.GetUserCookieKey(), token, new { path = "/", expires = 365, });
+
+        var returnUrl = this.NavigationManager!.Uri.QueryString("ReturnUrl");
+        this.NavigationManager!.NavigateTo(returnUrl.Has() ? returnUrl : "/", true);
     }
 
-    private async Task _onLogin(KeyboardEventArgs args)
+    protected override async Task OnInitializedAsync()
     {
-        if (args.Key.Like("Enter") == true && _disableLogin == false)
-        {
-            await _login();
-        }
+        await base.OnInitializedAsync();
+        await this.loginRepository.ResetAsync();
     }
 
-    private void _forgotPassword()
+    protected override void OnInitialized()
     {
-        this.NavigationManager.NavigateTo("/password/forgot", false);
+        base.OnInitialized();
+        this.loginRepository.RefreshUI += async (sender, e) => await this.InvokeAsync(this.StateHasChanged);
+        this.loginRepository.WelcomeToTheApplication += async (sender, e) => await this._welcomeToTheApplication(sender, e);
     }
 }

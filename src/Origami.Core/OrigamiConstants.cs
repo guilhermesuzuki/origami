@@ -65,25 +65,19 @@ namespace Origami.Core
         public static IEnumerable<CultureInfo> AllLanguages()
         {
             return [
-                new CultureInfo("pt"),
-                new CultureInfo("pt-BR"),
-                new CultureInfo("pt-PT"),
-                new CultureInfo("en"),
+                new CultureInfo("de-DE"),
+                new CultureInfo("en-CA"),
                 new CultureInfo("en-UK"),
                 new CultureInfo("en-US"),
-                new CultureInfo("en-CA"),
-                new CultureInfo("es"),
                 new CultureInfo("es-ES"),
-                new CultureInfo("fr"),
-                new CultureInfo("fr-FR"),
                 new CultureInfo("fr-CA"),
-                new CultureInfo("de"),
-                new CultureInfo("de-DE"),
-                new CultureInfo("zh-Hans"),
-                new CultureInfo("zh-Hant"),
+                new CultureInfo("fr-FR"),
+                new CultureInfo("hi-IN"),
                 new CultureInfo("ja-JP"),
                 new CultureInfo("ko-KR"),
-                new CultureInfo("hi-IN"),
+                new CultureInfo("pt-BR"),
+                new CultureInfo("pt-PT"),
+                new CultureInfo("zh-Hans"),
                 ];
         }
 
@@ -153,6 +147,7 @@ namespace Origami.Core
         public const int MaximumFileSizeForHeaderImages = 6291456;
         public const int MaximumBase64StringForHeaderImages = 524288;
         public const long MaximumFileSizeForVideos = 2147483648;
+        public const long MaximumFileSizeForBackupRestore = 549755813888; // 512 GB
 
         /// <summary>
         /// Cache options (2 minutes expiration)
@@ -164,8 +159,37 @@ namespace Origami.Core
 
         public static class Events
         {
+            public const string Backup = "backup";
+            public const string BackupComplete = "backup-complete";
             public const string EmailStatus = "email-status";
+            public const string Restore = "restore";
+            public const string RestoreComplete = "restore-complete";
             public const string RssFeeds = "rss-feeds";
+            public const string ShowCookieConsent = "show-cookie-consent";
         }
+
+        public static readonly string[] BackgroundGradients =
+        {
+            "linear-gradient(135deg,#ff0080,#ff8c00)", // neon sunset
+            "linear-gradient(135deg,#ff3cac,#784ba0,#2b86c5)", // vibrant purple mix
+            "linear-gradient(135deg,#00f260,#0575e6)", // neon green → blue
+            "linear-gradient(135deg,#ff416c,#ff4b2b)", // hot red
+            "linear-gradient(135deg,#36d1dc,#5b86e5)", // aqua blue
+            "linear-gradient(135deg,#f7971e,#ffd200)", // bright orange yellow
+            "linear-gradient(135deg,#c94b4b,#4b134f)", // wine red
+            "linear-gradient(135deg,#00c9ff,#92fe9d)", // cyan lime
+            "linear-gradient(135deg,#fc466b,#3f5efb)", // pink blue
+            "linear-gradient(135deg,#f953c6,#b91d73)", // magenta
+            "linear-gradient(135deg,#43e97b,#38f9d7)", // neon mint
+            "linear-gradient(135deg,#fa709a,#fee140)", // pink yellow
+            "linear-gradient(135deg,#30cfd0,#330867)", // teal purple
+            "linear-gradient(135deg,#ff5858,#f09819)", // orange fire
+            "linear-gradient(135deg,#00dbde,#fc00ff)", // cyber neon
+            "linear-gradient(135deg,#7f00ff,#e100ff)", // deep violet
+            "linear-gradient(135deg,#00b09b,#96c93d)", // green energy
+            "linear-gradient(135deg,#fc4a1a,#f7b733)", // orange heat
+            "linear-gradient(135deg,#ee0979,#ff6a00)", // pink flame
+            "linear-gradient(135deg,#11998e,#38ef7d)"  // emerald glow
+        };
     }
 }

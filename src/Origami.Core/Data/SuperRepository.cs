@@ -29,6 +29,7 @@ namespace Origami.Core.Data
             IPostRepository postRepository,
             IPostTagRepository postTagRepository,
             IPostViewRepository postViewRepository,
+            IQuickNoteRepository quickNoteRepository,
             IResumeRepository resumeRepository,
             IRightRepository rightRepository,
             IRoleRepository roleRepository,
@@ -41,6 +42,7 @@ namespace Origami.Core.Data
             ITagRepository tagRepository,
             ITrashRepository trashRepository,
             IUserActivityRepository userActivityRepository,
+            IUserBlogRepository userBlogRepository,
             IUserContentRepository userContentRepository,
             IUserPasswordResetRepository userPasswordResetRepository,
             IUserRepository userRepository,
@@ -77,6 +79,7 @@ namespace Origami.Core.Data
             Posts = postRepository;
             PostTags = postTagRepository;
             PostViews = postViewRepository;
+            QuickNotes = quickNoteRepository;
             Resumes = resumeRepository;
             Rights = rightRepository;
             Roles = roleRepository;
@@ -89,6 +92,7 @@ namespace Origami.Core.Data
             Tags = tagRepository;
             Trashes = trashRepository;
             UserActivities = userActivityRepository;
+            UserBlogs = userBlogRepository;
             UserContents = userContentRepository;
             UserPasswordResets = userPasswordResetRepository;
             UserRoles = userRoleRepository;
@@ -125,6 +129,7 @@ namespace Origami.Core.Data
         public IPostRepository Posts { get; }
         public IPostTagRepository PostTags { get; }
         public IPostViewRepository PostViews { get; }
+        public IQuickNoteRepository QuickNotes { get; }
         public IResumeRepository Resumes { get; }
         public IRightRepository Rights { get; }
         public IRoleRepository Roles { get; }
@@ -137,6 +142,7 @@ namespace Origami.Core.Data
         public ITagRepository Tags { get; }
         public ITrashRepository Trashes { get; }
         public IUserActivityRepository UserActivities { get; }
+        public IUserBlogRepository UserBlogs { get; }
         public IUserContentRepository UserContents { get; }
         public IUserPasswordResetRepository UserPasswordResets { get; }
         public IUserRoleRepository UserRoles { get; }
@@ -151,12 +157,19 @@ namespace Origami.Core.Data
         public IVideoTagRepository VideoTags { get; }
         public IVideoViewRepository VideoViews { get; }
         public IWhatToSeeNextRepository WhatToSeeNext { get; }
+
         public bool EmptyHome(Guid blogId)
         {
             if (Pages.ReadFromCache().FrontPage(blogId) != null) return false;
             if (Posts.ReadFromCache().Published().Blog(blogId).Any() == true) return false;
             if (Videos.ReadFromCache().Published().Blog(blogId).Any() == true) return false;
+            if (QuickNotes.ReadFromCache().Published().Blog(blogId).Any() == true) return false;
             return true;
+        }
+
+        public OrigamiUser GetAuthor(IAuthorId authorId)
+        {
+            return this.Users.ReadFromCache().Id(authorId.AuthorId) ?? new();
         }
 
         public IEnumerable<OrigamiCategory> GetCategories()
@@ -413,9 +426,7 @@ namespace Origami.Core.Data
         {
             try
             {
-                BackupAndRestores.RefreshCache();
                 Blogs.RefreshCache();
-                Settings.RefreshCache();
                 Categories.RefreshCache();
                 Pages.RefreshCache();
                 PostCategories.RefreshCache();
@@ -424,14 +435,15 @@ namespace Origami.Core.Data
                 PostRatings.RefreshCache();
                 Posts.RefreshCache();
                 PostTags.RefreshCache();
+                QuickNotes.RefreshCache();
                 Resumes.RefreshCache();
                 Roles.RefreshCache();
+                Settings.RefreshCache();
                 SocialProfiles.RefreshCache();
                 SpecialMessages.RefreshCache();
                 SpecialPages.RefreshCache();
                 Subscribers.RefreshCache();
                 Tags.RefreshCache();
-                UserPasswordResets.RefreshCache();
                 Users.RefreshCache();
                 VideoCategories.RefreshCache();
                 VideoCommentReactions.RefreshCache();
@@ -439,6 +451,13 @@ namespace Origami.Core.Data
                 VideoRatings.RefreshCache();
                 Videos.RefreshCache();
                 VideoTags.RefreshCache();
+
+                if (this.AppFacade.Admin.GetValueOrDefault() == true)
+                {
+                    BackupAndRestores.RefreshCache();
+                    UserPasswordResets.RefreshCache();
+                    UserBlogs.RefreshCache();
+                }
 
                 var pageViews = PageViews.FastRead().ConfigureAwait(false).GetAwaiter().GetResult();
                 var postViews = PostViews.FastRead().ConfigureAwait(false).GetAwaiter().GetResult();
@@ -481,6 +500,7 @@ namespace Origami.Core.Data
                 PostComments.CreateSearchIndex();
                 Posts.CreateSearchIndex();
                 PostTags.CreateSearchIndex();
+                QuickNotes.CreateSearchIndex();
                 Roles.CreateSearchIndex();
                 SocialProfiles.CreateSearchIndex();
                 Tags.CreateSearchIndex();
@@ -500,45 +520,46 @@ namespace Origami.Core.Data
         {
             try
             {
+                using var db = DbContextFactory.CreateDbContext();
                 using (var transaction = new TransactionScope())
                 {
                     // blogs
-                    foreach (var blog in Blogs.ReadFromDatabase().ToList())
+                    foreach (var blog in db.Set<OrigamiBlog>().AsNoTracking().ToList())
                     {
                         blog.NanoId = Nanoid.Generate(Nanoid.Alphabets.LettersAndDigits, 6);
                         var ctx = new DataOperationContext<OrigamiBlog>(OrigamiUser.AnonymousUser, blog);
                         Blogs.SmartSave(ctx, false);
                     }
                     // categories
-                    foreach (var category in Categories.ReadFromDatabase().ToList())
+                    foreach (var category in db.Set<OrigamiCategory>().AsNoTracking().ToList())
                     {
                         category.NanoId = Nanoid.Generate(Nanoid.Alphabets.LettersAndDigits, 6);
                         var ctx = new DataOperationContext<OrigamiCategory>(OrigamiUser.AnonymousUser, category);
                         Categories.SmartSave(ctx, false);
                     }
                     // pages
-                    foreach (var page in Pages.ReadFromDatabase().ToList())
+                    foreach (var page in db.Set<OrigamiPage>().AsNoTracking().ToList())
                     {
                         page.NanoId = Nanoid.Generate(Nanoid.Alphabets.LettersAndDigits, 6);
                         var ctx = new DataOperationContext<OrigamiPage>(OrigamiUser.AnonymousUser, page);
                         Pages.SmartSave(ctx, false);
                     }
                     // posts
-                    foreach (var post in Posts.ReadFromDatabase().ToList())
+                    foreach (var post in db.Set<OrigamiPost>().AsNoTracking().ToList())
                     {
                         post.NanoId = Nanoid.Generate(Nanoid.Alphabets.LettersAndDigits, 6);
                         var ctx = new DataOperationContext<OrigamiPost>(OrigamiUser.AnonymousUser, post);
                         Posts.SmartSave(ctx, false);
                     }
                     // videos
-                    foreach (var video in Videos.ReadFromDatabase().ToList())
+                    foreach (var video in db.Set<OrigamiVideo>().AsNoTracking().ToList())
                     {
                         video.NanoId = Nanoid.Generate(Nanoid.Alphabets.LettersAndDigits, 6);
                         var ctx = new DataOperationContext<OrigamiVideo>(OrigamiUser.AnonymousUser, video);
                         Videos.SmartSave(ctx, false);
                     }
                     // users
-                    foreach (var user in Users.ReadFromDatabase().ToList())
+                    foreach (var user in db.Set<OrigamiUser>().AsNoTracking().ToList())
                     {
                         user.NanoId = Nanoid.Generate(Nanoid.Alphabets.LettersAndDigits, 6);
                         var ctx = new DataOperationContext<OrigamiUser>(OrigamiUser.AnonymousUser, user);

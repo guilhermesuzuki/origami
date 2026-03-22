@@ -38,6 +38,11 @@ namespace Origami.UI
     {
         public static void AddOrigami(this WebApplicationBuilder builder, string[] args, bool admin = false)
         {
+            var files = Path.GetFullPath("..\\Origami.Files\\");
+
+            builder.Configuration.AddJsonFile(Path.Combine(files, "dbsettings.json"), false, reloadOnChange: true);
+            builder.Configuration.AddJsonFile(Path.Combine(files, $"dbsettings.{builder.Environment.EnvironmentName}.json"), true, reloadOnChange: true);
+
             // Add services to the container.
             builder.Services.AddRazorPages();
             builder.Services.AddMvc(options => options.EnableEndpointRouting = false);
@@ -87,7 +92,7 @@ namespace Origami.UI
             builder.Services.AddScoped<OrigamiLocationMiddleware>();
 
             builder.Services.AddSingleton<Text>();
-            builder.Services.AddSingleton<IAppFacade, AppFacade>(provider => new AppFacade(admin));
+            builder.Services.AddSingleton<IAppFacade, AppFacade>(provider => new AppFacade(admin, builder.Environment.EnvironmentName));
             builder.Services.AddSingleton<ISlideRepository, SlideRepository>();
             builder.Services.AddSingleton<IEmailStatusRepository, EmailStatusRepository>();
             builder.Services.AddSingleton<IBackupRestoreRepository, BackupRestoreRepository>();
@@ -113,6 +118,7 @@ namespace Origami.UI
             builder.Services.AddTransient<IPostRepository, PostRepository>();
             builder.Services.AddTransient<IPostTagRepository, PostTagRepository>();
             builder.Services.AddTransient<IPostViewRepository, PostViewRepository>();
+            builder.Services.AddTransient<IQuickNoteRepository, QuickNoteRepository>();
             builder.Services.AddTransient<IResumeRepository, ResumeRepository>();
             builder.Services.AddTransient<IRightRepository, RightRepository>();
             builder.Services.AddTransient<IRightRoleRepository, RightRoleRepository>();
@@ -130,6 +136,7 @@ namespace Origami.UI
             builder.Services.AddTransient<ITagRepository, TagRepository>();
             builder.Services.AddTransient<ITrashRepository, TrashRepository>();
             builder.Services.AddTransient<IUserActivityRepository, UserActivityRepository>();
+            builder.Services.AddTransient<IUserBlogRepository, UserBlogRepository>();
             builder.Services.AddTransient<IUserContentRepository, UserContentRepository>();
             builder.Services.AddTransient<IUserPasswordResetRepository, UserPasswordResetRepository>();
             builder.Services.AddTransient<IUserRepository, UserRepository>();
@@ -144,6 +151,7 @@ namespace Origami.UI
             builder.Services.AddTransient<IVideoTagRepository, VideoTagRepository>();
             builder.Services.AddTransient<IVideoViewRepository, VideoViewRepository>();
             builder.Services.AddTransient<IWhatToSeeNextRepository, WhatToSeeNextRepository>();
+            builder.Services.AddScoped<ILoginRepository, LoginRepository>();
 
             builder.Services.AddKeyedSingleton<IIpLocationRepository, IpApiComRepository>(IpApiComRepository.Host);
             builder.Services.AddKeyedSingleton<IIpLocationRepository, IpApiCoRepository>(IpApiCoRepository.Host);
@@ -158,6 +166,7 @@ namespace Origami.UI
             builder.Services.AddCrud<OrigamiPostCategory, PostCategoryRepository>();
             builder.Services.AddCrud<OrigamiPostComment, PostCommentRepository>();
             builder.Services.AddCrud<OrigamiPostTag, PostTagRepository>();
+            builder.Services.AddCrud<OrigamiQuickNote, QuickNoteRepository>();
             builder.Services.AddCrud<OrigamiRole, RoleRepository>();
             builder.Services.AddCrud<OrigamiSettings, SettingsRepository>();
             builder.Services.AddCrud<OrigamiSocialProfile, SocialProfileRepository>();
@@ -175,8 +184,8 @@ namespace Origami.UI
             //sets the blog as the primary one
             builder.Services.AddScoped<IUserFacade, UserFacade>(provider =>
             {
-                var blog = provider.GetRequiredService<IBlogRepository>();
-                return new() { BlogId = blog.GetPrimary().Id };
+                var super = provider.GetRequiredService<ISuperRepository>();
+                return new(super) { BlogId = admin ? Guid.Empty : super.Blogs.GetPrimary().Id, };
             });
 
             //really important workaround
@@ -197,12 +206,14 @@ namespace Origami.UI
             builder.Services.AddSingleton<IValidator<OrigamiPage>, OrigamiPageValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiPost>, OrigamiPostValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiPostComment>, OrigamiPostCommentValidator>();
+            builder.Services.AddSingleton<IValidator<OrigamiQuickNote>, OrigamiQuickNoteValidator>();
+            builder.Services.AddSingleton<IValidator<OrigamiRole>, OrigamiRoleValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiSettings>, OrigamiSettingsValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiSpecialMessage>, OrigamiSpecialMessageValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiSpecialPage>, OrigamiSpecialPageValidator>();
+            builder.Services.AddSingleton<IValidator<OrigamiUser>, OrigamiUserValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiVideo>, OrigamiVideoValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiVideoComment>, OrigamiVideoCommentValidator>();
-            builder.Services.AddSingleton<IValidator<OrigamiUser>, OrigamiUserValidator>();
 
             //jwt configuration
             builder.Services.Configure<JwtConfiguration>(builder.Configuration.GetSection("Jwt"));
@@ -413,10 +424,10 @@ namespace Origami.UI
             app.UseAuthentication();
             app.UseForwardedHeaders();
 
-            var supportedCultures = new[] { "en-US", "pt-BR", "ja-JP", "es-ES" };
+            var supportedCultures = OrigamiConstants.AllLanguages().Select(x => x.Name).ToArray();
             var localizationOptions = new RequestLocalizationOptions()
-                .SetDefaultCulture(supportedCultures[0])
-                .AddSupportedCultures(supportedCultures[0])
+                .SetDefaultCulture("en-US")
+                .AddSupportedCultures("en-US")
                 .AddSupportedUICultures(supportedCultures);
 
             app.UseRequestLocalization(localizationOptions);

@@ -1,6 +1,6 @@
 ﻿@inherits Basic
 
-@if (this.Super != null)
+@if (SyncRoot != null)
 {
     var pp = this.Super.SpecialPages.ReadFromCache().GetByType(OrigamiSpecialPageTypes.CookiePolicy).FirstOrDefault();
     <div class="cookie-consent-form @Class">

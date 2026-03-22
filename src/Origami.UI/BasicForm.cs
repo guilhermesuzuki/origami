@@ -5,6 +5,8 @@ using NanoidDotNet;
 using Origami.Core;
 using Origami.Core.Models;
 using Origami.Core.Models.FileSystem;
+using Polly;
+using Polly.Retry;
 using SixLabors.ImageSharp;
 using System.Buffers;
 
@@ -28,11 +30,6 @@ namespace Origami.UI
         protected bool FileManagerForVideos;
 
         /// <summary>
-        /// Component for file uploading (occasionally Header images, etc.)
-        /// </summary>
-        protected MudFileUpload<IBrowserFile>? FileUpload;
-
-        /// <summary>
         /// Indicates whether a file upload operation is currently in progress.
         /// </summary>
         /// <remarks>This field is intended for use within derived classes to track the state of file
@@ -48,11 +45,6 @@ namespace Origami.UI
         /// This <see cref="CancellationTokenSource"/> is used to control the process of uploading a video
         /// </summary>
         protected CancellationTokenSource FileUploadingToken = new();
-
-        /// <summary>
-        /// Component for video uploading
-        /// </summary>
-        protected MudFileUpload<IBrowserFile>? VideoUpload;
 
         [Parameter] public EventCallback<T> Cancelled { get; set; }
         [Parameter] public EventCallback<T> Created { get; set; }
@@ -71,18 +63,6 @@ namespace Origami.UI
                     return Super.Users.ReadFromCache().Id(author.AuthorId) ?? new();
                 }
                 return new();
-            }
-        }
-
-        /// <summary>
-        /// Rules for disabling the Cancel button
-        /// </summary>
-        protected virtual bool DisableTheCancelButton
-        {
-            get
-            {
-                if (Entity is INew { New: false }) return false;
-                return true;
             }
         }
 
@@ -203,7 +183,7 @@ namespace Origami.UI
         {
             if (image.IsImage == false)
             {
-                UserFacade.Result = new() { ErrorMessage = Text.Original("You need to pick an image") };
+                UserFacade.Result = new() { Error = Text.Original("You need to pick an image") };
                 return;
             }
 
@@ -212,7 +192,7 @@ namespace Origami.UI
                 if (image.WebPath.Like(header.HeaderImage) == true)
                 {
                     FileManagerForImages = false;
-                    UserFacade.Result = new() { InfoMessage = Text.Original("Source and destination images share the same location") };
+                    UserFacade.Result = new() { Info = Text.Original("Source and destination images share the same location") };
                     return;
                 }
 
@@ -259,8 +239,36 @@ namespace Origami.UI
             else
             {
                 FileManagerForImages = false;
-                UserFacade.Result = new() { ErrorMessage = Text.Original("Entity header cannot be updated") };
+                UserFacade.Result = new() { Error = Text.Original("Entity header cannot be updated") };
             }
+        }
+
+        /// <summary>
+        /// An image was picked from the file manager and should be assigned in the entity as a header as base64 string
+        /// </summary>
+        /// <param name="image"></param>
+        protected async Task ImageFromFileManagerWillAssignEntityHeaderAsBase64(OrigamiSystemFile image)
+        {
+            if (image.IsImage == false)
+            {
+                this.UserFacade.Result = new() { Error = Text.Original("You need to pick an image") };
+                return;
+            }
+
+            if (this.Entity is IHeaderImage header)
+            {
+                var localPath = this.Super.Files.LocalPath(image.WebPath);
+
+                using var reader = File.OpenRead(localPath);
+                using var memoryStream = new MemoryStream();
+                await reader.CopyToAsync(memoryStream);
+                var imageBytes = memoryStream.ToArray();
+
+                var extension = Path.GetExtension(image.Name).TrimStart('.');
+                header.HeaderImage = $"data:image/{extension};base64,{Convert.ToBase64String(imageBytes)}";
+            }
+
+            this.FileManagerForImages = false;
         }
 
         protected override void OnParametersSet()
@@ -271,31 +279,6 @@ namespace Origami.UI
         }
 
         /// <summary>
-        /// Picks a file, using <see cref="FileUpload"/>
-        /// </summary>
-        /// <returns></returns>
-        protected async Task PickFile()
-        {
-            if (FileUpload != null)
-            {
-                await FileUpload.OpenFilePickerAsync();
-            }
-        }
-
-        /// <summary>
-        /// Picks a video, using <see cref="VideoUpload"/>
-        /// </summary>
-        /// <returns></returns>
-        protected async Task PickVideo()
-        {
-            if (VideoUpload != null)
-            {
-                FileUploadingToken = new();
-                await VideoUpload.OpenFilePickerAsync();
-            }
-        }
-
-        /// <summary>
         /// Uploads a file to the server, saving it locally and generating a web-accessible path.
         /// </summary>
         /// <remarks>This method handles file uploads by saving the file locally and optionally processing
@@ -303,7 +286,7 @@ namespace Origami.UI
         /// avoid overwriting. The method updates the upload progress and ensures proper cleanup in case of
         /// errors.</remarks>
         /// <param name="file">The file to be uploaded. Must implement <see cref="IBrowserFile"/>.</param>
-        /// <param name="fileName">The name to assign to the uploaded file. If the file already exists, a unique name will be generated.</param>
+        /// <param name="filename">The name to assign to the uploaded file. If the file already exists, a unique name will be generated.</param>
         /// <param name="fileLimit">The maximum allowed file size, in bytes. Files exceeding this limit will result in an exception.</param>
         /// <returns>A tuple containing the following: <list type="bullet"> <item><term><c>Ok</c></term><description><see
         /// langword="true"/> if the upload was successful; otherwise, <see langword="false"/>.</description></item>
@@ -311,7 +294,7 @@ namespace Origami.UI
         /// upload failed.</description></item> <item><term><c>WebPath</c></term><description>The web-accessible path
         /// for the uploaded file. Empty if the upload failed.</description></item> </list></returns>
         /// <exception cref="InvalidOperationException">Thrown if the file size exceeds <paramref name="fileLimit"/>.</exception>
-        protected async Task<(bool Ok, string LocalPath, string WebPath)> UploadFile(IBrowserFile file, string fileName, long fileLimit)
+        protected async Task<(bool Ok, string LocalPath, string WebPath)> UploadFile(IBrowserFile file, long fileLimit, string? filename = null)
         {
             if (file.Size > fileLimit)
             {
@@ -324,20 +307,35 @@ namespace Origami.UI
             using var timer = new Timer(_ => InvokeAsync(StateHasChanged));
             timer.Change(TimeSpan.FromMilliseconds(100), TimeSpan.FromMilliseconds(100));
 
+            filename = filename ?? file.Name;
+
             string basePath = Super.Directories.LocalPathForFiles(Entity);
             string tempPath = Path.Combine(basePath, $"{Guid.NewGuid()}.tmp");
-            string finalPath = Path.Combine(basePath, file.Name);
+            string finalPath = Path.Combine(basePath, filename);
 
-            if (System.IO.File.Exists(finalPath) == true)
+            try
             {
-                finalPath = Path.Combine(basePath, fileName);
-            }
+                var pipeline = new ResiliencePipelineBuilder()
+                    .AddRetry(new RetryStrategyOptions { MaxRetryAttempts = 1024, Delay = TimeSpan.FromMilliseconds(10), })
+                    .Build();
 
-            if (System.IO.File.Exists(finalPath) == true)
+                await pipeline.ExecuteAsync(token =>
+                {
+                    if (File.Exists(finalPath) == true)
+                    {
+                        var newFilename = $"{Path.GetFileNameWithoutExtension(filename)}.{Nanoid.Generate(Nanoid.Alphabets.UppercaseLettersAndDigits, 4)}{Path.GetExtension(filename)}";
+                        finalPath = Path.Combine(basePath, newFilename);
+                        throw new Exception("File already exists");
+                    }
+                    return ValueTask.CompletedTask;
+                });
+            }
+            catch (Exception ex)
             {
-                throw new InvalidOperationException("File with the same name exists. Please, try again");
+                UserFacade.Result = new(ex);
+                return (false, string.Empty, string.Empty);
             }
-
+            
             await using Stream stream = file.OpenReadStream(file.Size, FileUploadingToken.Token);
 
             const int bufferSize = 1024 * 1024; // 1 MB
@@ -348,7 +346,7 @@ namespace Origami.UI
             try
             {
                 Directory.CreateDirectory(basePath);
-                using (FileStream fs = System.IO.File.Create(tempPath))
+                using (FileStream fs = File.Create(tempPath))
                 {
                     int bytesRead;
                     while ((bytesRead = await stream.ReadAsync(buffer, FileUploadingToken.Token)) != 0)
@@ -368,7 +366,7 @@ namespace Origami.UI
                 }
                 else
                 {
-                    System.IO.File.Copy(tempPath, finalPath, true);
+                    File.Copy(tempPath, finalPath, true);
                 }
 
                 FileUploadingProgress = 100;
@@ -388,7 +386,7 @@ namespace Origami.UI
                 timer.Change(Timeout.Infinite, Timeout.Infinite);
                 FileUploading = false;
                 FileUploadingProgress = 0;
-                System.IO.File.Delete(tempPath);
+                File.Delete(tempPath);
             }
         }
 
@@ -411,12 +409,12 @@ namespace Origami.UI
                     var lpath = Super.Directories.LocalPath(wpath);
                     var filename = $"logo.png";
 
-                    if (System.IO.File.Exists(lpath + filename) == true)
+                    if (File.Exists(Path.Combine(lpath, filename)) == true)
                     {
                         filename = $"logo.{Nanoid.Generate(Nanoid.Alphabets.UppercaseLettersAndDigits, 4)}.png";
                     }
 
-                    if (System.IO.File.Exists(lpath + filename) == true)
+                    if (File.Exists(Path.Combine(lpath, filename)) == true)
                     {
                         throw new InvalidOperationException("File with the same name exists. Please, try again");
                     }
@@ -443,13 +441,11 @@ namespace Origami.UI
         /// <returns></returns>
         protected virtual async Task UploadHeader(IBrowserFile file)
         {
-            var fileName = $"{Path.GetFileNameWithoutExtension(file.Name)}.{Nanoid.Generate(Nanoid.Alphabets.UppercaseLettersAndDigits, 4)}{Path.GetExtension(file.Name)}";
-
             try
             {
                 if (Entity is IHeaderImage headerImage)
                 {
-                    var status = await this.UploadFile(file, fileName, OrigamiConstants.MaximumFileSizeForHeaderImages);
+                    var status = await this.UploadFile(file, OrigamiConstants.MaximumFileSizeForHeaderImages);
                     if (status.Ok)
                     {
                         headerImage.HeaderImage = status.WebPath;
@@ -474,7 +470,7 @@ namespace Origami.UI
         {
             if (file.Size > OrigamiConstants.MaximumBase64StringForHeaderImages)
             {
-                UserFacade.Result = new() { ErrorMessage = Text.Original("File is too large") };
+                UserFacade.Result = new() { Error = Text.Original("File is too large") };
                 return;
             }
 
@@ -485,7 +481,7 @@ namespace Origami.UI
 
             if (Entity is IHeaderImage headerImage)
             {
-                var extension = file.Name.Extension();
+                var extension = Path.GetExtension(file.Name).TrimStart('.');
                 headerImage.HeaderImage = $"data:image/{extension};base64,{Convert.ToBase64String(imageBytes)}";
             }
         }
@@ -499,10 +495,9 @@ namespace Origami.UI
         {
             if (Entity is OrigamiVideo video)
             {
-                var filename = $"{Path.GetFileNameWithoutExtension(file.Name)}.{Nanoid.Generate(Nanoid.Alphabets.UppercaseLettersAndDigits, 4)}{Path.GetExtension(file.Name)}";
                 try
                 {
-                    var status = await UploadFile(file, filename, OrigamiConstants.MaximumFileSizeForVideos);
+                    var status = await UploadFile(file, OrigamiConstants.MaximumFileSizeForVideos);
                     if (status.Ok)
                     {
                         video.MediaFile.LocalPath = status.LocalPath;
@@ -524,7 +519,7 @@ namespace Origami.UI
         {
             if (video.IsVideo == false)
             {
-                UserFacade.Result = new() { ErrorMessage = Text.Original("You need to pick a video") };
+                UserFacade.Result = new() { Error = Text.Original("You need to pick a video") };
                 return;
             }
 
@@ -533,7 +528,7 @@ namespace Origami.UI
                 if (video.WebPath.Like(oiVideo.MediaFile.WebPath) == true)
                 {
                     FileManagerForImages = false;
-                    UserFacade.Result = new() { InfoMessage = Text.Original("Source and destination images share the same location") };
+                    UserFacade.Result = new() { Info = Text.Original("Source and destination images share the same location") };
                     return;
                 }
 
@@ -580,7 +575,7 @@ namespace Origami.UI
             else
             {
                 FileManagerForImages = false;
-                UserFacade.Result = new() { ErrorMessage = Text.Original("Video cannot be updated") };
+                UserFacade.Result = new() { Error = Text.Original("Video cannot be updated") };
             }
         }
     }

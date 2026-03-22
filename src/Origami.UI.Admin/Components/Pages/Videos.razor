@@ -1,11 +1,5 @@
 ﻿@page "/videos"
 @inherits BasicAdminGrid<OrigamiVideo>
-@implements IFilter
-@inject IVideoCategoryRepository _postCategory
-@inject IBlogRepository _blogs
-@inject IVideoRepository _videos
-@inject IVideoCommentRepository _videoComment
-@inject IVideoViewRepository _videoView
 
 <style>
     .video-header-lite .language { display: none !important; }
@@ -82,11 +76,11 @@
                                         <ul class="inline-list text-center">
                                             <li>
                                                 <i class="fa-solid fa-eye"></i>
-                                                @_videoView.GetViews(context.Item)
+                                                @this.Super.PhysicalPageViews.GetViews(context.Item)
                                             </li>
                                             <li>
                                                 <i class="fa-solid fa-comment"></i>
-                                                @_videoComment.GetComments(context.Item)
+                                                @this.Super.VideoComments.GetComments(context.Item)
                                             </li>
                                         </ul>
                                     </div>
@@ -105,10 +99,6 @@
                                     @if (context.Item.IsPublished)
                                     {
                                         <i class="fa-solid fa-thumbs-up"></i>
-                                        @if (context.Item.DatePublished != null)
-                                        {
-                                            <div class="small">@context.Item.DatePublished</div>
-                                        }
                                     }
                                 </CellTemplate>
                             </TemplateColumn>
@@ -141,13 +131,13 @@
     protected virtual Result<OrigamiVideo> PublishEntity(OrigamiVideo entity)
     {
         var context = new DataOperationContext<OrigamiVideo>(this.UserFacade.User, DateTime.UtcNow, entity);
-        return _videos.SmartPublish(context, true);
+        return this.Super.Videos.SmartPublish(context, true);
     }
 
     protected virtual Result<OrigamiVideo> UnpublishEntity(OrigamiVideo entity)
     {
         var context = new DataOperationContext<OrigamiVideo>(this.UserFacade.User, DateTime.UtcNow, entity);
-        return _videos.SmartUnpublish(context, true);
+        return this.Super.Videos.SmartUnpublish(context, true);
     }
 
     protected async Task PublishSelectedEntities()
@@ -155,7 +145,7 @@
         await ExecuteWithSelectedEntities(
             async () =>
             {
-                return await DialogService.ShowMessageBox(
+                return await DialogService.ShowMessageBoxAsync(
                     Text.Upper("Publish {0} item(s)", SelectedEntities.Count),
                     Text.Original("Are you sure?"),
                     yesText: Text.Lower("Yes"),
@@ -170,7 +160,7 @@
         await ExecuteWithSelectedEntities(
             async () =>
             {
-                return await DialogService.ShowMessageBox(
+                return await DialogService.ShowMessageBoxAsync(
                     Text.Upper("Unpublish {0} item(s)", SelectedEntities.Count),
                     Text.Original("Are you sure?"),
                     yesText: Text.Lower("Yes"),

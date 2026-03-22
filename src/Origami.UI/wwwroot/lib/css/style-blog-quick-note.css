@@ -1,0 +1,6 @@
+﻿.quick-note-header { }
+.quick-note-header a:hover, .quick-note-header a:hover span { color: var(--site-highlight) !important; }
+.quick-note-header { height: calc(250px / 0.65); background-repeat: no-repeat; background-position: center; background-size: cover; backdrop-filter: blur(10px); }
+.quick-note-header-title { text-align: center; bottom: 0px; top: 0; background-color: #00000077; display: inline-grid; align-items: center; border-top: none !important; }
+.quick-note-header-title * { color: white; border-color: white !important; }
+.quick-note-header-title .title { font-size: 14pt; }

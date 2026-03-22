@@ -1,11 +1,5 @@
 ﻿@page "/posts"
 @inherits BasicAdminGrid<OrigamiPost>
-@implements IFilter
-@inject IPostCategoryRepository _postCategory
-@inject IBlogRepository _blogs
-@inject IPostRepository _posts
-@inject IPostCommentRepository _postComment
-@inject IPostViewRepository _postView
 
 <style>
     .post-header-lite .language { display: none !important; }
@@ -82,11 +76,11 @@
                                         <ul class="inline-list text-center">
                                             <li>
                                                 <i class="fa-solid fa-eye"></i>
-                                                @_postView.GetViews(context.Item)
+                                                @this.Super.PhysicalPageViews.GetViews(context.Item)
                                             </li>
                                             <li>
                                                 <i class="fa-solid fa-comment"></i>
-                                                @_postComment.GetComments(context.Item)
+                                                @this.Super.PostComments.GetComments(context.Item)
                                             </li>
                                         </ul>
                                     </div>
@@ -105,10 +99,6 @@
                                     @if (context.Item.IsPublished)
                                     {
                                         <i class="fa-solid fa-thumbs-up"></i>
-                                        @if (context.Item.DatePublished != null)
-                                        {
-                                            <div class="small">@context.Item.DatePublished</div>
-                                        }
                                     }
                                 </CellTemplate>
                             </TemplateColumn>
@@ -141,13 +131,13 @@
     protected virtual Result<OrigamiPost> PublishEntity(OrigamiPost entity)
     {
         var context = new DataOperationContext<OrigamiPost>(this.UserFacade.User, DateTime.UtcNow, entity);
-        return _posts.SmartPublish(context, true);
+        return this.Super.Posts.SmartPublish(context, true);
     }
 
     protected virtual Result<OrigamiPost> UnpublishEntity(OrigamiPost entity)
     {
         var context = new DataOperationContext<OrigamiPost>(this.UserFacade.User, DateTime.UtcNow, entity);
-        return _posts.SmartUnpublish(context, true);
+        return this.Super.Posts.SmartUnpublish(context, true);
     }
 
     protected async Task PublishSelectedEntities()
@@ -155,7 +145,7 @@
         await ExecuteWithSelectedEntities(
             async () =>
             {
-                return await DialogService.ShowMessageBox(
+                return await DialogService.ShowMessageBoxAsync(
                     Text.Upper("Publish {0} item(s)", SelectedEntities.Count),
                     Text.Original("Are you sure?"),
                     yesText: Text.Lower("Yes"),
@@ -170,7 +160,7 @@
         await ExecuteWithSelectedEntities(
             async () =>
             {
-                return await DialogService.ShowMessageBox(
+                return await DialogService.ShowMessageBoxAsync(
                     Text.Upper("Unpublish {0} item(s)", SelectedEntities.Count),
                     Text.Original("Are you sure?"),
                     yesText: Text.Lower("Yes"),

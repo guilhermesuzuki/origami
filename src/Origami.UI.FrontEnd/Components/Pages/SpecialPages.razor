@@ -2,9 +2,14 @@
 @inherits BasicPage
 
 <Root>
-    <SpecialPageList Class="mt-3" BlogId="@this.BlogId" Page="@Page" ShowFakes="true"></SpecialPageList>
+    <SpecialPageList Class="mt-3" Page="@Page" ShowFakes="true"></SpecialPageList>
 </Root>
 
 @code {
     [Parameter] public int Page { get; set; } = 1;
+
+    protected override void SetPageTitle()
+    {
+        this.PageTitle.SetTitle(Text.Get("Special pages"));
+    }
 }

@@ -1,5 +1,4 @@
 ﻿@inherits Basic
-@implements IBlogId
 @implements IShowFakes
 @inject ISuperRepository _super
 
@@ -63,7 +62,6 @@ else if (this.ShowFakes == true)
 }
 
 @code {
-    [Parameter] public Guid BlogId { get; set; }
     [Parameter] public int Page { get; set; } = 1;
     [Parameter] public int PageSize { get; set; } = 9;
     [Parameter] public int OrderBy { get; set; } = 1;

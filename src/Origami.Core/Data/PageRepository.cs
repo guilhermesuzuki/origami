@@ -59,7 +59,7 @@ namespace Origami.Core.Data
 
             if (this.IsCycleDetected(ctx, []) == true)
             {
-                validation.ErrorMessage = $"Cycle detected: you must choose another parent";
+                validation.Error = $"Cycle detected: you must choose another parent";
             }
 
             this.ValidateSlug(ctx).Push(validation);
@@ -75,24 +75,25 @@ namespace Origami.Core.Data
                 if (permission.Ok == false) return permission;
             }
 
-            var page = ReadFromDatabase().Id(ctx.Entity.Id);
+            var page = ReadFromDatabase(ctx.Entity);
             if (page != null)
             {
                 if (page.IsFrontPage)
                 {
-                    return new(ctx.Entity) { ErrorMessage = Text.Original("Page is already front-page") };
+                    return new(ctx.Entity) { Error = Text.Original("Page is already front-page") };
                 }
 
                 if (page.ParentId != null)
                 {
-                    return new(ctx.Entity) { ErrorMessage = Text.Original("Only a top-level page can become front-page") };
+                    return new(ctx.Entity) { Error = Text.Original("Only a top-level page can become front-page") };
                 }
 
                 try
                 {
-                    var hub = new Result<OrigamiPage>(ctx.Entity);
-                    var row1 = ReadFromDatabase().Where(x => x.BlogId == ctx.Entity.BlogId).Where(x => x.IsFrontPage).ExecuteUpdate(x => x.SetProperty(y => y.IsFrontPage, false));
-                    var row2 = ReadFromDatabase().Where(x => x.BlogId == ctx.Entity.BlogId).Where(x => x.Id == ctx.Entity.Id).ExecuteUpdate(x => x.SetProperty(y => y.IsFrontPage, true));
+                    using var db = DbContextFactory.CreateDbContext();
+					var hub = new Result<OrigamiPage>(ctx.Entity);
+                    var row1 = db.Set<OrigamiPage>().Where(x => x.BlogId == ctx.Entity.BlogId).Where(x => x.IsFrontPage).ExecuteUpdate(x => x.SetProperty(y => y.IsFrontPage, false));
+                    var row2 = db.Set<OrigamiPage>().Where(x => x.BlogId == ctx.Entity.BlogId).Where(x => x.Id == ctx.Entity.Id).ExecuteUpdate(x => x.SetProperty(y => y.IsFrontPage, true));
 
                     hub.RowsAffected += row2;
                     hub.RowsAffected += row2;
@@ -102,12 +103,12 @@ namespace Origami.Core.Data
 
                     if (old != null)
                     {
-                        var update = ReadFromDatabase().Id(old.Id);
+                        var update = ReadFromDatabase(old);
                         this.UpdateCache(update ?? new());
                     }
                     if (neu != null)
                     {
-                        var update = ReadFromDatabase().Id(neu.Id);
+                        var update = ReadFromDatabase(neu);
                         this.UpdateCache(update ?? new());
                     }
 
@@ -118,12 +119,13 @@ namespace Origami.Core.Data
                     return new(ctx.Entity, ex.GetMessage());
                 }
             }
-            return new(ctx.Entity) { ErrorMessage = Text.Original($"Page cannot be retrieved") };
+            return new(ctx.Entity) { Error = Text.Original($"Page cannot be retrieved") };
         }
 
         public override Result<OrigamiPage> PurgeRelationshipsFromDatabase(DataOperationContext<OrigamiPage> ctx)
         {
-            var del = _pageViewRepository.ReadFromDatabase().Where(x => x.PageId == ctx.Entity.Id).ExecuteDelete();
+            using var db = DbContextFactory.CreateDbContext();
+            var del = db.Set<OrigamiPageView>().Where(x => x.PageId == ctx.Entity.Id).ExecuteDelete();
             return new Result<OrigamiPage>(ctx.Entity) { RowsAffected = del };
         }
 
@@ -135,21 +137,22 @@ namespace Origami.Core.Data
                 if (permission.Ok == false) return permission;
             }
 
-            var page = ReadFromDatabase().Id(ctx.Entity.Id);
+            var page = ReadFromDatabase(ctx.Entity);
             if (page != null)
             {
                 if (page.IsFrontPage)
                 {
                     try
-                    {
+                    {             
+                        using var db = DbContextFactory.CreateDbContext();
                         var hub = new Result<OrigamiPage>(ctx.Entity);
-                        var row = ReadFromDatabase().Where(x => x.BlogId == ctx.Entity.BlogId).Where(x => x.IsFrontPage).ExecuteUpdate(x => x.SetProperty(y => y.IsFrontPage, false));
+                        var row = db.Set<OrigamiPage>().Where(x => x.BlogId == ctx.Entity.BlogId).Where(x => x.IsFrontPage).ExecuteUpdate(x => x.SetProperty(y => y.IsFrontPage, false));
                         hub.RowsAffected = row;
 
                         var old = ReadFromCache().Blog(ctx.Entity.BlogId).FirstOrDefault(page => page.IsFrontPage);
                         if (old != null)
                         {
-                            var update = ReadFromDatabase().Id(old.Id);
+                            var update = ReadFromDatabase(old);
                             this.UpdateCache(update ?? new());
                         }
 
@@ -160,9 +163,9 @@ namespace Origami.Core.Data
                         return new(ctx.Entity, ex.GetMessage());
                     }
                 }
-                return new(ctx.Entity) { ErrorMessage = Text.Original($"Page is not front-page") };
+                return new(ctx.Entity) { Error = Text.Original($"Page is not front-page") };
             }
-            return new(ctx.Entity) { ErrorMessage = Text.Original($"Page does not exist") };
+            return new(ctx.Entity) { Error = Text.Original($"Page does not exist") };
         }
 
         public override Result<OrigamiPage> UpdateValidation(DataOperationContext<OrigamiPage> ctx)
@@ -171,7 +174,7 @@ namespace Origami.Core.Data
 
             if (this.IsCycleDetected(ctx, []) == true)
             {
-                validation.ErrorMessage = $"Cycle detected: you must choose another parent";
+                validation.Error = $"Cycle detected: you must choose another parent";
             }
 
             this.ValidateSlug(ctx).Push(validation);

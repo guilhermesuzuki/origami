@@ -57,6 +57,10 @@
                 <i class="fa-solid fa-folder-closed"></i>
                 <span>@Text.Lower("File manager")</span>
             </div>
+            <div class="sub-menu" @onclick="GoToQuickNotes">
+                <i class="bi bi-lightning-fill"></i>
+                <span>@Text.Lower("Quick notes")</span>
+            </div>
             <div class="sub-menu" @onclick="GoToPosts">
                 <i class="bi bi-file-earmark-text-fill"></i>
                 <span>@Text.Lower("Posts")</span>
@@ -102,7 +106,7 @@
                 <i class="fa-solid fa-trash-can"></i>
                 <span>@Text.Lower("User trashes")</span>
             </div>
-            <div class="sub-menu" @onclick="GoToTrashes">
+            <div class="sub-menu d-none" @onclick="GoToTrashes">
                 <i class="fa-solid fa-trash-can"></i>
                 <span>
                     @Text.Lower("Other trashes")
@@ -159,7 +163,7 @@
     /// </summary>
     private async Task ClearCache()
     {
-        var answer = await this.DialogService.ShowMessageBox(
+        var answer = await this.DialogService.ShowMessageBoxAsync(
             this.Text.Upper("Clear cache of the admin website"),
             this.Text.Original("Are you sure?"),
             yesText: this.Text.Lower("Yes"),
@@ -177,7 +181,7 @@
 
     protected async Task LogoutAsync()
     {
-        var answer = await this.DialogService.ShowMessageBox(
+        var answer = await this.DialogService.ShowMessageBoxAsync(
             this.Text.Upper("Log Out"),
             this.Text.Original("Are you sure?"),
             yesText: this.Text.Lower("Yes"),
@@ -311,9 +315,14 @@
         this.NavigationManager!.NavigateTo($"/user/profile");
     }
 
+    private void GoToQuickNotes()
+    {
+        this.NavigationManager!.NavigateTo($"/quicknotes");
+    }
+
     private async Task RegenerateNanoIds()
     {
-        var answer = await this.DialogService.ShowMessageBox(
+        var answer = await this.DialogService.ShowMessageBoxAsync(
             this.Text.Upper("Regenerate nano-ids"),
             this.Text.Original("Are you sure?"),
             yesText: this.Text.Lower("Yes"),

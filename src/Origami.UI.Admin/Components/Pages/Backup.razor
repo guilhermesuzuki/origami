@@ -18,36 +18,18 @@
                                 </button>
                             </div>
                             <div class="btn-group pe-1">
-                                <button class="btn btn-success text-white" title="@Text.Lower("Backup files and database")" disabled="@this.DisableTheBackupButton" @onclick="this.BackupTheSystem">
+                                <button class="btn btn-success text-white" title="@Text.Lower("Backup files and database")" disabled="@this.DisableTheBackupButton" @onclick="this.BackupOrigami">
                                     <i class="bi bi-database-fill-add"></i>
                                     <span>@Text.Lower("Backup")</span>
                                 </button>
-                                <button class="btn btn-warning text-white" title="@Text.Lower("Restore files and database from a backup in the list below")" disabled="@this.DisableTheRestoreButton">
+                                <button class="btn btn-warning text-white" title="@Text.Lower("Restore files and database from a backup in the list below")" disabled="@this.DisableTheRestoreButton" @onclick="this.RestoreOrigami">
                                     <i class="bi bi-database-fill-exclamation"></i>
                                     <span>@Text.Lower("Restore from list")</span>
                                 </button>
                             </div>
-                            <div class="btn-group pe-1">
-                                <button class="btn btn-danger text-white" title="@Text.Lower("Restore files and database from a zip file")">
-                                    <i class="bi bi-database-fill-exclamation"></i>
-                                    <span>@Text.Lower("Restore from a zip file")</span>
-                                </button>
-                            </div>
-                            @* <div class="btn-group pe-1">
-                                <button class="btn btn-success text-white" title="@Text.Lower("Mark as front-page")" disabled="@this.DisableTheFrontPageButton" @onclick="this.MarkAsFrontPage">
-                                    <i class="fa-solid fa-file-circle-check"></i>
-                                </button>
-                                <button class="btn btn-warning text-white" title="@Text.Lower("Unmark as front-page")" disabled="@this.DisableTheFrontPageButton" @onclick="this.UnmarkAsFrontPage">
-                                    <i class="fa-solid fa-file-circle-xmark"></i>
-                                </button>
-                            </div> *@
+                            <RestoreFromZip DisableTheRestoreZipButton="@this.DisableTheRestoreZipButton" Class="pe-1"></RestoreFromZip>
                         </li>
                         <li style="width:20%;">
-                            @* <MudSelect T="string" HelperText="@Text.Lower("Filter")" @bind-Value:get="Filter" @bind-Value:set="(filter) => SetFilterAndRefreshUI(filter)">
-                                <MudSelectItem T="string" Value="@(new string("all"))">@Text.Original("All")</MudSelectItem>
-                                <MudSelectItem T="string" Value="@(new string("published"))">@Text.Original("Published")</MudSelectItem>
-                                <MudSelectItem T="string" Value="@(new string("drafts"))">@Text.Original("Drafts")</MudSelectItem>
-                            </MudSelect> *@
                         </li>
                     </ul>
                 </div>
@@ -56,20 +38,30 @@
                 </div>
             </div>
         </div>
-        @* <div class="p-3 border-bottom">
-            <div class="row">
-                <div class="col-12">
-                    <SearchLite T="OrigamiBackup" OnHitSelected="this.OnSearchResultSelected"></SearchLite>
-                </div>
-            </div>
-        </div> *@
     </HeaderTemplate>
     <ContentTemplate>
+        @if (this.Repository is IBackupRestoreRepository backupRestoreRepository && backupRestoreRepository.Current != null)
+        {
+            <div class="p-3">
+                <div class="p-3 border border-warning rounded bg-light bg-gradient">
+                    <div class="row">
+                        <div class="col-12">
+                            <i class="bi bi-exclamation-triangle-fill text-warning pe-1"></i>
+                            @if (backupRestoreRepository.Current is OrigamiBackupRestore)
+                            {
+                                @Text.Original("A restore process is currently running. Some actions are disabled until the process is complete.")
+                            }
+                            else
+                            {
+                                @Text.Original("A backup process is currently running. Some actions are disabled until the process is complete.")
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
         <div class="p-3">
             <div class="row">
-                @* <div class="datagrid-options col-12 text-right mb-1">
-                    <DataGridOptions Deleted="this.IncludeDeletedEntitiesInDataGrid" DeletedChanged="this.OnIncludeDeletedEntitiesChanged"></DataGridOptions>
-                </div> *@
                 <div class="pages col-12">
                     <MudDataGrid @ref="DataGrid" T="OrigamiBackup" ServerData="GetEntities" Filterable="false" SortMode="SortMode.None" Class="border" SelectedItems="this.SelectedEntities" MultiSelection="false" SelectedItemsChanged="this.SelectedEntitiesChanged"
                                  RowClassFunc="this.RowClassFunc" Bordered="true" SelectOnRowClick="false">
@@ -78,18 +70,18 @@
                             <TemplateColumn Title="@Text.Upper("Title")">
                                 <CellTemplate>
                                     <div>
-                                        @if (context.Item is OrigamiBackup)
-                                        {
-                                            <div>
-                                                <i class="bi bi-database-fill-add"></i>
-                                                @Text.Original("Backup")
-                                            </div>
-                                        }
                                         @if (context.Item is OrigamiBackupRestore)
                                         {
                                             <div>
                                                 <i class="bi bi-database-fill-exclamation"></i>
                                                 @Text.Original("Restore")
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div>
+                                                <i class="bi bi-database-fill-add"></i>
+                                                @Text.Original("Backup")
                                             </div>
                                         }
                                         <Id Class="x-small" Entity="context.Item"></Id>
@@ -113,10 +105,9 @@
                                     @if (this.Super.Files.FileExists(context.Item.File) == true)
                                     {
                                         var file = this.Super.Files.GetFile(context.Item.File)!;
-                                        <button @onclick="() => _downloadFile(file)" @onclick:stopPropagation="true">
+                                        <button @onclick="() => DownloadFile(file)" @onclick:stopPropagation="true">
                                             <i class="fa-solid fa-file-arrow-down"></i>
                                         </button>
-                                        <div class="x-small">@context.Item.File</div>
                                     }
                                 </CellTemplate>
                             </TemplateColumn>
@@ -146,11 +137,26 @@
     {
         get
         {
-            if (this.Repository is IBackupRestoreRepository backupRestoreRepository)
+            if (this.Repository is IBackupRestoreRepository backupRestoreRepository && backupRestoreRepository.Current != null)
             {
-                return base.DisableTheRestoreButton && backupRestoreRepository.CurrentProcess != null;
+                return true;
             }
-            throw new InvalidOperationException();
+            return base.DisableTheRestoreButton;
+        }
+    }
+
+    /// <summary>
+    /// Disables the restore zip file button.
+    /// </summary>
+    protected bool DisableTheRestoreZipButton
+    {
+        get
+        {
+            if (this.Repository is IBackupRestoreRepository backupRestoreRepository && backupRestoreRepository.Current != null)
+            {
+                return true;
+            }
+            return false;
         }
     }
 
@@ -158,33 +164,90 @@
     {
         get
         {
-            if (this.Repository is IBackupRestoreRepository backupRestoreRepository)
+            if (this.Repository is IBackupRestoreRepository backupRestoreRepository && backupRestoreRepository.Current != null)
             {
-                return backupRestoreRepository.CurrentProcess != null;
+                return true;
             }
             return false;
         }
     }
 
-    protected async Task BackupTheSystem()
+    protected async Task BackupOrigami()
     {
+        var ok = await DialogService.ShowMessageBoxAsync(
+            Text.Upper("Backup files and database"),
+            Text.Original("Are you sure?"),
+            yesText: Text.Lower("Yes"),
+            noText: Text.Lower("No"));
+
+        if (ok == false) return;
+
         if (this.Repository is IBackupRestoreRepository backupRestoreRepository)
         {
-            using (var transaction = new TransactionScope())
+            var scope = new TransactionScope(
+                TransactionScopeOption.Required,
+                TransactionScopeAsyncFlowOption.Enabled);
+
+            backupRestoreRepository.BackupRestoreTask = Task.Run(async () =>
             {
-                var hub = await backupRestoreRepository.Backup(this.UserFacade.User);
-                if (hub.Ok)
+                using (scope)
                 {
-                    transaction.Complete();
-                    this.DataGrid?.ReloadServerData();
+                    var hub = await backupRestoreRepository.BackupAsync(this.UserFacade.User);
+                    if (hub.Ok)
+                    {
+                        scope.Complete();
+                        await this.InvokeAsync(() => this.DataGrid!.ReloadServerData());
+                    }
+                    UserFacade.Result = hub;
                 }
-                UserFacade.Result = hub;
-            }
+            });
         }
     }
 
-    private async Task _downloadFile(OrigamiSystemFile file)
+    protected async Task RestoreOrigami()
     {
-        await this.JSRuntime.InvokeVoidAsync("origami.common.downloadFileFromUrl", file.WebPath);
+        var ok = await DialogService.ShowMessageBoxAsync(
+            Text.Upper("Restore files and database"),
+            Text.Original("Are you sure?"),
+            yesText: Text.Lower("Yes"),
+            noText: Text.Lower("No"));
+
+        if (ok == false) return;
+
+        if (this.Repository is IBackupRestoreRepository backupRestoreRepository)
+        {
+            var scope = new TransactionScope(
+                TransactionScopeOption.Required,
+                TransactionScopeAsyncFlowOption.Enabled);
+
+            backupRestoreRepository.BackupRestoreTask = Task.Run(async () =>
+            {
+                using (scope)
+                {
+                    var hub = await backupRestoreRepository.RestoreAsync(this.UserFacade.User, this.SelectedEntities.First());
+                    if (hub.Ok)
+                    {
+                        scope.Complete();
+                        await this.InvokeAsync(() => this.DataGrid!.ReloadServerData());
+                    }
+                    UserFacade.Result = hub;
+                }
+            });
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        this.AppFacade.RefreshingTheUI += (obj, args) =>
+        {
+            if (obj is string s)
+            {
+                if (s.Like(OrigamiConstants.Events.Backup) == true) this.InvokeAsync(this.StateHasChanged);
+                if (s.Like(OrigamiConstants.Events.BackupComplete) == true) this.InvokeAsync(this.StateHasChanged);
+                if (s.Like(OrigamiConstants.Events.Restore) == true) this.InvokeAsync(this.StateHasChanged);
+                if (s.Like(OrigamiConstants.Events.RestoreComplete) == true) this.InvokeAsync(this.StateHasChanged);
+            }
+        };
     }
 }

@@ -40,6 +40,7 @@ namespace Origami.Core.Models
             get { return _userName; }
             set { this.Set(ref _userName, value, Changed); }
         }
+
         public virtual string Value
         {
             get { return _value; }

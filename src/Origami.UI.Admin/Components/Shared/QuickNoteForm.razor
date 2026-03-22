@@ -1,0 +1,75 @@
+﻿@inherits BasicFormFull<OrigamiQuickNote>
+
+<div class="quick-note @Class">
+    <BasicHeaderNotes Entity="this.Entity"></BasicHeaderNotes>
+    <BasicHeader Class="mt-3" Entity="this.Entity"></BasicHeader>
+    <ul class="inline-list mt-3">
+        <li>
+            <LanguageWrittenOn Entity="this.Entity"></LanguageWrittenOn>
+        </li>
+    </ul>
+    <ul class="inline-list mt-3">
+        <li>
+            <MudTextField FullWidth="true"
+                          Immediate="true"
+                          @bind-Value="@Entity.Note"
+                          HelperText="@Text.Lower("Type your note here")"></MudTextField>
+        </li>
+    </ul>
+    <ul class="inline-list mt-3">
+        <li>
+            <div class="border p-3">
+                <div>@Text.Lower("Choose the background style")</div>
+                <div class="mt-2">
+                    @foreach (var bg in OrigamiConstants.BackgroundGradients)
+                    {
+                        var bgStyle = $"background: {bg}; width: 40px; height: 40px;";
+                        @if (Entity.Background == bg)
+                        {
+                            bgStyle += "border: 2px solid var(--site-highlight);";
+                        }
+                        <MudAvatar Class="me-2 mb-2 cursor-pointer"
+                                   Size="Size.Large"
+                                   Style="@bgStyle"
+                                   Square="true"
+                                   @onclick="@(() => Entity.Background = bg)">
+                        </MudAvatar>
+                    }
+                </div>
+            </div>
+        </li>
+    </ul>
+    <div class="buttons mt-3 p-3 text-center">
+        <div class="btn-group">
+            <button class="btn btn-success text-white fw-bold" @onclick="Save" disabled="@this.DisableTheSaveButton">
+                <i class="fa-solid fa-floppy-disk"></i>
+                @Text.Lower("Save")
+            </button>
+            <button class="btn btn-secondary text-white fw-bold" @onclick="UndoChanges" disabled="@this.Entity.New">
+                <i class="fa-solid fa-rotate-left"></i>
+                @Text.Lower("Undo changes")
+            </button>
+            <button class="btn btn-info text-white fw-bold" @onclick="CreateEntity">
+                <i class="fa-solid fa-square-plus"></i>
+                @Text.Lower("New")
+            </button>
+        </div>
+    </div>
+</div>
+
+@code {
+    protected override Result<OrigamiQuickNote> BeforeSaving()
+    {
+        if (Entity.New)
+        {
+            Entity.AuthorId = this.UserFacade.User.Id;
+            Entity.BlogId = this.UserFacade.BlogId;
+            Entity.DateCreated = DateTime.UtcNow;
+            if (Entity.Background.Has() == false)
+            {
+                Entity.Background = OrigamiConstants.BackgroundGradients[Random.Shared.Next(OrigamiConstants.BackgroundGradients.Length)];
+            }
+        }
+        return new(Entity);
+    }
+}

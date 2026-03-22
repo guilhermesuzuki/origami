@@ -9,7 +9,19 @@ namespace Origami.Core.Validators
 {
     internal static class ValidatorExtensions
     {
-        private static Regex iframeRegex = new(@"^<iframe\b[^>]*>(.*?)</iframe>$", RegexOptions.Singleline);
+        public static IRuleBuilderOptions<T, Guid> AuthorId<T>(this IRuleBuilder<T, Guid> ruleBuilder, Text text)
+        {
+            return ruleBuilder
+                .NotEmpty()
+                .WithMessage(text.Original("Author is required"));
+        }
+
+        public static IRuleBuilderOptions<T, Guid> BlogId<T>(this IRuleBuilder<T, Guid> ruleBuilder, Text text)
+        {
+            return ruleBuilder
+                .NotEmpty()
+                .WithMessage(text.Original("Blog is required"));
+        }
 
         public static IRuleBuilderOptions<T, string?> Description<T>(this IRuleBuilder<T, string?> ruleBuilder, Text text)
         {
@@ -121,7 +133,6 @@ namespace Origami.Core.Validators
                 })
                 .WithMessage(text.Original("Content must be a valid HTML"));
         }
-
         public static IRuleBuilderOptions<T, Guid> Id<T>(this IRuleBuilder<T, Guid> ruleBuilder, Text text)
         {
             return ruleBuilder
@@ -220,6 +231,15 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("Title is required"))
                 .MaximumLength(255)
                 .WithMessage(text.Original("Title cannot exceed 255 characters"));
+        }
+
+        public static IRuleBuilderOptions<T, string> Note<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
+        {
+            return ruleBuilder
+                .NotEmpty()
+                .WithMessage(text.Original("Note is required"))
+                .MaximumLength(255)
+                .WithMessage(text.Original("Note cannot exceed 255 characters"));
         }
 
         public static IRuleBuilderOptions<T, string?> Username<T>(this IRuleBuilder<T, string?> ruleBuilder, Text text)

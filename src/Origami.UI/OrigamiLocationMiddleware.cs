@@ -30,6 +30,7 @@ namespace Origami.UI
                     await next(context);
                     return;
                 }
+
                 var ip = context.Connection.RemoteIpAddress?.ToString();
                 if (ip == null || ip.Like("::1") || ip.Like("127.0.0.1"))
                 {
@@ -37,7 +38,7 @@ namespace Origami.UI
                     var url = "https://api.ipify.org/?format=json";
                     using var client = new HttpClient()
                     {
-                        Timeout = TimeSpan.FromMilliseconds(250),
+                        Timeout = TimeSpan.FromMilliseconds(500),
                     };
                     var response = await client.GetAsync(url).ConfigureAwait(false);
                     if (response.IsSuccessStatusCode)

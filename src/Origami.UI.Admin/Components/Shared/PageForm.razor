@@ -2,7 +2,6 @@
 @inject IPageRepository _page
 @inject IFileRepository _fileRepository
 
-<MudFileUpload @ref="this.FileUpload" T="IBrowserFile" FilesChanged="UploadHeader" Accept=".png, .jpg, .bmp, .tiff" MaximumFileCount="1"></MudFileUpload>
 <div class="form @Class">
     <div class="row">
         <div class="col-12">
@@ -55,7 +54,7 @@
                     @if (ParentSelector)
                     {
                         <div class="mt-3">
-                            <MudDataGrid T="OrigamiPage" Items="this.Parents()" Filterable="false" SortMode="SortMode.Single" Class="border" Bordered="true" SelectOnRowClick="false">
+                            <MudDataGrid T="OrigamiPage" Items="this.GetParents()" Filterable="false" SortMode="SortMode.Single" Class="border" Bordered="true" SelectOnRowClick="false">
                                 <Columns>
                                     <TemplateColumn Title="@Text.Upper("Title")" Sortable="true" Filterable="false" CellClass="col-8" SortBy="x => x.Title">
                                         <CellTemplate>
@@ -122,21 +121,26 @@
         <div class="col-12 col-xxl-6">
             <div class="text-center p-3">
                 <HeaderImageLite Entity="@Entity"></HeaderImageLite>
-                <div class="btn-group mt-2 w-100">
-                    <button class="btn btn-light w-100" @onclick="PickFile">
-                        <i class="fa-solid fa-cloud-arrow-up"></i>
-                        <div>@Text.Lower("Only image files")</div>
-                        <div class="x-small">@Text.Lower("Create slug")</div>
-                    </button>
-                    <button class="btn btn-light w-100" @onclick="() => this.FileManagerForImages = true">
-                        <i class="fa-solid fa-folder"></i>
-                        @Text.Lower("Pick from file manager")
-                    </button>
-                    <button class="btn btn-light w-100" @onclick="ClearHeader">
-                        <i class="fa-solid fa-trash-can"></i>
-                        @Text.Lower("Clear header")
-                    </button>
-                </div>
+                <MudFileUpload T="IBrowserFile" FilesChanged="UploadHeader" Accept=".png, .jpg, .bmp, .tiff" MaximumFileCount="1">
+                    <CustomContent>
+                        <div class="btn-group mt-2 w-100">
+                            <button class="btn btn-light w-100" @onclick="context.OpenFilePickerAsync">
+                                <i class="fa-solid fa-cloud-arrow-up"></i>
+                                <div>@Text.Lower("Only image files")</div>
+                                <div class="x-small">@Text.Original("{0} MB max.", 6)</div>
+                            </button>
+                            <button class="btn btn-light w-100" @onclick="() => this.FileManagerForImages = true">
+                                <i class="fa-solid fa-folder"></i>
+                                @Text.Lower("Pick from file manager")
+                            </button>
+                            <button class="btn btn-light w-100" @onclick="ClearHeader">
+                                <i class="fa-solid fa-trash-can"></i>
+                                @Text.Lower("Clear header")
+                            </button>
+                        </div>
+                    </CustomContent>
+                    <SelectedTemplate></SelectedTemplate>
+                </MudFileUpload>
             </div>
         </div>
     </div>
@@ -202,7 +206,7 @@
         }
     }
 
-    protected override IEnumerable<OrigamiPage> Parents()
+    protected override IEnumerable<OrigamiPage> GetParents()
     {
         return from x in this.Super.Pages.ReadFromCache()
                where x.BlogId == this.UserFacade.BlogId

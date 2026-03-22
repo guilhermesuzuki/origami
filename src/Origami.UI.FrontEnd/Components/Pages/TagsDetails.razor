@@ -1,8 +1,8 @@
 ﻿@inherits BasicPage
 @implements IItems<BaseContent>
 @implements IEntityNull<BaseContent>
-@page "/blogs/{Slug}/tags/{Tag}"
-@page "/blogs/{Slug}/tags/{Tag}/{ContentNanoId}"
+@page "/blogs/{BlogSlug}/tags/{Tag}"
+@page "/blogs/{BlogSlug}/tags/{Tag}/{ContentNanoId}"
 @inject ITagRepository _tags
 @inject IPostTagRepository _postTags
 @inject IVideoTagRepository _videoTags
@@ -75,7 +75,6 @@
 </Root>
 
 @code {
-    [Parameter] public string Slug { get; set; } = string.Empty;
     [Parameter] public string ContentNanoId { get; set; } = string.Empty;
     [Parameter] public string Tag { get; set; } = string.Empty;
 
@@ -90,20 +89,11 @@
     public BaseContent? Entity { get; set; }
 
     /// <summary>
-    /// Retrieves the blog from the given slug
-    /// </summary>
-    /// <returns></returns>
-    private OrigamiBlog GetBlog()
-    {
-        return this.Super.Blogs.ReadFromCache().Slug(this.Slug) ?? new();
-    }
-
-    /// <summary>
     /// Core.Tag
     /// </summary>
     private OrigamiTag GetTag()
     {
-        var blog = this.GetBlog();
+        var blog = this.GetBlogFromSlug();
         return this.Super.Tags.ReadFromCache().Blog(blog.Id).Slug(this.Tag) ?? new();
     }
 
@@ -112,6 +102,7 @@
         base.OnParametersSet();
         this.LoadFromTag();
         this.LoadContent();
+        this.BlogId = this.GetBlogFromSlug().Id;
     }
 
     protected void LoadFromTag()
@@ -129,11 +120,8 @@
         if (this.ContentNanoId.Has() == true) this.Entity = Items.NanoId(this.ContentNanoId);
     }
 
-    protected override Task OnAfterRenderAsync(bool firstRender)
+    protected override void SetPageTitle()
     {
         this.PageTitle.SetTitle(GetTag(), this.Entity);
-        return base.OnAfterRenderAsync(firstRender);
     }
-
-    public override Guid BlogId => this.GetBlog().Id;
 }

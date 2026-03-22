@@ -430,13 +430,13 @@
                         </MudCheckBox>
                     </li>
                 </ul>
-                <ul class="inline-list">
+                @* <ul class="inline-list">
                     <li>
                         <MudCheckBox @bind-Value="Entity.EditSystemRoles">
                             <span>@Text.Lower("Edit system roles")</span>
                         </MudCheckBox>
                     </li>
-                </ul>
+                </ul> *@
                 <ul class="inline-list">
                     <li>
                         <MudCheckBox @bind-Value="Entity.DeleteRoles">
@@ -578,6 +578,20 @@
                     <li>
                         <MudCheckBox @bind-Value="Entity.ResetOtherUsersPasswords">
                             <span>@Text.Lower("Reset other users passwords")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.ResetOwn2FA">
+                            <span>@Text.Lower("Reset own 2FA")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.ResetOtherUsers2FA">
+                            <span>@Text.Lower("Reset other users 2FA")</span>
                         </MudCheckBox>
                     </li>
                 </ul>
@@ -786,6 +800,18 @@
                         </MudCheckBox>
                     </li>
                 </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.PurgeQuickNotes">
+                            <span>@Text.Lower("Purge quick notes")</span>
+                        </MudCheckBox>
+                    </li>
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.RestoreQuickNotes">
+                            <span>@Text.Lower("Restore quick notes")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
@@ -798,70 +824,145 @@
                 <ul class="inline-list">
                     <li>
                         <MudCheckBox @bind-Value="Entity.ViewSpecialPages">
-                            <span>@Text.Lower("View pages")</span>
+                            <span>@Text.Lower("View special pages")</span>
                         </MudCheckBox>
                     </li>
                 </ul>
                 <ul class="inline-list">
                     <li>
                         <MudCheckBox @bind-Value="Entity.CreateNewSpecialPages">
-                            <span>@Text.Lower("Create new pages")</span>
+                            <span>@Text.Lower("Create new special pages")</span>
                         </MudCheckBox>
                     </li>
                 </ul>
                 <ul class="inline-list">
                     <li>
                         <MudCheckBox @bind-Value="Entity.EditOwnSpecialPages">
-                            <span>@Text.Lower("Edit own pages")</span>
+                            <span>@Text.Lower("Edit own special pages")</span>
                         </MudCheckBox>
                     </li>
                 </ul>
                 <ul class="inline-list">
                     <li>
                         <MudCheckBox @bind-Value="Entity.EditOtherUsersSpecialPages">
-                            <span>@Text.Lower("Edit other users pages")</span>
+                            <span>@Text.Lower("Edit other users special pages")</span>
                         </MudCheckBox>
                     </li>
                 </ul>
                 <ul class="inline-list">
                     <li>
                         <MudCheckBox @bind-Value="Entity.DeleteOwnSpecialPages">
-                            <span>@Text.Lower("Delete own pages")</span>
+                            <span>@Text.Lower("Delete own special pages")</span>
                         </MudCheckBox>
                     </li>
                 </ul>
                 <ul class="inline-list">
                     <li>
                         <MudCheckBox @bind-Value="Entity.DeleteOtherUsersSpecialPages">
-                            <span>@Text.Lower("Delete other users pages")</span>
+                            <span>@Text.Lower("Delete other users special pages")</span>
                         </MudCheckBox>
                     </li>
                 </ul>
                 <ul class="inline-list">
                     <li>
                         <MudCheckBox @bind-Value="Entity.PublishOwnSpecialPages">
-                            <span>@Text.Lower("Publish own pages")</span>
+                            <span>@Text.Lower("Publish own special pages")</span>
                         </MudCheckBox>
                     </li>
                 </ul>
                 <ul class="inline-list">
                     <li>
                         <MudCheckBox @bind-Value="Entity.PublishOtherUsersSpecialPages">
-                            <span>@Text.Lower("Publish other users pages")</span>
+                            <span>@Text.Lower("Publish other users special pages")</span>
                         </MudCheckBox>
                     </li>
                 </ul>
                 <ul class="inline-list">
                     <li>
                         <MudCheckBox @bind-Value="Entity.UnpublishOwnSpecialPages">
-                            <span>@Text.Lower("Unpublish own pages")</span>
+                            <span>@Text.Lower("Unpublish own special pages")</span>
                         </MudCheckBox>
                     </li>
                 </ul>
                 <ul class="inline-list">
                     <li>
                         <MudCheckBox @bind-Value="Entity.UnpublishOtherUsersSpecialPages">
-                            <span>@Text.Lower("Unpublish other users pages")</span>
+                            <span>@Text.Lower("Unpublish other users special pages")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+            </div>
+            <div class="quick-notes mt-3">
+                <div class="w-100 text-white bg-secondary text-center mb-3">
+                    @Text.Lower("Quick notes")
+                </div>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.ViewQuickNotes">
+                            <span>@Text.Lower("View quick notes")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.CreateNewQuickNotes">
+                            <span>@Text.Lower("Create new quick notes")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.EditOwnQuickNotes">
+                            <span>@Text.Lower("Edit own quick notes")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.EditOtherUsersQuickNotes">
+                            <span>@Text.Lower("Edit other users quick notes")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.DeleteOwnQuickNotes">
+                            <span>@Text.Lower("Delete own quick notes")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.DeleteOtherUsersQuickNotes">
+                            <span>@Text.Lower("Delete other users quick notes")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.PublishOwnQuickNotes">
+                            <span>@Text.Lower("Publish own quick notes")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.PublishOtherUsersQuickNotes">
+                            <span>@Text.Lower("Publish other quick notes")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.UnpublishOwnQuickNotes">
+                            <span>@Text.Lower("Unpublish own quick notes")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.UnpublishOtherUsersQuickNotes">
+                            <span>@Text.Lower("Unpublish other users quick notes")</span>
                         </MudCheckBox>
                     </li>
                 </ul>

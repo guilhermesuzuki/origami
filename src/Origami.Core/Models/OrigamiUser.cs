@@ -1,4 +1,6 @@
 ﻿using NanoidDotNet;
+using OtpNet;
+using QRCoder;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -10,7 +12,6 @@ namespace Origami.Core.Models
         BaseModel,
         IModel,
         IChanged,
-        IFKBlog,
         IDeleted,
         IDateCreated,
         IDateModified,
@@ -25,7 +26,8 @@ namespace Origami.Core.Models
         IInstagram,
         IGitHub,
         IPersonalWebsite,
-        ILinkedIn
+        ILinkedIn,
+        ITOTPSecret
     {
         /// <summary>
         /// Anonymous user
@@ -33,8 +35,6 @@ namespace Origami.Core.Models
         public static OrigamiUser AnonymousUser = new() { Id = Guid.Empty };
 
         protected string? _additionalInfo = string.Empty;
-        protected OrigamiBlog? _blog;
-        protected Guid _blogId;
         protected DateTime? _dateBlocked;
         protected DateTime _dateCreated = DateTime.UtcNow;
         protected DateTime? _dateModified;
@@ -59,19 +59,6 @@ namespace Origami.Core.Models
         {
             get => _additionalInfo;
             set => this.Set(ref _additionalInfo, value, Changed);
-        }
-
-        [ForeignKey(nameof(BlogId))]
-        public OrigamiBlog? Blog
-        {
-            get => _blog;
-            set => this.Set(ref _blog, value, Changed);
-        }
-
-        public Guid BlogId
-        {
-            get => _blogId;
-            set => this.Set(ref _blogId, value, Changed);
         }
 
         public DateTime? DateBlocked
@@ -122,10 +109,24 @@ namespace Origami.Core.Models
         }
 
         [NotMapped]
+        public string Facebook
+        {
+            get => Get().Facebook;
+            set => Set(x => x.Facebook = value);
+        }
+
+        [NotMapped]
         public string FirstName
         {
             get => Get().FirstName;
             set => Set(x => x.FirstName = value);
+        }
+
+        [NotMapped]
+        public string GitHub
+        {
+            get => Get().GitHub;
+            set => Set(x => x.GitHub = value);
         }
 
         [NotMapped]
@@ -136,6 +137,13 @@ namespace Origami.Core.Models
         }
 
         public string Hyperlink => $"/users/{NanoId}/";
+
+        [NotMapped]
+        public string Instagram
+        {
+            get => Get().Instagram;
+            set => Set(x => x.Instagram = value);
+        }
 
         public bool IsBlocked
         {
@@ -165,6 +173,13 @@ namespace Origami.Core.Models
             set => Set(x => x.LastName = value);
         }
 
+        [NotMapped]
+        public string LinkedIn
+        {
+            get => Get().LinkedIn;
+            set => Set(x => x.LinkedIn = value);
+        }
+
         public bool MustChangePassword
         {
             get => _mustChangePassword;
@@ -181,6 +196,20 @@ namespace Origami.Core.Models
         {
             get => _password;
             set => this.Set(ref _password, value, Changed);
+        }
+
+        [NotMapped]
+        public string TOTPRecoveryCodes
+        {
+            get => Get().TOTPRecoveryCodes;
+            set => Set(x => x.TOTPRecoveryCodes = value);
+        }
+
+        [NotMapped]
+        public string TOTPSecret
+        {
+            get => Get().TOTPSecret;
+            set => Set(x => x.TOTPSecret = value);
         }
 
         /// <summary>
@@ -201,43 +230,58 @@ namespace Origami.Core.Models
         }
 
         [NotMapped]
-        public string Facebook
-        {
-            get => Get().Facebook;
-            set => Set(x => x.Facebook = value);
-        }
-
-        [NotMapped]
-        public string Instagram
-        {
-            get => Get().Instagram;
-            set => Set(x => x.Instagram = value);
-        }
-
-        [NotMapped]
-        public string GitHub
-        {
-            get => Get().GitHub;
-            set => Set(x => x.GitHub = value);
-        }
-
-        [NotMapped]
         public string Website
         {
             get => Get().Website;
             set => Set(x => x.Website = value);
         }
 
-        [NotMapped]
-        public string LinkedIn
+        public bool ConsumeTOTPRecoveryCode(string totpCodeForValidation)
         {
-            get => Get().LinkedIn;
-            set => Set(x => x.LinkedIn = value);
+            var hash = totpCodeForValidation.SHA256Hash();
+            var recoveryCodes = GetTOTPRecoveryCodes();
+            var found = recoveryCodes.FirstOrDefault(x => x == hash);
+            if (found != null)
+            {
+                recoveryCodes = recoveryCodes.Where(x => x != hash).ToArray();
+                TOTPRecoveryCodes = string.Join(",", recoveryCodes);
+                return true;
+            }
+            return false;
+        }
+
+        public void GenerateRandomTOTPSecret()
+        {
+            // Generate 20 bytes (160-bit secret)
+            var secretBytes = KeyGeneration.GenerateRandomKey(20);
+            var base32Secret = Base32Encoding.ToString(secretBytes);
+            TOTPSecret = base32Secret;
         }
 
         public AdditionalInfo.ForUsers Get()
         {
             return AdditionalInfo.To<AdditionalInfo.ForUsers>();
+        }
+
+        public string GetTOTPQrCode()
+        {
+            var uri = this.GetTOTPUri();
+            var qrGenerator = new QRCodeGenerator();
+            var qrData = qrGenerator.CreateQrCode(uri, QRCodeGenerator.ECCLevel.Q);
+            var qrCode = new Base64QRCode(qrData);
+            string qrImage = qrCode.GetGraphic(20);
+            return qrImage;
+        }
+
+        public string[] GetTOTPRecoveryCodes()
+        {
+            return TOTPRecoveryCodes.Split(',', StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        public string GetTOTPUri()
+        {
+            var app = "Origami";
+            return $"otpauth://totp/{app}:{Username}?secret={TOTPSecret}&issuer={app}";
         }
 
         public AdditionalInfo.ForUsers Set(Action<AdditionalInfo.ForUsers> action)

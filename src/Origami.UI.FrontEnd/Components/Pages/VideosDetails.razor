@@ -137,7 +137,7 @@
     }
 </Root>
 
-@code {
+    @code {
     [Parameter] public OrigamiTag? Tag { get; set; }
     [Parameter] public OrigamiCategory? Category { get; set; }
     [Parameter] public OrigamiVideo? Video { get; set; }
@@ -173,6 +173,7 @@
         base.OnParametersSet();
         this._video = this.Video ?? this.Super.Videos.ReadFromCache().NanoId(NanoId) ?? new();
         this._comments = this.Super.VideoComments.AllComments(_video);
+        this.BlogId = this._video.BlogId;
     }
 
     private void CreateComment()
@@ -213,17 +214,16 @@
     {
         if (firstRender)
         {
-            if (await this.JSRuntime.IncognitoModeAsync() == true) return;
-            await this.JSRuntime.InvokeVoidAsync("origami.videos.view", this._video.Id);
-            await this.InvokeAsync(this.StateHasChanged);
+            if (this.UserFacade.IncognitoMode == false)
+            {
+                var uri = new Uri(NavigationManager.Uri);
+                await JSRuntime.InvokeVoidAsync("origami.physicalpages.viewByContent", uri.AbsolutePath, nameof(OrigamiVideo), this._video.Id);
+            }
         }
     }
 
-    protected override Task OnAfterRenderAsync(bool firstRender)
+    protected override void SetPageTitle()
     {
         this.PageTitle.SetTitle(Tag, Category, _video);
-        return base.OnAfterRenderAsync(firstRender);
     }
-
-    public override Guid BlogId => this._video.BlogId;
 }

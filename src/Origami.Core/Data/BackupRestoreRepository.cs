@@ -1,15 +1,11 @@
-﻿using FluentValidation;
-using Lucene.Net.Util;
+﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
-using Org.BouncyCastle.Asn1.X509;
 using Origami.Core.Models;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO.Compression;
-using System.Text;
+using System.Text.Json.Nodes;
 
 namespace Origami.Core.Data
 {
@@ -17,11 +13,13 @@ namespace Origami.Core.Data
         RepositoryOuterLayer<OrigamiBackup>, 
         IBackupRestoreRepository
     {
-        protected IConfiguration _configuration;
-        protected IFileRepository _fileRepository;
-        protected IUserRepository _userRepository;
+        protected readonly IAppFacade _appFacade;
+        protected readonly IConfiguration _configuration;
+        protected readonly IFileRepository _fileRepository;
+        protected readonly IUserRepository _userRepository;
 
         public BackupRestoreRepository(
+            IAppFacade appFacade,
             IConfiguration configuration,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IFileRepository fileRepository,
@@ -31,40 +29,56 @@ namespace Origami.Core.Data
             Text text)
             : base(text, dbContextFactory, memoryCache, wwwRoot)
         {
+            _appFacade = appFacade;
             _configuration = configuration;
             _fileRepository = fileRepository;
             _userRepository = userRepository;
         }
 
-        public OrigamiBackup? CurrentProcess { get; set; }
+        public Task? BackupRestoreTask { get; set; }
+
+        public OrigamiBackup? Current { get; set; }
 
         public override string ReadPermission => nameof(OrigamiRole.ViewBackupRestoreSystem);
 
-        public async Task<Result<OrigamiBackup>> Backup(OrigamiUser user)
+        /// <summary>
+        /// New database name from the current process
+        /// </summary>
+        private string DatabaseName => $"origami-{Current?.NanoId}";
+
+        public async Task<Result<OrigamiBackup>> BackupAsync(OrigamiUser user)
         {
-            if (!Directory.Exists($"{WebRootPath.WebRootPath}/backups/"))
+            if (Current != null)
             {
-                Directory.CreateDirectory($"{WebRootPath.WebRootPath}/backups/");
+                return new() { Error = Text.Original("A backup or restore process is already running. Please try again later.") };
             }
 
-            if (CurrentProcess != null)
-            {
-                return new() { ErrorMessage = Text.Original("A backup or restore process is already running. Please try again later.") };
-            }
+            var hub = new Result<string>();
+            var backup = new OrigamiBackup { UserId = user.Id, DateCreated = DateTime.UtcNow };
 
             try
             {
-                CurrentProcess = new OrigamiBackup { UserId = user.Id, DateCreated = DateTime.UtcNow };
-                var backup = CurrentProcess.Clone();
+                if (Directory.Exists(WebRootPath.WebRootPathForBackups) == false)
+                {
+                    Directory.CreateDirectory(WebRootPath.WebRootPathForBackups);
+                }
 
-                var hub = await this.BackupTheDatabaseAsync();
+                Current = backup.Clone();
+
+                //asks to refresh the UI
+                _appFacade.RefreshUI(OrigamiConstants.Events.Backup);
+
+                hub = await this.BackupTheDatabaseAsync();
                 if (hub.Ok == false)
                 {
                     return new Result<OrigamiBackup>(backup).Pull(hub);
                 }
 
+                //asks to refresh the UI
+                _appFacade.RefreshUI(OrigamiConstants.Events.Backup);
+
                 string sourceFolder = $"{WebRootPath.WebRootPath}/files/";
-                string zipPath = $"{WebRootPath.WebRootPath}/backups/{CurrentProcess.NanoId}.zip";
+                string zipPath = $"{WebRootPath.WebRootPathForBackups}/{Current.Filename}";
 
                 await ZipFile.CreateFromDirectoryAsync(
                     sourceFolder,
@@ -73,71 +87,109 @@ namespace Origami.Core.Data
                     includeBaseDirectory: true
                 );
 
-                hub.SuccessMessage = Text.Original("Zip file created successfully.");
+                hub.Success = Text.Original("ZIP file created successfully.");
 
                 if (hub.Ok)
                 {
-                    var ctx = CurrentProcess.GetContext(user);
+                    var ctx = Current.GetContext(user);
                     this.SmartSave(ctx, false).Push(hub);
                 }
+
+                //asks to refresh the UI
+                _appFacade.RefreshUI(OrigamiConstants.Events.Backup);
 
                 return new Result<OrigamiBackup>(backup).Pull(hub);
             }
             catch (Exception ex)
             {
-                return new() { ErrorMessage = ex.GetMessage() };
+                return new() { Error = ex.GetMessage() };
             }
             finally
             {
-                CurrentProcess = null; 
+                Current = null;
+                _appFacade.RefreshUI(OrigamiConstants.Events.BackupComplete, hub);
             }
         }
 
-        public async Task<Result<OrigamiBackupRestore>> Restore(OrigamiUser user, OrigamiBackup backup)
+        public async Task<Result<OrigamiBackupRestore>> RestoreAsync(OrigamiUser user, OrigamiBackup backup, string? filepathOverride = null)
         {
-            if (!Directory.Exists($"{WebRootPath.WebRootPath}/restores/"))
+            if (Current != null)
             {
-                Directory.CreateDirectory($"{WebRootPath.WebRootPath}/restores/");
-            }
-
-            if (CurrentProcess != null)
-            {
-                return new() { ErrorMessage = Text.Original("A backup or restore process is already running. Please try again later.") };
+                return new() { Error = Text.Original("A backup or restore process is already running. Please try again later.") };
             }
 
             if (backup is OrigamiBackupRestore)
             {
-                return new() { ErrorMessage = Text.Original("This has already been restored.") };
+                return new() { Error = Text.Original("This has already been restored.") };
             }
+
+            var hub = new Result();
+            var restore = new OrigamiBackupRestore() { UserId = user.Id, DateCreated = DateTime.UtcNow };
 
             try
             {
-                CurrentProcess = new OrigamiBackupRestore() { UserId = user.Id, DateCreated = DateTime.UtcNow };
-                OrigamiBackupRestore restore = (OrigamiBackupRestore)CurrentProcess.Clone();
-                string zipPath = $"{WebRootPath.WebRootPath}/backups/{backup.NanoId}.zip";
-                string extractPath = $"{WebRootPath.WebRootPath}/restores/{backup.NanoId}/";
-                if (!File.Exists(zipPath))
+                if (Directory.Exists(WebRootPath.WebRootPathForRestores) == false)
                 {
-                    return new(restore) { ErrorMessage = Text.Original("Backup file not found.") };
+                    Directory.CreateDirectory(WebRootPath.WebRootPathForRestores);
                 }
+
+                var zipPath = filepathOverride ?? Path.Combine(WebRootPath.WebRootPathForBackups, backup.Filename);
+                var extractPath = Path.Combine(WebRootPath.WebRootPathForRestores, backup.NanoId);
+
+                if (Directory.Exists(extractPath) == true)
+                {
+                    Directory.Delete(extractPath, true);
+                }
+                
+                Current = restore.Clone();
+
+                //asks to refresh the UI
+                _appFacade.RefreshUI(OrigamiConstants.Events.Restore);
+
+                if (File.Exists(zipPath) == false)
+                {
+                    return new(restore) { Error = Text.Original("Backup file not found.") };
+                }
+
                 await ZipFile.ExtractToDirectoryAsync(zipPath, extractPath);
-                var hub = await RestoreTheDatabaseAsync($"{extractPath}/files/db.bacpac");
+
+                //asks to refresh the UI
+                _appFacade.RefreshUI(OrigamiConstants.Events.Restore);
+
+                hub = await RestoreTheDatabaseAsync(Path.Combine(extractPath, "files", "db.bacpac"));
                 if (hub.Ok == false)
                 {
                     return new Result<OrigamiBackupRestore>(restore).Pull(hub);
                 }
-                hub.SuccessMessage = Text.Original("Database restored successfully.");
 
                 //update connection string inside appsettings.json
+                var cs = await UpdateConnectionStringInsideDbSettings();
+
+                //asks to refresh the UI
+                _appFacade.RefreshUI(OrigamiConstants.Events.Restore);
+
+                //pushes the result to hub
+                cs.Push(hub);
+
+                if (hub.Ok == false)
+                {
+                    return new Result<OrigamiBackupRestore>(restore).Pull(hub);
+                }
+
+                //asks to refresh the UI
+                _appFacade.RefreshUI(OrigamiConstants.Events.Restore);
 
                 //rename current files folder to files_old_{CurrentProcess.NanoId}
-                Directory.Move($"{WebRootPath.WebRootPath}/files/", $"{WebRootPath.WebRootPath}/files_old_{CurrentProcess.NanoId}/");
+                Directory.Move($"{WebRootPath.WebRootPath}/files/", $"{WebRootPath.WebRootPath}/files-previous-{Current.NanoId}/");
                 Directory.Move($"{extractPath}/files/", $"{WebRootPath.WebRootPath}/files/");
+
+                //asks to refresh the UI
+                _appFacade.RefreshUI(OrigamiConstants.Events.Restore);
 
                 //save the restore record
                 if (hub.Ok)
                 {
-                    var ctx = CurrentProcess.GetContext(user);
+                    var ctx = Current.GetContext(user);
                     this.SmartSave(ctx, false).Push(hub);
                 }
 
@@ -145,11 +197,12 @@ namespace Origami.Core.Data
             }
             catch (Exception ex)
             {
-                return new() { ErrorMessage = ex.GetMessage() };
+                return new() { Error = ex.GetMessage() };
             }
             finally
             {
-                CurrentProcess = null;
+                Current = null;
+                _appFacade.RefreshUI(OrigamiConstants.Events.RestoreComplete, hub);
             }
         }
 
@@ -174,7 +227,7 @@ namespace Origami.Core.Data
                 }
                 catch (Exception ex)
                 {
-                    return new() { ErrorMessage = ex.GetMessage() };
+                    return new() { Error = ex.GetMessage() };
                 }
             }
 
@@ -183,9 +236,9 @@ namespace Origami.Core.Data
 
         protected async Task<Result<string>> BackupTheDatabaseAsync()
         {
-            if (CurrentProcess == null)
+            if (Current == null)
             {
-                return new() { ErrorMessage = $"Current process hasn't started yet" };
+                return new() { Error = $"Current process hasn't started yet" };
             }
 
             var oi = _configuration.GetOrigamiConnectionString();
@@ -214,37 +267,34 @@ namespace Origami.Core.Data
 
             if (process.ExitCode != 0)
             {
-                return new() { ErrorMessage = $"BACPAC export failed: {error}" };
+                return new() { Error = $"BACPAC export failed: {error}" };
             }
 
-            return new(target) { SuccessMessage = Text.Original("BACPAC file created successfully.") };
+            return new(target) { Success = Text.Original("BACPAC file created successfully.") };
         }
 
-        protected async Task<Result<string>> RestoreTheDatabaseAsync(string bacpacPath)
+        protected async Task<Result> RestoreTheDatabaseAsync(string bacpacPath)
         {
             if (File.Exists(bacpacPath) == false)
             {
-                return new() { ErrorMessage = "BACPAC file not found." };
+                return new() { Error = "BACPAC file not found." };
             }
 
-            if (CurrentProcess == null)
+            if (Current == null)
             {
-                return new() { ErrorMessage = $"Current process hasn't started yet" };
+                return new() { Error = $"Current process hasn't started yet" };
             }
 
             var oi = _configuration.GetOrigamiConnectionString();
-            var builder = new Microsoft.Data.SqlClient.SqlConnectionStringBuilder(oi);
-            var database = $"origami_{CurrentProcess.NanoId}";
+            var builder = new SqlConnectionStringBuilder(oi);
 
-            var args = $"""
-                /Action:Import
-                /SourceFile:"{bacpacPath}"
-                /TargetServerName:"{builder.DataSource}"
-                /TargetDatabaseName:"{database}"
-                /TargetUser:"{builder.UserID}"
-                /TargetPassword:"{builder.Password}"
-                /TargetEncryptConnection:False
-                """;
+            var args = $"/Action:Import " +
+                $"/SourceFile:\"{bacpacPath}\" " +
+                $"/TargetServerName:\"{builder.DataSource}\" " +
+                $"/TargetDatabaseName:\"{this.DatabaseName}\" " +
+                $"/TargetUser:\"origami-backup\" " +
+                $"/TargetPassword:\"zwREK18C7kDDoLXREGWs\" " +
+                $"/TargetEncryptConnection:False";
 
             var process = new Process
             {
@@ -271,7 +321,39 @@ namespace Origami.Core.Data
                 throw new Exception($"BACPAC import failed:\n{error}");
             }
 
-            return new(database) { SuccessMessage = Text.Original("BACPAC file created successfully."), };
+            return new() { Success = Text.Original("Database restored successfully."), };
+        }
+
+        private async Task<Result> UpdateConnectionStringInsideDbSettings()
+        {
+            try
+            {
+                var oi = _configuration.GetOrigamiConnectionString();
+                var builder = new SqlConnectionStringBuilder(oi)
+                {
+                    InitialCatalog = this.DatabaseName,
+                };
+
+                var path = Path.GetFullPath("..\\Origami.Files\\");
+                var file = Path.Combine(path, $"dbsettings.{_appFacade.EnvironmentName}.json");
+                file = File.Exists(file) ? file : Path.Combine(path, "dbsettings.json");
+
+                var json = await File.ReadAllTextAsync(file);
+                var node = JsonNode.Parse(json);
+
+                if (node != null)
+                {
+                    node["ConnectionStrings"]!["origami"] = builder.ToString();
+                    await File.WriteAllTextAsync(file, node.ToJsonString(new() { WriteIndented = true, }));
+                    return new() { Success = Text.Original("Db settings file updated successfully..") };
+                }
+
+                return new() { Error = Text.Original("Error parsing the JSON file.") };
+            }
+            catch (Exception ex)
+            {
+                return new() { Error = ex.GetMessage() };
+            }
         }
     }
 }

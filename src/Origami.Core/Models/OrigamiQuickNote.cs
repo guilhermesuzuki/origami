@@ -5,34 +5,53 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Origami.Core.Models
 {
     [Table("oi_QuickNotes")]
-    public class OrigamiQuickNote :
+    public class OrigamiQuickNote : BaseModel,
         IChanged,
         IId,
-        IFKBlog
+        IBlogId,
+        IAuthorId,
+        IDateCreated,
+        IDateModified,
+        IDeleted,
+        ILanguageWrittenOn,
+        IVersion,
+        INew,
+        IPublished,
+        IDraft
     {
-        private Guid _id = Guid.NewGuid();
+        private Guid _authorId;
         private Guid _blogId;
-        private string _userName = string.Empty;
+        private DateTime _dateCreated;
+        private DateTime? _dateModified;
+        private DateTime? _datePublished;
+        private bool _isDeleted = false;
+        private bool _isPublished = false;
+        private string _languageWrittenOn = string.Empty;
         private string _note = string.Empty;
-        private DateTime? _updated;
-
-        private OrigamiBlog? _blog;
+        private byte[] _version = [];
+        private string _background = string.Empty;
 
         /// <summary>
         /// Default constructor
         /// </summary>
         public OrigamiQuickNote() : base()
         {
-
+            this.LanguageWrittenOn = Thread.CurrentThread.CurrentUICulture.Name;
         }
 
         public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) => { };
 
-        [Key]
-        public Guid Id
+        public Guid AuthorId
         {
-            get { return _id; }
-            set { this.Set(ref _id, value, Changed); }
+            get { return _authorId; }
+            set { this.Set(ref _authorId, value, Changed); }
+        }
+
+        [StringLength(255)]
+        public string Background
+        {
+            get { return _background; }
+            set { this.Set(ref _background, value, Changed); }
         }
 
         public Guid BlogId
@@ -41,30 +60,63 @@ namespace Origami.Core.Models
             set { this.Set(ref _blogId, value, Changed); }
         }
 
-        [ForeignKey(nameof(BlogId))]
-        public OrigamiBlog? Blog
+        public DateTime DateCreated
         {
-            get { return _blog; }
-            set { this.Set(ref _blog, value, Changed); }
+            get { return _dateCreated; }
+            set { this.Set(ref _dateCreated, value, Changed); }
         }
 
-        [StringLength(100)]
-        public string UserName
+        public DateTime? DateModified
         {
-            get { return _userName; }
-            set { this.Set(ref _userName, value, Changed); }
+            get { return _dateModified; }
+            set { this.Set(ref _dateModified, value, Changed); }
         }
 
+        public DateTime? DatePublished
+        {
+            get { return _datePublished; }
+            set { this.Set(ref _datePublished, value, Changed); }
+        }
+
+        public bool IsDeleted
+        {
+            get { return _isDeleted; }
+            set { this.Set(ref _isDeleted, value, Changed); }
+        }
+
+        [NotMapped]
+        public bool? IsDraft
+        {
+            get => false; set { }
+        }
+
+        public bool IsPublished
+        {
+            get { return _isPublished; }
+            set { this.Set(ref _isPublished, value, Changed); }
+        }
+
+        [StringLength(5)]
+        public string LanguageWrittenOn
+        {
+            get { return _languageWrittenOn; }
+            set { this.Set(ref _languageWrittenOn, value, Changed); }
+        }
+
+        public bool New => _version.SequenceEqual([]);
+
+        [StringLength(256)]
         public string Note
         {
             get { return _note; }
             set { this.Set(ref _note, value, Changed); }
         }
 
-        public DateTime? Updated
+        [Timestamp]
+        public byte[] Version
         {
-            get { return _updated; }
-            set { this.Set(ref _updated, value, Changed); }
+            get { return _version; }
+            set { this.Set(ref _version, value, Changed); }
         }
     }
 }

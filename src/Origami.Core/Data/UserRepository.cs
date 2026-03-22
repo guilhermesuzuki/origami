@@ -67,31 +67,33 @@ namespace Origami.Core.Data
             return this.SmartUpdate(ctx, false);
         }
 
-        public Result<OrigamiUser> ChangePassword(DataOperationContext<OrigamiUser> ctx, string oldPassword, string newPassword, string newPassword2)
+        public Result<OrigamiUser> ChangePassword(DataOperationContext<OrigamiUser> ctx, string oldPassword, string newPassword1, string newPassword2)
         {
+            using var db = DbContextFactory.CreateDbContext();
+
             // this is necessary because of ReadFromDatabase
             var hash = oldPassword.SHA256Hash();
 
-            var user = ReadFromDatabase()
+            var user = db.Set<OrigamiUser>().AsNoTracking()
                 .Where(x => x.Username.ToLower() == ctx.Entity.Username.ToLower())
                 .Where(x => x.Password == hash)
                 .FirstOrDefault();
 
-            if (user == null) return new() { ErrorMessage = Text.Original("Username and current password do NOT exist in the database") };
-            if (newPassword != newPassword2) return new() { ErrorMessage = Text.Original("New passwords do NOT match, they differ from each other") };
-            if (oldPassword == newPassword) return new() { ErrorMessage = Text.Original("You did NOT change passwords, current and new are the same") };
+            if (user == null) return new() { Error = Text.Original("Username and current password do NOT exist in the database") };
+            if (newPassword1 != newPassword2) return new() { Error = Text.Original("New passwords do NOT match, they differ from each other") };
+            if (oldPassword == newPassword1) return new() { Error = Text.Original("You did NOT change passwords, current and new are the same") };
 
-            var result = new Result<OrigamiUser>(user).Pull(newPassword.IsPasswordStrong());
-            if (result.Ok == false) return result;
+            var hub = new Result<OrigamiUser>(user).Pull(newPassword1.IsPasswordStrong());
+            if (hub.Ok == false) return hub;
 
             // sets the new password
             user.MustChangePassword = false;
-            user.Password = newPassword.SHA256Hash();
+            user.Password = newPassword1.SHA256Hash();
 
             var userContext = new DataOperationContext<OrigamiUser>(ctx.User, ctx.DateTime, user);
-            if (result.Ok == true) base.SmartUpdate(userContext, false).Push(result);
+            if (hub.Ok == true) base.SmartUpdate(userContext, false).Push(hub);
 
-            return result;
+            return hub;
         }
 
         public override Result<OrigamiUser> CreateValidation(DataOperationContext<OrigamiUser> ctx)
@@ -109,8 +111,8 @@ namespace Origami.Core.Data
                 {
                     var hub = new Result<string>();
 
-                    hub.ErrorMessage = Text.Original("You don't have permission to reset your own password");
-                    hub.SimpleMessage = Text.Original("Please, talk to a system administrator");
+                    hub.Error = Text.Original("You don't have permission to reset your own password");
+                    hub.Simple = Text.Original("Please, talk to a system administrator");
 
                     return hub;
                 }
@@ -130,24 +132,25 @@ namespace Origami.Core.Data
                 return new()
                 {
                     RowsAffected = row,
-                    ErrorMessage = Text.Original("Failed to reset password for user")
+                    Error = Text.Original("Failed to reset password for user")
                 };
             }
 
             return new(password) { RowsAffected = row };
         }
 
-        public OrigamiUser? LookupUserInDatabase(OrigamiBlog blog, string username, string cleanPassword)
+        public OrigamiUser? LookupUserInDatabase(string username, string cleanPassword)
         {
             username = username.ToLower().Trim();
-            var hash = cleanPassword.SHA256Hash();
+            var password = cleanPassword.SHA256Hash();
 
-            var query = from x in ReadFromDatabase().NonDeleted()
+            using var db = DbContextFactory.CreateDbContext();
+
+			var query = from x in db.Set<OrigamiUser>().AsNoTracking().NonDeleted()
                         where x.IsDeleted == false
                         where x.IsBlocked == false
-                        where x.BlogId == blog.Id
                         where x.Username.ToLower() == username
-                        where x.Password == hash
+                        where x.Password == password
                         select x;
 
             return query.FirstOrDefault();
@@ -174,19 +177,19 @@ namespace Origami.Core.Data
 
         public override Result<OrigamiUser> PurgeRelationshipsFromDatabase(DataOperationContext<OrigamiUser> ctx)
         {
-            var hub = new Result<OrigamiUser>(ctx.Entity);
-
-            var pages = _pageRepository.ReadFromDatabase().Where(x => x.AuthorId == ctx.Entity.Id).ToList();
-            var posts = _postRepository.ReadFromDatabase().Where(x => x.AuthorId == ctx.Entity.Id).ToList();
-            var videos = _videoRepository.ReadFromDatabase().Where(x => x.AuthorId == ctx.Entity.Id).ToList();
-
-            pages.GetContexts(ctx).Call(_pageRepository.SmartPurge, false).Push(hub);
-            posts.GetContexts(ctx).Call(_postRepository.SmartPurge, false).Push(hub);
-            videos.GetContexts(ctx).Call(_videoRepository.SmartPurge, false).Push(hub);
-
+			var hub = new Result<OrigamiUser>(ctx.Entity);
+            
             using (var db = DbContextFactory.CreateDbContext())
             {
-                var del1 = db.UserRoles.Where(x => x.UserId == ctx.Entity.Id).ExecuteDelete();
+				var pages = db.Set<OrigamiPage>().AsNoTracking().Where(x => x.AuthorId == ctx.Entity.Id).ToList();
+				var posts = db.Set<OrigamiPost>().AsNoTracking().Where(x => x.AuthorId == ctx.Entity.Id).ToList();
+				var videos = db.Set<OrigamiVideo>().AsNoTracking().Where(x => x.AuthorId == ctx.Entity.Id).ToList();
+
+				pages.GetContexts(ctx).Call(_pageRepository.SmartPurge, false).Push(hub);
+				posts.GetContexts(ctx).Call(_postRepository.SmartPurge, false).Push(hub);
+				videos.GetContexts(ctx).Call(_videoRepository.SmartPurge, false).Push(hub);
+
+				var del1 = db.UserRoles.Where(x => x.UserId == ctx.Entity.Id).ExecuteDelete();
                 var del2 = db.UserPasswordResets.Where(x => x.UserId == ctx.Entity.Id).ExecuteDelete();
                 var del3 = db.UserPasswordResets.Where(x => x.AuthorId == ctx.Entity.Id).ExecuteDelete();
                 hub.RowsAffected += del1;
@@ -195,6 +198,36 @@ namespace Origami.Core.Data
             }
 
             return hub;
+        }
+
+        public Result Reset2FA(DataOperationContext<OrigamiUser> ctx, bool checkPermission)
+        {
+            if (checkPermission)
+            {
+                var permission = ctx.Entity.Id == ctx.User.Id
+                    ? this.CheckPermission(ctx.User.Id, nameof(OrigamiRole.ResetOwn2FA))
+                    : this.CheckPermission(ctx.User.Id, nameof(OrigamiRole.ResetOtherUsers2FA));
+
+                if (permission.Ok == false)
+                {
+                    var hub = new Result();
+
+                    hub.Error = Text.Original("You don't have permission to reset 2FA");
+                    hub.Simple = Text.Original("Please, talk to a system administrator");
+
+                    return hub;
+                }
+            }
+
+            var fresh = this.ReadFromDatabase(ctx.Entity);
+            if (fresh != null)
+            {
+                fresh.TOTPSecret = string.Empty;
+                fresh.TOTPRecoveryCodes = string.Empty;
+                return this.SmartUpdate(fresh.GetContext(ctx.User), false);
+            }
+
+            return new() { Error = Text.Original("Failed to reset 2FA for user") };
         }
 
         public Result<string> ResetPassword(DataOperationContext<OrigamiUser> ctx, bool checkPermission)
@@ -209,8 +242,8 @@ namespace Origami.Core.Data
                 {
                     var hub = new Result<string>();
 
-                    hub.ErrorMessage = Text.Original("You don't have permission to reset password");
-                    hub.SimpleMessage = Text.Original("Please, talk to a system administrator");
+                    hub.Error = Text.Original("You don't have permission to reset password");
+                    hub.Simple = Text.Original("Please, talk to a system administrator");
 
                     return hub;
                 }
@@ -232,7 +265,7 @@ namespace Origami.Core.Data
             return new(reset.Key)
             {
                 RowsAffected = row,
-                SimpleMessage = Text.Original("Password reset link has been created, please check your email for further instructions")
+                Simple = Text.Original("Password reset link has been created, please check your email for further instructions")
             };
         }
 
@@ -249,13 +282,15 @@ namespace Origami.Core.Data
             {
                 if (newPassword1 != newPassword2)
                 {
-                    hub.ErrorMessage = Text.Original("New passwords do NOT match, they differ from each other");
+                    hub.Error = Text.Original("New passwords do NOT match, they differ from each other");
                 }
             }
 
             if (hub.Ok)
             {
-                var user = from x in this.ReadFromDatabase().NonDeleted()
+                using var db = DbContextFactory.CreateDbContext();
+
+				var user = from x in db.Set<OrigamiUser>().AsNoTracking().NonDeleted()
                            where x.IsBlocked == false
                            where x.Id == ctx.Entity.Id
                            select x;
@@ -264,8 +299,7 @@ namespace Origami.Core.Data
 
                 if (userEntity != null)
                 {
-                    using var db = DbContextFactory.CreateDbContext();
-                    var reset = from x in db.UserPasswordResets
+                    var reset = from x in db.UserPasswordResets.AsNoTracking()
                                 where x.Key == key
                                 where x.UserId == ctx.Entity.Id
                                 where x.IsDeleted == false
@@ -275,18 +309,20 @@ namespace Origami.Core.Data
                     if (resetEntity != null)
                     {
                         resetEntity.IsDeleted = true;
-                        userEntity.Password = newPassword1.SHA256Hash();
+						db.Update(resetEntity);
+						db.SaveChanges();
+
+						userEntity.Password = newPassword1.SHA256Hash();
                         this.SmartUpdate(userEntity.GetContext(ctx.User), false).Push(hub);
-                        db.Update(resetEntity);
-                        db.SaveChanges();
-                        hub.SuccessMessage = Text.Original("Password has been reset successfully");
+                        
+                        hub.Success = Text.Original("Password has been reset successfully");
                         return hub;
                     }
                 }
             }
 
-            hub.ErrorMessage = Text.Original("Failed to reset password");
-            hub.SimpleMessage = Text.Original("Please, try again later");
+            hub.Error = Text.Original("Failed to reset password");
+            hub.Simple = Text.Original("Please, try again later");
 
             return hub;
         }

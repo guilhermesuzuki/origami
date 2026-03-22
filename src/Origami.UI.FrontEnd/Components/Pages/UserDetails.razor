@@ -175,8 +175,9 @@
     /// This method should retrieve the Entities from database or memory
     /// </summary>
     /// <param name="state"></param>
+    /// <param name="token"></param>
     /// <returns></returns>
-    protected virtual Task<GridData<Core.Models.OrigamiPage>> GetPages(GridState<Core.Models.OrigamiPage> state)
+    protected virtual Task<GridData<Core.Models.OrigamiPage>> GetPages(GridState<Core.Models.OrigamiPage> state, CancellationToken token)
     {
         var orders = new StringBuilder();
 
@@ -197,7 +198,7 @@
         var orderBy = orders.ToString();
 
         //pulls information from cache
-        var result = _pages.ReadFromCache().Published().Query(
+        var result = this.Super.Pages.ReadFromCache().Published().Query(
             state.PageSize,
             state.Page * state.PageSize,
             filters.ToString(),
@@ -211,8 +212,9 @@
     /// This method should retrieve the Entities from database or memory
     /// </summary>
     /// <param name="state"></param>
+    /// <param name="token"></param>
     /// <returns></returns>
-    protected virtual Task<GridData<OrigamiPost>> GetPosts(GridState<OrigamiPost> state)
+    protected virtual Task<GridData<OrigamiPost>> GetPosts(GridState<OrigamiPost> state, CancellationToken token)
     {
         var orders = new StringBuilder();
 
@@ -233,7 +235,7 @@
         var orderBy = orders.ToString();
 
         //pulls information from cache
-        var result = _posts.ReadFromCache().Published().Query(
+        var result = this.Super.Posts.ReadFromCache().Published().Query(
             state.PageSize,
             state.Page * state.PageSize,
             filters.ToString(),
@@ -247,8 +249,9 @@
     /// This method should retrieve the Entities from database or memory
     /// </summary>
     /// <param name="state"></param>
+    /// <param name="token"></param>
     /// <returns></returns>
-    protected virtual Task<GridData<OrigamiVideo>> GetVideos(GridState<OrigamiVideo> state)
+    protected virtual Task<GridData<OrigamiVideo>> GetVideos(GridState<OrigamiVideo> state, CancellationToken token)
     {
         var orders = new StringBuilder();
 
@@ -269,7 +272,7 @@
         var orderBy = orders.ToString();
 
         //pulls information from cache
-        var result = _videos.ReadFromCache().Published().Query(
+        var result = this.Super.Videos.ReadFromCache().Published().Query(
             state.PageSize,
             state.Page * state.PageSize,
             filters.ToString(),
@@ -283,6 +286,4 @@
     {
         return this.Super.Users.ReadFromCache().Id(this.UserId) ?? new();
     }
-
-    public override Guid BlogId => this.GetUser().BlogId;
 }

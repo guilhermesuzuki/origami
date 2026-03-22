@@ -132,7 +132,7 @@
         await this.ExecuteWithSelectedEntities(
             async () =>
             {
-                return await this.DialogService.ShowMessageBox(
+                return await this.DialogService.ShowMessageBoxAsync(
                     this.Text.Upper("Block {0} User(s)", this.SelectedEntities.Count),
                     this.Text.Original("Are you sure?"),
                     yesText: this.Text.Lower("Yes"),
@@ -150,7 +150,7 @@
         await this.ExecuteWithSelectedEntities(
             async () =>
             {
-                return await this.DialogService.ShowMessageBox(
+                return await this.DialogService.ShowMessageBoxAsync(
                     this.Text.Upper("Granting Moderator To {0} User(s)", this.SelectedEntities.Count),
                     this.Text.Original("Are you sure?"),
                     yesText: this.Text.Lower("Yes"),
@@ -168,7 +168,7 @@
         await this.ExecuteWithSelectedEntities(
             async () =>
             {
-                return await this.DialogService.ShowMessageBox(
+                return await this.DialogService.ShowMessageBoxAsync(
                     this.Text.Upper("Revoking Moderator From {0} User(s)", this.SelectedEntities.Count),
                     this.Text.Original("Are you sure?"),
                     yesText: this.Text.Lower("Yes"),
@@ -186,7 +186,7 @@
         await this.ExecuteWithSelectedEntities(
             async () =>
             {
-                return await this.DialogService.ShowMessageBox(
+                return await this.DialogService.ShowMessageBoxAsync(
                     this.Text.Upper("Unblocking {0} User(s)", this.SelectedEntities.Count),
                     this.Text.Original("Are you sure?"),
                     yesText: this.Text.Lower("Yes"),
@@ -204,7 +204,7 @@
         await this.ExecuteWithSelectedEntities(
             async () =>
             {
-                return await this.DialogService.ShowMessageBox(
+                return await this.DialogService.ShowMessageBoxAsync(
                     this.Text.Upper("Unsubscribe {0} User(s)", this.SelectedEntities.Count),
                     this.Text.Original("Are you sure?"),
                     yesText: this.Text.Lower("Yes"),
@@ -228,7 +228,7 @@
         await this.ExecuteWithSelectedEntities(
             async () =>
             {
-                var answer = await this.DialogService.ShowMessageBox(
+                var answer = await this.DialogService.ShowMessageBoxAsync(
                     this.Text.Upper("Wipe data out from {0} user(s)", this.SelectedEntities.Count),
                     this.Text.Original("Are you sure?"),
                     yesText: this.Text.Lower("Yes"),

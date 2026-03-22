@@ -1,29 +1,23 @@
 ﻿@inherits Basic
 @implements IEntityNull<OrigamiPost>
 @implements IHyperlink
-@inject NavigationManager _navigationManager
-@inject IPostCommentRepository _postComment
-@inject IPostRatingRepository _postRating
-@inject IPostViewRepository _postView
-@inject IPostTagRepository _postTag
-@inject IUserRepository _user
 
 @if (this.Entity != null)
 {
     var header = this.Entity.Get().HeaderImage.NoHeader();
-    var views = _postView.GetViews(Entity);
-    var comments = _postComment.GetComments(Entity);
+    var views = this.Super.PhysicalPageViews.GetViews(Entity);
+    var comments = this.Super.PostComments.GetComments(Entity);
     <ContentHeaderLite Entity="this.Entity"></ContentHeaderLite>
     <div class="post-header position-relative shadow-sm cursor-pointer @Class" @onclick="() => this.GoToPost()">
         <div class="post-header-image" style="background-image: url(@header)"></div>
         <div class="post-header-title position-absolute overflow-auto zeroes">
             <div class="p-3">
                 <div class="post-rating-count small" style="margin-bottom: -5px;">
-                    <i class="fa-solid fa-user pe-1"></i>@_postRating.Ratings(this.Entity).Count()
+                    <i class="fa-solid fa-user pe-1"></i>@this.Super.PostRatings.Ratings(this.Entity).Count()
                 </div>
                 <div class="post-rating d-inline-flex align-items-center">
                     <span class="d-inline-block language @Entity.Get().LanguageWrittenOn me-1"></span>
-                    <ul class="d-inline-flex align-items-center rating padding-u-5" data-rating="@Math.Round(_postRating.CalculateRating(this.Entity), 1, MidpointRounding.ToEven)">
+                    <ul class="d-inline-flex align-items-center rating padding-u-5" data-rating="@Math.Round(this.Super.PostRatings.CalculateRating(this.Entity), 1, MidpointRounding.ToEven)">
                         <li>
                             <div data-rating-level="1"
                             class="@(UserFacade.SocialProfile.New || HasRated() ? null : "cursor-pointer rateable") rating-star rating-star-1 rating-star-empty"
@@ -87,7 +81,7 @@
                 </AuthorizeView>
                 <span class="title fw-bold text-uppercase focusable ellipsis" style="-webkit-line-clamp:5!important;" title="@Entity.Title">@Entity.Title</span>
                 <div>
-                    <label class="post-date pe-1">@(Entity.DatePublished ?? Entity.DateModified ?? Entity.DateCreated)</label>
+                    <label class="post-date pe-1">@(Entity.GetDate())</label>
                     <label class="post-views pe-1 @(views > 0 ? null : "d-none")">
                         <i class="fa-solid fa-eye"></i>
                         @views
@@ -161,7 +155,7 @@
     /// </summary>
     protected void GoToPost()
     {
-        _navigationManager.NavigateTo($"{Hyperlink}#content-start");
+        NavigationManager.NavigateTo($"{Hyperlink}#content-start");
     }
 
     public string Hyperlink
@@ -194,7 +188,7 @@
 
     protected OrigamiPostRating? RatingFromCurrentUser()
     {
-        return _postRating.Ratings(this.Entity!).FirstOrDefault(x => x.SocialProfileId == UserFacade.SocialProfile.Id);
+        return this.Super.PostRatings.Ratings(this.Entity!).FirstOrDefault(x => x.SocialProfileId == UserFacade.SocialProfile.Id);
     }
 
     protected bool HasRated()
@@ -215,7 +209,7 @@
             };
 
             var context = new DataOperationContextFrontEnd<OrigamiPostRating>(UserFacade.SocialProfile, DateTime.UtcNow, rating);
-            var hub = this._postRating.SmartCreate(context);
+            var hub = this.Super.PostRatings.SmartCreate(context);
             if (hub.Ok) this.OnUserHasRated.InvokeAsync(rating);
         }
     }
@@ -226,7 +220,7 @@
         if (rating != null)
         {
             var context = new DataOperationContextFrontEnd<OrigamiPostRating>(UserFacade.SocialProfile, DateTime.UtcNow, rating);
-            var hub = this._postRating.SmartPurge(context);
+            var hub = this.Super.PostRatings.SmartPurge(context);
             if (hub.Ok) this.OnUserHasRated.InvokeAsync(rating);
         }
     }

@@ -63,6 +63,21 @@
                 var entity = this.Super.Blogs.ReadFromCache().Id(Entity.Id)!;
                 <TrashFormBlog Entity="entity"></TrashFormBlog>
             }
+            else if (Entity.Type.Like("QuickNote") == true)
+            {
+                var entity = this.Super.QuickNotes.ReadFromCache().Id(Entity.Id)!;
+                <TrashFormQuickNote Entity="entity"></TrashFormQuickNote>
+            }
+            else if (Entity.Type.Like("SpecialPage") == true)
+            {
+                var entity = this.Super.SpecialPages.ReadFromCache().Id(Entity.Id);
+                <TrashFormSpecialPage Entity="entity"></TrashFormSpecialPage>
+            }
+            else if (Entity.Type.Like("SpecialMessage") == true)
+            {
+                var entity = this.Super.SpecialMessages.ReadFromCache().Id(Entity.Id);
+                <TrashFormSpecialMessage Entity="entity"></TrashFormSpecialMessage>
+            }
         </div>
     }
 </div>

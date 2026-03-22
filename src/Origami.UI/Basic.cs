@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.JSInterop;
 using MudBlazor;
 using Origami.Core;
 using Origami.Core.Data;
 using Origami.Core.Models;
+using Origami.Core.Models.FileSystem;
 using System.Globalization;
 
 namespace Origami.UI
@@ -14,18 +16,26 @@ namespace Origami.UI
     public abstract class Basic :
         ComponentBase,
         IClass,
-        IId
+        IId,
+        IBlogId
     {
-        public virtual Guid BlogId => Guid.Empty;
+        /// <summary>
+        /// Sync root object
+        /// </summary>
+        public static readonly object SyncRoot = new();
+
+        [Parameter] public Guid BlogId { get; set; }
+        [Parameter] public string BlogSlug { get; set; } = string.Empty;
         [Parameter] public virtual string Class { get; set; } = string.Empty;
 
         /// <summary>
         /// Identifier for this instance.
         /// </summary>
-        public virtual Guid Id { get; set; } = Guid.Empty;
+        [Parameter] public virtual Guid Id { get; set; } = Guid.Empty;
 
         [Inject] protected IAppFacade AppFacade { get; set; } = null!;
         [Inject] protected IConfiguration Configuration { get; set; } = null!;
+        [Inject] protected IDbContextFactory<OrigamiDbContext> DbContextFactory { get; set; } = null!;
         [Inject] protected IDialogService DialogService { get; set; } = null!;
         [Inject] protected IHttpContextAccessor HttpContextAccessor { get; set; } = null!;
         [Inject] protected IJSRuntime JSRuntime { get; set; } = null!;
@@ -34,10 +44,26 @@ namespace Origami.UI
         [Inject] protected ISuperRepository Super { get; set; } = null!;
         [Inject] protected Text Text { get; set; } = null!;
         [Inject] protected IUserFacade UserFacade { get; set; } = null!;
+        [Inject] protected IWebRootPath WebRootPath { get; set; } = null!;
+
+        public OrigamiBlog GetBlogFromSlug()
+        {
+            if (this.BlogSlug.Has() == true)
+            {
+                return Super.Blogs.Slug(BlogSlug) ?? OrigamiBlog.Empty;
+            }
+
+            return Super.Blogs.GetPrimary();
+        }
 
         public OrigamiBlog GetBlogFromUserFacade()
         {
-            return Super.Blogs.ReadFromCache().Id(UserFacade.BlogId) ?? throw new InvalidOperationException("Blog could not be found");
+            return Super.Blogs.ReadFromCache().Id(UserFacade.BlogId) ?? OrigamiBlog.Empty;
+        }
+
+        protected async Task DownloadFile(OrigamiSystemFile file)
+        {
+            await this.JSRuntime.InvokeVoidAsync("origami.common.downloadFileFromUrl", file.WebPath);
         }
 
         /// <summary>
@@ -66,6 +92,12 @@ namespace Origami.UI
         {
             var returnUrl = Uri.EscapeDataString(NavigationManager.Uri);
             NavigationManager!.NavigateTo($"/login/out?returnUrl={returnUrl}", true);
+        }
+
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+            this.UserFacade.Changed += _currentBlogIdChangedMustRefreshUI;
         }
 
         /// <summary>
@@ -114,6 +146,14 @@ namespace Origami.UI
         {
             var ctx = this.UserFacade.SocialProfile.GetContext();
             UserFacade.Result = Super.Subscribers.Unsubscribe(ctx);
+        }
+
+        private void _currentBlogIdChangedMustRefreshUI(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(IUserFacade.BlogId))
+            {
+                this.InvokeAsync(this.StateHasChanged);
+            }
         }
     }
 }

@@ -24,7 +24,7 @@
                     </div>
                 </div>
                 <div class="col-12 col-xxl-4">
-                    <BlogSelect></BlogSelect>
+                    <BlogSelect IncludeDeletedBlogs="true"></BlogSelect>
                 </div>
             </div>
         </div>
@@ -70,12 +70,12 @@
                                         else if (context.Item.Type.Like("PostComment") == true)
                                         {
                                             var comment = this.Super.PostComments.ReadFromCache().Id(context.Item.Id);
-                                            <CommentLite Entity="comment"></CommentLite>
+                                            <CommentLite Entity="comment" ShowParentHeader="true"></CommentLite>
                                         }
                                         else if (context.Item.Type.Like("VideoComment") == true)
                                         {
                                             var comment = this.Super.VideoComments.ReadFromCache().Id(context.Item.Id);
-                                            <CommentLite Entity="comment"></CommentLite>
+                                            <CommentLite Entity="comment" ShowParentHeader="true"></CommentLite>
                                         }
                                         else if (context.Item.Type.Like("Category") == true)
                                         {
@@ -92,6 +92,21 @@
                                             var role = this.Super.Roles.ReadFromCache().Id(context.Item.Id);
                                             <RoleHeaderLite Entity="role"></RoleHeaderLite>
                                         }
+                                        else if (context.Item.Type.Like("QuickNote") == true)
+                                        {
+                                            var note = this.Super.QuickNotes.ReadFromCache().Id(context.Item.Id);
+                                            <QuickNoteHeaderLite Entity="note"></QuickNoteHeaderLite>
+                                        }
+                                        else if (context.Item.Type.Like("SpecialPage") == true)
+                                        {
+                                            var page = this.Super.SpecialPages.ReadFromCache().Id(context.Item.Id);
+                                            <SpecialPageHeaderLite2 Entity="page"></SpecialPageHeaderLite2>
+                                        }
+                                        else if (context.Item.Type.Like("SpecialMessage") == true)
+                                        {
+                                            var message = this.Super.SpecialMessages.ReadFromCache().Id(context.Item.Id);
+                                            <SpecialMessageHeaderLite Entity="message"></SpecialMessageHeaderLite>
+                                        }
                                     </div>
                                 </CellTemplate>
                             </TemplateColumn>
@@ -105,6 +120,18 @@
                                         else if (context.Item.Type.Like("VideoComment") == true)
                                         {
                                             <span>@Text.Original("Comment in video")</span>
+                                        }
+                                        else if (context.Item.Type.Like("QuickNote") == true)
+                                        {
+                                            <span>@Text.Original("Quick note")</span>
+                                        }
+                                        else if (context.Item.Type.Like("SpecialPage") == true)
+                                        {
+                                            <span>@Text.Original("Special page")</span>
+                                        }
+                                        else if (context.Item.Type.Like("SpecialMessage") == true)
+                                        {
+                                            <span>@Text.Original("Special message")</span>
                                         }
                                         else
                                         {
@@ -137,7 +164,7 @@
 </Root>
 @code {
 
-    protected override string DefaultOrdering => $"{nameof(OrigamiUserTrash.Type)}, {nameof(OrigamiUserTrash.Name)}, {nameof(OrigamiUserTrash.Title)}";
+    protected override string DefaultOrdering => $"{nameof(OrigamiUserTrash.BlogId)},{nameof(OrigamiUserTrash.Type)},{nameof(OrigamiUserTrash.Name)},{nameof(OrigamiUserTrash.Title)}";
 
     /// <summary>
     /// Retrieves the deleted items
@@ -145,6 +172,12 @@
     /// <returns></returns>
     protected override IEnumerable<OrigamiUserTrash> GetItems()
     {
-        return this.Repository.ReadFromDatabase().Blog(this.UserFacade.BlogId);
+        using var db = this.DbContextFactory.CreateDbContext();
+
+        var query = from trash in db.Set<OrigamiUserTrash>().AsNoTracking()
+                    where new Guid[2] { Guid.Empty, this.UserFacade.BlogId }.Contains(trash.BlogId)
+                    select trash;
+
+        return query.ToList();
     }
 }

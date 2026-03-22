@@ -4,7 +4,8 @@
 
 @if (Id != Guid.Empty)
 {
-    var socialProfileDelete = _socialProfileDelete.ReadFromDatabase().Id(Id);
+    using var db = DbContextFactory.CreateDbContext();
+    var socialProfileDelete = db.Set<OrigamiSocialProfileDelete>().AsNoTracking().Id(Id);
     if (socialProfileDelete != null)
     {
         <div class="user-activity-social-profile-delete @Class bg-danger text-white p-3">

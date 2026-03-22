@@ -322,7 +322,9 @@ else
     {
         if (this.SocialProfile.Has() == false) return;
 
-        this.SocialProfileForDeletions = _socialProfileForDeletion.ReadFromDatabase()
+        using var db = DbContextFactory.CreateDbContext();
+
+        this.SocialProfileForDeletions = db.Set<OrigamiSocialProfileDelete>().AsNoTracking()
             .Where(x => x.SocialProfileId == this.SocialProfileId)
             .OrderByDescending(x => x.DateCreated)
             .ToList();
@@ -333,7 +335,7 @@ else
     /// </summary>
     private async Task WipeData()
     {
-        var answer = await this._dialogService.ShowMessageBox(
+        var answer = await this.DialogService.ShowMessageBoxAsync(
             title: Text.Lower("Are You Sure?"),
             message: Text.Lower("This Will Delete All Your Data From The Website"),
             yesText: Text.Lower("Yes"),

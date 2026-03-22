@@ -115,6 +115,7 @@
     /// <returns></returns>
     protected override IEnumerable<OrigamiTrash> GetItems()
     {
-        return this.Repository.ReadFromDatabase();
+        using var db = this.DbContextFactory.CreateDbContext();
+        return db.Set<OrigamiTrash>().AsNoTracking().ToList();
     }
 }

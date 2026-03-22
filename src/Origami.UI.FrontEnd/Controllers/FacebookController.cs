@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using Origami.Core;
@@ -17,19 +18,20 @@ namespace Origami.UI.FrontEnd.Controllers
     [Route("[Controller]")]
     public class FacebookController : Controller
     {
-        protected readonly Serilog.ILogger _logger;
+        protected readonly IDbContextFactory<OrigamiDbContext> _dbContextFactory;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
         protected readonly IMemoryCache _memoryCache;
         protected readonly IPostCommentReactionRepository _postCommentReactionRepository;
         protected readonly IPostCommentRepository _postCommentRepository;
         protected readonly IPostRatingRepository _postRatingRepository;
-        protected readonly SocialNetwork _socialNetwork;
+        protected readonly ISocialProfileDeleteRepository _socialProfileForDeletion;
         protected readonly ISocialProfileRepository _socialProfile;
         protected readonly IUserFacade _userFacade;
         protected readonly IVideoCommentReactionRepository _videoCommentReactionRepository;
         protected readonly IVideoCommentRepository _videoCommentRepository;
         protected readonly IVideoRatingRepository _videoRatingRepository;
-        protected readonly ISocialProfileDeleteRepository _socialProfileForDeletion;
-        protected readonly IHttpContextAccessor _httpContextAccessor;
+        protected readonly Serilog.ILogger _logger;
+        protected readonly SocialNetwork _socialNetwork;
 
         public FacebookController(
             ISocialProfileRepository socialProfile,
@@ -44,25 +46,24 @@ namespace Origami.UI.FrontEnd.Controllers
             IVideoCommentRepository videoCommentRepository,
             IVideoRatingRepository videoRatingRepository,
             ISocialProfileDeleteRepository facebookUserForDeletionRepository,
-            IHttpContextAccessor httpContextAccessor
+            IHttpContextAccessor httpContextAccessor,
+            IDbContextFactory<OrigamiDbContext> dbContextFactory
             ) : base()
         {
-            _socialProfile = socialProfile;
+            _httpContextAccessor = httpContextAccessor;
             _logger = logger;
-            _userFacade = userFacade;
             _memoryCache = memoryCache;
-            _socialNetwork = socialNetworkOptions.Value;
-
+            _dbContextFactory = dbContextFactory;
             _postCommentReactionRepository = postCommentReactionRepository;
             _postCommentRepository = postCommentRepository;
             _postRatingRepository = postRatingRepository;
-
+            _socialNetwork = socialNetworkOptions.Value;
+            _socialProfile = socialProfile;
+            _socialProfileForDeletion = facebookUserForDeletionRepository;
+            _userFacade = userFacade;
             _videoCommentReactionRepository = videoCommentReactionRepository;
             _videoCommentRepository = videoCommentRepository;
             _videoRatingRepository = videoRatingRepository;
-
-            _socialProfileForDeletion = facebookUserForDeletionRepository;
-            _httpContextAccessor = httpContextAccessor;
         }
 
         /// <summary>
@@ -154,8 +155,10 @@ namespace Origami.UI.FrontEnd.Controllers
 
                 var userId = json?["user_id"]?.GetValue<string>();
 
+                using var db = _dbContextFactory.CreateDbContext();
+
                 //facebook social profile
-                var facebookUser = _socialProfile.ReadFromDatabase()
+                var facebookUser = db.Set<OrigamiSocialProfile>().AsNoTracking()
                     .Where(x => x.SocialNetwork == SocialNetworks.Facebook)
                     .Where(x => x.UserId == userId)
                     .FirstOrDefault();

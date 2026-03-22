@@ -20,6 +20,8 @@ namespace Origami.Core.Models
         IHyperlink,
         ISlug
     {
+        public static readonly OrigamiBlog Empty = new() { Id = Guid.Empty };
+
         protected string? _additionalInfo;
         protected DateTime _dateCreated;
         protected DateTime? _dateModified;

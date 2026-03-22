@@ -7,9 +7,6 @@
 @inject IDirectoryRepository _directoryRepository
 @inject IFileRepository _fileRepository
 
-<MudFileUpload @ref="this.VideoUpload" T="IBrowserFile" FilesChanged="UploadVideo" Accept=".mp4" MaximumFileCount="1"></MudFileUpload>
-<MudFileUpload @ref="this.FileUpload" T="IBrowserFile" FilesChanged="UploadHeader" Accept=".png, .jpg, .bmp, .tiff" MaximumFileCount="1"></MudFileUpload>
-
 <div class="video-form @Class">
     <div class="row">
         <div class="col-12">
@@ -103,21 +100,25 @@
         <div class="col-12 col-xxl-6">
             <div class="text-center p-3">
                 <VideoMediaFile Entity="this.Entity"></VideoMediaFile>
-                <div class="btn-group mt-2 w-100">
-                    <button class="btn btn-light" @onclick="PickVideo" style="width:33.33%;">
-                        <i class="fa-solid fa-cloud-arrow-up"></i>
-                        <div>@Text.Lower("Only video files")</div>
-                        <div class="x-small">@Text.Original("{0} GB max.", 2)</div>
-                    </button>
-                    <button class="btn btn-light" @onclick="() => this.FileManagerForVideos = true" style="width:33.34%;">
-                        <i class="fa-solid fa-folder"></i>
-                        @Text.Lower("Pick from file manager")
-                    </button>
-                    <button class="btn btn-light" @onclick="ClearVideo" style="width:33.33%;">
-                        <i class="fa-solid fa-trash-can"></i>
-                        @Text.Lower("Clear video")
-                    </button>
-                </div>
+                <MudFileUpload T="IBrowserFile" FilesChanged="UploadVideo" Accept=".mp4" MaximumFileCount="1">
+                    <CustomContent>
+                        <div class="btn-group mt-2 w-100">
+                            <button class="btn btn-light" @onclick="context.OpenFilePickerAsync" style="width:33.33%;">
+                                <i class="fa-solid fa-cloud-arrow-up"></i>
+                                <div>@Text.Lower("Only video files")</div>
+                                <div class="x-small">@Text.Original("{0} GB max.", 2)</div>
+                            </button>
+                            <button class="btn btn-light" @onclick="() => this.FileManagerForVideos = true" style="width:33.34%;">
+                                <i class="fa-solid fa-folder"></i>
+                                @Text.Lower("Pick from file manager")
+                            </button>
+                            <button class="btn btn-light" @onclick="ClearVideo" style="width:33.33%;">
+                                <i class="fa-solid fa-trash-can"></i>
+                                @Text.Lower("Clear video")
+                            </button>
+                        </div>
+                    </CustomContent>
+                </MudFileUpload>
             </div>
             <div class="p-3">
                 <VideoSubtitle Class="border p-2 mt-0" Video="@this.Entity" Entity="@this.Entity.Subtitle1" FileSaved="subtitle => this.Entity.Subtitle1 = subtitle" FileDeleted="subtitle => this.Entity.Subtitle1 = null"></VideoSubtitle>
@@ -128,21 +129,25 @@
         <div class="col-12 col-xxl-6">
             <div class="text-center p-3">
                 <HeaderImageLite Entity="@Entity"></HeaderImageLite>
-                <div class="btn-group mt-2 w-100">
-                    <button class="btn btn-light" @onclick="PickFile" style="width:33.33%;">
-                        <i class="fa-solid fa-cloud-arrow-up"></i>
-                        <div>@Text.Lower("Only image files")</div>
-                        <div class="x-small">@Text.Original("{0} MB max.", 6)</div>
-                    </button>
-                    <button class="btn btn-light" @onclick="() => this.FileManagerForImages = true" style="width:33.34%;">
-                        <i class="fa-solid fa-folder"></i>
-                        @Text.Lower("Pick from file manager")
-                    </button>
-                    <button class="btn btn-light" @onclick="ClearHeader" style="width:33.33%;">
-                        <i class="fa-solid fa-trash-can"></i>
-                        @Text.Lower("Clear header")
-                    </button>
-                </div>
+                <MudFileUpload T="IBrowserFile" FilesChanged="UploadHeader" Accept=".png, .jpg, .bmp, .tiff" MaximumFileCount="1">
+                    <CustomContent>
+                        <div class="btn-group mt-2 w-100">
+                            <button class="btn btn-light" @onclick="context.OpenFilePickerAsync" style="width:33.33%;">
+                                <i class="fa-solid fa-cloud-arrow-up"></i>
+                                <div>@Text.Lower("Only image files")</div>
+                                <div class="x-small">@Text.Original("{0} MB max.", 6)</div>
+                            </button>
+                            <button class="btn btn-light" @onclick="() => this.FileManagerForImages = true" style="width:33.34%;">
+                                <i class="fa-solid fa-folder"></i>
+                                @Text.Lower("Pick from file manager")
+                            </button>
+                            <button class="btn btn-light" @onclick="ClearHeader" style="width:33.33%;">
+                                <i class="fa-solid fa-trash-can"></i>
+                                @Text.Lower("Clear header")
+                            </button>
+                        </div>
+                    </CustomContent>
+                </MudFileUpload>
             </div>
         </div>
     </div>
@@ -209,18 +214,6 @@
             </div>
         </div>
     </div>
-    @* <div class="row">
-        <div class="col-12">
-            <div class="p-3">
-                <MudTextField FullWidth="true"
-                              Immediate="true"
-                              @bind-Value="@Entity.Description"
-                              AutoGrow="true"
-                              HelperText="@Text.Lower("Description")"></MudTextField>
-                <TinyMCEContent Class="mt-3" Entity="Entity" Title="@Text.Lower("Content")"></TinyMCEContent>
-            </div>
-        </div>
-    </div> *@
     <div class="row">
         <div class="col-12">
             <div class="p-3">

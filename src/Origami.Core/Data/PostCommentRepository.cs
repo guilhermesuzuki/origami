@@ -62,7 +62,8 @@ namespace Origami.Core.Data
         {
             try
             {
-                _socialProfileRepository.ReadFromDatabase().GetProfileThrowIfBlocked(ctx.SocialProfile.Id);
+                using var db = DbContextFactory.CreateDbContext();
+                db.Set<OrigamiSocialProfile>().AsNoTracking().GetProfileThrowIfBlocked(ctx.SocialProfile.Id);
             }
             catch (Exception ex)
             {
@@ -78,7 +79,7 @@ namespace Origami.Core.Data
             //if it's more than 20, timeout
             if (commentsMadeByTheUser >= 20)
             {
-                return new(ctx.Entity) { ErrorMessage = Text.Original(Text.YouMadeTooManyCommentsIn5Minutes) };
+                return new(ctx.Entity) { Error = Text.Original(Text.YouMadeTooManyCommentsIn5Minutes) };
             }
 
             return base.SmartCreate(ctx, false);
@@ -93,7 +94,8 @@ namespace Origami.Core.Data
         {
             try
             {
-                var profile = _socialProfileRepository.ReadFromDatabase().GetProfileThrowIfBlocked(ctx.SocialProfile.Id)!;
+                using var db = DbContextFactory.CreateDbContext();
+                var profile = db.Set<OrigamiSocialProfile>().AsNoTracking().GetProfileThrowIfBlocked(ctx.SocialProfile.Id);
                 if (profile.IsModerator)
                 {
                     return base.SmartDelete(ctx, false);
@@ -101,7 +103,7 @@ namespace Origami.Core.Data
             }
             catch (Exception)
             {
-                return new(ctx.Entity) { ErrorMessage = Text.Original(Text.SomethingWentWrongPleaseTryAgain) };
+                return new(ctx.Entity) { Error = Text.Original(Text.SomethingWentWrongPleaseTryAgain) };
             }
 
             var comment = ReadFromCache().Id(ctx.Entity.Id);
@@ -113,7 +115,7 @@ namespace Origami.Core.Data
                 }
             }
 
-            return new(ctx.Entity) { ErrorMessage = Text.Original(Text.SomethingWentWrongPleaseTryAgain) };
+            return new(ctx.Entity) { Error = Text.Original(Text.SomethingWentWrongPleaseTryAgain) };
         }
 
         public async Task<List<PostCommentTotal>> FastRead()
@@ -138,7 +140,8 @@ namespace Origami.Core.Data
         {
             try
             {
-                var profile = _socialProfileRepository.ReadFromDatabase().GetProfileThrowIfBlocked(ctx.SocialProfile.Id)!;
+                using var db = DbContextFactory.CreateDbContext();
+                var profile = db.Set<OrigamiSocialProfile>().AsNoTracking().GetProfileThrowIfBlocked(ctx.SocialProfile.Id)!;
                 if (profile.IsModerator)
                 {
                     ctx.Entity.PinnedById = ctx.SocialProfile.Id;
@@ -147,10 +150,10 @@ namespace Origami.Core.Data
             }
             catch (Exception)
             {
-                return new(ctx.Entity) { ErrorMessage = Text.Original(Text.SomethingWentWrongPleaseTryAgain) };
+                return new(ctx.Entity) { Error = Text.Original(Text.SomethingWentWrongPleaseTryAgain) };
             }
 
-            return new(ctx.Entity) { ErrorMessage = Text.Original(Text.SomethingWentWrongPleaseTryAgain) };
+            return new(ctx.Entity) { Error = Text.Original(Text.SomethingWentWrongPleaseTryAgain) };
         }
 
         public override void PurgeRelationshipsFromCache(OrigamiPostComment entity)
@@ -166,18 +169,20 @@ namespace Origami.Core.Data
         public override Result<OrigamiPostComment> PurgeRelationshipsFromDatabase(DataOperationContext<OrigamiPostComment> ctx)
         {
             var hub = base.PurgeRelationshipsFromDatabase(ctx);
-            var reactions = (from x in _postCommentReactionRepository.ReadFromDatabase() where x.CommentId == ctx.Entity.Id select x.Id).ToList();
             using var db = DbContextFactory.CreateDbContext();
+            var reactions = (from x in db.Set<OrigamiPostCommentReaction>().AsNoTracking() where x.CommentId == ctx.Entity.Id select x.Id).ToList();
             hub.RowsAffected += db.PostCommentReactions.Where(x => reactions.Contains(x.Id)).ExecuteDelete();
             return hub;
         }
 
         public void SetComments(OrigamiPost entity, long count) => this.Comments(entity, count);
+
         public Result<OrigamiPostComment> Unpin(DataOperationContextFrontEnd<OrigamiPostComment> ctx)
         {
             try
             {
-                var profile = _socialProfileRepository.ReadFromDatabase().GetProfileThrowIfBlocked(ctx.SocialProfile.Id)!;
+                using var db = DbContextFactory.CreateDbContext();
+                var profile = db.Set<OrigamiSocialProfile>().AsNoTracking().GetProfileThrowIfBlocked(ctx.SocialProfile.Id)!;
                 if (profile.IsModerator)
                 {
                     ctx.Entity.PinnedById = null;
@@ -186,10 +191,10 @@ namespace Origami.Core.Data
             }
             catch (Exception)
             {
-                return new(ctx.Entity) { ErrorMessage = Text.Original(Text.SomethingWentWrongPleaseTryAgain) };
+                return new(ctx.Entity) { Error = Text.Original(Text.SomethingWentWrongPleaseTryAgain) };
             }
 
-            return new(ctx.Entity) { ErrorMessage = Text.Original(Text.SomethingWentWrongPleaseTryAgain) };
+            return new(ctx.Entity) { Error = Text.Original(Text.SomethingWentWrongPleaseTryAgain) };
         }
 
         public Task Update(IEnumerable<PostCommentTotal> entities)
@@ -201,7 +206,8 @@ namespace Origami.Core.Data
         {
             try
             {
-                _socialProfileRepository.ReadFromDatabase().GetProfileThrowIfBlocked(ctx.SocialProfile.Id);
+                using var db = DbContextFactory.CreateDbContext();
+                db.Set<OrigamiSocialProfile>().AsNoTracking().GetProfileThrowIfBlocked(ctx.SocialProfile.Id);
             }
             catch (Exception ex)
             {
@@ -211,11 +217,8 @@ namespace Origami.Core.Data
             // user must have created the comment to edit it
             if (ctx.SocialProfile.Id != ctx.Entity.SocialProfileId)
             {
-                return new(ctx.Entity) { ErrorMessage = Text.Original("You cannot edit this comment") };
+                return new(ctx.Entity) { Error = Text.Original("You cannot edit this comment") };
             }
-
-            var htmlValidation = this.HTMLValidation(ctx);
-            if (htmlValidation.Ok == false) return htmlValidation;
 
             return base.SmartUpdate(ctx, false);
         }

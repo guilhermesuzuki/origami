@@ -6,20 +6,28 @@
 {
     var socialProfile = this.Super.SocialProfiles.ReadFromCache().Id(Entity.SocialProfileId) ?? new();
     <div class="comment-lite @Class">
+        @if (this.ShowParentHeader)
+        {
+            <div class="comment-parent-header d-inline-flex align-items-center">
+                @if (Entity is OrigamiPostComment postComment)
+                {
+                    var post = this.Super.Posts.ReadFromCache().Id(postComment.PostId)!;
+                    <i class="fa-solid fa-file-lines me-1" style="font-size: 12px;"></i>
+                    <span class="">@post.Title</span>
+                }
+                else if (Entity is OrigamiVideoComment videoComment)
+                {
+                    var video = this.Super.Videos.ReadFromCache().Id(videoComment.VideoId)!;
+                    <i class="fa-solid fa-video me-1" style="font-size: 12px;"></i>
+                    <span class="">@video.Title</span>
+                }
+            </div>
+        }
+        <div></div>
         <div class="comment-header d-inline-flex align-items-center">
-            @if (Entity is OrigamiPostComment postComment)
-            {
-                var post = this.Super.Posts.ReadFromCache().Id(postComment.PostId);
-                <i class="fa-solid fa-file-lines pe-1" style="font-size: 12px;" title="@(post != null ? post.Title : null)"></i>
-            }
-            @if (Entity is OrigamiVideoComment videoComment)
-            {
-                var video = this.Super.Videos.ReadFromCache().Id(videoComment.VideoId);
-                <i class="fa-solid fa-video pe-1" style="font-size: 12px;" title="@(video != null ? video.Title : null)"></i>
-            }
             <SocialProfileHeaderLite Entity="socialProfile"></SocialProfileHeaderLite>
         </div>
-        <div class="comment-date x-small">
+        <div class="comment-info x-small">
             @if (Entity.PinnedById != null)
             {
                 <span class="pe-1">
@@ -35,4 +43,5 @@
 
 @code {
     [Parameter] public BaseComment? Entity { get; set; }
+    [Parameter] public bool ShowParentHeader { get; set; } = false;
 }

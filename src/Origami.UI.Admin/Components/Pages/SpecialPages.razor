@@ -1,12 +1,5 @@
 ﻿@page "/specialpages"
 @inherits BasicAdminGrid<OrigamiSpecialPage>
-@implements IFilter
-@inject IBlogRepository _blogs
-@inject ICategoryRepository _category
-@inject IPostCategoryRepository _postCategory
-@inject IVideoCategoryRepository _videoCategory
-@inject ISpecialPageRepository _pages
-@inject ISpecialPageViewRepository _pageViews
 
 <style>
     .related-pages .id { display: none !important; }
@@ -33,30 +26,17 @@
                                     <i class="fa-solid fa-file-arrow-down"></i>
                                 </button>
                             </div>
-                            @* <div class="btn-group pe-1">
-                                <button class="btn btn-danger text-white" title="@Text.Lower("Enter maintenance mode")" disabled="@this.DisableEnterMaintenanceModeButton" @onclick="this.EnterMaintenanceMode">
-                                    <i class="fa-solid fa-person-digging"></i>
-                                    <i class="fa-solid fa-arrow-down"></i>
-                                    <span class="x-small">@Text.Lower("Enter")</span>
-                                </button>
-                                <button class="btn btn-success text-white" title="@Text.Lower("Leave maintenance mode")" disabled="@this.DisableLeaveMaintenanceModeButton" @onclick="this.LeaveMaintenanceMode">
-                                    <i class="fa-solid fa-person-digging"></i>
-                                    <i class="fa-solid fa-arrow-up"></i>
-                                    <span class="x-small">@Text.Lower("Leave")</span>
-                                </button>
-                            </div> *@
                         </li>
                         <li style="width:20%;">
-                            <MudSelect T="string" HelperText="@Text.Lower("Filter")" @bind-Value:get="Filter" @bind-Value:set="(filter) => SetFilterAndRefreshUI(filter)">
-                                <MudSelectItem T="string" Value="@(new string("all"))">@Text.Original("All")</MudSelectItem>
-                                <MudSelectItem T="string" Value="@(new string("published"))">@Text.Original("Published")</MudSelectItem>
-                                <MudSelectItem T="string" Value="@(new string("drafts"))">@Text.Original("Drafts")</MudSelectItem>
-                            </MudSelect>
                         </li>
                     </ul>
                 </div>
                 <div class="col-12 col-xxl-4">
-                    <BlogSelect></BlogSelect>
+                    <MudSelect T="string" HelperText="@Text.Lower("Filter")" @bind-Value:get="Filter" @bind-Value:set="(filter) => SetFilterAndRefreshUI(filter)">
+                        <MudSelectItem T="string" Value="@(new string("all"))">@Text.Original("All")</MudSelectItem>
+                        <MudSelectItem T="string" Value="@(new string("published"))">@Text.Original("Published")</MudSelectItem>
+                        <MudSelectItem T="string" Value="@(new string("drafts"))">@Text.Original("Drafts")</MudSelectItem>
+                    </MudSelect>
                 </div>
             </div>
         </div>
@@ -93,7 +73,7 @@
                                         <ul class="inline-list text-center">
                                             <li>
                                                 <i class="fa-solid fa-eye"></i>
-                                                @_pageViews.GetViews(context.Item)
+                                                @this.Super.PhysicalPageViews.GetViews(context.Item)
                                             </li>
                                         </ul>
                                     </div>
@@ -118,10 +98,6 @@
                                     @if (context.Item.IsPublished)
                                     {
                                         <i class="fa-solid fa-thumbs-up"></i>
-                                        @if (context.Item.DatePublished != null)
-                                        {
-                                            <div class="small">@context.Item.DatePublished</div>
-                                        }
                                     }
                                 </CellTemplate>
                             </TemplateColumn>
@@ -156,19 +132,16 @@
     /// </summary>
     protected virtual bool DisableTheFrontPageButton => SelectedEntities.Any() == false;
 
-    protected bool DisableEnterMaintenanceModeButton => this.Super.Settings.ReadFromDatabase().First().MaintenanceMode == true;
-    protected bool DisableLeaveMaintenanceModeButton => this.Super.Settings.ReadFromDatabase().First().MaintenanceMode == false;
-
     protected virtual Result<OrigamiSpecialPage> PublishEntity(OrigamiSpecialPage entity)
     {
         var context = new DataOperationContext<OrigamiSpecialPage>(this.UserFacade.User, DateTime.UtcNow, entity);
-        return this._pages.SmartPublish(context, true);
+        return this.Super.SpecialPages.SmartPublish(context, true);
     }
 
     protected virtual Result<OrigamiSpecialPage> UnpublishEntity(OrigamiSpecialPage entity)
     {
         var context = new DataOperationContext<OrigamiSpecialPage>(this.UserFacade.User, DateTime.UtcNow, entity);
-        return this._pages.SmartUnpublish(context, true);
+        return this.Super.SpecialPages.SmartUnpublish(context, true);
     }
 
     protected async Task PublishSelectedEntities()
@@ -176,7 +149,7 @@
         await ExecuteWithSelectedEntities(
             async () =>
             {
-                return await DialogService.ShowMessageBox(
+                return await DialogService.ShowMessageBoxAsync(
                     Text.Upper("Publish {0} item(s)", SelectedEntities.Count),
                     Text.Original("Are you sure?"),
                     yesText: Text.Lower("Yes"),
@@ -191,7 +164,7 @@
         await ExecuteWithSelectedEntities(
             async () =>
             {
-                return await DialogService.ShowMessageBox(
+                return await DialogService.ShowMessageBoxAsync(
                     Text.Upper("Unpublish {0} item(s)", SelectedEntities.Count),
                     Text.Original("Are you sure?"),
                     yesText: Text.Lower("Yes"),
@@ -219,7 +192,7 @@
 
     protected async Task EnterMaintenanceMode()
     {
-        var ok = await DialogService.ShowMessageBox(
+        var ok = await DialogService.ShowMessageBoxAsync(
             Text.Upper("Entering maintenance mode"),
             Text.Original("Are you sure?"),
             yesText: Text.Lower("Yes"),
@@ -230,7 +203,7 @@
             using (var transaction = new TransactionScope())
             {
                 var ctx = new DataOperationContext(this.UserFacade.User, DateTime.UtcNow);
-                var hub = this._pages.EnterMaintenanceMode(ctx);
+                var hub = this.Super.SpecialPages.EnterMaintenanceMode(ctx);
                 this.UserFacade.Result = hub;
                 if (hub.Ok) transaction.Complete();
             }
@@ -239,7 +212,7 @@
 
     protected async Task LeaveMaintenanceMode()
     {
-        var ok = await DialogService.ShowMessageBox(
+        var ok = await DialogService.ShowMessageBoxAsync(
             Text.Upper("Leaving maintenance mode"),
             Text.Original("Are you sure?"),
             yesText: Text.Lower("Yes"),
@@ -250,7 +223,7 @@
             using (var transaction = new TransactionScope())
             {
                 var ctx = new DataOperationContext(this.UserFacade.User, DateTime.UtcNow);
-                var hub = this._pages.LeaveMaintenanceMode(ctx);
+                var hub = this.Super.SpecialPages.LeaveMaintenanceMode(ctx);
                 this.UserFacade.Result = hub;
                 if (hub.Ok) transaction.Complete();
             }

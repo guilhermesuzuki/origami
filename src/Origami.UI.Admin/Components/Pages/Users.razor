@@ -23,7 +23,7 @@
                     </ul>
                 </div>
                 <div class="col-12 col-xxl-4">
-                    <BlogSelect></BlogSelect>
+                    <BlogSelect Disabled="true" Style="visibility: hidden;"></BlogSelect>
                 </div>
             </div>
         </div>
@@ -64,10 +64,13 @@
                                 <CellTemplate>
                                     @if (context.Item != null)
                                     {
-                                        var userRoles = this.Super.UserRoles.ReadFromCache().Where(x => x.UserId == context.Item.Id).ToList();
-                                        @foreach (var userRole in userRoles)
+                                        var query = from ur in this.Super.UserRoles.ReadFromCache()
+                                                    join ro in this.Super.Roles.ReadFromCache() on ur.RoleId equals ro.Id
+                                                    where ur.UserId == context.Item.Id
+                                                    orderby ro.Name
+                                                    select ro;
+                                        @foreach (var role in query)
                                         {
-                                            var role = this.Super.Roles.ReadFromCache().NonDeleted().FirstOrDefault(x => x.Id == userRole.RoleId);
                                             <RoleHeaderLite Class="shadow-sm mb-1 border p-2" Entity="role"></RoleHeaderLite>
                                         }
                                     }
@@ -97,7 +100,7 @@
         var current = this.SelectedEntities.FirstOrDefault(x => x.Id == this.UserFacade.User.Id);
         if (current != null)
         {
-            var answer = await DialogService.ShowMessageBox(
+            var answer = await DialogService.ShowMessageBoxAsync(
                 Text.Upper("Deleting {0} item(s), including yourself", SelectedEntities.Count),
                 Text.Original("Are you sure?") + " " + Text.Original("You will be logged out at the end"),
                 yesText: Text.Lower("Yes"),

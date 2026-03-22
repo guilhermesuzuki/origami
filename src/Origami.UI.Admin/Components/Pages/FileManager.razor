@@ -243,7 +243,7 @@
                                                 <div class="position-absolute p-2 border-top" style="bottom:0;left:0;right:0;z-index:5;">
                                                     <ul class="inline-list">
                                                         <li>
-                                                            <button @onclick="() => _downloadFile(file)" @onclick:stopPropagation="true">
+                                                            <button @onclick="() => DownloadFile(file)" @onclick:stopPropagation="true">
                                                                 <i class="fa-solid fa-file-arrow-down"></i>
                                                             </button>
                                                         </li>
@@ -423,7 +423,7 @@
         }
         catch (Exception ex)
         {
-            this.UserFacade.Result = new() { ErrorMessage = ex.GetMessage() };
+            this.UserFacade.Result = new() { Error = ex.GetMessage() };
         }
     }
 
@@ -439,7 +439,7 @@
 
     private async Task _deleteFile(OrigamiSystemFile file)
     {
-        var result = await this.DialogService.ShowMessageBox(
+        var result = await this.DialogService.ShowMessageBoxAsync(
             Text.Upper("Delete File"),
             Text.Original("Are you sure?"),
             yesText: Text.Original("Yes"),
@@ -455,14 +455,14 @@
             }
             catch (Exception ex)
             {
-                this.UserFacade.Result = new() { ErrorMessage = ex.GetMessage() };
+                this.UserFacade.Result = new() { Error = ex.GetMessage() };
             }
         }
     }
 
     private async Task _deleteFolder(OrigamiSystemDirectory dir)
     {
-        var result = await this.DialogService.ShowMessageBox(
+        var result = await this.DialogService.ShowMessageBoxAsync(
             Text.Upper("Delete Folder"),
             Text.Original("Are you sure?"),
             yesText: Text.Original("Yes"),
@@ -478,14 +478,14 @@
             }
             catch (Exception ex)
             {
-                this.UserFacade.Result = new() { ErrorMessage = ex.GetMessage() };
+                this.UserFacade.Result = new() { Error = ex.GetMessage() };
             }
         }
     }
 
     private async Task _deleteItems()
     {
-        var result = await this.DialogService.ShowMessageBox(
+        var result = await this.DialogService.ShowMessageBoxAsync(
             Text.Upper("Delete selected items"),
             Text.Original("Are you sure?"),
             yesText: Text.Original("Yes"),
@@ -521,19 +521,13 @@
                 this._loadFiles(true);
                 this._loadDirectories(true);
 
-                this.UserFacade.Result = new() { SuccessMessage = Text.Original("{0} item(s) deleted") };
+                this.UserFacade.Result = new() { Success = Text.Original("{0} item(s) deleted") };
             }
             catch (Exception ex)
             {
-                this.UserFacade.Result = new() { ErrorMessage = ex.GetMessage() };
+                this.UserFacade.Result = new() { Error = ex.GetMessage() };
             }
         }
-    }
-
-    private async Task _downloadFile(OrigamiSystemFile file)
-    {
-        var fileUrl = file.WebPath;
-        await this.JSRuntime.InvokeVoidAsync("origami.common.downloadFileFromUrl", fileUrl);
     }
 
     private void _goBackInNavigation()
@@ -634,7 +628,7 @@
         }
         catch (Exception ex)
         {
-            this.UserFacade.Result = new() { ErrorMessage = ex.GetMessage(), };
+            this.UserFacade.Result = new() { Error = ex.GetMessage(), };
         }
     }
 
@@ -656,7 +650,7 @@
         }
         catch (Exception ex)
         {
-            this.UserFacade.Result = new() { ErrorMessage = ex.GetMessage(), };
+            this.UserFacade.Result = new() { Error = ex.GetMessage(), };
         }
     }
 

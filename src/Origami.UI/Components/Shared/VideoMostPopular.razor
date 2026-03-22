@@ -41,7 +41,6 @@ else if (this.ShowFakes == true)
 }
 
 @code {
-    [Parameter] public Guid BlogId { get; set; }
     [Parameter] public bool ShowFakes { get; set; } = false;
     protected List<OrigamiVideo> MostPopular { get; set; } = new();
 

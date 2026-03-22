@@ -2,12 +2,8 @@
 @implements IItems<BaseContent>
 @implements IEntityNull<BaseContent>
 
-@page "/blogs/{Slug}/categories/{Category}"
-@page "/blogs/{Slug}/categories/{Category}/{ContentNanoId}"
-
-@inject ICategoryRepository _category
-@inject IPostCategoryRepository _postCategory
-@inject IVideoCategoryRepository _videoCategory
+@page "/blogs/{BlogSlug}/categories/{Category}"
+@page "/blogs/{BlogSlug}/categories/{Category}/{ContentNanoId}"
 
 <Root>
     <style>
@@ -78,7 +74,6 @@
 
 @code {
     [Parameter] public string Category { get; set; } = string.Empty;
-    [Parameter] public string Slug { get; set; } = string.Empty;
     [Parameter] public string ContentNanoId { get; set; } = string.Empty;
 
     /// <summary>
@@ -92,20 +87,11 @@
     public BaseContent? Entity { get; set; }
 
     /// <summary>
-    /// Retrieves the blog from the given slug
-    /// </summary>
-    /// <returns></returns>
-    private OrigamiBlog GetBlog()
-    {
-        return this.Super.Blogs.ReadFromCache().Slug(this.Slug) ?? new();
-    }
-
-    /// <summary>
     /// Core.Category
     /// </summary>
     private OrigamiCategory GetCategory()
     {
-        var blog = this.GetBlog();
+        var blog = this.GetBlogFromSlug();
         return this.Super.Categories.ReadFromCache().Blog(blog.Id).Slug(Category) ?? new();
     }
 
@@ -114,6 +100,7 @@
         base.OnParametersSet();
         this.LoadFromCategory();
         this.LoadContent();
+        this.BlogId = this.GetBlogFromSlug().Id;
     }
 
     protected void LoadFromCategory()
@@ -131,11 +118,8 @@
         if (this.ContentNanoId.Has() == true) this.Entity = Items.NanoId(this.ContentNanoId);
     }
 
-    protected override Task OnAfterRenderAsync(bool firstRender)
+    protected override void SetPageTitle()
     {
         this.PageTitle.SetTitle(this.GetCategory(), this.Entity);
-        return base.OnAfterRenderAsync(firstRender);
     }
-
-    public override Guid BlogId => this.GetBlog().Id;
 }

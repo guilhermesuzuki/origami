@@ -153,17 +153,17 @@ namespace Origami.Core.Data
 
         protected virtual Result CheckPermission(Guid userId, string permission)
         {
-            var result = new Result() { InfoMessage = permission, };
+            var result = new Result() { Info = permission, };
             if (UserHasPermission(userId, permission) == true) return result;
-            result.ErrorMessage = Text.Original(Text.YouDontHavePermissionForThisFeature);
+            result.Error = Text.Original(Text.YouDontHavePermissionForThisFeature);
             return result;
         }
 
         protected virtual Result<T> CheckPermission(DataOperationContext<T> ctx, string permission)
         {
-            var result = new Result<T>(ctx.Entity) { InfoMessage = permission, };
+            var result = new Result<T>(ctx.Entity) { Info = permission, };
             if (UserHasPermission(ctx.User.Id, permission) == true) return result;
-            result.ErrorMessage = Text.Original(Text.YouDontHavePermissionForThisFeature);
+            result.Error = Text.Original(Text.YouDontHavePermissionForThisFeature);
             return result;
         }
 

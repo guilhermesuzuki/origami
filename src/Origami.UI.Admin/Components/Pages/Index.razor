@@ -136,7 +136,7 @@
                             <div class="p-3 border-bottom bg-light bg-gradient fw-bold">@Text.Upper("Latest comments")</div>
                             @foreach (var comment in this.Super.GetComments(this.UserFacade.BlogId).Where(x => x.IsDeleted == false && this.Super.IsParentDeleted(x) == false).OrderByDescending(x => x.DateCreated).Take(5))
                             {
-                                <CommentLite Class="border-bottom p-3" Entity="comment"></CommentLite>
+                                <CommentLite Class="border-bottom p-3" Entity="comment" ShowParentHeader="true"></CommentLite>
                             }
                         </div>
                     </div>
@@ -144,8 +144,8 @@
                 <div class="col-12 col-xxl-4">
                     <div class="p-3">
                         <div class="border shadow-sm">
-                            <div class="p-3 border-bottom bg-light bg-gradient fw-bold">@Text.Upper("Quick post")</div>
-                            <QuickPost Class="p-3"></QuickPost>
+                            <div class="p-3 border-bottom bg-light bg-gradient fw-bold">@Text.Upper("Quick note")</div>
+                            <QuickNote Class="p-3"></QuickNote>
                         </div>
                     </div>
                     <div class="p-3">
@@ -261,7 +261,7 @@
                                 <div class="text-center fw-bold">
                                     @Text.Original("Platforms")
                                 </div>
-                                <MudChart Class="mt-3" InputData="_platformsData" InputLabels="_platformsLabels" ChartType="ChartType.Pie" Width="100%" Height="300px" />
+                                <MudChart Class="mt-3" ChartSeries="_platformsData.AsChartDataSet()" ChartLabels="_platformsLabels" ChartType="ChartType.Pie" Width="100%" Height="300px" />
                             </div>
                         }
                     </div>
@@ -272,7 +272,7 @@
                                 <div class="text-center fw-bold">
                                     @Text.Original("Browsers")
                                 </div>
-                                <MudChart Class="mt-3" InputData="_browsersData" InputLabels="_browsersLabels" ChartType="ChartType.Pie" Width="100%" Height="300px" />
+                                <MudChart Class="mt-3" ChartSeries="_browsersData.AsChartDataSet()" ChartLabels="_browsersLabels" ChartType="ChartType.Pie" Width="100%" Height="300px" />
                             </div>
                         }
                     </div>
@@ -284,7 +284,7 @@
                             <div class="text-center fw-bold">
                                 @Text.Original("History")
                             </div>
-                            <MudChart Class="mt-3" ChartSeries="@_series" XAxisLabels="@_xAxisLabels" ChartType="ChartType.Line" Width="100%" Height="450px" />
+                            <MudChart Class="mt-3" ChartSeries="@_series" ChartLabels="@_xAxisLabels" ChartType="ChartType.Line" Width="100%" Height="450px" />
                         </div>
                     }
                 </div>
@@ -421,8 +421,8 @@
     private IEnumerable<ProcessedUserView> _platforms = [];
     private IEnumerable<ProcessedUserViewForHistory> _history = [];
 
-    protected bool DisableEnterMaintenanceModeButton => this.Super.Settings.ReadFromDatabase().First().MaintenanceMode == true;
-    protected bool DisableLeaveMaintenanceModeButton => this.Super.Settings.ReadFromDatabase().First().MaintenanceMode == false;
+    protected bool DisableEnterMaintenanceModeButton => this.Super.Settings.GetSettings().MaintenanceMode == true;
+    protected bool DisableLeaveMaintenanceModeButton => this.Super.Settings.GetSettings().MaintenanceMode == false;
 
     /// <summary>
     /// Period of Time the user has selected
@@ -506,8 +506,9 @@
     /// This method should retrieve the Entities from database or memory
     /// </summary>
     /// <param name="state"></param>
+    /// <param name="token"></param>
     /// <returns></returns>
-    protected virtual Task<GridData<OrigamiUserView>> UserViews(GridState<OrigamiUserView> state)
+    protected virtual async Task<GridData<OrigamiUserView>> UserViews(GridState<OrigamiUserView> state, CancellationToken token)
     {
         var orders = new StringBuilder();
 
@@ -537,15 +538,17 @@
             ? $"{nameof(OrigamiUserView.DateCreated)} DESC"
             : orderBy[1..];
 
+        using var db = await DbContextFactory.CreateDbContextAsync();
+
         //pulls information from cache
-        var result = this.Super.UserViews.ReadFromDatabase().Query(
+        var result = db.Set<OrigamiUserView>().AsNoTracking().Query(
             state.PageSize,
             state.Page * state.PageSize,
             filters.ToString(),
             orderBy
         );
 
-        return Task.FromResult(new GridData<OrigamiUserView> { Items = result.Rows, TotalItems = (int)result.NumberOfRows, });
+        return new GridData<OrigamiUserView> { Items = result.Rows, TotalItems = (int)result.NumberOfRows, };
     }
 
     /// <summary>
@@ -558,7 +561,7 @@
             if (p.PropertyName.Like(nameof(IUserFacade.BlogId)) == true)
             {
                 await this._loadCharts();
-                await this._userViews!.ReloadServerData();
+                if (this._userViews != null) await this._userViews.ReloadServerData();
                 await this.InvokeAsync(this.StateHasChanged);
             }
         };
@@ -628,14 +631,14 @@
     /// <summary>
     /// ChartSeries for the History Line Chart
     /// </summary>
-    private List<ChartSeries> _series
+    private List<ChartSeries<double>> _series
     {
         get
         {
-            return new List<ChartSeries>()
+            return new List<ChartSeries<double>>()
             {
-                new() { Name = Text.Original("Views"), Index = 0, Visible = true, Data = this._history.Where(x => x.IsBot == false).Select(x => (double)x.Count).ToArray() },
-                new() { Name = Text.Original("Bot Views"), Index = 1, Visible = true, Data = this._history.Where(x => x.IsBot == true).Select(x => (double)x.Count).ToArray() },
+                new() { Name = Text.Original("Views"), Visible = true, Data = this._history.Where(x => x.IsBot == false).Select(x => (double)x.Count).ToArray() },
+                new() { Name = Text.Original("Bot Views"), Visible = true, Data = this._history.Where(x => x.IsBot == true).Select(x => (double)x.Count).ToArray() },
             };
         }
     }
@@ -668,7 +671,7 @@
 
     protected async Task EnterMaintenanceMode()
     {
-        var ok = await DialogService.ShowMessageBox(
+        var ok = await DialogService.ShowMessageBoxAsync(
             Text.Upper("Entering maintenance mode"),
             Text.Original("Are you sure?"),
             yesText: Text.Lower("Yes"),
@@ -688,7 +691,7 @@
 
     protected async Task LeaveMaintenanceMode()
     {
-        var ok = await DialogService.ShowMessageBox(
+        var ok = await DialogService.ShowMessageBoxAsync(
             Text.Upper("Leaving maintenance mode"),
             Text.Original("Are you sure?"),
             yesText: Text.Lower("Yes"),

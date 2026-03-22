@@ -21,7 +21,7 @@ namespace Origami.Core.Data
             using var client = new HttpClient
             {
                 BaseAddress = new Uri($"http://{Host}/"),
-                Timeout = TimeSpan.FromMilliseconds(150),
+                Timeout = TimeSpan.FromMilliseconds(500),
                 DefaultRequestVersion = new Version(2, 0),
             };
 
@@ -51,20 +51,20 @@ namespace Origami.Core.Data
                         };
 
                         var offset = root.GetProperty("offset").GetInt32();
-                        location.UtcOffset = TimeSpan.FromSeconds(offset);
+                        location.TimeZoneOffset = offset / 60;
 
                         return new(location);
                     }
                 }
 
-                return new() { ErrorMessage = $"HTTP {response.StatusCode} - {response.ReasonPhrase} from {Host}", };
+                return new() { Error = $"HTTP {response.StatusCode} - {response.ReasonPhrase} from {Host}", };
             }
             catch
             {
 
             }
 
-            return new() { ErrorMessage = Text.Original("Unable to retrieve IP location") };
+            return new() { Error = Text.Original("Unable to retrieve IP location") };
         }
     }
 }

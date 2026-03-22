@@ -24,32 +24,10 @@ namespace Origami.Core.Data
             Console.WriteLine($"Refreshing cache for {k}");
             lock (OrigamiConstants.SyncRoot)
             {
-                var l = ReadFromDatabase().ToList();
+                using var db = DbContextFactory.CreateDbContext();
+                var l = db.Set<T>().AsNoTracking().ToList();
                 MemoryCache.Set(k, l);
             }
-        }
-
-        public virtual Result<T> HTMLValidation(DataOperationContext<T> ctx)
-        {
-            if (ctx.Entity is BaseComment comment)
-            {
-                //avoiding cross-site script attacks
-                if (comment.Content.Contains("<script", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    return new(ctx.Entity) { ErrorMessage = Text.Original(Text.SomethingWentWrongPleaseTryAgain) };
-                }
-                //avoiding cross-site script attacks
-                if (comment.Content.Contains("<link", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    return new(ctx.Entity) { ErrorMessage = Text.Original(Text.SomethingWentWrongPleaseTryAgain) };
-                }
-                //avoiding cross-site script attacks
-                if (comment.Content.Contains("<iframe", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    return new(ctx.Entity) { ErrorMessage = Text.Original(Text.SomethingWentWrongPleaseTryAgain) };
-                }
-            }
-            return new(ctx.Entity);
         }
     }
 }

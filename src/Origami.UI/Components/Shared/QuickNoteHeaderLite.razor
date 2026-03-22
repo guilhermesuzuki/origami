@@ -1,0 +1,17 @@
+﻿@inherits Basic
+@implements IEntityNull<OrigamiQuickNote>
+
+@if (this.Entity != null)
+{
+    <div class="physical-page-header-lite-3 @Class">
+        <div class="d-inline-flex align-items-center">
+            <span class="language @Entity.LanguageWrittenOn me-1"></span>
+            <span>@Entity.Note</span>
+        </div>
+        <Id Class="d-block x-small" Entity="@Entity"></Id>
+    </div>
+}
+
+@code {
+    [Parameter] public OrigamiQuickNote? Entity { get; set; }
+}
