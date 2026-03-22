@@ -1,12 +1,10 @@
 ﻿@inherits Basic
 @implements IEntityNull<OrigamiPage>
-@inject IPageViewRepository _pageView
-@inject IUserRepository _user
 
 @if (this.Entity != null)
 {
     var header = this.Entity.HeaderImage.NoHeader();
-    var views = _pageView.GetViews(this.Entity);
+    var views = this.Super.PhysicalPageViews.GetViews(this.Entity);
     <div class="wrapper @Class">
         <ContentHeaderLite Entity="this.Entity"></ContentHeaderLite>
         <div class="page-header-lite position-relative shadow-sm cursor-pointer" @onclick="() => this.GoToPage()">

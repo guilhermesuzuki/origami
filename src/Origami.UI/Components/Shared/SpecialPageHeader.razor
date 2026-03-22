@@ -1,14 +1,10 @@
 ﻿@inherits Basic
 @implements IEntityNull<OrigamiSpecialPage>
-@inject NavigationManager _navigationManager
-@inject IPageViewRepository _pageView
-@inject IPageRepository _page
-@inject IUserRepository _user
 
 @if (this.Entity != null)
 {
     var header = this.Entity.HeaderImage.NoHeader();
-    var views = this.Super.SpecialPageViews.GetViews(Entity);
+    var views = this.Super.PhysicalPageViews.GetViews(Entity);
     <ContentHeaderLite Entity="this.Entity"></ContentHeaderLite>
     <div class="page-header position-relative shadow-sm cursor-pointer @Class" @onclick="() => this.GoToPage()">
         <div class="page-header-image" style="background-image: url(@header)"></div>
@@ -115,7 +111,7 @@
     /// </summary>
     protected void GoToPage()
     {
-        _navigationManager.NavigateTo($"{Entity!.Hyperlink}#content-start");
+        NavigationManager.NavigateTo($"{Entity!.Hyperlink}#content-start");
     }
 
     /// <summary>
@@ -123,7 +119,7 @@
     /// </summary>
     protected void GoToPage(OrigamiSpecialPage page)
     {
-        _navigationManager.NavigateTo($"{page.Hyperlink}#content-start");
+        NavigationManager.NavigateTo($"{page.Hyperlink}#content-start");
     }
 
     /// <summary>

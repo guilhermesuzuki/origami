@@ -1,10 +1,5 @@
 ﻿@page "/quicknotes"
 @inherits BasicAdminGrid<OrigamiQuickNote>
-@inject IPostCategoryRepository _postCategory
-@inject IBlogRepository _blogs
-@inject IPostRepository _posts
-@inject IPostCommentRepository _postComment
-@inject IPostViewRepository _postView
 
 <Root Access="this.CanAccess()">
     <HeaderTemplate>

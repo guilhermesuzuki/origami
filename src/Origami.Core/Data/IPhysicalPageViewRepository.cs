@@ -7,6 +7,6 @@ namespace Origami.Core.Data
         IViews<OrigamiPhysicalPage>,
         IFastRead<PhysicalPageViewTotal>
     {
-
+        long GetViews<T>(T entity) where T: IId;
     }
 }

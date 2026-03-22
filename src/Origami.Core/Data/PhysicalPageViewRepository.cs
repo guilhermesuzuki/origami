@@ -45,6 +45,17 @@ namespace Origami.Core.Data
             return this.Views(page);
         }
 
+        public long GetViews<T>(T entity) where T : IId
+        {
+            var query = from view in this.ReadFromDatabase()
+                        where view.Content != null
+                        where view.Content!.Id == entity.Id
+                        where view.Content!.Type == typeof(T).Name
+                        select view;
+
+            return query.LongCount();
+        }
+
         public void SetViews(OrigamiPhysicalPage entity, long count) => this.Views(entity, count);
 
         public Task Update(IEnumerable<PhysicalPageViewTotal> entities)

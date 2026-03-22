@@ -11,8 +11,8 @@
 @if (this.Entity != null)
 {
     var header = this.Entity.HeaderImage.NoHeader();
-    var views = _videoView.GetViews(Entity);
-    var comments = _videoComment.GetComments(Entity);
+    var views = this.Super.PhysicalPageViews.GetViews(Entity);
+    var comments = this.Super.VideoComments.GetComments(Entity);
     <ContentHeaderLite Entity="this.Entity"></ContentHeaderLite>
     <div class="video-header position-relative shadow-sm cursor-pointer @Class" @onclick="() => this.GoToVideo()">
         <div class="video-header-image" style="background-image: url(@header)"></div>
