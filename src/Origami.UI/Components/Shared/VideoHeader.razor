@@ -7,7 +7,7 @@
     var header = this.Entity.HeaderImage.NoHeader();
     var views = this.Super.PhysicalPageViews.GetViews(Entity);
     var comments = this.Super.ContentComments.GetComments(Entity);
-    <ContentHeaderLite Entity="this.Entity"></ContentHeaderLite>
+    <AuthorHeaderLite Entity="this.Entity"></AuthorHeaderLite>
     <div class="video-header position-relative shadow-sm cursor-pointer @Class" @onclick="() => this.GoToVideo()">
         <div class="video-header-image" style="background-image: url(@header)"></div>
         <div class="video-header-title position-absolute overflow-auto zeroes">

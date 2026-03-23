@@ -110,31 +110,31 @@
                             <PropertyColumn Property="x => x.DateCreated" Title="@Text.Lower("Date")"></PropertyColumn>
                             <TemplateColumn CellStyle="width: 85%;">
                                 <CellTemplate>
-                                    @if (context.Item is OrigamiContentCommentReaction postReaction)
+                                    @if (context.Item is OrigamiContentCommentReaction commentReaction)
                                     {
-                                        var comment = _contentComment.ReadFromCache().Id(postReaction.CommentId);
-                                        var post = this.Super.Contents.ReadFromCache().Id(comment!.ContentId);
+                                        var comment = this.Super.ContentComments.ReadFromCache().Id(commentReaction.CommentId);
+                                        var content = this.Super.Contents.ReadFromCache().Id(comment!.ContentId);
                                         <div class="">
-                                            <span class="fw-bold">@Text.Lower("Reacted {0} To:", postReaction.Reaction)</span>
-                                            <PostHeaderLite Entity="post"></PostHeaderLite>
+                                            <span class="fw-bold">@Text.Lower("Reacted {0} to:", commentReaction.Reaction)</span>
+                                            <ContentHeaderLite Entity="content"></ContentHeaderLite>
                                             <CommentLite Class="mt-2 p-2 frame-purple" Entity="comment"></CommentLite>
                                         </div>
                                     }
-                                    @if (context.Item is OrigamiContentComment postComment)
+                                    @if (context.Item is OrigamiContentComment contentComment)
                                     {
-                                        var post = this.Super.Contents.ReadFromCache().Id(postComment.ContentId);
+                                        var content = this.Super.Contents.ReadFromCache().Id(contentComment.ContentId);
                                         <div class="">
-                                            <span class="fw-bold">@Text.Lower("Commented On Post:")</span>
-                                            <PostHeaderLite Entity="post"></PostHeaderLite>
-                                            <CommentLite Class="mt-2 p-2 frame-purple" Entity="postComment"></CommentLite>
+                                            <span class="fw-bold">@Text.Lower("Commented on post:")</span>
+                                            <ContentHeaderLite Entity="content"></ContentHeaderLite>
+                                            <CommentLite Class="mt-2 p-2 frame-purple" Entity="contentComment"></CommentLite>
                                         </div>
                                     }
-                                    @if (context.Item is OrigamiContentRating postRating)
+                                    @if (context.Item is OrigamiContentRating rating)
                                     {
-                                        var post = this.Super.Contents.ReadFromCache().Id(postRating.ContentId);
+                                        var content = this.Super.Contents.ReadFromCache().Id(rating.ContentId);
                                         <div class="">
-                                            <span class="fw-bold">@Text.Lower("Rated {0} On:", postRating.Rating)</span>
-                                            <PostHeaderLite Entity="post"></PostHeaderLite>
+                                            <span class="fw-bold">@Text.Lower("Rated {0} on:", rating.Rating)</span>
+                                            <ContentHeaderLite Entity="content"></ContentHeaderLite>
                                         </div>
                                     }
                                 </CellTemplate>

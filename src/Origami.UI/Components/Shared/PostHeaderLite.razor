@@ -7,13 +7,13 @@
     var views = this.Super.PhysicalPageViews.GetViews(Entity);
     var comments = this.Super.ContentComments.GetComments(Entity);
     <div class="@Class">
-        <ContentHeaderLite Entity="this.Entity"></ContentHeaderLite>
+        <AuthorHeaderLite Entity="this.Entity"></AuthorHeaderLite>
         <div class="post-header-lite position-relative shadow-sm cursor-pointer" @onclick="() => this.GoToPost()">
             <div class="post-header-image" style="height: 150px; background-image: url(@Entity.Get().HeaderImage.NoHeader())"></div>
             <div class="post-header-title position-absolute overflow-auto zeroes">
                 <div class="p-3">
                     <div class="post-rating">
-                        <PostRating Entity="this.Entity"></PostRating>
+                        <ContentRating Entity="this.Entity"></ContentRating>
                     </div>
                     <span class="title fw-bold text-uppercase focusable ellipsis" style="" title="@Entity.Title">@Entity.Title</span>
                     <div>

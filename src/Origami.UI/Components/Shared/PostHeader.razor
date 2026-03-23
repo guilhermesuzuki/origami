@@ -7,7 +7,7 @@
     var header = this.Entity.Get().HeaderImage.NoHeader();
     var views = this.Super.PhysicalPageViews.GetViews(Entity);
     var comments = this.Super.ContentComments.GetComments(Entity);
-    <ContentHeaderLite Entity="this.Entity"></ContentHeaderLite>
+    <AuthorHeaderLite Entity="this.Entity"></AuthorHeaderLite>
     <div class="post-header position-relative shadow-sm cursor-pointer @Class" @onclick="() => this.GoToPost()">
         <div class="post-header-image" style="background-image: url(@header)"></div>
         <div class="post-header-title position-absolute overflow-auto zeroes">

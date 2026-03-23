@@ -12,6 +12,7 @@ namespace Origami.Core.Models
         IDescriptionNull,
         IContent,
         IDateCreated,
+        IDateModified,
         IPublished,
         IAdditionalInfo,
         ISlug,
@@ -27,6 +28,7 @@ namespace Origami.Core.Models
         protected Guid? _blogId;
         protected string _content = string.Empty;
         protected DateTime _dateCreated;
+        protected DateTime? _dateModified;
         protected DateTime? _datePublished;
         protected string? _description = string.Empty;
         protected bool _isCommentEnabled;
@@ -80,7 +82,7 @@ namespace Origami.Core.Models
         }
 
         /// <summary>
-        /// Date/Time this Content was Created
+        /// Date/Time this content was created
         /// </summary>
         public DateTime DateCreated
         {
@@ -88,6 +90,18 @@ namespace Origami.Core.Models
             set => this.Set(ref _dateCreated, value, Changed);
         }
 
+        /// <summary>
+        /// Date/Time this Content was modified
+        /// </summary>
+        public DateTime? DateModified
+        {
+            get => _dateModified;
+            set => this.Set(ref _dateModified, value, Changed);
+        }
+
+        /// <summary>
+        /// Date/Time this content was published
+        /// </summary>
         public DateTime? DatePublished
         {
             get => _datePublished;

@@ -8,7 +8,7 @@
 {
     var header = this.Entity.HeaderImage.NoHeader();
     var views = this.Super.PhysicalPageViews.GetViews(this.Entity);
-    <ContentHeaderLite Entity="this.Entity"></ContentHeaderLite>
+    <AuthorHeaderLite Entity="this.Entity"></AuthorHeaderLite>
     <div class="page-header position-relative shadow-sm cursor-pointer @Class" @onclick="() => this.GoToPage()">
         <div class="page-header-image" style="background-image: url(@header)"></div>
         <div class="page-header-title-wrapper position-absolute overflow-auto zeroes">
