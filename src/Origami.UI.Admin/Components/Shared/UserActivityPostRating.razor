@@ -1,16 +1,16 @@
 ﻿@inherits Basic
 @implements IId
 @inject IPostRepository _post
-@inject IPostCommentReactionRepository _postCommentReaction
-@inject IPostCommentRepository _postComment
-@inject IPostRatingRepository _postRating
+@inject IContentCommentReactionRepository _postCommentReaction
+@inject IContentCommentRepository _postComment
+@inject IContentRatingRepository _postRating
 
 @if (Id != Guid.Empty)
 {
     var rating = _postRating.ReadFromCache().Id(Id);
     if (rating != null)
     {
-        var post = _post.ReadFromCache().Id(rating.PostId)!;
+        var post = _post.ReadFromCache().Id(rating.ContentId)!;
         <div class="user-activity-post-rating @Class">
             <label class="fw-bold">@Text.Lower("Rated {0} On:", rating.Rating)</label>
             <PostHeaderLite Entity="post"></PostHeaderLite>

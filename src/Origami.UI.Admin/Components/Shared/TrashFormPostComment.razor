@@ -1,7 +1,7 @@
-﻿@inherits BasicFormFull<OrigamiPostComment>
+﻿@inherits BasicFormFull<OrigamiContentComment>
 @inject IPostRepository _post
 @inject ISocialProfileRepository _socialProfile
-@inject IPostCommentReactionRepository _postCommentReaction
+@inject IContentCommentReactionRepository _postCommentReaction
 
 <div class="trash-form-post-comment @Class">
     @if (this.Entity.New)
@@ -12,7 +12,7 @@
     }
     else
     {
-        var post = this.Super.Posts.ReadFromCache().Id(Entity.PostId);
+        var post = this.Super.Posts.ReadFromCache().Id(Entity.ContentId);
         var socialProfile = this.Super.SocialProfiles.ReadFromCache().Id(Entity.SocialProfileId);
 
         <div class="row">
@@ -86,7 +86,7 @@
                             <span>@reaction.Count()</span>
                         </label>
                     }
-                    <MudDataGrid Class="mt-3" T="OrigamiPostCommentReaction" Items="_postCommentReaction.Reactions(Entity).OrderByDescending(x => x.DateCreated)">
+                    <MudDataGrid Class="mt-3" T="OrigamiContentCommentReaction" Items="_postCommentReaction.Reactions(Entity).OrderByDescending(x => x.DateCreated)">
                         <Columns>
                             <TemplateColumn>
                                 <CellTemplate>
@@ -104,7 +104,7 @@
                             </TemplateColumn>
                         </Columns>
                         <PagerContent>
-                            <MudDataGridPager T="OrigamiPostCommentReaction" />
+                            <MudDataGridPager T="OrigamiContentCommentReaction" />
                         </PagerContent>
                     </MudDataGrid>
                 </div>
