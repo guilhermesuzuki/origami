@@ -42,13 +42,9 @@
                         {
                             <VideoHeaderLite Entity="video"></VideoHeaderLite>
                         }
-                        else if (hit is OrigamiPostComment postComment)
+                        else if (hit is OrigamiContentComment contentComment)
                         {
-                            <CommentLite Entity="postComment"></CommentLite>
-                        }
-                        else if (hit is OrigamiVideoComment videoComment)
-                        {
-                            <CommentLite Entity="videoComment"></CommentLite>
+                            <CommentLite Entity="contentComment"></CommentLite>
                         }
                         else if (hit is OrigamiCategory category)
                         {

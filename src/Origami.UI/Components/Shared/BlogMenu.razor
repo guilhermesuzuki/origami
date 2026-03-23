@@ -259,7 +259,7 @@
                 list.AddRange(items.OrderByDescending(x => x.DateCreated).Take(7));
                 break;
             default:
-                list.AddRange(items.OrderByDescending(x => this.Super.PageViews.GetViews(x)).Take(7));
+                list.AddRange(items.OrderByDescending(x => this.Super.PhysicalPageViews.GetViews(x)).Take(7));
                 break;
         }
 
@@ -282,7 +282,7 @@
                 _posts = items.OrderByDescending(x => x.DateCreated).Take(7);
                 break;
             default:
-                _posts = items.OrderByDescending(x => this.Super.PostViews.GetViews(x)).Take(7);
+                _posts = items.OrderByDescending(x => this.Super.PhysicalPageViews.GetViews(x)).Take(7);
                 break;
         }
     }
@@ -306,7 +306,7 @@
                 _videos = items.OrderByDescending(x => x.DateCreated).Take(7);
                 break;
             default:
-                _videos = items.OrderByDescending(x => this.Super.VideoViews.GetViews(x)).Take(7);
+                _videos = items.OrderByDescending(x => this.Super.PhysicalPageViews.GetViews(x)).Take(7);
                 break;
         }
     }

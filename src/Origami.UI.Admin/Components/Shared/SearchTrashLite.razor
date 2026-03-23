@@ -45,14 +45,9 @@
                             var video = this.Super.Videos.ReadFromCache().Id(hit.Id);
                             <VideoHeaderLite2 Entity="video"></VideoHeaderLite2>
                         }
-                        else if (hit.Type.Like("PostComment") == true)
+                        else if (hit.Type.Like("ContentComment") == true)
                         {
-                            var comment = this.Super.PostComments.ReadFromCache().Id(hit.Id);
-                            <CommentLite Entity="comment"></CommentLite>
-                        }
-                        else if (hit.Type.Like("VideoComment") == true)
-                        {
-                            var comment = this.Super.VideoComments.ReadFromCache().Id(hit.Id);
+                            var comment = this.Super.ContentComments.ReadFromCache().Id(hit.Id);
                             <CommentLite Entity="comment"></CommentLite>
                         }
                         else if (hit.Type.Like("Category") == true)

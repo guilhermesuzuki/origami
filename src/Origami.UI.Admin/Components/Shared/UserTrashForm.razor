@@ -33,15 +33,10 @@
                 var entity = this.Super.Videos.ReadFromCache().Id(Entity.Id);
                 <TrashFormVideo Entity="entity"></TrashFormVideo>
             }
-            else if (Entity.Type.Like("PostComment") == true)
+            else if (Entity.Type.Like("ContentComment") == true)
             {
-                var entity = this.Super.PostComments.ReadFromCache().Id(Entity.Id)!;
+                var entity = this.Super.ContentComments.ReadFromCache().Id(Entity.Id)!;
                 <TrashFormPostComment Entity="entity"></TrashFormPostComment>
-            }
-            else if (Entity.Type.Like("VideoComment") == true)
-            {
-                var entity = this.Super.VideoComments.ReadFromCache().Id(Entity.Id)!;
-                <TrashFormVideoComment Entity="entity"></TrashFormVideoComment>
             }
             else if (Entity.Type.Like("Category") == true)
             {

@@ -260,6 +260,15 @@ namespace Origami.Core.Data
                 .FirstOrDefault();
         }
 
+        public IEnumerable<OrigamiContentTag> GetTags(OrigamiContent content)
+        {
+            return from a in ContentTags.ReadFromCache()
+                   join b in Contents.ReadFromCache() on a.ContentId equals b.Id
+                   where b.Id == content.Id
+                   orderby a.Tag
+                   select a;
+        }
+
         public IEnumerable<OrigamiVideo> GetVideos(OrigamiTag tag)
         {
             return from a in ContentTags.ReadFromCache()

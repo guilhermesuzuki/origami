@@ -7,29 +7,44 @@ namespace Origami.Core.Data
     public interface ISuperRepository :
         ICategories<OrigamiCategory, OrigamiContent>
     {
+        IAppFacade AppFacade { get; }
+
+        IBackupRestoreRepository BackupAndRestores { get; }
+
+        IBlogRepository Blogs { get; }
+
+        ICategoryRepository Categories { get; }
+
+        IConfiguration Configurations { get; }
+
+        IContentCategoryRepository ContentCategories { get; }
+
+        IContentCommentReactionRepository ContentCommentReactions { get; }
+
+        IContentCommentRepository ContentComments { get; }
+
+        IContentHistoryRepository ContentHistories { get; }
+
+        IContentRatingRepository ContentRatings { get; }
+
+        IContentReactionRepository ContentReactions { get; }
+
+        IContentRepository Contents { get; }
+
+        IContentTagRepository ContentTags { get; }
+
+        IDbContextFactory<OrigamiDbContext> DbContextFactory { get; }
+
+        IDirectoryRepository Directories { get; }
+
+        IEmailRepository Emails { get; }
+
+        IFileRepository Files { get; }
+
         /// <summary>
         /// Is Origami in maintenance lock-out mode?
         /// </summary>
         bool MaintenanceLockout { get; }
-
-        IDbContextFactory<OrigamiDbContext> DbContextFactory { get; }
-
-        IAppFacade AppFacade { get; }
-        IBackupRestoreRepository BackupAndRestores { get; }
-        IBlogRepository Blogs { get; }
-        ICategoryRepository Categories { get; }
-        IConfiguration Configurations { get; }
-        IContentCategoryRepository ContentCategories { get; }
-        IContentCommentReactionRepository ContentCommentReactions { get; }
-        IContentCommentRepository ContentComments { get; }
-        IContentHistoryRepository ContentHistories { get; }
-        IContentRatingRepository ContentRatings { get; }
-        IContentReactionRepository ContentReactions { get; }
-        IContentRepository Contents { get; }
-        IContentTagRepository ContentTags { get; }
-        IDirectoryRepository Directories { get; }
-        IEmailRepository Emails { get; }
-        IFileRepository Files { get; }
         IPageRepository Pages { get; }
         IPhysicalPageRepository PhysicalPages { get; }
         IPhysicalPageViewRepository PhysicalPageViews { get; }
@@ -49,8 +64,8 @@ namespace Origami.Core.Data
         IUserBlogRepository UserBlogs { get; }
         IUserContentRepository UserContents { get; }
         IUserPasswordResetRepository UserPasswordResets { get; }
-        IUserRepository Users { get; }
         IUserRoleRepository UserRoles { get; }
+        IUserRepository Users { get; }
         IUserTrashRepository UserTrashes { get; }
         IUserViewRepository UserViews { get; }
         IVideoRepository Videos { get; }
@@ -127,6 +142,14 @@ namespace Origami.Core.Data
         /// <param name="socialProfile"></param>
         /// <returns></returns>
         OrigamiSubscriber? GetSubscriber(OrigamiSocialProfile socialProfile);
+
+        /// <summary>
+        /// Retrieves the collection of tags associated with the specified content item.
+        /// </summary>
+        /// <param name="content">The content item for which to retrieve tags. Cannot be null.</param>
+        /// <returns>An enumerable collection of tags linked to the specified content. The collection is empty if the content has
+        /// no tags.</returns>
+        IEnumerable<OrigamiContentTag> GetTags(OrigamiContent content);
 
         /// <summary>
         /// Retrieves a collection of videos associated with the specified tag.

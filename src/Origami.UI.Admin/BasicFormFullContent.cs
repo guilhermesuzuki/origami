@@ -112,11 +112,8 @@ namespace Origami.UI.Admin
             {
                 switch (category)
                 {
-                    case OrigamiPostCategory postCategory:
-                        postCategory.PostId = this.Entity.Id;
-                        break;
-                    case OrigamiVideoCategory videoCategory:
-                        videoCategory.VideoId = this.Entity.Id;
+                    case OrigamiContentCategory contentCategory:
+                        contentCategory.ContentId = this.Entity.Id;
                         break;
                 }
                 var context = new DataOperationContext<TCat>(this.UserFacade.User, DateTime.UtcNow, category);
@@ -134,11 +131,8 @@ namespace Origami.UI.Admin
             {
                 switch (tag)
                 {
-                    case OrigamiPostTag postTag:
-                        postTag.PostId = this.Entity.Id;
-                        break;
-                    case OrigamiVideoTag videoTag:
-                        videoTag.VideoId = this.Entity.Id;
+                    case OrigamiContentTag contentTag:
+                        contentTag.ContentId = this.Entity.Id;
                         break;
                 }
                 var context = new DataOperationContext<TTag>(this.UserFacade.User, DateTime.UtcNow, tag);
@@ -168,11 +162,8 @@ namespace Origami.UI.Admin
 
             switch (Category)
             {
-                case IRepository<OrigamiPostCategory> postCategories:
-                    categoriesFromDb = db.Set<OrigamiPostCategory>().AsNoTracking().Where(x => x.PostId == this.Entity.Id).Cast<TCat>().ToList();
-                    break;
-                case IRepository<OrigamiVideoCategory> videoCategories:
-                    categoriesFromDb = db.Set<OrigamiVideoCategory>().AsNoTracking().Where(x => x.VideoId == this.Entity.Id).Cast<TCat>().ToList();
+                case IRepository<OrigamiContentCategory> postCategories:
+                    categoriesFromDb = db.Set<OrigamiContentCategory>().AsNoTracking().Where(x => x.ContentId == this.Entity.Id).Cast<TCat>().ToList();
                     break;
             }
 
@@ -190,11 +181,8 @@ namespace Origami.UI.Admin
 
             switch (Tag)
             {
-                case IRepository<OrigamiPostTag> postTags:
-                    tagsFromDb = db.Set<OrigamiPostTag>().AsNoTracking().Where(x => x.PostId == this.Entity.Id).Cast<TTag>().ToList();
-                    break;
-                case IRepository<OrigamiVideoTag> videoTags:
-                    tagsFromDb = db.Set<OrigamiVideoTag>().AsNoTracking().Where(x => x.VideoId == this.Entity.Id).Cast<TTag>().ToList();
+                case IRepository<OrigamiContentTag> postTags:
+                    tagsFromDb = db.Set<OrigamiContentTag>().AsNoTracking().Where(x => x.ContentId == this.Entity.Id).Cast<TTag>().ToList();
                     break;
             }
 
@@ -218,11 +206,8 @@ namespace Origami.UI.Admin
 
             switch (Category)
             {
-                case IRepository<OrigamiPostCategory> postCategories:
-                    Categories = postCategories.ReadFromCache().Where(x => x.PostId == this.Entity.Id).Cast<TCat>().ToList();
-                    break;
-                case IRepository<OrigamiVideoCategory> videoCategories:
-                    Categories = videoCategories.ReadFromCache().Where(x => x.VideoId == this.Entity.Id).Cast<TCat>().ToList();
+                case IRepository<OrigamiContentCategory> postCategories:
+                    Categories = postCategories.ReadFromCache().Where(x => x.ContentId == this.Entity.Id).Cast<TCat>().ToList();
                     break;
             }
         }
@@ -239,11 +224,8 @@ namespace Origami.UI.Admin
 
             switch (Tag)
             {
-                case IRepository<OrigamiPostTag> postTags:
-                    Tags = postTags.ReadFromCache().Where(x => x.PostId == this.Entity.Id).Cast<TTag>().ToList();
-                    break;
-                case IRepository<OrigamiVideoTag> videoTags:
-                    Tags = videoTags.ReadFromCache().Where(x => x.VideoId == this.Entity.Id).Cast<TTag>().ToList();
+                case IRepository<OrigamiContentTag> postTags:
+                    Tags = postTags.ReadFromCache().Where(x => x.ContentId == this.Entity.Id).Cast<TTag>().ToList();
                     break;
             }
         }
@@ -254,10 +236,8 @@ namespace Origami.UI.Admin
 
             switch (Category)
             {
-                case IRepository<OrigamiPostCategory> postCategories:
-                    return postCategories.ReadFromCache().Where(x => x.CategoryId == categoryId).Where(x => x.PostId == this.Entity.Id).Any() == false;
-                case IRepository<OrigamiVideoCategory> videoCategories:
-                    return videoCategories.ReadFromCache().Where(x => x.CategoryId == categoryId).Where(x => x.VideoId == this.Entity.Id).Any() == false;
+                case IRepository<OrigamiContentCategory> postCategories:
+                    return postCategories.ReadFromCache().Where(x => x.CategoryId == categoryId).Where(x => x.ContentId == this.Entity.Id).Any() == false;
             }
 
             throw new NotImplementedException();

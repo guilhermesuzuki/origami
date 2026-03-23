@@ -62,16 +62,5 @@ namespace Origami.Core.Models
         {
             for (int i = 0; i < count; i++) yield return GetFake();
         }
-
-        public AdditionalInfo.ForSitePages Get()
-        {
-            return AdditionalInfo.To<AdditionalInfo.ForSitePages>();
-        }
-
-        public AdditionalInfo.ForSitePages Set(Action<AdditionalInfo.ForSitePages> action)
-        {
-            AdditionalInfo = AdditionalInfo.From(action);
-            return AdditionalInfo.To<AdditionalInfo.ForSitePages>();
-        }
     }
 }
