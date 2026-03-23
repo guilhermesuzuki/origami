@@ -131,12 +131,6 @@ namespace Origami.Core.Data
         IEnumerable<OrigamiSpecialPage> GetMaintenancePages();
 
         /// <summary>
-        /// Get active pages
-        /// </summary>
-        /// <returns>non-deleted and published pages, sorted by title</returns>
-        IEnumerable<OrigamiPage> GetPages();
-
-        /// <summary>
         /// Retrieves all pages associated with the specified blog.
         /// </summary>
         /// <param name="blog">The unique identifier of the blog for which to retrieve pages.</param>
@@ -218,6 +212,7 @@ namespace Origami.Core.Data
         /// <returns>An enumerable collection of videos belonging to the specified blog. The collection is empty if the blog
         /// contains no videos.</returns>
         IEnumerable<OrigamiVideo> GetVideos(Guid blog);
+
         /// <summary>
         /// Retrieves a collection of videos associated with the specified tag.
         /// </summary>
@@ -232,6 +227,12 @@ namespace Origami.Core.Data
         /// <param name="category"></param>
         /// <returns></returns>
         IEnumerable<OrigamiVideo> GetVideos(OrigamiCategory category);
+
+        /// <summary>
+        /// Get active pages
+        /// </summary>
+        /// <returns>non-deleted and published pages, sorted by title</returns>
+        IEnumerable<OrigamiPage> GetVisiblePages();
 
         object? GuessWho(string text);
 

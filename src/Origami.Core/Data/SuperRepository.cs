@@ -269,16 +269,6 @@ namespace Origami.Core.Data
             return [];
         }
 
-        public IEnumerable<OrigamiPage> GetPages()
-        {
-            return from x in Contents.ReadFromCache().OfType<OrigamiPage>()
-                   where x.IsDeleted == false
-                   where this.IsParentDeleted(x) == false
-                   where x.IsPublished == true
-                   orderby x.Title
-                   select x;
-        }
-
         public IEnumerable<OrigamiPage> GetPages(Guid blog)
         {
             return from p in Contents.ReadFromCache().OfType<OrigamiPage>() where p.BlogId == blog select p;
@@ -376,6 +366,15 @@ namespace Origami.Core.Data
             return from v in Contents.ReadFromCache().OfType<OrigamiVideo>() where v.BlogId == blog select v;
         }
 
+        public IEnumerable<OrigamiPage> GetVisiblePages()
+        {
+            return from x in Contents.ReadFromCache().OfType<OrigamiPage>()
+                   where x.IsDeleted == false
+                   where this.IsParentDeleted(x) == false
+                   where x.IsPublished == true
+                   orderby x.Title
+                   select x;
+        }
         public object? GuessWho(string text)
         {
             if (Guid.TryParse(text, out var guid) == true)

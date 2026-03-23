@@ -565,7 +565,7 @@
 
     protected List<OrigamiPage> GetPages()
     {
-        return this.Super.GetPages().Author(this.Entity).ToList();
+        return this.Super.GetVisiblePages().Author(this.Entity).ToList();
     }
 
     protected List<OrigamiPost> GetPosts()
