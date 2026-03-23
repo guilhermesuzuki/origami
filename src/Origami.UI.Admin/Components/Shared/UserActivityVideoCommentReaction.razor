@@ -1,9 +1,9 @@
 ﻿@inherits Basic
 @implements IId
 @inject IVideoRepository _video
-@inject IVideoCommentReactionRepository _videoCommentReaction
-@inject IVideoCommentRepository _videoComment
-@inject IVideoRatingRepository _videoRating
+@inject IContentCommentReactionRepository _videoCommentReaction
+@inject IContentCommentRepository _videoComment
+@inject IContentRatingRepository _videoRating
 
 @if (Id != Guid.Empty)
 {
@@ -11,7 +11,7 @@
     if (reaction != null)
     {
         var comment = _videoComment.ReadFromCache().Id(reaction.CommentId);
-        var video = _video.ReadFromCache().Id(comment!.VideoId);
+        var video = _video.ReadFromCache().Id(comment!.ContentId);
         <div class="user-activity-video-comment-reaction @Class">
             <label class="fw-bold">@Text.Lower("Reacted {0} To:", reaction.Reaction)</label>
             <VideoHeaderLite Entity="video"></VideoHeaderLite>

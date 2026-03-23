@@ -1,8 +1,6 @@
 ﻿@page "/tags"
 @inherits BasicAdminGrid<OrigamiTag>
-@inject IPostTagRepository _postTag
-@inject IVideoTagRepository _videoTag
-@inject IBlogRepository _blogs
+
 <Root Access="this.CanAccess()">
     <HeaderTemplate>
         <div class="p-3 border-bottom">
@@ -76,8 +74,12 @@
     {
         var result = new Result<OrigamiTag>();
 
-        this._postTag.ReadFromCache().Where(x => x.Tag == entity.Name && x.Post!.BlogId == entity.BlogId).Each(this._postTag.PurgeCache);
-        this._videoTag.ReadFromCache().Where(x => x.Tag == entity.Name && x.Video!.BlogId == entity.BlogId).Each(this._videoTag.PurgeCache);
+        var query = from t in this.Super.ContentTags.ReadFromCache()
+                    join c in this.Super.Contents.ReadFromCache() on t.ContentId equals c.Id
+                    where t.Tag == entity.Name && c.BlogId == entity.BlogId
+                    select t;
+
+        query.Each(this.Super.ContentTags.PurgeCache);
 
         SelectedEntity = SelectedEntity.Id == entity.Id ? this.CreateEntity() : SelectedEntity;
 

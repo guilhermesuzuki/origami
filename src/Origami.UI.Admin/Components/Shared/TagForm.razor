@@ -1,8 +1,5 @@
 ﻿@using System.Transactions
 @inherits BasicFormFull<OrigamiTag>
-@inject IBlogRepository _blog
-@inject IPostTagRepository _postTag
-@inject IVideoTagRepository _videoTag
 
 <div class="tag-form @Class">
     @if (this.Entity.New)

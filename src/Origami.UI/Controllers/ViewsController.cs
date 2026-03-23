@@ -18,15 +18,12 @@ namespace Origami.UI.FrontEnd.Controllers
         protected readonly IHttpContextAccessor _httpContextAccessor;
         protected readonly IMemoryCache _memoryCache;
         protected readonly IPageRepository _page;
-        protected readonly IPageViewRepository _pageView;
         protected readonly IPhysicalPageRepository _physicalPage;
         protected readonly IPhysicalPageViewRepository _physicalPageView;
         protected readonly IPostRepository _post;
-        protected readonly IPostViewRepository _postView;
         protected readonly ISuperRepository _superRepository;
         protected readonly IUserFacade _userFacade;
         protected readonly IVideoRepository _video;
-        protected readonly IVideoViewRepository _videoView;
 
         /// <summary>
         /// Constructor with DI
@@ -38,15 +35,12 @@ namespace Origami.UI.FrontEnd.Controllers
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IHttpContextAccessor httpContextAccessor,
             IPageRepository page,
-            IPageViewRepository pageView,
             IPhysicalPageRepository physicalPage,
             IPhysicalPageViewRepository physicalPageView,
             IPostRepository post,
-            IPostViewRepository postView,
             ISuperRepository superRepository,
             IUserFacade userFacade,
-            IVideoRepository video,
-            IVideoViewRepository videoView)
+            IVideoRepository video)
             : base()
         {
             _appFacade = appFacade;
@@ -54,37 +48,12 @@ namespace Origami.UI.FrontEnd.Controllers
             _httpContextAccessor = httpContextAccessor;
             _memoryCache = memoryCache;
             _page = page;
-            _pageView = pageView;
             _physicalPage = physicalPage;
             _physicalPageView = physicalPageView;
             _post = post;
-            _postView = postView;
             _superRepository = superRepository;
             _userFacade = userFacade;
             _video = video;
-            _videoView = videoView;
-        }
-
-        [HttpGet]
-        [Route("pages/{id:guid}")]
-        public IActionResult Pages([FromRoute] Guid id, [FromQuery] string url, [FromQuery] string referrer)
-        {
-            var page = _page.ReadFromCache().FirstOrDefault(x => x.Id == id);
-            if (page != null)
-            {
-                var view = new OrigamiPageView
-                {
-                    Id = Guid.NewGuid(),
-                    PageId = page.Id,
-                };
-
-                this._fill(view, url, referrer);
-                _pageView.SmartSave(view.GetContext(), false);
-
-                return Ok();
-            }
-
-            return NotFound();
         }
 
         [HttpGet]
@@ -209,75 +178,6 @@ namespace Origami.UI.FrontEnd.Controllers
                 };
                 this._fill(view, url, referrer);
                 _physicalPageView.SmartSave(view.GetContext(), false);
-                return Ok();
-            }
-
-            return NotFound();
-        }
-
-        [HttpGet]
-        [Route("posts/{id:guid}")]
-        public IActionResult Posts([FromRoute] Guid id, [FromQuery] string url, [FromQuery] string referrer)
-        {
-            var post = _post.ReadFromCache().FirstOrDefault(x => x.Id == id);
-            if (post != null)
-            {
-                var dd = Request.GetDeviceDetector();
-
-                var view = new OrigamiPostView
-                {
-                    Id = Guid.NewGuid(),
-                    PostId = post.Id,
-                };
-
-                this._fill(view, url, referrer);
-                _postView.SmartSave(view.GetContext(), false);
-
-                return Ok();
-            }
-
-            return NotFound();
-        }
-
-        [HttpGet]
-        [Route("specialpages/{id:guid}")]
-        public IActionResult SpecialPages([FromRoute] Guid id, [FromQuery] string url, [FromQuery] string referrer)
-        {
-            var page = _superRepository.SpecialPages.ReadFromCache().FirstOrDefault(x => x.Id == id);
-            if (page != null)
-            {
-                var view = new OrigamiSpecialPageView
-                {
-                    Id = Guid.NewGuid(),
-                    SpecialPageId = page.Id,
-                };
-
-                this._fill(view, url, referrer);
-                _superRepository.SpecialPageViews.SmartSave(view.GetContext(), false);
-
-                return Ok();
-            }
-
-            return NotFound();
-        }
-        [HttpGet]
-        [Route("videos/{id:guid}")]
-        public IActionResult Videos([FromRoute] Guid id, [FromQuery] string url, [FromQuery] string referrer)
-        {
-            var video = _video.ReadFromCache().FirstOrDefault(x => x.Id == id);
-            if (video != null)
-            {
-                var dd = Request.GetDeviceDetector();
-
-                var view = new OrigamiVideoView
-                {
-                    Id = Guid.NewGuid(),
-                    VideoId = video.Id,
-                };
-
-                this._fill(view, url, referrer);
-                _videoView.SmartSave(view.GetContext(), false);
-
                 return Ok();
             }
 

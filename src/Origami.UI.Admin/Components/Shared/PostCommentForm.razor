@@ -1,7 +1,7 @@
-﻿@inherits BasicFormFull<OrigamiPostComment>
+﻿@inherits BasicFormFull<OrigamiContentComment>
 @inject IPostRepository _post
 @inject ISocialProfileRepository _socialProfile
-@inject IPostCommentReactionRepository _postCommentReaction
+@inject IContentCommentReactionRepository _contentCommentReaction
 
 <div class="post-comment-form @Class">
     @if (this.Entity.New)
@@ -12,7 +12,7 @@
     }
     else
     {
-        var post = this.Super.Posts.ReadFromCache().Id(Entity.PostId);
+        var post = this.Super.Posts.ReadFromCache().Id(Entity.ContentId);
         var socialProfile = this.Super.SocialProfiles.ReadFromCache().Id(Entity.SocialProfileId);
 
         <div class="row">
@@ -81,14 +81,14 @@
                     <div class="w-100 text-white bg-secondary text-center mb-3">
                         @Text.Lower("Reactions")
                     </div>
-                    @foreach (var reaction in _postCommentReaction.Reactions(Entity).GroupBy(x => x.Reaction))
+                    @foreach (var reaction in _contentCommentReaction.Reactions(Entity).GroupBy(x => x.Reaction))
                     {
                         <label class="post-comment-reaction pe-1 me-1 border" style="border-radius: 12px; padding-left: 3px; padding-right: 6px; padding-bottom: 3px;">
                             <span>@reaction.Key</span>
                             <span>@reaction.Count()</span>
                         </label>
                     }
-                    <MudDataGrid Class="mt-3" T="OrigamiPostCommentReaction" Items="_postCommentReaction.Reactions(Entity).OrderByDescending(x => x.DateCreated)">
+                    <MudDataGrid Class="mt-3" T="OrigamiContentCommentReaction" Items="_contentCommentReaction.Reactions(Entity).OrderByDescending(x => x.DateCreated)">
                         <Columns>
                             <TemplateColumn>
                                 <CellTemplate>
@@ -106,7 +106,7 @@
                             </TemplateColumn>
                         </Columns>
                         <PagerContent>
-                            <MudDataGridPager T="OrigamiPostCommentReaction" />
+                            <MudDataGridPager T="OrigamiContentCommentReaction" />
                         </PagerContent>
                     </MudDataGrid>
                 </div>

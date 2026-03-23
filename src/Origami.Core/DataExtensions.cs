@@ -188,7 +188,7 @@ namespace Origami.Core
         /// <param name="entity">The parent entity whose children are to be retrieved.</param>
         /// <returns>A collection of child entities of the given parent entity.</returns>
         public static IEnumerable<T> GetChildren<T, T2>(this IEnumerable<T> entities, T2 entity)
-            where T2 : IParentIdNull<T>, T, IId
+            where T2 : IParentIdNull, T, IId
         {
             return entities.Cast<T2>().Where(x => x.ParentId == entity.Id).Cast<T>().ToList();
         }

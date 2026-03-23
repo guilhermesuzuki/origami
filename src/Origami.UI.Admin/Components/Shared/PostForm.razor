@@ -1,10 +1,4 @@
-﻿@inherits BasicFormFullContent<OrigamiPost, OrigamiPostCategory, OrigamiPostTag>
-@inject ICategoryRepository _category
-@inject IPostCategoryRepository _postCategory
-@inject IPostTagRepository _postTag
-@inject IVideoTagRepository _videoTag
-@inject IFileRepository _fileRepository
-
+﻿@inherits BasicFormFullContent<OrigamiPost, OrigamiContentCategory, OrigamiContentTag>
 
 <div class="post-form @Class">
     <div class="row">
@@ -134,7 +128,7 @@
                     <i class="fa-solid fa-tag"></i>
                     @Text.Lower("Tags")
                 </div>
-                <MudDataGrid T="OrigamiPostTag" Class="border mt-3" Items="this.Tags" SortMode="SortMode.None" Filterable="false">
+                <MudDataGrid T="OrigamiContentTag" Class="border mt-3" Items="this.Tags" SortMode="SortMode.None" Filterable="false">
                     <Columns>
                         <TemplateColumn CellClass="w-100">
                             <CellTemplate>
@@ -150,7 +144,7 @@
                         </TemplateColumn>
                     </Columns>
                     <PagerContent>
-                        <MudDataGridPager T="OrigamiPostTag" PageSizeOptions="[10,25,50,100]" />
+                        <MudDataGridPager T="OrigamiContentTag" PageSizeOptions="[10,25,50,100]" />
                     </PagerContent>
                 </MudDataGrid>
                 <TagAutoComplete @ref="_tagAutoComplete" Class="border p-3 mt-3" TagEntered="this.TagEntered"></TagAutoComplete>

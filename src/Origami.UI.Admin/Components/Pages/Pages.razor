@@ -3,10 +3,7 @@
 @implements IFilter
 @inject IBlogRepository _blogs
 @inject ICategoryRepository _category
-@inject IPostCategoryRepository _postCategory
-@inject IVideoCategoryRepository _videoCategory
 @inject IPageRepository _pages
-@inject IPageViewRepository _pageViews
 
 <style>
     .related-pages .id { display: none !important; }
@@ -96,7 +93,7 @@
                                         <ul class="inline-list text-center">
                                             <li>
                                                 <i class="fa-solid fa-eye"></i>
-                                                @_pageViews.GetViews(context.Item)
+                                                @this.Super.PhysicalPageViews.GetViews(context.Item)
                                             </li>
                                         </ul>
                                     </div>

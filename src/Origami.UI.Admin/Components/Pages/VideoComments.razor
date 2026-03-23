@@ -1,5 +1,5 @@
 ﻿@page "/videos/comments"
-@inherits BasicAdminGrid<OrigamiVideoComment>
+@inherits BasicAdminGrid<OrigamiContentComment>
 @inject IVideoRepository _video
 @inject IBlogRepository _blogs
 
@@ -22,7 +22,7 @@
         <div class="p-3 border-bottom">
             <div class="row">
                 <div class="col-12">
-                    <SearchLite T="OrigamiVideoComment" OnHitSelected="this.OnSearchResultSelected"></SearchLite>
+                    <SearchLite T="OrigamiContentComment" OnHitSelected="this.OnSearchResultSelected"></SearchLite>
                 </div>
             </div>
         </div>
@@ -34,17 +34,17 @@
                     <DataGridOptions Deleted="this.IncludeDeletedEntitiesInDataGrid" DeletedChanged="this.OnIncludeDeletedEntitiesChanged"></DataGridOptions>
                 </div>
                 <div class="videos-comments col-12">
-                    <MudDataGrid @ref="DataGrid" T="OrigamiVideoComment" ServerData="GetEntities" Filterable="false" SortMode="SortMode.None" Class="border selectable" SelectedItems="this.SelectedEntities" MultiSelection="true" SelectedItemsChanged="this.SelectedEntitiesChanged"
+                    <MudDataGrid @ref="DataGrid" T="OrigamiContentComment" ServerData="GetEntities" Filterable="false" SortMode="SortMode.None" Class="border selectable" SelectedItems="this.SelectedEntities" MultiSelection="true" SelectedItemsChanged="this.SelectedEntitiesChanged"
                                  RowClassFunc="this.RowClassFunc" Bordered="true" SelectOnRowClick="false">
                         <Columns>
-                            <SelectColumn T="OrigamiVideoComment"></SelectColumn>
+                            <SelectColumn T="OrigamiContentComment"></SelectColumn>
                             <TemplateColumn Title="@Text.Upper("Comment")">
                                 <CellTemplate>
                                     <div class="cursor-pointer" @onclick="() => OnEdit(context.Item)">
                                         <CommentLite Entity="context.Item"></CommentLite>
                                         @if (context.Item.ParentId != null)
                                         {
-                                            var parent = this.Super.VideoComments.ReadFromCache().Id(context.Item.ParentId);
+                                            var parent = this.Super.ContentComments.ReadFromCache().Id(context.Item.ParentId);
                                             <div class="mt-3 border p-3 shadow-sm">
                                                 <span class="small fw-bold">
                                                     <i class="fa-solid fa-reply"></i>
@@ -59,14 +59,14 @@
                             <TemplateColumn Title="@Text.Upper("Video")" CellClass="col-4">
                                 <CellTemplate>
                                     @{
-                                        var video = _video.ReadFromCache().Id(context.Item.VideoId);
+                                        var video = _video.ReadFromCache().Id(context.Item.ContentId);
                                         <VideoHeaderLite2 Entity="video"></VideoHeaderLite2>
                                     }
                                 </CellTemplate>
                             </TemplateColumn>
                         </Columns>
                         <PagerContent>
-                            <MudDataGridPager T="OrigamiVideoComment" />
+                            <MudDataGridPager T="OrigamiContentComment" />
                         </PagerContent>
                         <NoRecordsContent>
                             <NoEntriesWereFound></NoEntriesWereFound>
@@ -82,5 +82,5 @@
 </Root>
 @code 
 {
-    protected override string DefaultOrdering => $"{nameof(OrigamiPostComment.DateCreated)} DESC";
+    protected override string DefaultOrdering => $"{nameof(OrigamiContentComment.DateCreated)} DESC";
 }

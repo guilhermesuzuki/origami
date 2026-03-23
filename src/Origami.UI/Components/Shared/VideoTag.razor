@@ -1,6 +1,6 @@
 ﻿@inherits Basic
 @implements IHyperlink
-@implements IEntityNull<Core.Models.OrigamiVideoTag>
+@implements IEntityNull<OrigamiContentTag>
 @if (Entity != null)
 {
     <span class="video-tag m-1 @Class d-inline-block">
@@ -8,7 +8,7 @@
     </span>
 }
 @code {
-    [Parameter] public Core.Models.OrigamiVideoTag? Entity { get; set; }
+    [Parameter] public OrigamiContentTag? Entity { get; set; }
 
     public string Hyperlink
     {
@@ -16,7 +16,7 @@
         {
             if (Entity != null)
             {
-                var video = this.Super.Videos.ReadFromCache().Id(Entity.VideoId)!;
+                var video = this.Super.Videos.ReadFromCache().Id(Entity.ContentId)!;
                 var blog = this.Super.Blogs.ReadFromCache().Id(video.BlogId)!;
                 return $"/blogs/{blog.Slug}/tags/{Entity.Slug}/{video.NanoId}#content-start";
             }

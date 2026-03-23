@@ -1,18 +1,18 @@
 ﻿@inherits Basic
-
-@inject IVideoRatingRepository _videoRating
+@implements IEntityNull<OrigamiVideo>
+@inject IContentRatingRepository _videoRating
 @inject ISocialProfileRepository _socialProfile
 
-@if (this.Video != null)
+@if (this.Entity != null)
 {
     <div class="video-ratings @Class">
         <label class="w-100 text-center fs-3">
             <i class="fa-solid fa-star"></i>
-            @Text.Lower("{0} People Rated This Video", _videoRating.Ratings(this.Video).Count())
+            @Text.Lower("{0} People Rated This Video", _videoRating.Ratings(this.Entity).Count())
             <i class="fa-solid fa-star"></i>
         </label>
         <div class="row">
-            @foreach (var rating in _videoRating.Ratings(this.Video).OrderByDescending(x => x.DateCreated).Take(this.Page * this.PageSize))
+            @foreach (var rating in _videoRating.Ratings(this.Entity).OrderByDescending(x => x.DateCreated).Take(this.Page * this.PageSize))
             {
                 var socialProfile = rating.SocialProfileId != null ? _socialProfile.ReadFromCache().Id(rating.SocialProfileId.Value) : null;
                 <div class="col-12 col-xl-4 text-center mt-3">
@@ -47,12 +47,12 @@
 @code {
     [Parameter] public int Page { get; set; } = 1;
     [Parameter] public int PageSize { get; set; } = 9;
-    [Parameter] public OrigamiVideo? Video { get; set; }
+    [Parameter] public OrigamiVideo? Entity { get; set; }
 
     [Parameter] public EventCallback<int> OnPageChanged{ get; set; }
 
     private bool _disableLoadMore
     {
-        get => this.Page * this.PageSize >= _videoRating.Ratings(this.Video!).Count();
+        get => this.Page * this.PageSize >= _videoRating.Ratings(this.Entity!).Count();
     }
 }
