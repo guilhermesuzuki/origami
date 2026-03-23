@@ -570,12 +570,12 @@
 
     protected List<OrigamiPost> GetPosts()
     {
-        return this.Super.Posts.ReadFromCache().Published().Author(this.Entity).ToList();
+        return this.Super.Contents.ReadFromCache().OfType<OrigamiPost>().Published().Author(this.Entity).ToList();
     }
 
     protected List<OrigamiVideo> GetVideos()
     {
-        return this.Super.Videos.ReadFromCache().Published().Author(this.Entity).ToList();
+        return this.Super.Contents.ReadFromCache().OfType<OrigamiVideo>().Published().Author(this.Entity).ToList();
     }
 
     protected List<OrigamiUserPasswordReset> GetPasswordResetHistory()

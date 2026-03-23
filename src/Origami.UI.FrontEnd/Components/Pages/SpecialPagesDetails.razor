@@ -36,7 +36,7 @@
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        this._page = this.Page ?? this.Super.SpecialPages.ReadFromCache().Published().NanoId(NanoId) ?? new();
+        this._page = this.Page ?? this.Super.Contents.ReadFromCache().OfType<OrigamiSpecialPage>().Published().NanoId(NanoId) ?? new();
     }
 
     protected override async Task PageViewAsync(bool firstRender)

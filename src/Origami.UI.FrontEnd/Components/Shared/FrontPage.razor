@@ -4,7 +4,7 @@
 
 @if (this.BlogId != Guid.Empty)
 {
-    var frontPage = _pageRepository.ReadFromCache().FrontPage(this.BlogId);
+    var frontPage = this.Super.Contents.ReadFromCache().OfType<OrigamiPage>().NonDeleted().Published().FrontPage(this.BlogId);
     @if (frontPage != null)
     {
         <div class="front-page @Class">

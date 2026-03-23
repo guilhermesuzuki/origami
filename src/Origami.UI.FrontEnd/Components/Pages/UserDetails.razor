@@ -198,7 +198,7 @@
         var orderBy = orders.ToString();
 
         //pulls information from cache
-        var result = this.Super.Pages.ReadFromCache().Published().Query(
+        var result = this.Super.Contents.ReadFromCache().OfType<OrigamiPage>().Published().Query(
             state.PageSize,
             state.Page * state.PageSize,
             filters.ToString(),
@@ -235,7 +235,7 @@
         var orderBy = orders.ToString();
 
         //pulls information from cache
-        var result = this.Super.Posts.ReadFromCache().Published().Query(
+        var result = this.Super.Contents.ReadFromCache().OfType<OrigamiPost>().Published().Query(
             state.PageSize,
             state.Page * state.PageSize,
             filters.ToString(),
@@ -272,7 +272,7 @@
         var orderBy = orders.ToString();
 
         //pulls information from cache
-        var result = this.Super.Videos.ReadFromCache().Published().Query(
+        var result = this.Super.Contents.ReadFromCache().OfType<OrigamiVideo>().Published().Query(
             state.PageSize,
             state.Page * state.PageSize,
             filters.ToString(),
