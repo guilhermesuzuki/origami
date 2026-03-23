@@ -78,29 +78,15 @@
                     </div>
                 </div>
             }
-            @if (this._postComments.Any() == true)
+            @if (this._contentComments.Any() == true)
             {
                 <div class="search-post-comments">
                     <label class="fs-3 w-100 text-center">@Text.Lower("Comments from posts found In the search")</label>
                     <div class="row mt-3">
-                        @foreach (var comment in _postComments)
+                        @foreach (var comment in _contentComments)
                         {
                             <div class="col-12 col-xl-6">
                                 <PostComment Class="mb-3" Comment="comment"></PostComment>
-                            </div>
-                        }
-                    </div>
-                </div>
-            }
-            @if (this._videoComments.Any() == true)
-            {
-                <div class="search-video-comments">
-                    <label class="fs-3 w-100 text-center">@Text.Lower("Comments from videos found In the search")</label>
-                    <div class="row mt-3">
-                        @foreach (var comment in _videoComments)
-                        {
-                            <div class="col-12 col-xl-6">
-                                <VideoComment Class="mb-3" Comment="comment"></VideoComment>
                             </div>
                         }
                     </div>
@@ -190,12 +176,7 @@
     /// <summary>
     /// List of post comments found in the search
     /// </summary>
-    private IEnumerable<OrigamiPostComment> _postComments = [];
-
-    /// <summary>
-    /// List of video comments found in the search
-    /// </summary>
-    private IEnumerable<OrigamiVideoComment> _videoComments = [];
+    private IEnumerable<OrigamiContentComment> _contentComments = [];
 
     /// <summary>
     /// List of tags found in the search
@@ -211,13 +192,12 @@
     {
         this._blogs = [];
         this._categories = [];
+        this._contentComments = [];
         this._pages = [];
         this._posts = [];
         this._socialProfiles = [];
-        this._videos = [];
-        this._postComments = [];
-        this._videoComments = [];
         this._tags = [];
+        this._videos = [];
     }
 
     /// <summary>
@@ -228,13 +208,12 @@
     {
         if (this._blogs.Any() == true) return true;
         if (this._categories.Any() == true) return true;
+        if (this._contentComments.Any() == true) return true;
         if (this._pages.Any() == true) return true;
         if (this._posts.Any() == true) return true;
         if (this._socialProfiles.Any() == true) return true;
-        if (this._videos.Any() == true) return true;
-        if (this._postComments.Any() == true) return true;
-        if (this._videoComments.Any() == true) return true;
         if (this._tags.Any() == true) return true;
+        if (this._videos.Any() == true) return true;
         return false;
     }
 
@@ -284,8 +263,7 @@
             this._posts = _super.Posts.Search(queryTerm).Published().OrderBy(x => x.Title);
             this._videos = _super.Videos.Search(queryTerm).Published().OrderBy(x => x.Title);
             this._socialProfiles = _super.SocialProfiles.Search(queryTerm).OrderBy(x => x.SocialNetwork.ToString()).ThenBy(x => x.Name());
-            this._postComments = _super.PostComments.Search(queryTerm).NonDeleted().Where(x => this.Super.IsParentDeleted(x) == false).OrderByDescending(x => x.GetDate());
-            this._videoComments = _super.VideoComments.Search(queryTerm).NonDeleted().Where(x => this.Super.IsParentDeleted(x) == false).OrderByDescending(x => x.GetDate());
+            this._contentComments = _super.ContentComments.Search(queryTerm).NonDeleted().Where(x => this.Super.IsParentDeleted(x) == false).OrderByDescending(x => x.GetDate());
             this._tags = _super.Tags.Search(queryTerm).OrderBy(x => x.Name);
         }
 

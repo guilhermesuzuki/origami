@@ -1,7 +1,7 @@
-﻿@inherits BasicFormFull<OrigamiVideoComment>
+﻿@inherits BasicFormFull<OrigamiContentComment>
 @inject IVideoRepository _video
 @inject ISocialProfileRepository _socialProfile
-@inject IVideoCommentReactionRepository _videoCommentReaction
+@inject IContentCommentReactionRepository _videoCommentReaction
 
 <div class="video-comment-form @Class">
     @if (this.Entity.New)
@@ -12,7 +12,7 @@
     }
     else
     {
-        var video = this.Super.Videos.ReadFromCache().Id(Entity.VideoId);
+        var video = this.Super.Videos.ReadFromCache().Id(Entity.ContentId);
         var socialProfile = this.Super.SocialProfiles.ReadFromCache().Id(Entity.SocialProfileId);
 
         <div class="row">
@@ -88,7 +88,7 @@
                             <span>@reaction.Count()</span>
                         </label>
                     }
-                    <MudDataGrid Class="mt-3" T="OrigamiVideoCommentReaction" Items="_videoCommentReaction.Reactions(Entity).OrderByDescending(x => x.DateCreated)">
+                    <MudDataGrid Class="mt-3" T="OrigamiContentCommentReaction" Items="_videoCommentReaction.Reactions(Entity).OrderByDescending(x => x.DateCreated)">
                         <Columns>
                             <TemplateColumn>
                                 <CellTemplate>
@@ -106,7 +106,7 @@
                             </TemplateColumn>
                         </Columns>
                         <PagerContent>
-                            <MudDataGridPager T="OrigamiVideoCommentReaction" />
+                            <MudDataGridPager T="OrigamiContentCommentReaction" />
                         </PagerContent>
                     </MudDataGrid>
                 </div>

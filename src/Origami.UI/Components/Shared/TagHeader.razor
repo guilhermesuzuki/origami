@@ -2,9 +2,6 @@
 @implements IEntityNull<OrigamiTag>
 @implements IHyperlink
 
-@inject IPostTagRepository _postTag
-@inject IVideoTagRepository _videoTag
-
 @if (this.Entity != null)
 {
     <div class="tag-header p-2 text-center border shadow-sm @Class">

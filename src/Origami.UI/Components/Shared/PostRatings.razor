@@ -1,18 +1,19 @@
 ﻿@inherits Basic
+@implements IEntityNull<OrigamiContent>
 
-@inject IPostRatingRepository _postRating
+@inject IContentRatingRepository _contentRating
 @inject ISocialProfileRepository _socialProfile
 
-@if (this.Post != null)
+@if (this.Entity != null)
 {
     <div class="post-ratings @Class">
         <label class="w-100 text-center fs-3">
             <i class="fa-solid fa-star"></i>
-            @Text.Lower("{0} People Rated This Post", _postRating.Ratings(this.Post).Count())
+            @Text.Lower("{0} people rated this", _contentRating.Ratings(this.Entity).Count())
             <i class="fa-solid fa-star"></i>
         </label>
         <div class="row">
-            @foreach (var rating in _postRating.Ratings(this.Post).OrderByDescending(x => x.DateCreated).Take(this.Page * this.PageSize))
+            @foreach (var rating in _contentRating.Ratings(this.Entity).OrderByDescending(x => x.DateCreated).Take(this.Page * this.PageSize))
             {
                 var socialProfile = rating.SocialProfileId != null ? _socialProfile.ReadFromCache().Id(rating.SocialProfileId.Value) : null;
                 <div class="col-12 col-xl-4 text-center mt-3">
@@ -47,12 +48,11 @@
 @code {
     [Parameter] public int Page { get; set; } = 1;
     [Parameter] public int PageSize { get; set; } = 9;
-    [Parameter] public OrigamiPost? Post { get; set; }
-
+    [Parameter] public OrigamiContent? Entity { get; set; }
     [Parameter] public EventCallback<int> OnPageChanged{ get; set; }
 
     private bool _disableLoadMore
     {
-        get => this.Page * this.PageSize >= _postRating.Ratings(this.Post!).Count();
+        get => this.Page * this.PageSize >= _contentRating.Ratings(this.Entity!).Count();
     }
 }

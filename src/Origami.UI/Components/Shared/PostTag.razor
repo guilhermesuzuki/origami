@@ -1,6 +1,7 @@
 ﻿@inherits Basic
 @implements IHyperlink
-@implements IEntityNull<Core.Models.OrigamiPostTag>
+@implements IEntityNull<OrigamiContentTag>
+
 @if (Entity != null)
 {
     <span class="post-tag m-1 @Class d-inline-block">
@@ -11,7 +12,7 @@
 }
 
 @code {
-    [Parameter] public Core.Models.OrigamiPostTag? Entity { get; set; }
+    [Parameter] public OrigamiContentTag? Entity { get; set; }
 
     public string Hyperlink
     {
@@ -19,9 +20,9 @@
         {
             if (Entity != null)
             {
-                var post = this.Super.Posts.ReadFromCache().Id(Entity.PostId)!;
-                var blog = this.Super.Blogs.ReadFromCache().Id(post.BlogId)!;
-                return $"/blogs/{blog.Slug}/tags/{Entity.Slug}/{post.NanoId}#content-start";
+                var content = this.Super.Contents.ReadFromCache().Id(Entity.ContentId)!;
+                var blog = this.Super.Blogs.ReadFromCache().Id(content.BlogId)!;
+                return $"/blogs/{blog.Slug}/tags/{Entity.Slug}/{content.NanoId}#content-start";
             }
             return string.Empty;
         }

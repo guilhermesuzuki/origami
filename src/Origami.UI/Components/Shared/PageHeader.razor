@@ -1,7 +1,6 @@
 ﻿@inherits Basic
 @implements IEntityNull<Core.Models.OrigamiPage>
 @inject NavigationManager _navigationManager
-@inject IPageViewRepository _pageView
 @inject IPageRepository _page
 @inject IUserRepository _user
 
@@ -61,7 +60,7 @@
                     <div class="row">
                         @foreach (var child in this.RelatedPages)
                         {
-                            var childViews = @_pageView.GetViews(child);
+                            var childViews = this.Super.PhysicalPageViews.GetViews(child);
                             <div class="related-page-header-title col-12 col-xxl-4 mh-100 overflow-auto m-auto" @onclick="() => this.GoToPage(child)" @onclick:stopPropagation="true">
                                 <div class="p-2">
                                     <a class="title fw-bold text-uppercase focusable text-center" href="@child.Hyperlink">

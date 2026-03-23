@@ -21,15 +21,12 @@ namespace Origami.UI.FrontEnd.Controllers
         protected readonly IDbContextFactory<OrigamiDbContext> _dbContextFactory;
         protected readonly IHttpContextAccessor _httpContextAccessor;
         protected readonly IMemoryCache _memoryCache;
-        protected readonly IPostCommentReactionRepository _postCommentReactionRepository;
-        protected readonly IPostCommentRepository _postCommentRepository;
-        protected readonly IPostRatingRepository _postRatingRepository;
+        protected readonly IContentCommentReactionRepository _contentCommentReactionRepository;
+        protected readonly IContentCommentRepository _contentCommentRepository;
+        protected readonly IContentRatingRepository _contentRatingRepository;
         protected readonly ISocialProfileDeleteRepository _socialProfileForDeletion;
         protected readonly ISocialProfileRepository _socialProfile;
         protected readonly IUserFacade _userFacade;
-        protected readonly IVideoCommentReactionRepository _videoCommentReactionRepository;
-        protected readonly IVideoCommentRepository _videoCommentRepository;
-        protected readonly IVideoRatingRepository _videoRatingRepository;
         protected readonly Serilog.ILogger _logger;
         protected readonly SocialNetwork _socialNetwork;
 
@@ -39,12 +36,9 @@ namespace Origami.UI.FrontEnd.Controllers
             IUserFacade userFacade,
             IMemoryCache memoryCache,
             IOptions<SocialNetwork> socialNetworkOptions,
-            IPostCommentReactionRepository postCommentReactionRepository,
-            IPostCommentRepository postCommentRepository,
-            IPostRatingRepository postRatingRepository,
-            IVideoCommentReactionRepository videoCommentReactionRepository,
-            IVideoCommentRepository videoCommentRepository,
-            IVideoRatingRepository videoRatingRepository,
+            IContentCommentReactionRepository contentCommentReactionRepository,
+            IContentCommentRepository contentCommentRepository,
+            IContentRatingRepository contentRatingRepository,
             ISocialProfileDeleteRepository facebookUserForDeletionRepository,
             IHttpContextAccessor httpContextAccessor,
             IDbContextFactory<OrigamiDbContext> dbContextFactory
@@ -54,16 +48,13 @@ namespace Origami.UI.FrontEnd.Controllers
             _logger = logger;
             _memoryCache = memoryCache;
             _dbContextFactory = dbContextFactory;
-            _postCommentReactionRepository = postCommentReactionRepository;
-            _postCommentRepository = postCommentRepository;
-            _postRatingRepository = postRatingRepository;
+            _contentCommentReactionRepository = contentCommentReactionRepository;
+            _contentCommentRepository = contentCommentRepository;
+            _contentRatingRepository = contentRatingRepository;
             _socialNetwork = socialNetworkOptions.Value;
             _socialProfile = socialProfile;
             _socialProfileForDeletion = facebookUserForDeletionRepository;
             _userFacade = userFacade;
-            _videoCommentReactionRepository = videoCommentReactionRepository;
-            _videoCommentRepository = videoCommentRepository;
-            _videoRatingRepository = videoRatingRepository;
         }
 
         /// <summary>

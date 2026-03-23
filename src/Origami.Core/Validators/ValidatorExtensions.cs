@@ -16,9 +16,10 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("Author is required"));
         }
 
-        public static IRuleBuilderOptions<T, Guid> BlogId<T>(this IRuleBuilder<T, Guid> ruleBuilder, Text text)
+        public static IRuleBuilderOptions<T, Guid?> BlogId<T>(this IRuleBuilder<T, Guid?> ruleBuilder, Text text)
         {
             return ruleBuilder
+                .NotNull()
                 .NotEmpty()
                 .WithMessage(text.Original("Blog is required"));
         }
@@ -187,7 +188,7 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("NanoId cannot exceed 6 characters"));
         }
 
-        public static IRuleBuilderOptions<T, T> ParentId<T>(this IRuleBuilder<T, T> ruleBuilder, Text text) where T : IId, IParentIdNull<T>
+        public static IRuleBuilderOptions<T, T> ParentId<T>(this IRuleBuilder<T, T> ruleBuilder, Text text) where T : IId, IParentIdNull
         {
             return ruleBuilder
                 .Must(x => x.ParentId == null || x.Id != x.ParentId)

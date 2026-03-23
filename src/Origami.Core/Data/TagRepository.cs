@@ -79,7 +79,7 @@ namespace Origami.Core.Data
             var before = this.ReadFromCache().Id(entity.Id);
             if (before != null)
             {
-                _contentTagRepository.RefreshCache(entity.BlogId, before.Name, entity.Name);
+                _contentTagRepository.RefreshCache(entity.BlogId.GetValueOrDefault(), before.Name, entity.Name);
                 return;
             }
 

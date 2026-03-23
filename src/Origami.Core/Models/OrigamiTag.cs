@@ -11,10 +11,10 @@ namespace Origami.Core.Models
         IId,
         IName,
         INew,
-        IBlogId,
+        IBlogIdNull,
         ISlug
     {
-        private Guid _blogId;
+        private Guid? _blogId;
         private Guid _id = Guid.NewGuid();
         private string _name = string.Empty;
 
@@ -22,7 +22,7 @@ namespace Origami.Core.Models
 
         public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) => { };
 
-        public Guid BlogId
+        public Guid? BlogId
         {
             get => _blogId;
             set => this.Set(ref _blogId, value, Changed);

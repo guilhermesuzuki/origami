@@ -11,7 +11,7 @@ namespace Origami.Core.Models
         IModel,
         IChanged,
         IBlogIdNull,
-        IParentIdNull<OrigamiCategory>,
+        IParentIdNull,
         IName,
         IDescriptionNull,
         IAdditionalInfo,

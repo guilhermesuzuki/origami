@@ -2,7 +2,6 @@
 @implements IBlogId
 @implements IShowFakes
 @inject IPostRepository _post
-@inject IPostViewRepository _postView
 
 @if (MostPopular.Count > 0)
 {
@@ -51,7 +50,7 @@ else if (this.ShowFakes == true)
 
     protected void LoadPosts()
     {
-        this.MostPopular = _post.ReadFromCache()
+        this.MostPopular = this.Super.Contents.ReadFromCache().OfType<OrigamiPost>()
             .NonDeleted()
             .Published()
             .Blog(this.BlogId)

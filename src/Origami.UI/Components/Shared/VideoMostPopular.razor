@@ -2,7 +2,6 @@
 @implements IBlogId
 @implements IShowFakes
 @inject IVideoRepository _video
-@inject IVideoViewRepository _videoView
 
 @if (MostPopular.Count > 0)
 {
@@ -46,7 +45,7 @@ else if (this.ShowFakes == true)
 
     protected void LoadVideos()
     {
-        this.MostPopular = _video.ReadFromCache()
+        this.MostPopular = this.Super.Contents.ReadFromCache().OfType<OrigamiVideo>()
             .NonDeleted()
             .Published()
             .Blog(this.BlogId)

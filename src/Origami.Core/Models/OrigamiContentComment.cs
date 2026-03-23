@@ -8,7 +8,7 @@ namespace Origami.Core.Models
         BaseComment,
         ICommentChanged,
         IContentId,
-        IParentIdNull<OrigamiContentComment>
+        IParentIdNull
     {
         protected Guid? _parentId;
         protected Guid _contentId;

@@ -2,9 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Origami.Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Origami.Core.Data
 {
@@ -28,6 +25,16 @@ namespace Origami.Core.Data
             : base(text, dbContextFactory, memoryCache, wwwRoot)
         {
             _validator = validator;
+        }
+
+        public IEnumerable<OrigamiContentCommentReaction> Reactions(OrigamiContentComment entity)
+        {
+            return ReadFromCache().Where(x => x.CommentId == entity.Id);
+        }
+
+        public IEnumerable<OrigamiContentCommentReaction> ReactionsFromProfile(OrigamiSocialProfile socialProfile)
+        {
+            return ReadFromCache().Where(x => x.SocialProfileId == socialProfile.Id);
         }
 
         public Result<OrigamiContentCommentReaction> SmartCreate(DataOperationContextFrontEnd<OrigamiContentCommentReaction> ctx)
@@ -58,16 +65,6 @@ namespace Origami.Core.Data
             }
 
             return base.SmartPurge(ctx, false);
-        }
-
-        public IEnumerable<OrigamiContentCommentReaction> Reactions(OrigamiContentComment entity)
-        {
-            return ReadFromCache().Where(x => x.CommentId == entity.Id);
-        }
-
-        public IEnumerable<OrigamiContentCommentReaction> ReactionsFromProfile(OrigamiSocialProfile socialProfile)
-        {
-            return ReadFromCache().Where(x => x.SocialProfileId == socialProfile.Id);
         }
     }
 }

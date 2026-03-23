@@ -1,13 +1,10 @@
 ﻿@using System.Text;
 @inherits Basic
-
-@inject IPostCommentRepository _postComment
-@inject IPostCommentReactionRepository _postCommentReaction
 @inject ISocialProfileRepository _socialProfile
 
 @if (Comment != null)
 {
-    var parent = this.Super.PostComments.ReadFromCache().Id(Comment.ParentId);
+    var parent = this.Super.ContentComments.ReadFromCache().Id(Comment.ParentId);
     var socialProfile = this.Super.SocialProfiles.ReadFromCache().Id(Comment.SocialProfileId);
     var replies = this.Super.GetReplies(Comment);
     <a id="@Comment.Id"></a>
@@ -124,7 +121,7 @@
             </div>
             <div class="post-comment-reactions mt-3">
                 <div class="reactions">
-                    @foreach (var reaction in _postCommentReaction.Reactions(Comment).GroupBy(x => x.Reaction))
+                    @foreach (var reaction in this.Super.ContentCommentReactions.Reactions(Comment).GroupBy(x => x.Reaction))
                     {
                         <MudTooltip Text="@WhoReacted(reaction.Key)">
                             <label class="post-comment-reaction @(HasReactionClass(reaction.Key, this.UserFacade.SocialProfile)) me-1 @(this.UserFacade.SocialProfile.New ? null : "cursor-pointer")"
@@ -181,26 +178,26 @@
 @code {
 
     private Guid _emojiPickerId = Guid.NewGuid();
-    private OrigamiPostComment? CommentForUpdating { get; set; }
+    private OrigamiContentComment? CommentForUpdating { get; set; }
     private DotNetObjectReference<PostComment>? objRef;
     private ElementReference elementRef;
 
-    [Parameter] public OrigamiPostComment? Comment { get; set; }
+    [Parameter] public OrigamiContentComment? Comment { get; set; }
 
     /// <summary>
     /// Event triggered when the comment was successfully updated
     /// </summary>
-    [Parameter] public EventCallback<OrigamiPostComment> OnCommentUpdated { get; set; }
+    [Parameter] public EventCallback<OrigamiContentComment> OnCommentUpdated { get; set; }
 
     /// <summary>
     /// Event triggered when the comment was successfully deleted
     /// </summary>
-    [Parameter] public EventCallback<OrigamiPostComment> OnCommentDeleted { get; set; }
+    [Parameter] public EventCallback<OrigamiContentComment> OnCommentDeleted { get; set; }
 
     /// <summary>
     /// Event triggered when the user wants to reply to the comment
     /// </summary>
-    [Parameter] public EventCallback<OrigamiPostComment> OnCommentReply { get; set; }
+    [Parameter] public EventCallback<OrigamiContentComment> OnCommentReply { get; set; }
 
     /// <summary>
     /// Static event triggered when there's an update in a comment, to refresh the your comments section
@@ -232,13 +229,12 @@
         {
             this.Comment = this.Comment ?? new();
 
-            var context = new DataOperationContextFrontEnd<OrigamiPostComment>(
+            var context = new DataOperationContextFrontEnd<OrigamiContentComment>(
                 UserFacade.SocialProfile,
                 DateTime.UtcNow,
                 this.CommentForUpdating);
 
-            this._postComment
-                .SmartSave(context, false)
+            this.Super.ContentComments.SmartSave(context, false)
                 .OnSuccess(() => this.Comment.Version = CommentForUpdating.Version)
                 .OnSuccess(() => this.Comment.Content = CommentForUpdating.Content)
                 .OnSuccess(() => this.OnCommentUpdated.InvokeAsync(this.CommentForUpdating))
@@ -261,13 +257,12 @@
 
             if (yes.GetValueOrDefault() == true)
             {
-                var context = new DataOperationContextFrontEnd<OrigamiPostComment>(
+                var context = new DataOperationContextFrontEnd<OrigamiContentComment>(
                     UserFacade.SocialProfile,
                     DateTime.UtcNow,
                     this.Comment);
 
-                this.UserFacade.Result = this._postComment
-                    .SmartDelete(context)
+                this.UserFacade.Result = this.Super.ContentComments.SmartDelete(context)
                     .OnSuccess(() => this.OnCommentDeleted.InvokeAsync(this.Comment))
                     .OnSuccess(() => this.CommentHasChanged());
             }
@@ -278,9 +273,8 @@
     {
         if (this.Comment != null)
         {
-            var context = new DataOperationContextFrontEnd<OrigamiPostComment>(UserFacade.SocialProfile, DateTime.UtcNow, this.Comment);
-            this._postComment
-                .Pin(context)
+            var context = new DataOperationContextFrontEnd<OrigamiContentComment>(UserFacade.SocialProfile, DateTime.UtcNow, this.Comment);
+            this.Super.ContentComments.Pin(context)     
                 .OnSuccess(async () => await this.OnCommentUpdated.InvokeAsync(this.Comment))
                 .OnSuccess(() => this.CommentHasChanged());
         }
@@ -290,9 +284,8 @@
     {
         if (this.Comment != null)
         {
-            var context = new DataOperationContextFrontEnd<OrigamiPostComment>(UserFacade.SocialProfile, DateTime.UtcNow, this.Comment);
-            this._postComment
-                .Unpin(context)
+            var context = new DataOperationContextFrontEnd<OrigamiContentComment>(UserFacade.SocialProfile, DateTime.UtcNow, this.Comment);
+            this.Super.ContentComments.Unpin(context)
                 .OnSuccess(async () => await this.OnCommentUpdated.InvokeAsync(this.Comment))
                 .OnSuccess(() => this.CommentHasChanged());
         }
@@ -328,7 +321,7 @@
     {
         if (Comment != null)
         {
-            var reactions = this._postCommentReaction.Reactions(Comment)
+            var reactions = this.Super.ContentCommentReactions.Reactions(Comment)
                 .Where(x => x.Reaction == reaction)
                 .Where(x => x.SocialProfileId == socialProfile.Id)
                 .Count();
@@ -347,14 +340,14 @@
     [JSInvokable]
     public void Reaction(string reaction)
     {
-        var reactions = _postCommentReaction.Reactions(Comment!)
+        var reactions = this.Super.ContentCommentReactions.Reactions(Comment!)
             .Where(x => x.SocialProfileId == UserFacade.SocialProfile.Id)
             .Where(x => x.Reaction.Like(reaction))
             .Count();
 
         if (reactions == 0)
         {
-            var postCommentReaction = new Core.Models.OrigamiPostCommentReaction
+            var postCommentReaction = new Core.Models.OrigamiContentCommentReaction
             {
                 Id = Guid.NewGuid(),
                 CommentId = Comment!.Id,
@@ -362,9 +355,9 @@
                 Reaction = reaction,
             };
 
-            var context = new DataOperationContextFrontEnd<OrigamiPostCommentReaction>(UserFacade.SocialProfile, DateTime.UtcNow, postCommentReaction);
+            var context = new DataOperationContextFrontEnd<OrigamiContentCommentReaction>(UserFacade.SocialProfile, DateTime.UtcNow, postCommentReaction);
 
-            _postCommentReaction.SmartCreate(context)
+            this.Super.ContentCommentReactions.SmartCreate(context)
                 .OnSuccess(() => this.CommentHasChanged())
                 .OnSuccess(this.StateHasChanged);
         }
@@ -376,7 +369,7 @@
         {
             if (HasReaction(reaction, socialProfile) == true)
             {
-                var remove = _postCommentReaction.ReadFromCache()
+                var remove = this.Super.ContentCommentReactions.ReadFromCache()
                     .Where(x => x.CommentId == this.Comment!.Id)
                     .Where(x => x.SocialProfileId == socialProfile.Id)
                     .Where(x => x.Reaction == reaction)
@@ -384,13 +377,13 @@
 
                 if (remove != null)
                 {
-                    var context = new DataOperationContextFrontEnd<OrigamiPostCommentReaction>(UserFacade.SocialProfile, DateTime.UtcNow, remove);
-                    _postCommentReaction.SmartPurge(context).OnSuccess(() => this.CommentHasChanged());
+                    var context = new DataOperationContextFrontEnd<OrigamiContentCommentReaction>(UserFacade.SocialProfile, DateTime.UtcNow, remove);
+                    this.Super.ContentCommentReactions.SmartPurge(context).OnSuccess(() => this.CommentHasChanged());
                 }
             }
             else
             {
-                var add = new Core.Models.OrigamiPostCommentReaction
+                var add = new Core.Models.OrigamiContentCommentReaction
                 {
                     Id = Guid.NewGuid(),
                     CommentId = this.Comment!.Id,
@@ -398,15 +391,15 @@
                     Reaction = reaction,
                 };
 
-                var context = new DataOperationContextFrontEnd<OrigamiPostCommentReaction>(UserFacade.SocialProfile, DateTime.UtcNow, add);
-                _postCommentReaction.SmartCreate(context).OnSuccess(() => this.CommentHasChanged());
+                var context = new DataOperationContextFrontEnd<OrigamiContentCommentReaction>(UserFacade.SocialProfile, DateTime.UtcNow, add);
+                this.Super.ContentCommentReactions.SmartCreate(context).OnSuccess(() => this.CommentHasChanged());
             }
         }
     }
 
     private string WhoReacted(string reaction)
     {
-        var reactions = _postCommentReaction.Reactions(Comment!).Where(x => x.Reaction == reaction);
+        var reactions = this.Super.ContentCommentReactions.Reactions(Comment!).Where(x => x.Reaction == reaction);
 
         var result = new StringBuilder(
             this.UserFacade.SocialProfile.New ? Text.Lower("Click to Add this Reaction (Login First)") :

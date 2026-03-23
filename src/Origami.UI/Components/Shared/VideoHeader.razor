@@ -1,29 +1,23 @@
 ﻿@inherits Basic
 @implements IEntityNull<OrigamiVideo>
 @implements IHyperlink
-@inject IVideoTagRepository _videoTag
-@inject IVideoViewRepository _videoView
-@inject IVideoRatingRepository _videoRating
-@inject NavigationManager _navigationManager
-@inject IVideoCommentRepository _videoComment
-@inject IUserRepository _user
 
 @if (this.Entity != null)
 {
     var header = this.Entity.HeaderImage.NoHeader();
     var views = this.Super.PhysicalPageViews.GetViews(Entity);
-    var comments = this.Super.VideoComments.GetComments(Entity);
+    var comments = this.Super.ContentComments.GetComments(Entity);
     <ContentHeaderLite Entity="this.Entity"></ContentHeaderLite>
     <div class="video-header position-relative shadow-sm cursor-pointer @Class" @onclick="() => this.GoToVideo()">
         <div class="video-header-image" style="background-image: url(@header)"></div>
         <div class="video-header-title position-absolute overflow-auto zeroes">
             <div class="p-3">
                 <div class="video-rating-count small" style="margin-bottom: -5px;">
-                    <i class="fa-solid fa-user pe-1"></i>@_videoRating.Ratings(this.Entity).Count()
+                    <i class="fa-solid fa-user pe-1"></i>@this.Super.ContentRatings.Ratings(this.Entity).Count()
                 </div>
                 <div class="video-rating d-inline-flex align-items-center">
                     <span class="d-inline-block language @Entity.Get().LanguageWrittenOn me-1"></span>
-                    <ul class="d-inline-flex align-items-center rating padding-u-5" data-rating="@Math.Round(_videoRating.CalculateRating(this.Entity), 1, MidpointRounding.ToEven)">
+                    <ul class="d-inline-flex align-items-center rating padding-u-5" data-rating="@Math.Round(this.Super.ContentRatings.CalculateRating(this.Entity), 1, MidpointRounding.ToEven)">
                         <li>
                             <div data-rating-level="1"
                                  class="@(UserFacade.SocialProfile.New || HasRated() ? null : "cursor-pointer rateable") rating-star rating-star-1 rating-star-empty"
@@ -154,14 +148,14 @@
     /// <summary>
     /// Event triggered when the user rates the video (or unrates it)
     /// </summary>
-    [Parameter] public EventCallback<OrigamiVideoRating?> OnUserHasRated { get; set; }
+    [Parameter] public EventCallback<OrigamiContentRating?> OnUserHasRated { get; set; }
 
     /// <summary>
     /// Browses to the Video Details
     /// </summary>
     protected void GoToVideo()
     {
-        _navigationManager.NavigateTo($"{Hyperlink}#content-start");
+        NavigationManager.NavigateTo($"{Hyperlink}#content-start");
     }
 
     public string Hyperlink
@@ -192,9 +186,9 @@
         }
     }
 
-    protected OrigamiVideoRating? RatingFromCurrentUser()
+    protected OrigamiContentRating? RatingFromCurrentUser()
     {
-        return _videoRating.Ratings(this.Entity!).FirstOrDefault(x => x.SocialProfileId == UserFacade.SocialProfile.Id);
+        return this.Super.ContentRatings.Ratings(this.Entity!).FirstOrDefault(x => x.SocialProfileId == UserFacade.SocialProfile.Id);
     }
 
     protected bool HasRated()
@@ -206,16 +200,16 @@
     {
         if (HasRated() == false)
         {
-            var rating = new OrigamiVideoRating
+            var rating = new OrigamiContentRating
                 {
                     Id = Guid.NewGuid(),
                     SocialProfileId = UserFacade.SocialProfile.Id,
-                    VideoId = this.Entity!.Id,
+                    ContentId = this.Entity!.Id,
                     Rating = rate,
                 };
 
-            var context = new DataOperationContextFrontEnd<OrigamiVideoRating>(UserFacade.SocialProfile, DateTime.UtcNow, rating);
-            var hub = this._videoRating.SmartCreate(context);
+            var context = new DataOperationContextFrontEnd<OrigamiContentRating>(UserFacade.SocialProfile, DateTime.UtcNow, rating);
+            var hub = this.Super.ContentRatings.SmartCreate(context);
             if (hub.Ok) this.OnUserHasRated.InvokeAsync(rating);
         }
     }
@@ -225,8 +219,8 @@
         var rating = this.RatingFromCurrentUser();
         if (rating != null)
         {
-            var context = new DataOperationContextFrontEnd<OrigamiVideoRating>(UserFacade.SocialProfile, DateTime.UtcNow, rating);
-            var hub = this._videoRating.SmartPurge(context);
+            var context = new DataOperationContextFrontEnd<OrigamiContentRating>(UserFacade.SocialProfile, DateTime.UtcNow, rating);
+            var hub = this.Super.ContentRatings.SmartPurge(context);
             if (hub.Ok) this.OnUserHasRated.InvokeAsync(rating);
         }
     }

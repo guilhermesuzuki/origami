@@ -6,8 +6,6 @@
 @using System.Text;
 @using Microsoft.Extensions.Options;
 
-@inject IPostCommentRepository _postComment
-
 <Root>
     @if (this._post.New == false)
     {
@@ -47,7 +45,7 @@
                 <WhatToSeeNext Class="mt-5" Entity="whatToSeeNextTitle"></WhatToSeeNext>
             </div>
             <div class="post-ratings-frame mt-3 p-4 border shadow-lg">
-                <PostRatings Post="this._post"></PostRatings>
+                <PostRatings Entity="this._post"></PostRatings>
             </div>
             <div class="post-comments-frame mt-3 p-4 border shadow-lg">
                 <label class="w-100 text-center fs-3">
@@ -72,7 +70,7 @@
                                     <Authorized>
                                         @if (NewComment.ParentId != null)
                                         {
-                                            var parent = this.Super.PostComments.ReadFromCache().FirstOrDefault(x => x.Id == NewComment.ParentId);
+                                            var parent = this.Super.ContentComments.ReadFromCache().FirstOrDefault(x => x.Id == NewComment.ParentId);
                                             @if (parent != null)
                                             {
                                                 var socialProfile = this.Super.SocialProfiles.ReadFromCache().Id(parent.SocialProfileId);
@@ -137,7 +135,7 @@
     /// <summary>
     /// For New Comments
     /// </summary>
-    private OrigamiPostComment NewComment = new();
+    private OrigamiContentComment NewComment = new();
 
     /// <summary>
     /// Current Post
@@ -147,7 +145,7 @@
     /// <summary>
     /// Comments for the Post
     /// </summary>
-    public List<OrigamiPostComment> _comments = new();
+    public List<OrigamiContentComment> _comments = new();
 
     private int _currentPage = 1;
     private int _pageSize = 10;
@@ -162,22 +160,22 @@
     {
         base.OnParametersSet();
         this._post = this.Post ?? this.Super.Posts.ReadFromCache().Published().NanoId(NanoId) ?? new();
-        this._comments = this._postComment.AllComments(_post);
-        this.BlogId = this._post.BlogId;
+        this._comments = this.Super.ContentComments.AllComments(_post);
+        this.BlogId = this._post.BlogId.GetValueOrDefault();
     }
 
     private void CreateComment()
     {
         this.NewComment.IsApproved = true;
         this.NewComment.Id = Guid.NewGuid();
-        this.NewComment.PostId = this._post.Id;
+        this.NewComment.ContentId = this._post.Id;
         this.NewComment.DateCreated = DateTime.UtcNow;
         this.NewComment.SocialProfileId = UserFacade.SocialProfile.Id;
 
-        var context = new DataOperationContextFrontEnd<OrigamiPostComment>(UserFacade.SocialProfile, DateTime.UtcNow, this.NewComment);
-        var hub = this._postComment.SmartCreate(context);
+        var context = new DataOperationContextFrontEnd<OrigamiContentComment>(UserFacade.SocialProfile, DateTime.UtcNow, this.NewComment);
+        var hub = this.Super.ContentComments.SmartCreate(context);
 
-        hub.OnSuccess(() => this._comments = this._postComment.AllComments(_post));
+        hub.OnSuccess(() => this._comments = this.Super.ContentComments.AllComments(_post));
 
         this.NewComment = new();
         this.NewComment.Changed += (sender, e) => this.InvokeAsync(this.StateHasChanged);
@@ -190,14 +188,14 @@
         return this.NewComment.Content.Has() == false;
     }
 
-    private void _onCommentUpdated(OrigamiPostComment comment)
+    private void _onCommentUpdated(OrigamiContentComment comment)
     {
-        this._comments = this._postComment.AllComments(_post);
+        this._comments = this.Super.ContentComments.AllComments(_post);
     }
 
-    private void _onCommentDeleted(OrigamiPostComment comment)
+    private void _onCommentDeleted(OrigamiContentComment comment)
     {
-        this._comments = this._postComment.AllComments(_post);
+        this._comments = this.Super.ContentComments.AllComments(_post);
     }
 
     protected override async Task PageViewAsync(bool firstRender)

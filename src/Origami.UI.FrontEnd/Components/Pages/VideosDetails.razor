@@ -81,7 +81,7 @@
                                         <Authorized>
                                             @if (NewComment.ParentId != null)
                                             {
-                                                var parent = this.Super.VideoComments.ReadFromCache().Id(NewComment.ParentId.Value);
+                                                var parent = this.Super.ContentComments.ReadFromCache().Id(NewComment.ParentId.Value);
                                                 @if (parent != null)
                                                 {
                                                     var socialProfile = this.Super.SocialProfiles.ReadFromCache().Id(parent.SocialProfileId);
@@ -116,7 +116,7 @@
                                 else
                                 {
                                     <label class="w-100 text-center mb-3 fs-4">@Text.Lower("{0} comment(s)", _comments.Count)</label>
-                                    <VideoComments Comments="this._comments" PageSize="@this._pageSize" CurrentPage="@_currentPage" OnCommentUpdated="this.OnCommentUpdated" OnCommentDeleted="this.OnCommentDeleted" OnCurrentPageChanged="(page) => this._currentPage = page" OnCommentReply="(comment) => this.NewComment.ParentId = comment.Id"></VideoComments>
+                                    <PostComments Comments="this._comments" PageSize="@this._pageSize" CurrentPage="@_currentPage" OnCommentUpdated="this.OnCommentUpdated" OnCommentDeleted="this.OnCommentDeleted" OnCurrentPageChanged="(page) => this._currentPage = page" OnCommentReply="(comment) => this.NewComment.ParentId = comment.Id"></PostComments>
                                 }
                             </div>
                         </div>
@@ -147,7 +147,7 @@
     /// <summary>
     /// For New Comments
     /// </summary>
-    private OrigamiVideoComment NewComment = new();
+    private OrigamiContentComment NewComment = new();
 
     /// <summary>
     /// Current Video
@@ -157,7 +157,7 @@
     /// <summary>
     /// Comments for the Video
     /// </summary>
-    public List<OrigamiVideoComment> _comments = new();
+    public List<OrigamiContentComment> _comments = new();
 
     private int _currentPage = 1;
     private int _pageSize = 10;
@@ -172,22 +172,22 @@
     {
         base.OnParametersSet();
         this._video = this.Video ?? this.Super.Videos.ReadFromCache().NanoId(NanoId) ?? new();
-        this._comments = this.Super.VideoComments.AllComments(_video);
-        this.BlogId = this._video.BlogId;
+        this._comments = this.Super.ContentComments.AllComments(_video);
+        this.BlogId = this._video.BlogId.GetValueOrDefault();
     }
 
     private void CreateComment()
     {
         this.NewComment.IsApproved = true;
         this.NewComment.Id = Guid.NewGuid();
-        this.NewComment.VideoId = this._video.Id;
+        this.NewComment.ContentId = this._video.Id;
         this.NewComment.DateCreated = DateTime.UtcNow;
         this.NewComment.SocialProfileId = UserFacade.SocialProfile.Id;
 
-        var context = new DataOperationContextFrontEnd<OrigamiVideoComment>(UserFacade.SocialProfile, DateTime.UtcNow, this.NewComment);
-        var hub = this.Super.VideoComments.SmartCreate(context);
+        var context = new DataOperationContextFrontEnd<OrigamiContentComment>(UserFacade.SocialProfile, DateTime.UtcNow, this.NewComment);
+        var hub = this.Super.ContentComments.SmartCreate(context);
 
-        hub.OnSuccess(() => this._comments = this.Super.VideoComments.AllComments(_video));
+        hub.OnSuccess(() => this._comments = this.Super.ContentComments.AllComments(_video));
 
         this.NewComment = new();
         this.NewComment.Changed += (sender, e) => this.InvokeAsync(this.StateHasChanged);
@@ -200,14 +200,14 @@
         return this.NewComment.Content.Has() == false;
     }
 
-    private void OnCommentUpdated(OrigamiVideoComment comment)
+    private void OnCommentUpdated(OrigamiContentComment comment)
     {
-        this._comments = this.Super.VideoComments.AllComments(_video);
+        this._comments = this.Super.ContentComments.AllComments(_video);
     }
 
-    private void OnCommentDeleted(OrigamiVideoComment comment)
+    private void OnCommentDeleted(OrigamiContentComment comment)
     {
-        this._comments = this.Super.VideoComments.AllComments(_video);
+        this._comments = this.Super.ContentComments.AllComments(_video);
     }
 
     protected override async Task PageViewAsync(bool firstRender)
