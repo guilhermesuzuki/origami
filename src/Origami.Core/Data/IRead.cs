@@ -15,19 +15,6 @@ namespace Origami.Core.Data
         IDbContextFactory<OrigamiDbContext> DbContextFactory { get; }
 
         /// <summary>
-        /// Returns an IQueryable instance of <typeparamref name="T"/>
-        /// </summary>
-        /// <returns></returns>
-        IQueryable<T> ReadFromDatabase();
-
-        /// <summary>
-        /// Returns an IQueryable instance of <typeparamref name="X"/>
-        /// </summary>
-        /// <typeparam name="X"></typeparam>
-        /// <returns></returns>
-        IQueryable<X> ReadFromDatabase<X>() where X : class;
-
-        /// <summary>
         /// Retrieves an entity from the database that matches the specified identifier.
         /// </summary>
         /// <param name="id">The identifier of the entity to retrieve. Cannot be null.</param>

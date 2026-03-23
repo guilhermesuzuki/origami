@@ -188,6 +188,15 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("NanoId cannot exceed 6 characters"));
         }
 
+        public static IRuleBuilderOptions<T, string> Note<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
+        {
+            return ruleBuilder
+                .NotEmpty()
+                .WithMessage(text.Original("Note is required"))
+                .MaximumLength(255)
+                .WithMessage(text.Original("Note cannot exceed 255 characters"));
+        }
+
         public static IRuleBuilderOptions<T, T> ParentId<T>(this IRuleBuilder<T, T> ruleBuilder, Text text) where T : IId, IParentIdNull
         {
             return ruleBuilder
@@ -225,6 +234,13 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("Slug cannot exceed 255 characters"));
         }
 
+        public static IRuleBuilderOptions<T, string> Tag<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
+        {
+            return ruleBuilder
+                .MaximumLength(128)
+                .WithMessage(text.Original("Tag cannot exceed 128 characters"));
+        }
+
         public static IRuleBuilderOptions<T, string> Title<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
         {
             return ruleBuilder
@@ -232,15 +248,6 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("Title is required"))
                 .MaximumLength(255)
                 .WithMessage(text.Original("Title cannot exceed 255 characters"));
-        }
-
-        public static IRuleBuilderOptions<T, string> Note<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
-        {
-            return ruleBuilder
-                .NotEmpty()
-                .WithMessage(text.Original("Note is required"))
-                .MaximumLength(255)
-                .WithMessage(text.Original("Note cannot exceed 255 characters"));
         }
 
         public static IRuleBuilderOptions<T, string?> Username<T>(this IRuleBuilder<T, string?> ruleBuilder, Text text)

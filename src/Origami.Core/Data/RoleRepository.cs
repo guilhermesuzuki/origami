@@ -101,7 +101,7 @@ namespace Origami.Core.Data
             return hub;
         }
 
-        public override IQueryable<OrigamiRole> ReadFromDatabase()
+        public virtual IList<OrigamiRole> ReadFromDatabase()
         {
             using (var db = this.DbContextFactory.CreateDbContext())
             {
@@ -120,7 +120,7 @@ namespace Origami.Core.Data
                     match.Each(x => x.SetValue(role, true));
                 }
 
-                return roles.AsQueryable();
+                return roles;
             }
         }
 

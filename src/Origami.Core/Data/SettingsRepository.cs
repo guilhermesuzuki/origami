@@ -66,21 +66,6 @@ public class SettingsRepository :
         return this.ExtractSettings() ?? throw new InvalidOperationException();
     }
 
-    public override IQueryable<OrigamiSettings> ReadFromDatabase()
-    {
-        return new List<OrigamiSettings>(1) { this.ExtractSettings() }.AsQueryable();
-    }
-
-    public override IQueryable<X> ReadFromDatabase<X>()
-    {
-        var x = Activator.CreateInstance<X>();
-        if (x is OrigamiSettings)
-        {
-            return new List<X>(1) { (X)(object)this.ExtractSettings() }.AsQueryable();
-        }
-        return base.ReadFromDatabase<X>();
-    }
-
     public override Result<OrigamiSettings> Update(DataOperationContext<OrigamiSettings> ctx)
     {
         using var db = DbContextFactory.CreateDbContext();
