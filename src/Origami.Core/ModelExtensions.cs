@@ -749,11 +749,11 @@ namespace Origami.Core
         /// <summary>
         /// Generates a unique cache key for storing or retrieving comment counts associated with the specified entity.
         /// </summary>
-        /// <param name="parent">The entity for which the cache key is generated. Must implement <see cref="IId"/>.</param>
+        /// <param name="entity">The entity for which the cache key is generated. Must implement <see cref="IId"/>.</param>
         /// <returns>A string representing the cache key, formatted to include the entity's type and ID.</returns>
-        public static string KeyForCachingComments(this IId parent)
+        public static string KeyForCachingComments(this IId entity)
         {
-            return $"entities-comments-count-{parent.GetType().FullName}[{parent.Id}]";
+            return $"entities-comments-count-{entity.GetType().FullName}[{entity.Id}]";
         }
 
         /// <summary>
@@ -761,9 +761,9 @@ namespace Origami.Core
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public static string KeyForCachingViews(this IId parent)
+        public static string KeyForCachingViews(this IId entity)
         {
-            return $"entities-views-count-{parent.GetType().FullName}[{parent.Id}]";
+            return $"entities-views-count-{entity.GetType().FullName}[{entity.Id}]";
         }
 
         /// <summary>

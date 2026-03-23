@@ -47,15 +47,32 @@ namespace Origami.Core.Data
 
         public long GetViews<T>(T entity) where T : IId
         {
-            using var db = DbContextFactory.CreateDbContext();
+            var x = 0L;
+            var key = entity.KeyForCachingViews();
+            var options = new MemoryCacheEntryOptions() { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(3) };
 
-            var query = from view in db.Set<OrigamiPhysicalPageView>()
-                        where view.Content != null
-                        where view.Content!.Id == entity.Id
-                        where view.Content!.Type == typeof(T).Name
-                        select view;
+            if (this.MemoryCache.TryGetValue(key, out x))
+            {
+                return x;
+            }
 
-            return query.LongCount();
+            try
+            {
+                using var db = DbContextFactory.CreateDbContext();
+
+                var query = from view in db.Set<OrigamiPhysicalPageView>()
+                            where view.Content != null
+                            where view.Content!.Id == entity.Id
+                            where view.Content!.Type == typeof(T).Name
+                            select view;
+
+                x = query.LongCount();
+                return x;
+            }
+            finally
+            {
+                this.MemoryCache.Set(key, x, options);
+            }
         }
 
         public void SetViews(OrigamiPhysicalPage entity, long count) => this.Views(entity, count);
