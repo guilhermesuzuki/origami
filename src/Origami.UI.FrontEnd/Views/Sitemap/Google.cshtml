@@ -18,17 +18,17 @@
 
     var tags = _tag.ReadFromCache().ToList();
 
-    var cookiePolicy = this._super.SpecialPages.ReadFromCache()
-        .Where(x => x.Type.Like("CookiePolicy"));
+    var cookiePolicy = this._super.Contents.ReadFromCache().OfType<OrigamiSpecialPage>()
+        .Where(x => x.SubType.Like("CookiePolicy"));
 
-    var privacyPolicy = this._super.SpecialPages.ReadFromCache()
-        .Where(x => x.Type.Like("PrivacyPolicy"));
+    var privacyPolicy = this._super.Contents.ReadFromCache().OfType<OrigamiSpecialPage>()
+        .Where(x => x.SubType.Like("PrivacyPolicy"));
 
-    var termsAndConditions = this._super.SpecialPages.ReadFromCache()
-        .Where(x => x.Type.Like("TermsAndConditions"));
+    var termsAndConditions = this._super.Contents.ReadFromCache().OfType<OrigamiSpecialPage>()
+        .Where(x => x.SubType.Like("TermsAndConditions"));
 
-    var termsOfService = this._super.SpecialPages.ReadFromCache()
-        .Where(x => x.Type.Like("TermsOfService"));
+    var termsOfService = this._super.Contents.ReadFromCache().OfType<OrigamiSpecialPage>()
+        .Where(x => x.SubType.Like("TermsOfService"));
 }
 
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"

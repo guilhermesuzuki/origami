@@ -185,16 +185,16 @@
 
     private IEnumerable<OrigamiPage> _getPages()
     {
-        return this.Super.Pages.ReadFromCache().NonDeleted().Blog(this.Entity.Id).OrderBy(x => x.Title);
+        return this.Super.Contents.ReadFromCache().OfType<OrigamiPage>().NonDeleted().Blog(this.Entity.Id).OrderBy(x => x.Title);
     }
 
     private IEnumerable<OrigamiPost> _getPosts()
     {
-        return this.Super.Posts.ReadFromCache().NonDeleted().Blog(this.Entity.Id).OrderBy(x => x.Title);
+        return this.Super.Contents.ReadFromCache().OfType<OrigamiPost>().NonDeleted().Blog(this.Entity.Id).OrderBy(x => x.Title);
     }
 
     private IEnumerable<OrigamiVideo> _getVideos()
     {
-        return this.Super.Videos.ReadFromCache().NonDeleted().Blog(this.Entity.Id).OrderBy(x => x.Title);
+        return this.Super.Contents.ReadFromCache().OfType<OrigamiVideo>().NonDeleted().Blog(this.Entity.Id).OrderBy(x => x.Title);
     }
 }

@@ -208,7 +208,7 @@
 
     protected override IEnumerable<OrigamiPage> GetParents()
     {
-        return from x in this.Super.Pages.ReadFromCache()
+        return from x in this.Super.Contents.ReadFromCache().OfType<OrigamiPage>()
                where x.BlogId == this.UserFacade.BlogId
                where x.IsDeleted == false
                where this.Super.IsParentDeleted(x) == false

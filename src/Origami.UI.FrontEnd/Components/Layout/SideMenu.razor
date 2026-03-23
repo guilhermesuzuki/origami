@@ -4,9 +4,9 @@
 @if (this.UserFacade != null)
 {
     var re = this.Super.Resumes.ReadFromCache().Any();
-    var pp = this.Super.Pages.ReadFromCache().PrivacyPolicy();
-    var tc = this.Super.Pages.ReadFromCache().TermsAndConditions();
-    var ts = this.Super.Pages.ReadFromCache().TermsOfService();
+    var pp = this.Super.Contents.ReadFromCache().OfType<OrigamiPage>().PrivacyPolicy();
+    var tc = this.Super.Contents.ReadFromCache().OfType<OrigamiPage>().TermsAndConditions();
+    var ts = this.Super.Contents.ReadFromCache().OfType<OrigamiPage>().TermsOfService();
     <div class="position-relative @Class">
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
             <i class="fa-solid fa-bars fs-2 text-white"></i>

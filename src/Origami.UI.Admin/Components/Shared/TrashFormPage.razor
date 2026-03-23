@@ -1,5 +1,5 @@
 ﻿@inherits Basic
-@implements IEntityNull<Core.Models.OrigamiPage>
+@implements IEntityNull<OrigamiPage>
 
 @if (this.Entity != null)
 {
@@ -7,7 +7,7 @@
         <BasicHeaderNotes Entity="Entity"></BasicHeaderNotes>
         @if (this.Entity.ParentId != null)
         {
-            var parent = this.Super.Pages.ReadFromCache().Id(this.Entity.ParentId.Value);
+            var parent = this.Super.Contents.ReadFromCache().OfType<OrigamiPage>().Id(this.Entity.ParentId.Value);
             <div class="page-parent mt-3">
                 <div class="xx-small">@Text.Lower("Parent")</div>
                 <div class="fw-bold shadow-sm border p-2">
@@ -54,7 +54,7 @@
         }
         @if (this.Entity != null)
         {
-            var children = this.Super.Pages.ReadFromCache().GetChildren(this.Entity).OrderBy(x => x.Title);
+            var children = this.Super.Contents.ReadFromCache().OfType<OrigamiPage>().GetChildren(this.Entity).OrderBy(x => x.Title);
             @if (children.Any() == true)
             {
                 <div class="page-parent mt-3">
@@ -72,5 +72,5 @@
 }
 
 @code {
-    [Parameter] public Core.Models.OrigamiPage? Entity { get; set; }
+    [Parameter] public OrigamiPage? Entity { get; set; }
 }
