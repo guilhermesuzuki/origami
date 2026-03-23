@@ -7,7 +7,7 @@ namespace Origami.UI.Services
 {
     public class MailConnectivityCheckService : BackgroundService
     {
-        protected const int _timerInterval = 1000 * 60 * 5;
+        protected const int _timerInterval = 1000 * 60 * 3;
         protected readonly IAppFacade _appFacade;
         protected readonly IEmailStatusRepository _emailStatus;
         protected readonly ISuperRepository _super;
