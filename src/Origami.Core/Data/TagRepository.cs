@@ -11,6 +11,8 @@ namespace Origami.Core.Data
         RepositoryOuterLayer<OrigamiTag>,
         ITagRepository
     {
+        protected readonly IContentTagRepository _contentTagRepository;
+
         /// <summary>
         /// Default constructor with DI
         /// </summary>
@@ -19,11 +21,12 @@ namespace Origami.Core.Data
         public TagRepository(
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IMemoryCache memoryCache,
+            IContentTagRepository contentTagRepository,
             Text text,
             IWebRootPath wwwRoot)
             : base(text, dbContextFactory, memoryCache, wwwRoot)
         {
-
+            _contentTagRepository = contentTagRepository;
         }
 
         public override string DeletePermission => nameof(OrigamiRole.DeleteTags);
@@ -37,18 +40,13 @@ namespace Origami.Core.Data
 
             using (var dbContext = DbContextFactory.CreateDbContext())
             {
-                //var rows1 = dbContext.PostTags.Include(x => x.Post)
-                //    .Where(x => x.Post!.BlogId == ctx.Entity.BlogId)
-                //    .Where(x => x.Tag == ctx.Entity.Name)
-                //    .ExecuteDelete();
+                var rows1 = from t in dbContext.ContentTags.AsNoTracking()
+                            join c in dbContext.Contents.AsNoTracking() on t.ContentId equals c.Id
+                            where c.BlogId == ctx.Entity.BlogId
+                            where t.Tag == ctx.Entity.Name
+                            select t;
 
-                //var rows2 = dbContext.VideoTags.Include(x => x.Video)
-                //    .Where(x => x.Video!.BlogId == ctx.Entity.BlogId)
-                //    .Where(x => x.Tag == ctx.Entity.Name)
-                //    .ExecuteDelete();
-
-                //hub.RowsAffected += rows1;
-                //hub.RowsAffected += rows2;
+                hub.RowsAffected += rows1.ExecuteDelete();
             }
 
             return hub;
@@ -60,16 +58,13 @@ namespace Origami.Core.Data
             {
                 using (var dbContext = DbContextFactory.CreateDbContext())
                 {
-                    dbContext.PostTags.Include(x => x.Post)
-                        .Where(x => x.Post!.BlogId == ctx.Entity.BlogId)
-                        .Where(x => x.Tag == ctx.EntityBeforeModifications.Name)
-                        .ExecuteUpdate(setters => setters.SetProperty(t => t.Tag, ctx.Entity.Name));
+                    var query = from t in dbContext.ContentTags.AsNoTracking()
+                             join c in dbContext.Contents.AsNoTracking() on t.ContentId equals c.Id
+                             where c.BlogId == ctx.Entity.BlogId
+                             where t.Tag == ctx.EntityBeforeModifications.Name
+                             select t;
 
-                    dbContext.VideoTags.Include(x => x.Video)
-                        .Where(x => x.Video!.BlogId == ctx.Entity.BlogId)
-                        .Where(x => x.Tag == ctx.EntityBeforeModifications.Name)
-                        .ExecuteUpdate(setters => setters.SetProperty(t => t.Tag, ctx.Entity.Name));
-
+                    query.ExecuteUpdate(setters => setters.SetProperty(t => t.Tag, ctx.Entity.Name));
                     dbContext.SaveChanges();
                 }
                 return new(ctx.Entity);
@@ -84,8 +79,7 @@ namespace Origami.Core.Data
             var before = this.ReadFromCache().Id(entity.Id);
             if (before != null)
             {
-                _postTagRepository.RefreshCache(entity.BlogId, before.Name, entity.Name);
-                _videoTagRepository.RefreshCache(entity.BlogId, before.Name, entity.Name);
+                _contentTagRepository.RefreshCache(entity.BlogId, before.Name, entity.Name);
                 return;
             }
 

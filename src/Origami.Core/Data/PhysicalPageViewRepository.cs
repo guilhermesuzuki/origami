@@ -51,6 +51,7 @@ namespace Origami.Core.Data
             var key = entity.KeyForCachingViews();
             var options = new MemoryCacheEntryOptions() { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(3) };
 
+            // already in cache, return it
             if (this.MemoryCache.TryGetValue(key, out x))
             {
                 return x;

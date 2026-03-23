@@ -5,7 +5,7 @@
 {
     var header = this.Entity.Get().HeaderImage.NoHeader();
     var views = this.Super.PhysicalPageViews.GetViews(Entity);
-    var comments = this.Super.PostComments.GetComments(Entity);
+    var comments = this.Super.ContentComments.GetComments(Entity);
     <div class="@Class">
         <ContentHeaderLite Entity="this.Entity"></ContentHeaderLite>
         <div class="post-header-lite position-relative shadow-sm cursor-pointer" @onclick="() => this.GoToPost()">

@@ -12,12 +12,21 @@ namespace Origami.Core.Data
         /// </summary>
         bool MaintenanceLockout { get; }
 
+        IDbContextFactory<OrigamiDbContext> DbContextFactory { get; }
+
         IAppFacade AppFacade { get; }
         IBackupRestoreRepository BackupAndRestores { get; }
         IBlogRepository Blogs { get; }
         ICategoryRepository Categories { get; }
         IConfiguration Configurations { get; }
-        IDbContextFactory<OrigamiDbContext> DbContextFactory { get; }
+        IContentCategoryRepository ContentCategories { get; }
+        IContentCommentReactionRepository ContentCommentReactions { get; }
+        IContentCommentRepository ContentComments { get; }
+        IContentHistoryRepository ContentHistories { get; }
+        IContentRatingRepository ContentRatings { get; }
+        IContentReactionRepository ContentReactions { get; }
+        IContentRepository Contents { get; }
+        IContentTagRepository ContentTags { get; }
         IDirectoryRepository Directories { get; }
         IEmailRepository Emails { get; }
         IFileRepository Files { get; }
@@ -40,24 +49,21 @@ namespace Origami.Core.Data
         IUserBlogRepository UserBlogs { get; }
         IUserContentRepository UserContents { get; }
         IUserPasswordResetRepository UserPasswordResets { get; }
-        IUserRoleRepository UserRoles { get; }
         IUserRepository Users { get; }
+        IUserRoleRepository UserRoles { get; }
         IUserTrashRepository UserTrashes { get; }
         IUserViewRepository UserViews { get; }
         IVideoRepository Videos { get; }
         IWhatToSeeNextRepository WhatToSeeNext { get; }
-
-        IContentCategoryRepository ContentCategories { get; }
-        IContentCommentReactionRepository ContentCommentReactions { get; }
-        IContentCommentRepository ContentComments { get; }
-        IContentHistoryRepository ContentHistories { get; }
-        IContentRatingRepository ContentRatings { get; }
-        IContentReactionRepository ContentReactions { get; }
-        IContentRepository Contents { get; }
-        IContentTagRepository ContentTags { get; }
         
         bool EmptyHome(Guid blogId);
 
+        /// <summary>
+        /// Retrieves the author associated with the specified author identifier.
+        /// </summary>
+        /// <param name="authorId">An object that uniquely identifies the author to retrieve. Cannot be null.</param>
+        /// <returns>An instance of OrigamiUser representing the author associated with the given identifier. Returns null if no
+        /// matching author is found.</returns>
         OrigamiUser GetAuthor(IAuthorId authorId);
 
         /// <summary>
@@ -71,7 +77,7 @@ namespace Origami.Core.Data
         /// </summary>
         /// <param name="blogId"></param>
         /// <returns></returns>
-        IEnumerable<BaseComment> GetComments(Guid blogId);
+        IEnumerable<OrigamiContentComment> GetComments(Guid blogId);
 
         /// <summary>
         /// Gets all published maintenance pages
@@ -113,7 +119,7 @@ namespace Origami.Core.Data
         /// </summary>
         /// <param name="comment"></param>
         /// <returns></returns>
-        IEnumerable<BaseComment> GetReplies(BaseComment comment);
+        IEnumerable<OrigamiContentComment> GetReplies(OrigamiContentComment comment);
 
         /// <summary>
         /// Gets a subscriber by its social profile, when the subscriber is not deleted and verified.
@@ -122,6 +128,12 @@ namespace Origami.Core.Data
         /// <returns></returns>
         OrigamiSubscriber? GetSubscriber(OrigamiSocialProfile socialProfile);
 
+        /// <summary>
+        /// Retrieves a collection of videos associated with the specified tag.
+        /// </summary>
+        /// <param name="tag">The tag used to filter videos. Only videos that are associated with this tag are returned.</param>
+        /// <returns>An enumerable collection of videos that are associated with the specified tag. The collection is empty if no
+        /// videos match the tag.</returns>
         IEnumerable<OrigamiVideo> GetVideos(OrigamiTag tag);
 
         /// <summary>
@@ -132,9 +144,11 @@ namespace Origami.Core.Data
         IEnumerable<OrigamiVideo> GetVideos(OrigamiCategory category);
 
         object? GuessWho(string text);
+
         bool IsParentDeleted(OrigamiCategory category);
-        bool IsParentDeleted(BaseComment comment);
-        bool IsParentDeleted(OrigamiPage page);
+        bool IsParentDeleted(OrigamiContentComment comment);
+        bool IsParentDeleted(OrigamiContent content);
+
         Result RefreshAllRepositories();
         Result RefreshAllSearchIndexes();
         Result RegenerateNanoIds();
