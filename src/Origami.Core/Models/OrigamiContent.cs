@@ -15,9 +15,11 @@ namespace Origami.Core.Models
         ILanguageWrittenOn,
         IHeaderImage,
         IParentIdNull,
-        IType
+        IType,
+        ISubtype
     {
         protected Guid? _parentId;
+        protected string _subtype = string.Empty;
         protected string _type = string.Empty;
 
         /// <summary>
@@ -54,12 +56,17 @@ namespace Origami.Core.Models
             set => this.Set(ref _parentId, value, ContentChanged);
         }
 
+        public string Subtype
+        {
+            get => _subtype;
+            set => this.Set(ref _subtype, value, ContentChanged);
+        }
+
         public string Type
         {
             get => _type;
             set => this.Set(ref _type, value, ContentChanged);
         }
-
         public AdditionalInfo.ForContents Get()
         {
             return AdditionalInfo.To<AdditionalInfo.ForContents>();

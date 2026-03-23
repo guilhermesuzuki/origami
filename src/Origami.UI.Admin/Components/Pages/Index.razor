@@ -48,61 +48,61 @@
                             <ul class="inline-list p-3 border-bottom">
                                 <li>@Text.Original("Published posts")</li>
                                 <li class="text-right" style="width:20px;">
-                                    <span class="">@this.Super.Posts.ReadFromCache().Published(this.UserFacade.BlogId).Count()</span>
+                                    <span class="">@this.Super.GetPosts(this.UserFacade.BlogId).Published().Count()</span>
                                 </li>
                             </ul>
                             <ul class="inline-list p-3 border-bottom">
                                 <li>@Text.Original("Published videos")</li>
                                 <li class="text-right" style="width:20px;">
-                                    <span class="">@this.Super.Videos.ReadFromCache().Published(this.UserFacade.BlogId).Count()</span>
+                                    <span class="">@this.Super.GetVideos(this.UserFacade.BlogId).Published().Count()</span>
                                 </li>
                             </ul>
                             <ul class="inline-list p-3 border-bottom">
                                 <li>@Text.Original("Published pages")</li>
                                 <li class="text-right" style="width:20px;">
-                                    <span class="">@this.Super.Pages.ReadFromCache().Published(this.UserFacade.BlogId).Count()</span>
+                                    <span class="">@this.Super.GetPages(this.UserFacade.BlogId).Published().Count()</span>
                                 </li>
                             </ul>
                             <ul class="inline-list p-3 border-bottom">
                                 <li>@Text.Original("Published special pages")</li>
                                 <li class="text-right" style="width:20px;">
-                                    <span class="">@this.Super.SpecialPages.ReadFromCache().Published().Count()</span>
+                                    <span class="">@this.Super.GetSpecialPages().Published().Count()</span>
                                 </li>
                             </ul>
                             <ul class="inline-list p-3 border-bottom">
                                 <li>@Text.Original("Published special messages")</li>
                                 <li class="text-right" style="width:20px;">
-                                    <span class="">@this.Super.SpecialMessages.ReadFromCache().Published().Count()</span>
+                                    <span class="">@this.Super.GetSpecialMessages().Published().Count()</span>
                                 </li>
                             </ul>
                             <ul class="inline-list p-3 border-bottom">
                                 <li>@Text.Original("Draft posts")</li>
                                 <li class="text-right" style="width:20px;">
-                                    <span class="">@this.DraftPosts().Count()</span>
+                                    <span class="">@this.Super.GetDraftPosts(this.UserFacade.BlogId).Count()</span>
                                 </li>
                             </ul>
                             <ul class="inline-list p-3 border-bottom">
                                 <li>@Text.Original("Draft videos")</li>
                                 <li class="text-right" style="width:20px;">
-                                    <span class="">@this.DraftVideos().Count()</span>
+                                    <span class="">@this.Super.GetDraftVideos(this.UserFacade.BlogId).Count()</span>
                                 </li>
                             </ul>
                             <ul class="inline-list p-3 border-bottom">
                                 <li>@Text.Original("Draft pages")</li>
                                 <li class="text-right" style="width:20px;">
-                                    <span class="">@this.DraftPages().Count()</span>
+                                    <span class="">@this.Super.GetDraftPages(this.UserFacade.BlogId).Count()</span>
                                 </li>
                             </ul>
                             <ul class="inline-list p-3 border-bottom">
                                 <li>@Text.Original("Draft special pages")</li>
                                 <li class="text-right" style="width:20px;">
-                                    <span class="">@this.DraftSpecialPages().Count()</span>
+                                    <span class="">@this.Super.GetDraftSpecialPages().Count()</span>
                                 </li>
                             </ul>
                             <ul class="inline-list p-3 border-bottom">
                                 <li>@Text.Original("Draft special messages")</li>
                                 <li class="text-right" style="width:20px;">
-                                    <span class="">@this.DraftSpecialMessages().Count()</span>
+                                    <span class="">@this.Super.GetDraftSpecialMessages().Count()</span>
                                 </li>
                             </ul>
                             <ul class="inline-list p-3 border-bottom">

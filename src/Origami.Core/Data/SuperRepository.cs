@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using NanoidDotNet;
 using Origami.Core.Models;
 using System.Globalization;
+using System.Reflection.Metadata;
 using System.Transactions;
 
 namespace Origami.Core.Data
@@ -184,6 +185,71 @@ namespace Origami.Core.Data
                    select co;
         }
 
+        /// <summary>
+        /// Draft pages
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<OrigamiPage> GetDraftPages(Guid blog)
+        {
+            return this.Contents.ReadFromCache()
+                .OfType<OrigamiPage>()
+                .Drafts()
+                .Blog(blog)
+                .Where(x => this.IsParentDeleted(x) == false)
+                .OrderByDescending(x => x.DateCreated);
+        }
+
+        /// <summary>
+        /// Draft posts
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<OrigamiPost> GetDraftPosts(Guid blog)
+        {
+            return this.Contents.ReadFromCache()
+                .OfType<OrigamiPost>()
+                .Drafts()
+                .Blog(blog)
+                .OrderByDescending(x => x.DateCreated);
+        }
+
+        /// <summary>
+        /// Draft special messages
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<OrigamiSpecialMessage> GetDraftSpecialMessages()
+        {
+            return this.SpecialMessages.ReadFromCache()
+                .Drafts()
+                .OrderByDescending(x => x.DateCreated)
+                .Take(5);
+        }
+
+        /// <summary>
+        /// Draft special pages
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<OrigamiSpecialPage> GetDraftSpecialPages()
+        {
+            return this.Contents.ReadFromCache()
+                .OfType<OrigamiSpecialPage>()
+                .Drafts()
+                .OrderByDescending(x => x.DateCreated)
+                .Take(5);
+        }
+
+        /// <summary>
+        /// Draft videos
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<OrigamiVideo> GetDraftVideos(Guid blog)
+        {
+            return this.Contents.ReadFromCache()
+                .OfType<OrigamiVideo>()
+                .Drafts()
+                .Blog(blog)
+                .OrderByDescending(x => x.DateCreated);
+        }
+
         public IEnumerable<OrigamiSpecialPage> GetMaintenancePages()
         {
             var pages = from x in Contents.ReadFromCache().OfType<OrigamiSpecialPage>()
@@ -213,6 +279,11 @@ namespace Origami.Core.Data
                    select x;
         }
 
+        public IEnumerable<OrigamiPage> GetPages(Guid blog)
+        {
+            return from p in Contents.ReadFromCache().OfType<OrigamiPage>() where p.BlogId == blog select p;
+        }
+
         public IEnumerable<OrigamiPost> GetPosts(OrigamiTag tag)
         {
             return from a in ContentTags.ReadFromCache()
@@ -228,6 +299,11 @@ namespace Origami.Core.Data
                    join b in Contents.ReadFromCache().OfType<OrigamiPost>() on a.ContentId equals b.Id
                    where a.CategoryId == category.Id
                    select b;
+        }
+
+        public IEnumerable<OrigamiPost> GetPosts(Guid blog)
+        {
+            return from p in Contents.ReadFromCache().OfType<OrigamiPost>() where p.BlogId == blog select p;
         }
 
         public IEnumerable<OrigamiSpecialPage> GetRelatedPages(OrigamiSpecialPage page)
@@ -249,6 +325,16 @@ namespace Origami.Core.Data
                           select x;
 
             return replies;
+        }
+
+        public IEnumerable<OrigamiSpecialMessage> GetSpecialMessages()
+        {
+            return Contents.ReadFromCache().OfType<OrigamiSpecialMessage>();
+        }
+
+        public IEnumerable<OrigamiSpecialPage> GetSpecialPages()
+        {
+            return Contents.ReadFromCache().OfType<OrigamiSpecialPage>();
         }
 
         public OrigamiSubscriber? GetSubscriber(OrigamiSocialProfile socialProfile)
@@ -283,6 +369,11 @@ namespace Origami.Core.Data
                    join b in Contents.ReadFromCache().OfType<OrigamiVideo>() on a.ContentId equals b.Id
                    where a.CategoryId == category.Id
                    select b;
+        }
+
+        public IEnumerable<OrigamiVideo> GetVideos(Guid blog)
+        {
+            return from v in Contents.ReadFromCache().OfType<OrigamiVideo>() where v.BlogId == blog select v;
         }
 
         public object? GuessWho(string text)

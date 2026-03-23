@@ -6,23 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Origami.Core.Models
 {
     [Table("oi_SpecialMessages")]
-    public class OrigamiSpecialMessage :
-        BaseModel,
-        IModel,
-        IChanged,
-        IId,
-        IType,
-        ITitle,
-        IDeleted,
-        IPublished,
-        IDateCreated,
-        IDateModified,
-        IContent,
-        INew,
-        INanoId,
-        IAuthorId,
-        IVersion,
-        IDraft
+    public class OrigamiSpecialMessage : OrigamiContent
     {
         protected Guid _authorId;
         protected string _content = string.Empty;
@@ -38,96 +22,30 @@ namespace Origami.Core.Models
         protected byte[] _version = [];
         protected bool? _isDraft = true;
 
-        public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) => { };
+        public event EventHandler<PropertyChangedEventArgs> OrigamiSpecialMessageChanged = (sender, e) => { };
 
-        public OrigamiSpecialMessage()
+        public OrigamiSpecialMessage() : base()
         {
-            this.NanoId = Nanoid.Generate(Nanoid.Alphabets.LettersAndDigits, 6);
+            this.Type = nameof(OrigamiSpecialMessage);
         }
 
-        /// <summary>
-        /// Author Id (FK)
-        /// </summary>
-        public Guid AuthorId
-        {
-            get => _authorId;
-            set => this.Set(ref _authorId, value, Changed);
-        }
-
-        public virtual string Content
-        {
-            get => _content;
-            set => this.Set(ref _content, value, Changed);
-        }
-
-        public DateTime DateCreated
-        {
-            get => _dateCreated;
-            set => this.Set(ref _dateCreated, value, Changed);
-        }
-
-        public DateTime? DateModified
-        {
-            get => _dateModified;
-            set => this.Set(ref _dateModified, value, Changed);
-        }
-
-        public DateTime? DatePublished
-        {
-            get => _datePublished;
-            set => this.Set(ref _datePublished, value, Changed);
-        }
         public DateOnly EndDate
         {
             get => _endDate;
-            set => this.Set(ref _endDate, value, Changed);
+            set => this.Set(ref _endDate, value, OrigamiSpecialMessageChanged);
         }
-
-        public bool IsDeleted
-        {
-            get => _isDeleted;
-            set => this.Set(ref _isDeleted, value, Changed);
-        }
-
-        public bool? IsDraft
-        {
-            get => _isDraft;
-            set => this.Set(ref _isDraft, value, Changed);
-        }
-
-        public bool IsPublished
-        {
-            get => _isPublished;
-            set => this.Set(ref _isPublished, value, Changed);
-        }
-
-        public bool New => Version.SequenceEqual([]);
 
         public DateOnly StartDate
         {
             get => _startDate;
-            set => this.Set(ref _startDate, value, Changed);
-        }
-
-        [StringLength(255)]
-        public string Title
-        {
-            get => _title;
-            set => this.Set(ref _title, value, Changed);
+            set => this.Set(ref _startDate, value, OrigamiSpecialMessageChanged);
         }
 
         [StringLength(25)]
         public string Type
         {
             get => _type;
-            set => this.Set(ref _type, value, Changed);
-        }
-
-        [Timestamp]
-        public byte[] Version
-        {
-            get => _version;
-            set => this.Set(ref _version, value, Changed);
+            set => this.Set(ref _type, value, OrigamiSpecialMessageChanged);
         }
 
         /// <summary>

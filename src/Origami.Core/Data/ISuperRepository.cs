@@ -95,6 +95,36 @@ namespace Origami.Core.Data
         IEnumerable<OrigamiContentComment> GetComments(Guid blogId);
 
         /// <summary>
+        /// Draft pages
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<OrigamiPage> GetDraftPages(Guid blog);
+
+        /// <summary>
+        /// Draft posts
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<OrigamiPost> GetDraftPosts(Guid blog);
+
+        /// <summary>
+        /// Draft special messages
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<OrigamiSpecialMessage> GetDraftSpecialMessages();
+
+        /// <summary>
+        /// Draft special pages
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<OrigamiSpecialPage> GetDraftSpecialPages();
+
+        /// <summary>
+        /// Draft videos
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<OrigamiVideo> GetDraftVideos(Guid blog);
+
+        /// <summary>
         /// Gets all published maintenance pages
         /// </summary>
         /// <returns></returns>
@@ -105,6 +135,22 @@ namespace Origami.Core.Data
         /// </summary>
         /// <returns>non-deleted and published pages, sorted by title</returns>
         IEnumerable<OrigamiPage> GetPages();
+
+        /// <summary>
+        /// Retrieves all pages associated with the specified blog.
+        /// </summary>
+        /// <param name="blog">The unique identifier of the blog for which to retrieve pages.</param>
+        /// <returns>An enumerable collection of pages belonging to the specified blog. The collection is empty if the blog
+        /// contains no pages.</returns>
+        IEnumerable<OrigamiPage> GetPages(Guid blog);
+
+        /// <summary>
+        /// Retrieves all posts associated with the specified blog.
+        /// </summary>
+        /// <param name="blog">The unique identifier of the blog for which to retrieve posts.</param>
+        /// <returns>An enumerable collection of posts belonging to the specified blog. The collection is empty if the blog
+        /// contains no posts.</returns>
+        IEnumerable<OrigamiPost> GetPosts(Guid blog);
 
         /// <summary>
         /// Retrieves a collection of posts associated with the specified tag.
@@ -137,6 +183,20 @@ namespace Origami.Core.Data
         IEnumerable<OrigamiContentComment> GetReplies(OrigamiContentComment comment);
 
         /// <summary>
+        /// Retrieves a collection of special messages available in the system.
+        /// </summary>
+        /// <returns>An enumerable collection of <see cref="OrigamiSpecialMessage"/> objects representing the special messages.
+        /// The collection will be empty if no special messages are available.</returns>
+        IEnumerable<OrigamiSpecialMessage> GetSpecialMessages();
+
+        /// <summary>
+        /// Retrieves a collection of special pages available in the system.
+        /// </summary>
+        /// <returns>An enumerable collection of <see cref="OrigamiSpecialPage"/> objects representing the special pages. The
+        /// collection will be empty if no special pages are available.</returns>
+        IEnumerable<OrigamiSpecialPage> GetSpecialPages();
+
+        /// <summary>
         /// Gets a subscriber by its social profile, when the subscriber is not deleted and verified.
         /// </summary>
         /// <param name="socialProfile"></param>
@@ -151,6 +211,13 @@ namespace Origami.Core.Data
         /// no tags.</returns>
         IEnumerable<OrigamiContentTag> GetTags(OrigamiContent content);
 
+        /// <summary>
+        /// Retrieves a collection of videos associated with the specified blog.
+        /// </summary>
+        /// <param name="blog">The unique identifier of the blog for which to retrieve videos.</param>
+        /// <returns>An enumerable collection of videos belonging to the specified blog. The collection is empty if the blog
+        /// contains no videos.</returns>
+        IEnumerable<OrigamiVideo> GetVideos(Guid blog);
         /// <summary>
         /// Retrieves a collection of videos associated with the specified tag.
         /// </summary>

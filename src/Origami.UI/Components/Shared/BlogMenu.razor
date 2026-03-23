@@ -251,7 +251,7 @@
     private void LoadPages(string order = "1")
     {
         var list = new List<Core.Models.OrigamiPage>();
-        var items = this.Super.GetPages().Blog(BlogId);
+        var items = this.Super.GetPages(BlogId);
 
         switch (order)
         {
