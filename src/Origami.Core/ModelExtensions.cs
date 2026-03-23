@@ -356,6 +356,7 @@ namespace Origami.Core
 
         /// <summary>
         /// Converts the <paramref name="entity"/> back into an XML in string form
+        /// TODO: rename this method, it's really bad
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="entity"></param>

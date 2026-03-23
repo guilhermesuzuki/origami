@@ -620,6 +620,56 @@ namespace Origami.Core.Models
         }
 
         /// <summary>
+        /// Additional info for Videos
+        /// </summary>
+        [XmlRoot("additionalInfo")]
+        public class ForContents : AdditionalInfo, ILanguageWrittenOn, IHeaderImage, IEmbedIFrame
+        {
+            private const string keyHeader = "header-image";
+
+            /// <summary>
+            /// Default constructor
+            /// </summary>
+            public ForContents() : base()
+            {
+                HeaderMedia = new HeaderMedia();
+                LanguageWrittenOn = Thread.CurrentThread.CurrentUICulture.Name;
+                EmbedIFrame = string.Empty;
+            }
+
+            /// <summary>
+            /// Post Header image
+            /// </summary>
+            [XmlIgnore]
+            public override string HeaderImage
+            {
+                get
+                {
+                    var img = HeaderMedia.Images.FirstOrDefault(x => x.IsSocialMedia && x.Key == keyHeader);
+                    return img != null ? img.Source.NoHeader() : OrigamiConstants.NoHeader;
+                }
+                set
+                {
+                    var img = HeaderMedia.Images.FirstOrDefault(x => x.IsSocialMedia && x.Key == keyHeader) ?? new Image { Key = keyHeader, IsSocialMedia = true, };
+                    img.Source = value;
+                    if (HeaderMedia.Images.Contains(img) == false) HeaderMedia.Images.Add(img);
+                }
+            }
+
+            /// <summary>
+            /// Header media
+            /// </summary>
+            [XmlElement("headerMedia")]
+            public new HeaderMedia HeaderMedia { get; set; }
+
+            [XmlElement("language-written-on", IsNullable = true)]
+            public string LanguageWrittenOn { get; set; }
+
+            [XmlElement("embed-iframe", IsNullable = true)]
+            public string EmbedIFrame { get; set; }
+        }
+
+        /// <summary>
         /// Header media for Additional Info carriers
         /// </summary>
         [Serializable]

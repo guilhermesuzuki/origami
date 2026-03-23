@@ -6,13 +6,12 @@ namespace Origami.Core.Models
 {
     public abstract class BaseContent :
         BaseModel,
-        IModel,
         IChanged,
+        IModel,
         ITitle,
         IDescriptionNull,
         IContent,
         IDateCreated,
-        IDateModified,
         IPublished,
         IAdditionalInfo,
         ISlug,
@@ -20,13 +19,14 @@ namespace Origami.Core.Models
         IAuthorId,
         IHyperlink,
         IDraft,
-        IVersion
+        IVersion,
+        IBlogIdNull
     {
         protected string? _additionalInfo = string.Empty;
         protected Guid _authorId;
+        protected Guid? _blogId;
         protected string _content = string.Empty;
         protected DateTime _dateCreated;
-        protected DateTime? _dateModified;
         protected DateTime? _datePublished;
         protected string? _description = string.Empty;
         protected bool _isCommentEnabled;
@@ -64,6 +64,12 @@ namespace Origami.Core.Models
             set => this.Set(ref _authorId, value, Changed);
         }
 
+        public Guid? BlogId
+        {
+            get => _blogId;
+            set => this.Set(ref _blogId, value, Changed);
+        }
+
         /// <summary>
         /// Content (nvarchar[max])
         /// </summary>
@@ -80,15 +86,6 @@ namespace Origami.Core.Models
         {
             get => _dateCreated;
             set => this.Set(ref _dateCreated, value, Changed);
-        }
-
-        /// <summary>
-        /// Date/Time this Page was Modified
-        /// </summary>
-        public DateTime? DateModified
-        {
-            get => _dateModified;
-            set => this.Set(ref _dateModified, value, Changed);
         }
 
         public DateTime? DatePublished
