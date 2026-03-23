@@ -205,7 +205,7 @@ namespace Origami.UI
             builder.Services.AddSingleton<IValidator<OrigamiCategory>, OrigamiCategoryValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiPage>, OrigamiPageValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiPost>, OrigamiPostValidator>();
-            builder.Services.AddSingleton<IValidator<OrigamiPostComment>, OrigamiPostCommentValidator>();
+            builder.Services.AddSingleton<IValidator<OrigamiPostComment>, OrigamiContentCommentValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiQuickNote>, OrigamiQuickNoteValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiRole>, OrigamiRoleValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiSettings>, OrigamiSettingsValidator>();

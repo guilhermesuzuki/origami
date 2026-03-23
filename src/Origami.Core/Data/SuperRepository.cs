@@ -19,16 +19,9 @@ namespace Origami.Core.Data
             IEmailRepository emailRepository,
             IFileRepository fileRepository,
             IPageRepository pageRepository,
-            IPageViewRepository pageViewRepository,
             IPhysicalPageRepository physicalPageRepository,
             IPhysicalPageViewRepository physicalPageViewRepository,
-            IPostCategoryRepository postCategoryRepository,
-            IPostCommentReactionRepository postCommentReactionRepository,
-            IPostCommentRepository postCommentRepository,
-            IPostRatingRepository postRatingRepository,
             IPostRepository postRepository,
-            IPostTagRepository postTagRepository,
-            IPostViewRepository postViewRepository,
             IQuickNoteRepository quickNoteRepository,
             IResumeRepository resumeRepository,
             IRightRepository rightRepository,
@@ -37,7 +30,6 @@ namespace Origami.Core.Data
             ISocialProfileRepository socialProfileRepository,
             ISpecialMessageRepository specialMessageRepository,
             ISpecialPageRepository specialPageRepository,
-            ISpecialPageViewRepository specialPageViewRepository,
             ISubscriberRepository subscriberRepository,
             ITagRepository tagRepository,
             ITrashRepository trashRepository,
@@ -49,13 +41,7 @@ namespace Origami.Core.Data
             IUserRoleRepository userRoleRepository,
             IUserTrashRepository userTrashRepository,
             IUserViewRepository userViewRepository,
-            IVideoCategoryRepository videoCategoryRepository,
-            IVideoCommentReactionRepository videoCommentReactionRepository,
-            IVideoCommentRepository videoCommentRepository,
-            IVideoRatingRepository videoRatingRepository,
             IVideoRepository videoRepository,
-            IVideoTagRepository videoTagRepository,
-            IVideoViewRepository videoViewRepository,
             IWhatToSeeNextRepository whatToSeeNextRepository,
             IDbContextFactory<OrigamiDbContext> dbContextFactory) : base()
         {
@@ -69,16 +55,9 @@ namespace Origami.Core.Data
             Emails = emailRepository;
             Files = fileRepository;
             Pages = pageRepository;
-            PageViews = pageViewRepository;
             PhysicalPages = physicalPageRepository;
             PhysicalPageViews = physicalPageViewRepository;
-            PostCategories = postCategoryRepository;
-            PostCommentReactions = postCommentReactionRepository;
-            PostComments = postCommentRepository;
-            PostRatings = postRatingRepository;
             Posts = postRepository;
-            PostTags = postTagRepository;
-            PostViews = postViewRepository;
             QuickNotes = quickNoteRepository;
             Resumes = resumeRepository;
             Rights = rightRepository;
@@ -87,7 +66,6 @@ namespace Origami.Core.Data
             SocialProfiles = socialProfileRepository;
             SpecialMessages = specialMessageRepository;
             SpecialPages = specialPageRepository;
-            SpecialPageViews = specialPageViewRepository;
             Subscribers = subscriberRepository;
             Tags = tagRepository;
             Trashes = trashRepository;
@@ -99,13 +77,7 @@ namespace Origami.Core.Data
             Users = userRepository;
             UserTrashes = userTrashRepository;
             UserViews = userViewRepository;
-            VideoCategories = videoCategoryRepository;
-            VideoCommentReactions = videoCommentReactionRepository;
-            VideoComments = videoCommentRepository;
-            VideoRatings = videoRatingRepository;
             Videos = videoRepository;
-            VideoTags = videoTagRepository;
-            VideoViews = videoViewRepository;
             WhatToSeeNext = whatToSeeNextRepository;
         }
         public IAppFacade AppFacade { get; }
@@ -119,16 +91,9 @@ namespace Origami.Core.Data
         public IFileRepository Files { get; }
         public bool MaintenanceLockout => this.GetMaintenancePages().Any();
         public IPageRepository Pages { get; }
-        public IPageViewRepository PageViews { get; }
         public IPhysicalPageRepository PhysicalPages { get; }
         public IPhysicalPageViewRepository PhysicalPageViews { get; }
-        public IPostCategoryRepository PostCategories { get; }
-        public IPostCommentReactionRepository PostCommentReactions { get; }
-        public IPostCommentRepository PostComments { get; }
-        public IPostRatingRepository PostRatings { get; }
         public IPostRepository Posts { get; }
-        public IPostTagRepository PostTags { get; }
-        public IPostViewRepository PostViews { get; }
         public IQuickNoteRepository QuickNotes { get; }
         public IResumeRepository Resumes { get; }
         public IRightRepository Rights { get; }
@@ -137,7 +102,6 @@ namespace Origami.Core.Data
         public ISocialProfileRepository SocialProfiles { get; }
         public ISpecialMessageRepository SpecialMessages { get; }
         public ISpecialPageRepository SpecialPages { get; }
-        public ISpecialPageViewRepository SpecialPageViews { get; }
         public ISubscriberRepository Subscribers { get; }
         public ITagRepository Tags { get; }
         public ITrashRepository Trashes { get; }
@@ -149,13 +113,7 @@ namespace Origami.Core.Data
         public IUserRepository Users { get; }
         public IUserTrashRepository UserTrashes { get; }
         public IUserViewRepository UserViews { get; }
-        public IVideoCategoryRepository VideoCategories { get; }
-        public IVideoCommentReactionRepository VideoCommentReactions { get; }
-        public IVideoCommentRepository VideoComments { get; }
-        public IVideoRatingRepository VideoRatings { get; }
         public IVideoRepository Videos { get; }
-        public IVideoTagRepository VideoTags { get; }
-        public IVideoViewRepository VideoViews { get; }
         public IWhatToSeeNextRepository WhatToSeeNext { get; }
 
         public bool EmptyHome(Guid blogId)

@@ -5,15 +5,7 @@ using System.Globalization;
 
 namespace Origami.Core.Models
 {
-    [Table("oi_SpecialPages")]
-    public class OrigamiSpecialPage :
-        BaseContent,
-        IContentChanged,
-        IId,
-        IAdditionalInfo<AdditionalInfo.ForSitePages>,
-        ILanguageWrittenOn,
-        IHeaderImage,
-        IType
+    public class OrigamiSpecialPage : OrigamiContent
     {
         /// <summary>
         /// Default maintenance page
@@ -27,13 +19,14 @@ namespace Origami.Core.Models
             Type = OrigamiSpecialPageTypes.Maintenance.ToString(),
         };
 
-        protected string _type = OrigamiSpecialPageTypes.CookiePolicy.ToString();
+        protected string _subtype = OrigamiSpecialPageTypes.CookiePolicy.ToString();
 
         /// <summary>
         /// Default constructor
         /// </summary>
         public OrigamiSpecialPage() : base()
         {
+            this.Type = nameof(OrigamiSpecialPage);
             this.LanguageWrittenOn = CultureInfo.DefaultThreadCurrentUICulture?.Name ?? "en-US";
         }
 
@@ -46,45 +39,13 @@ namespace Origami.Core.Models
             Id = id;
         }
 
-        public event EventHandler<PropertyChangedEventArgs> ContentChanged = (sender, e) => { };
-        [NotMapped]
-        public string HeaderImage
-        {
-            get => Get().HeaderImage;
-            set => Set(info => info.HeaderImage = value);
-        }
+        public event EventHandler<PropertyChangedEventArgs> OrigamiSpecialPageChanged = (sender, e) => { };
 
-        [Key]
-        public override Guid Id
+        [StringLength(64)]
+        public string SubType
         {
-            get => _id;
-            set => this.Set(ref _id, value, ContentChanged);
-        }
-
-        /// <summary>
-        /// This is not mapped for Pages (Pages don't have comments)
-        /// </summary>
-        [NotMapped]
-        public override bool IsCommentEnabled
-        {
-            get => _isCommentEnabled;
-            set => this.Set(ref _isCommentEnabled, value, ContentChanged);
-        }
-        /// <summary>
-        /// Language this page was written on
-        /// </summary>
-        [NotMapped]
-        public string LanguageWrittenOn
-        {
-            get => Get().LanguageWrittenOn;
-            set => Set(x => x.LanguageWrittenOn = value);
-        }
-
-        [StringLength(25)]
-        public string Type
-        {
-            get => _type;
-            set => this.Set(ref _type, value, ContentChanged);
+            get => _subtype;
+            set => this.Set(ref _subtype, value, OrigamiSpecialPageChanged);
         }
 
         /// <summary>

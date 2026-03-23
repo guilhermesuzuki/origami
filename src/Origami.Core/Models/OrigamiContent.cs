@@ -6,15 +6,19 @@ using System.Globalization;
 namespace Origami.Core.Models
 {
     [Table("oi_Contents")]
-    public class OrigamiContent :
+    public abstract class OrigamiContent :
         BaseContent,
         IBlogIdNull,
         IContentChanged,
         IId,
         IAdditionalInfo<AdditionalInfo.ForContents>,
         ILanguageWrittenOn,
-        IHeaderImage
+        IHeaderImage,
+        IParentIdNull
     {
+        protected Guid? _parentId;
+        protected string _type = string.Empty;
+
         /// <summary>
         /// Default constructor
         /// </summary>
@@ -34,20 +38,12 @@ namespace Origami.Core.Models
 
         public event EventHandler<PropertyChangedEventArgs> ContentChanged = (sender, e) => { };
 
-        
 
         [NotMapped]
         public string HeaderImage
         {
             get => Get().HeaderImage;
             set => Set(x => x.HeaderImage = value);
-        }
-
-        [Key]
-        public override Guid Id
-        {
-            get => _id;
-            set => this.Set(ref _id, value, ContentChanged);
         }
 
         /// <summary>
@@ -60,19 +56,16 @@ namespace Origami.Core.Models
             set => Set(x => x.LanguageWrittenOn = value);
         }
 
-        /// <summary>
-        /// Fake post
-        /// </summary>
-        public static OrigamiPost GetFake() => new() { Id = Guid.Empty, Title = "Veritas et Sapientia: De Vita et Cogitationibus" };
-
-        /// <summary>
-        /// Fake posts
-        /// </summary>
-        /// <param name="count"></param>
-        /// <returns></returns>
-        public static IEnumerable<OrigamiPost> GetFakes(int count = 6)
+        public Guid? ParentId
         {
-            for (int i = 0; i < count; i++) yield return GetFake();
+            get => _parentId;
+            set => this.Set(ref _parentId, value, ContentChanged);
+        }
+
+        public string Type
+        {
+            get => _type;
+            set => this.Set(ref _type, value, ContentChanged);
         }
 
         public AdditionalInfo.ForContents Get()

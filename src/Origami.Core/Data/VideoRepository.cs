@@ -10,11 +10,6 @@ namespace Origami.Core.Data
         IVideoRepository
     {
         protected readonly IValidator<OrigamiVideo> _validator;
-        protected readonly IVideoCategoryRepository _videoCategoryRepository;
-        protected readonly IVideoCommentRepository _videoCommentRepository;
-        protected readonly IVideoRatingRepository _videoRatingRepository;
-        protected readonly IVideoTagRepository _videoTagRepository;
-        protected readonly IVideoViewRepository _videoViewRepository;
 
         /// <summary>
         /// Default constructor with DI
@@ -25,21 +20,11 @@ namespace Origami.Core.Data
             IValidator<OrigamiVideo> validator,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IMemoryCache memoryCache,
-            IVideoCategoryRepository videoCategoryRepository,
-            IVideoCommentRepository videoCommentRepository,
-            IVideoRatingRepository videoRatingRepository,
-            IVideoTagRepository videoTagRepository,
-            IVideoViewRepository videoViewRepository,
             Text text,
             IWebRootPath wwwRoot)
             : base(text, dbContextFactory, memoryCache, wwwRoot)
         {
             _validator = validator;
-            _videoCategoryRepository = videoCategoryRepository;
-            _videoCommentRepository = videoCommentRepository;
-            _videoRatingRepository = videoRatingRepository;
-            _videoTagRepository = videoTagRepository;
-            _videoViewRepository = videoViewRepository;
         }
 
         public override string CreatePermission => nameof(OrigamiRole.CreateNewVideos);
@@ -66,17 +51,15 @@ namespace Origami.Core.Data
         {
             base.PurgeRelationshipsFromCache(entity);
 
-            var categories = _videoCategoryRepository.ReadFromCache().Where(x => x.VideoId == entity.Id);
-            var comments = _videoCommentRepository.ReadFromCache().Where(x => x.VideoId == entity.Id);
-            var ratings = _videoRatingRepository.ReadFromCache().Where(x => x.VideoId == entity.Id);
-            var tags = _videoTagRepository.ReadFromCache().Where(x => x.VideoId == entity.Id);
+            //var categories = _videoCategoryRepository.ReadFromCache().Where(x => x.VideoId == entity.Id);
+            //var comments = _videoCommentRepository.ReadFromCache().Where(x => x.VideoId == entity.Id);
+            //var ratings = _videoRatingRepository.ReadFromCache().Where(x => x.VideoId == entity.Id);
+            //var tags = _videoTagRepository.ReadFromCache().Where(x => x.VideoId == entity.Id);
 
-
-
-            categories.Each(_videoCategoryRepository.PurgeCache);
-            comments.Each(_videoCommentRepository.PurgeCache);
-            ratings.Each(_videoRatingRepository.PurgeCache);
-            tags.Each(_videoTagRepository.PurgeCache);
+            //categories.Each(_videoCategoryRepository.PurgeCache);
+            //comments.Each(_videoCommentRepository.PurgeCache);
+            //ratings.Each(_videoRatingRepository.PurgeCache);
+            //tags.Each(_videoTagRepository.PurgeCache);
         }
 
         public override Result<OrigamiVideo> PurgeRelationshipsFromDatabase(DataOperationContext<OrigamiVideo> ctx)
@@ -85,17 +68,17 @@ namespace Origami.Core.Data
 
             var hub = base.PurgeRelationshipsFromDatabase(ctx);
 
-            var categories = db.Set<OrigamiVideoCategory>().AsNoTracking().Where(x => x.VideoId == ctx.Entity.Id).WithOnlyIds();
-            var comments = db.Set<OrigamiVideoComment>().AsNoTracking().Where(x => x.VideoId == ctx.Entity.Id).WithOnlyIds();
-            var ratings = db.Set<OrigamiVideoRating>().AsNoTracking().Where(x => x.VideoId == ctx.Entity.Id).WithOnlyIds();
-            var tags = db.Set<OrigamiVideoTag>().AsNoTracking().Where(x => x.VideoId == ctx.Entity.Id).WithOnlyIds();
+            //var categories = db.Set<OrigamiVideoCategory>().AsNoTracking().Where(x => x.VideoId == ctx.Entity.Id).WithOnlyIds();
+            //var comments = db.Set<OrigamiVideoComment>().AsNoTracking().Where(x => x.VideoId == ctx.Entity.Id).WithOnlyIds();
+            //var ratings = db.Set<OrigamiVideoRating>().AsNoTracking().Where(x => x.VideoId == ctx.Entity.Id).WithOnlyIds();
+            //var tags = db.Set<OrigamiVideoTag>().AsNoTracking().Where(x => x.VideoId == ctx.Entity.Id).WithOnlyIds();
 
-            categories.GetContexts(ctx).Call(_videoCategoryRepository.SmartPurge, false).Push(hub);
-            comments.GetContexts(ctx).Call(_videoCommentRepository.SmartPurge, false).Push(hub);
-            ratings.GetContexts(ctx).Call(_videoRatingRepository.SmartPurge, false).Push(hub);
-            tags.GetContexts(ctx).Call(_videoTagRepository.SmartPurge, false).Push(hub);
+            //categories.GetContexts(ctx).Call(_videoCategoryRepository.SmartPurge, false).Push(hub);
+            //comments.GetContexts(ctx).Call(_videoCommentRepository.SmartPurge, false).Push(hub);
+            //ratings.GetContexts(ctx).Call(_videoRatingRepository.SmartPurge, false).Push(hub);
+            //tags.GetContexts(ctx).Call(_videoTagRepository.SmartPurge, false).Push(hub);
 
-            hub.RowsAffected += db.Set<OrigamiVideoView>().AsNoTracking().Where(x => x.VideoId == ctx.Entity.Id).ExecuteDelete();
+            //hub.RowsAffected += db.Set<OrigamiVideoView>().AsNoTracking().Where(x => x.VideoId == ctx.Entity.Id).ExecuteDelete();
 
             return hub;
         }

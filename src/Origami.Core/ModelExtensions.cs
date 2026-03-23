@@ -121,8 +121,8 @@ namespace Origami.Core
         /// <param name="entities"></param>
         /// <param name="blog"></param>
         /// <returns></returns>
-        public static IEnumerable<T> Blog<T>(this IEnumerable<T> entities, Guid blog)
-            where T : IBlogId
+        public static IEnumerable<T> Blog<T>(this IEnumerable<T> entities, Guid? blog)
+            where T : IBlogIdNull
         {
             return entities.Where(x => x.BlogId == blog);
         }

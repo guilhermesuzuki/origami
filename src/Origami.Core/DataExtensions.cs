@@ -80,7 +80,7 @@ namespace Origami.Core
         }
 
         public static IEnumerable<T> Drafts<T>(this IEnumerable<T> entities, Guid blog)
-            where T : IDraft, IBlogId
+            where T : IDraft, IBlogIdNull
         {
             return entities.Blog(blog).Drafts();
         }
@@ -324,7 +324,7 @@ namespace Origami.Core
         /// <param name="blog"></param>
         /// <returns></returns>
         public static IEnumerable<T> Published<T>(this IEnumerable<T> entities, Guid blog)
-            where T : IPublished, IDraft, IBlogId
+            where T : IPublished, IDraft, IBlogIdNull
         {
             return entities.Blog(blog).Published();
         }

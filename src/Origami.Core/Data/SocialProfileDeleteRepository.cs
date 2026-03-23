@@ -9,13 +9,7 @@ namespace Origami.Core.Data
         RepositoryOuterLayer<OrigamiSocialProfileDelete>,
         ISocialProfileDeleteRepository
     {
-        protected readonly IPostCommentReactionRepository _postCommentReactionRepository;
-        protected readonly IPostCommentRepository _postCommentRepository;
-        protected readonly IPostRatingRepository _postRatingRepository;
         protected readonly ISocialProfileRepository _socialProfileRepository;
-        protected readonly IVideoCommentReactionRepository _videoCommentReactionRepository;
-        protected readonly IVideoCommentRepository _videoCommentRepository;
-        protected readonly IVideoRatingRepository _videoRatingRepository;
 
         /// <summary>
         /// Default constructor with DI
@@ -25,24 +19,12 @@ namespace Origami.Core.Data
         public SocialProfileDeleteRepository(
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IMemoryCache memoryCache,
-            IPostCommentReactionRepository postCommentReactionRepository,
-            IPostCommentRepository postCommentRepository,
-            IPostRatingRepository postRatingRepository,
             ISocialProfileRepository socialProfileRepository,
-            IVideoCommentReactionRepository videoCommentReactionRepository,
-            IVideoCommentRepository videoCommentRepository,
-            IVideoRatingRepository videoRatingRepository,
             IWebRootPath wwwRoot,
             Text text)
             : base(text, dbContextFactory, memoryCache, wwwRoot)
         {
             _socialProfileRepository = socialProfileRepository;
-            _postCommentReactionRepository = postCommentReactionRepository;
-            _postCommentRepository = postCommentRepository;
-            _postRatingRepository = postRatingRepository;
-            _videoCommentReactionRepository = videoCommentReactionRepository;
-            _videoCommentRepository = videoCommentRepository;
-            _videoRatingRepository = videoRatingRepository;
         }
 
         public override string CreatePermission => nameof(OrigamiRole.WipeDataOutFromSocialProfiles);

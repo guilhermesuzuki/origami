@@ -10,7 +10,7 @@ namespace Origami.Core.Models
         BaseModel,
         IModel,
         IChanged,
-        IBlogId,
+        IBlogIdNull,
         IParentIdNull<OrigamiCategory>,
         IName,
         IDescriptionNull,
@@ -23,7 +23,7 @@ namespace Origami.Core.Models
         ISlug
     {
         protected string? _additionalInfo = string.Empty;
-        protected Guid _blogId;
+        protected Guid? _blogId;
         protected DateTime _dateCreated;
         protected DateTime? _dateModified;
         protected string? _description = string.Empty;
@@ -48,7 +48,7 @@ namespace Origami.Core.Models
             set => this.Set(ref _additionalInfo, value, Changed);
         }
 
-        public Guid BlogId
+        public Guid? BlogId
         {
             get => _blogId;
             set => this.Set(ref _blogId, value, Changed);

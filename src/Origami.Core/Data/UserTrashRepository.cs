@@ -13,16 +13,9 @@ namespace Origami.Core.Data
         private readonly IDirectoryRepository _directoryRepository;
         private readonly IFileRepository _fileRepository;
         private readonly IPageRepository _pageRepository;
-        private readonly IPageViewRepository _pageViewRepository;
         private readonly IPhysicalPageRepository _physicalPageRepository;
         private readonly IPhysicalPageViewRepository _physicalPageViewRepository;
-        private readonly IPostCategoryRepository _postCategoryRepository;
-        private readonly IPostCommentReactionRepository _postCommentReactionRepository;
-        private readonly IPostCommentRepository _postCommentRepository;
-        private readonly IPostRatingRepository _postRatingRepository;
         private readonly IPostRepository _postRepository;
-        private readonly IPostTagRepository _postTagRepository;
-        private readonly IPostViewRepository _postViewRepository;
         private readonly IQuickNoteRepository _quickNoteRepository;
         private readonly IRoleRepository _roleRepository;
         private readonly ISettingsRepository _blogSettingsRepository;
@@ -36,13 +29,7 @@ namespace Origami.Core.Data
         private readonly IUserRepository _userRepository;
         private readonly IUserRoleRepository _userRoleRepository;
         private readonly IUserViewRepository _userViewRepository;
-        private readonly IVideoCategoryRepository _videoCategoryRepository;
-        private readonly IVideoCommentReactionRepository _videoCommentReactionRepository;
-        private readonly IVideoCommentRepository _videoCommentRepository;
-        private readonly IVideoRatingRepository _videoRatingRepository;
         private readonly IVideoRepository _videoRepository;
-        private readonly IVideoTagRepository _videoTagRepository;
-        private readonly IVideoViewRepository _videoViewRepository;
         private readonly IWhatToSeeNextRepository _whatToSeeNextRepository;
 
         public UserTrashRepository(
@@ -53,16 +40,9 @@ namespace Origami.Core.Data
             IDirectoryRepository directoryRepository,
             IFileRepository fileRepository,
             IPageRepository pageRepository,
-            IPageViewRepository pageViewRepository,
             IPhysicalPageRepository physicalPageRepository,
             IPhysicalPageViewRepository physicalPageViewRepository,
-            IPostCategoryRepository postCategoryRepository,
-            IPostCommentReactionRepository postCommentReactionRepository,
-            IPostCommentRepository postCommentRepository,
-            IPostRatingRepository postRatingRepository,
             IPostRepository postRepository,
-            IPostTagRepository postTagRepository,
-            IPostViewRepository postViewRepository,
             IQuickNoteRepository quickNoteRepository,
             IRoleRepository roleRepository,
             ISettingsRepository blogSettingsRepository,
@@ -76,13 +56,7 @@ namespace Origami.Core.Data
             IUserRepository userRepository,
             IUserRoleRepository userRoleRepository,
             IUserViewRepository userViewRepository,
-            IVideoCategoryRepository videoCategoryRepository,
-            IVideoCommentReactionRepository videoCommentReactionRepository,
-            IVideoCommentRepository videoCommentRepository,
-            IVideoRatingRepository videoRatingRepository,
             IVideoRepository videoRepository,
-            IVideoTagRepository videoTagRepository,
-            IVideoViewRepository videoViewRepository,
             IWhatToSeeNextRepository whatToSeeNextRepository,
             Text text,
             IWebRootPath wwwRoot)
@@ -94,16 +68,9 @@ namespace Origami.Core.Data
             _directoryRepository = directoryRepository;
             _fileRepository = fileRepository;
             _pageRepository = pageRepository;
-            _pageViewRepository = pageViewRepository;
             _physicalPageRepository = physicalPageRepository;
             _physicalPageViewRepository = physicalPageViewRepository;
-            _postCategoryRepository = postCategoryRepository;
-            _postCommentReactionRepository = postCommentReactionRepository;
-            _postCommentRepository = postCommentRepository;
-            _postRatingRepository = postRatingRepository;
             _postRepository = postRepository;
-            _postTagRepository = postTagRepository;
-            _postViewRepository = postViewRepository;
             _quickNoteRepository = quickNoteRepository;
             _roleRepository = roleRepository;
             _socialProfileRepository = socialProfileRepository;
@@ -116,13 +83,7 @@ namespace Origami.Core.Data
             _userRepository = userRepository;
             _userRoleRepository = userRoleRepository;
             _userViewRepository = userViewRepository;
-            _videoCategoryRepository = videoCategoryRepository;
-            _videoCommentReactionRepository = videoCommentReactionRepository;
-            _videoCommentRepository = videoCommentRepository;
-            _videoRatingRepository = videoRatingRepository;
             _videoRepository = videoRepository;
-            _videoTagRepository = videoTagRepository;
-            _videoViewRepository = videoViewRepository;
             _whatToSeeNextRepository = whatToSeeNextRepository;
         }
 
@@ -163,16 +124,6 @@ namespace Origami.Core.Data
             if (ctx.Entity.Type.Like("Video") == true)
             {
                 return _purge(_videoRepository, ctx);
-            }
-
-            if (ctx.Entity.Type.Like("PostComment") == true)
-            {
-                return _purge(_postCommentRepository, ctx);
-            }
-
-            if (ctx.Entity.Type.Like("VideoComment") == true)
-            {
-                return _purge(_videoCommentRepository, ctx);
             }
 
             if (ctx.Entity.Type.Like("Category") == true)
@@ -228,16 +179,6 @@ namespace Origami.Core.Data
             if (ctx.Entity.Type.Like("Video") == true)
             {
                 return _restore(_videoRepository, ctx);
-            }
-
-            if (ctx.Entity.Type.Like("Post") == true)
-            {
-                return _restore(_postCommentRepository, ctx);
-            }
-
-            if (ctx.Entity.Type.Like("VideoComment") == true)
-            {
-                return _restore(_videoCommentRepository, ctx);
             }
 
             if (ctx.Entity.Type.Like("Category") == true)

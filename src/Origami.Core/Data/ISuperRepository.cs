@@ -24,16 +24,9 @@ namespace Origami.Core.Data
         bool MaintenanceLockout { get; }
 
         IPageRepository Pages { get; }
-        IPageViewRepository PageViews { get; }
         IPhysicalPageRepository PhysicalPages { get; }
         IPhysicalPageViewRepository PhysicalPageViews { get; }
-        IPostCategoryRepository PostCategories { get; }
-        IPostCommentReactionRepository PostCommentReactions { get; }
-        IPostCommentRepository PostComments { get; }
-        IPostRatingRepository PostRatings { get; }
         IPostRepository Posts { get; }
-        IPostTagRepository PostTags { get; }
-        IPostViewRepository PostViews { get; }
         IQuickNoteRepository QuickNotes { get; }
         IResumeRepository Resumes { get; }
         IRightRepository Rights { get; }
@@ -42,7 +35,6 @@ namespace Origami.Core.Data
         ISocialProfileRepository SocialProfiles { get; }
         ISpecialMessageRepository SpecialMessages { get; }
         ISpecialPageRepository SpecialPages { get; }
-        ISpecialPageViewRepository SpecialPageViews { get; }
         ISubscriberRepository Subscribers { get; }
         ITagRepository Tags { get; }
         ITrashRepository Trashes { get; }
@@ -54,13 +46,7 @@ namespace Origami.Core.Data
         IUserRepository Users { get; }
         IUserTrashRepository UserTrashes { get; }
         IUserViewRepository UserViews { get; }
-        IVideoCategoryRepository VideoCategories { get; }
-        IVideoCommentReactionRepository VideoCommentReactions { get; }
-        IVideoCommentRepository VideoComments { get; }
-        IVideoRatingRepository VideoRatings { get; }
         IVideoRepository Videos { get; }
-        IVideoTagRepository VideoTags { get; }
-        IVideoViewRepository VideoViews { get; }
         IWhatToSeeNextRepository WhatToSeeNext { get; }
 
         bool EmptyHome(Guid blogId);
@@ -123,9 +109,9 @@ namespace Origami.Core.Data
         /// <param name="socialProfile"></param>
         /// <returns></returns>
         OrigamiSubscriber? GetSubscriber(OrigamiSocialProfile socialProfile);
-        IEnumerable<OrigamiPostTag> GetTags(OrigamiPost post);
-        IEnumerable<OrigamiVideoTag> GetTags(OrigamiVideo video);
+
         IEnumerable<OrigamiVideo> GetVideos(OrigamiTag tag);
+
         /// <summary>
         /// Returns all Videos associated with a category
         /// </summary>

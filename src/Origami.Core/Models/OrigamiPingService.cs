@@ -8,13 +8,11 @@ namespace Origami.Core.Models
     public class OrigamiPingService :
         IChanged,
         IId,
-        IFKBlog
+        IBlogIdNull
     {
         private Guid _id = Guid.NewGuid();
-        private Guid _blogId;
+        private Guid? _blogId;
         private string _link = string.Empty;
-
-        private OrigamiBlog? _blog;
 
         /// <summary>
         /// Default constructor
@@ -33,17 +31,10 @@ namespace Origami.Core.Models
             set { this.Set(ref _id, value, Changed); }
         }
 
-        public Guid BlogId
+        public Guid? BlogId
         {
             get { return _blogId; }
             set { this.Set(ref _blogId, value, Changed); }
-        }
-
-        [ForeignKey(nameof(BlogId))]
-        public OrigamiBlog? Blog
-        {
-            get { return _blog; }
-            set { this.Set(ref _blog, value, Changed); }
         }
 
         [StringLength(255)]
