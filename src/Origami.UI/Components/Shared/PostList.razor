@@ -76,7 +76,7 @@ else if (this.ShowFakes == true)
 
     private bool _disableLoadMore
     {
-        get => _postRepository.ReadFromCache()
+        get => this.Super.Contents.ReadFromCache().OfType<OrigamiPost>()
             .NonDeleted()
             .Published()
             .Blog(this.BlogId)
@@ -88,8 +88,7 @@ else if (this.ShowFakes == true)
     /// </summary>
     protected void LoadPosts()
     {
-        var posts = _postRepository
-            .ReadFromCache()
+        var posts = this.Super.Contents.ReadFromCache().OfType<OrigamiPost>()
             .NonDeleted()
             .Published()
             .Blog(this.BlogId);

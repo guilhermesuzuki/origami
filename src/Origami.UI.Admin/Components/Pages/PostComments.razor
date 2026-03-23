@@ -62,7 +62,7 @@
                             <TemplateColumn Title="@Text.Upper("Post")" CellClass="col-4">
                                 <CellTemplate>
                                     @{
-                                        var post = _post.ReadFromCache().Id(context.Item.ContentId);
+                                        var post = this.Super.Contents.ReadFromCache().OfType<OrigamiPost>().Id(context.Item.ContentId);
                                     }
                                     <PostHeaderLite2 Entity="post"></PostHeaderLite2>
                                 </CellTemplate>

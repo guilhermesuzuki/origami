@@ -59,7 +59,7 @@
                             <TemplateColumn Title="@Text.Upper("Video")" CellClass="col-4">
                                 <CellTemplate>
                                     @{
-                                        var video = _video.ReadFromCache().Id(context.Item.ContentId);
+                                        var video = this.Super.Contents.ReadFromCache().OfType<OrigamiVideo>().Id(context.Item.ContentId);
                                         <VideoHeaderLite2 Entity="video"></VideoHeaderLite2>
                                     }
                                 </CellTemplate>

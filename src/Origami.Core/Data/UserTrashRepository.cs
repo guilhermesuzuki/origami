@@ -31,12 +31,14 @@ namespace Origami.Core.Data
         private readonly IUserViewRepository _userViewRepository;
         private readonly IVideoRepository _videoRepository;
         private readonly IWhatToSeeNextRepository _whatToSeeNextRepository;
+        private readonly IContentRepository _contentRepository;
 
         public UserTrashRepository(
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IMemoryCache memoryCache,
             IBlogRepository blogRepository,
             ICategoryRepository categoryRepository,
+            IContentRepository contentRepository,
             IDirectoryRepository directoryRepository,
             IFileRepository fileRepository,
             IPageRepository pageRepository,
@@ -65,6 +67,7 @@ namespace Origami.Core.Data
             _blogRepository = blogRepository;
             _blogSettingsRepository = blogSettingsRepository;
             _categoryRepository = categoryRepository;
+            _contentRepository = contentRepository;
             _directoryRepository = directoryRepository;
             _fileRepository = fileRepository;
             _pageRepository = pageRepository;
@@ -113,17 +116,17 @@ namespace Origami.Core.Data
 
             if (ctx.Entity.Type.Like("Page") == true)
             {
-                return _purge(_pageRepository, ctx);
+                return _purge(_contentRepository, ctx);
             }
 
             if (ctx.Entity.Type.Like("Post") == true)
             {
-                return _purge(_postRepository, ctx);
+                return _purge(_contentRepository, ctx);
             }
 
             if (ctx.Entity.Type.Like("Video") == true)
             {
-                return _purge(_videoRepository, ctx);
+                return _purge(_contentRepository, ctx);
             }
 
             if (ctx.Entity.Type.Like("Category") == true)
@@ -148,7 +151,7 @@ namespace Origami.Core.Data
 
             if (ctx.Entity.Type.Like("SpecialPage") == true)
             {
-                return _purge(_specialPageRepository, ctx);
+                return _purge(_contentRepository, ctx);
             }
 
             if (ctx.Entity.Type.Like("SpecialMessage") == true)
@@ -168,17 +171,17 @@ namespace Origami.Core.Data
 
             if (ctx.Entity.Type.Like("Page") == true)
             {
-                return _restore(_pageRepository, ctx);
+                return _restore(_contentRepository, ctx);
             }
 
             if (ctx.Entity.Type.Like("Post") == true)
             {
-                return _restore(_postRepository, ctx);
+                return _restore(_contentRepository, ctx);
             }
 
             if (ctx.Entity.Type.Like("Video") == true)
             {
-                return _restore(_videoRepository, ctx);
+                return _restore(_contentRepository, ctx);
             }
 
             if (ctx.Entity.Type.Like("Category") == true)
@@ -203,7 +206,7 @@ namespace Origami.Core.Data
 
             if (ctx.Entity.Type.Like("SpecialPage") == true)
             {
-                return _restore(_specialPageRepository, ctx);
+                return _restore(_contentRepository, ctx);
             }
 
             if (ctx.Entity.Type.Like("SpecialMessage") == true)
@@ -215,20 +218,20 @@ namespace Origami.Core.Data
         }
 
         private Result<OrigamiUserTrash> _purge<T>(IRepository<T> repo, DataOperationContext<OrigamiUserTrash> trash)
-            where T : class, IId, new()
+            where T : class, IId
         {
             var hub = new Result<OrigamiUserTrash>(trash.Entity);
             var entity = repo.ReadFromDatabase(trash.Entity);
-            var ctx = new DataOperationContext<T>(trash.User, trash.DateTime, entity ?? new());
+            var ctx = new DataOperationContext<T>(trash.User, trash.DateTime, entity ?? Activator.CreateInstance<T>());
             return repo.SmartPurge(ctx, true).Push(hub);
         }
 
         private Result<OrigamiUserTrash> _restore<T>(IRepository<T> repo, DataOperationContext<OrigamiUserTrash> trash)
-            where T : class, IId, new()
+            where T : class, IId
         {
             var hub = new Result<OrigamiUserTrash>(trash.Entity);
             var entity = repo.ReadFromDatabase(trash.Entity);
-            var ctx = new DataOperationContext<T>(trash.User, trash.DateTime, entity ?? new());
+            var ctx = new DataOperationContext<T>(trash.User, trash.DateTime, entity ?? Activator.CreateInstance<T>());
             if (entity != null)
             {
                 return repo.SmartRestore(ctx, true).Push(hub);

@@ -12,19 +12,9 @@ namespace Origami.Core.Models
         /// </summary>
         public OrigamiPost() : base()
         {
-            this.LanguageWrittenOn = CultureInfo.DefaultThreadCurrentUICulture?.Name ?? "en-US";
         }
 
-        /// <summary>
-        /// Id constructor
-        /// </summary>
-        /// <param name="id"></param>
-        public OrigamiPost(Guid id) : this()
-        {
-            Id = id;
-        }
-
-        public event EventHandler<PropertyChangedEventArgs> OrigamiPostChanged = (sender, e) => { };
+        public event EventHandler<PropertyChangedEventArgs> OrigamiPostChanged = delegate { };
 
         /// <summary>
         /// Fake post

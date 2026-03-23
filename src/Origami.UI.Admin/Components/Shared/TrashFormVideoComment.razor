@@ -12,7 +12,7 @@
     }
     else
     {
-        var video = this.Super.Videos.ReadFromCache().Id(Entity.ContentId);
+        var video = this.Super.Contents.ReadFromCache().OfType<OrigamiVideo>().Id(Entity.ContentId);
         var socialProfile = this.Super.SocialProfiles.ReadFromCache().Id(Entity.SocialProfileId);
 
         <div class="row">

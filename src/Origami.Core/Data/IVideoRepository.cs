@@ -2,9 +2,7 @@
 
 namespace Origami.Core.Data
 {
-    public interface IVideoRepository :
-        IRepository<OrigamiVideo>,
-        IPublish<OrigamiVideo>
+    public interface IVideoRepository : IPublish<OrigamiVideo>
     {
 
     }

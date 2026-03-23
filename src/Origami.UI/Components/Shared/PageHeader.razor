@@ -1,5 +1,5 @@
 ﻿@inherits Basic
-@implements IEntityNull<Core.Models.OrigamiPage>
+@implements IEntityNull<OrigamiPage>
 @inject NavigationManager _navigationManager
 @inject IPageRepository _page
 @inject IUserRepository _user
@@ -108,13 +108,13 @@
     private bool _showHeaderImage = false;
     public override Guid Id { get; set; } = Guid.NewGuid();
 
-    [Parameter] public Core.Models.OrigamiPage? Entity { get; set; }
+    [Parameter] public OrigamiPage? Entity { get; set; }
     [Parameter] public bool ShowRelatedPages { get; set; } = true;
 
     /// <summary>
     /// Children pages
     /// </summary>
-    protected List<Core.Models.OrigamiPage> RelatedPages { get; set; } = new();
+    protected List<OrigamiPage> RelatedPages { get; set; } = new();
 
     /// <summary>
     /// Browses to the page details
@@ -139,8 +139,8 @@
     {
         if (this.Entity == null) return;
         this.RelatedPages = new();
-        this.RelatedPages.AddRange(this.Super.Pages.ReadFromCache().Published().Where(x => x.Id == this.Entity.ParentId));
-        this.RelatedPages.AddRange(this.Super.Pages.ReadFromCache().Published().Where(x => x.ParentId == this.Entity.Id));
+        this.RelatedPages.AddRange(this.Super.Contents.ReadFromCache().OfType<OrigamiPage>().Published().Where(x => x.Id == this.Entity.ParentId));
+        this.RelatedPages.AddRange(this.Super.Contents.ReadFromCache().OfType<OrigamiPage>().Published().Where(x => x.ParentId == this.Entity.Id));
     }
 
     protected override void OnParametersSet()

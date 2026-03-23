@@ -14,7 +14,8 @@ namespace Origami.Core.Models
         IAdditionalInfo<AdditionalInfo.ForContents>,
         ILanguageWrittenOn,
         IHeaderImage,
-        IParentIdNull
+        IParentIdNull,
+        IType
     {
         protected Guid? _parentId;
         protected string _type = string.Empty;
@@ -27,16 +28,7 @@ namespace Origami.Core.Models
             this.LanguageWrittenOn = CultureInfo.DefaultThreadCurrentUICulture?.Name ?? "en-US";
         }
 
-        /// <summary>
-        /// Id constructor
-        /// </summary>
-        /// <param name="id"></param>
-        public OrigamiContent(Guid id) : this()
-        {
-            Id = id;
-        }
-
-        public event EventHandler<PropertyChangedEventArgs> ContentChanged = (sender, e) => { };
+        public event EventHandler<PropertyChangedEventArgs> ContentChanged = delegate { };
 
 
         [NotMapped]

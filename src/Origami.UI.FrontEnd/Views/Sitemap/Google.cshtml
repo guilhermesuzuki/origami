@@ -44,7 +44,7 @@
         }
     </url>
 
-    @foreach (var post in _post.ReadFromCache().Published().OrderBy(x => x.Title))
+    @foreach (var post in _super.Contents.ReadFromCache().OfType<OrigamiPost>().Published().OrderBy(x => x.Title))
     {
         var loc = $"{oi}{post.Hyperlink}";
         var header = $"{oi}{post.HeaderImage}";
@@ -60,7 +60,7 @@
         </url>
     }
 
-    @foreach (var video in _video.ReadFromCache().Published().OrderBy(x => x.Title))
+    @foreach (var video in _super.Contents.ReadFromCache().OfType<OrigamiVideo>().Published().OrderBy(x => x.Title))
     {
         var loc = $"{oi}{video.Hyperlink}";
         var vid = $"{oi}{video.MediaFile.WebPath}";

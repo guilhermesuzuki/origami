@@ -157,7 +157,7 @@
                                         @if (context.Item is OrigamiContentCommentReaction postReaction)
                                         {
                                             var comment = _contentComment.ReadFromCache().Id(postReaction.CommentId);
-                                            var post = _post.ReadFromCache().Id(comment!.ContentId);
+                                            var post = this.Super.Contents.ReadFromCache().Id(comment!.ContentId);
                                             <div class="">
                                                 <span class="fw-bold">@Text.Lower("Reacted {0} To:", postReaction.Reaction)</span>
                                                 <PostHeaderLite Entity="post"></PostHeaderLite>
@@ -166,7 +166,7 @@
                                         }
                                         @if (context.Item is OrigamiContentComment postComment)
                                         {
-                                            var post = _post.ReadFromCache().Id(postComment.ContentId);
+                                            var post = this.Super.Contents.ReadFromCache().Id(postComment.ContentId);
                                             <div class="">
                                                 <span class="fw-bold">@Text.Lower("Commented On Post:")</span>
                                                 <PostHeaderLite Entity="post"></PostHeaderLite>
@@ -175,7 +175,7 @@
                                         }
                                         @if (context.Item is OrigamiContentRating postRating)
                                         {
-                                            var post = _post.ReadFromCache().Id(postRating.ContentId);
+                                            var post = this.Super.Contents.ReadFromCache().Id(postRating.ContentId);
                                             <div class="">
                                                 <span class="fw-bold">@Text.Lower("Rated {0} On:", postRating.Rating)</span>
                                                 <PostHeaderLite Entity="post"></PostHeaderLite>

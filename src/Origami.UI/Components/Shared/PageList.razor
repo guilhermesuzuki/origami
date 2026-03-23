@@ -72,8 +72,7 @@ else if (this.ShowFakes == true)
 
     private bool _disableLoadMore
     {
-        get => _super.Pages
-            .ReadFromCache()
+        get => _super.Contents.ReadFromCache().OfType<Core.Models.OrigamiPage>()
             .NonDeleted()
             .Published()
             .Blog(this.BlogId)
@@ -85,8 +84,7 @@ else if (this.ShowFakes == true)
     /// </summary>
     protected void LoadPages()
     {
-        var pages = _super.Pages
-            .ReadFromCache()
+        var pages = _super.Contents.ReadFromCache().OfType<Core.Models.OrigamiPage>()
             .NonDeleted()
             .Published()
             .Blog(this.BlogId);

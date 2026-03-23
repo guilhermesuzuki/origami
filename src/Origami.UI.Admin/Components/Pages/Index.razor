@@ -305,22 +305,22 @@
                                 }
                                 else if (context.Item.Type.Like("PageView") == true)
                                 {
-                                    var page = this.Super.Pages.ReadFromCache().Id(context.Item.Id);
+                                    var page = this.Super.Contents.ReadFromCache().OfType<OrigamiPage>().Id(context.Item.Id);
                                     <PageHeaderLite2 Entity="page"></PageHeaderLite2>
                                 }
                                 else if (context.Item.Type.Like("PostView") == true)
                                 {
-                                    var post = this.Super.Posts.ReadFromCache().Id(context.Item.Id);
+                                    var post = this.Super.Contents.ReadFromCache().OfType<OrigamiPost>().Id(context.Item.Id);
                                     <PostHeaderLite2 Entity="post"></PostHeaderLite2>
                                 }
                                 else if (context.Item.Type.Like("VideoView") == true)
                                 {
-                                    var video = this.Super.Videos.ReadFromCache().Id(context.Item.Id);
+                                    var video = this.Super.Contents.ReadFromCache().OfType<OrigamiVideo>().Id(context.Item.Id);
                                     <VideoHeaderLite2 Entity="video"></VideoHeaderLite2>
                                 }
                                 else if (context.Item.Type.Like("SpecialPageView") == true)
                                 {
-                                    var specialpage = this.Super.SpecialPages.ReadFromCache().Id(context.Item.Id);
+                                    var specialpage = this.Super.Contents.ReadFromCache().OfType<OrigamiSpecialPage>().Id(context.Item.Id);
                                     <SpecialPageHeaderLite2 Entity="specialpage"></SpecialPageHeaderLite2>
                                 }
                                 @if (context.Item.SocialProfileId != null)
@@ -444,7 +444,8 @@
     /// <returns></returns>
     protected IEnumerable<OrigamiPage> DraftPages()
     {
-        return this.Super.Pages.ReadFromCache()
+        return this.Super.Contents.ReadFromCache()
+            .OfType<OrigamiPage>()
             .Drafts()
             .Blog(UserFacade.BlogId)
             .Where(x => this.Super.IsParentDeleted(x) == false)
@@ -458,7 +459,8 @@
     /// <returns></returns>
     protected IEnumerable<OrigamiPost> DraftPosts()
     {
-        return this.Super.Posts.ReadFromCache()
+        return this.Super.Contents.ReadFromCache()
+            .OfType<OrigamiPost>()
             .Drafts()
             .Blog(UserFacade.BlogId)
             .OrderByDescending(x => x.DateCreated)
@@ -471,7 +473,8 @@
     /// <returns></returns>
     protected IEnumerable<OrigamiVideo> DraftVideos()
     {
-        return this.Super.Videos.ReadFromCache()
+        return this.Super.Contents.ReadFromCache()
+            .OfType<OrigamiVideo>()
             .Drafts()
             .Blog(UserFacade.BlogId)
             .OrderByDescending(x => x.DateCreated)
@@ -484,7 +487,8 @@
     /// <returns></returns>
     protected IEnumerable<OrigamiSpecialPage> DraftSpecialPages()
     {
-        return this.Super.SpecialPages.ReadFromCache()
+        return this.Super.Contents.ReadFromCache()
+            .OfType<OrigamiSpecialPage>()
             .Drafts()
             .OrderByDescending(x => x.DateCreated)
             .Take(5);

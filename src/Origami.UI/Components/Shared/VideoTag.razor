@@ -16,7 +16,7 @@
         {
             if (Entity != null)
             {
-                var video = this.Super.Videos.ReadFromCache().Id(Entity.ContentId)!;
+                var video = this.Super.Contents.ReadFromCache().OfType<OrigamiVideo>().Id(Entity.ContentId)!;
                 var blog = this.Super.Blogs.ReadFromCache().Id(video.BlogId)!;
                 return $"/blogs/{blog.Slug}/tags/{Entity.Slug}/{video.NanoId}#content-start";
             }

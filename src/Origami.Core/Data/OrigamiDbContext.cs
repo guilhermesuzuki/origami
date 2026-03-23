@@ -109,7 +109,7 @@ namespace Origami.Core.Data
         /// <summary>
         /// Ping Services
         /// </summary>
-        public DbSet<OrigamiPingService> PageServices { get; set; }
+        public DbSet<OrigamiPingService> PingServices { get; set; }
 
         /// <summary>
         /// Physical Page Reactions

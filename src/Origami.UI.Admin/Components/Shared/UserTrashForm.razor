@@ -20,17 +20,17 @@
         <div class="trash-content mt-3">
             @if (Entity.Type.Like("Page") == true)
             {
-                var entity = this.Super.Pages.ReadFromCache().Id(Entity.Id);
+                var entity = this.Super.Contents.ReadFromCache().OfType<OrigamiPage>().Id(Entity.Id);
                 <TrashFormPage Entity="entity"></TrashFormPage>
             }
             else if (Entity.Type.Like("Post") == true)
             {
-                var entity = this.Super.Posts.ReadFromCache().Id(Entity.Id);
+                var entity = this.Super.Contents.ReadFromCache().OfType<OrigamiPost>().Id(Entity.Id);
                 <TrashFormPost Entity="entity"></TrashFormPost>
             }
             else if (Entity.Type.Like("Video") == true)
             {
-                var entity = this.Super.Videos.ReadFromCache().Id(Entity.Id);
+                var entity = this.Super.Contents.ReadFromCache().OfType<OrigamiVideo>().Id(Entity.Id);
                 <TrashFormVideo Entity="entity"></TrashFormVideo>
             }
             else if (Entity.Type.Like("ContentComment") == true)

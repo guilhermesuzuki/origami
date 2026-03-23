@@ -10,7 +10,7 @@
     var comment = _postComment.ReadFromCache().Id(Id);
     if (comment != null)
     {
-        var post = _post.ReadFromCache().Id(comment!.ContentId)!;
+        var post = this.Super.Contents.ReadFromCache().OfType<OrigamiPost>().Id(comment!.ContentId)!;
         <div class="user-activity-post-comment @Class">
             <label class="fw-bold">@Text.Lower("Commented On Post:")</label>
             <PostHeaderLite Entity="post"></PostHeaderLite>

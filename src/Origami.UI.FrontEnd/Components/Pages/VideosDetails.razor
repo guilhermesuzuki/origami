@@ -171,7 +171,7 @@
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        this._video = this.Video ?? this.Super.Videos.ReadFromCache().NanoId(NanoId) ?? new();
+        this._video = this.Video ?? this.Super.Contents.ReadFromCache().OfType<OrigamiVideo>().NanoId(NanoId) ?? new();
         this._comments = this.Super.ContentComments.AllComments(_video);
         this.BlogId = this._video.BlogId.GetValueOrDefault();
     }

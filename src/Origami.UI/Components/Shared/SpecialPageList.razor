@@ -67,13 +67,12 @@ else if (this.ShowFakes == true)
     [Parameter] public int OrderBy { get; set; } = 1;
     [Parameter] public bool ShowFakes { get; set; } = false;
 
-    protected List<Core.Models.OrigamiSpecialPage> SpecialPages = [];
+    protected List<OrigamiSpecialPage> SpecialPages = [];
 
     private bool _disableLoadMore
     {
-        get => _super.SpecialPages
-            .ReadFromCache()
-            .NonDeleted()
+        get => _super.Contents.ReadFromCache()
+            .OfType<OrigamiSpecialPage>()
             .Published()
             .Count() <= this.Page * this.PageSize;
     }
@@ -83,9 +82,8 @@ else if (this.ShowFakes == true)
     /// </summary>
     protected void LoadSpecialPages()
     {
-        var pages = _super.SpecialPages
-            .ReadFromCache()
-            .NonDeleted()
+        var pages = _super.Contents.ReadFromCache()
+            .OfType<OrigamiSpecialPage>()
             .Published();
 
         pages = this.OrderBy switch

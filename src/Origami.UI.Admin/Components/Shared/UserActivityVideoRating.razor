@@ -10,7 +10,7 @@
     var rating = _videoRating.ReadFromCache().Id(Id);
     if (rating != null)
     {
-        var video = _video.ReadFromCache().Id(rating.ContentId);
+        var video = this.Super.Contents.ReadFromCache().OfType<OrigamiVideo>().Id(rating.ContentId);
         <div class="user-activity-video-rating @Class">
             <label class="fw-bold">@Text.Lower("Rated {0} On:", rating.Rating)</label>
             <VideoHeaderLite Entity="video"></VideoHeaderLite>

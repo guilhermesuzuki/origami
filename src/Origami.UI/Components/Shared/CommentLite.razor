@@ -11,7 +11,7 @@
             <div class="comment-parent-header d-inline-flex align-items-center">
                 @if (Entity is OrigamiContentComment postComment)
                 {
-                    var post = this.Super.Posts.ReadFromCache().Id(postComment.ContentId)!;
+                    var post = this.Super.Contents.ReadFromCache().OfType<OrigamiPost>().Id(postComment.ContentId)!;
                     <i class="fa-solid fa-file-lines me-1" style="font-size: 12px;"></i>
                     <span class="">@post.Title</span>
                 }

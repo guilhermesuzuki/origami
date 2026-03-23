@@ -2,7 +2,7 @@
 
 namespace Origami.Core.Data
 {
-    public interface IPageRepository : IRepository<OrigamiPage>, IPublish<OrigamiPage>
+    public interface IPageRepository : IPublish<OrigamiPage>
     {
         /// <summary>
         /// Mark the <paramref name="page"/> as front-page, unmarking any existing one

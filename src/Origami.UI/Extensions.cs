@@ -156,18 +156,15 @@ namespace Origami.UI
             builder.Services.AddCrud<OrigamiContentComment, ContentCommentRepository>();
             builder.Services.AddCrud<OrigamiContentCommentReaction, ContentCommentReactionRepository>();
             builder.Services.AddCrud<OrigamiFile, FileManagerRepository>();
-            builder.Services.AddCrud<OrigamiPage, PageRepository>();
             builder.Services.AddCrud<OrigamiQuickNote, QuickNoteRepository>();
             builder.Services.AddCrud<OrigamiRole, RoleRepository>();
             builder.Services.AddCrud<OrigamiSettings, SettingsRepository>();
             builder.Services.AddCrud<OrigamiSocialProfile, SocialProfileRepository>();
             builder.Services.AddCrud<OrigamiSpecialMessage, SpecialMessageRepository>();
-            builder.Services.AddCrud<OrigamiSpecialPage, SpecialPageRepository>();
             builder.Services.AddCrud<OrigamiTag, TagRepository>();
             builder.Services.AddCrud<OrigamiTrash, TrashRepository>();
             builder.Services.AddCrud<OrigamiUser, UserRepository>();
             builder.Services.AddCrud<OrigamiUserTrash, UserTrashRepository>();
-            builder.Services.AddCrud<OrigamiVideo, VideoRepository>();
 
             //sets the blog as the primary one
             builder.Services.AddScoped<IUserFacade, UserFacade>(provider =>

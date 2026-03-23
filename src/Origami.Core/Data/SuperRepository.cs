@@ -145,9 +145,8 @@ namespace Origami.Core.Data
         public IWhatToSeeNextRepository WhatToSeeNext { get; }
         public bool EmptyHome(Guid blogId)
         {
-            if (Pages.ReadFromCache().FrontPage(blogId) != null) return false;
-            if (Posts.ReadFromCache().Published().Blog(blogId).Any() == true) return false;
-            if (Videos.ReadFromCache().Published().Blog(blogId).Any() == true) return false;
+            if (Contents.ReadFromCache().OfType<OrigamiPage>().FrontPage(blogId) != null) return false;
+            if (Contents.ReadFromCache().Published().Blog(blogId).Any() == true) return false;
             if (QuickNotes.ReadFromCache().Published().Blog(blogId).Any() == true) return false;
             return true;
         }
@@ -187,7 +186,7 @@ namespace Origami.Core.Data
 
         public IEnumerable<OrigamiSpecialPage> GetMaintenancePages()
         {
-            var pages = from x in SpecialPages.ReadFromCache()
+            var pages = from x in Contents.ReadFromCache().OfType<OrigamiSpecialPage>()
                         where x.Type == OrigamiSpecialPageTypes.Maintenance.ToString()
                         where x.IsDeleted == false
                         where x.IsPublished == true
@@ -206,7 +205,7 @@ namespace Origami.Core.Data
 
         public IEnumerable<OrigamiPage> GetPages()
         {
-            return from x in Pages.ReadFromCache()
+            return from x in Contents.ReadFromCache().OfType<OrigamiPage>()
                    where x.IsDeleted == false
                    where this.IsParentDeleted(x) == false
                    where x.IsPublished == true
@@ -233,7 +232,7 @@ namespace Origami.Core.Data
 
         public IEnumerable<OrigamiSpecialPage> GetRelatedPages(OrigamiSpecialPage page)
         {
-            return from a in SpecialPages.ReadFromCache()
+            return from a in Contents.ReadFromCache().OfType<OrigamiSpecialPage>()
                    where a.Id != page.Id
                    where a.Type == page.Type
                    select a;
@@ -372,7 +371,6 @@ namespace Origami.Core.Data
                 Settings.RefreshCache();
                 SocialProfiles.RefreshCache();
                 SpecialMessages.RefreshCache();
-                SpecialPages.RefreshCache();
                 Subscribers.RefreshCache();
                 Tags.RefreshCache();
                 Users.RefreshCache();
@@ -411,7 +409,6 @@ namespace Origami.Core.Data
                 Categories.CreateSearchIndex();
                 ContentComments.CreateSearchIndex();
                 Contents.CreateSearchIndex();
-                Pages.CreateSearchIndex();
                 QuickNotes.CreateSearchIndex();
                 Roles.CreateSearchIndex();
                 SocialProfiles.CreateSearchIndex();
@@ -450,22 +447,22 @@ namespace Origami.Core.Data
                     foreach (var page in db.Set<OrigamiPage>().AsNoTracking().ToList())
                     {
                         page.NanoId = Nanoid.Generate(Nanoid.Alphabets.LettersAndDigits, 6);
-                        var ctx = new DataOperationContext<OrigamiPage>(OrigamiUser.AnonymousUser, page);
-                        Pages.SmartSave(ctx, false);
+                        var ctx = new DataOperationContext<OrigamiContent>(OrigamiUser.AnonymousUser, page);
+                        Contents.SmartSave(ctx, false);
                     }
                     // posts
                     foreach (var post in db.Set<OrigamiPost>().AsNoTracking().ToList())
                     {
                         post.NanoId = Nanoid.Generate(Nanoid.Alphabets.LettersAndDigits, 6);
-                        var ctx = new DataOperationContext<OrigamiPost>(OrigamiUser.AnonymousUser, post);
-                        Posts.SmartSave(ctx, false);
+                        var ctx = new DataOperationContext<OrigamiContent>(OrigamiUser.AnonymousUser, post);
+                        Contents.SmartSave(ctx, false);
                     }
                     // videos
                     foreach (var video in db.Set<OrigamiVideo>().AsNoTracking().ToList())
                     {
                         video.NanoId = Nanoid.Generate(Nanoid.Alphabets.LettersAndDigits, 6);
-                        var ctx = new DataOperationContext<OrigamiVideo>(OrigamiUser.AnonymousUser, video);
-                        Videos.SmartSave(ctx, false);
+                        var ctx = new DataOperationContext<OrigamiContent>(OrigamiUser.AnonymousUser, video);
+                        Contents.SmartSave(ctx, false);
                     }
                     // users
                     foreach (var user in db.Set<OrigamiUser>().AsNoTracking().ToList())
@@ -491,9 +488,9 @@ namespace Origami.Core.Data
             return [
                 .. Blogs.ReadFromCache(),
                 .. Categories.ReadFromCache(),
-                .. Pages.ReadFromCache(),
-                .. Posts.ReadFromCache(),
-                .. Videos.ReadFromCache(),
+                .. Contents.ReadFromCache().OfType<OrigamiPage>(),
+                .. Contents.ReadFromCache().OfType<OrigamiPost>(),
+                .. Contents.ReadFromCache().OfType<OrigamiVideo>(),
                 .. Users.ReadFromCache() ];
         }
 
@@ -502,9 +499,9 @@ namespace Origami.Core.Data
             return [
                 .. Blogs.ReadFromCache(),
                 .. Categories.ReadFromCache(),
-                .. Pages.ReadFromCache(),
-                .. Posts.ReadFromCache(),
-                .. Videos.ReadFromCache(),
+                .. Contents.ReadFromCache().OfType<OrigamiPage>(),
+                .. Contents.ReadFromCache().OfType<OrigamiPost>(),
+                .. Contents.ReadFromCache().OfType<OrigamiVideo>(),
                 .. Users.ReadFromCache() ];
         }
     }

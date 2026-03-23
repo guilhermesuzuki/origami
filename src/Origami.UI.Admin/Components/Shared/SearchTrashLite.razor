@@ -32,17 +32,17 @@
                         }
                         else if (hit.Type.Like("Page") == true)
                         {
-                            var page = this.Super.Pages.ReadFromCache().Id(hit.Id);
+                            var page = this.Super.Contents.ReadFromCache().OfType<OrigamiPage>().Id(hit.Id);
                             <PageHeaderLite2 Entity="page"></PageHeaderLite2>
                         }
                         else if (hit.Type.Like("Post") == true)
                         {
-                            var post = this.Super.Posts.ReadFromCache().Id(hit.Id);
+                            var post = this.Super.Contents.ReadFromCache().OfType<OrigamiPost>().Id(hit.Id);
                             <PostHeaderLite2 Entity="post"></PostHeaderLite2>
                         }
                         else if (hit.Type.Like("Video") == true)
                         {
-                            var video = this.Super.Videos.ReadFromCache().Id(hit.Id);
+                            var video = this.Super.Contents.ReadFromCache().OfType<OrigamiVideo>().Id(hit.Id);
                             <VideoHeaderLite2 Entity="video"></VideoHeaderLite2>
                         }
                         else if (hit.Type.Like("ContentComment") == true)

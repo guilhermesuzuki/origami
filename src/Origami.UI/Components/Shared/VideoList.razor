@@ -75,8 +75,7 @@ else if (this.ShowFakes == true)
 
     private bool _disableLoadMoreVideos
     {
-        get => _videoRepository.ReadFromCache()
-            .NonDeleted()
+        get => this.Super.Contents.ReadFromCache().OfType<OrigamiVideo>()
             .Published()
             .Blog(this.BlogId)
             .Count() <= this.Page * this.PageSize;
@@ -87,9 +86,7 @@ else if (this.ShowFakes == true)
     /// </summary>
     protected void LoadVideos()
     {
-        var videos = _videoRepository
-            .ReadFromCache()
-            .NonDeleted()
+        var videos = this.Super.Contents.ReadFromCache().OfType<OrigamiVideo>()
             .Published()
             .Blog(this.BlogId);
 

@@ -263,7 +263,7 @@
                 break;
         }
 
-        var fp = this.Super.Pages.ReadFromCache().FrontPage(BlogId);
+        var fp = this.Super.Contents.ReadFromCache().OfType<OrigamiPage>().FrontPage(BlogId);
         if (fp != null)
         {
             list.Insert(0, fp);
@@ -274,7 +274,7 @@
 
     private void LoadPosts(string order = "1")
     {
-        var items = this.Super.Posts.ReadFromCache().NonDeleted().Published().Blog(BlogId);
+        var items = this.Super.Contents.ReadFromCache().OfType<OrigamiPost>().NonDeleted().Published().Blog(BlogId);
 
         switch (order)
         {
@@ -298,7 +298,7 @@
 
     private void LoadVideos(string order = "1")
     {
-        var items = this.Super.Videos.ReadFromCache().NonDeleted().Published().Blog(BlogId);
+        var items = this.Super.Contents.ReadFromCache().OfType<OrigamiVideo>().NonDeleted().Published().Blog(BlogId);
 
         switch (order)
         {

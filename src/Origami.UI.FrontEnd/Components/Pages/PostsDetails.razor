@@ -159,7 +159,7 @@
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        this._post = this.Post ?? this.Super.Posts.ReadFromCache().Published().NanoId(NanoId) ?? new();
+        this._post = this.Post ?? this.Super.Contents.ReadFromCache().OfType<OrigamiPost>().Published().NanoId(NanoId) ?? new();
         this._comments = this.Super.ContentComments.AllComments(_post);
         this.BlogId = this._post.BlogId.GetValueOrDefault();
     }

@@ -39,7 +39,7 @@ namespace Origami.Core.Models
             Id = id;
         }
 
-        public event EventHandler<PropertyChangedEventArgs> OrigamiSpecialPageChanged = (sender, e) => { };
+        public event EventHandler<PropertyChangedEventArgs> OrigamiSpecialPageChanged = delegate { };
 
         [StringLength(64)]
         public string SubType

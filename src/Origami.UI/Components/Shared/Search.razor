@@ -259,9 +259,9 @@
         {
             this._blogs = this.Super.Blogs.Search(queryTerm).NonDeleted().Active().OrderBy(x => x.Name);
             this._categories = _super.Categories.Search(queryTerm).NonDeleted().Where(x => this.Super.IsParentDeleted(x) == false).OrderBy(x => x.Name);
-            this._pages = _super.Pages.Search(queryTerm).Published().Where(x => this.Super.IsParentDeleted(x) == false).OrderBy(x => x.Title);
-            this._posts = _super.Posts.Search(queryTerm).Published().OrderBy(x => x.Title);
-            this._videos = _super.Videos.Search(queryTerm).Published().OrderBy(x => x.Title);
+            this._pages = _super.Contents.Search(queryTerm).OfType<OrigamiPage>().Published().Where(x => this.Super.IsParentDeleted(x) == false).OrderBy(x => x.Title);
+            this._posts = _super.Contents.Search(queryTerm).OfType<OrigamiPost>().Published().OrderBy(x => x.Title);
+            this._videos = _super.Contents.Search(queryTerm).OfType<OrigamiVideo>().Published().OrderBy(x => x.Title);
             this._socialProfiles = _super.SocialProfiles.Search(queryTerm).OrderBy(x => x.SocialNetwork.ToString()).ThenBy(x => x.Name());
             this._contentComments = _super.ContentComments.Search(queryTerm).NonDeleted().Where(x => this.Super.IsParentDeleted(x) == false).OrderByDescending(x => x.GetDate());
             this._tags = _super.Tags.Search(queryTerm).OrderBy(x => x.Name);

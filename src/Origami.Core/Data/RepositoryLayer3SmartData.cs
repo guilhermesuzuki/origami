@@ -77,8 +77,8 @@ namespace Origami.Core.Data
 
         public virtual List<X> ReadFromCache<X>() where X : class
         {
-            var key = typeof(X).KeyForCaching();
             var timestamp = Stopwatch.GetTimestamp();
+            var key = typeof(X).KeyForCaching();
 
             try
             {

@@ -128,7 +128,7 @@
     protected void LoadRelatedPages()
     {
         if (this.Entity == null) return;
-        this.RelatedPages = this.Super.SpecialPages.ReadFromCache().Published().Where(x => x.Type == this.Entity.Type).Except([this.Entity]);
+        this.RelatedPages = this.Super.Contents.ReadFromCache().OfType<OrigamiSpecialPage>().Published().Where(x => x.Type == this.Entity.Type).Except([this.Entity]);
         this.RelatedPages = from a in this.RelatedPages orderby a.LanguageWrittenOn, a.Title select a;
     }
 

@@ -16,19 +16,9 @@ namespace Origami.Core.Models
         public OrigamiPage() : base()
         {
             this.Type = nameof(OrigamiPage);
-            this.LanguageWrittenOn = CultureInfo.DefaultThreadCurrentUICulture?.Name ?? "en-US";
         }
 
-        /// <summary>
-        /// Id constructor
-        /// </summary>
-        /// <param name="id"></param>
-        public OrigamiPage(Guid id) : this()
-        {
-            Id = id;
-        }
-
-        public event EventHandler<PropertyChangedEventArgs> OrigamiPageChanged = (sender, e) => { };
+        public event EventHandler<PropertyChangedEventArgs> OrigamiPageChanged = delegate { };
 
         /// <summary>
         /// Is this Page the Front Page?
