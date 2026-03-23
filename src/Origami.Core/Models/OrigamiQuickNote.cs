@@ -8,7 +8,7 @@ namespace Origami.Core.Models
     public class OrigamiQuickNote : BaseModel,
         IChanged,
         IId,
-        IBlogId,
+        IBlogIdNull,
         IAuthorId,
         IDateCreated,
         IDateModified,
@@ -20,7 +20,7 @@ namespace Origami.Core.Models
         IDraft
     {
         private Guid _authorId;
-        private Guid _blogId;
+        private Guid? _blogId;
         private DateTime _dateCreated;
         private DateTime? _dateModified;
         private DateTime? _datePublished;
@@ -54,7 +54,7 @@ namespace Origami.Core.Models
             set { this.Set(ref _background, value, Changed); }
         }
 
-        public Guid BlogId
+        public Guid? BlogId
         {
             get { return _blogId; }
             set { this.Set(ref _blogId, value, Changed); }

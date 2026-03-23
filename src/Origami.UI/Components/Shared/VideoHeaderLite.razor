@@ -1,10 +1,6 @@
 ﻿@inherits Basic
 @implements IEntityNull<OrigamiVideo>
-@inject IVideoTagRepository _videoTag
-@inject IVideoViewRepository _videoView
-@inject IVideoRatingRepository _videoRating
 @inject NavigationManager _navigationManager
-@inject IVideoCommentRepository _videoComment
 @inject IUserRepository _user
 
 @if (this.Entity != null)

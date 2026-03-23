@@ -5,7 +5,7 @@ using Origami.Core.Models;
 namespace Origami.Core.Data
 {
     public abstract class RepositoryOuterLayer<T> : RepositoryLayer4Search<T>
-        where T : class, IId, new()
+        where T : class, IId
     {
         protected RepositoryOuterLayer(
             Text text,

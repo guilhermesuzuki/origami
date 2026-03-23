@@ -100,6 +100,12 @@ namespace Origami.UI
             builder.Services.AddTransient<IBlogRepository, BlogRepository>();
             builder.Services.AddTransient<IBlogRollRepository, BlogRollRepository>();
             builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
+            builder.Services.AddTransient<IContentCategoryRepository, ContentCategoryRepository>();
+            builder.Services.AddTransient<IContentCommentReactionRepository, ContentCommentReactionRepository>();
+            builder.Services.AddTransient<IContentCommentRepository, ContentCommentRepository>();
+            builder.Services.AddTransient<IContentReactionRepository, ContentReactionRepository>();
+            builder.Services.AddTransient<IContentRepository, ContentRepository>();
+            builder.Services.AddTransient<IContentRepository, ContentRepository>();
             builder.Services.AddTransient<IDashboardRepository, DashboardRepository>();
             builder.Services.AddTransient<IDirectoryRepository, DirectoryRepository>();
             builder.Services.AddTransient<IEmailRepository, EmailRepository>();
@@ -107,17 +113,9 @@ namespace Origami.UI
             builder.Services.AddTransient<IFileRepository, FileRepository>();
             builder.Services.AddTransient<IPageRepository, PageRepository>();
             builder.Services.AddTransient<IPageTitleRepository, PageTitleRepository>();
-            builder.Services.AddTransient<IPageViewRepository, PageViewRepository>();
             builder.Services.AddTransient<IPhysicalPageRepository, PhysicalPageRepository>();
             builder.Services.AddTransient<IPhysicalPageViewRepository, PhysicalPageViewRepository>();
             builder.Services.AddTransient<IPingServiceRepository, PingServiceRepository>();
-            builder.Services.AddTransient<IPostCategoryRepository, PostCategoryRepository>();
-            builder.Services.AddTransient<IPostCommentReactionRepository, PostCommentReactionRepository>();
-            builder.Services.AddTransient<IPostCommentRepository, PostCommentRepository>();
-            builder.Services.AddTransient<IPostRatingRepository, PostRatingRepository>();
-            builder.Services.AddTransient<IPostRepository, PostRepository>();
-            builder.Services.AddTransient<IPostTagRepository, PostTagRepository>();
-            builder.Services.AddTransient<IPostViewRepository, PostViewRepository>();
             builder.Services.AddTransient<IQuickNoteRepository, QuickNoteRepository>();
             builder.Services.AddTransient<IResumeRepository, ResumeRepository>();
             builder.Services.AddTransient<IRightRepository, RightRepository>();
@@ -130,7 +128,6 @@ namespace Origami.UI
             builder.Services.AddTransient<ISocialProfileRepository, SocialProfileRepository>();
             builder.Services.AddTransient<ISpecialMessageRepository, SpecialMessageRepository>();
             builder.Services.AddTransient<ISpecialPageRepository, SpecialPageRepository>();
-            builder.Services.AddTransient<ISpecialPageViewRepository, SpecialPageViewRepository>();
             builder.Services.AddTransient<ISubscriberRepository, SubscriberRepository>();
             builder.Services.AddTransient<ISuperRepository, SuperRepository>();
             builder.Services.AddTransient<ITagRepository, TagRepository>();
@@ -143,13 +140,7 @@ namespace Origami.UI
             builder.Services.AddTransient<IUserRoleRepository, UserRoleRepository>();
             builder.Services.AddTransient<IUserTrashRepository, UserTrashRepository>();
             builder.Services.AddTransient<IUserViewRepository, UserViewRepository>();
-            builder.Services.AddTransient<IVideoCategoryRepository, VideoCategoryRepository>();
-            builder.Services.AddTransient<IVideoCommentReactionRepository, VideoCommentReactionRepository>();
-            builder.Services.AddTransient<IVideoCommentRepository, VideoCommentRepository>();
-            builder.Services.AddTransient<IVideoRatingRepository, VideoRatingRepository>();
             builder.Services.AddTransient<IVideoRepository, VideoRepository>();
-            builder.Services.AddTransient<IVideoTagRepository, VideoTagRepository>();
-            builder.Services.AddTransient<IVideoViewRepository, VideoViewRepository>();
             builder.Services.AddTransient<IWhatToSeeNextRepository, WhatToSeeNextRepository>();
             builder.Services.AddScoped<ILoginRepository, LoginRepository>();
 
@@ -160,12 +151,12 @@ namespace Origami.UI
 
             builder.Services.AddCrud<OrigamiBlog, BlogRepository>();
             builder.Services.AddCrud<OrigamiCategory, CategoryRepository>();
+            builder.Services.AddCrud<OrigamiContent, ContentRepository>();
+            builder.Services.AddCrud<OrigamiContentCategory, ContentCategoryRepository>();
+            builder.Services.AddCrud<OrigamiContentComment, ContentCommentRepository>();
+            builder.Services.AddCrud<OrigamiContentCommentReaction, ContentCommentReactionRepository>();
             builder.Services.AddCrud<OrigamiFile, FileManagerRepository>();
             builder.Services.AddCrud<OrigamiPage, PageRepository>();
-            builder.Services.AddCrud<OrigamiPost, PostRepository>();
-            builder.Services.AddCrud<OrigamiPostCategory, PostCategoryRepository>();
-            builder.Services.AddCrud<OrigamiPostComment, PostCommentRepository>();
-            builder.Services.AddCrud<OrigamiPostTag, PostTagRepository>();
             builder.Services.AddCrud<OrigamiQuickNote, QuickNoteRepository>();
             builder.Services.AddCrud<OrigamiRole, RoleRepository>();
             builder.Services.AddCrud<OrigamiSettings, SettingsRepository>();
@@ -177,9 +168,6 @@ namespace Origami.UI
             builder.Services.AddCrud<OrigamiUser, UserRepository>();
             builder.Services.AddCrud<OrigamiUserTrash, UserTrashRepository>();
             builder.Services.AddCrud<OrigamiVideo, VideoRepository>();
-            builder.Services.AddCrud<OrigamiVideoCategory, VideoCategoryRepository>();
-            builder.Services.AddCrud<OrigamiVideoComment, VideoCommentRepository>();
-            builder.Services.AddCrud<OrigamiVideoTag, VideoTagRepository>();
 
             //sets the blog as the primary one
             builder.Services.AddScoped<IUserFacade, UserFacade>(provider =>
@@ -205,7 +193,7 @@ namespace Origami.UI
             builder.Services.AddSingleton<IValidator<OrigamiCategory>, OrigamiCategoryValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiPage>, OrigamiPageValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiPost>, OrigamiPostValidator>();
-            builder.Services.AddSingleton<IValidator<OrigamiPostComment>, OrigamiContentCommentValidator>();
+            builder.Services.AddSingleton<IValidator<OrigamiContentComment>, OrigamiContentCommentValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiQuickNote>, OrigamiQuickNoteValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiRole>, OrigamiRoleValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiSettings>, OrigamiSettingsValidator>();
@@ -213,7 +201,6 @@ namespace Origami.UI
             builder.Services.AddSingleton<IValidator<OrigamiSpecialPage>, OrigamiSpecialPageValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiUser>, OrigamiUserValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiVideo>, OrigamiVideoValidator>();
-            builder.Services.AddSingleton<IValidator<OrigamiVideoComment>, OrigamiVideoCommentValidator>();
 
             //jwt configuration
             builder.Services.Configure<JwtConfiguration>(builder.Configuration.GetSection("Jwt"));

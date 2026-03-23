@@ -11,9 +11,6 @@ namespace Origami.Core.Data
         RepositoryOuterLayer<OrigamiTag>,
         ITagRepository
     {
-        protected readonly IPostTagRepository _postTagRepository;
-        protected readonly IVideoTagRepository _videoTagRepository;
-
         /// <summary>
         /// Default constructor with DI
         /// </summary>
@@ -22,14 +19,11 @@ namespace Origami.Core.Data
         public TagRepository(
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IMemoryCache memoryCache,
-            IPostTagRepository postTagRepository,
-            IVideoTagRepository videoTagRepository,
             Text text,
             IWebRootPath wwwRoot)
             : base(text, dbContextFactory, memoryCache, wwwRoot)
         {
-            this._postTagRepository = postTagRepository;
-            this._videoTagRepository = videoTagRepository;
+
         }
 
         public override string DeletePermission => nameof(OrigamiRole.DeleteTags);
@@ -43,18 +37,18 @@ namespace Origami.Core.Data
 
             using (var dbContext = DbContextFactory.CreateDbContext())
             {
-                var rows1 = dbContext.PostTags.Include(x => x.Post)
-                    .Where(x => x.Post!.BlogId == ctx.Entity.BlogId)
-                    .Where(x => x.Tag == ctx.Entity.Name)
-                    .ExecuteDelete();
+                //var rows1 = dbContext.PostTags.Include(x => x.Post)
+                //    .Where(x => x.Post!.BlogId == ctx.Entity.BlogId)
+                //    .Where(x => x.Tag == ctx.Entity.Name)
+                //    .ExecuteDelete();
 
-                var rows2 = dbContext.VideoTags.Include(x => x.Video)
-                    .Where(x => x.Video!.BlogId == ctx.Entity.BlogId)
-                    .Where(x => x.Tag == ctx.Entity.Name)
-                    .ExecuteDelete();
+                //var rows2 = dbContext.VideoTags.Include(x => x.Video)
+                //    .Where(x => x.Video!.BlogId == ctx.Entity.BlogId)
+                //    .Where(x => x.Tag == ctx.Entity.Name)
+                //    .ExecuteDelete();
 
-                hub.RowsAffected += rows1;
-                hub.RowsAffected += rows2;
+                //hub.RowsAffected += rows1;
+                //hub.RowsAffected += rows2;
             }
 
             return hub;

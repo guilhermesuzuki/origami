@@ -15,7 +15,7 @@ namespace Origami.Core.Data
     public abstract class RepositoryLayer4Search<T> :
         RepositoryLayer3SmartData<T>,
         ISearch<T>
-        where T : class, IId, new()
+        where T : class, IId
     {
         protected RepositoryLayer4Search(
             Text text,
@@ -123,26 +123,15 @@ namespace Origami.Core.Data
                 doc.Add(new TextField("lastName", user.LastName, Field.Store.YES));
             }
 
-            if (entity is OrigamiPostComment pcomment)
+            if (entity is OrigamiContentComment pcomment)
             {
-                var post = this.ReadFromCache<OrigamiPost>().Id(pcomment.PostId);
+                var post = this.ReadFromCache<OrigamiContent>().Id(pcomment.ContentId);
                 var pcSocialProfile = this.ReadFromCache<OrigamiSocialProfile>().Id(pcomment.SocialProfileId);
                 doc.Add(new TextField("comment_socialProfileFirstName", pcSocialProfile?.FirstName, Field.Store.YES));
                 doc.Add(new TextField("comment_socialProfileLastName", pcSocialProfile?.LastName, Field.Store.YES));
                 doc.Add(new TextField("comment_socialProfileName", pcSocialProfile?.Name, Field.Store.YES));
                 doc.Add(new TextField("comment_socialProfileSocialNetwork", pcSocialProfile?.SocialNetwork.ToString(), Field.Store.YES));
                 doc.Add(new TextField("comment_postTitle", post?.Title, Field.Store.YES));
-            }
-
-            if (entity is OrigamiVideoComment vcomment)
-            {
-                var video = this.ReadFromCache<OrigamiVideo>().Id(vcomment.VideoId);
-                var vcSocialProfile = this.ReadFromCache<OrigamiSocialProfile>().Id(vcomment.SocialProfileId);
-                doc.Add(new TextField("comment_socialProfileFirstName", vcSocialProfile?.FirstName, Field.Store.YES));
-                doc.Add(new TextField("comment_socialProfileLastName", vcSocialProfile?.LastName, Field.Store.YES));
-                doc.Add(new TextField("comment_socialProfileName", vcSocialProfile?.Name, Field.Store.YES));
-                doc.Add(new TextField("comment_socialProfileSocialNetwork", vcSocialProfile?.SocialNetwork.ToString(), Field.Store.YES));
-                doc.Add(new TextField("comment_videoTitle", video?.Title, Field.Store.YES));
             }
 
             return doc;
@@ -152,7 +141,7 @@ namespace Origami.Core.Data
         {
             searchTerm = $"{QueryParser.Escape(searchTerm)}*";
 
-            var t = new T();
+            var t = Activator.CreateInstance<T>();
             var queries = new List<WildcardQuery>();
 
             if (t is IId id) queries.Add(new(new("id", searchTerm)));
@@ -180,15 +169,7 @@ namespace Origami.Core.Data
                 queries.Add(new(new("lastName", searchTerm)));
             }
 
-            if (t is OrigamiPostComment pcomment)
-            {
-                queries.Add(new(new("comment_socialProfileFirstName", searchTerm)));
-                queries.Add(new(new("comment_socialProfileLastName", searchTerm)));
-                queries.Add(new(new("comment_socialProfileName", searchTerm)));
-                queries.Add(new(new("comment_socialProfileSocialNetwork", searchTerm)));
-            }
-
-            if (t is OrigamiVideoComment vcomment)
+            if (t is OrigamiContentComment pcomment)
             {
                 queries.Add(new(new("comment_socialProfileFirstName", searchTerm)));
                 queries.Add(new(new("comment_socialProfileLastName", searchTerm)));

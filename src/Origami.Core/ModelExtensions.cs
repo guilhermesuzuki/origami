@@ -150,14 +150,14 @@ namespace Origami.Core
         /// <param name="entity"></param>
         /// <returns></returns>
         public static T Clone<T>(this T? entity)
-            where T : class, new()
+            where T : class
         {
             //TODO: workaround for OrigamiBackupRestore, find a better way to do this
             if (entity is OrigamiBackupRestore restore)
             {
-                return restore.GetClone() as T ?? new T();
+                return restore.GetClone() as T ?? Activator.CreateInstance<T>();
             }
-            return entity != null ? entity.GetClone() : new();
+            return entity != null ? entity.GetClone() : Activator.CreateInstance<T>();
         }
 
         /// <summary>
@@ -651,7 +651,7 @@ namespace Origami.Core
         /// <returns>The first entity in the collection with a matching identifier, or <see langword="null"/> if no match is
         /// found or if <paramref name="id"/> is <see langword="null"/>.</returns>
         public static T? Id<T>(this IEnumerable<T> entities, Guid? id)
-            where T : class, IId, new()
+            where T : class, IId
         {
             return entities.FirstOrDefault(x => x.Id == id.GetValueOrDefault());
         }

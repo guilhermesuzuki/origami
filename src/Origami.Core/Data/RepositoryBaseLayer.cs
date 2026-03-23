@@ -6,7 +6,7 @@ namespace Origami.Core.Data
 {
     public abstract class RepositoryBaseLayer<T> :
         ICache<T>
-        where T : class, IId, new()
+        where T : class, IId
     {
         protected RepositoryBaseLayer(Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory, IMemoryCache memoryCache, IWebRootPath webRootPath) : base()
         {

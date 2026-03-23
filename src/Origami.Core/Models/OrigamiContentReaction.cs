@@ -5,38 +5,38 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Origami.Core.Models
 {
-    [Table("oi_ContentCommentReactions")]
-    public class OrigamiContentCommentReaction :
-        Reaction,
+    [Table("oi_ContentReactions")]
+    public class OrigamiContentReaction :
+        BaseView,
         IReactionChanged,
         IId,
-        ICommentId
+        IContentId
     {
-        private Guid _commentId = Guid.Empty;
-        private Guid _id = Guid.Empty;
+        private Guid _id;
+        private Guid _contentId;
         private string _reaction = string.Empty;
 
         /// <summary>
         /// Default constructor
         /// </summary>
-        public OrigamiContentCommentReaction() : base()
+        public OrigamiContentReaction() : base()
         {
             Id = Guid.NewGuid();
         }
 
         public event EventHandler<PropertyChangedEventArgs> ReactionChanged = (sender, e) => { };
 
-        public Guid CommentId
-        {
-            get => _commentId;
-            set => this.Set(ref _commentId, value, ReactionChanged);
-        }
-
         [Key]
         public Guid Id
         {
             get => _id;
             set => this.Set(ref _id, value, ReactionChanged);
+        }
+
+        public Guid ContentId
+        {
+            get => _contentId;
+            set => this.Set(ref _contentId, value, ReactionChanged);
         }
 
         /// <summary>

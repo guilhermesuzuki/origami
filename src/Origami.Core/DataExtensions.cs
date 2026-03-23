@@ -121,13 +121,13 @@ namespace Origami.Core
         }
 
         public static IEnumerable<T> GetAllChildren<T>(this IEnumerable<T>? source, T entity)
-                    where T : class, IId, new()
+                    where T : class, IId
         {
             return source.GetAllChildren([entity]);
         }
 
         public static IEnumerable<T> GetAllChildren<T>(this IEnumerable<T>? source, IEnumerable<T> entities)
-            where T : class, IId, new()
+            where T : class, IId
         {
             if (source == null) return [];
             if (typeof(T).Implements<IParentIdNull<T>>() == false) return [];
@@ -147,7 +147,7 @@ namespace Origami.Core
         }
 
         public static IEnumerable<Guid> GetAllChildren<T>(this IEnumerable<T>? source, Guid id)
-            where T : class, IId, new()
+            where T : class, IId
         {
             if (source == null) return [];
             if (id is not IParentIdNull<T>) return [];
@@ -241,7 +241,7 @@ namespace Origami.Core
         /// <param name="key"></param>
         /// <returns></returns>
         public static List<T>? GetList<T>(this IMemoryCache memoryCache, string key)
-            where T : class, new()
+            where T : class
         {
             var value = memoryCache.Get(key);
             return value is List<T> list ? list : null;

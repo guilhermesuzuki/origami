@@ -14,7 +14,7 @@ namespace Origami.Core.Data
 
         List<T> ReadFromCache();
 
-        List<X> ReadFromCache<X>() where X : class, new();
+        List<X> ReadFromCache<X>() where X : class;
 
         void RefreshCache();
     }

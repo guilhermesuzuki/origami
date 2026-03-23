@@ -10,6 +10,10 @@ namespace Origami.Core.Data
         ISocialProfileDeleteRepository
     {
         protected readonly ISocialProfileRepository _socialProfileRepository;
+        protected readonly IContentCommentReactionRepository _contentCommentReactionRepository;
+        protected readonly IContentCommentRepository _contentCommentRepository;
+        protected readonly IContentRatingRepository _contentRatingRepository;
+        protected readonly IContentReactionRepository _contentReactionRepository;
 
         /// <summary>
         /// Default constructor with DI
@@ -20,11 +24,19 @@ namespace Origami.Core.Data
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IMemoryCache memoryCache,
             ISocialProfileRepository socialProfileRepository,
+            IContentCommentReactionRepository contentCommentReactionRepository,
+            IContentCommentRepository contentCommentRepository,
+            IContentRatingRepository contentRatingRepository,
+            IContentReactionRepository contentReactionRepository,
             IWebRootPath wwwRoot,
             Text text)
             : base(text, dbContextFactory, memoryCache, wwwRoot)
         {
             _socialProfileRepository = socialProfileRepository;
+            _contentCommentReactionRepository = contentCommentReactionRepository;
+            _contentCommentRepository = contentCommentRepository;
+            _contentRatingRepository = contentRatingRepository;
+            _contentReactionRepository = contentReactionRepository;
         }
 
         public override string CreatePermission => nameof(OrigamiRole.WipeDataOutFromSocialProfiles);
@@ -43,37 +55,27 @@ namespace Origami.Core.Data
             var socialProfile = db.Set<OrigamiSocialProfile>().AsNoTracking().Where(x => x.Id == ctx.Entity.Id).FirstOrDefault();
             if (socialProfile != null)
             {
-                var postCommentReactions = _postCommentReactionRepository.ReactionsFromProfile(socialProfile).ToList();
-                var postComments = _postCommentRepository.CommentsFromProfile(socialProfile, true);
-                var postRatings = _postRatingRepository.RatingsFromProfile(socialProfile).ToList();
-                var videoCommentReactions = _videoCommentReactionRepository.ReactionsFromProfile(socialProfile).ToList();
-                var videoComments = _videoCommentRepository.CommentsFromProfile(socialProfile, true);
-                var videoRatings = _videoRatingRepository.RatingsFromProfile(socialProfile).ToList();
+                var commentReactions = _contentCommentReactionRepository.ReactionsFromProfile(socialProfile).ToList();
+                var comments = _contentCommentRepository.CommentsFromProfile(socialProfile, true);
+                var ratings = _contentRatingRepository.RatingsFromProfile(socialProfile).ToList();
 
                 var hub = new Result<OrigamiSocialProfileDelete>();
 
                 using (var transaction = new TransactionScope())
                 {
-                    hub.OnSuccess(() => postCommentReactions.GetContexts(ctx).Call(_postCommentReactionRepository.SmartPurge, false));
-                    hub.OnSuccess(() => postComments.Where(x => x.ParentId != null).GetContexts(ctx).Call(_postCommentRepository.SmartPurge, false));
-                    hub.OnSuccess(() => postComments.Where(x => x.ParentId == null).GetContexts(ctx).Call(_postCommentRepository.SmartPurge, false));
-                    hub.OnSuccess(() => postRatings.GetContexts(ctx).Call(_postRatingRepository.SmartPurge, false));
-                    hub.OnSuccess(() => videoCommentReactions.GetContexts(ctx).Call(_videoCommentReactionRepository.SmartPurge, false));
-                    hub.OnSuccess(() => videoComments.Where(x => x.ParentId != null).GetContexts(ctx).Call(_videoCommentRepository.SmartPurge, false));
-                    hub.OnSuccess(() => videoComments.Where(x => x.ParentId == null).GetContexts(ctx).Call(_videoCommentRepository.SmartPurge, false));
-                    hub.OnSuccess(() => videoRatings.GetContexts(ctx).Call(_videoRatingRepository.SmartPurge, false));
+                    hub.OnSuccess(() => commentReactions.GetContexts(ctx).Call(_contentCommentReactionRepository.SmartPurge, false));
+                    hub.OnSuccess(() => comments.Where(x => x.ParentId != null).GetContexts(ctx).Call(_contentCommentRepository.SmartPurge, false));
+                    hub.OnSuccess(() => comments.Where(x => x.ParentId == null).GetContexts(ctx).Call(_contentCommentRepository.SmartPurge, false));
+                    hub.OnSuccess(() => ratings.GetContexts(ctx).Call(_contentRatingRepository.SmartPurge, false));
 
                     hub.Entity = new()
                     {
                         Id = Guid.NewGuid(),
                         DateCreated = DateTime.UtcNow,
                         SocialProfileId = socialProfile.Id,
-                        PostCommentReactions = postCommentReactions.Count,
-                        PostComments = postComments.Count,
-                        PostRatings = postRatings.Count,
-                        VideoCommentReactions = videoCommentReactions.Count,
-                        VideoComments = videoComments.Count,
-                        VideoRatings = videoRatings.Count,
+                        PostCommentReactions = commentReactions.Count,
+                        PostComments = comments.Count,
+                        PostRatings = ratings.Count,
                     };
 
                     var exists = db.Set<OrigamiSocialProfileDelete>().AsNoTracking()
@@ -94,13 +96,9 @@ namespace Origami.Core.Data
                 }
 
                 //needs to update cache
-                postCommentReactions.ForEach(x => _postCommentReactionRepository.PurgeCache(x));
-                postComments.ForEach(x => _postCommentRepository.PurgeCache(x));
-                postRatings.ForEach(x => _postRatingRepository.PurgeCache(x));
-
-                videoCommentReactions.ForEach(x => _videoCommentReactionRepository.PurgeCache(x));
-                videoComments.ForEach(x => _videoCommentRepository.PurgeCache(x));
-                videoRatings.ForEach(x => _videoRatingRepository.PurgeCache(x));
+                commentReactions.ForEach(_contentCommentReactionRepository.PurgeCache);
+                comments.ForEach(_contentCommentRepository.PurgeCache);
+                ratings.ForEach(_contentRatingRepository.PurgeCache);
 
                 return hub;
             }

@@ -9,7 +9,7 @@ namespace Origami.Core.Data
 {
     public abstract class RepositoryLayer0Data<T> : RepositoryBaseLayer<T>,
         ICrud<T>
-        where T : class, IId, new()
+        where T : class, IId
     {
         protected RepositoryLayer0Data(
             Text text,

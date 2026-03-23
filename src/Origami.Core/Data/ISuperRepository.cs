@@ -5,9 +5,13 @@ using Origami.Core.Models;
 namespace Origami.Core.Data
 {
     public interface ISuperRepository :
-        ICategories<OrigamiCategory, OrigamiPost>,
-        ICategories<OrigamiCategory, OrigamiVideo>
+        ICategories<OrigamiCategory, OrigamiContent>
     {
+        /// <summary>
+        /// Is Origami in maintenance lock-out mode?
+        /// </summary>
+        bool MaintenanceLockout { get; }
+
         IAppFacade AppFacade { get; }
         IBackupRestoreRepository BackupAndRestores { get; }
         IBlogRepository Blogs { get; }
@@ -17,12 +21,6 @@ namespace Origami.Core.Data
         IDirectoryRepository Directories { get; }
         IEmailRepository Emails { get; }
         IFileRepository Files { get; }
-
-        /// <summary>
-        /// Is Origami in maintenance lock-out mode?
-        /// </summary>
-        bool MaintenanceLockout { get; }
-
         IPageRepository Pages { get; }
         IPhysicalPageRepository PhysicalPages { get; }
         IPhysicalPageViewRepository PhysicalPageViews { get; }
@@ -49,6 +47,15 @@ namespace Origami.Core.Data
         IVideoRepository Videos { get; }
         IWhatToSeeNextRepository WhatToSeeNext { get; }
 
+        IContentCategoryRepository ContentCategories { get; }
+        IContentCommentReactionRepository ContentCommentReactions { get; }
+        IContentCommentRepository ContentComments { get; }
+        IContentHistoryRepository ContentHistories { get; }
+        IContentRatingRepository ContentRatings { get; }
+        IContentReactionRepository ContentReactions { get; }
+        IContentRepository Contents { get; }
+        IContentTagRepository ContentTags { get; }
+        
         bool EmptyHome(Guid blogId);
 
         OrigamiUser GetAuthor(IAuthorId authorId);
@@ -77,6 +84,7 @@ namespace Origami.Core.Data
         /// </summary>
         /// <returns>non-deleted and published pages, sorted by title</returns>
         IEnumerable<OrigamiPage> GetPages();
+
         /// <summary>
         /// Retrieves a collection of posts associated with the specified tag.
         /// </summary>
@@ -84,12 +92,14 @@ namespace Origami.Core.Data
         /// <returns>An enumerable collection of <see cref="OrigamiPost"/> objects that are associated with the specified tag. If
         /// no posts match the tag, the collection will be empty.</returns>
         IEnumerable<OrigamiPost> GetPosts(OrigamiTag tag);
+
         /// <summary>
         /// Returns all posts associated with a category
         /// </summary>
         /// <param name="category"></param>
         /// <returns></returns>
         IEnumerable<OrigamiPost> GetPosts(OrigamiCategory category);
+
         /// <summary>
         /// Retrieves a collection of pages that are related to the specified page by its type.
         /// </summary>
@@ -97,12 +107,14 @@ namespace Origami.Core.Data
         /// <returns>An enumerable collection of <see cref="OrigamiSpecialPage"/> objects representing the related pages. If no
         /// related pages are found, the collection will be empty.</returns>
         IEnumerable<OrigamiSpecialPage> GetRelatedPages(OrigamiSpecialPage page);
+
         /// <summary>
         /// Get direct replies to a comment
         /// </summary>
         /// <param name="comment"></param>
         /// <returns></returns>
         IEnumerable<BaseComment> GetReplies(BaseComment comment);
+
         /// <summary>
         /// Gets a subscriber by its social profile, when the subscriber is not deleted and verified.
         /// </summary>
@@ -118,6 +130,7 @@ namespace Origami.Core.Data
         /// <param name="category"></param>
         /// <returns></returns>
         IEnumerable<OrigamiVideo> GetVideos(OrigamiCategory category);
+
         object? GuessWho(string text);
         bool IsParentDeleted(OrigamiCategory category);
         bool IsParentDeleted(BaseComment comment);

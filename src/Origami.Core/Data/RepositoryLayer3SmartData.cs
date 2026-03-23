@@ -8,7 +8,7 @@ namespace Origami.Core.Data
     public abstract class RepositoryLayer3SmartData<T> :
         RepositoryLayer2Permission<T>,
         IMerge<T>
-        where T : class, IId, new()
+        where T : class, IId
     {
         protected RepositoryLayer3SmartData(
             Text text,
@@ -75,7 +75,7 @@ namespace Origami.Core.Data
             return this.ReadFromCache<T>();
         }
 
-        public virtual List<X> ReadFromCache<X>() where X : class, new()
+        public virtual List<X> ReadFromCache<X>() where X : class
         {
             var key = typeof(X).KeyForCaching();
             var timestamp = Stopwatch.GetTimestamp();
