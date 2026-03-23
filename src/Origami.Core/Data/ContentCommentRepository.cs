@@ -24,13 +24,14 @@ namespace Origami.Core.Data
         public ContentCommentRepository(
             IValidator<OrigamiContentComment> validator,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
-            
+            IContentCommentReactionRepository contentCommentReactionRepository,
             IMemoryCache memoryCache,
             IWebRootPath wwwRoot,
             Text text)
             : base(text, dbContextFactory, memoryCache, wwwRoot)
         {
             _validator = validator;
+            _contentCommentReactionRepository = contentCommentReactionRepository;
         }
 
         public override string DeletePermission => nameof(OrigamiRole.ModerateComments);

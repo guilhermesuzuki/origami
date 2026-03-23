@@ -29,5 +29,45 @@ namespace Origami.Core.Data
         {
             _validator = validator;
         }
+
+        public Result<OrigamiContentCommentReaction> SmartCreate(DataOperationContextFrontEnd<OrigamiContentCommentReaction> ctx)
+        {
+            try
+            {
+                using var db = DbContextFactory.CreateDbContext();
+                db.Set<OrigamiSocialProfile>().AsNoTracking().GetProfileThrowIfBlocked(ctx.SocialProfile.Id);
+            }
+            catch (Exception ex)
+            {
+                return new(ctx.Entity, ex.GetMessage());
+            }
+
+            return base.SmartCreate(ctx, false);
+        }
+
+        public Result<OrigamiContentCommentReaction> SmartPurge(DataOperationContextFrontEnd<OrigamiContentCommentReaction> ctx)
+        {
+            try
+            {
+                using var db = DbContextFactory.CreateDbContext();
+                db.Set<OrigamiSocialProfile>().AsNoTracking().GetProfileThrowIfBlocked(ctx.SocialProfile.Id);
+            }
+            catch (Exception ex)
+            {
+                return new(ctx.Entity, ex.GetMessage());
+            }
+
+            return base.SmartPurge(ctx, false);
+        }
+
+        public IEnumerable<OrigamiContentCommentReaction> Reactions(OrigamiContentComment entity)
+        {
+            return ReadFromCache().Where(x => x.CommentId == entity.Id);
+        }
+
+        public IEnumerable<OrigamiContentCommentReaction> ReactionsFromProfile(OrigamiSocialProfile socialProfile)
+        {
+            return ReadFromCache().Where(x => x.SocialProfileId == socialProfile.Id);
+        }
     }
 }
