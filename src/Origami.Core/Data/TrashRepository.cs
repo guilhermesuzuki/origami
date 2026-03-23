@@ -9,13 +9,15 @@ namespace Origami.Core.Data
         ITrashRepository
     {
         private readonly IBlogRepository _blogRepository;
-        private readonly ISpecialPageRepository _specialPageRepository;
+        private readonly IContentRepository _contentRepository;
         private readonly ISpecialMessageRepository _specialMessageRepository;
+        private readonly ISpecialPageRepository _specialPageRepository;
 
         public TrashRepository(
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IMemoryCache memoryCache,
             IBlogRepository blogRepository,
+            IContentRepository contentRepository,
             ISpecialPageRepository specialPageRepository,
             ISpecialMessageRepository specialMessageRepository,
             Text text,
@@ -23,6 +25,7 @@ namespace Origami.Core.Data
             : base(text, dbContextFactory, memoryCache, wwwRoot)
         {
             _blogRepository = blogRepository;
+            _contentRepository = contentRepository;
             _specialPageRepository = specialPageRepository;
             _specialMessageRepository = specialMessageRepository;
         }
@@ -53,12 +56,12 @@ namespace Origami.Core.Data
 
             if (ctx.Entity.Type.Like("SpecialPage") == true)
             {
-                return _purge(_specialPageRepository, ctx);
+                return _purge(_contentRepository, ctx);
             }
 
             if (ctx.Entity.Type.Like("SpecialMessage") == true)
             {
-                return _purge(_specialMessageRepository, ctx);
+                return _purge(_contentRepository, ctx);
             }
 
             throw new NotImplementedException();
@@ -73,32 +76,32 @@ namespace Origami.Core.Data
 
             if (ctx.Entity.Type.Like("SpecialPage") == true)
             {
-                return _restore(_specialPageRepository, ctx);
+                return _restore(_contentRepository, ctx);
             }
 
             if (ctx.Entity.Type.Like("SpecialMessage") == true)
             {
-                return _restore(_specialMessageRepository, ctx);
+                return _restore(_contentRepository, ctx);
             }
 
             throw new NotImplementedException();
         }
 
         private Result<OrigamiTrash> _purge<T>(IRepository<T> repo, DataOperationContext<OrigamiTrash> trash)
-            where T : class, IId, new()
+            where T : class, IId
         {
             var hub = new Result<OrigamiTrash>(trash.Entity);
             var entity = repo.ReadFromDatabase(trash.Entity);
-            var ctx = new DataOperationContext<T>(trash.User, trash.DateTime, entity ?? new());
+            var ctx = new DataOperationContext<T>(trash.User, trash.DateTime, entity ?? Activator.CreateInstance<T>());
             return repo.SmartPurge(ctx, true).Push(hub);
         }
 
         private Result<OrigamiTrash> _restore<T>(IRepository<T> repo, DataOperationContext<OrigamiTrash> trash)
-            where T : class, IId, new()
+            where T : class, IId
         {
             var hub = new Result<OrigamiTrash>(trash.Entity);
             var entity = repo.ReadFromDatabase(trash.Entity);
-            var ctx = new DataOperationContext<T>(trash.User, trash.DateTime, entity ?? new());
+            var ctx = new DataOperationContext<T>(trash.User, trash.DateTime, entity ?? Activator.CreateInstance<T>());
             if (entity != null)
             {
                 return repo.SmartRestore(ctx, true).Push(hub);

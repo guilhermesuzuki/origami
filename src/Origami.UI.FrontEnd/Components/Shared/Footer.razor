@@ -34,18 +34,18 @@
     }
     protected OrigamiSpecialPage CookiePolicy()
     {
-        return this.Super.SpecialPages.ReadFromCache().GetByType(OrigamiSpecialPageTypes.CookiePolicy).FirstOrDefault() ?? new();
+        return this.Super.GetSpecialPages().GetByType(OrigamiSpecialPageTypes.CookiePolicy).FirstOrDefault() ?? new();
     }
     protected OrigamiSpecialPage PrivacyPolicy()
     {
-        return this.Super.SpecialPages.ReadFromCache().GetByType(OrigamiSpecialPageTypes.PrivacyPolicy).FirstOrDefault() ?? new();
+        return this.Super.GetSpecialPages().GetByType(OrigamiSpecialPageTypes.PrivacyPolicy).FirstOrDefault() ?? new();
     }
     protected OrigamiSpecialPage TermsAndConditions()
     {
-        return this.Super.SpecialPages.ReadFromCache().GetByType(OrigamiSpecialPageTypes.TermsAndConditions).FirstOrDefault() ?? new();
+        return this.Super.GetSpecialPages().GetByType(OrigamiSpecialPageTypes.TermsAndConditions).FirstOrDefault() ?? new();
     }
     protected OrigamiSpecialPage TermsOfService()
     {
-        return this.Super.SpecialPages.ReadFromCache().GetByType(OrigamiSpecialPageTypes.TermsOfService).FirstOrDefault() ?? new();
+        return this.Super.GetSpecialPages().GetByType(OrigamiSpecialPageTypes.TermsOfService).FirstOrDefault() ?? new();
     }
 }

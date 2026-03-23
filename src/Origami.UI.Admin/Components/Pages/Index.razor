@@ -500,7 +500,8 @@
     /// <returns></returns>
     protected IEnumerable<OrigamiSpecialMessage> DraftSpecialMessages()
     {
-        return this.Super.SpecialMessages.ReadFromCache()
+        return this.Super.Contents.ReadFromCache()
+            .OfType<OrigamiSpecialMessage>()
             .Drafts()
             .OrderByDescending(x => x.DateCreated)
             .Take(5);

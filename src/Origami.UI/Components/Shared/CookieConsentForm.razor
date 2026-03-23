@@ -2,7 +2,7 @@
 
 @if (SyncRoot != null)
 {
-    var pp = this.Super.SpecialPages.ReadFromCache().GetByType(OrigamiSpecialPageTypes.CookiePolicy).FirstOrDefault();
+    var pp = this.Super.GetSpecialPages().GetByType(OrigamiSpecialPageTypes.CookiePolicy).FirstOrDefault();
     <div class="cookie-consent-form @Class">
         <div class="comment-text p-3 border shadow-lg">
             <p>

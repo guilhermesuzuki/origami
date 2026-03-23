@@ -20,12 +20,12 @@
         <div class="trash-content mt-3">
             @if (Entity.Type.Like("SpecialPage") == true)
             {
-                var entity = this.Super.SpecialPages.ReadFromCache().Id(Entity.Id);
+                var entity = this.Super.GetSpecialPages().Id(Entity.Id);
                 <TrashFormSpecialPage Entity="entity"></TrashFormSpecialPage>
             }
             else if (Entity.Type.Like("SpecialMessage") == true)
             {
-                var entity = this.Super.SpecialMessages.ReadFromCache().Id(Entity.Id);
+                var entity = this.Super.GetSpecialMessages().Id(Entity.Id);
                 <TrashFormSpecialMessage Entity="entity"></TrashFormSpecialMessage>
             }
             else if (Entity.Type.Like("Blog") == true)

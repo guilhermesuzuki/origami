@@ -218,7 +218,8 @@ namespace Origami.Core.Data
         /// <returns></returns>
         public IEnumerable<OrigamiSpecialMessage> GetDraftSpecialMessages()
         {
-            return this.SpecialMessages.ReadFromCache()
+            return this.Contents.ReadFromCache()
+                .OfType<OrigamiSpecialMessage>()
                 .Drafts()
                 .OrderByDescending(x => x.DateCreated)
                 .Take(5);
@@ -460,7 +461,6 @@ namespace Origami.Core.Data
                 Roles.RefreshCache();
                 Settings.RefreshCache();
                 SocialProfiles.RefreshCache();
-                SpecialMessages.RefreshCache();
                 Subscribers.RefreshCache();
                 Tags.RefreshCache();
                 Users.RefreshCache();

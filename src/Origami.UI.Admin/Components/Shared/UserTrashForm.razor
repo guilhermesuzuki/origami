@@ -70,7 +70,7 @@
             }
             else if (Entity.Type.Like("SpecialMessage") == true)
             {
-                var entity = this.Super.SpecialMessages.ReadFromCache().Id(Entity.Id);
+                var entity = this.Super.Contents.ReadFromCache().OfType<OrigamiSpecialMessage>().Id(Entity.Id);
                 <TrashFormSpecialMessage Entity="entity"></TrashFormSpecialMessage>
             }
         </div>

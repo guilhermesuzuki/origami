@@ -160,7 +160,6 @@ namespace Origami.UI
             builder.Services.AddCrud<OrigamiRole, RoleRepository>();
             builder.Services.AddCrud<OrigamiSettings, SettingsRepository>();
             builder.Services.AddCrud<OrigamiSocialProfile, SocialProfileRepository>();
-            builder.Services.AddCrud<OrigamiSpecialMessage, SpecialMessageRepository>();
             builder.Services.AddCrud<OrigamiTag, TagRepository>();
             builder.Services.AddCrud<OrigamiTrash, TrashRepository>();
             builder.Services.AddCrud<OrigamiUser, UserRepository>();

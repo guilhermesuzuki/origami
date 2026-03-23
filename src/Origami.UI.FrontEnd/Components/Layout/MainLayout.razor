@@ -11,7 +11,7 @@
     <Root>
         <a id="top"></a>
         <IncognitoMode></IncognitoMode>
-        @foreach (var message in this.Super.SpecialMessages.GetSiteMessages())
+        @foreach (var message in this.Super.SpecialMessages.GetVisibleMessages())
         {
             <SpecialMessageHeader Entity="message" Class="border-bottom border-light-subtle"></SpecialMessageHeader>
         }

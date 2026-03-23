@@ -45,7 +45,7 @@ namespace Origami.Core.Data
             return new Result<OrigamiSpecialMessage>(ctx.Entity, _validator);
         }
 
-        public IEnumerable<OrigamiSpecialMessage> GetSiteMessages()
+        public IEnumerable<OrigamiSpecialMessage> GetVisibleMessages()
         {
             var now = new DateOnly(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day);
             var messages = base.ReadFromCache();

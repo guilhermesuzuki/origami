@@ -156,7 +156,7 @@ namespace Origami.Core.Data
 
             if (ctx.Entity.Type.Like("SpecialMessage") == true)
             {
-                return _purge(_specialMessageRepository, ctx);
+                return _purge(_contentRepository, ctx);
             }
 
             throw new NotImplementedException();
@@ -211,7 +211,7 @@ namespace Origami.Core.Data
 
             if (ctx.Entity.Type.Like("SpecialMessage") == true)
             {
-                return _restore(_specialMessageRepository, ctx);
+                return _restore(_contentRepository, ctx);
             }
 
             throw new NotImplementedException();

@@ -54,12 +54,12 @@
                                         }
                                         else if (context.Item.Type.Like("SpecialPage") == true)
                                         {
-                                            var page = this.Super.SpecialPages.ReadFromCache().Id(context.Item.Id);
+                                            var page = this.Super.GetSpecialPages().Id(context.Item.Id);
                                             <SpecialPageHeaderLite2 Entity="page"></SpecialPageHeaderLite2>
                                         }
                                         else if (context.Item.Type.Like("SpecialMessage") == true)
                                         {
-                                            var message = this.Super.SpecialMessages.ReadFromCache().Id(context.Item.Id);
+                                            var message = this.Super.GetSpecialMessages().Id(context.Item.Id);
                                             <SpecialMessageHeaderLite Entity="message"></SpecialMessageHeaderLite>
                                         }
                                     </div>
