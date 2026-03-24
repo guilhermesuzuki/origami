@@ -24,17 +24,28 @@
                     </li>
                 </ul>
                 <div class="p-3">
-                    <div class="post-rating">
+                    <div class="content-header-title-tinyheader small d-inline-flex align-items-center">
+                        <span class="language d-inline-block @Entity.Get().LanguageWrittenOn mx-1"></span>
+                        @if (this.Entity is OrigamiPage page && page.IsFrontPage)
+                        {
+                            <span class="mx-1">
+                                <i class="bi bi-globe"></i>
+                                @Text.Lower("Front-page")
+                            </span>
+                        }
+                    </div>
+                    <div class="dummy" style="margin-bottom: -8px;"></div>
+                    <div class="content-rating">
                         <ContentRating Entity="this.Entity"></ContentRating>
                     </div>
                     <span class="title fw-bold text-uppercase focusable ellipsis" style="" title="@Entity.Title">@Entity.Title</span>
                     <div>
-                        <span class="post-date pe-1">@(Entity.GetDate())</span>
-                        <span class="post-views pe-1 @(views > 0 ? null : "d-none")">
+                        <span class="content-date pe-1">@(Entity.GetDate())</span>
+                        <span class="content-views pe-1 @(views > 0 ? null : "d-none")">
                             <i class="fa-solid fa-eye"></i>
                             @views
                         </span>
-                        <span class="post-comments pe-1 @(comments > 0 ? null : "d-none")">
+                        <span class="content-comments pe-1 @(comments > 0 ? null : "d-none")">
                             <i class="fa-solid fa-comment"></i>
                             @comments
                         </span>

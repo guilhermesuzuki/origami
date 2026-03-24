@@ -2,45 +2,100 @@
 @implements IEntityNull<OrigamiContent>
 @inject IContentRatingRepository _contentRating
 
-@if(this.Entity != null)
+@if (this.Entity != null)
 {
     var rating = Math.Round(_contentRating.CalculateRating(this.Entity), 1, MidpointRounding.ToEven);
     var ratings = _contentRating.Ratings(Entity).Count();
     <ul class="d-inline-flex align-items-center @Class list-unstyled post-rating">
-        @if (this.ShowLanguage)
+        @* @if (this.ShowLanguage)
         {
             <li class="me-1" style="width:22px;">
                 <span class="language d-inline-block @Entity.Get().LanguageWrittenOn"></span>
             </li>
-        }
+        } *@
         <li>
             <ul class="d-inline-flex align-items-center rating" data-rating="@rating">
-                @for (int i = 1; i <= 5; i++)
+                @for (byte i = 1; i <= 5; i++)
                 {
                     <li>
-                        <div data-rating-level="@i" class="rating-star rating-star-@i rating-star-empty"></div>
+                        <div data-rating-level="@i"
+                             class="@(UserFacade.SocialProfile.New || HasRated() ? null : "cursor-pointer rateable") rating-star rating-star-@i rating-star-empty"
+                             @onclick="() => this.Rate(i)" @onclick:stopPropagation="true"></div>
                     </li>
                 }
+                <li class="ratings ps-1 x-small">
+                    <span>[ </span>
+                    <span>@rating.ToString("0.0")</span>
+                    <span>, </span>
+                    <i class="fa-solid fa-user"></i>
+                    <span>@ratings</span>
+                    <span>]</span>
+                </li>
             </ul>
         </li>
-        @if (ratings > 0)
-        {
-            <li class="ratings ps-1 x-small">
-                <span>[ </span>
-                @if (rating > 0)
-                {
-                    <span>@rating.ToString(".0")</span>
-                    <span>, </span>
-                }
-                <i class="fa-solid fa-user"></i>
-                <span>@ratings</span>
-                <span>]</span>
-            </li>
-        }
     </ul>
+    <AuthorizeView>
+        <Authorized>
+            @if (HasRated() == true)
+            {
+                var rating = this.RatingFromCurrentUser();
+                <div class="x-small">
+                    <label>@Text.Lower("You Rated This Post: {0} Star(s)", rating!.Rating) - </label>
+                    <label class="focusable" @onclick="() => this.PurgeRate()" @onclick:stopPropagation="true">
+                        <i class="fa-solid fa-rotate-left"></i>
+                        @Text.Lower("Undo")
+                    </label>
+                </div>
+            }
+        </Authorized>
+    </AuthorizeView>
 }
 
 @code {
+    /// <summary>
+    /// Event triggered when the user rates the post (or unrates it)
+    /// </summary>
+    [Parameter] public EventCallback<OrigamiContentRating?> OnUserHasRated { get; set; }
+
     [Parameter] public OrigamiContent? Entity { get; set; }
-    [Parameter] public bool ShowLanguage { get; set; } = true;
+    // [Parameter] public bool ShowLanguage { get; set; } = true;
+
+    protected OrigamiContentRating? RatingFromCurrentUser()
+    {
+        return this.Super.ContentRatings.Ratings(this.Entity!).FirstOrDefault(x => x.SocialProfileId == UserFacade.SocialProfile.Id);
+    }
+
+    protected bool HasRated()
+    {
+        return RatingFromCurrentUser() != null;
+    }
+
+    protected void Rate(byte rate)
+    {
+        if (HasRated() == false)
+        {
+            var rating = new OrigamiContentRating
+            {
+                Id = Guid.NewGuid(),
+                SocialProfileId = UserFacade.SocialProfile.Id,
+                ContentId = this.Entity!.Id,
+                Rating = rate,
+            };
+
+            var context = new DataOperationContextFrontEnd<OrigamiContentRating>(UserFacade.SocialProfile, DateTime.UtcNow, rating);
+            var hub = this.Super.ContentRatings.SmartCreate(context);
+            if (hub.Ok) this.OnUserHasRated.InvokeAsync(rating);
+        }
+    }
+
+    protected void PurgeRate()
+    {
+        var rating = this.RatingFromCurrentUser();
+        if (rating != null)
+        {
+            var context = new DataOperationContextFrontEnd<OrigamiContentRating>(UserFacade.SocialProfile, DateTime.UtcNow, rating);
+            var hub = this.Super.ContentRatings.SmartPurge(context);
+            if (hub.Ok) this.OnUserHasRated.InvokeAsync(rating);
+        }
+    }
 }
