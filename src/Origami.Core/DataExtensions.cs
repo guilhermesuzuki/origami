@@ -1,5 +1,6 @@
 ﻿using CloneExtensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
@@ -7,6 +8,7 @@ using Origami.Core;
 using Origami.Core.Data;
 using Origami.Core.Models;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq.Dynamic.Core;
 using System.Reflection;
@@ -15,13 +17,6 @@ namespace Origami.Core
 {
     public static class DataExtensions
     {
-        public static List<X> Set<X, Y>(this DbContext db)
-            where X : class
-            where Y : OrigamiContent
-        {
-            return db.Set<X>().AsNoTracking().OfType<Y>().Cast<X>().ToList();
-        }
-
         /// <summary>
         /// 
         /// </summary>
@@ -384,6 +379,70 @@ namespace Origami.Core
             return (rowNumber.Count(), query.ToList());
         }
 
+        /// <summary>
+        /// Retrieves a list of entities of the specified type from the memory cache, loading them from the database if
+        /// they are not already cached.
+        /// </summary>
+        /// <remarks>For certain derived types, such as OrigamiPage, OrigamiPost, OrigamiSpecialMessage,
+        /// OrigamiSpecialPage, and OrigamiVideo, the method retrieves and filters entities from the OrigamiContent
+        /// cache. The method is thread-safe and uses locking to prevent race conditions when populating the
+        /// cache.</remarks>
+        /// <typeparam name="X">The type of entity to retrieve. Must be a reference type.</typeparam>
+        /// <param name="db">The database context used to query entities if they are not present in the cache.</param>
+        /// <param name="memoryCache">The memory cache instance used to store and retrieve cached entities.</param>
+        /// <returns>A list of entities of type X retrieved from the cache, or from the database if not cached. Returns an empty
+        /// list if no entities are found.</returns>
+        public static List<X> ReadFromCache<X>(this DbContext db, IMemoryCache memoryCache) where X : class
+        {
+            var timestamp = Stopwatch.GetTimestamp();
+            var key = typeof(X).KeyForCaching();
+
+            if (typeof(X).FullName != typeof(OrigamiContent).FullName)
+            {
+                var x = Activator.CreateInstance<X>();
+                switch (x)
+                {
+                    case OrigamiPage:
+                    case OrigamiPost:
+                    case OrigamiSpecialMessage:
+                    case OrigamiSpecialPage:
+                    case OrigamiVideo:
+                        return db.ReadFromCache<OrigamiContent>(memoryCache).OfType<X>().ToList();
+                    default: break;
+                }
+            }
+
+            try
+            {
+                //race condition
+                if (memoryCache.Get(key) == null)
+                {
+                    lock (OrigamiConstants.SyncRoot)
+                    {
+                        if (memoryCache.Get(key) == null)
+                        {
+                            var list = db.Set<X>().AsNoTracking().ToList();
+                            memoryCache.Set(key, list);
+                        }
+                    }
+                }
+
+                return memoryCache.GetList<X>(key) ?? [];
+            }
+            finally
+            {
+                var elapsedTime = Stopwatch.GetElapsedTime(timestamp);
+                Console.ForegroundColor = elapsedTime.Milliseconds >= 100 ? ConsoleColor.Red : ConsoleColor.White;
+                Console.WriteLine($"{key} obtained in {elapsedTime}");
+            }
+        }
+
+        public static List<X> Set<X, Y>(this DbContext db)
+                                                                                                                                                                                                            where X : class
+            where Y : OrigamiContent
+        {
+            return db.Set<X>().AsNoTracking().OfType<Y>().Cast<X>().ToList();
+        }
         /// <summary>
         /// Tries to retrieve a blog by its slug. Returns null if not found or if the blog is deleted or inactive.
         /// </summary>

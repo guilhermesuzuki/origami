@@ -78,47 +78,8 @@ namespace Origami.Core.Data
 
         public virtual List<X> ReadFromCache<X>() where X : class
         {
-            var timestamp = Stopwatch.GetTimestamp();
-            var key = typeof(X).KeyForCaching();
-
-            if (typeof(X).FullName != typeof(OrigamiContent).FullName)
-            {
-                var x = Activator.CreateInstance<X>();
-                switch (x)
-                {
-                    case OrigamiPage:
-                    case OrigamiPost:
-                    case OrigamiSpecialMessage:
-                    case OrigamiSpecialPage:
-                    case OrigamiVideo:
-                        return ReadFromCache<OrigamiContent>().OfType<X>().ToList();
-                    default: break;
-                }
-            }
-
-            try
-            {
-                //race condition
-                if (MemoryCache.Get(key) == null)
-                {
-                    lock (OrigamiConstants.SyncRoot)
-                    {
-                        if (MemoryCache.Get(key) == null)
-                        {
-                            using var db = DbContextFactory.CreateDbContext();
-                            var list = db.Set<X>().AsNoTracking().ToList();
-                            MemoryCache.Set(key, list);
-                        }
-                    }
-                }
-                return MemoryCache.GetList<X>(key) ?? [];
-            }
-            finally
-            {
-                var elapsedTime = Stopwatch.GetElapsedTime(timestamp);
-                Console.ForegroundColor = elapsedTime.Milliseconds >= 100 ? ConsoleColor.Red : ConsoleColor.White;
-                Console.WriteLine($"{key} obtained in {elapsedTime}");
-            }
+            using var db = this.DbContextFactory.CreateDbContext();
+            return db.ReadFromCache<X>(MemoryCache);
         }
 
         public Result<T> SmartCreate(DataOperationContext<T> ctx, bool checkPermission)
