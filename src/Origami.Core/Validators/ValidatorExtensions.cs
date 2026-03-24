@@ -204,6 +204,12 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("An entity cannot be its own parent"));
         }
 
+        public static IRuleBuilderOptions<T, byte> Rating<T>(this IRuleBuilder<T, byte> ruleBuilder, Text text)
+        {
+            return ruleBuilder
+                .LessThanOrEqualTo((byte)5)
+                .WithMessage(text.Original("Rating must be less than or equal to 5"));
+        }
         public static IRuleBuilderOptions<T, string> RssFeed<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
         {
             return ruleBuilder

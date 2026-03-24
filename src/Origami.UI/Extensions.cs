@@ -103,8 +103,10 @@ namespace Origami.UI
             builder.Services.AddTransient<IContentCategoryRepository, ContentCategoryRepository>();
             builder.Services.AddTransient<IContentCommentReactionRepository, ContentCommentReactionRepository>();
             builder.Services.AddTransient<IContentCommentRepository, ContentCommentRepository>();
+            builder.Services.AddTransient<IContentRatingRepository, ContentRatingRepository>();
             builder.Services.AddTransient<IContentReactionRepository, ContentReactionRepository>();
             builder.Services.AddTransient<IContentRepository, ContentRepository>();
+            builder.Services.AddTransient<IContentHistoryRepository, ContentHistoryRepository>();
             builder.Services.AddTransient<IContentTagRepository, ContentTagRepository>();
             builder.Services.AddTransient<IDashboardRepository, DashboardRepository>();
             builder.Services.AddTransient<IDirectoryRepository, DirectoryRepository>();
@@ -157,6 +159,10 @@ namespace Origami.UI
             builder.Services.AddCrud<OrigamiContentCategory, ContentCategoryRepository>();
             builder.Services.AddCrud<OrigamiContentComment, ContentCommentRepository>();
             builder.Services.AddCrud<OrigamiContentCommentReaction, ContentCommentReactionRepository>();
+            builder.Services.AddCrud<OrigamiContentHistory, ContentHistoryRepository>();
+            builder.Services.AddCrud<OrigamiContentRating, ContentRatingRepository>();
+            builder.Services.AddCrud<OrigamiContentReaction, ContentReactionRepository>();
+            builder.Services.AddCrud<OrigamiContentTag, ContentTagRepository>();
             builder.Services.AddCrud<OrigamiFile, FileManagerRepository>();
             builder.Services.AddCrud<OrigamiQuickNote, QuickNoteRepository>();
             builder.Services.AddCrud<OrigamiRole, RoleRepository>();
@@ -190,7 +196,13 @@ namespace Origami.UI
             builder.Services.AddSingleton<IValidator<OrigamiBlog>, OrigamiBlogValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiCategory>, OrigamiCategoryValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiContent>, OrigamiContentValidator>();
+            builder.Services.AddSingleton<IValidator<OrigamiContentCategory>, OrigamiContentCategoryValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiContentComment>, OrigamiContentCommentValidator>();
+            builder.Services.AddSingleton<IValidator<OrigamiContentCommentReaction>, OrigamiContentCommentReactionValidator>();
+            builder.Services.AddSingleton<IValidator<OrigamiContentHistory>, OrigamiContentHistoryValidator>();
+            builder.Services.AddSingleton<IValidator<OrigamiContentRating>, OrigamiContentRatingValidator>();
+            builder.Services.AddSingleton<IValidator<OrigamiContentReaction>, OrigamiContentReactionValidator>();
+            builder.Services.AddSingleton<IValidator<OrigamiContentTag>, OrigamiContentTagValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiPage>, OrigamiPageValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiPost>, OrigamiPostValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiQuickNote>, OrigamiQuickNoteValidator>();
