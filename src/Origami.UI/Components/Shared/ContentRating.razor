@@ -13,7 +13,7 @@
                 {
                     <li>
                         <div data-rating-level="@i"
-                             class="@(UserFacade.SocialProfile.New || HasRated() ? null : "cursor-pointer rateable") rating-star rating-star-@i rating-star-empty"
+                             class="rating-star rating-star-@i rating-star-empty"
                              @onclick="() => this.Rate(i)" @onclick:stopPropagation="true"></div>
                     </li>
                 }
