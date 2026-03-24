@@ -19,14 +19,13 @@ namespace Origami.Core.Models
             Type = OrigamiSpecialPageTypes.Maintenance.ToString(),
         };
 
-        protected string _subtype = OrigamiSpecialPageTypes.CookiePolicy.ToString();
-
         /// <summary>
         /// Default constructor
         /// </summary>
         public OrigamiSpecialPage() : base()
         {
             this.Type = nameof(OrigamiSpecialPage);
+            this.Subtype = OrigamiSpecialPageTypes.CookiePolicy.ToString();
             this.LanguageWrittenOn = CultureInfo.DefaultThreadCurrentUICulture?.Name ?? "en-US";
         }
 
