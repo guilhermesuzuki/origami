@@ -103,9 +103,9 @@ namespace Origami.UI
 
         public void SetParent(T entity)
         {
-            if (Entity is IParentIdNull fkParent)
+            if (Entity is IParentIdNull parent)
             {
-                fkParent.ParentId = entity.Id;
+                parent.ParentId = entity.Id;
                 return;
             }
             throw new NotImplementedException("Entity does not support parent");
