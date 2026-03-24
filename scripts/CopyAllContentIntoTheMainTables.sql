@@ -706,5 +706,138 @@ FROM dbo.oi_VideoComments;
 
 
 
+INSERT INTO dbo.oi_ContentCategories (
+	[Id],
+	[CategoryId],
+	[ContentId])
+SELECT
+	[Id],
+	[CategoryId],
+	[PostId]
+FROM dbo.oi_PostCategories;
 
 
+
+INSERT INTO dbo.oi_ContentCategories (
+	[Id],
+	[CategoryId],
+	[ContentId])
+SELECT
+	[Id],
+	[CategoryId],
+	[VideoId]
+FROM dbo.oi_VideoCategories;
+
+
+
+
+
+
+INSERT INTO dbo.oi_ContentCommentReactions (
+	[Id],
+	[CommentId],
+	[Reaction],
+	[DateCreated],
+	[HostAddress],
+	[HostName],
+	[UserAgent],
+	[Platform],
+	[Browser],
+	[IsMobileDevice],
+	[UrlReferrer],
+	[Url],
+	[Location_City],
+	[Location_Country],
+	[Location_CountryCode],
+	[Location_Latitude],
+	[Location_Longitude],
+	[Location_Region],
+	[Location_RegionCode],
+	[Location_TimeZone],
+	[Location_TimeZoneOffset],
+	[Location_ZipCode],
+	[SocialProfileId],
+	[IsBot])
+SELECT 
+	[Id],
+	[CommentId],
+	[Reaction],
+	[DateCreated],
+	[HostAddress],
+	[HostName],
+	[UserAgent],
+	[Platform],
+	[Browser],
+	[IsMobileDevice],
+	[UrlReferrer],
+	[Url],
+	[Location_City],
+	[Location_Country],
+	[Location_CountryCode],
+	[Location_Latitude],
+	[Location_Longitude],
+	[Location_Region],
+	[Location_RegionCode],
+	[Location_TimeZone],
+	[Location_TimeZoneOffset],
+	[Location_ZipCode],
+	[SocialProfileId],
+	[IsBot]
+FROM dbo.oi_PostCommentReactions;
+
+
+
+
+
+
+INSERT INTO dbo.oi_ContentCommentReactions (
+	[Id],
+	[CommentId],
+	[Reaction],
+	[DateCreated],
+	[HostAddress],
+	[HostName],
+	[UserAgent],
+	[Platform],
+	[Browser],
+	[IsMobileDevice],
+	[UrlReferrer],
+	[Url],
+	[Location_City],
+	[Location_Country],
+	[Location_CountryCode],
+	[Location_Latitude],
+	[Location_Longitude],
+	[Location_Region],
+	[Location_RegionCode],
+	[Location_TimeZone],
+	[Location_TimeZoneOffset],
+	[Location_ZipCode],
+	[SocialProfileId],
+	[IsBot])
+SELECT 
+	[Id],
+	[CommentId],
+	[Reaction],
+	[DateCreated],
+	[HostAddress],
+	[HostName],
+	[UserAgent],
+	[Platform],
+	[Browser],
+	[IsMobileDevice],
+	[UrlReferrer],
+	[Url],
+	[Location_City],
+	[Location_Country],
+	[Location_CountryCode],
+	[Location_Latitude],
+	[Location_Longitude],
+	[Location_Region],
+	[Location_RegionCode],
+	[Location_TimeZone],
+	[Location_TimeZoneOffset],
+	[Location_ZipCode],
+	[SocialProfileId],
+	[IsBot]
+FROM dbo.oi_VideoCommentReactions;
