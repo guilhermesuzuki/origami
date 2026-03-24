@@ -17,7 +17,7 @@ namespace Origami.UI
         IEntity<T>,
         ICreateEntityVoid<T>,
         ISave
-        where T : class, IId, INew, new()
+        where T : class, IId
     {
         /// <summary>
         /// Should show or hide the file manager for picking images
@@ -48,7 +48,7 @@ namespace Origami.UI
 
         [Parameter] public EventCallback<T> Cancelled { get; set; }
         [Parameter] public EventCallback<T> Created { get; set; }
-        [Parameter] public T Entity { get; set; } = new();
+        [Parameter] public T Entity { get; set; } = Activator.CreateInstance<T>();
         [Parameter] public EventCallback<T> Saved { get; set; }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace Origami.UI
         /// <summary>
         /// Shows or hides the parent selector
         /// </summary>
-        protected bool ParentSelector { get; set; }
+        protected bool ShowParentSelector { get; set; }
 
         /// <summary>
         /// Instantiates a new <see cref="Entity"/>
@@ -89,7 +89,7 @@ namespace Origami.UI
             try
             {
                 var blog = GetBlogFromUserFacade();
-                Entity = new T();
+                Entity = Activator.CreateInstance<T>();
                 Entity.SetBlog(blog);
                 Entity.SetAuthor(UserFacade.User);
                 CreateEntityBeforeEvent(Entity);
@@ -97,7 +97,7 @@ namespace Origami.UI
             }
             finally
             {
-                ParentSelector = false;
+                ShowParentSelector = false;
             }
         }
 
@@ -120,16 +120,6 @@ namespace Origami.UI
         /// Cancels the edit
         /// </summary>
         public virtual void UndoChanges() { }
-
-        /// <summary>
-        /// Executes before the save process
-        /// </summary>
-        /// <returns></returns>
-        protected virtual Result<T> BeforeSaving()
-        {
-            ParentSelector = false;
-            return new(Entity);
-        }
 
         /// <summary>
         /// Clears the header image, setting it to a default value
@@ -546,13 +536,13 @@ namespace Origami.UI
                     {
                         var filename = Path.GetFileName(sourcePath);
                         var destinationPath = Super.Files.LocalPath($"{webPath}{filename}");
-                        if (System.IO.File.Exists(destinationPath) == true)
+                        if (File.Exists(destinationPath) == true)
                         {
                             var extension = Path.GetExtension(destinationPath);
                             var newfilename = $"{Path.GetFileNameWithoutExtension(destinationPath)}.{Nanoid.Generate(Nanoid.Alphabets.UppercaseLettersAndDigits, 4)}{extension}";
                             destinationPath = Super.Files.LocalPath($"{webPath}{newfilename}");
                         }
-                        if (System.IO.File.Exists(destinationPath) == true)
+                        if (File.Exists(destinationPath) == true)
                         {
                             throw new InvalidOperationException("File with the same name exists. Please, try again");
                         }
@@ -562,7 +552,7 @@ namespace Origami.UI
                         {
                             Directory.CreateDirectory(destinationDirectory);
                         }
-                        System.IO.File.Copy(sourcePath, destinationPath, true);
+                        File.Copy(sourcePath, destinationPath, true);
                     }
                     catch (Exception ex)
                     {

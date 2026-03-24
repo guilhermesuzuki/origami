@@ -61,13 +61,13 @@ namespace Origami.UI.Admin
 
         public override void UndoChanges()
         {
-            this.ParentSelector = false;
+            this.ShowParentSelector = false;
             this.Entity = Repository.ReadFromCache().Id(this.Entity.Id).Clone() ?? new();
         }
 
-        protected override Result<T> BeforeSaving()
+        protected virtual Result<T> BeforeSaving()
         {
-            this.ParentSelector = false;
+            this.ShowParentSelector = false;
 
             //sets the FK Blog (or the save process will fail)
             if (Entity is IFKBlog fkBlog && fkBlog.BlogId == Guid.Empty)

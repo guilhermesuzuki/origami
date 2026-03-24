@@ -11,7 +11,7 @@ namespace Origami.Core.Models
         /// <summary>
         /// The main entity, root of all information here
         /// </summary>
-        public T? Entity { get; set; }
+        public T Entity { get; set; } = Activator.CreateInstance<T>();
 
         public List<OrigamiContentCategory> Categories { get; } = [];
 
@@ -22,5 +22,10 @@ namespace Origami.Core.Models
         public List<OrigamiContentReaction> Reactions { get; } = [];
 
         public List<OrigamiContentTag> Tags { get; } = [];
+
+        /// <summary>
+        /// Dummy implementation to satisfy IHubContent interface, since the actual ID is stored in the Entity
+        /// </summary>
+        public Guid Id { get => Entity.Id; set => Entity.Id = value; }
     }
 }

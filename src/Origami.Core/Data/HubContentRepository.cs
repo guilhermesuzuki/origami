@@ -37,7 +37,7 @@ namespace Origami.Core.Data
 
             var tasks = new List<Task>
             {
-                Task.Run(() => result.Entity = this.GetEntity(rootId)),
+                Task.Run(() => result.Entity = this.GetEntity(rootId) ?? Activator.CreateInstance<T1>()),
                 Task.Run(() => result.Categories.AddRange(this.GetEntities<OrigamiContentCategory>(rootId))),
                 Task.Run(() => result.Comments.AddRange(this.GetEntities<OrigamiContentComment>(rootId))),
                 Task.Run(() => result.Ratings.AddRange(this.GetEntities<OrigamiContentRating>(rootId))),
@@ -52,8 +52,6 @@ namespace Origami.Core.Data
 
         public Result<T2> Save(T2 root, IId userId)
         {
-            if (root.Entity == null) return new(root) { Error = Text.Original("Entity is null"), };
-
             // hub
             var hub = new Result<T2>(root);
 
@@ -68,6 +66,8 @@ namespace Origami.Core.Data
                 // check permissions
                 if (UserHasPermission(db, userId.Id, permission) == false) return new(root) { Info = permission, Error = Text.Original(Text.YouDontHavePermissionForThisFeature), };
 
+                hub.Info = Text.Original("User has permission for this feature");
+
                 // validate hub
                 _validator.ValidateAndThrow(root);
 
@@ -80,6 +80,8 @@ namespace Origami.Core.Data
                 _memoryCache.SaveCache(root.Entity);
                 _memoryCache.MergeCache(m1);
                 _memoryCache.MergeCache(m2);
+
+                hub.Success = Text.Original(Text.OperationCompletedSuccessfully);
 
                 return hub;
             }

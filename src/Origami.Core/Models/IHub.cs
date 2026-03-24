@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Origami.Core.Models
 {
-    public interface IHub<T> : IEntityNull<T>
+    public interface IHub<T> : IEntity<T>, IId
     {
 
     }

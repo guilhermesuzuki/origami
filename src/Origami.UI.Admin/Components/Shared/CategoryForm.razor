@@ -13,7 +13,7 @@
             <div class="p-3 border">
                 <CategoryHeaderLite Class="p-3 border" Entity="parent"></CategoryHeaderLite>
                 <div class="btn-group mt-2 w-100">
-                    <button class="btn btn-light w-100" @onclick="() => this.ParentSelector = !this.ParentSelector">
+                    <button class="btn btn-light w-100" @onclick="() => this.ShowParentSelector = !this.ShowParentSelector">
                         <i class="fa-solid fa-square-check"></i>
                         @Text.Lower("Select parent category")
                     </button>
@@ -28,14 +28,14 @@
         {
             <div class="p-3 border">
                 <div class="btn-group w-100">
-                    <button class="btn btn-light w-100" @onclick="() => this.ParentSelector = !this.ParentSelector">
+                    <button class="btn btn-light w-100" @onclick="() => this.ShowParentSelector = !this.ShowParentSelector">
                         <i class="fa-solid fa-square-check"></i>
                         @Text.Lower("Select parent category")
                     </button>
                 </div>
             </div>
         }
-        @if (ParentSelector)
+        @if (ShowParentSelector)
         {
             <div class="mt-3">
                 <MudDataGrid T="OrigamiCategory" Items="this.GetParents()" Filterable="false" SortMode="SortMode.Single" Class="border" Bordered="true" SelectOnRowClick="false">
@@ -47,7 +47,7 @@
                         </TemplateColumn>
                         <TemplateColumn Sortable="false" Filterable="false" CellClass="col-1 text-center">
                             <CellTemplate>
-                                <button class="cursor-pointer p-2" @onclick="() => { this.SetParent(context.Item); this.ParentSelector = false; }"><i class="bi bi-check-square-fill"></i></button>
+                                <button class="cursor-pointer p-2" @onclick="() => { this.SetParent(context.Item); this.ShowParentSelector = false; }"><i class="bi bi-check-square-fill"></i></button>
                             </CellTemplate>
                         </TemplateColumn>
                     </Columns>
