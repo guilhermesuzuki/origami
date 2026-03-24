@@ -101,9 +101,9 @@ namespace Origami.UI
             }
         }
 
-        public void Parent(T entity)
+        public void SetParent(T entity)
         {
-            if (Entity is IParentIdNull<T> fkParent)
+            if (Entity is IParentIdNull fkParent)
             {
                 fkParent.ParentId = entity.Id;
                 return;

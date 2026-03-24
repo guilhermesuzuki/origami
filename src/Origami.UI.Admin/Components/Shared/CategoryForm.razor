@@ -47,7 +47,7 @@
                         </TemplateColumn>
                         <TemplateColumn Sortable="false" Filterable="false" CellClass="col-1 text-center">
                             <CellTemplate>
-                                <button class="cursor-pointer p-2" @onclick="() => { this.Parent(context.Item); this.ParentSelector = false; }"><i class="bi bi-check-square-fill"></i></button>
+                                <button class="cursor-pointer p-2" @onclick="() => { this.SetParent(context.Item); this.ParentSelector = false; }"><i class="bi bi-check-square-fill"></i></button>
                             </CellTemplate>
                         </TemplateColumn>
                     </Columns>
