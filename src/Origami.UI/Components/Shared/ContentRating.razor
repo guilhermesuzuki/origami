@@ -6,14 +6,8 @@
 {
     var rating = Math.Round(_contentRating.CalculateRating(this.Entity), 1, MidpointRounding.ToEven);
     var ratings = _contentRating.Ratings(Entity).Count();
-    <ul class="d-inline-flex align-items-center @Class list-unstyled post-rating">
-        @* @if (this.ShowLanguage)
-        {
-            <li class="me-1" style="width:22px;">
-                <span class="language d-inline-block @Entity.Get().LanguageWrittenOn"></span>
-            </li>
-        } *@
-        <li>
+    <AuthorizeView>
+        <Authorized>
             <ul class="d-inline-flex align-items-center rating" data-rating="@rating">
                 @for (byte i = 1; i <= 5; i++)
                 {
@@ -32,22 +26,45 @@
                     <span>]</span>
                 </li>
             </ul>
-        </li>
-    </ul>
-    <AuthorizeView>
-        <Authorized>
             @if (HasRated() == true)
             {
                 var rating = this.RatingFromCurrentUser();
+                <div class="dummy" style="margin-bottom: -6px;"></div>
                 <div class="x-small">
-                    <label>@Text.Lower("You Rated This Post: {0} Star(s)", rating!.Rating) - </label>
-                    <label class="focusable" @onclick="() => this.PurgeRate()" @onclick:stopPropagation="true">
+                    <span>@Text.Lower("You rated this post: {0} star(s)", rating!.Rating) - </span>
+                    <span class="focusable" @onclick="() => this.PurgeRate()" @onclick:stopPropagation="true">
                         <i class="fa-solid fa-rotate-left"></i>
                         @Text.Lower("Undo")
-                    </label>
+                    </span>
                 </div>
             }
         </Authorized>
+        <NotAuthorized>
+            <ul class="d-inline-flex align-items-center rating" data-rating="@rating">
+                @for (byte i = 1; i <= 5; i++)
+                {
+                    <li>
+                        <div data-rating-level="@i"
+                             class="@(UserFacade.SocialProfile.New || HasRated() ? null : "cursor-pointer rateable") rating-star rating-star-@i rating-star-empty"></div>
+                    </li>
+                }
+                <li class="ratings ps-1 x-small">
+                    <span>[ </span>
+                    <span>@rating.ToString("0.0")</span>
+                    <span>, </span>
+                    <i class="fa-solid fa-user"></i>
+                    <span>@ratings</span>
+                    <span>]</span>
+                </li>
+            </ul>
+            <div class="dummy" style="margin-bottom: -6px;"></div>
+            <div class="x-small text-center">
+                <span>
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    @Text.Lower("Login to rate this")
+                </span>
+            </div>
+        </NotAuthorized>
     </AuthorizeView>
 }
 
@@ -58,7 +75,6 @@
     [Parameter] public EventCallback<OrigamiContentRating?> OnUserHasRated { get; set; }
 
     [Parameter] public OrigamiContent? Entity { get; set; }
-    // [Parameter] public bool ShowLanguage { get; set; } = true;
 
     protected OrigamiContentRating? RatingFromCurrentUser()
     {
