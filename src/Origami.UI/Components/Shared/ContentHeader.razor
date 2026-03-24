@@ -18,31 +18,14 @@
                 <div class="content-rating d-inline-flex align-items-center">
                     <span class="d-inline-block language @Entity.Get().LanguageWrittenOn me-1"></span>
                     <ul class="d-inline-flex align-items-center rating padding-u-5" data-rating="@Math.Round(this.Super.ContentRatings.CalculateRating(this.Entity), 1, MidpointRounding.ToEven)">
-                        <li>
-                            <div data-rating-level="1"
-                                 class="@(UserFacade.SocialProfile.New || HasRated() ? null : "cursor-pointer rateable") rating-star rating-star-1 rating-star-empty"
-                                 @onclick="() => this.Rate(1)" @onclick:stopPropagation="true"></div>
-                        </li>
-                        <li>
-                            <div data-rating-level="2"
-                                 class="@(UserFacade.SocialProfile.New || HasRated() ? null : "cursor-pointer rateable") rating-star rating-star-2 rating-star-empty"
-                                 @onclick="() => this.Rate(2)" @onclick:stopPropagation="true"></div>
-                        </li>
-                        <li>
-                            <div data-rating-level="3"
-                                 class="@(UserFacade.SocialProfile.New || HasRated() ? null : "cursor-pointer rateable") rating-star rating-star-3 rating-star-empty"
-                                 @onclick="() => this.Rate(3)" @onclick:stopPropagation="true"></div>
-                        </li>
-                        <li>
-                            <div data-rating-level="4"
-                                 class="@(UserFacade.SocialProfile.New || HasRated() ? null : "cursor-pointer rateable") rating-star rating-star-4 rating-star-empty"
-                                 @onclick="() => this.Rate(4)" @onclick:stopPropagation="true"></div>
-                        </li>
-                        <li>
-                            <div data-rating-level="5"
-                                 class="@(UserFacade.SocialProfile.New || HasRated() ? null : "cursor-pointer rateable") rating-star rating-star-5 rating-star-empty"
-                                 @onclick="() => this.Rate(5)" @onclick:stopPropagation="true"></div>
-                        </li>
+                        @for (byte i = 1; i <= 5; i++)
+                        {
+                            <li>
+                                <div data-rating-level="@i"
+                                     class="@(UserFacade.SocialProfile.New || HasRated() ? null : "cursor-pointer rateable") rating-star rating-star-@i rating-star-empty"
+                                     @onclick="() => this.Rate(i)" @onclick:stopPropagation="true"></div>
+                            </li>
+                        }
                         <AuthorizeView>
                             <Authorized>
                                 @if (UserFacade.SocialProfile.New)
