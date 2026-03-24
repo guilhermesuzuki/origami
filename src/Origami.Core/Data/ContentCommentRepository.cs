@@ -67,13 +67,6 @@ namespace Origami.Core.Data
             return new Result<OrigamiContentComment>(ctx.Entity, _validator);
         }
 
-        public async Task<List<PostCommentTotal>> FastRead()
-        {
-            using var dbContextFactory = DbContextFactory.CreateDbContext();
-            var sql = @"SELECT p.Id as PostId, (SELECT COUNT_BIG(1) FROM dbo.oi_PostComments pc WHERE pc.PostId = p.Id AND pc.IsDeleted = 0) as TotalComments FROM dbo.oi_Posts p";
-            return await dbContextFactory.Database.SqlQueryRaw<PostCommentTotal>(sql).ToListAsync();
-        }
-
         public long GetComments(OrigamiContent entity)
         {
             var key = entity.KeyForCachingComments();
@@ -134,11 +127,6 @@ namespace Origami.Core.Data
             return hub;
         }
 
-        public void SetComments(OrigamiContent entity, long count)
-        {
-            throw new NotImplementedException();
-        }
-
         public Result<OrigamiContentComment> SmartCreate(DataOperationContextFrontEnd<OrigamiContentComment> ctx)
         {
             try
@@ -165,6 +153,7 @@ namespace Origami.Core.Data
 
             return base.SmartCreate(ctx, false);
         }
+
         public Result<OrigamiContentComment> SmartDelete(DataOperationContextFrontEnd<OrigamiContentComment> ctx)
         {
             try
@@ -192,6 +181,7 @@ namespace Origami.Core.Data
 
             return new(ctx.Entity) { Error = Text.Original(Text.SomethingWentWrongPleaseTryAgain) };
         }
+
         public Result<OrigamiContentComment> SmartUpdate(DataOperationContextFrontEnd<OrigamiContentComment> ctx)
         {
             try
@@ -232,6 +222,7 @@ namespace Origami.Core.Data
 
             return new(ctx.Entity) { Error = Text.Original(Text.SomethingWentWrongPleaseTryAgain) };
         }
+
         public override Result<OrigamiContentComment> UpdateValidation(DataOperationContext<OrigamiContentComment> ctx)
         {
             return new Result<OrigamiContentComment>(ctx.Entity, _validator);

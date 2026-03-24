@@ -8,9 +8,8 @@ namespace Origami.Core.Models
     /// </summary>
     public class PostCommentTotal :
         IChanged,
-        IFKPost
+        IPostId
     {
-        private OrigamiPost? _post;
         private Guid _postId;
         private long _totalComments;
 
@@ -23,14 +22,6 @@ namespace Origami.Core.Models
         }
 
         public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) => { };
-
-        [NotMapped]
-        [ForeignKey(nameof(PostId))]
-        public OrigamiPost? Post
-        {
-            get => _post;
-            set => this.Set(ref _post, value, Changed);
-        }
 
         public Guid PostId
         {

@@ -15,8 +15,15 @@ namespace Origami.Core
 {
     public static class DataExtensions
     {
+        public static List<X> Set<X, Y>(this DbContext db)
+            where X : class
+            where Y : OrigamiContent
+        {
+            return db.Set<X>().AsNoTracking().OfType<Y>().Cast<X>().ToList();
+        }
+
         /// <summary>
-        /// TODO: comment this
+        /// 
         /// </summary>
         /// <param name="blogs"></param>
         /// <returns></returns>
