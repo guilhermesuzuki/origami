@@ -341,7 +341,7 @@ namespace Origami.Core
         /// </summary>
         /// <returns></returns>
         public static IEnumerable<T> Published<T>(this IEnumerable<T> entities)
-            where T : IPublished, IDraft
+            where T : IPublished
         {
             return entities.Where(x => x.IsPublished == true).NonDeleted();
         }
@@ -515,5 +515,7 @@ namespace Origami.Core
         {
             return CultureInfo.CurrentUICulture.Name.Split('-')[0];
         }
+
+        
     }
 }

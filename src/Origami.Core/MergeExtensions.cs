@@ -1,4 +1,5 @@
-﻿using Origami.Core.Models;
+﻿using Microsoft.Extensions.Caching.Memory;
+using Origami.Core.Models;
 
 namespace Origami.Core
 {
@@ -11,12 +12,12 @@ namespace Origami.Core
         /// <param name="dbRows">Rows that come straight from the source, the database</param>
         /// <param name="uiRows">Rows that come straight from the UI, that need to be persisted in the database</param>
         /// <returns></returns>
-        public static (IEnumerable<T> Purge, IEnumerable<T> Update, IEnumerable<T> Create) GetMerge<T>(this IEnumerable<T> dbRows, IEnumerable<T> uiRows)
+        public static Merge<T> GetMerge<T>(this IEnumerable<T> dbRows, IEnumerable<T> uiRows)
             where T : IId
         {
             if (dbRows.Any() == false)
             {
-                return ([], [], uiRows);
+                return new([], [], uiRows);
             }
 
             var join = from a in dbRows
@@ -27,7 +28,7 @@ namespace Origami.Core
             var add = uiRows.Except(update);
             var purge = dbRows.Except(join.Select(x => x.db));
 
-            return (purge, update, add);
+            return new(purge, update, add);
         }
 
         /// <summary>
@@ -124,38 +125,6 @@ namespace Origami.Core
         /// TODO: comment this
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="dbRows"></param>
-        /// <param name="uiRows"></param>
-        /// <returns></returns>
-        public static (IEnumerable<T> Purge, IEnumerable<T> Update, IEnumerable<T> Create) GetMergeSettings<T>(this IEnumerable<T> dbRows, IEnumerable<T> uiRows)
-            where T : BaseSetting
-        {
-            if (dbRows.Any() == false)
-            {
-                return ([], [], uiRows);
-            }
-
-            var join = from a in dbRows
-                       join b in uiRows on new { a.BlogId, a.Username, a.Name } equals new { b.BlogId, b.Username, b.Name }
-                       select new { db = a, ui = b };
-
-            //needs to extract the id, if this is the case
-            join.Each(row =>
-            {
-                if (row.ui is IId uiId && row.db is IId dbId) uiId.Id = dbId.Id;
-            });
-
-            var update = join.Select(x => x.ui);
-            var add = uiRows.Except(update);
-            var purge = dbRows.Except(join.Select(x => x.db));
-
-            return (purge, update, add);
-        }
-
-        /// <summary>
-        /// TODO: comment this
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="dbRows">Rows that come straight from the source, the database</param>
         /// <param name="uiRows">Rows that come straight from the UI, that need to be persisted in the database</param>
         /// <returns></returns>
@@ -176,6 +145,13 @@ namespace Origami.Core
             var purge = dbRows.Except(join.Select(x => x.db));
 
             return (purge, update, create);
+        }
+
+        public static void MergeCache<T>(this IMemoryCache memoryCache, Merge<T> merge) where T : class, IId
+        {
+            memoryCache.CreateCache(merge.Create);
+            memoryCache.UpdateCache(merge.Update);
+            memoryCache.PurgeCache(merge.Purge);
         }
     }
 }

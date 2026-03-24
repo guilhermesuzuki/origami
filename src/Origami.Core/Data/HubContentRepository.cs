@@ -9,7 +9,7 @@ namespace Origami.Core.Data
         where T1 : OrigamiContent
         where T2 : class, IHubContent<T1>, new()
     {
-        protected readonly MemoryCache _memoryCache;
+        protected readonly IMemoryCache _memoryCache;
         protected readonly IContentCategoryRepository _contentCategoryRepository;
         protected readonly IContentCommentRepository _contentCommentRepository;
         protected readonly IContentRatingRepository _contentRatingRepository;
@@ -21,7 +21,7 @@ namespace Origami.Core.Data
         protected readonly Text Text;
 
         protected HubContentRepository(
-            MemoryCache memoryCache,
+            IMemoryCache memoryCache,
             IValidator<T2> validator,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IContentCategoryRepository contentCategoryRepository,
@@ -75,7 +75,7 @@ namespace Origami.Core.Data
             // hub
             var hub = new Result<T2>(root);
 
-            try 
+            try
             {
                 using var db = _dbContextFactory.CreateDbContext();
 
@@ -92,12 +92,16 @@ namespace Origami.Core.Data
                 db.Entry(root.Entity).State = nil ? EntityState.Added : EntityState.Modified;
                 db.SaveChanges();
 
-                Save(root.Entity, root.Categories).Push(hub);
-                Save(root.Entity, root.Tags).Push(hub);
+                var m1 = Save(root.Entity, root.Categories);
+                var m2 = Save(root.Entity, root.Tags);
+
+                _memoryCache.SaveCache(root.Entity);
+                _memoryCache.MergeCache(m1);
+                _memoryCache.MergeCache(m2);
 
                 return hub;
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 return new(root) { Error = ex.GetMessage(), };
             }
@@ -125,20 +129,20 @@ namespace Origami.Core.Data
             return query.Any();
         }
 
-        private Result Save<T>(T1 entity, IEnumerable<T> entities) where T : class, IId
+        private Merge<T> Save<T>(T1 entity, IEnumerable<T> entities) where T : class, IId
         {
             using var db = this._dbContextFactory.CreateDbContext();
 
             var fresh = from x in db.Set<T>().AsNoTracking() where x.Id == entity.Id select x;
             var merge = fresh.GetMerge(entities);
 
-            merge.Create.Each(x => db.Set<T>().Add(x));
-            merge.Update.Each(x => db.Set<T>().Update(x));
-            merge.Purge.Each(x => db.Set<T>().Remove(x));
+            merge.Create.Each(x => db.Entry(x).State = EntityState.Added);
+            merge.Update.Each(x => db.Entry(x).State = EntityState.Modified);
+            merge.Purge.Each(x => db.Entry(x).State = EntityState.Deleted);
 
             db.SaveChanges();
 
-            return new();
-        } 
+            return merge;
+        }
     }
 }
