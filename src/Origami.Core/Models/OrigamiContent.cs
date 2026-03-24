@@ -40,6 +40,8 @@ namespace Origami.Core.Models
             set => Set(x => x.HeaderImage = value);
         }
 
+        public override string Hyperlink => $"/contents/{NanoId}/";
+
         /// <summary>
         /// Language this page was written on
         /// </summary>

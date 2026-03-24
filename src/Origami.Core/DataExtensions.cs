@@ -167,12 +167,12 @@ namespace Origami.Core
         /// Privacy policy (for the current language)
         /// </summary>
         /// <returns></returns>
-        public static IEnumerable<OrigamiSpecialPage> GetByType(this IEnumerable<OrigamiSpecialPage> pages, OrigamiSpecialPageTypes type)
+        public static IEnumerable<OrigamiSpecialPage> GetBySubType(this IEnumerable<OrigamiSpecialPage> pages, OrigamiSpecialPageTypes type)
         {
             return pages
                 .NonDeleted()
                 .Published()
-                .Where(x => x.Type == type.ToString())
+                .Where(x => x.Subtype == type.ToString())
                 .ToList()
                 .OrderBy(x => x.LanguageWrittenOn.Like(CultureInfo.CurrentUICulture.Name) == true ? 0 : 1)
                 .ThenBy(x => x.LanguageWrittenOn.StartsWith(_getLanguage()) == true ? 2 : 3)

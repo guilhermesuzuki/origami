@@ -28,36 +28,36 @@
             <ContentEmbedIFrame Entity="_entity" Class="mb-3"></ContentEmbedIFrame>
             <ContentMediaFile Entity="_entity"></ContentMediaFile>
             <div class="mt-3">
-                <ContentHeader Category="@Category" Tag="@Tag" Entity="@_entity" OnUserHasRated="() => this.StateHasChanged()"></ContentHeader>
+                <ContentHeader Category="@Category" Tag="@Tag" Entity="@_entity" OnUserHasRated="() => this.StateHasChanged()" ShowRelatedContent="true"></ContentHeader>
                 <ContentHtml Entity="_entity"></ContentHtml>
                 <div class="wrapper mt-3 p-4 border shadow-lg">
-                    <label class="w-100 text-center fs-3">
+                    <div class="text-center fs-3">
                         <i class="fa-solid fa-rectangle-list"></i>
                         @Text.Lower("What to see next")
                         <i class="fa-solid fa-rectangle-list"></i>
-                    </label>
+                    </div>
                     <WhatToSeeNext Class="mt-5" Entity="whatToSeeNextTitle"></WhatToSeeNext>
                 </div>
                 <div class="wrapper mt-3 p-4 border shadow-lg">
                     <ContentRatings Entity="this._entity"></ContentRatings>
                 </div>
-                <div class="wrapper mt-3 p-4 border shadow-lg">
-                    <span class="w-100 text-center fs-3">
-                        <i class="fa-solid fa-comment"></i>
-                        @Text.Lower("Comment section")
-                        <i class="fa-solid fa-comment"></i>
-                    </span>
-                    @if (this._entity.IsCommentEnabled == true)
-                    {
+                @if (this._entity.IsCommentEnabled == true)
+                {
+                    <div class="wrapper mt-3 p-4 border shadow-lg">
+                        <div class="text-center fs-3">
+                            <i class="fa-solid fa-comment"></i>
+                            @Text.Lower("Comment section")
+                            <i class="fa-solid fa-comment"></i>
+                        </div>
                         <div class="row mt-5">
                             <div class="col-12 col-xl-6">
-                                <span class="w-100 text-center fs-4">
+                                <div class="text-center fs-4">
                                     @Text.Lower("Place your comment here")
                                     @if (UserFacade.SocialProfile.New)
                                     {
                                         <span>, @Text.Lower("But login first")</span>
                                     }
-                                </span>
+                                </div>
                                 <div class="mt-3 position-sticky" style="top: 1rem;">
                                     <Login></Login>
                                     <AuthorizeView>
@@ -91,10 +91,10 @@
                             <div class="col-12 col-xl-6">
                                 @if (_comments.Count == 0)
                                 {
-                                    <label class="w-100 text-center mb-3 fs-4">
+                                    <div class="text-center mb-3 fs-4">
                                         <i class="fa-solid fa-face-smile-wink"></i>
                                         @Text.Lower("Be the first to comment")
-                                    </label>
+                                    </div>
                                 }
                                 else
                                 {
@@ -103,14 +103,8 @@
                                 }
                             </div>
                         </div>
-                    }
-                    else
-                    {
-                        <div class="row mt-5">
-                            <NothingToSeeHere Class="shadow-none"></NothingToSeeHere>
-                        </div>
-                    }
-                </div>
+                    </div>
+                }
             </div>
         </div>
     }

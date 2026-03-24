@@ -40,7 +40,10 @@
                 </div>
             }
         </div>
-        <button class="d-block mt-3 w-50 text-center btn btn-light border @(_disableLoadMore ? "cursor-not-allowed" : null)" disabled="@this._disableLoadMore" @onclick="() => {this.Page += 1; this.OnPageChanged.InvokeAsync(this.Page);}" style="margin:auto;">@Text.Lower("See more ratings")</button>
+        @if (Super.ContentRatings.Ratings(this.Entity).Any() == true)
+        {
+            <button class="d-block mt-3 w-50 text-center btn btn-light border @(_disableLoadMore ? "cursor-not-allowed" : null)" disabled="@this._disableLoadMore" @onclick="() => { this.Page += 1; this.OnPageChanged.InvokeAsync(this.Page); }" style="margin:auto;">@Text.Lower("See more ratings")</button>
+        }
     </div>
 }
 

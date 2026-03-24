@@ -118,24 +118,14 @@
                 <i class="fa-solid fa-earth-americas"></i>
                 @Text.Lower("Related content")
             </label>
-            <div class="page-header page-header-children shadow-sm border cursor-pointer text-center @Class">
+            <div class="content-header content-header-children shadow-sm border cursor-pointer text-center @Class">
                 <div class="workaround overflow-hidden">
                     <div class="row">
                         @foreach (var child in this.RelatedContent)
                         {
-                            var childViews = this.Super.PhysicalPageViews.GetViews(child);
                             <div class="related-content-header-title col-12 col-xxl-4 mh-100 overflow-auto m-auto">
                                 <div class="p-2">
-                                    <a class="title fw-bold text-uppercase focusable text-center" href="@child.Hyperlink">
-                                        <ContentHeaderLite Entity="child"></ContentHeaderLite>
-                                    </a>
-                                    <div>
-                                        <span class="page-date pe-1">@(child.GetDate())</span>
-                                        <span class="page-views pe-1 @(childViews > 0 ? null : "d-none")">
-                                            <i class="fa-solid fa-eye"></i>
-                                            @childViews
-                                        </span>
-                                    </div>
+                                    <ContentHeaderLite Entity="child"></ContentHeaderLite>
                                 </div>
                             </div>
                         }

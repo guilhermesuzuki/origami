@@ -40,13 +40,6 @@ namespace Origami.Core.Models
 
         public event EventHandler<PropertyChangedEventArgs> OrigamiSpecialPageChanged = delegate { };
 
-        [StringLength(64)]
-        public string SubType
-        {
-            get => _subtype;
-            set => this.Set(ref _subtype, value, OrigamiSpecialPageChanged);
-        }
-
         /// <summary>
         /// Fake page
         /// </summary>
