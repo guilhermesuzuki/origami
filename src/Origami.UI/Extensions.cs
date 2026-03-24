@@ -176,6 +176,9 @@ namespace Origami.UI
             builder.Services.AddCrud<OrigamiUserTrash, UserTrashRepository>();
             builder.Services.AddCrud<OrigamiVideo, VideoRepository>();
 
+            builder.Services.AddTransient<IHubContentRepository<HubContentPage>, HubContentPageRepository>();
+            builder.Services.AddTransient<IHubContentRepository<HubContentPost>, HubContentPostRepository>();
+
             //sets the blog as the primary one
             builder.Services.AddScoped<IUserFacade, UserFacade>(provider =>
             {

@@ -21,7 +21,7 @@ namespace Origami.Core.Data
 
         }
 
-        public Result Merge(DataOperationContext main, (IEnumerable<T> Purge, IEnumerable<T> Update, IEnumerable<T> Create) merge)
+        public Result Merge(DataOperationContext main, Merge<T> merge)
         {
             var hub = new Result();
 
@@ -32,7 +32,7 @@ namespace Origami.Core.Data
             return hub;
         }
 
-        public Result MergeCache((IEnumerable<T> Purge, IEnumerable<T> Update, IEnumerable<T> Create) merge)
+        public Result MergeCache(Merge<T> merge)
         {
             merge.Purge.Each(this.PurgeCache);
             merge.Update.Each(this.UpdateCache);

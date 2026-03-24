@@ -9,14 +9,8 @@ namespace Origami.Core.Data
         where T1 : OrigamiContent
         where T2 : class, IHubContent<T1>, new()
     {
-        protected readonly IMemoryCache _memoryCache;
-        protected readonly IContentCategoryRepository _contentCategoryRepository;
-        protected readonly IContentCommentRepository _contentCommentRepository;
-        protected readonly IContentRatingRepository _contentRatingRepository;
-        protected readonly IContentReactionRepository _contentReactionRepository;
-        protected readonly IContentRepository _contentRepository;
-        protected readonly IContentTagRepository _contentTagRepository;
         protected readonly IDbContextFactory<OrigamiDbContext> _dbContextFactory;
+        protected readonly IMemoryCache _memoryCache;
         protected readonly IValidator<T2> _validator;
         protected readonly Text Text;
 
@@ -24,22 +18,10 @@ namespace Origami.Core.Data
             IMemoryCache memoryCache,
             IValidator<T2> validator,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
-            IContentCategoryRepository contentCategoryRepository,
-            IContentCommentRepository contentCommentRepository,
-            IContentRatingRepository contentRatingRepository,
-            IContentReactionRepository contentReactionRepository,
-            IContentRepository contentRepository,
-            IContentTagRepository contentTagRepository,
             Text text
             )
         {
             _validator = validator;
-            _contentCategoryRepository = contentCategoryRepository;
-            _contentCommentRepository = contentCommentRepository;
-            _contentRatingRepository = contentRatingRepository;
-            _contentReactionRepository = contentReactionRepository;
-            _contentRepository = contentRepository;
-            _contentTagRepository = contentTagRepository;
             _dbContextFactory = dbContextFactory;
             _memoryCache = memoryCache;
             Text = text;
@@ -49,23 +31,23 @@ namespace Origami.Core.Data
         public virtual string UpdateOtherUsersPermission { get; } = string.Empty;
         public virtual string UpdateOwnPermission { get; } = string.Empty;
 
-        public Task<T2> GetAsync(IId rootId)
+        public T2 Get(IId rootId)
         {
             var result = new T2();
 
             var tasks = new List<Task>
             {
-                Task.Run(() => result.Entity = (T1?)_contentRepository.ReadFromCache().Id(rootId.Id)),
-                Task.Run(() => result.Categories.AddRange(_contentCategoryRepository.ReadFromCache().Where(x => x.ContentId == rootId.Id))),
-                Task.Run(() => result.Comments.AddRange(_contentCommentRepository.ReadFromCache().Where(x => x.ContentId == rootId.Id))),
-                Task.Run(() => result.Ratings.AddRange(_contentRatingRepository.ReadFromCache().Where(x => x.ContentId == rootId.Id))),
-                Task.Run(() => result.Reactions.AddRange(_contentReactionRepository.ReadFromCache().Where(x => x.ContentId == rootId.Id))),
-                Task.Run(() => result.Tags.AddRange(_contentTagRepository.ReadFromCache().Where(x => x.ContentId == rootId.Id))),
+                Task.Run(() => result.Entity = this.GetEntity(rootId)),
+                Task.Run(() => result.Categories.AddRange(this.GetEntities<OrigamiContentCategory>(rootId))),
+                Task.Run(() => result.Comments.AddRange(this.GetEntities<OrigamiContentComment>(rootId))),
+                Task.Run(() => result.Ratings.AddRange(this.GetEntities<OrigamiContentRating>(rootId))),
+                Task.Run(() => result.Reactions.AddRange(this.GetEntities<OrigamiContentReaction>(rootId))),
+                Task.Run(() => result.Tags.AddRange(this.GetEntities<OrigamiContentTag>(rootId))),
             };
 
             Task.WhenAll(tasks);
 
-            return Task.FromResult(result);
+            return result;
         }
 
         public Result<T2> Save(T2 root, IId userId)
@@ -84,7 +66,7 @@ namespace Origami.Core.Data
                 var permission = nil ? CreatePermission : root.Entity.AuthorId == userId.Id ? UpdateOwnPermission : UpdateOtherUsersPermission;
 
                 // check permissions
-                if (UserHasPermission(userId.Id, permission) == false) return new(root) { Info = permission, Error = Text.Original(Text.YouDontHavePermissionForThisFeature), };
+                if (UserHasPermission(db, userId.Id, permission) == false) return new(root) { Info = permission, Error = Text.Original(Text.YouDontHavePermissionForThisFeature), };
 
                 // validate hub
                 _validator.ValidateAndThrow(root);
@@ -92,8 +74,8 @@ namespace Origami.Core.Data
                 db.Entry(root.Entity).State = nil ? EntityState.Added : EntityState.Modified;
                 db.SaveChanges();
 
-                var m1 = Save(root.Entity, root.Categories);
-                var m2 = Save(root.Entity, root.Tags);
+                var m1 = Save(db, root.Entity, root.Categories);
+                var m2 = Save(db, root.Entity, root.Tags);
 
                 _memoryCache.SaveCache(root.Entity);
                 _memoryCache.MergeCache(m1);
@@ -107,10 +89,36 @@ namespace Origami.Core.Data
             }
         }
 
-        protected virtual bool UserHasPermission(Guid userId, string permission)
+        /// <summary>
+        /// Retrieves a list of entities of the specified type that match the given content identifier.
+        /// </summary>
+        /// <remarks>The returned entities are not tracked by the context. This method is typically used
+        /// for read-only operations.</remarks>
+        /// <typeparam name="X">The type of entity to retrieve. Must implement both IId and IContentId.</typeparam>
+        /// <param name="id">The content identifier used to filter the entities. Only entities with a matching ContentId are returned.</param>
+        /// <returns>A list of entities of type X whose ContentId matches the specified identifier. The list is empty if no
+        /// matching entities are found.</returns>
+        protected List<X> GetEntities<X>(IId id) where X : class, IId, IContentId
         {
-            using var db = this._dbContextFactory.CreateDbContext();
+            using var db = _dbContextFactory.CreateDbContext();
+            return db.Set<X>().AsNoTracking().Where(x => x.ContentId == id.Id).ToList();
+        }
 
+        /// <summary>
+        /// Retrieves an entity of type T1 with the specified identifier from the database without tracking changes.
+        /// </summary>
+        /// <remarks>The returned entity is not tracked by the context, so changes to it will not be
+        /// persisted unless it is attached to the context and explicitly updated.</remarks>
+        /// <param name="id">An object that provides the unique identifier of the entity to retrieve. Cannot be null.</param>
+        /// <returns>The entity of type T1 that matches the specified identifier, or null if no such entity exists.</returns>
+        protected T1? GetEntity(IId id)
+        {
+            using var db = _dbContextFactory.CreateDbContext();
+            return db.Set<T1>().AsNoTracking().Id(id.Id);
+        }
+
+        protected virtual bool UserHasPermission(OrigamiDbContext db, Guid userId, string permission)
+        {
             var user = db.Users.AsNoTracking().Id(userId);
             if (user == null) return false;
             if (user.IsDeleted) return false;
@@ -129,10 +137,8 @@ namespace Origami.Core.Data
             return query.Any();
         }
 
-        private Merge<T> Save<T>(T1 entity, IEnumerable<T> entities) where T : class, IId
+        private Merge<T> Save<T>(OrigamiDbContext db, T1 entity, IEnumerable<T> entities) where T : class, IId
         {
-            using var db = this._dbContextFactory.CreateDbContext();
-
             var fresh = from x in db.Set<T>().AsNoTracking() where x.Id == entity.Id select x;
             var merge = fresh.GetMerge(entities);
 

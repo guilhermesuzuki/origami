@@ -8,7 +8,7 @@ namespace Origami.Core.Data
     public interface IHubContentRepository<T>
     {
         // need to get by id async
-        Task<T> GetAsync(IId entityId);
+        T Get(IId entityId);
 
         // need to save
         Result<T> Save(T entity, IId userId);
