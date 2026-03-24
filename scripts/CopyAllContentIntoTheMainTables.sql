@@ -371,7 +371,7 @@ SELECT
 	[IsDraft],
 	NULL[StartDate],
 	NULL[EndDate]
-FROM dbo.oi_SpecialPages
+FROM dbo.oi_SpecialPages;
 
 
 
@@ -841,3 +841,14 @@ SELECT
 	[SocialProfileId],
 	[IsBot]
 FROM dbo.oi_VideoCommentReactions;
+
+
+
+
+
+INSERT INTO dbo.oi_ContentTags (Id, ContentId, Tag)
+SELECT Id, PostId, Tag FROM dbo.oi_PostTags;
+
+
+INSERT INTO dbo.oi_ContentTags (Id, ContentId, Tag)
+SELECT Id, VideoId, Tag FROM dbo.oi_VideoTags;
