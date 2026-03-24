@@ -7,10 +7,10 @@
 
 @if (Comments.Count() > 0)
 {
-    <div class="post-comments">
+    <div class="content-comments">
         @if (this.CommentsFromUser.Any() == true)
         {
-            <div class="post-comments-highlighted mb-3">
+            <div class="content-comments-highlighted mb-3">
                 <div class="p-1 fw-bold text-center border border-info bg-info text-white">@Text.Lower("Your Comments")</div>
                 @foreach (var comment in CommentsFromUser)
                 {
@@ -21,7 +21,7 @@
         <div class="p-1 fw-bold text-center border mb-3 bg-secondary text-white">@Text.Lower("All Comments")</div>
         @foreach (var comment in Comments.Take(this._currentPage * this._pageSize))
         {
-            <PostComment Class="mb-3 shadow-sm" Comment="comment" OnCommentUpdated="OnCommentUpdated" OnCommentDeleted="OnCommentDeleted" OnCommentReply="OnCommentReply"></PostComment>
+            <ContentComment Class="mb-3 shadow-sm" Comment="comment" OnCommentUpdated="OnCommentUpdated" OnCommentDeleted="OnCommentDeleted" OnCommentReply="OnCommentReply"></ContentComment>
         }
         <button class="w-100 text-center btn btn-light border @(_disableLoadMoreComments ? "cursor-not-allowed" : null)" disabled="@this._disableLoadMoreComments" @onclick="() => {this._currentPage += 1; this.OnCurrentPageChanged.InvokeAsync(this._currentPage);}">@Text.Lower("See more comments")</button>
     </div>

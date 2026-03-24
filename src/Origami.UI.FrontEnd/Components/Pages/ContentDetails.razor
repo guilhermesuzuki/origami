@@ -1,5 +1,6 @@
-﻿@page "/videos/{NanoId}"
+﻿@page "/contents/{NanoId}"
 @inherits BasicPage
+@implements IEntityNull<OrigamiContent>
 
 @using Microsoft.AspNetCore.Authentication.Google;
 @using Microsoft.AspNetCore.Identity;
@@ -8,46 +9,28 @@
 
 <Root>
     <style>
-        .no-video { display: none; }
+            .no-video { display: none; }
     </style>
-    @if (this._video.New == false)
+    @if (this._entity.New == false)
     {
-        var whatToSeeNext = Super.WhatToSeeNext.GetWhatToSeeNext(this._video).Take(3).OrderBy(x => x.Title);
-        var whatToSeeNextTitle = Super.WhatToSeeNext.GetWhatToSeeNextTitle(this._video).Take(3).Concat(whatToSeeNext);
+        var whatToSeeNext = Super.WhatToSeeNext.GetWhatToSeeNext(this._entity).Take(3).OrderBy(x => x.Title);
+        var whatToSeeNextTitle = Super.WhatToSeeNext.GetWhatToSeeNextTitle(this._entity).Take(3).Concat(whatToSeeNext);
         @if (OpenGraphMetaTags)
         {
             <HeadContent>
-                <meta property="og:title" content="@_video.Title" />
-                <meta property="og:description" content="@_video.Description" />
-                <meta property="og:image" content="@(NavigationManager.BaseUri.TrimEnd('/') + _video.Get().HeaderImage.NoHeader())" />
-                <meta property="og:url" content="@NavigationManager.BaseUri.TrimEnd('/')/videos/@_video.NanoId" />
+                <meta property="og:title" content="@_entity.Title" />
+                <meta property="og:description" content="@_entity.Description" />
+                <meta property="og:image" content="@(NavigationManager.BaseUri.TrimEnd('/') + _entity.Get().HeaderImage.NoHeader())" />
+                <meta property="og:url" content="@NavigationManager.BaseUri.TrimEnd('/')/videos/@_entity.NanoId" />
             </HeadContent>
         }
-        <div class="video-details @Class">
-            @if (_video.EmbedIFrame.IsIFrame() == true)
-            {
-                <div class="video-iframe embed-iframe mb-3">
-                    @_video.EmbedIFrame.Markup()
-                </div>
-            }
-            <VideoMediaFile Entity="_video"></VideoMediaFile>
+        <div class="content-details @Class">
+            <ContentEmbedIFrame Entity="_entity" Class="mb-3"></ContentEmbedIFrame>
+            <ContentMediaFile Entity="_entity"></ContentMediaFile>
             <div class="mt-3">
-                <VideoHeader Category="@Category" Tag="@Tag" Entity="@_video" OnUserHasRated="() => this.StateHasChanged()"></VideoHeader>
-                <div class="video-content mt-3 p-4 border shadow-lg">
-                    @if (_video!.Content.Has() == true)
-                    {
-                        @((MarkupString)_video!.Content)
-                    }
-                    else
-                    {
-                        <p class="fs-2 w-100 text-center">
-                            <i class="fa-solid fa-quote-left"></i>
-                            @Text.Lower("No text from this video")
-                            <i class="fa-solid fa-quote-right"></i>
-                        </p>
-                    }
-                </div>
-                <div class="post-what-to-see-next mt-3 p-4 border shadow-lg">
+                <ContentHeader Category="@Category" Tag="@Tag" Entity="@_entity" OnUserHasRated="() => this.StateHasChanged()"></ContentHeader>
+                <ContentHtml Entity="_entity"></ContentHtml>
+                <div class="wrapper mt-3 p-4 border shadow-lg">
                     <label class="w-100 text-center fs-3">
                         <i class="fa-solid fa-rectangle-list"></i>
                         @Text.Lower("What to see next")
@@ -55,26 +38,26 @@
                     </label>
                     <WhatToSeeNext Class="mt-5" Entity="whatToSeeNextTitle"></WhatToSeeNext>
                 </div>
-                <div class="video-ratings-frame mt-3 p-4 border shadow-lg">
-                    <ContentRatings Entity="this._video"></ContentRatings>
+                <div class="wrapper mt-3 p-4 border shadow-lg">
+                    <ContentRatings Entity="this._entity"></ContentRatings>
                 </div>
-                <div class="video-comments-frame mt-3 p-4 border shadow-lg">
-                    <label class="w-100 text-center fs-3">
+                <div class="wrapper mt-3 p-4 border shadow-lg">
+                    <span class="w-100 text-center fs-3">
                         <i class="fa-solid fa-comment"></i>
                         @Text.Lower("Comment section")
                         <i class="fa-solid fa-comment"></i>
-                    </label>
-                    @if (this._video.IsCommentEnabled == true)
+                    </span>
+                    @if (this._entity.IsCommentEnabled == true)
                     {
                         <div class="row mt-5">
                             <div class="col-12 col-xl-6">
-                                <label class="w-100 text-center fs-4">
+                                <span class="w-100 text-center fs-4">
                                     @Text.Lower("Place your comment here")
                                     @if (UserFacade.SocialProfile.New)
                                     {
                                         <span>, @Text.Lower("But login first")</span>
                                     }
-                                </label>
+                                </span>
                                 <div class="mt-3 position-sticky" style="top: 1rem;">
                                     <Login></Login>
                                     <AuthorizeView>
@@ -137,10 +120,10 @@
     }
 </Root>
 
-    @code {
+@code {
     [Parameter] public OrigamiTag? Tag { get; set; }
     [Parameter] public OrigamiCategory? Category { get; set; }
-    [Parameter] public OrigamiVideo? Video { get; set; }
+    [Parameter] public OrigamiContent? Entity { get; set; }
     [Parameter] public string NanoId { get; set; } = string.Empty;
     [Parameter] public bool OpenGraphMetaTags { get; set; } = true;
 
@@ -152,7 +135,7 @@
     /// <summary>
     /// Current Video
     /// </summary>
-    private OrigamiVideo _video = new();
+    private OrigamiContent _entity = null!;
 
     /// <summary>
     /// Comments for the Video
@@ -171,23 +154,23 @@
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        this._video = this.Video ?? this.Super.Contents.ReadFromCache().OfType<OrigamiVideo>().NanoId(NanoId) ?? new();
-        this._comments = this.Super.ContentComments.AllComments(_video);
-        this.BlogId = this._video.BlogId.GetValueOrDefault();
+        this._entity = this.Entity ?? this.Super.Contents.ReadFromCache().OfType<OrigamiContent>().NanoId(NanoId) ?? new OrigamiVideo();
+        this._comments = this.Super.ContentComments.AllComments(_entity);
+        this.BlogId = this._entity.BlogId.GetValueOrDefault();
     }
 
     private void CreateComment()
     {
         this.NewComment.IsApproved = true;
         this.NewComment.Id = Guid.NewGuid();
-        this.NewComment.ContentId = this._video.Id;
+        this.NewComment.ContentId = this._entity.Id;
         this.NewComment.DateCreated = DateTime.UtcNow;
         this.NewComment.SocialProfileId = UserFacade.SocialProfile.Id;
 
         var context = new DataOperationContextFrontEnd<OrigamiContentComment>(UserFacade.SocialProfile, DateTime.UtcNow, this.NewComment);
         var hub = this.Super.ContentComments.SmartCreate(context);
 
-        hub.OnSuccess(() => this._comments = this.Super.ContentComments.AllComments(_video));
+        hub.OnSuccess(() => this._comments = this.Super.ContentComments.AllComments(_entity));
 
         this.NewComment = new();
         this.NewComment.Changed += (sender, e) => this.InvokeAsync(this.StateHasChanged);
@@ -202,12 +185,12 @@
 
     private void OnCommentUpdated(OrigamiContentComment comment)
     {
-        this._comments = this.Super.ContentComments.AllComments(_video);
+        this._comments = this.Super.ContentComments.AllComments(_entity);
     }
 
     private void OnCommentDeleted(OrigamiContentComment comment)
     {
-        this._comments = this.Super.ContentComments.AllComments(_video);
+        this._comments = this.Super.ContentComments.AllComments(_entity);
     }
 
     protected override async Task PageViewAsync(bool firstRender)
@@ -217,13 +200,13 @@
             if (this.UserFacade.IncognitoMode == false)
             {
                 var uri = new Uri(NavigationManager.Uri);
-                await JSRuntime.InvokeVoidAsync("origami.physicalpages.viewByContent", uri.AbsolutePath, nameof(OrigamiVideo), this._video.Id);
+                await JSRuntime.InvokeVoidAsync("origami.physicalpages.viewByContent", uri.AbsolutePath, nameof(OrigamiVideo), this._entity.Id);
             }
         }
     }
 
     protected override void SetPageTitle()
     {
-        this.PageTitle.SetTitle(Tag, Category, _video);
+        this.PageTitle.SetTitle(Tag, Category, _entity);
     }
 }

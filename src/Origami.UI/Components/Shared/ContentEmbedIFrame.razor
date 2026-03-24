@@ -1,0 +1,13 @@
+﻿@inherits Basic
+@implements IEntityNull<OrigamiContent>
+
+@if (Entity is OrigamiVideo video && video.EmbedIFrame.IsIFrame() == true)
+{
+    <div class="video-iframe embed-iframe @Class">
+        @video.EmbedIFrame.Markup()
+    </div>
+}
+
+@code {
+    [Parameter] public OrigamiContent? Entity { get; set; }
+}

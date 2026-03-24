@@ -19,7 +19,7 @@ namespace Origami.Core.Data
             _contentTagRepository = postTagRepository;
         }
 
-        public IEnumerable<OrigamiContent> GetWhatToSeeNext<T>(T entity) where T : ITitle, IContent, IId, new()
+        public IEnumerable<OrigamiContent> GetWhatToSeeNext<T>(T entity) where T : ITitle, IContent, IId
         {
             var content = new List<OrigamiContent>();
 
@@ -43,7 +43,7 @@ namespace Origami.Core.Data
             return content.GroupBy(x => x).OrderByDescending(x => x.Count()).Select(x => x.Key);
         }
 
-        public IEnumerable<OrigamiContent> GetWhatToSeeNextTitle<T>(T entity) where T : ITitle, IContent, IId, new()
+        public IEnumerable<OrigamiContent> GetWhatToSeeNextTitle<T>(T entity) where T : ITitle, IContent, IId
         {
             var content = new List<FuzzyContent>();
 

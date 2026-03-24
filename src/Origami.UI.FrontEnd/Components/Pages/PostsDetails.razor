@@ -105,7 +105,7 @@
                             else
                             {
                                 <label class="w-100 text-center mb-3 fs-4">@Text.Lower("{0} comment(s)", _comments.Count)</label>
-                                <PostComments Comments="this._comments" PageSize="@this._pageSize" CurrentPage="@_currentPage" OnCommentUpdated="this._onCommentUpdated" OnCommentDeleted="this._onCommentDeleted" OnCurrentPageChanged="(page) => this._currentPage = page" OnCommentReply="(comment) => { this.NewComment.ParentId = comment.Id; }"></PostComments>
+                                <ContentComments Comments="this._comments" PageSize="@this._pageSize" CurrentPage="@_currentPage" OnCommentUpdated="this._onCommentUpdated" OnCommentDeleted="this._onCommentDeleted" OnCurrentPageChanged="(page) => this._currentPage = page" OnCommentReply="(comment) => { this.NewComment.ParentId = comment.Id; }"></ContentComments>
                             }
                         </div>
                     </div>
