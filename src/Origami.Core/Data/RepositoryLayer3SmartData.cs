@@ -116,7 +116,7 @@ namespace Origami.Core.Data
             finally
             {
                 var elapsedTime = Stopwatch.GetElapsedTime(timestamp);
-                Console.ForegroundColor = elapsedTime.Milliseconds >= 200 ? ConsoleColor.Red : ConsoleColor.White;
+                Console.ForegroundColor = elapsedTime.Milliseconds >= 100 ? ConsoleColor.Red : ConsoleColor.White;
                 Console.WriteLine($"{key} obtained in {elapsedTime}");
             }
         }
