@@ -250,8 +250,7 @@ namespace Origami.Core
         public static List<T>? GetList<T>(this IMemoryCache memoryCache, string key)
             where T : class
         {
-            var value = memoryCache.Get(key);
-            return value is List<T> list ? list : null;
+            return memoryCache.TryGetValue(key, out List<T>? value) == true ? value : null;
         }
 
         /// <summary>

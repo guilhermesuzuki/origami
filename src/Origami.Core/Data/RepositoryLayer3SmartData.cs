@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using HtmlAgilityPack;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Origami.Core.Models;
 using System.Diagnostics;
@@ -79,6 +80,21 @@ namespace Origami.Core.Data
         {
             var timestamp = Stopwatch.GetTimestamp();
             var key = typeof(X).KeyForCaching();
+
+            if (typeof(X).FullName != typeof(OrigamiContent).FullName)
+            {
+                var x = Activator.CreateInstance<X>();
+                switch (x)
+                {
+                    case OrigamiPage:
+                    case OrigamiPost:
+                    case OrigamiSpecialMessage:
+                    case OrigamiSpecialPage:
+                    case OrigamiVideo:
+                        return ReadFromCache<OrigamiContent>().OfType<X>().ToList();
+                    default: break;
+                }
+            }
 
             try
             {
