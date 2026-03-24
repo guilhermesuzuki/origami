@@ -5,10 +5,7 @@ using System.Text;
 
 namespace Origami.Core.Data
 {
-    /// <summary>
-    /// TODO: rename this
-    /// </summary>
-    public interface ILoginRepository
+    public interface ILoginRules
     {
         event EventHandler CurrentStepChanged;
         event EventHandler RefreshUI;

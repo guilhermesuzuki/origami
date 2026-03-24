@@ -4,13 +4,13 @@ using OtpNet;
 
 namespace Origami.Core.Data
 {
-    public class LoginRepository : ILoginRepository
+    public class LoginRules : ILoginRules
     {
         protected readonly ISuperRepository _superRepository;
         protected readonly Text _text;
         protected readonly IUserFacade _userFacade;
 
-        public LoginRepository(ISuperRepository superRepository, IUserFacade userFacade, Text text)
+        public LoginRules(ISuperRepository superRepository, IUserFacade userFacade, Text text)
         {
             _superRepository = superRepository;
             _userFacade = userFacade;
@@ -69,7 +69,7 @@ namespace Origami.Core.Data
             }
         }
 
-        public Stack<ILoginRepository.Steps> State { get; } = new Stack<ILoginRepository.Steps>();
+        public Stack<ILoginRules.Steps> State { get; } = new Stack<ILoginRules.Steps>();
 
         public string TOTPCodeForEnablement { get; set; } = string.Empty;
 
@@ -155,16 +155,16 @@ namespace Origami.Core.Data
             throw new InvalidOperationException("Failed to enable 2FA");
         }
 
-        public ILoginRepository.Steps GetCurrentStep()
+        public ILoginRules.Steps GetCurrentStep()
         {
-            if (State.Count == 0) return ILoginRepository.Steps.Step1_ValidateCredentials;
+            if (State.Count == 0) return ILoginRules.Steps.Step1_ValidateCredentials;
             return State.Peek();
         }
 
         public Task GoBackAsync()
         {
             this.State.Clear();
-            this.State.Push(ILoginRepository.Steps.Step1_ValidateCredentials);
+            this.State.Push(ILoginRules.Steps.Step1_ValidateCredentials);
             this.RefreshUI?.Invoke(this, EventArgs.Empty);
             return Task.CompletedTask;
         }
@@ -174,33 +174,33 @@ namespace Origami.Core.Data
             try
             {
                 var step = this.GetCurrentStep();
-                if (step == ILoginRepository.Steps.Step1_ValidateCredentials)
+                if (step == ILoginRules.Steps.Step1_ValidateCredentials)
                 {
                     await this.LoginAsync();
 
                     if (this.User.MustChangePassword == true)
                     {
                         this._userFacade.Result = new() { Info = _text.Original("You must change your password") };
-                        this.State.Push(ILoginRepository.Steps.Step2_MustChangePassword);
+                        this.State.Push(ILoginRules.Steps.Step2_MustChangePassword);
                         return;
                     }
 
                     _2FA();
                 }
-                else if (step == ILoginRepository.Steps.Step2_MustChangePassword)
+                else if (step == ILoginRules.Steps.Step2_MustChangePassword)
                 {
                     await this.ChangePasswordAsync();
                     _2FA();
                 }
-                else if (step == ILoginRepository.Steps.Step3_MustEnable2MFA)
+                else if (step == ILoginRules.Steps.Step3_MustEnable2MFA)
                 {
                     await this.Enable2FAAsync();
-                    this.State.Push(ILoginRepository.Steps.Step4_Validate2FA);
+                    this.State.Push(ILoginRules.Steps.Step4_Validate2FA);
                 }
-                else if (step == ILoginRepository.Steps.Step4_Validate2FA)
+                else if (step == ILoginRules.Steps.Step4_Validate2FA)
                 {
                     await this.Validate2FAAsync();
-                    this.State.Push(ILoginRepository.Steps.Step5_WelcomeToTheApplication);
+                    this.State.Push(ILoginRules.Steps.Step5_WelcomeToTheApplication);
                     this.WelcomeToTheApplication?.Invoke(this, EventArgs.Empty);
                 }
             }
@@ -251,7 +251,7 @@ namespace Origami.Core.Data
             this.User = new OrigamiUser();
 
             this.State.Clear();
-            this.State.Push(ILoginRepository.Steps.Step1_ValidateCredentials);
+            this.State.Push(ILoginRules.Steps.Step1_ValidateCredentials);
 
             return Task.CompletedTask;
         }
@@ -283,11 +283,11 @@ namespace Origami.Core.Data
             {
                 this.User.GenerateRandomTOTPSecret();
                 this._userFacade.Result = new() { Info = _text.Original("You must enable two-factor authentication") };
-                this.State.Push(ILoginRepository.Steps.Step3_MustEnable2MFA);
+                this.State.Push(ILoginRules.Steps.Step3_MustEnable2MFA);
                 return;
             }
 
-            this.State.Push(ILoginRepository.Steps.Step4_Validate2FA);
+            this.State.Push(ILoginRules.Steps.Step4_Validate2FA);
         }
     }
 }
