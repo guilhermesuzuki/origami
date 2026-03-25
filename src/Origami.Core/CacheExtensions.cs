@@ -1,7 +1,9 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿using AngleSharp.Dom;
+using Microsoft.Extensions.Caching.Memory;
 using Origami.Core.Models;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Origami.Core
@@ -44,6 +46,11 @@ namespace Origami.Core
                 found.Each(list.Remove);
                 memoryCache.Set(key, list);
             }
+        }
+
+        public static void SaveCache(this IMemoryCache memoryCache, OrigamiContent entity)
+        {
+            memoryCache.SaveCache<OrigamiContent>(entity);
         }
 
         public static void SaveCache<T>(this IMemoryCache memoryCache, T entity) where T : class, IId

@@ -75,7 +75,7 @@ namespace Origami.Core.Data
                 var m1 = Save(db, root.Entity, root.Categories);
                 var m2 = Save(db, root.Entity, root.Tags);
 
-                _memoryCache.SaveCache(root.Entity);
+                _memoryCache.SaveCache((OrigamiContent)root.Entity);
                 _memoryCache.SaveCache(m1);
                 _memoryCache.SaveCache(m2);
 

@@ -1,4 +1,5 @@
 ﻿@page "/posts2"
+@using BootstrapBlazor.Components
 @inherits BasicAdminGridContent<OrigamiPost, HubContentPost>
 
 <style>
@@ -90,7 +91,9 @@
                                 <CellTemplate>
                                     @foreach (var category in this.Super.GetCategories(context.Item))
                                     {
-                                        <CategoryHeaderLite Class="mb-1 p-2 shadow-sm border" Entity="category"></CategoryHeaderLite>
+                                        <div class="wrapper p-2 mb-1 me-1 shadow-sm border d-inline-block">
+                                            <CategoryHeaderLite Class="" Entity="category"></CategoryHeaderLite>
+                                        </div>
                                     }
                                 </CellTemplate>
                             </TemplateColumn>
