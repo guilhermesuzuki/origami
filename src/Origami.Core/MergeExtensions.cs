@@ -26,7 +26,7 @@ namespace Origami.Core
 
             var update = join.Select(x => x.ui);
             var add = uiRows.Except(update);
-            var purge = dbRows.Except(join.Select(x => x.db));
+            var purge = dbRows.ExceptBy(join.Select(x => x.db.Id), x => x.Id);
 
             return new(purge, update, add);
         }

@@ -66,8 +66,6 @@ namespace Origami.Core.Data
                 // check permissions
                 if (UserHasPermission(db, userId.Id, permission) == false) return new(root) { Info = permission, Error = Text.Original(Text.YouDontHavePermissionForThisFeature), };
 
-                hub.Info = Text.Original("User has permission for this feature");
-
                 // validate hub
                 _validator.ValidateAndThrow(root);
 
@@ -139,10 +137,10 @@ namespace Origami.Core.Data
             return query.Any();
         }
 
-        private Merge<T> Save<T>(OrigamiDbContext db, T1 entity, IEnumerable<T> entities) where T : class, IId
+        private Merge<T> Save<T>(OrigamiDbContext db, T1 entity, IEnumerable<T> entities) where T : class, IId, IContentId
         {
-            var fresh = from x in db.Set<T>().AsNoTracking() where x.Id == entity.Id select x;
-            var merge = fresh.GetMerge(entities);
+            var fresh = from x in db.Set<T>().AsNoTracking() where x.ContentId == entity.Id select x;
+            var merge = fresh.GetMerge(entities.ToList());
 
             merge.Create.Each(x => db.Entry(x).State = EntityState.Added);
             merge.Update.Each(x => db.Entry(x).State = EntityState.Modified);
