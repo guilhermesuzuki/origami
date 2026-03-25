@@ -26,39 +26,36 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("Blog is required"));
         }
 
-        public static IRuleBuilderOptions<T, List<OrigamiContentCategory>> Categories<T>(this IRuleBuilder<T, List<OrigamiContentCategory>> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory)
+        public static IRuleBuilderOptions<T, List<OrigamiContentCategory>> CategoriesMustBeUnique<T>(this IRuleBuilder<T, List<OrigamiContentCategory>> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory)
         {
             return ruleBuilder
                 .Must(categories =>
                 {
-                    using var db = dbContextFactory.CreateDbContext();
-                    foreach (var category in categories)
+                    if (categories.DistinctBy(x => x.CategoryId).Count() != categories.Count)
                     {
-                        var fresh = db.Set<OrigamiCategory>().AsNoTracking().Id(category.CategoryId);
-                        if (fresh == null)
-                        {
-                            return false;
-                        }
+                        return false;
                     }
+
                     return true;
                 })
-                .WithMessage(text.Original("Category must be valid"));
+                .WithMessage(text.Original("Categories must be unique"));
         }
 
         public static IRuleBuilderOptions<T, Guid> Category<T>(this IRuleBuilder<T, Guid> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory)
         {
             return ruleBuilder
-                .Must(categoryId => {
+                .Must(categoryId =>
+                {
                     using var db = dbContextFactory.CreateDbContext();
                     return db.Set<OrigamiCategory>().AsNoTracking().Id(categoryId) != null;
                 })
-                .WithMessage(text.Original("Category must be valid"));
+                .WithMessage(text.Original("Category must exist"));
         }
 
         public static IRuleBuilderOptions<T, Guid> Content<T>(this IRuleBuilder<T, Guid> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory)
         {
             return ruleBuilder
-                .Must(contentId => 
+                .Must(contentId =>
                 {
                     using var db = dbContextFactory.CreateDbContext();
                     return db.Set<OrigamiContent>().AsNoTracking().Id(contentId) != null;
@@ -176,6 +173,7 @@ namespace Origami.Core.Validators
                 })
                 .WithMessage(text.Original("Content must be a valid HTML"));
         }
+
         public static IRuleBuilderOptions<T, Guid> Id<T>(this IRuleBuilder<T, Guid> ruleBuilder, Text text)
         {
             return ruleBuilder
@@ -252,6 +250,7 @@ namespace Origami.Core.Validators
                 .LessThanOrEqualTo((byte)5)
                 .WithMessage(text.Original("Rating must be less than or equal to 5"));
         }
+
         public static IRuleBuilderOptions<T, string> RssFeed<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
         {
             return ruleBuilder
@@ -289,6 +288,20 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("Tag cannot exceed 128 characters"));
         }
 
+        public static IRuleBuilderOptions<T, List<OrigamiContentTag>> TagsMustBeUnique<T>(this IRuleBuilder<T, List<OrigamiContentTag>> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory)
+        {
+            return ruleBuilder
+                .Must(tags =>
+                {
+                    if (tags.DistinctBy(x => x.Tag).Count() != tags.Count)
+                    {
+                        return false;
+                    }
+
+                    return true;
+                })
+                .WithMessage(text.Original("Tags must be unique"));
+        }
         public static IRuleBuilderOptions<T, string> Title<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
         {
             return ruleBuilder

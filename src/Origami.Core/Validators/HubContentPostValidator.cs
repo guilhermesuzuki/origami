@@ -13,6 +13,8 @@ namespace Origami.Core.Validators
         public HubContentPostValidator(Text text, IWebRootPath webRootPath, IDbContextFactory<OrigamiDbContext> dbContextFactory) : base()
         {
             RuleFor(x => x.Entity).SetValidator(new OrigamiContentValidator(text, webRootPath));
+            RuleFor(x => x.Categories).CategoriesMustBeUnique(text, dbContextFactory);
+            RuleFor(x => x.Tags).TagsMustBeUnique(text, dbContextFactory);
             RuleForEach(x => x.Categories).SetValidator(new OrigamiContentCategoryValidator(text, webRootPath, dbContextFactory));
             RuleForEach(x => x.Tags).SetValidator(new OrigamiContentTagValidator(text, webRootPath, dbContextFactory));
         }

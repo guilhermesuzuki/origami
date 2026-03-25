@@ -84,8 +84,8 @@ namespace Origami.UI.Admin
         {
             await JSRuntime.InvokeVoidAsync("removeQueryStringWithoutReload", "filter");
             await JSRuntime.InvokeVoidAsync("addQueryStringWithoutReload", "filter", filter);
+            await DataGrid.ReloadServerData();
             Filter = filter;
-            DataGrid?.ReloadServerData();
         }
 
         protected override Result CanAccess()
@@ -201,7 +201,7 @@ namespace Origami.UI.Admin
                 }
             }
 
-            await ReloadDataGrid();
+            await ReloadDataGridAsync();
             Root = this.HubContentRepository.Get(Root).Clone();
         }
 
@@ -281,7 +281,7 @@ namespace Origami.UI.Admin
             {
                 if (p.PropertyName.Like(nameof(IUserFacade.BlogId)) == true)
                 {
-                    await ReloadDataGrid();
+                    await ReloadDataGridAsync();
                     await this.InvokeAsync(this.StateHasChanged);
                 }
             };
@@ -304,7 +304,7 @@ namespace Origami.UI.Admin
         protected virtual async Task OnIncludeDeletedEntitiesChanged(bool newValue)
         {
             IncludeDeletedEntitiesInDataGrid = newValue;
-            await ReloadDataGrid();
+            await ReloadDataGridAsync();
         }
 
         protected override void OnInitialized()
@@ -351,11 +351,11 @@ namespace Origami.UI.Admin
         /// Reloads the data-grid
         /// </summary>
         /// <returns></returns>
-        protected virtual async Task ReloadDataGrid()
+        protected virtual async Task ReloadDataGridAsync()
         {
             Root = CreateEntity();
             SelectedEntities = new();
-            await DataGrid!.ReloadServerData();
+            await DataGrid.ReloadServerData();
         }
 
         /// <summary>

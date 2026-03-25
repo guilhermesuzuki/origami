@@ -76,8 +76,8 @@ namespace Origami.Core.Data
                 var m2 = Save(db, root.Entity, root.Tags);
 
                 _memoryCache.SaveCache(root.Entity);
-                _memoryCache.MergeCache(m1);
-                _memoryCache.MergeCache(m2);
+                _memoryCache.SaveCache(m1);
+                _memoryCache.SaveCache(m2);
 
                 hub.Success = Text.Original(Text.OperationCompletedSuccessfully);
 

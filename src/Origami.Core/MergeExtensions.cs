@@ -147,7 +147,7 @@ namespace Origami.Core
             return (purge, update, create);
         }
 
-        public static void MergeCache<T>(this IMemoryCache memoryCache, Merge<T> merge) where T : class, IId
+        public static void SaveCache<T>(this IMemoryCache memoryCache, Merge<T> merge) where T : class, IId
         {
             memoryCache.CreateCache(merge.Create);
             memoryCache.UpdateCache(merge.Update);
