@@ -1,13 +1,14 @@
-﻿using Origami.Core.Models;
+﻿using FluentValidation;
+using Origami.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Origami.Core.Validators;
 
-public class OrigamiSettingsValidator : BaseValidator<OrigamiSettings>
+public class OrigamiSettingsValidator : AbstractValidator<OrigamiSettings>
 {
-    public OrigamiSettingsValidator(Text text, IWebRootPath webRootPath) : base(text, webRootPath)
+    public OrigamiSettingsValidator(Text text, IWebRootPath webRootPath) : base()
     {
         RuleFor(x => x.Name).Name(text);
         RuleFor(x => x.Description).Description(text);

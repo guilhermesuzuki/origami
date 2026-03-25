@@ -1,4 +1,6 @@
 ﻿using FluentValidation;
+using Microsoft.EntityFrameworkCore;
+using Origami.Core.Data;
 using Origami.Core.Models;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
@@ -276,6 +278,44 @@ namespace Origami.Core.Validators
                     return true;
                 })
                 .WithMessage(text.Original("{0}: URL must be a valid website address", field));
+        }
+
+        public static IRuleBuilderOptions<T, List<OrigamiContentCategory>> Categories<T>(this IRuleBuilder<T, List<OrigamiContentCategory>> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory)
+        {
+            using var db = dbContextFactory.CreateDbContext();
+
+            return ruleBuilder
+                .Must(categories =>
+                {
+                    foreach (var category in categories)
+                    {
+                        var fresh = db.Set<OrigamiCategory>().AsNoTracking().Id(category.CategoryId);
+                        if (fresh == null)
+                        {
+                            return false;
+                        }
+                    }
+                    return true;
+                })
+                .WithMessage(text.Original("Category must be valid"));
+        }
+
+        public static IRuleBuilderOptions<T, Guid> Category<T>(this IRuleBuilder<T, Guid> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory)
+        {
+            using var db = dbContextFactory.CreateDbContext();
+
+            return ruleBuilder
+                .Must(categoryId => db.Set<OrigamiCategory>().AsNoTracking().Id(categoryId) != null)
+                .WithMessage(text.Original("Category must be valid"));
+        }
+
+        public static IRuleBuilderOptions<T, Guid> Content<T>(this IRuleBuilder<T, Guid> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory)
+        {
+            using var db = dbContextFactory.CreateDbContext();
+
+            return ruleBuilder
+                .Must(contentId => db.Set<OrigamiContent>().AsNoTracking().Id(contentId) != null)
+                .WithMessage(text.Original("Content must be valid"));
         }
     }
 }

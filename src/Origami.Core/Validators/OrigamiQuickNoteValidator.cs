@@ -3,9 +3,9 @@ using Origami.Core.Models;
 
 namespace Origami.Core.Validators
 {
-    public class OrigamiQuickNoteValidator : BaseValidator<OrigamiQuickNote>
+    public class OrigamiQuickNoteValidator : AbstractValidator<OrigamiQuickNote>
     {
-        public OrigamiQuickNoteValidator(Text text, IWebRootPath webRootPath) : base(text, webRootPath)
+        public OrigamiQuickNoteValidator(Text text, IWebRootPath webRootPath) : base()
         {
             RuleFor(x => x.AuthorId).AuthorId(text);
             RuleFor(x => x.BlogId).BlogId(text);

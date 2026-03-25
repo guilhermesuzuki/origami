@@ -3,9 +3,9 @@ using Origami.Core.Models;
 
 namespace Origami.Core.Validators
 {
-    public class OrigamiUserValidator : BaseValidator<OrigamiUser>
+    public class OrigamiUserValidator : AbstractValidator<OrigamiUser>
     {
-        public OrigamiUserValidator(Text text, IWebRootPath webRootPath) : base(text, webRootPath)
+        public OrigamiUserValidator(Text text, IWebRootPath webRootPath) : base()
         {
             RuleFor(x => x.Id).Id(text);
             RuleFor(x => x.NanoId).NanoId(text);
@@ -13,16 +13,19 @@ namespace Origami.Core.Validators
             RuleFor(x => x.DisplayName).DisplayName(text);
             RuleFor(x => x).DisplayNameMustBeDifferentThanUsername(text);
             RuleFor(x => x.Username).Cascade(CascadeMode.Stop).Username(text);
+
             RuleFor(x => x.EmailAddress)
                 .Cascade(CascadeMode.Stop)
                 .NotNull().WithMessage(text.Original("Email address is required"))
                 .MaximumLength(100).WithMessage(text.Original("Email address cannot exceed 100 characters"))
                 .EmailAddress();
+
             RuleFor(x => x.FirstName)
                 .Cascade(CascadeMode.Stop)
                 .NotNull().WithMessage(text.Original("First name is required"))
                 .NotEmpty().WithMessage(text.Original("First name is required"))
                 .MaximumLength(100).WithMessage(text.Original("First name cannot exceed 100 characters"));
+
             RuleFor(x => x.LastName)
                 .Cascade(CascadeMode.Stop)
                 .NotNull().WithMessage(text.Original("Last name is required"))

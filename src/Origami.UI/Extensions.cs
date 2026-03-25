@@ -219,6 +219,12 @@ namespace Origami.UI
             builder.Services.AddSingleton<IValidator<OrigamiUser>, OrigamiUserValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiVideo>, OrigamiVideoValidator>();
 
+            builder.Services.AddSingleton<IValidator<HubContentPage>, HubContentPageValidator>();
+            builder.Services.AddSingleton<IValidator<HubContentPost>, HubContentPostValidator>();
+            builder.Services.AddSingleton<IValidator<HubContentSpecialMessage>, HubContentSpecialMessageValidator>();
+            builder.Services.AddSingleton<IValidator<HubContentSpecialPage>, HubContentSpecialPageValidator>();
+            builder.Services.AddSingleton<IValidator<HubContentVideo>, HubContentVideoValidator>();
+
             //jwt configuration
             builder.Services.Configure<JwtConfiguration>(builder.Configuration.GetSection("Jwt"));
             builder.Services.Configure<Core.Models.Settings.OpenTelemetry>(builder.Configuration.GetSection("OpenTelemetry"));

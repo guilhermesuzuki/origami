@@ -3,9 +3,9 @@ using Origami.Core.Models;
 
 namespace Origami.Core.Validators
 {
-    public class OrigamiContentCommentValidator : BaseValidator<OrigamiContentComment>
+    public class OrigamiContentCommentValidator : AbstractValidator<OrigamiContentComment>
     {
-        public OrigamiContentCommentValidator(Text text, IWebRootPath webRootPath) : base(text, webRootPath)
+        public OrigamiContentCommentValidator(Text text, IWebRootPath webRootPath) : base()
         {
             RuleFor(x => x.Id).Id(text);
             RuleFor(x => x.Content).Cascade(CascadeMode.Stop).Html(text).HtmlInjection(text);

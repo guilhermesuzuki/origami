@@ -1,10 +1,11 @@
-﻿using Origami.Core.Models;
+﻿using FluentValidation;
+using Origami.Core.Models;
 
 namespace Origami.Core.Validators
 {
-    public class OrigamiVideoValidator : BaseValidator<OrigamiVideo>
+    public class OrigamiVideoValidator : AbstractValidator<OrigamiVideo>
     {
-        public OrigamiVideoValidator(Text text, IWebRootPath webRootPath) : base(text, webRootPath)
+        public OrigamiVideoValidator(Text text, IWebRootPath webRootPath) : base()
         {
             RuleFor(x => x.AuthorId).AuthorId(text);
             RuleFor(x => x.BlogId).BlogId(text);

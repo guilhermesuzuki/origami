@@ -5,7 +5,8 @@ using System.Transactions;
 
 namespace Origami.UI.Admin
 {
-    public class BasicFormFullContent2<T1, T2> : BasicForm<T2>
+    public class BasicFormFullContent2<T1, T2> : 
+        BasicForm<T2>
         where T1 : OrigamiContent, new()
         where T2 : class, IHubContent<T1>, new()
     {
