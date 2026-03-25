@@ -45,7 +45,7 @@ namespace Origami.UI.Admin
 
         public override void UndoChanges()
         {
-            this.Entity = HubContentRepository.Get(Entity.Entity);
+            this.Entity = HubContentRepository.Get(Entity.Entity).Clone();
         }
 
         /// <summary>
