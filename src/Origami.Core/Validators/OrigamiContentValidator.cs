@@ -7,6 +7,7 @@ namespace Origami.Core.Validators
     {
         public OrigamiContentValidator(Text text, IWebRootPath webRootPath) : base()
         {
+            RuleFor(x => x.Type).ContentType(text);
             RuleFor(x => x.AuthorId).AuthorId(text);
             RuleFor(x => x.BlogId).BlogId(text);
             RuleFor(x => x.Id).Id(text);

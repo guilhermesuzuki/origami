@@ -52,17 +52,17 @@
                                             var blog = this.Super.Blogs.ReadFromCache().Id(context.Item.Id);
                                             <BlogHeaderLite Entity="blog"></BlogHeaderLite>
                                         }
-                                        else if (context.Item.Type.Like("Page") == true)
+                                        else if (context.Item.Type.Like("OrigamiPage") == true)
                                         {
                                             var page = this.Super.Contents.ReadFromCache().OfType<OrigamiPage>().Id(context.Item.Id);
                                             <PageHeaderLite2 Entity="page"></PageHeaderLite2>
                                         }
-                                        else if (context.Item.Type.Like("Post") == true)
+                                        else if (context.Item.Type.Like("OrigamiPost") == true)
                                         {
                                             var post = this.Super.Contents.ReadFromCache().OfType<OrigamiPost>().Id(context.Item.Id);
                                             <PostHeaderLite2 Entity="post"></PostHeaderLite2>
                                         }
-                                        else if (context.Item.Type.Like("Video") == true)
+                                        else if (context.Item.Type.Like("OrigamiVideo") == true)
                                         {
                                             var video = this.Super.Contents.ReadFromCache().OfType<OrigamiVideo>().Id(context.Item.Id);
                                             <VideoHeaderLite2 Entity="video"></VideoHeaderLite2>
@@ -92,12 +92,12 @@
                                             var note = this.Super.QuickNotes.ReadFromCache().Id(context.Item.Id);
                                             <QuickNoteHeaderLite Entity="note"></QuickNoteHeaderLite>
                                         }
-                                        else if (context.Item.Type.Like("SpecialPage") == true)
+                                        else if (context.Item.Type.Like("OrigamiSpecialPage") == true)
                                         {
                                             var page = this.Super.GetSpecialPages().Id(context.Item.Id);
                                             <SpecialPageHeaderLite2 Entity="page"></SpecialPageHeaderLite2>
                                         }
-                                        else if (context.Item.Type.Like("SpecialMessage") == true)
+                                        else if (context.Item.Type.Like("OrigamiSpecialMessage") == true)
                                         {
                                             var message = this.Super.GetSpecialMessages().Id(context.Item.Id);
                                             <SpecialMessageHeaderLite Entity="message"></SpecialMessageHeaderLite>
@@ -116,17 +116,29 @@
                                         {
                                             <span>@Text.Original("Comment in video")</span>
                                         }
+                                        else if (context.Item.Type.Like("OrigamiPage") == true)
+                                        {
+                                            <span>@Text.Original("Page")</span>
+                                        }
+                                        else if (context.Item.Type.Like("OrigamiPost") == true)
+                                        {
+                                            <span>@Text.Original("Post")</span>
+                                        }
                                         else if (context.Item.Type.Like("QuickNote") == true)
                                         {
                                             <span>@Text.Original("Quick note")</span>
                                         }
-                                        else if (context.Item.Type.Like("SpecialPage") == true)
+                                        else if (context.Item.Type.Like("OrigamiSpecialPage") == true)
                                         {
                                             <span>@Text.Original("Special page")</span>
                                         }
-                                        else if (context.Item.Type.Like("SpecialMessage") == true)
+                                        else if (context.Item.Type.Like("OrigamiSpecialMessage") == true)
                                         {
                                             <span>@Text.Original("Special message")</span>
+                                        }
+                                        else if (context.Item.Type.Like("OrigamiVideo") == true)
+                                        {
+                                            <span>@Text.Original("Video")</span>
                                         }
                                         else
                                         {

@@ -114,17 +114,17 @@ namespace Origami.Core.Data
                 return _purge(_blogRepository, ctx);
             }
 
-            if (ctx.Entity.Type.Like("Page") == true)
+            if (ctx.Entity.Type.Like("OrigamiPage") == true)
             {
                 return _purge(_contentRepository, ctx);
             }
 
-            if (ctx.Entity.Type.Like("Post") == true)
+            if (ctx.Entity.Type.Like("OrigamiPost") == true)
             {
                 return _purge(_contentRepository, ctx);
             }
 
-            if (ctx.Entity.Type.Like("Video") == true)
+            if (ctx.Entity.Type.Like("OrigamiVideo") == true)
             {
                 return _purge(_contentRepository, ctx);
             }
@@ -149,12 +149,12 @@ namespace Origami.Core.Data
                 return _purge(_quickNoteRepository, ctx);
             }
 
-            if (ctx.Entity.Type.Like("SpecialPage") == true)
+            if (ctx.Entity.Type.Like("OrigamiSpecialPage") == true)
             {
                 return _purge(_contentRepository, ctx);
             }
 
-            if (ctx.Entity.Type.Like("SpecialMessage") == true)
+            if (ctx.Entity.Type.Like("OrigamiSpecialMessage") == true)
             {
                 return _purge(_contentRepository, ctx);
             }
@@ -169,17 +169,17 @@ namespace Origami.Core.Data
                 return _restore(_blogRepository, ctx);
             }
 
-            if (ctx.Entity.Type.Like("Page") == true)
+            if (ctx.Entity.Type.Like("OrigamiPage") == true)
             {
                 return _restore(_contentRepository, ctx);
             }
 
-            if (ctx.Entity.Type.Like("Post") == true)
+            if (ctx.Entity.Type.Like("OrigamiPost") == true)
             {
                 return _restore(_contentRepository, ctx);
             }
 
-            if (ctx.Entity.Type.Like("Video") == true)
+            if (ctx.Entity.Type.Like("OrigamiVideo") == true)
             {
                 return _restore(_contentRepository, ctx);
             }
@@ -204,12 +204,12 @@ namespace Origami.Core.Data
                 return _restore(_quickNoteRepository, ctx);
             }
 
-            if (ctx.Entity.Type.Like("SpecialPage") == true)
+            if (ctx.Entity.Type.Like("OrigamiSpecialPage") == true)
             {
                 return _restore(_contentRepository, ctx);
             }
 
-            if (ctx.Entity.Type.Like("SpecialMessage") == true)
+            if (ctx.Entity.Type.Like("OrigamiSpecialMessage") == true)
             {
                 return _restore(_contentRepository, ctx);
             }
@@ -223,7 +223,7 @@ namespace Origami.Core.Data
             var hub = new Result<OrigamiUserTrash>(trash.Entity);
             var entity = repo.ReadFromDatabase(trash.Entity);
             var ctx = new DataOperationContext<T>(trash.User, trash.DateTime, entity ?? Activator.CreateInstance<T>());
-            return repo.SmartPurge(ctx, true).Push(hub);
+            return repo.SmartPurge(ctx, false).Push(hub);
         }
 
         private Result<OrigamiUserTrash> _restore<T>(IRepository<T> repo, DataOperationContext<OrigamiUserTrash> trash)
@@ -234,7 +234,7 @@ namespace Origami.Core.Data
             var ctx = new DataOperationContext<T>(trash.User, trash.DateTime, entity ?? Activator.CreateInstance<T>());
             if (entity != null)
             {
-                return repo.SmartRestore(ctx, true).Push(hub);
+                return repo.SmartRestore(ctx, false).Push(hub);
             }
             return new(trash.Entity) { Error = Text.Original("Unable to restore trash") };
         }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using AngleSharp.Dom;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using MudBlazor;
 using NanoidDotNet;
@@ -89,6 +90,7 @@ namespace Origami.UI
             try
             {
                 Entity = NewEntity();
+                this.CreateEntityBeforeEvent(Entity);
                 await Created.InvokeAsync(Entity);
             }
             finally
@@ -103,7 +105,6 @@ namespace Origami.UI
             var entity = Activator.CreateInstance<T>();
             entity.SetBlog(blog);
             entity.SetAuthor(UserFacade.User);
-            CreateEntityBeforeEvent(entity);
             return entity;
         }
 

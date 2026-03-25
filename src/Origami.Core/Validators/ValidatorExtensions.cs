@@ -63,6 +63,23 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("Content must be valid"));
         }
 
+        public static IRuleBuilderOptions<T, string> ContentType<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
+        {
+            return ruleBuilder
+                .Must(type => 
+                {
+                    if (type.Has() == false) return false;
+
+                    var types = AppDomain.CurrentDomain
+                        .GetAssemblies()
+                        .SelectMany(a => a.GetTypes())
+                        .Where(t => typeof(OrigamiContent).IsAssignableFrom(t) && t.IsClass && !t.IsAbstract);
+
+                    return types.Any(t => t.Name == type);
+                }).WithMessage("Content type is required")
+                ;
+        }
+
         public static IRuleBuilderOptions<T, string?> Description<T>(this IRuleBuilder<T, string?> ruleBuilder, Text text)
         {
             return ruleBuilder
@@ -77,7 +94,6 @@ namespace Origami.Core.Validators
                 .NotEmpty().WithMessage(text.Original("Display name is required"))
                 .MaximumLength(200).WithMessage(text.Original("Display name cannot exceed 200 characters"));
         }
-
         public static IRuleBuilderOptions<T, T> DisplayNameMustBeDifferentThanUsername<T>(this IRuleBuilder<T, T> ruleBuilder, Text text)
             where T : IUsername, IDisplayName
         {

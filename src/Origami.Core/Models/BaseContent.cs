@@ -27,7 +27,7 @@ namespace Origami.Core.Models
         protected Guid _authorId;
         protected Guid? _blogId;
         protected string _content = string.Empty;
-        protected DateTime _dateCreated;
+        protected DateTime _dateCreated = DateTime.UtcNow;
         protected DateTime? _dateModified;
         protected DateTime? _datePublished;
         protected string? _description = string.Empty;

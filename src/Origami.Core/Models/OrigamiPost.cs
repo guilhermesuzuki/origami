@@ -12,6 +12,7 @@ namespace Origami.Core.Models
         /// </summary>
         public OrigamiPost() : base()
         {
+            Type = nameof(OrigamiPost);
         }
 
         public event EventHandler<PropertyChangedEventArgs> OrigamiPostChanged = delegate { };

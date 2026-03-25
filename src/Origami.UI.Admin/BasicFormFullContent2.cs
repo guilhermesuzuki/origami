@@ -125,5 +125,11 @@ namespace Origami.UI.Admin
 
             this.InvokeAsync(this.StateHasChanged);
         }
+
+        protected override void CreateEntityBeforeEvent(T2 entity)
+        {
+            entity.Entity.SetAuthor(UserFacade.User);
+            entity.Entity.SetBlog(GetBlogFromUserFacade());
+        }
     }
 }
