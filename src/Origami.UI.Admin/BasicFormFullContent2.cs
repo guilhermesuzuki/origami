@@ -15,7 +15,6 @@ namespace Origami.UI.Admin
         where T2 : class, IHubContent<T1>, new()
     {
         [Inject] public IHubContentRepository<T2> HubContentRepository { get; set; } = null!;
-        [Inject] public IMemoryCache MemoryCache { get; set; } = null!;
         
         protected List<OrigamiCategory> Categories { get; set; } = [];
         protected List<OrigamiTag> Tags { get; set; } = [];

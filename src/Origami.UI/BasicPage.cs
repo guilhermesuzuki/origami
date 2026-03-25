@@ -1,10 +1,14 @@
-﻿using Microsoft.JSInterop;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using Origami.Core;
+using Origami.Core.Data;
 
 namespace Origami.UI
 {
     public class BasicPage : Basic
     {
+        [Inject] protected IPageTitleRepository PageTitle { get; set; } = null!;
+
         protected virtual void ChangeBlog()
         {
             if (BlogId == Guid.Empty) return;
