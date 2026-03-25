@@ -831,6 +831,17 @@ namespace Origami.Core
         /// <param name="source"></param>
         /// <param name="noImage"></param>
         /// <returns></returns>
+        public static string NoCategoryHeader(this string? source)
+        {
+            return source.Has() ? source : OrigamiConstants.NoCategory;
+        }
+
+        /// <summary>
+        /// Returns no image, if necessary
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="noImage"></param>
+        /// <returns></returns>
         public static string NoHeader(this string? source, string noImage = OrigamiConstants.NoHeader)
         {
             return source.Has() ? source : noImage;
@@ -1134,10 +1145,17 @@ namespace Origami.Core
         public static T? SetBlog<T>(this T? entity, OrigamiBlog? blog)
         {
             if (blog == null) return entity;
-            if (entity is IBlogIdNull blogId && blogId.BlogId.GetValueOrDefault() == Guid.Empty)
+
+            if (entity is IBlogId blogId && blogId.BlogId == Guid.Empty)
             {
                 blogId.BlogId = blog.Id;
             }
+
+            if (entity is IBlogIdNull blogIdNull && blogIdNull.BlogId.GetValueOrDefault() == Guid.Empty)
+            {
+                blogIdNull.BlogId = blog.Id;
+            }
+
             return entity;
         }
 
@@ -1165,12 +1183,13 @@ namespace Origami.Core
         /// <typeparam name="T"></typeparam>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public static T? SetId<T>(this T? entity)
+        public static T? SetId<T>(this T? entity) where T : IId
         {
-            if (entity is IId id && id.Id == Guid.Empty)
+            if (entity != null && entity.Id == Guid.Empty)
             {
-                id.Id = Guid.NewGuid();
+                entity.Id = Guid.NewGuid();
             }
+
             return entity;
         }
 

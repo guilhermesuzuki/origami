@@ -103,7 +103,7 @@
                                       AdornmentIcon="@Icons.Material.Filled.Search"
                                       Adornment="Adornment.Start"
                                       @bind-Value="CategoriesSearch"
-                                      OnKeyUp="() => Search<OrigamiCategory>()"
+                                      OnKeyUp="(kea) => Search<OrigamiCategory>(kea)"
                                       HelperText="@Text.Lower("Search")"></MudTextField>
                     </li>
                 </ul>
@@ -126,7 +126,7 @@
                         <MudDataGridPager T="OrigamiCategory" PageSizeOptions="[10, 25, 50, 100]" />
                     </PagerContent>
                 </MudDataGrid>
-                <div class="selected-categories p-3 mt-3 border">
+                <div class="picked-categories p-3 mt-3 border">
                     @foreach (var content in Entity.Categories)
                     {
                         var category = this.Get<OrigamiCategory>().Id(content.CategoryId);
@@ -161,7 +161,7 @@
                                       AdornmentIcon="@Icons.Material.Filled.Search"
                                       Adornment="Adornment.Start"
                                       @bind-Value="TagsSearch"
-                                      OnKeyUp="() => Search<OrigamiTag>()"
+                                      OnKeyUp="(kea) => Search<OrigamiTag>(kea)"
                                       HelperText="@Text.Lower("Search (type ENTER to add a new tag)")"></MudTextField>
                     </li>
                 </ul>
@@ -187,7 +187,7 @@
                 <div class="selected-tags p-3 mt-3 border">
                     @foreach (var content in Entity.Tags)
                     {
-                        var tag = this.Get<OrigamiTag>().FirstOrDefault(x => x.Tag == content.Tag);
+                        var tag = new OrigamiTag { BlogId = Entity.Entity.Id, Tag = content.Tag };
                         <div class="d-inline-flex align-items-center p-1 border me-1">
                             <TagHeaderLite Entity="tag" Class="me-1"></TagHeaderLite>
                             <button class="cursor-pointer" @onclick="() => this.Entity.Tags.Remove(content)">

@@ -196,7 +196,7 @@
                     if (hub.Ok)
                     {
                         scope.Complete();
-                        await this.InvokeAsync(() => this.DataGrid!.ReloadServerData());
+                        await this.InvokeAsync(async () => await this.DataGrid.ReloadServerData());
                     }
                     UserFacade.Result = hub;
                 }
@@ -228,7 +228,7 @@
                     if (hub.Ok)
                     {
                         scope.Complete();
-                        await this.InvokeAsync(() => this.DataGrid!.ReloadServerData());
+                        await this.InvokeAsync(async () => await this.DataGrid.ReloadServerData());
                     }
                     UserFacade.Result = hub;
                 }

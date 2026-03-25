@@ -21,7 +21,7 @@ namespace Origami.UI.Admin
         /// <summary>
         /// DataGrid for this instance
         /// </summary>
-        protected MudDataGrid<T>? DataGrid { get; set; }
+        protected MudDataGrid<T> DataGrid { get; set; } = null!;
 
         /// <summary>
         /// Default ordering, in case there's no order-by
@@ -81,8 +81,8 @@ namespace Origami.UI.Admin
         {
             await JSRuntime.InvokeVoidAsync("removeQueryStringWithoutReload", "filter");
             await JSRuntime.InvokeVoidAsync("addQueryStringWithoutReload", "filter", filter);
+            await DataGrid.ReloadServerData();
             Filter = filter;
-            DataGrid?.ReloadServerData();
         }
 
         protected override Result CanAccess()
@@ -140,7 +140,7 @@ namespace Origami.UI.Admin
         /// <param name="entity"></param>
         protected virtual void EntitySaved(T entity)
         {
-            DataGrid?.ReloadServerData();
+            DataGrid.ReloadServerData();
             SelectedEntity = entity.Clone();
         }
 
@@ -378,7 +378,7 @@ namespace Origami.UI.Admin
         {
             SelectedEntity = CreateEntity();
             SelectedEntities = new();
-            await DataGrid!.ReloadServerData();
+            await DataGrid.ReloadServerData();
         }
 
         /// <summary>

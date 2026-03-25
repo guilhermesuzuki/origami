@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.Caching.Memory;
 using MudBlazor;
 using Origami.Core;
@@ -9,13 +10,13 @@ using System.Transactions;
 
 namespace Origami.UI.Admin
 {
-    public class BasicFormFullContent2<T1, T2> : 
+    public class BasicFormFullContent2<T1, T2> :
         BasicForm<T2>
         where T1 : OrigamiContent, new()
         where T2 : class, IHubContent<T1>, new()
     {
         [Inject] public IHubContentRepository<T2> HubContentRepository { get; set; } = null!;
-        
+
         protected List<OrigamiCategory> Categories { get; set; } = [];
         protected List<OrigamiTag> Tags { get; set; } = [];
 
@@ -106,7 +107,7 @@ namespace Origami.UI.Admin
             Tags = Get<OrigamiTag>();
         }
 
-        protected void Search<T>()
+        protected void Search<T>(KeyboardEventArgs kea)
         {
             var t = Activator.CreateInstance<T>();
 
@@ -116,7 +117,9 @@ namespace Origami.UI.Admin
                     this.Categories = CategoriesSearch.Has() == false ? this.Get<OrigamiCategory>() : this.Get<OrigamiCategory>().Where(x => x.Name.Contains(CategoriesSearch, StringComparison.OrdinalIgnoreCase)).ToList();
                     break;
                 case OrigamiTag:
-                    this.Tags = TagsSearch.Has() == false ? this.Get<OrigamiTag>() : this.Get<OrigamiTag>().Where(x => x.Tag.Contains(TagsSearch, StringComparison.OrdinalIgnoreCase)).ToList();
+                    this.Tags = TagsSearch.Has() == false 
+                        ? this.Get<OrigamiTag>() 
+                        : [new() { Tag = TagsSearch }, .. this.Get<OrigamiTag>().Where(x => x.Tag.Contains(TagsSearch, StringComparison.OrdinalIgnoreCase))];
                     break;
             }
 
