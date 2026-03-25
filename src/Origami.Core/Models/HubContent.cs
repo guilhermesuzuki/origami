@@ -13,15 +13,11 @@ namespace Origami.Core.Models
         /// </summary>
         public T Entity { get; set; } = Activator.CreateInstance<T>();
 
-        public List<OrigamiContentCategory> Categories { get; } = [];
-
-        public List<OrigamiContentComment> Comments { get; } = [];
-
-        public List<OrigamiContentRating> Ratings { get; } = [];
-
-        public List<OrigamiContentReaction> Reactions { get; } = [];
-
-        public List<OrigamiContentTag> Tags { get; } = [];
+        public List<OrigamiContentCategory> Categories { get; set; } = [];
+        public List<OrigamiContentComment> Comments { get; set; } = [];
+        public List<OrigamiContentRating> Ratings { get; set; } = [];
+        public List<OrigamiContentReaction> Reactions { get; set; } = [];
+        public List<OrigamiContentTag> Tags { get; set; } = [];
 
         /// <summary>
         /// Dummy implementation to satisfy IHubContent interface, since the actual ID is stored in the Entity

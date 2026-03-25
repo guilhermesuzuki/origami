@@ -88,17 +88,23 @@ namespace Origami.UI
         {
             try
             {
-                var blog = GetBlogFromUserFacade();
-                Entity = Activator.CreateInstance<T>();
-                Entity.SetBlog(blog);
-                Entity.SetAuthor(UserFacade.User);
-                CreateEntityBeforeEvent(Entity);
+                Entity = NewEntity();
                 await Created.InvokeAsync(Entity);
             }
             finally
             {
                 ShowParentSelector = false;
             }
+        }
+
+        public T NewEntity()
+        {
+            var blog = GetBlogFromUserFacade();
+            var entity = Activator.CreateInstance<T>();
+            entity.SetBlog(blog);
+            entity.SetAuthor(UserFacade.User);
+            CreateEntityBeforeEvent(entity);
+            return entity;
         }
 
         public void SetParent(T entity)
@@ -261,9 +267,9 @@ namespace Origami.UI
             this.FileManagerForImages = false;
         }
 
-        protected override void OnParametersSet()
+        protected override void OnInitialized()
         {
-            base.OnParametersSet();
+            base.OnInitialized();
             Entity.SetAuthor(UserFacade.User);
             Entity.SetBlog(GetBlogFromUserFacade());
         }

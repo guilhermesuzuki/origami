@@ -103,7 +103,7 @@ namespace Origami.Core.Data
         protected List<X> GetEntities<X>(IId id) where X : class, IId, IContentId
         {
             using var db = _dbContextFactory.CreateDbContext();
-            return db.Set<X>().AsNoTracking().Where(x => x.ContentId == id.Id).ToList();
+            return db.ReadFromCache<X>(this._memoryCache).Where(x => x.ContentId == id.Id).ToList();
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace Origami.Core.Data
         protected T1? GetEntity(IId id)
         {
             using var db = _dbContextFactory.CreateDbContext();
-            return db.Set<T1>().AsNoTracking().Id(id.Id);
+            return db.ReadFromCache<T1>(this._memoryCache).Id(id.Id);
         }
 
         protected virtual bool UserHasPermission(OrigamiDbContext db, Guid userId, string permission)

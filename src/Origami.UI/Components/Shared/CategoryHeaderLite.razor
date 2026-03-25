@@ -5,8 +5,8 @@
 {
     <div class="category-header-lite @Class" title="@Text.Original("Category")">
         <div class="d-inline-flex align-items-center">
-            <img class="me-1" src="@Entity.HeaderImage" style="height:15px; width:15px;" onerror="this.onerror=null; this.src='@(OrigamiConstants.NoCategory)'" />
-            <div>
+            <img class="" src="@Entity.HeaderImage" style="height:15px; width:15px;" onerror="this.onerror=null; this.src='@(OrigamiConstants.NoCategory)'" />
+            <div class="ms-1">
                 <span class="category-name">@Entity.Name</span>
                 @if (this.Entity.Slug.Equals(this.Entity.Name, StringComparison.InvariantCultureIgnoreCase) == false)
                 {

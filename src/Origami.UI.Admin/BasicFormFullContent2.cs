@@ -17,9 +17,10 @@ namespace Origami.UI.Admin
         [Inject] public IHubContentRepository<T2> HubContentRepository { get; set; } = null!;
         [Inject] public IMemoryCache MemoryCache { get; set; } = null!;
         
-        protected MudDataGrid<OrigamiCategory> CategoriesGrid { get; set; } = null!;
+        protected List<OrigamiCategory> Categories { get; set; } = [];
+        protected List<OrigamiTag> Tags { get; set; } = [];
+
         protected string CategoriesSearch { get; set; } = string.Empty;
-        protected MudDataGrid<OrigamiTag> TagsGrid { get; set; } = null!;
         protected string TagsSearch { get; set; } = string.Empty;
 
         public override void Save()
@@ -49,32 +50,23 @@ namespace Origami.UI.Admin
         }
 
         /// <summary>
-        /// Associates the specified category with the current entity if it is not already associated.
+        /// Adds the specified content to the associated collection if it does not already exist.
         /// </summary>
-        /// <remarks>If the category is already associated with the entity, this method has no
-        /// effect.</remarks>
-        /// <param name="category">The category to add to the entity. Cannot be null.</param>
-        protected void AddCategory(OrigamiCategory category)
+        /// <remarks>If the specified content already exists in the collection, no action is taken. Only
+        /// OrigamiCategory and OrigamiTag types are supported; other types are ignored.</remarks>
+        /// <typeparam name="T">The type of the content to add. Supported types are OrigamiCategory and OrigamiTag.</typeparam>
+        /// <param name="content">The content item to add to the collection. Must be of type OrigamiCategory or OrigamiTag.</param>
+        protected void Add<T>(T content)
         {
-            var query = Entity.Categories.Where(x => x.CategoryId == category.Id);
-            if (query.Any() == false)
+            if (content is OrigamiCategory category)
             {
                 Entity.Categories.Add(new() { CategoryId = category.Id, ContentId = Entity.Entity.Id });
+                Entity.Categories = Entity.Categories.DistinctBy(x => x.CategoryId).ToList();
             }
-        }
-
-        /// <summary>
-        /// Adds a tag to the entity if it does not already exist.
-        /// </summary>
-        /// <remarks>If the specified tag is already associated with the entity, this method does nothing.
-        /// Tag comparison is based on the tag's value.</remarks>
-        /// <param name="tag">The tag to add to the entity. Cannot be null.</param>
-        protected void AddTag(OrigamiTag tag)
-        {
-            var query = Entity.Tags.Where(x => x.Tag == tag.Tag);
-            if (query.Any() == false)
+            else if (content is OrigamiTag tag)
             {
                 Entity.Tags.Add(new() { ContentId = Entity.Entity.Id, Tag = tag.Tag });
+                Entity.Tags = Entity.Tags.DistinctBy(x => x.Tag).ToList();
             }
         }
 
@@ -84,50 +76,52 @@ namespace Origami.UI.Admin
         /// <param name="state"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        protected virtual Task<GridData<OrigamiCategory>> GetCategories(GridState<OrigamiCategory> state, CancellationToken token)
+        protected virtual List<T> Get<T>() where T : class, IBlogIdNull
         {
-            using var db = this.DbContextFactory.CreateDbContext();
+            var t = Activator.CreateInstance<T>();
+            var db = this.DbContextFactory.CreateDbContext();
+            var query = from c in db.ReadFromCache<T>(this.MemoryCache) where c.BlogId == Entity.Entity.BlogId select c;
 
-            var filter = new StringBuilder("(true)");
-
-            filter.Append($" && {nameof(OrigamiCategory.BlogId)} == {Entity.Entity.BlogId}");
-            filter.Append($" && {nameof(OrigamiCategory.Name)}.Contains(\"{CategoriesSearch}\", StringComparison.InvariantCultureIgnoreCase)", CategoriesSearch.Has());
-
-            //pulls information from cache
-            var result = db.ReadFromCache<OrigamiCategory>(this.MemoryCache).Query(
-                state.PageSize,
-                state.Page * state.PageSize,
-                filter.ToString(),
-                $"{nameof(OrigamiCategory.Name)}"
-            );
-
-            return Task.FromResult(new GridData<OrigamiCategory> { Items = result.Rows, TotalItems = result.NumberOfRows, });
+            try
+            {
+                query = t switch
+                {
+                    IName => query.Cast<IName>().OrderBy(x => x.Name).Cast<T>(),
+                    ITag => query.Cast<ITag>().DistinctBy(x => x.Tag).OrderBy(x => x.Tag).Cast<T>(),
+                    _ => query,
+                };
+                return [.. query];
+            }
+            finally
+            {
+                db.Dispose();
+            }
         }
 
-        /// <summary>
-        /// This method should retrieve the Entities from database or memory
-        /// </summary>
-        /// <param name="state"></param>
-        /// <param name="token"></param>
-        /// <returns></returns>
-        protected virtual Task<GridData<OrigamiTag>> GetTags(GridState<OrigamiTag> state, CancellationToken token)
+        protected override void OnInitialized()
         {
-            using var db = this.DbContextFactory.CreateDbContext();
+            base.OnInitialized();
+            Entity.Entity.SetAuthor(UserFacade.User);
+            Entity.Entity.SetBlog(GetBlogFromUserFacade());
+            Categories = Get<OrigamiCategory>();
+            Tags = Get<OrigamiTag>();
+        }
 
-            var filter = new StringBuilder("(true)");
+        protected void Search<T>()
+        {
+            var t = Activator.CreateInstance<T>();
 
-            filter.Append($" && {nameof(OrigamiTag.BlogId)} == {Entity.Entity.BlogId}");
-            filter.Append($" && {nameof(OrigamiTag.Tag)}.Contains(\"{TagsSearch}\", StringComparison.InvariantCultureIgnoreCase)", TagsSearch.Has());
+            switch (t)
+            {
+                case OrigamiCategory:
+                    this.Categories = CategoriesSearch.Has() == false ? this.Get<OrigamiCategory>() : this.Get<OrigamiCategory>().Where(x => x.Name.Contains(CategoriesSearch, StringComparison.OrdinalIgnoreCase)).ToList();
+                    break;
+                case OrigamiTag:
+                    this.Tags = TagsSearch.Has() == false ? this.Get<OrigamiTag>() : this.Get<OrigamiTag>().Where(x => x.Tag.Contains(TagsSearch, StringComparison.OrdinalIgnoreCase)).ToList();
+                    break;
+            }
 
-            //pulls information from cache
-            var result = db.ReadFromCache<OrigamiTag>(this.MemoryCache).Query(
-                state.PageSize,
-                state.Page * state.PageSize,
-                filter.ToString(),
-                $"{nameof(OrigamiTag.Tag)}"
-            );
-
-            return Task.FromResult(new GridData<OrigamiTag> { Items = result.Rows, TotalItems = result.NumberOfRows, });
+            this.InvokeAsync(this.StateHasChanged);
         }
     }
 }

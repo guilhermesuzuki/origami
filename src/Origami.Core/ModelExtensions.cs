@@ -1124,9 +1124,9 @@ namespace Origami.Core
         public static T? SetAuthor<T>(this T? entity, OrigamiUser? author)
         {
             if (author == null) return entity;
-            if (entity is IAuthorId fKAuthor && fKAuthor.AuthorId == Guid.Empty)
+            if (entity is IAuthorId authorId && authorId.AuthorId == Guid.Empty)
             {
-                fKAuthor.AuthorId = author.Id;
+                authorId.AuthorId = author.Id;
             }
             return entity;
         }
@@ -1134,9 +1134,9 @@ namespace Origami.Core
         public static T? SetBlog<T>(this T? entity, OrigamiBlog? blog)
         {
             if (blog == null) return entity;
-            if (entity is IBlogId fkBlog && fkBlog.BlogId == Guid.Empty)
+            if (entity is IBlogIdNull blogId && blogId.BlogId.GetValueOrDefault() == Guid.Empty)
             {
-                fkBlog.BlogId = blog.Id;
+                blogId.BlogId = blog.Id;
             }
             return entity;
         }
