@@ -19,7 +19,7 @@ namespace Origami.UI
             }
         }
 
-        protected async Task ErrorFromQueryString()
+        protected async Task ErrorFromQueryStringAsync()
         {
             var key = "error";
             var error = this.NavigationManager.Uri.QueryString(key);
@@ -34,7 +34,7 @@ namespace Origami.UI
             }
         }
 
-        protected async Task LanguageFromQueryString()
+        protected async Task LanguageFromQueryStringAsync()
         {
             var key = "language";
             var language = this.NavigationManager.Uri.QueryString(key);
@@ -59,8 +59,8 @@ namespace Origami.UI
             await PageAsync(firstRender);
             await PageViewAsync(firstRender);
             await PageTitleAsync(firstRender);
-            await ErrorFromQueryString();
-            await LanguageFromQueryString();
+            await ErrorFromQueryStringAsync();
+            await LanguageFromQueryStringAsync();
         }
 
         protected virtual async Task PageAsync(bool firstRender)
