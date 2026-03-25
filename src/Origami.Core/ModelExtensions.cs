@@ -149,14 +149,18 @@ namespace Origami.Core
         /// <typeparam name="T"></typeparam>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public static T Clone<T>(this T? entity)
-            where T : class
+        public static T Clone<T>(this T? entity) where T : class
         {
             //TODO: workaround for OrigamiBackupRestore, find a better way to do this
             if (entity is OrigamiBackupRestore restore)
             {
                 return restore.GetClone() as T ?? Activator.CreateInstance<T>();
             }
+            if (entity is OrigamiPost post)
+            {
+                return post.GetClone() as T ?? Activator.CreateInstance<T>();
+            }
+
             return entity != null ? entity.GetClone() : Activator.CreateInstance<T>();
         }
 

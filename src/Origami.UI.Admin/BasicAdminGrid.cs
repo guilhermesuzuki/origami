@@ -199,7 +199,6 @@ namespace Origami.UI.Admin
             }
 
             await ReloadDataGrid();
-            SelectedEntity = Repository.ReadFromCache().Id(SelectedEntity.Id).Clone();
         }
 
         /// <summary>
