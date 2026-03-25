@@ -43,7 +43,7 @@ namespace Origami.Core.Data
                 var rows1 = from t in dbContext.ContentTags.AsNoTracking()
                             join c in dbContext.Contents.AsNoTracking() on t.ContentId equals c.Id
                             where c.BlogId == ctx.Entity.BlogId
-                            where t.Tag == ctx.Entity.Name
+                            where t.Tag == ctx.Entity.Tag
                             select t;
 
                 hub.RowsAffected += rows1.ExecuteDelete();
@@ -61,10 +61,10 @@ namespace Origami.Core.Data
                     var query = from t in dbContext.ContentTags.AsNoTracking()
                              join c in dbContext.Contents.AsNoTracking() on t.ContentId equals c.Id
                              where c.BlogId == ctx.Entity.BlogId
-                             where t.Tag == ctx.EntityBeforeModifications.Name
+                             where t.Tag == ctx.EntityBeforeModifications.Tag
                              select t;
 
-                    query.ExecuteUpdate(setters => setters.SetProperty(t => t.Tag, ctx.Entity.Name));
+                    query.ExecuteUpdate(setters => setters.SetProperty(t => t.Tag, ctx.Entity.Tag));
                     dbContext.SaveChanges();
                 }
                 return new(ctx.Entity);
@@ -79,7 +79,7 @@ namespace Origami.Core.Data
             var before = this.ReadFromCache().Id(entity.Id);
             if (before != null)
             {
-                _contentTagRepository.RefreshCache(entity.BlogId.GetValueOrDefault(), before.Name, entity.Name);
+                _contentTagRepository.RefreshCache(entity.BlogId.GetValueOrDefault(), before.Tag, entity.Tag);
                 return;
             }
 

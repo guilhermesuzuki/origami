@@ -13,7 +13,8 @@ namespace Origami.Core.Data
         void SetTitle(string? category, string? page);
         void SetTitle(ITitle? page);
         void SetTitle(IName? category, ITitle? page);
-        void SetTitle(IName? category1, IName? category2, ITitle? page);
+        void SetTitle(ITag? tag, ITitle? page);
+        void SetTitle(ITag? tag, IName? category, ITitle? page);
         void SetTitle(params string?[] parts);
     }
 }

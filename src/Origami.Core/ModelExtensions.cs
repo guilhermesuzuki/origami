@@ -1358,5 +1358,13 @@ namespace Origami.Core
             if (exception == null) return string.Empty;
             return string.Concat(" • ", exception.Message, exception.InnerException.M(depth + 1));
         }
+
+        public static StringBuilder Append(this StringBuilder builder, string value, bool condition)
+        {
+            if (condition == false) return builder;
+
+            builder.Append(value);
+            return builder;
+        }
     }
 }

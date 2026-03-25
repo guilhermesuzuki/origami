@@ -293,7 +293,7 @@
             .Blog(BlogId)
             .OrderByDescending(x => { return Super.GetPosts(x).Published().Count() + Super.GetVideos(x).Published().Count(); })
             .Take(7)
-            .OrderBy(x => x.Name);
+            .OrderBy(x => x.Tag);
     }
 
     private void LoadVideos(string order = "1")

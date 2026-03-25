@@ -9,14 +9,14 @@ namespace Origami.Core.Models
     public class OrigamiTag :
         IChanged,
         IId,
-        IName,
         INew,
         IBlogIdNull,
-        ISlug
+        ISlug,
+        ITag
     {
         private Guid? _blogId;
         private Guid _id = Guid.NewGuid();
-        private string _name = string.Empty;
+        private string _tag = string.Empty;
 
         public OrigamiTag() { }
 
@@ -37,18 +37,18 @@ namespace Origami.Core.Models
         /// <summary>
         /// Tag name
         /// </summary>
-        public string Name
+        public string Tag
         {
-            get => _name;
-            set => this.Set(ref _name, value, Changed);
+            get => _tag;
+            set => this.Set(ref _tag, value, Changed);
         }
 
         /// <summary>
         /// Always false, because we are not adding a Tag
         /// </summary>
-        public bool New => _name.Has() == false;
+        public bool New => _tag.Has() == false;
 
         [NotMapped]
-        public string Slug => Name.GetSlug();
+        public string Slug => Tag.GetSlug();
     }
 }

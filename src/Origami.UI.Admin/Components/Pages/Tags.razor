@@ -34,7 +34,7 @@
                                  SelectedItemsChanged="this.SelectedEntitiesChanged" RowClassFunc="RowClassFunc" Bordered="true" SelectOnRowClick="false">
                         <Columns>
                             <SelectColumn T="OrigamiTag"></SelectColumn>
-                            <TemplateColumn Title="@Text.Upper("Name")" Sortable="false" Filterable="false" SortBy="x => nameof(x.Name)">
+                            <TemplateColumn Title="@Text.Upper("Name")" Sortable="false" Filterable="false" SortBy="x => nameof(x.Tag)">
                                 <CellTemplate>
                                     <div class="cursor-pointer" @onclick="() => OnEdit(context.Item)">
                                         <TagHeaderLite Entity="context.Item"></TagHeaderLite>
@@ -68,7 +68,7 @@
     </ContentTemplate>
 </Root>
 @code {
-    protected override string DefaultOrdering => $"{nameof(OrigamiTag.Name)}";
+    protected override string DefaultOrdering => $"{nameof(OrigamiTag.Tag)}";
 
     protected override Result<OrigamiTag> RemoveEntityFromCache(OrigamiTag entity)
     {
@@ -76,7 +76,7 @@
 
         var query = from t in this.Super.ContentTags.ReadFromCache()
                     join c in this.Super.Contents.ReadFromCache() on t.ContentId equals c.Id
-                    where t.Tag == entity.Name && c.BlogId == entity.BlogId
+                    where t.Tag == entity.Tag && c.BlogId == entity.BlogId
                     select t;
 
         query.Each(this.Super.ContentTags.PurgeCache);
@@ -89,7 +89,7 @@
     protected override string RowClassFunc(OrigamiTag entity, int index)
     {
         var result = base.RowClassFunc(entity, index);
-        if (entity.Name == SelectedEntity.Name && entity.Slug == SelectedEntity.Slug) result += " selected-row";
+        if (entity.Tag == SelectedEntity.Tag && entity.Slug == SelectedEntity.Slug) result += " selected-row";
         return result;
     }
 }

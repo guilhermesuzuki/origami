@@ -11,7 +11,7 @@
         <div class="mt-3 tag-container">
             @foreach (var tag in _tagsFound)
             {
-                <span class="p-1 border me-1 mb-1 cursor-pointer" @onclick="async () => await this.TagEntered.InvokeAsync(tag.Name)">@tag.Name</span>
+                <span class="p-1 border me-1 mb-1 cursor-pointer" @onclick="async () => await this.TagEntered.InvokeAsync(tag.Tag)">@tag.Tag</span>
             }
         </div>
     }
@@ -38,10 +38,10 @@
         if (tag.Has() == true)
         {
             this._tagsFound = [
-                ..this.Super.ContentTags.ReadFromCache().Distinct().Where(x => x.Tag.Contains(tag, StringComparison.InvariantCultureIgnoreCase) == true).Select(x => new OrigamiTag { Name = x.Tag }),
+                ..this.Super.ContentTags.ReadFromCache().Distinct().Where(x => x.Tag.Contains(tag, StringComparison.InvariantCultureIgnoreCase) == true).Select(x => new OrigamiTag { Tag = x.Tag }),
             ];
 
-            this._tagsFound = this._tagsFound.DistinctBy(x => x.Name).OrderBy(x => x.Name).ToList();
+            this._tagsFound = this._tagsFound.DistinctBy(x => x.Tag).OrderBy(x => x.Tag).ToList();
         }
     }
 

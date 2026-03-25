@@ -280,7 +280,7 @@ namespace Origami.Core.Data
             return from a in ContentTags.ReadFromCache()
                    join b in Contents.ReadFromCache().OfType<OrigamiPost>() on a.ContentId equals b.Id
                    where b.BlogId == tag.BlogId
-                   where a.Tag.Like(tag.Name)
+                   where a.Tag.Like(tag.Tag)
                    select b;
         }
 
@@ -349,7 +349,7 @@ namespace Origami.Core.Data
         {
             return from a in ContentTags.ReadFromCache()
                    join b in Contents.ReadFromCache().OfType<OrigamiVideo>() on a.ContentId equals b.Id
-                   where a.Tag.Like(tag.Name)
+                   where a.Tag.Like(tag.Tag)
                    where b.BlogId == tag.BlogId
                    select b;
         }

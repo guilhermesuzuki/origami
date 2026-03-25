@@ -264,7 +264,7 @@
             this._videos = _super.Contents.Search(queryTerm).OfType<OrigamiVideo>().Published().OrderBy(x => x.Title);
             this._socialProfiles = _super.SocialProfiles.Search(queryTerm).OrderBy(x => x.SocialNetwork.ToString()).ThenBy(x => x.Name());
             this._contentComments = _super.ContentComments.Search(queryTerm).NonDeleted().Where(x => this.Super.IsParentDeleted(x) == false).OrderByDescending(x => x.GetDate());
-            this._tags = _super.Tags.Search(queryTerm).OrderBy(x => x.Name);
+            this._tags = _super.Tags.Search(queryTerm).OrderBy(x => x.Tag);
         }
 
         this.InvokeAsync(this.StateHasChanged);

@@ -199,6 +199,11 @@ namespace Origami.UI
             builder.Services.AddSingleton<CircuitHandler, OrigamiCircuitHandler>();
             builder.Services.AddScoped<HtmlRenderer>();
 
+            builder.Services.AddSingleton<IValidator<HubContentPage>, HubContentPageValidator>();
+            builder.Services.AddSingleton<IValidator<HubContentPost>, HubContentPostValidator>();
+            builder.Services.AddSingleton<IValidator<HubContentSpecialMessage>, HubContentSpecialMessageValidator>();
+            builder.Services.AddSingleton<IValidator<HubContentSpecialPage>, HubContentSpecialPageValidator>();
+            builder.Services.AddSingleton<IValidator<HubContentVideo>, HubContentVideoValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiBlog>, OrigamiBlogValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiCategory>, OrigamiCategoryValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiContent>, OrigamiContentValidator>();
@@ -218,12 +223,6 @@ namespace Origami.UI
             builder.Services.AddSingleton<IValidator<OrigamiSpecialPage>, OrigamiSpecialPageValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiUser>, OrigamiUserValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiVideo>, OrigamiVideoValidator>();
-
-            builder.Services.AddSingleton<IValidator<HubContentPage>, HubContentPageValidator>();
-            builder.Services.AddSingleton<IValidator<HubContentPost>, HubContentPostValidator>();
-            builder.Services.AddSingleton<IValidator<HubContentSpecialMessage>, HubContentSpecialMessageValidator>();
-            builder.Services.AddSingleton<IValidator<HubContentSpecialPage>, HubContentSpecialPageValidator>();
-            builder.Services.AddSingleton<IValidator<HubContentVideo>, HubContentVideoValidator>();
 
             //jwt configuration
             builder.Services.Configure<JwtConfiguration>(builder.Configuration.GetSection("Jwt"));
