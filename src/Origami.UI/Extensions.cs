@@ -513,7 +513,7 @@ namespace Origami.UI
         /// <param name="tracking"></param>
         /// <param name="url"></param>
         /// <param name="referrer"></param>
-        public static void TrackingFields(this HttpContext httpContext, IMemoryCache memoryCache, BaseTracking tracking, string url, string referrer = "")
+        public static void TrackFields(this HttpContext httpContext, IMemoryCache memoryCache, BaseTracking tracking, string url, string referrer = "")
         {
             var dd = httpContext.Request.GetDeviceDetector();
 

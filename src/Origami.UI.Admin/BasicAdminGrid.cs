@@ -291,6 +291,25 @@ namespace Origami.UI.Admin
                 items = query.Cast<T>();
             }
 
+            if (typeof(T).Implements<IBlogIdNull>() == true)
+            {
+                var query = from a in items.Cast<IBlogIdNull>()
+                            where a.BlogId == this.UserFacade.BlogId
+                            select a;
+
+                items = query.Cast<T>();
+            }
+
+            if (typeof(T).Implements<IContentId>() == true)
+            {
+                var query = from a in items.Cast<IContentId>()
+                            join b in Repository.ReadFromCache<OrigamiContent>() on a.ContentId equals b.Id
+                            where b.BlogId == this.UserFacade.BlogId
+                            select a;
+
+                items = query.Cast<T>();
+            }
+
             return items;
         }
 

@@ -61,10 +61,11 @@
                             </TemplateColumn>
                             <TemplateColumn Title="@Text.Upper("Post")" CellClass="col-4">
                                 <CellTemplate>
-                                    @{
+                                    @if (context.Item != null)
+                                    {
                                         var post = this.Super.Contents.ReadFromCache().OfType<OrigamiPost>().Id(context.Item.ContentId);
+                                        <ContentHeaderInline Entity="post"></ContentHeaderInline>
                                     }
-                                    <ContentHeaderInline Entity="post"></ContentHeaderInline>
                                 </CellTemplate>
                             </TemplateColumn>
                         </Columns>
@@ -86,4 +87,11 @@
 @code
 {
     protected override string DefaultOrdering => $"{nameof(OrigamiContentComment.DateCreated)} DESC";
+
+    protected override IEnumerable<OrigamiContentComment> GetItems()
+    {
+        return from comment in base.GetItems()
+               join content in this.Super.Contents.ReadFromCache().OfType<OrigamiPost>() on comment.ContentId equals content.Id
+               select comment;
+    }
 }

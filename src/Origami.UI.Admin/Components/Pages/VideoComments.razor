@@ -58,9 +58,10 @@
                             </TemplateColumn>
                             <TemplateColumn Title="@Text.Upper("Video")" CellClass="col-4">
                                 <CellTemplate>
-                                    @{
+                                    @if (context.Item != null)
+                                    {
                                         var video = this.Super.Contents.ReadFromCache().OfType<OrigamiVideo>().Id(context.Item.ContentId);
-                                        <ContentHeaderLite Entity="video"></ContentHeaderLite>
+                                        <ContentHeaderInline Entity="video"></ContentHeaderInline>
                                     }
                                 </CellTemplate>
                             </TemplateColumn>
@@ -83,4 +84,11 @@
 @code 
 {
     protected override string DefaultOrdering => $"{nameof(OrigamiContentComment.DateCreated)} DESC";
+
+    protected override IEnumerable<OrigamiContentComment> GetItems()
+    {
+        return from comment in base.GetItems()
+               join content in this.Super.Contents.ReadFromCache().OfType<OrigamiVideo>() on comment.ContentId equals content.Id
+               select comment;
+    }
 }

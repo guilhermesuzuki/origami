@@ -9,11 +9,10 @@
         @if (this.ShowParentHeader)
         {
             <div class="comment-parent-header d-inline-flex align-items-center">
-                @if (Entity is OrigamiContentComment postComment)
+                @if (Entity is OrigamiContentComment contentComment)
                 {
-                    var post = this.Super.Contents.ReadFromCache().Id(postComment.ContentId)!;
-                    <i class="fa-solid fa-file-lines me-1" style="font-size: 12px;"></i>
-                    <span class="">@post.Title</span>
+                    var content = this.Super.Contents.ReadFromCache().Id(contentComment.ContentId);
+                    <ContentHeaderInline Entity="content"></ContentHeaderInline>
                 }
             </div>
         }

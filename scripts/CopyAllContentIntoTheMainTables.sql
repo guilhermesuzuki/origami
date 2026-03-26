@@ -672,7 +672,11 @@ INSERT INTO dbo.oi_ContentComments (
 	[Location_TimeZone],
 	[Location_TimeZoneOffset],
 	[Location_ZipCode],
-	[ModeratedById])
+	[ModeratedById],
+	
+	[Browser], [HostAddress], [HostName], [IsBot], [IsMobileDevice], [Platform], [UserAgent]
+
+	)
 SELECT
 	[Id],
 	[VideoId],
@@ -697,7 +701,8 @@ SELECT
 	[Location_TimeZone],
 	[Location_TimeZoneOffset],
 	[Location_ZipCode],
-	[ModeratedById]
+	[ModeratedById],
+	''[Browser], ''[HostAddress], ''[HostName], 0[IsBot], 0[IsMobileDevice], ''[Platform], ''[UserAgent]
 FROM dbo.oi_VideoComments;
 
 

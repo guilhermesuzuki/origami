@@ -10,23 +10,23 @@
         <Authorized>
             <ul class="d-inline-flex align-items-center rating" data-rating="@rating">
                 <li>
-                    <div data-rating-level="1" class="rating-star rating-star-1 rating-star-empty cursor-pointer rateable"
+                    <div data-rating-level="1" class="rating-star rating-star-1 rating-star-empty @(HasRated() == true ? null : "cursor-pointer rateable")"
                          @onclick="() => this.Rate(1)" @onclick:stopPropagation="true"></div>
                 </li>
                 <li>
-                    <div data-rating-level="2" class="rating-star rating-star-2 rating-star-empty cursor-pointer rateable"
+                    <div data-rating-level="2" class="rating-star rating-star-2 rating-star-empty @(HasRated() == true ? null : "cursor-pointer rateable")"
                          @onclick="() => this.Rate(2)" @onclick:stopPropagation="true"></div>
                 </li>
                 <li>
-                    <div data-rating-level="3" class="rating-star rating-star-3 rating-star-empty cursor-pointer rateable"
+                    <div data-rating-level="3" class="rating-star rating-star-3 rating-star-empty @(HasRated() == true ? null : "cursor-pointer rateable")"
                          @onclick="() => this.Rate(3)" @onclick:stopPropagation="true"></div>
                 </li>
                 <li>
-                    <div data-rating-level="4" class="rating-star rating-star-4 rating-star-empty cursor-pointer rateable"
+                    <div data-rating-level="4" class="rating-star rating-star-4 rating-star-empty @(HasRated() == true ? null : "cursor-pointer rateable")"
                          @onclick="() => this.Rate(4)" @onclick:stopPropagation="true"></div>
                 </li>
                 <li>
-                    <div data-rating-level="5" class="rating-star rating-star-5 rating-star-empty cursor-pointer rateable"
+                    <div data-rating-level="5" class="rating-star rating-star-5 rating-star-empty @(HasRated() == true ? null : "cursor-pointer rateable")"
                          @onclick="() => this.Rate(5)" @onclick:stopPropagation="true"></div>
                 </li>
                 <li class="ratings ps-1 x-small">
@@ -89,8 +89,17 @@
 
     protected OrigamiContentRating? RatingFromCurrentUser()
     {
-        return this.Super.ContentRatings.Ratings(this.Entity!).FirstOrDefault(x => x.SocialProfileId == UserFacade.SocialProfile.Id) 
-            ?? this.Super.ContentRatings.Ratings(this.Entity!).FirstOrDefault(x => x.UserId == UserFacade.User.Id);
+        if (this.UserFacade.SocialProfile.New == false)
+        {
+            return this.Super.ContentRatings.Ratings(this.Entity!).FirstOrDefault(x => x.SocialProfileId == UserFacade.SocialProfile.Id);
+        }
+
+        if (this.UserFacade.User.New == false)
+        {
+            return this.Super.ContentRatings.Ratings(this.Entity!).FirstOrDefault(x => x.UserId == UserFacade.User.Id);
+        }
+
+        return null;
     }
 
     protected bool HasRated()
@@ -109,9 +118,10 @@
                 Rating = rate,
             };
 
-            this.HttpContextAccessor.HttpContext?.TrackingFields(this.MemoryCache, rating, NavigationManager.Uri);
+            this.HttpContextAccessor.HttpContext?.TrackFields(this.MemoryCache, rating, NavigationManager.Uri);
 
-            if (this.UserFacade.SocialProfile.Id != Guid.Empty)
+            // social user is rating this
+            if (this.UserFacade.SocialProfile.New == false)
             {
                 rating.SocialProfileId = this.UserFacade.SocialProfile.Id;
                 var context = new DataOperationContextFrontEnd<OrigamiContentRating>(UserFacade.SocialProfile, DateTime.UtcNow, rating);
@@ -120,7 +130,8 @@
                 return;
             }
 
-            if (this.UserFacade.User.Id != Guid.Empty)
+            // regular user is rating this
+            if (this.UserFacade.User.New == false)
             {
                 rating.UserId = this.UserFacade.User.Id;
                 var context = new DataOperationContext<OrigamiContentRating>(UserFacade.User, DateTime.UtcNow, rating);
@@ -129,10 +140,6 @@
                 return;
             }
         }
-        else
-        {
-            this.UserFacade.Result = new() { Error = Text.Original("You already rated this"), };
-        }
     }
 
     protected void PurgeRate()
@@ -140,9 +147,23 @@
         var rating = this.RatingFromCurrentUser();
         if (rating != null)
         {
-            var context = new DataOperationContextFrontEnd<OrigamiContentRating>(UserFacade.SocialProfile, DateTime.UtcNow, rating);
-            var hub = this.Super.ContentRatings.SmartPurge(context);
-            if (hub.Ok) this.OnUserHasRated.InvokeAsync(rating);
+            // social user is rating this
+            if (this.UserFacade.SocialProfile.New == false)
+            {
+                var context = new DataOperationContextFrontEnd<OrigamiContentRating>(UserFacade.SocialProfile, DateTime.UtcNow, rating);
+                var hub = this.Super.ContentRatings.SmartPurge(context);
+                if (hub.Ok) this.OnUserHasRated.InvokeAsync(rating);
+                return;
+            }
+
+            // regular user is rating this
+            if (this.UserFacade.User.New == false)
+            {
+                var context = new DataOperationContext<OrigamiContentRating>(UserFacade.User, DateTime.UtcNow, rating);
+                var hub = this.Super.ContentRatings.SmartPurge(context, false);
+                if (hub.Ok) this.OnUserHasRated.InvokeAsync(rating);
+                return;
+            }
         }
     }
 }
