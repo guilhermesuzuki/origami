@@ -27,15 +27,26 @@ namespace Origami.Core.Data
             Text = text;
         }
 
-        public virtual string CreatePermission { get; } = string.Empty;
-        public virtual string UpdateOtherUsersPermission { get; } = string.Empty;
-        public virtual string UpdateOwnPermission { get; } = string.Empty;
+        public virtual string ReadPermission { get; } = string.Empty;
 
+        public virtual string CreatePermission { get; } = string.Empty;
         public virtual string DeleteOtherUsersPermission { get; } = string.Empty;
         public virtual string DeleteOwnPermission { get; } = string.Empty;
-
+        public virtual string UpdateOtherUsersPermission { get; } = string.Empty;
+        public virtual string UpdateOwnPermission { get; } = string.Empty;
         public virtual string RestorePermission { get; } = string.Empty;
         public virtual string PurgePermission { get; } = string.Empty;
+
+        public Result CanRead(IId userId)
+        {
+            using var db = _dbContextFactory.CreateDbContext();
+
+            // check permissions
+            if (UserHasPermission(db, userId.Id, ReadPermission) == false) return new() { Info = ReadPermission, Error = Text.Original(Text.YouDontHavePermissionForThisFeature), };
+
+            // success
+            return new() { Info = ReadPermission, Success = Text.Original(Text.OperationCompletedSuccessfully), };
+        }
 
         public Result<T2> Delete(T2 root, IId userId)
         {

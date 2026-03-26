@@ -90,7 +90,7 @@ namespace Origami.UI.Admin
 
         protected override Result CanAccess()
         {
-            return Repository.CanRead(this.UserFacade.User.Id);
+            return HubContentRepository.CanRead(this.UserFacade.User);
         }
 
         /// <summary>

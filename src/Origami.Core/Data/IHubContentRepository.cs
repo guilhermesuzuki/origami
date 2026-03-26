@@ -10,13 +10,10 @@ namespace Origami.Core.Data
         // need to get by id async
         T Get(IId entityId);
 
-        // need to save
+        Result CanRead(IId userId);
         Result<T> Save(T entity, IId userId);
-
         Result<T> Delete(T entity, IId userId);
-
         Result<T> Purge(T entity, IId userId);
-
         Result<T> Restore(T entity, IId userId);
     }
 }
