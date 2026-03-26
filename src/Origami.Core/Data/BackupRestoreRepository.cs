@@ -54,7 +54,7 @@ namespace Origami.Core.Data
             }
 
             var hub = new Result<string>();
-            var backup = new OrigamiBackup { UserId = user.Id, DateCreated = DateTime.UtcNow };
+            var backup = new OrigamiBackup { AuthorId = user.Id, DateCreated = DateTime.UtcNow };
 
             try
             {
@@ -124,7 +124,7 @@ namespace Origami.Core.Data
             }
 
             var hub = new Result();
-            var restore = new OrigamiBackupRestore() { UserId = user.Id, DateCreated = DateTime.UtcNow };
+            var restore = new OrigamiBackupRestore() { AuthorId = user.Id, DateCreated = DateTime.UtcNow };
 
             try
             {

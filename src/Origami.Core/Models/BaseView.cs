@@ -109,6 +109,9 @@ namespace Origami.Core.Models
             set => this.Set(ref _platform, value, Changed);
         }
 
+        /// <summary>
+        /// Social Profile associated with this information
+        /// </summary>
         public Guid? SocialProfileId
         {
             get => _socialProfileId;
