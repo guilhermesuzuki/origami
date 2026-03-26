@@ -21,7 +21,7 @@
             </HeadContent>
         }
         <div class="post-details @Class">
-            <PostHeader Category="@Category" Tag="@Tag" Entity="@_post" OnUserHasRated="() => this.StateHasChanged()"></PostHeader>
+            <ContentHeader Category="@Category" Tag="@Tag" Entity="@_post" OnUserHasRated="() => this.StateHasChanged()"></ContentHeader>
             <div class="post-content mt-3 p-4 border shadow-lg">
                 @if (_post!.Content.Has() == true)
                 {
