@@ -38,6 +38,12 @@
         </div>
     </div>
 }
+else
+{
+    <div class="col-12">
+        <NothingToSeeHere Class="p-3 border shadow-sm" Subtitle="@Text.Lower("No videos whatsoever")"></NothingToSeeHere>
+    </div>
+}
 
 @code {
     [Parameter] public int Page { get; set; } = 1;
