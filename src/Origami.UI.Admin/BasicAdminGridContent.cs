@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using MudBlazor;
+using MudBlazor.Charts;
 using Origami.Core;
 using Origami.Core.Data;
 using Origami.Core.Models;
@@ -16,16 +17,15 @@ namespace Origami.UI.Admin
         where T1 : OrigamiContent, new()
         where T2 : class, IHubContent<T1>, new()
     {
-        public string Filter { get; set; } = "all";
-
-        [Inject] public IRepository<T1> Repository { get; set; } = null!;
-        [Inject] public IHubContentRepository<T2> HubContentRepository { get; set; } = null!;
-
         /// <summary>
         /// DataGrid for this instance
         /// </summary>
-        protected MudDataGrid<T1> DataGrid = null!;
+        protected MudDataGrid<T2> DataGrid = null!;
 
+        public string Filter { get; set; } = "all";
+
+        [Inject] public IHubContentRepository<T2> HubContentRepository { get; set; } = null!;
+        [Inject] public IRepository<T1> Repository { get; set; } = null!;
         /// <summary>
         /// Default ordering, in case there's no order-by
         /// </summary>
@@ -54,7 +54,7 @@ namespace Origami.UI.Admin
         /// <summary>
         /// Selected entities
         /// </summary>
-        protected HashSet<T1> SelectedEntities { get; set; } = new();
+        protected HashSet<T2> SelectedEntities { get; set; } = new();
 
         /// <summary>
         /// Selected entity
@@ -75,7 +75,7 @@ namespace Origami.UI.Admin
         /// Selected entities have changed (and need to be updated)
         /// </summary>
         /// <param name="newItems"></param>
-        public virtual void SelectedEntitiesChanged(HashSet<T1> newItems)
+        public virtual void SelectedEntitiesChanged(HashSet<T2> newItems)
         {
             SelectedEntities = newItems;
         }
@@ -97,10 +97,9 @@ namespace Origami.UI.Admin
         /// Deletes the entity and its children (if appropriate)
         /// </summary>
         /// <param name="entity"></param>
-        protected virtual Result<T1> DeleteEntity(T1 entity)
+        protected virtual Result<T2> DeleteEntity(T2 entity)
         {
-            var context = new DataOperationContext<T1>(this.UserFacade.User, DateTime.UtcNow, entity);
-            return Repository.SmartDelete(context, true);
+            return HubContentRepository.Delete(entity, this.UserFacade.User);
         }
 
         /// <summary>
@@ -155,7 +154,7 @@ namespace Origami.UI.Admin
         /// <param name="mainStep">function to be executed in a transaction</param>
         /// <param name="additionalSteps">functions to be called after the transaction has been committed</param>
         /// <returns></returns>
-        protected virtual async Task ExecuteWithSelectedEntities(Func<Task<bool?>> confirm, Func<T1, Result<T1>> mainStep, params Func<T1, Result<T1>>[] additionalSteps)
+        protected virtual async Task ExecuteWithSelectedEntities(Func<Task<bool?>> confirm, Func<T2, Result<T2>> mainStep)
         {
             var answer = await confirm();
             if (answer.GetValueOrDefault() == false) return;
@@ -172,7 +171,7 @@ namespace Origami.UI.Admin
             //iterates entities
             foreach (var entity in entities)
             {
-                var hub = new Result<T1>();
+                var hub = new Result<T2>();
                 try
                 {
                     using (var transaction = new TransactionScope())
@@ -181,13 +180,6 @@ namespace Origami.UI.Admin
                         if (hub.Ok)
                         {
                             transaction.Complete();
-                        }
-                    }
-                    if (hub.Ok)
-                    {
-                        foreach (var step in additionalSteps)
-                        {
-                            step?.Invoke(entity).Push(hub);
                         }
                     }
                 }
@@ -202,7 +194,7 @@ namespace Origami.UI.Admin
             }
 
             await ReloadDataGridAsync();
-            SelectedEntity = this.HubContentRepository.Get(SelectedEntity).Clone();
+            SelectedEntity = this.HubContentRepository.Get(SelectedEntity.Entity).Clone();
         }
 
         /// <summary>
@@ -211,45 +203,12 @@ namespace Origami.UI.Admin
         /// <param name="state"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        protected virtual Task<GridData<T1>> GetEntities(GridState<T1> state, CancellationToken token)
+        protected virtual Task<GridData<T2>> GetEntities(GridState<T2> state, CancellationToken token)
         {
-            var orders = new StringBuilder();
-
-            if (state.SortDefinitions.Any() == true)
-            {
-                //iterates through every sort definition
-                foreach (var definition in state.SortDefinitions)
-                {
-                    orders.AppendFormat(",{0} {1}", definition.SortBy, definition.Descending ? "DESC" : "ASC");
-                }
-            }
-            else
-            {
-                orders.Append($",{DefaultOrdering}", DefaultOrdering.Has());
-            }
-
+            var orders = new StringBuilder($",{DefaultOrdering}");
             var filters = new StringBuilder("(true)");
 
-            //needs to filter by all, published or drafts
-            if (this is IFilter filter)
-            {
-                if (filter.Filter.Like("published") == true)
-                {
-                    if (typeof(T1).Implements<IPublished>() == true)
-                    {
-                        filters.Append($" && ({nameof(IPublished.IsPublished)} == true)");
-                    }
-                }
-                else if (filter.Filter.Like("drafts") == true)
-                {
-                    if (typeof(T1).Implements<IDraft>() == true)
-                    {
-                        filters.Append($" && ({nameof(IDraft.IsDraft)} == true)");
-                    }
-                }
-            }
-
-            //pulls information from cache
+            // pulls information from cache
             var result = GetItems().Query(
                 state.PageSize,
                 state.Page * state.PageSize,
@@ -257,7 +216,12 @@ namespace Origami.UI.Admin
                 orders.ToString()[1..]
             );
 
-            return Task.FromResult(new GridData<T1> { Items = result.Rows, TotalItems = result.NumberOfRows, });
+            var data = new GridData<T2>();
+
+            data.Items = result.Rows.Select(x => this.HubContentRepository.Get(x)).ToList();
+            data.TotalItems = result.NumberOfRows;
+
+            return Task.FromResult(data);
         }
 
         /// <summary>
@@ -266,14 +230,17 @@ namespace Origami.UI.Admin
         /// <returns></returns>
         protected virtual IEnumerable<T1> GetItems()
         {
-            IEnumerable<T1> items = Repository.ReadFromCache();
+            var t1 = new T1();
+            using var db = this.DbContextFactory.CreateDbContext();
+
+            IEnumerable<T1> items = db.ReadFromCache<T1>(this.MemoryCache);
 
             if (IncludeDeletedEntitiesInDataGrid == false)
             {
                 items = items.NonDeleted();
             }
 
-            if (typeof(T1).Implements<IBlogId>() == true)
+            if (t1 is IBlogId)
             {
                 var query = from a in items.Cast<IBlogId>()
                             where a.BlogId == this.UserFacade.BlogId
@@ -282,7 +249,7 @@ namespace Origami.UI.Admin
                 items = query.Cast<T1>();
             }
 
-            if (typeof(T1).Implements<IBlogIdNull>() == true)
+            if (t1 is IBlogIdNull)
             {
                 var query = from a in items.Cast<IBlogIdNull>()
                             where a.BlogId == this.UserFacade.BlogId
@@ -291,15 +258,12 @@ namespace Origami.UI.Admin
                 items = query.Cast<T1>();
             }
 
-            if (typeof(T1).Implements<IContentId>() == true)
+            items = this.Filter switch
             {
-                var query = from a in items.Cast<IContentId>()
-                            join b in Repository.ReadFromCache<OrigamiContent>() on a.ContentId equals b.Id
-                            where b.BlogId == this.UserFacade.BlogId
-                            select a;
-
-                items = query.Cast<T1>();
-            }
+                "Drafts" => from item in items where item.IsDraft == true select item,
+                "Published" => from item in items where item.IsPublished == true select item,
+                _ => items
+            };
 
             return items;
         }
@@ -323,9 +287,9 @@ namespace Origami.UI.Admin
         /// User selects an <paramref name="entity"/> to edit
         /// </summary>
         /// <param name="entity"></param>
-        protected virtual void OnEdit(T1 entity)
+        protected virtual void OnEdit(T2 entity)
         {
-            SelectedEntity = this.HubContentRepository.Get(entity).Clone();
+            SelectedEntity = entity.Clone();
         }
 
         /// <summary>
@@ -343,6 +307,9 @@ namespace Origami.UI.Admin
         {
             base.OnInitialized();
             HasBlogChangedInUserFacade();
+
+            var filter = this.NavigationManager!.Uri.QueryString("filter");
+            this.Filter = filter.Has() ? filter : this.Filter;
         }
 
         protected virtual void OnSearchResultSelected(T1 entity)
@@ -350,14 +317,33 @@ namespace Origami.UI.Admin
             SelectedEntity = this.HubContentRepository.Get(entity).Clone();
         }
 
+        protected virtual Result<T2> PublishEntity(T2 entity)
+        {
+            return HubContentRepository.Publish(entity, this.UserFacade.User);
+        }
+
+        protected async Task PublishSelectedEntities()
+        {
+            await ExecuteWithSelectedEntities(
+                async () =>
+                {
+                    return await DialogService.ShowMessageBoxAsync(
+                        Text.Upper("Publish {0} item(s)", SelectedEntities.Count),
+                        Text.Original("Are you sure?"),
+                        yesText: Text.Lower("Yes"),
+                        noText: Text.Lower("No"));
+                },
+                this.PublishEntity
+            );
+        }
+
         /// <summary>
         /// Purges the entity and its children (if appropriate)
         /// </summary>
         /// <param name="entity"></param>
-        protected virtual Result<T1> PurgeEntity(T1 entity)
+        protected virtual Result<T2> PurgeEntity(T2 entity)
         {
-            var context = new DataOperationContext<T1>(this.UserFacade.User, DateTime.UtcNow, entity);
-            return Repository.SmartPurge(context, true);
+            return HubContentRepository.Purge(entity, this.UserFacade.User);
         }
 
         /// <summary>
@@ -406,10 +392,9 @@ namespace Origami.UI.Admin
         /// Restores the entity and its children (if appropriate)
         /// </summary>
         /// <param name="entity"></param>
-        protected virtual Result<T1> RestoreEntity(T1 entity)
+        protected virtual Result<T2> RestoreEntity(T2 entity)
         {
-            var context = new DataOperationContext<T1>(this.UserFacade.User, DateTime.UtcNow, entity);
-            return Repository.SmartRestore(context, true);
+            return HubContentRepository.Restore(entity, this.UserFacade.User);
         }
 
         /// <summary>
@@ -431,16 +416,16 @@ namespace Origami.UI.Admin
             );
         }
 
-        protected virtual string RowClassFunc(T1 entity, int index)
+        protected virtual string RowClassFunc(T2 entity, int index)
         {
             var result = string.Empty;
             if (entity.Id == SelectedEntity.Id) result += " selected-row";
-            if (entity is IPublished published1 && published1.IsPublished == false) result += " unpublished";
-            if (entity is IPublished published2 && published2.IsPublished == true) result += " published";
-            if (entity is IDeleted deleted && deleted.IsDeleted == true) result += " deleted";
-            if (entity is OrigamiPage page && page.IsFrontPage == true) result += " front-page";
-            if (entity is OrigamiCategory category && this.Super.IsParentDeleted(category) == true) result += " deleted";
-            if (entity is OrigamiPage page2 && this.Super.IsParentDeleted(page2) == true) result += " deleted";
+            if (entity.Entity is IPublished published1 && published1.IsPublished == false) result += " unpublished";
+            if (entity.Entity is IPublished published2 && published2.IsPublished == true) result += " published";
+            if (entity.Entity is IDeleted deleted && deleted.IsDeleted == true) result += " deleted";
+            if (entity.Entity is OrigamiPage page && page.IsFrontPage == true) result += " front-page";
+            if (entity.Entity is OrigamiCategory category && this.Super.IsParentDeleted(category) == true) result += " deleted";
+            if (entity.Entity is OrigamiPage page2 && this.Super.IsParentDeleted(page2) == true) result += " deleted";
             return result;
         }
 
@@ -448,9 +433,27 @@ namespace Origami.UI.Admin
         /// Sometimes you need the <see cref="SelectedEntities"/> to be in a different order.
         /// </summary>
         /// <returns></returns>
-        protected virtual List<T1> SelectedEntitiesInOrder()
+        protected virtual List<T2> SelectedEntitiesInOrder()
         {
             return SelectedEntities.ToList();
+        }
+        protected virtual Result<T2> UnpublishEntity(T2 entity)
+        {
+            return HubContentRepository.Unpublish(entity, this.UserFacade.User);
+        }
+        protected async Task UnpublishSelectedEntities()
+        {
+            await ExecuteWithSelectedEntities(
+                async () =>
+                {
+                    return await DialogService.ShowMessageBoxAsync(
+                        Text.Upper("Unpublish {0} item(s)", SelectedEntities.Count),
+                        Text.Original("Are you sure?"),
+                        yesText: Text.Lower("Yes"),
+                        noText: Text.Lower("No"));
+                },
+                this.UnpublishEntity
+            );
         }
     }
 }

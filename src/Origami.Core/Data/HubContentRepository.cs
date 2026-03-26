@@ -36,6 +36,10 @@ namespace Origami.Core.Data
         public virtual string UpdateOwnPermission { get; } = string.Empty;
         public virtual string RestorePermission { get; } = string.Empty;
         public virtual string PurgePermission { get; } = string.Empty;
+        public virtual string PublishOtherUsersPermission { get; } = string.Empty;
+        public virtual string PublishOwnPermission { get; } = string.Empty;
+        public virtual string UnpublishOtherUsersPermission { get; } = string.Empty;
+        public virtual string UnpublishOwnPermission { get; } = string.Empty;
 
         public Result CanRead(IId userId)
         {
@@ -95,6 +99,41 @@ namespace Origami.Core.Data
             Task.WhenAll(tasks);
 
             return result;
+        }
+
+        public Result<T2> Publish(T2 root, IId userId)
+        {
+            try
+            {
+                using var db = _dbContextFactory.CreateDbContext();
+
+                // needs to hit the database for the entity
+                var permission = root.Entity.AuthorId == userId.Id ? PublishOwnPermission : PublishOtherUsersPermission;
+
+                // check permissions
+                if (UserHasPermission(db, userId.Id, permission) == false) return new(root) { Info = permission, Error = Text.Original(Text.YouDontHavePermissionForThisFeature), };
+
+                // marks as published
+                db.Set<T1>().AsNoTracking().Where(x => x.Id == root.Entity.Id).ExecuteUpdate(
+                    s => 
+                    { 
+                        s.SetProperty(x => x.IsPublished, true);
+                        s.SetProperty(x => x.DatePublished, DateTime.UtcNow);
+                    });
+
+                // needs to hit the database for the entity
+                var entity = db.Set<T1>().AsNoTracking().Id(root.Entity.Id) as OrigamiContent;
+
+                // needs to update cache
+                _memoryCache.SaveCache(entity);
+
+                // returns success
+                return new(root) { Success = Text.Original(Text.OperationCompletedSuccessfully), };
+            }
+            catch (Exception ex)
+            {
+                return new(root) { Error = ex.GetMessage(), };
+            }
         }
 
         public Result<T2> Purge(T2 root, IId userId)
@@ -164,6 +203,41 @@ namespace Origami.Core.Data
                 hub.Success = Text.Original(Text.OperationCompletedSuccessfully);
 
                 return hub;
+            }
+            catch (Exception ex)
+            {
+                return new(root) { Error = ex.GetMessage(), };
+            }
+        }
+
+        public Result<T2> Unpublish(T2 root, IId userId)
+        {
+            try
+            {
+                using var db = _dbContextFactory.CreateDbContext();
+
+                // needs to hit the database for the entity
+                var permission = root.Entity.AuthorId == userId.Id ? PublishOwnPermission : PublishOtherUsersPermission;
+
+                // check permissions
+                if (UserHasPermission(db, userId.Id, permission) == false) return new(root) { Info = permission, Error = Text.Original(Text.YouDontHavePermissionForThisFeature), };
+
+                // marks as published
+                db.Set<T1>().AsNoTracking().Where(x => x.Id == root.Entity.Id).ExecuteUpdate(
+                    s =>
+                    {
+                        s.SetProperty(x => x.IsPublished, false);
+                        s.SetProperty(x => x.DatePublished, (DateTime?)null);
+                    });
+
+                // needs to hit the database for the entity
+                var entity = db.Set<T1>().AsNoTracking().Id(root.Entity.Id) as OrigamiContent;
+
+                // needs to update cache
+                _memoryCache.SaveCache(entity);
+
+                // returns success
+                return new(root) { Success = Text.Original(Text.OperationCompletedSuccessfully), };
             }
             catch (Exception ex)
             {

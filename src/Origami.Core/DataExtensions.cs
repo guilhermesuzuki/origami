@@ -397,7 +397,7 @@ namespace Origami.Core
             var timestamp = Stopwatch.GetTimestamp();
             var key = typeof(X).KeyForCaching();
 
-            if (typeof(X).FullName != typeof(OrigamiContent).FullName)
+            if (typeof(X).IsAbstract == false)
             {
                 var x = Activator.CreateInstance<X>();
                 switch (x)

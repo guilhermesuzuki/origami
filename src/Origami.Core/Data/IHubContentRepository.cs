@@ -15,5 +15,7 @@ namespace Origami.Core.Data
         Result<T> Delete(T entity, IId userId);
         Result<T> Purge(T entity, IId userId);
         Result<T> Restore(T entity, IId userId);
+        Result<T> Publish(T entity, IId userId);
+        Result<T> Unpublish(T entity, IId userId);
     }
 }

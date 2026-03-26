@@ -17,6 +17,7 @@ namespace Origami.Core.Data
 
         }
 
+        public override string ReadPermission => nameof(OrigamiRole.ViewPosts);
         public override string CreatePermission => nameof(OrigamiRole.CreateNewPosts);
         public override string UpdateOtherUsersPermission => nameof(OrigamiRole.EditOtherUsersPosts);
         public override string UpdateOwnPermission => nameof(OrigamiRole.EditOwnPosts);
@@ -24,5 +25,9 @@ namespace Origami.Core.Data
         public override string DeleteOwnPermission => nameof(OrigamiRole.DeleteOwnPosts);
         public override string PurgePermission => nameof(OrigamiRole.PurgePosts);
         public override string RestorePermission => nameof(OrigamiRole.RestorePosts);
+        public override string PublishOtherUsersPermission => nameof(OrigamiRole.PublishOtherUsersPosts);
+        public override string PublishOwnPermission => nameof(OrigamiRole.PublishOwnPosts);
+        public override string UnpublishOtherUsersPermission => nameof(OrigamiRole.UnpublishOtherUsersPosts);
+        public override string UnpublishOwnPermission => nameof(OrigamiRole.UnpublishOwnPosts);
     }
 }
