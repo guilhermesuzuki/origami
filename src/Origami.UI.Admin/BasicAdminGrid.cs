@@ -16,6 +16,7 @@ namespace Origami.UI.Admin
         where T : class, IId, new()
     {
         public string Filter { get; set; } = "all";
+
         [Inject] public IRepository<T> Repository { get; set; } = null!;
 
         /// <summary>
