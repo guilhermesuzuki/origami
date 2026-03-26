@@ -75,7 +75,7 @@
                             </TemplateColumn>
                             <TemplateColumn Title="@Text.Upper("Author")" CellClass="col-2">
                                 <CellTemplate>
-                                    <UserHeaderLite2 Entity="this.Super.GetAuthor(context.Item)"></UserHeaderLite2>
+                                    <UserHeaderInline Entity="this.Super.GetAuthor(context.Item)"></UserHeaderInline>
                                 </CellTemplate>
                             </TemplateColumn>
                             <TemplateColumn Title="@Text.Upper("Published")" Sortable="false" Filterable="false" CellClass="col-1 text-center">

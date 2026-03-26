@@ -1,0 +1,92 @@
+﻿@inherits Basic
+
+@if (this.Videos.Count > 0)
+{
+    <div class="video-list @Class position-relative">
+        <div class="row">
+            @for (int i = 1; i <= 5; i++)
+            {
+                <div class="col-12 col-xl-2"></div>
+            }
+            <div class="col-12 col-xl-2">
+                <MudSelect T="int" @bind-Value:get="this.OrderBy" @bind-Value:set="SetOrderBy">
+                    <MudSelectItem Value="1">@Text.Lower("By most recent")</MudSelectItem>
+                    <MudSelectItem Value="2">@Text.Lower("By title")</MudSelectItem>
+                    <MudSelectItem Value="3">@Text.Lower("By title desc.")</MudSelectItem>
+                    <MudSelectItem Value="4">@Text.Lower("By oldest")</MudSelectItem>
+                    <MudSelectItem Value="5">@Text.Lower("By language, title")</MudSelectItem>
+                    <MudSelectItem Value="6">@Text.Lower("By language, most recent")</MudSelectItem>
+                </MudSelect>
+            </div>
+        </div>
+        <div class="row mt-3">
+            @for (int i = 0; i < this.Page * this.PageSize; i++)
+            {
+                @if (Videos.Count > i)
+                {
+                    <div class="col-12 col-xl-4 mb-3">
+                        <ContentHeader Entity="Videos[i]" ShowRelatedContent="false"></ContentHeader>
+                    </div>
+                }
+            }
+        </div>
+        <div class="text-center">
+            <button class="text-center btn btn-light border" style="min-width: 250px; max-width: 100%" disabled="@_disableLoadMore" @onclick="() => { this.Page += 1; this.LoadVideos(); }">
+                <div><i class="fa-solid fa-file-lines fs-2"></i></div>
+                @Text.Lower("See more videos")
+            </button>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public int Page { get; set; } = 1;
+    [Parameter] public int PageSize { get; set; } = 9;
+    [Parameter] public int OrderBy { get; set; } = 1;
+
+    protected List<OrigamiPost> Videos = [];
+
+    private bool _disableLoadMore
+    {
+        get => Super.Contents.ReadFromCache().OfType<Core.Models.OrigamiPost>()
+            .NonDeleted()
+            .Published()
+            .Blog(this.BlogId)
+            .Count() <= this.Page * this.PageSize;
+    }
+
+    /// <summary>
+    /// Loads the videos from the repository
+    /// </summary>
+    protected void LoadVideos()
+    {
+        var videos = Super.Contents.ReadFromCache().OfType<Core.Models.OrigamiPost>()
+            .NonDeleted()
+            .Published()
+            .Blog(this.BlogId);
+
+        videos = this.OrderBy switch
+        {
+            2 => videos.OrderBy(x => x.Title),
+            3 => videos.OrderByDescending(x => x.Title),
+            4 => videos.OrderBy(x => x.DateCreated),
+            5 => videos.OrderBy(x => x.LanguageWrittenOn).ThenBy(x => x.Title),
+            6 => videos.OrderBy(x => x.LanguageWrittenOn).ThenByDescending(x => x.DateCreated),
+            _ => videos.OrderByDescending(x => x.DateCreated)
+        };
+
+        this.Videos = videos.Take(Page * PageSize).ToList();
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        this.LoadVideos();
+    }
+
+    private void SetOrderBy(int value)
+    {
+        this.OrderBy = value;
+        this.LoadVideos();
+    }
+}

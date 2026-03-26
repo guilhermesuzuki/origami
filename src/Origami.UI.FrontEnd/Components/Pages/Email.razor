@@ -12,7 +12,7 @@
         if (user != null)
         {
             var link = this.NavigationManager.BaseUri.TrimEnd('/') + "/password/reset/" + Key1;
-            <UserHeaderLite2 Entity="user"></UserHeaderLite2>
+            <UserHeaderInline Entity="user"></UserHeaderInline>
             <div>
                 <h1>@Text.Original("Password Reset")</h1>
                 <p>@Text.Original("You asked for a password reset and here's the link to paste in your browser: {0}", link)</p>

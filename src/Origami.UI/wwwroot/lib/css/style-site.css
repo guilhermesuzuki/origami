@@ -39,7 +39,7 @@ html, body, main { height:100vh; }
 .deleted { background-color: #efefef70; opacity: 0.6; }
 
 .inline-list { display: flex; justify-content: space-around; list-style-type: none; padding: 0; margin: 0; align-items: center; }
-.inline-list li { display: inline; width: 100%; }
+.inline-list > li { display: inline; width: 100%; }
 
 .logo-image { height: 170px; }
 
