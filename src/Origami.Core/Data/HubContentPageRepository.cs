@@ -20,5 +20,9 @@ namespace Origami.Core.Data
         public override string CreatePermission => nameof(OrigamiRole.CreateNewPages);
         public override string UpdateOtherUsersPermission => nameof(OrigamiRole.EditOtherUsersPages);
         public override string UpdateOwnPermission => nameof(OrigamiRole.EditOwnPages);
+        public override string DeleteOtherUsersPermission => nameof(OrigamiRole.DeleteOtherUsersPages);
+        public override string DeleteOwnPermission => nameof(OrigamiRole.DeleteOwnPages);
+        public override string PurgePermission => nameof(OrigamiRole.PurgePages);
+        public override string RestorePermission => nameof(OrigamiRole.RestorePages);
     }
 }

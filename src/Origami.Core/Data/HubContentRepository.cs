@@ -39,9 +39,6 @@ namespace Origami.Core.Data
 
         public Result<T2> Delete(T2 root, IId userId)
         {
-            // hub
-            var hub = new Result<T2>(root);
-
             try
             {
                 using var db = _dbContextFactory.CreateDbContext();
@@ -56,14 +53,13 @@ namespace Origami.Core.Data
                 db.Set<T1>().AsNoTracking().Where(x => x.Id == root.Entity.Id).ExecuteUpdate(s => s.SetProperty(x => x.IsDeleted, true));
 
                 // needs to hit the database for the entity
-                var entity = db.Set<T1>().AsNoTracking().Id(root.Entity.Id);
+                var entity = db.Set<T1>().AsNoTracking().Id(root.Entity.Id) as OrigamiContent;
 
                 // needs to update cache
-                _memoryCache.SaveCache(entity as OrigamiContent);
+                _memoryCache.SaveCache(entity);
 
-                hub.Success = Text.Original(Text.OperationCompletedSuccessfully);
-
-                return hub;
+                // returns success
+                return new(root) { Success = Text.Original(Text.OperationCompletedSuccessfully), };
             }
             catch (Exception ex)
             {
@@ -116,6 +112,7 @@ namespace Origami.Core.Data
                 // needs to update cache
                 _memoryCache.SaveCache(entity);
 
+                // returns success
                 return new(root) { Success = Text.Original(Text.OperationCompletedSuccessfully), };
             }
             catch (Exception ex)
