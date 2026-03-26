@@ -59,7 +59,7 @@ namespace Origami.UI.Admin
         /// <summary>
         /// Selected entity
         /// </summary>
-        protected T2 Root { get; set; } = new();
+        protected T2 SelectedEntity { get; set; } = new();
 
         public T2 CreateEntity()
         {
@@ -128,12 +128,12 @@ namespace Origami.UI.Admin
         /// <param name="entity"></param>
         protected virtual void EntityCancelled(T2? entity)
         {
-            Root = entity.Clone();
+            SelectedEntity = entity.Clone();
         }
 
         protected virtual void EntityCreated(T2? entity)
         {
-            Root = entity.Clone();
+            SelectedEntity = entity.Clone();
             StateHasChanged();
         }
 
@@ -144,7 +144,7 @@ namespace Origami.UI.Admin
         protected virtual void EntitySaved(T2 entity)
         {
             DataGrid.ReloadServerData();
-            Root = entity.Clone();
+            SelectedEntity = entity.Clone();
         }
 
         /// <summary>
@@ -202,7 +202,7 @@ namespace Origami.UI.Admin
             }
 
             await ReloadDataGridAsync();
-            Root = this.HubContentRepository.Get(Root).Clone();
+            SelectedEntity = this.HubContentRepository.Get(SelectedEntity).Clone();
         }
 
         /// <summary>
@@ -325,7 +325,7 @@ namespace Origami.UI.Admin
         /// <param name="entity"></param>
         protected virtual void OnEdit(T1 entity)
         {
-            Root = this.HubContentRepository.Get(entity).Clone();
+            SelectedEntity = this.HubContentRepository.Get(entity).Clone();
         }
 
         /// <summary>
@@ -347,7 +347,7 @@ namespace Origami.UI.Admin
 
         protected virtual void OnSearchResultSelected(T1 entity)
         {
-            Root = this.HubContentRepository.Get(entity).Clone();
+            SelectedEntity = this.HubContentRepository.Get(entity).Clone();
         }
 
         /// <summary>
@@ -385,7 +385,7 @@ namespace Origami.UI.Admin
         /// <returns></returns>
         protected virtual async Task ReloadDataGridAsync()
         {
-            Root = CreateEntity();
+            SelectedEntity = CreateEntity();
             SelectedEntities = new();
             await DataGrid.ReloadServerData();
         }
@@ -398,7 +398,7 @@ namespace Origami.UI.Admin
         protected virtual Result<T1> RemoveEntityFromCache(T1 entity)
         {
             Repository.PurgeCache(entity);
-            Root = Root.Id == entity.Id ? CreateEntity() : Root;
+            SelectedEntity = SelectedEntity.Id == entity.Id ? CreateEntity() : SelectedEntity;
             return new(entity);
         }
 
@@ -434,7 +434,7 @@ namespace Origami.UI.Admin
         protected virtual string RowClassFunc(T1 entity, int index)
         {
             var result = string.Empty;
-            if (entity.Id == Root.Id) result += " selected-row";
+            if (entity.Id == SelectedEntity.Id) result += " selected-row";
             if (entity is IPublished published1 && published1.IsPublished == false) result += " unpublished";
             if (entity is IPublished published2 && published2.IsPublished == true) result += " published";
             if (entity is IDeleted deleted && deleted.IsDeleted == true) result += " deleted";
