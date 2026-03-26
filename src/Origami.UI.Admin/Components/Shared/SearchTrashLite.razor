@@ -63,7 +63,7 @@
                         else if (hit.Type.Like("User") == true)
                         {
                             var user = this.Super.Users.ReadFromCache().Id(hit.Id);
-                            <UserHeaderLite Entity="user"></UserHeaderLite>
+                            <UserHeader Entity="user"></UserHeader>
                         }
                         else if (hit.Type.Like("Role") == true)
                         {

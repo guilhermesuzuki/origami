@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -31,11 +32,38 @@ using System.Buffers;
 using System.Globalization;
 using System.Text;
 using System.Threading.RateLimiting;
+using UAParser;
 
 namespace Origami.UI
 {
     public static class Extensions
     {
+        /// <summary>
+        /// Registers CRUD-related services for the specified entity and repository types.
+        /// </summary>
+        /// <remarks>This method registers the specified repository type as the implementation for various
+        /// CRUD-related interfaces, including <see cref="_ICrudCache{TEntity}"/>, <see cref="_ICreateCache{TEntity}"/>,
+        /// <see cref="_IReadCache{TEntity}"/>, <see cref="_IUpdateCache{TEntity}"/>, <see
+        /// cref="_IDeleteCache{TEntity}"/>, and <see cref="_ISaveCache{TEntity}"/>. Use this method to configure
+        /// dependency injection for CRUD operations in your application.</remarks>
+        /// <typeparam name="TEntity">The type of the entity. Must implement <see cref="IId"/>.</typeparam>
+        /// <typeparam name="TRepository">The type of the repository. Must implement <see cref="_ICrudCache{TEntity}"/>.</typeparam>
+        /// <param name="services">The <see cref="IServiceCollection"/> to which the services will be added.</param>
+        /// <returns>The updated <see cref="IServiceCollection"/> instance.</returns>
+        public static IServiceCollection AddCrud<TEntity, TRepository>(this IServiceCollection services)
+            where TEntity : IId
+            where TRepository : class, IRepository<TEntity>
+        {
+            services.AddTransient<IRepository<TEntity>, TRepository>();
+            services.AddTransient<ICreateCache<TEntity>, TRepository>();
+            services.AddTransient<IReadCache<TEntity>, TRepository>();
+            services.AddTransient<IUpdateCache<TEntity>, TRepository>();
+            services.AddTransient<IDeleteCache<TEntity>, TRepository>();
+            services.AddTransient<ISearch<TEntity>, TRepository>();
+
+            return services;
+        }
+
         public static void AddOrigami(this WebApplicationBuilder builder, string[] args, bool admin = false)
         {
             var files = Path.GetFullPath("..\\Origami.Files\\");
@@ -279,33 +307,6 @@ namespace Origami.UI
             //adds command line
             builder.Configuration.AddCommandLine(args);
         }
-
-        /// <summary>
-        /// Registers CRUD-related services for the specified entity and repository types.
-        /// </summary>
-        /// <remarks>This method registers the specified repository type as the implementation for various
-        /// CRUD-related interfaces, including <see cref="_ICrudCache{TEntity}"/>, <see cref="_ICreateCache{TEntity}"/>,
-        /// <see cref="_IReadCache{TEntity}"/>, <see cref="_IUpdateCache{TEntity}"/>, <see
-        /// cref="_IDeleteCache{TEntity}"/>, and <see cref="_ISaveCache{TEntity}"/>. Use this method to configure
-        /// dependency injection for CRUD operations in your application.</remarks>
-        /// <typeparam name="TEntity">The type of the entity. Must implement <see cref="IId"/>.</typeparam>
-        /// <typeparam name="TRepository">The type of the repository. Must implement <see cref="_ICrudCache{TEntity}"/>.</typeparam>
-        /// <param name="services">The <see cref="IServiceCollection"/> to which the services will be added.</param>
-        /// <returns>The updated <see cref="IServiceCollection"/> instance.</returns>
-        public static IServiceCollection AddCrud<TEntity, TRepository>(this IServiceCollection services)
-            where TEntity : IId
-            where TRepository : class, IRepository<TEntity>
-        {
-            services.AddTransient<IRepository<TEntity>, TRepository>();
-            services.AddTransient<ICreateCache<TEntity>, TRepository>();
-            services.AddTransient<IReadCache<TEntity>, TRepository>();
-            services.AddTransient<IUpdateCache<TEntity>, TRepository>();
-            services.AddTransient<IDeleteCache<TEntity>, TRepository>();
-            services.AddTransient<ISearch<TEntity>, TRepository>();
-
-            return services;
-        }
-
         public static string Error(this IEnumerable<IdentityError> errors)
         {
             if (errors.Count() > 0)
@@ -345,6 +346,81 @@ namespace Origami.UI
             }
 
             return string.Empty;
+        }
+
+        public static WebApplication FoldTheOrigami<T>(
+            this WebApplicationBuilder builder,
+            string[] args,
+            bool admin = false,
+            Action? inject = null)
+        {
+            //first thing in the morning
+            builder.AddOrigami(args, admin: admin);
+
+            var siteName = builder.Configuration.GetValue<string>("Site:Name");
+            var serviceName = $"origami2, {(admin ? "admin:" : "front-end:")} {siteName}";
+
+            /*open telemetry*/
+            var openTelemetry = builder.Configuration.GetValue("OpenTelemetry:Enabled", false);
+            if (openTelemetry)
+            {
+                /*OpenTelemetry*/
+                var otel = builder.Services.AddOpenTelemetry();
+
+                // Configure OpenTelemetry Resources with the application name
+                otel.ConfigureResource(resource => resource.AddService(serviceName: serviceName));
+
+                // Add Metrics for ASP.NET Core and our custom metrics and export to Prometheus
+                otel.WithMetrics(metrics =>
+                {
+                    metrics.AddAspNetCoreInstrumentation();
+                    metrics.AddRuntimeInstrumentation();
+                    metrics.AddProcessInstrumentation();
+                    metrics.AddHttpClientInstrumentation();
+                    metrics.AddPrometheusExporter();
+
+                    // Metrics provides by ASP.NET Core in .NET 8
+                    metrics.AddMeter("Microsoft.AspNetCore.Hosting");
+                    metrics.AddMeter("Microsoft.AspNetCore.Server.Kestrel");
+                    metrics.AddMeter("Microsoft.AspNetCore.Http.Connections");
+                    metrics.AddMeter("Microsoft.AspNetCore.Routing");
+                    metrics.AddMeter("Microsoft.AspNetCore.Diagnostics");
+                    metrics.AddMeter("Microsoft.AspNetCore.RateLimiting");
+                });
+
+                // Add Tracing for ASP.NET Core and our custom ActivitySource and export to Jaeger
+                otel.WithTracing(tracing =>
+                {
+                    tracing.AddAspNetCoreInstrumentation();
+                    tracing.AddHttpClientInstrumentation();
+                    tracing.AddOtlpExporter(otlpOptions =>
+                    {
+                        // Use IConfiguration directly for Otlp exporter endpoint option.
+                        otlpOptions.Endpoint = new Uri(builder.Configuration.GetValue("OpenTelemetry:Endpoint", defaultValue: "http://localhost:4317")!);
+                    });
+                });
+            }
+
+            builder.Host.UseSerilog((context, configuration) =>
+            {
+                configuration.ReadFrom.Configuration(context.Configuration);
+                configuration.WriteTo.Console();
+            });
+
+            //kestrel 8MB
+            builder.WebHost.ConfigureKestrel(serverOptions => serverOptions.Limits.MaxRequestBodySize = (long)8 * 1024 * 1024);
+
+            /*there's services to inject*/
+            inject?.Invoke();
+
+            /*builds and use origami*/
+            var app = builder.Build().UseOrigami(admin: admin);
+
+            if (openTelemetry) app.MapPrometheusScrapingEndpoint();
+
+            app.MapRazorComponents<T>().AddInteractiveServerRenderMode();
+
+            return app;
         }
 
         public static async Task<string> GetBase64Image(this IBrowserFile file)
@@ -431,6 +507,36 @@ namespace Origami.UI
             return new MarkupString(html);
         }
 
+        /// <summary>
+        /// Fills the <paramref name="tracking"/> with request information
+        /// </summary>
+        /// <param name="tracking"></param>
+        /// <param name="url"></param>
+        /// <param name="referrer"></param>
+        public static void TrackingFields(this HttpContext httpContext, IMemoryCache memoryCache, BaseTracking tracking, string url, string referrer = "")
+        {
+            var dd = httpContext.Request.GetDeviceDetector();
+
+            // important!
+            dd.Parse();
+
+            tracking.DateCreated = DateTime.UtcNow;
+            tracking.Url = url;
+            tracking.UrlReferrer = referrer;
+            tracking.UserAgent = httpContext.Request.Header("User-Agent");
+            tracking.HostAddress = httpContext.Connection.RemoteIpAddress?.ToString() ?? string.Empty;
+            tracking.IsMobileDevice = dd.IsTablet() || dd.IsMobile();
+            tracking.IsBot = dd.IsBot();
+
+            var client = Parser.GetDefault().Parse(tracking.UserAgent);
+
+            tracking.Platform = client.OS.Family;
+            tracking.Browser = client.UA.Family;
+
+            var key = $"Origami_UserLocation_{httpContext.Connection.Id}";
+            tracking.Location = memoryCache.Get<Location>(key);
+        }
+
         public static WebApplication UseOrigami(this WebApplication app, bool admin = false)
         {
             app.UseAuthentication();
@@ -484,81 +590,6 @@ namespace Origami.UI
                     await context.Response.WriteAsync(xml);
                 });
             }
-
-            return app;
-        }
-
-        public static WebApplication FoldTheOrigami<T>(
-            this WebApplicationBuilder builder,
-            string[] args,
-            bool admin = false,
-            Action? inject = null)
-        {
-            //first thing in the morning
-            builder.AddOrigami(args, admin: admin);
-
-            var siteName = builder.Configuration.GetValue<string>("Site:Name");
-            var serviceName = $"origami2, {(admin ? "admin:" : "front-end:")} {siteName}";
-
-            /*open telemetry*/
-            var openTelemetry = builder.Configuration.GetValue("OpenTelemetry:Enabled", false);
-            if (openTelemetry)
-            {
-                /*OpenTelemetry*/
-                var otel = builder.Services.AddOpenTelemetry();
-
-                // Configure OpenTelemetry Resources with the application name
-                otel.ConfigureResource(resource => resource.AddService(serviceName: serviceName));
-
-                // Add Metrics for ASP.NET Core and our custom metrics and export to Prometheus
-                otel.WithMetrics(metrics =>
-                {
-                    metrics.AddAspNetCoreInstrumentation();
-                    metrics.AddRuntimeInstrumentation();
-                    metrics.AddProcessInstrumentation();
-                    metrics.AddHttpClientInstrumentation();
-                    metrics.AddPrometheusExporter();
-
-                    // Metrics provides by ASP.NET Core in .NET 8
-                    metrics.AddMeter("Microsoft.AspNetCore.Hosting");
-                    metrics.AddMeter("Microsoft.AspNetCore.Server.Kestrel");
-                    metrics.AddMeter("Microsoft.AspNetCore.Http.Connections");
-                    metrics.AddMeter("Microsoft.AspNetCore.Routing");
-                    metrics.AddMeter("Microsoft.AspNetCore.Diagnostics");
-                    metrics.AddMeter("Microsoft.AspNetCore.RateLimiting");
-                });
-
-                // Add Tracing for ASP.NET Core and our custom ActivitySource and export to Jaeger
-                otel.WithTracing(tracing =>
-                {
-                    tracing.AddAspNetCoreInstrumentation();
-                    tracing.AddHttpClientInstrumentation();
-                    tracing.AddOtlpExporter(otlpOptions =>
-                    {
-                        // Use IConfiguration directly for Otlp exporter endpoint option.
-                        otlpOptions.Endpoint = new Uri(builder.Configuration.GetValue("OpenTelemetry:Endpoint", defaultValue: "http://localhost:4317")!);
-                    });
-                });
-            }
-
-            builder.Host.UseSerilog((context, configuration) =>
-            {
-                configuration.ReadFrom.Configuration(context.Configuration);
-                configuration.WriteTo.Console();
-            });
-
-            //kestrel 8MB
-            builder.WebHost.ConfigureKestrel(serverOptions => serverOptions.Limits.MaxRequestBodySize = (long)8 * 1024 * 1024);
-
-            /*there's services to inject*/
-            inject?.Invoke();
-
-            /*builds and use origami*/
-            var app = builder.Build().UseOrigami(admin: admin);
-
-            if (openTelemetry) app.MapPrometheusScrapingEndpoint();
-
-            app.MapRazorComponents<T>().AddInteractiveServerRenderMode();
 
             return app;
         }

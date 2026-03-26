@@ -14,12 +14,17 @@
         <div class="row">
             @foreach (var rating in _contentRating.Ratings(this.Entity).OrderByDescending(x => x.DateCreated).Take(this.Page * this.PageSize))
             {
-                var socialProfile = rating.SocialProfileId != null ? _socialProfile.ReadFromCache().Id(rating.SocialProfileId.Value) : null;
+                var user = rating.UserId != null ? Super.Users.ReadFromCache().Id(rating.UserId.Value) : null;
+                var socialProfile = rating.SocialProfileId != null ? this.Super.SocialProfiles.ReadFromCache().Id(rating.SocialProfileId.Value) : null;
                 <div class="col-12 col-xl-4 text-center mt-3">
                     <div class="p-3">
                         @if (socialProfile != null)
                         {
                             <SocialProfileHeader Entity="socialProfile"></SocialProfileHeader>
+                        }
+                        else if (user != null)
+                        {
+                            <UserHeaderLite Entity="user"></UserHeaderLite>
                         }
                         else
                         {

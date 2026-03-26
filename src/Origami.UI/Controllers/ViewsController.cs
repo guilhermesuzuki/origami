@@ -185,36 +185,36 @@ namespace Origami.UI.FrontEnd.Controllers
         }
 
         /// <summary>
-        /// Fills the <paramref name="view"/> with request information
+        /// Fills the <paramref name="tracking"/> with request information
         /// </summary>
-        /// <param name="view"></param>
+        /// <param name="tracking"></param>
         /// <param name="url"></param>
         /// <param name="referrer"></param>
-        private void _fill(BaseView view, string url, string referrer)
+        private void _fill(BaseTracking tracking, string url, string referrer)
         {
             var dd = Request.GetDeviceDetector();
 
             // important!
             dd.Parse();
 
-            view.DateCreated = DateTime.UtcNow;
-            view.Url = url;
-            view.UrlReferrer = referrer;
-            view.UserAgent = HttpContext.Request.Header("User-Agent");
-            view.HostAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? string.Empty;
-            view.IsMobileDevice = dd.IsTablet() || dd.IsMobile();
-            view.IsBot = dd.IsBot();
-            view.SocialProfileId = _userFacade.SocialProfile.New == false ? _userFacade.SocialProfile.Id : null;
+            tracking.DateCreated = DateTime.UtcNow;
+            tracking.Url = url;
+            tracking.UrlReferrer = referrer;
+            tracking.UserAgent = HttpContext.Request.Header("User-Agent");
+            tracking.HostAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? string.Empty;
+            tracking.IsMobileDevice = dd.IsTablet() || dd.IsMobile();
+            tracking.IsBot = dd.IsBot();
+            tracking.SocialProfileId = _userFacade.SocialProfile.New == false ? _userFacade.SocialProfile.Id : null;
 
-            var client = Parser.GetDefault().Parse(view.UserAgent);
+            var client = Parser.GetDefault().Parse(tracking.UserAgent);
 
-            view.Platform = client.OS.Family;
-            view.Browser = client.UA.Family;
+            tracking.Platform = client.OS.Family;
+            tracking.Browser = client.UA.Family;
 
             var key = $"Origami_UserLocation_{this._httpContextAccessor.HttpContext?.Connection.Id}";
-            view.Location = this._memoryCache.Get<Location>(key);
+            tracking.Location = this._memoryCache.Get<Location>(key);
 
-            if (view is OrigamiPhysicalPageView ppv)
+            if (tracking is OrigamiPhysicalPageView ppv)
             {
                 var user = this.HttpContext.Items["loggedIn-admin-user"] as OrigamiUser;
                 if (user != null)

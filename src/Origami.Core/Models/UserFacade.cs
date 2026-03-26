@@ -16,8 +16,9 @@ namespace Origami.Core.Models
         protected ObservableCollection<Result> _results = new();
         protected string _search = string.Empty;
         protected bool _showCookieConsent = false;
-        protected OrigamiSocialProfile _socialProfile = new();
+        protected OrigamiSocialProfile _socialProfile = OrigamiSocialProfile.AnonymousUser;
         protected OrigamiUser _user = OrigamiUser.AnonymousUser;
+
         /// <summary>
         /// Default constructor
         /// </summary>

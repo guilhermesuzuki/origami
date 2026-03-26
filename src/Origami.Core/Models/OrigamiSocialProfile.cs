@@ -37,6 +37,11 @@ namespace Origami.Core.Models
 
         }
 
+        /// <summary>
+        /// Anonymous user
+        /// </summary>
+        public static OrigamiSocialProfile AnonymousUser = new() { Id = Guid.Empty };
+
         public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) => { };
 
         public string? AdditionalInfo
