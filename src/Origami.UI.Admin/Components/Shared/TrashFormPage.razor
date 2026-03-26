@@ -11,11 +11,11 @@
             <div class="page-parent mt-3">
                 <div class="xx-small">@Text.Lower("Parent")</div>
                 <div class="fw-bold shadow-sm border p-2">
-                    <PageHeaderLite2 Entity="parent"></PageHeaderLite2>
+                    <ContentHeaderInline Entity="parent"></ContentHeaderInline>
                 </div>
             </div>
         }
-        <PageHeaderLite Class="mt-3" Entity="Entity"></PageHeaderLite>
+        <ContentHeaderLite Class="mt-3" Entity="Entity"></ContentHeaderLite>
         <BasicHeader Class="mt-3" Entity="Entity"></BasicHeader>
         <ul class="inline-list mt-3">
             <li>
@@ -62,7 +62,7 @@
                     @foreach (var child in children)
                     {
                         <div class="shadow-sm border p-2 mt-1">
-                            <PageHeaderLite2 Entity="child"></PageHeaderLite2>
+                            <ContentHeaderInline Entity="child"></ContentHeaderInline>
                         </div>
                     }
                 </div>

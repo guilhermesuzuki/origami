@@ -28,7 +28,7 @@
                 @if (Pages.Count > i)
                 {
                     <div class="col-12 col-xl-4 mb-3">
-                        <PageHeader Entity="Pages[i]" ShowRelatedPages="false"></PageHeader>
+                        <ContentHeader Entity="Pages[i]" ShowRelatedContent="false"></ContentHeader>
                     </div>
                 }
             }
@@ -48,7 +48,7 @@ else if (this.ShowFakes == true)
             @foreach (var page in Core.Models.OrigamiPage.GetFakes())
             {
                 <div class="col-12 col-xl-4 mb-3">
-                    <PageHeader Class="fake" Entity="page" ShowRelatedPages="false"></PageHeader>
+                    <ContentHeader Class="fake" Entity="page" ShowRelatedContent="false"></ContentHeader>
                 </div>
             }
         </div>

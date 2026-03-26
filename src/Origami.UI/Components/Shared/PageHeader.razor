@@ -14,7 +14,7 @@
         <div class="page-header-title-wrapper position-absolute overflow-auto zeroes">
             <div class="p-3">
                 <a class="title fw-bold text-uppercase focusable text-center" href="@Entity.Hyperlink">
-                    <PageHeaderTitle Entity="this.Entity"></PageHeaderTitle>
+                    <ContentHeaderTitle Entity="this.Entity"></ContentHeaderTitle>
                 </a>
                 <div>
                     <span class="page-date pe-1">@(Entity.GetDate())</span>
@@ -64,7 +64,7 @@
                             <div class="related-page-header-title col-12 col-xxl-4 mh-100 overflow-auto m-auto" @onclick="() => this.GoToPage(child)" @onclick:stopPropagation="true">
                                 <div class="p-2">
                                     <a class="title fw-bold text-uppercase focusable text-center" href="@child.Hyperlink">
-                                        <PageHeaderTitle Entity="child"></PageHeaderTitle>
+                                        <ContentHeaderTitle Entity="child"></ContentHeaderTitle>
                                     </a>
                                     <div>
                                         <span class="page-date pe-1">@(child.GetDate())</span>
