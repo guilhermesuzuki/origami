@@ -213,7 +213,20 @@ namespace Origami.UI.Admin
         /// <returns></returns>
         protected virtual Task<GridData<T1>> GetEntities(GridState<T1> state, CancellationToken token)
         {
-            var orders = new StringBuilder().Append($",{DefaultOrdering}", DefaultOrdering.Has());
+            var orders = new StringBuilder();
+
+            if (state.SortDefinitions.Any() == true)
+            {
+                //iterates through every sort definition
+                foreach (var definition in state.SortDefinitions)
+                {
+                    orders.AppendFormat(",{0} {1}", definition.SortBy, definition.Descending ? "DESC" : "ASC");
+                }
+            }
+            else
+            {
+                orders.Append($",{DefaultOrdering}", DefaultOrdering.Has());
+            }
 
             var filters = new StringBuilder("(true)");
 

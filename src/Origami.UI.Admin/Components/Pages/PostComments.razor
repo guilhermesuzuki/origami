@@ -64,7 +64,7 @@
                                     @{
                                         var post = this.Super.Contents.ReadFromCache().OfType<OrigamiPost>().Id(context.Item.ContentId);
                                     }
-                                    <PostHeaderLite2 Entity="post"></PostHeaderLite2>
+                                    <ContentHeaderInline Entity="post"></ContentHeaderInline>
                                 </CellTemplate>
                             </TemplateColumn>
                         </Columns>

@@ -3,11 +3,10 @@
 
 @if (this.Entity != null)
 {
-    <div class="physical-page-header-lite-3 @Class">
+    <span class="physical-page-header-inline d-inline-flex align-items-center @Class">
         <i class="fa-solid fa-globe"></i>
         <span>@Entity.Path</span>
-        <Id Class="d-block x-small" Entity="@Entity"></Id>
-    </div>
+    </span>
 }
 
 @code {

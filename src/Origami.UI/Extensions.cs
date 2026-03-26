@@ -178,6 +178,9 @@ namespace Origami.UI
 
             builder.Services.AddTransient<IHubContentRepository<HubContentPage>, HubContentPageRepository>();
             builder.Services.AddTransient<IHubContentRepository<HubContentPost>, HubContentPostRepository>();
+            builder.Services.AddTransient<IHubContentRepository<HubContentSpecialMessage>, HubContentSpecialMessageRepository>();
+            builder.Services.AddTransient<IHubContentRepository<HubContentSpecialPage>, HubContentSpecialPageRepository>();
+            builder.Services.AddTransient<IHubContentRepository<HubContentVideo>, HubContentVideoRepository>();
 
             //sets the blog as the primary one
             builder.Services.AddScoped<IUserFacade, UserFacade>(provider =>
