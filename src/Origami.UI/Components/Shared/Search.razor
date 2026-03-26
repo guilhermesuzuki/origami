@@ -287,11 +287,11 @@
                 Task.Run(() => this._tags = _super.Tags.Search(queryTerm).OrderBy(x => x.Tag)),
                 Task.Run(() =>
                 {
-                    var hits = _super.Contents.Search(queryTerm);
-                    this._pages = hits.OfType<OrigamiPage>().Published().Where(x => this.Super.IsParentDeleted(x) == false).OrderBy(x => x.Title);
-                    this._posts = hits.OfType<OrigamiPost>().Published().OrderBy(x => x.Title);
-                    this._videos = hits.OfType<OrigamiVideo>().Published().OrderBy(x => x.Title);
-                    this._specialPages = hits.OfType<OrigamiSpecialPage>().Published().OrderBy(x => x.Title);
+                    var hits = _super.Contents.Search(queryTerm).Published();
+                    this._pages = hits.OfType<OrigamiPage>().Where(x => this.Super.IsParentDeleted(x) == false).OrderBy(x => x.Title);
+                    this._posts = hits.OfType<OrigamiPost>().OrderBy(x => x.Title);
+                    this._videos = hits.OfType<OrigamiVideo>().OrderBy(x => x.Title);
+                    this._specialPages = hits.OfType<OrigamiSpecialPage>().OrderBy(x => x.Title);
                 }),
             };
          
