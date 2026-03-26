@@ -14,7 +14,7 @@
         var post = this.Super.Contents.ReadFromCache().OfType<OrigamiPost>().Id(comment!.ContentId)!;
         <div class="user-activity-post-comment-reaction @Class">
             <label class="fw-bold">@Text.Lower("Reacted {0} To:", reaction.Reaction)</label>
-            <PostHeaderLite Entity="post"></PostHeaderLite>
+            <ContentHeaderLite Entity="post"></ContentHeaderLite>
             <CommentLite Class="mt-2 p-2 frame-purple" Entity="comment"></CommentLite>
         </div>
     }
