@@ -48,13 +48,15 @@ namespace Origami.Core
             }
         }
 
-        public static void SaveCache(this IMemoryCache memoryCache, OrigamiContent entity)
+        public static void SaveCache(this IMemoryCache memoryCache, OrigamiContent? entity)
         {
             memoryCache.SaveCache<OrigamiContent>(entity);
         }
 
-        public static void SaveCache<T>(this IMemoryCache memoryCache, T entity) where T : class, IId
+        public static void SaveCache<T>(this IMemoryCache memoryCache, T? entity) where T : class, IId
         {
+            if (entity == null) return;
+
             var key = typeof(T).KeyForCaching();
 
             lock (OrigamiConstants.SyncRoot)

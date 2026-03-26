@@ -31,6 +31,46 @@ namespace Origami.Core.Data
         public virtual string UpdateOtherUsersPermission { get; } = string.Empty;
         public virtual string UpdateOwnPermission { get; } = string.Empty;
 
+        public virtual string DeleteOtherUsersPermission { get; } = string.Empty;
+        public virtual string DeleteOwnPermission { get; } = string.Empty;
+
+        public virtual string RestorePermission { get; } = string.Empty;
+        public virtual string PurgePermission { get; } = string.Empty;
+
+        public Result<T2> Delete(T2 root, IId userId)
+        {
+            // hub
+            var hub = new Result<T2>(root);
+
+            try
+            {
+                using var db = _dbContextFactory.CreateDbContext();
+
+                // needs to hit the database for the entity
+                var permission = root.Entity.AuthorId == userId.Id ? DeleteOwnPermission : DeleteOtherUsersPermission;
+
+                // check permissions
+                if (UserHasPermission(db, userId.Id, permission) == false) return new(root) { Info = permission, Error = Text.Original(Text.YouDontHavePermissionForThisFeature), };
+
+                // marks as deleted
+                db.Set<T1>().AsNoTracking().Where(x => x.Id == root.Entity.Id).ExecuteUpdate(s => s.SetProperty(x => x.IsDeleted, true));
+
+                // needs to hit the database for the entity
+                var entity = db.Set<T1>().AsNoTracking().Id(root.Entity.Id);
+
+                // needs to update cache
+                _memoryCache.SaveCache(entity as OrigamiContent);
+
+                hub.Success = Text.Original(Text.OperationCompletedSuccessfully);
+
+                return hub;
+            }
+            catch (Exception ex)
+            {
+                return new(root) { Error = ex.GetMessage(), };
+            }
+        }
+
         public T2 Get(IId rootId)
         {
             var result = new T2();
@@ -48,6 +88,40 @@ namespace Origami.Core.Data
             Task.WhenAll(tasks);
 
             return result;
+        }
+
+        public Result<T2> Purge(T2 root, IId userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Result<T2> Restore(T2 root, IId userId)
+        {
+            try
+            {
+                using var db = _dbContextFactory.CreateDbContext();
+
+                // needs to hit the database for the entity
+                var permission = root.Entity.AuthorId == userId.Id ? DeleteOwnPermission : DeleteOtherUsersPermission;
+
+                // check permissions
+                if (UserHasPermission(db, userId.Id, permission) == false) return new(root) { Info = permission, Error = Text.Original(Text.YouDontHavePermissionForThisFeature), };
+
+                // marks as deleted
+                db.Set<T1>().AsNoTracking().Where(x => x.Id == root.Entity.Id).ExecuteUpdate(s => s.SetProperty(x => x.IsDeleted, false));
+
+                // needs to hit the database for the entity
+                var entity = db.Set<T1>().AsNoTracking().Id(root.Entity.Id) as OrigamiContent;
+
+                // needs to update cache
+                _memoryCache.SaveCache(entity);
+
+                return new(root) { Success = Text.Original(Text.OperationCompletedSuccessfully), };
+            }
+            catch (Exception ex)
+            {
+                return new(root) { Error = ex.GetMessage(), };
+            }
         }
 
         public Result<T2> Save(T2 root, IId userId)

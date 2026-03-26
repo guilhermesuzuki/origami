@@ -12,5 +12,11 @@ namespace Origami.Core.Data
 
         // need to save
         Result<T> Save(T entity, IId userId);
+
+        Result<T> Delete(T entity, IId userId);
+
+        Result<T> Purge(T entity, IId userId);
+
+        Result<T> Restore(T entity, IId userId);
     }
 }
