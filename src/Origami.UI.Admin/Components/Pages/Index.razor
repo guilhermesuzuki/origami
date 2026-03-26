@@ -301,7 +301,7 @@
                                 @if (context.Item.Type.Like("PhysicalPageView") == true)
                                 {
                                     var page = this.Super.PhysicalPages.ReadFromCache().Id(context.Item.Id);
-                                    <PhysicalPageHeaderLite3 Entity="page"></PhysicalPageHeaderLite3>
+                                    <PhysicalPageHeaderInline Entity="page"></PhysicalPageHeaderInline>
                                 }
                                 else if (context.Item.Type.Like("PageView") == true)
                                 {
