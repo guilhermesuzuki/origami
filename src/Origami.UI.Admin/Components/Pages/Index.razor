@@ -154,7 +154,7 @@
                             @foreach (var page in this.DraftPages())
                             {
                                 <div class="p-3 border-bottom">
-                                    <PageHeaderLite2 Class="" Entity="page"></PageHeaderLite2>
+                                    <ContentHeaderInline Class="" Entity="page"></ContentHeaderInline>
                                 </div>
                             }
                         </div>
@@ -176,7 +176,7 @@
                             @foreach (var video in this.DraftVideos())
                             {
                                 <div class="p-3 border-bottom">
-                                    <VideoHeaderLite2 Class="" Entity="video"></VideoHeaderLite2>
+                                    <ContentHeaderInline Class="" Entity="video"></ContentHeaderInline>
                                 </div>
                             }
                         </div>
@@ -305,23 +305,23 @@
                                 }
                                 else if (context.Item.Type.Like("PageView") == true)
                                 {
-                                    var page = this.Super.Contents.ReadFromCache().OfType<OrigamiPage>().Id(context.Item.Id);
-                                    <PageHeaderLite2 Entity="page"></PageHeaderLite2>
+                                    var page = this.Super.Contents.ReadFromCache().Id(context.Item.Id);
+                                    <ContentHeaderInline Entity="page"></ContentHeaderInline>
                                 }
                                 else if (context.Item.Type.Like("PostView") == true)
                                 {
-                                    var post = this.Super.Contents.ReadFromCache().OfType<OrigamiPost>().Id(context.Item.Id);
+                                    var post = this.Super.Contents.ReadFromCache().Id(context.Item.Id);
                                     <ContentHeaderInline Entity="post"></ContentHeaderInline>
                                 }
                                 else if (context.Item.Type.Like("VideoView") == true)
                                 {
-                                    var video = this.Super.Contents.ReadFromCache().OfType<OrigamiVideo>().Id(context.Item.Id);
-                                    <VideoHeaderLite2 Entity="video"></VideoHeaderLite2>
+                                    var video = this.Super.Contents.ReadFromCache().Id(context.Item.Id);
+                                    <ContentHeaderInline Entity="video"></ContentHeaderInline>
                                 }
                                 else if (context.Item.Type.Like("SpecialPageView") == true)
                                 {
                                     var specialpage = this.Super.Contents.ReadFromCache().OfType<OrigamiSpecialPage>().Id(context.Item.Id);
-                                    <SpecialPageHeaderLite2 Entity="specialpage"></SpecialPageHeaderLite2>
+                                    <ContentHeaderInline Entity="specialpage"></ContentHeaderInline>
                                 }
                                 @if (context.Item.SocialProfileId != null)
                                 {

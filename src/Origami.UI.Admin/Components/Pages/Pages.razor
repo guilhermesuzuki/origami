@@ -75,7 +75,7 @@
                             <TemplateColumn Title="@Text.Upper("Title")">
                                 <CellTemplate>
                                     <div class="cursor-pointer" @onclick="() => OnEdit(context.Item)">
-                                        <PageHeaderLite2 Entity="context.Item"></PageHeaderLite2>
+                                        <ContentHeaderInline Entity="context.Item"></ContentHeaderInline>
                                         @if (context.Item.Keywords.Has() == true)
                                         {
                                             <div class="x-small">
@@ -109,7 +109,7 @@
                                             <div class="page-parent">
                                                 <div class="xx-small">@Text.Lower("Parent")</div>
                                                 <div class="shadow-sm border p-2">
-                                                    <PageHeaderLite2 Class="" Entity="parent"></PageHeaderLite2>
+                                                    <ContentHeaderInline Class="" Entity="parent"></ContentHeaderInline>
                                                 </div>
                                             </div>
                                         }
@@ -121,7 +121,7 @@
                                             continue;
                                         }
                                         <div class="page-child mt-1 shadow-sm border p-2 @(page.IsDeleted ? "deleted" : null)">
-                                            <PageHeaderLite2 Class="" Entity="page"></PageHeaderLite2>
+                                            <ContentHeaderInline Class="" Entity="page"></ContentHeaderInline>
                                         </div>
                                     }
                                 </CellTemplate>

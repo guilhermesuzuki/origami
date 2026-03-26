@@ -32,15 +32,19 @@
                         }
                         else if (hit is OrigamiPage page)
                         {
-                            <PageHeaderLite Entity="page"></PageHeaderLite>
+                            <ContentHeaderLite Entity="page"></ContentHeaderLite>
                         }
                         else if (hit is OrigamiPost post)
                         {
-                            <PostHeaderLite Entity="post"></PostHeaderLite>
+                            <ContentHeaderLite Entity="post"></ContentHeaderLite>
                         }
                         else if (hit is OrigamiVideo video)
                         {
-                            <VideoHeaderLite Entity="video"></VideoHeaderLite>
+                            <ContentHeaderLite Entity="video"></ContentHeaderLite>
+                        }
+                        else if (hit is OrigamiSpecialPage specialPage)
+                        {
+                            <ContentHeaderLite Entity="specialPage"></ContentHeaderLite>
                         }
                         else if (hit is OrigamiContentComment contentComment)
                         {
