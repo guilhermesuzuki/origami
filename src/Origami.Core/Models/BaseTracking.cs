@@ -3,35 +3,35 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Origami.Core.Models
 {
-    public abstract class BaseView :
-        IChanged,
+    public abstract class BaseTracking :
         IDateCreated,
         IVersion,
         ISocialProfileIdNull,
+        IUserIdNull,
         ILocation,
         INew
     {
-        private string _browser = string.Empty;
-        private DateTime _dateCreated = DateTime.UtcNow;
+        protected string _browser = string.Empty;
+        protected DateTime _dateCreated = DateTime.UtcNow;
+        protected string _hostAddress = string.Empty;
+        protected string _hostName = string.Empty;
+        protected bool _isBot;
+        protected bool _isMobileDevice;
+        protected Location? _location;
+        protected string _platform = string.Empty;
+        protected Guid? _socialProfileId;
+        protected string? _url = string.Empty;
+        protected string? _urlReferrer = string.Empty;
+        protected string _userAgent = string.Empty;
+        protected Guid? _userId;
+        protected byte[] _version = [];
 
-        private string _hostAddress = string.Empty;
-        private string _hostName = string.Empty;
-        private bool _isBot;
-        private bool _isMobileDevice;
-        private Location? _location;
-        private string _platform = string.Empty;
-        private Guid? _socialProfileId;
-        private string? _url = string.Empty;
-        private string? _urlReferrer = string.Empty;
-        private string _userAgent = string.Empty;
-        private byte[] _version = [];
-
-        public BaseView() : base()
+        protected BaseTracking() : base()
         {
 
         }
 
-        public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) => { };
+        public event EventHandler<PropertyChangedEventArgs> TrackingChanged = (sender, e) => { };
 
         /// <summary>
         /// Browser
@@ -40,13 +40,13 @@ namespace Origami.Core.Models
         public string Browser
         {
             get => _browser;
-            set => this.Set(ref _browser, value, Changed);
+            set => this.Set(ref _browser, value, TrackingChanged);
         }
 
         public DateTime DateCreated
         {
             get => _dateCreated;
-            set => this.Set(ref _dateCreated, value, Changed);
+            set => this.Set(ref _dateCreated, value, TrackingChanged);
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace Origami.Core.Models
         public string HostAddress
         {
             get => _hostAddress;
-            set => this.Set(ref _hostAddress, value, Changed);
+            set => this.Set(ref _hostAddress, value, TrackingChanged);
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace Origami.Core.Models
         public string HostName
         {
             get => _hostName;
-            set => this.Set(ref _hostName, value, Changed);
+            set => this.Set(ref _hostName, value, TrackingChanged);
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace Origami.Core.Models
         public bool IsBot
         {
             get => _isBot;
-            set => this.Set(ref _isBot, value, Changed);
+            set => this.Set(ref _isBot, value, TrackingChanged);
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace Origami.Core.Models
         public bool IsMobileDevice
         {
             get => _isMobileDevice;
-            set => this.Set(ref _isMobileDevice, value, Changed);
+            set => this.Set(ref _isMobileDevice, value, TrackingChanged);
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace Origami.Core.Models
         public Location? Location
         {
             get => _location;
-            set => this.Set(ref _location, value, Changed);
+            set => this.Set(ref _location, value, TrackingChanged);
         }
 
         public bool New => this.Version.SequenceEqual(Array.Empty<byte>());
@@ -105,16 +105,16 @@ namespace Origami.Core.Models
         public string Platform
         {
             get => _platform;
-            set => this.Set(ref _platform, value, Changed);
+            set => this.Set(ref _platform, value, TrackingChanged);
         }
 
         /// <summary>
-        /// Social Profile associated with this information
+        /// Social Profile associated with this information, when available (e.g., for authenticated social profiles)
         /// </summary>
         public Guid? SocialProfileId
         {
             get => _socialProfileId;
-            set => this.Set(ref _socialProfileId, value, Changed);
+            set => this.Set(ref _socialProfileId, value, TrackingChanged);
         }
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace Origami.Core.Models
         public string? Url
         {
             get => _url;
-            set => this.Set(ref _url, value, Changed);
+            set => this.Set(ref _url, value, TrackingChanged);
         }
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace Origami.Core.Models
         public string? UrlReferrer
         {
             get => _urlReferrer;
-            set => this.Set(ref _urlReferrer, value, Changed);
+            set => this.Set(ref _urlReferrer, value, TrackingChanged);
         }
 
         /// <summary>
@@ -143,14 +143,23 @@ namespace Origami.Core.Models
         public string UserAgent
         {
             get => _userAgent;
-            set => this.Set(ref _userAgent, value, Changed);
+            set => this.Set(ref _userAgent, value, TrackingChanged);
+        }
+
+        /// <summary>
+        /// User associated with this information, when available (e.g., for authenticated users)
+        /// </summary>
+        public Guid? UserId
+        {
+            get => _userId;
+            set => this.Set(ref _userId, value, TrackingChanged);
         }
 
         [Timestamp]
         public byte[] Version
         {
             get => _version;
-            set => this.Set(ref _version, value, Changed);
+            set => this.Set(ref _version, value, TrackingChanged);
         }
     }
 }

@@ -4,32 +4,24 @@ using System.ComponentModel.DataAnnotations;
 namespace Origami.Core.Models
 {
     public abstract class BaseComment :
+        BaseTracking,
         IId,
         IChanged,
-        ISocialProfileId,
         IContent,
-        IDateCreated,
         IDateModified,
-        IVersion,
         IDeleted,
-        IAdditionalInfo,
-        ILocation,
-        INew
+        IAdditionalInfo
     {
         protected string? _additionalInfo;
         protected string _content = string.Empty;
-        protected DateTime _dateCreated = DateTime.UtcNow;
         protected DateTime? _dateModified;
         protected Guid _id = Guid.NewGuid();
         protected string _ip = string.Empty;
         protected bool _isApproved;
         protected bool _isDeleted;
         protected bool _isSpam;
-        protected Location? _location;
         protected Guid? _moderatedById;
         protected Guid? _pinnedById;
-        protected Guid _socialProfileId;
-        private byte[] _version = [];
 
         /// <summary>
         /// Default constructor
@@ -51,12 +43,6 @@ namespace Origami.Core.Models
         {
             get => _content;
             set => this.Set(ref _content, value, Changed);
-        }
-
-        public DateTime DateCreated
-        {
-            get => _dateCreated;
-            set => this.Set(ref _dateCreated, value, Changed);
         }
 
         public DateTime? DateModified
@@ -106,17 +92,6 @@ namespace Origami.Core.Models
             set => this.Set(ref _isSpam, value, Changed);
         }
 
-        public Location? Location
-        {
-            get => _location;
-            set => this.Set(ref _location, value, Changed);
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether the current version is new.
-        /// </summary>
-        public bool New => Version.SequenceEqual([]);
-
         /// <summary>
         /// Comment was Moderated By (ID, FK)
         /// </summary>
@@ -133,19 +108,6 @@ namespace Origami.Core.Models
         {
             get => _pinnedById;
             set => this.Set(ref _pinnedById, value, Changed);
-        }
-
-        public Guid SocialProfileId
-        {
-            get => _socialProfileId;
-            set => this.Set(ref _socialProfileId, value, Changed);
-        }
-
-        [Timestamp]
-        public byte[] Version
-        {
-            get => _version;
-            set => this.Set(ref _version, value, Changed);
         }
     }
 }

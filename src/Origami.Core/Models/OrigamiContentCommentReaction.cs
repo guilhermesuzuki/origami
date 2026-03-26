@@ -7,7 +7,7 @@ namespace Origami.Core.Models
 {
     [Table("oi_ContentCommentReactions")]
     public class OrigamiContentCommentReaction :
-        Reaction,
+        BaseTracking,
         IReactionChanged,
         IId,
         ICommentId
