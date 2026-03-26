@@ -60,7 +60,7 @@
                                 <CellTemplate>
                                     @{
                                         var video = this.Super.Contents.ReadFromCache().OfType<OrigamiVideo>().Id(context.Item.ContentId);
-                                        <VideoHeaderLite2 Entity="video"></VideoHeaderLite2>
+                                        <ContentHeaderLite Entity="video"></ContentHeaderLite>
                                     }
                                 </CellTemplate>
                             </TemplateColumn>
