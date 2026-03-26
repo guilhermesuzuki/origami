@@ -99,39 +99,39 @@ namespace Origami.Core.Data
                 new StringField("id", entity.Id.ToString(), Field.Store.YES)
             };
 
-            if (entity is IContent content) doc.Add(new TextField("content", content.Content, Field.Store.YES));
-            if (entity is IDescription description) doc.Add(new TextField("description", description.Description, Field.Store.YES));
-            if (entity is IDescriptionNull descriptionNull) doc.Add(new TextField("description", descriptionNull.Description, Field.Store.YES));
-            if (entity is IName name) doc.Add(new TextField("name", name.Name, Field.Store.YES));
-            if (entity is ISlug slug) doc.Add(new TextField("slug", slug.Slug, Field.Store.YES));
-            if (entity is ITag tag) doc.Add(new TextField("tag", tag.Tag, Field.Store.YES));
-            if (entity is ITitle title) doc.Add(new TextField("title", title.Title, Field.Store.YES));
-            if (entity is INanoId nano) doc.Add(new StringField("nano-id", nano.NanoId, Field.Store.YES));
+            if (entity is IContent content && content.Content.Has() == true) doc.Add(new TextField("content", content.Content, Field.Store.YES));
+            if (entity is IDescription description && description.Description.Has() == true) doc.Add(new TextField("description", description.Description, Field.Store.YES));
+            if (entity is IDescriptionNull descriptionNull && descriptionNull.Description.Has() == true) doc.Add(new TextField("description", descriptionNull.Description, Field.Store.YES));
+            if (entity is IName name && name.Name.Has() == true) doc.Add(new TextField("name", name.Name, Field.Store.YES));
+            if (entity is ISlug slug && slug.Slug.Has() == true) doc.Add(new TextField("slug", slug.Slug, Field.Store.YES));
+            if (entity is ITag tag && tag.Tag.Has() == true) doc.Add(new TextField("tag", tag.Tag, Field.Store.YES));
+            if (entity is ITitle title && title.Title.Has() == true) doc.Add(new TextField("title", title.Title, Field.Store.YES));
+            if (entity is INanoId nano && nano.NanoId.Has() == true) doc.Add(new StringField("nano-id", nano.NanoId, Field.Store.YES));
 
             if (entity is OrigamiSocialProfile socialProfile)
             {
                 doc.Add(new TextField("socialProfileSocialNetwork", socialProfile.SocialNetwork.ToString(), Field.Store.YES));
-                doc.Add(new TextField("socialProfileFirstName", socialProfile.FirstName, Field.Store.YES));
-                doc.Add(new TextField("socialProfileLastName", socialProfile.LastName, Field.Store.YES));
+                if (socialProfile.FirstName.Has() == true) doc.Add(new TextField("socialProfileFirstName", socialProfile.FirstName, Field.Store.YES));
+                if (socialProfile.LastName.Has() == true) doc.Add(new TextField("socialProfileLastName", socialProfile.LastName, Field.Store.YES));
             }
 
             if (entity is OrigamiUser user)
             {
-                doc.Add(new TextField("userName", user.Username, Field.Store.YES));
-                doc.Add(new TextField("displayName", user.DisplayName, Field.Store.YES));
-                doc.Add(new TextField("firstName", user.FirstName, Field.Store.YES));
-                doc.Add(new TextField("lastName", user.LastName, Field.Store.YES));
+                if (user.Username.Has() == true) doc.Add(new TextField("userName", user.Username, Field.Store.YES));
+                if (user.DisplayName.Has() == true) doc.Add(new TextField("displayName", user.DisplayName, Field.Store.YES));
+                if (user.FirstName.Has() == true) doc.Add(new TextField("firstName", user.FirstName, Field.Store.YES));
+                if (user.LastName.Has() == true) doc.Add(new TextField("lastName", user.LastName, Field.Store.YES));
             }
 
             if (entity is OrigamiContentComment pcomment)
             {
                 var post = this.ReadFromCache<OrigamiContent>().Id(pcomment.ContentId);
                 var pcSocialProfile = this.ReadFromCache<OrigamiSocialProfile>().Id(pcomment.SocialProfileId);
-                doc.Add(new TextField("comment_socialProfileFirstName", pcSocialProfile?.FirstName, Field.Store.YES));
-                doc.Add(new TextField("comment_socialProfileLastName", pcSocialProfile?.LastName, Field.Store.YES));
-                doc.Add(new TextField("comment_socialProfileName", pcSocialProfile?.Name, Field.Store.YES));
-                doc.Add(new TextField("comment_socialProfileSocialNetwork", pcSocialProfile?.SocialNetwork.ToString(), Field.Store.YES));
-                doc.Add(new TextField("comment_postTitle", post?.Title, Field.Store.YES));
+                if (pcSocialProfile?.FirstName.Has() == true) doc.Add(new TextField("comment_socialProfileFirstName", pcSocialProfile.FirstName, Field.Store.YES));
+                if (pcSocialProfile?.LastName.Has() == true) doc.Add(new TextField("comment_socialProfileLastName", pcSocialProfile.LastName, Field.Store.YES));
+                if (pcSocialProfile?.Name.Has() == true) doc.Add(new TextField("comment_socialProfileName", pcSocialProfile.Name, Field.Store.YES));
+                if (pcSocialProfile != null) doc.Add(new TextField("comment_socialProfileSocialNetwork", pcSocialProfile.SocialNetwork.ToString(), Field.Store.YES));
+                if (post?.Title.Has() == true) doc.Add(new TextField("comment_postTitle", post.Title, Field.Store.YES));
             }
 
             return doc;
@@ -139,29 +139,29 @@ namespace Origami.Core.Data
 
         protected virtual IEnumerable<WildcardQuery> GetWildcardQueries(string searchTerm)
         {
-            searchTerm = $"{QueryParser.Escape(searchTerm)}*";
+            searchTerm = $"{QueryParser.Escape(searchTerm)}";
 
-            var t = Activator.CreateInstance<T>();
+            var type = typeof(T);
             var queries = new List<WildcardQuery>();
 
-            if (t is IId id) queries.Add(new(new("id", searchTerm)));
-            if (t is IContent content) queries.Add(new(new("content", searchTerm)));
-            if (t is IDescription description) queries.Add(new(new("description", searchTerm)));
-            if (t is IDescriptionNull descriptionNull) queries.Add(new(new("description", searchTerm)));
-            if (t is IName name) queries.Add(new(new("name", searchTerm)));
-            if (t is ISlug slug) queries.Add(new(new("slug", searchTerm)));
-            if (t is ITag tag) queries.Add(new(new("tag", searchTerm)));
-            if (t is ITitle title) queries.Add(new(new("title", searchTerm)));
-            if (t is INanoId nano) queries.Add(new(new("nano-id", searchTerm)));
+            if (type.Implements<IId>() == true) queries.Add(new(new("id", searchTerm)));
+            if (type.Implements<IContent>() == true) queries.Add(new(new("content", searchTerm)));
+            if (type.Implements<IDescription>() == true) queries.Add(new(new("description", searchTerm)));
+            if (type.Implements<IDescriptionNull>() == true) queries.Add(new(new("description", searchTerm)));
+            if (type.Implements<IName>() == true) queries.Add(new(new("name", searchTerm)));
+            if (type.Implements<ISlug>() == true) queries.Add(new(new("slug", searchTerm)));
+            if (type.Implements<ITag>() == true) queries.Add(new(new("tag", searchTerm)));
+            if (type.Implements<ITitle>() == true) queries.Add(new(new("title", searchTerm)));
+            if (type.Implements<INanoId>() == true) queries.Add(new(new("nano-id", searchTerm)));
 
-            if (t is OrigamiSocialProfile socialProfile)
+            if (type.IsAssignableFrom(typeof(OrigamiSocialProfile)) == true)
             {
                 queries.Add(new(new("socialProfileSocialNetwork", searchTerm)));
                 queries.Add(new(new("socialProfileFirstName", searchTerm)));
                 queries.Add(new(new("socialProfileLastName", searchTerm)));
             }
 
-            if (t is OrigamiUser user)
+            if (type.IsAssignableFrom(typeof(OrigamiUser)) == true)
             {
                 queries.Add(new(new("userName", searchTerm)));
                 queries.Add(new(new("displayName", searchTerm)));
@@ -169,7 +169,7 @@ namespace Origami.Core.Data
                 queries.Add(new(new("lastName", searchTerm)));
             }
 
-            if (t is OrigamiContentComment pcomment)
+            if (type.IsAssignableFrom(typeof(OrigamiContentComment)) == true)
             {
                 queries.Add(new(new("comment_socialProfileFirstName", searchTerm)));
                 queries.Add(new(new("comment_socialProfileLastName", searchTerm)));
