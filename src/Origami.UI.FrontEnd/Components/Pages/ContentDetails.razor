@@ -194,7 +194,7 @@
             if (this.UserFacade.IncognitoMode == false)
             {
                 var uri = new Uri(NavigationManager.Uri);
-                await JSRuntime.InvokeVoidAsync("origami.physicalpages.viewByContent", uri.AbsolutePath, nameof(OrigamiVideo), this._entity.Id);
+                await JSRuntime.InvokeVoidAsync("origami.physicalpages.viewByContent", uri.AbsolutePath, this._entity.GetType().Name, this._entity.Id);
             }
         }
     }
