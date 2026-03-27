@@ -134,6 +134,11 @@ namespace Origami.Core.Data
                 if (post?.Title.Has() == true) doc.Add(new TextField("comment_postTitle", post.Title, Field.Store.YES));
             }
 
+            if (entity is OrigamiQuickNote quickNote)
+            {
+                if (quickNote.Note.Has() == true) doc.Add(new TextField("quickNote", quickNote.Note, Field.Store.YES));
+            }
+
             return doc;
         }
 
@@ -175,6 +180,11 @@ namespace Origami.Core.Data
                 queries.Add(new(new("comment_socialProfileLastName", searchTerm)));
                 queries.Add(new(new("comment_socialProfileName", searchTerm)));
                 queries.Add(new(new("comment_socialProfileSocialNetwork", searchTerm)));
+            }
+
+            if (type.IsAssignableFrom(typeof(OrigamiQuickNote)) == true)
+            {
+                queries.Add(new(new("quickNote", searchTerm)));
             }
 
             return queries;

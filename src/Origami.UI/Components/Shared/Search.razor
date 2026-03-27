@@ -64,6 +64,20 @@
                     </div>
                 </div>
             }
+            @if (this._specialMessages.Any() == true)
+            {
+                <div class="search-specialmessages">
+                    <label class="fs-3 w-100 text-center mt-6">@Text.Lower("Special messages found in the search")</label>
+                    <div class="row mt-3">
+                        @foreach (var page in _specialMessages)
+                        {
+                            <div class="col-12 col-xl-4">
+                                <ContentHeader Class="mb-3" Entity="page" ShowRelatedContent="false"></ContentHeader>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
             @if (this._specialPages.Any() == true)
             {
                 <div class="search-specialpages">
@@ -94,8 +108,8 @@
             }
             @if (this._contentComments.Any() == true)
             {
-                <div class="search-post-comments">
-                    <label class="fs-3 w-100 text-center">@Text.Lower("Comments from posts found In the search")</label>
+                <div class="search-content-comments">
+                    <label class="fs-3 w-100 text-center">@Text.Lower("Comments found In the search")</label>
                     <div class="row mt-3">
                         @foreach (var comment in _contentComments)
                         {
@@ -113,7 +127,7 @@
                     <div class="row mt-3">
                         @foreach (var tag in _tags)
                         {
-                            <div class="col-12 col-xl-4 fs-4 text-center">
+                            <div class="col-12 col-xl-4">
                                 <TagHeader Class="mb-3" Entity="@tag"></TagHeader>
                             </div>
                         }
@@ -127,7 +141,7 @@
                     <div class="row mt-3">
                         @foreach (var socialProfile in _socialProfiles)
                         {
-                            <div class="col-12 col-xl-4 fs-4 text-center">
+                            <div class="col-12 col-xl-4">
                                 <SocialProfileHeader Class="mb-3 p-3 border shadow-sm" Entity="socialProfile"></SocialProfileHeader>
                             </div>
                         }
@@ -141,8 +155,22 @@
                     <div class="row mt-3">
                         @foreach (var blog in _blogs)
                         {
-                            <div class="col-12 col-xl-4 fs-4 text-center">
+                            <div class="col-12 col-xl-4">
                                 <BlogHeaderLite Class="mb-3 p-3 border shadow-sm" Entity="blog"></BlogHeaderLite>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+            @if (this._quickNotes.Any() == true)
+            {
+                <div class="search-quicknotes">
+                    <label class="fs-3 w-100 text-center">@Text.Lower("Quick notes found in the search")</label>
+                    <div class="row mt-3">
+                        @foreach (var quickNote in _quickNotes)
+                        {
+                            <div class="col-12 col-xl-4 text-center">
+                                <QuickNoteHeader Class="mb-3 p-3 border shadow-sm" Entity="quickNote"></QuickNoteHeader>
                             </div>
                         }
                     </div>
@@ -193,6 +221,11 @@
     private IEnumerable<OrigamiSpecialPage> _specialPages = [];
 
     /// <summary>
+    /// List of special messages found in the search
+    /// </summary>
+    private IEnumerable<OrigamiSpecialMessage> _specialMessages = [];
+
+    /// <summary>
     /// List of post comments found in the search
     /// </summary>
     private IEnumerable<OrigamiContentComment> _contentComments = [];
@@ -201,6 +234,11 @@
     /// List of tags found in the search
     /// </summary>
     private IEnumerable<OrigamiTag> _tags = [];
+
+    /// <summary>
+    /// List of quick notes found in the search
+    /// </summary>
+    private IEnumerable<OrigamiQuickNote> _quickNotes = [];
 
     /// <summary>
     /// Search timer
@@ -217,7 +255,9 @@
         this._socialProfiles = [];
         this._tags = [];
         this._videos = [];
+        this._specialMessages = [];
         this._specialPages = [];
+        this._quickNotes = [];
     }
 
     /// <summary>
@@ -234,7 +274,9 @@
         if (this._socialProfiles.Any() == true) return true;
         if (this._tags.Any() == true) return true;
         if (this._videos.Any() == true) return true;
+        if (this._specialMessages.Any() == true) return true;
         if (this._specialPages.Any() == true) return true;
+        if (this._quickNotes.Any() == true) return true;
         return false;
     }
 
@@ -291,8 +333,10 @@
                     this._pages = hits.OfType<OrigamiPage>().Where(x => this.Super.IsParentDeleted(x) == false).OrderBy(x => x.Title);
                     this._posts = hits.OfType<OrigamiPost>().OrderBy(x => x.Title);
                     this._videos = hits.OfType<OrigamiVideo>().OrderBy(x => x.Title);
+                    this._specialMessages = hits.OfType<OrigamiSpecialMessage>().OrderBy(x => x.Title);
                     this._specialPages = hits.OfType<OrigamiSpecialPage>().OrderBy(x => x.Title);
                 }),
+                Task.Run(() => this._quickNotes = _super.QuickNotes.Search(queryTerm).OrderBy(x => x.Note)),
             };
          
             Task.WhenAll(tasks).Wait();

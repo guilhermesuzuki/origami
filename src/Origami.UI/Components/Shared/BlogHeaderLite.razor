@@ -7,14 +7,11 @@
     <span class="blog-header-lite @Class d-inline-flex align-items-center">
         <i class="fa-solid fa-cube me-1"></i>
         <span class="">@Entity.Name</span>
-        @if (ShowSlug)
+        @if (this.Entity.Slug.Equals(this.Entity.Name, StringComparison.InvariantCultureIgnoreCase) == false)
         {
-            @if (this.Entity.Slug.Equals(this.Entity.Name, StringComparison.InvariantCultureIgnoreCase) == false)
-            {
-                <span class="blog-slug ms-1 border-bottom" title="@Text.Lower("Slug")" style="opacity: 0.8; font-size: 0.8em;">
-                    @Entity.Slug
-                </span>
-            }
+            <span class="blog-slug ms-1 border-bottom" title="@Text.Lower("Slug")" style="opacity: 0.8; font-size: 0.8em;">
+                @Entity.Slug
+            </span>
         }
         @if (Entity.IsPrimary)
         {
