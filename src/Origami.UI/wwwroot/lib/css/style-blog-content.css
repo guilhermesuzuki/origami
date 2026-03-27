@@ -5,14 +5,14 @@
 .content-header-title * { color: white; border-color: white !important; }
 
 .content-header-title .title { font-size: 14pt; }
-.content-content img { max-width: 100% !important; height: auto !important; border: 1px solid #dee2e6; }
+.content-html img { max-width: 100% !important; height: auto !important; border: 1px solid #dee2e6; }
 
-.content-content > video, .content-content > p > video { width: 600px; max-width: 100%; height: auto; }
-.content-content > * { margin-bottom: 1rem !important; }
-.content-content > *:last-child { margin-bottom: 0 !important; }
-.content-content > ul { padding-left: 1rem; }
-.content-content iframe { min-height: 500px !important; }
-.content-content a { border-bottom: 1px solid var(--site-highlight); }
+.content-html > video, .content-html > p > video { width: 600px; max-width: 100%; height: auto; }
+.content-html > * { margin-bottom: 1rem !important; }
+.content-html > *:last-child { margin-bottom: 0 !important; }
+.content-html > ul { padding-left: 1rem; }
+.content-html iframe { min-height: 500px !important; }
+.content-html a { border-bottom: 1px solid var(--site-highlight); }
 
 .content-category table .content-header-title .title { font-size: 14pt; }
 .content-tag table .content-header-title .title { font-size: 14pt; }
