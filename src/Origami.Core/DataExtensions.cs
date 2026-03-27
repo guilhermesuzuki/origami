@@ -81,12 +81,6 @@ namespace Origami.Core
             return entities.Where(x => x.IsDraft.GetValueOrDefault() == true).NonDeleted();
         }
 
-        public static IEnumerable<T> Drafts<T>(this IEnumerable<T> entities, Guid blog)
-            where T : IDraft, IBlogIdNull
-        {
-            return entities.Blog(blog).Drafts();
-        }
-
         /// <summary>
         /// Gets the front page for a blog
         /// </summary>

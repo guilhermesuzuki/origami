@@ -1,5 +1,4 @@
 ﻿@page "/posts"
-@using BootstrapBlazor.Components
 @inherits BasicAdminGridContent<OrigamiPost, HubContentPost>
 
 <Root Access="this.CanAccess()">
@@ -42,7 +41,7 @@
         <div class="p-3 border-bottom">
             <div class="row">
                 <div class="col-12">
-                    <SearchLite T="OrigamiPost" OnHitSelected="this.OnSearchResultSelected"></SearchLite>
+                    <Search T="OrigamiPost"></Search>
                 </div>
             </div>
         </div>
