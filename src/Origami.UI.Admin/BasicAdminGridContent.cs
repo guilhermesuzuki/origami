@@ -25,7 +25,7 @@ namespace Origami.UI.Admin
         public string Filter { get; set; } = "all";
 
         [Inject] public IHubContentRepository<T2> HubContentRepository { get; set; } = null!;
-        [Inject] public IRepository<T1> Repository { get; set; } = null!;
+        
         /// <summary>
         /// Default ordering, in case there's no order-by
         /// </summary>
@@ -306,10 +306,8 @@ namespace Origami.UI.Admin
         protected override void OnInitialized()
         {
             base.OnInitialized();
+            SetFilterFromQueryString();
             HasBlogChangedInUserFacade();
-
-            var filter = this.NavigationManager!.Uri.QueryString("filter");
-            this.Filter = filter.Has() ? filter : this.Filter;
         }
 
         protected virtual void OnSearchResultSelected(T1 entity)
@@ -377,18 +375,6 @@ namespace Origami.UI.Admin
         }
 
         /// <summary>
-        /// Clean <paramref name="entity"/> from cache and its children
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        protected virtual Result<T1> RemoveEntityFromCache(T1 entity)
-        {
-            Repository.PurgeCache(entity);
-            SelectedEntity = SelectedEntity.Id == entity.Id ? CreateEntity() : SelectedEntity;
-            return new(entity);
-        }
-
-        /// <summary>
         /// Restores the entity and its children (if appropriate)
         /// </summary>
         /// <param name="entity"></param>
@@ -437,10 +423,19 @@ namespace Origami.UI.Admin
         {
             return SelectedEntities.ToList();
         }
+
+        protected void SetFilterFromQueryString()
+        {
+            var filter = this.NavigationManager!.Uri.QueryString("filter");
+            if (filter.Has() == false) return;
+            Filter = filter;
+        }
+
         protected virtual Result<T2> UnpublishEntity(T2 entity)
         {
             return HubContentRepository.Unpublish(entity, this.UserFacade.User);
         }
+
         protected async Task UnpublishSelectedEntities()
         {
             await ExecuteWithSelectedEntities(
