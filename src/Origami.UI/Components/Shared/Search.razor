@@ -1,4 +1,5 @@
-﻿@inherits Basic
+﻿@typeparam T where T : IId
+@inherits Basic
 @inject ISuperRepository _super
 
 <div class="search @Class">
@@ -19,7 +20,7 @@
             </li>
         </ul>
     </div>
-    @if (this._hasResults() == true)
+    @if (this._hits.Any() == true)
     {
         <div class="search-results mt-3 border shadow-lg p-3">
             @if (this._posts.Any() == true)
@@ -188,57 +189,62 @@
     /// <summary>
     /// List of blogs found in the search
     /// </summary>
-    private IEnumerable<OrigamiBlog> _blogs = [];
+    private IEnumerable<OrigamiBlog> _blogs => _hits.OfType<OrigamiBlog>().OrderBy(x => x.Name);
 
     /// <summary>
     /// List of categories found in the search
     /// </summary>
-    private IEnumerable<OrigamiCategory> _categories = [];
+    private IEnumerable<OrigamiCategory> _categories => _hits.OfType<OrigamiCategory>().OrderBy(x => x.Name);
 
     /// <summary>
     /// List of pages found in the search
     /// </summary>
-    private IEnumerable<OrigamiPage> _pages = [];
+    private IEnumerable<OrigamiPage> _pages => _hits.OfType<OrigamiPage>().OrderBy(x => x.Title);
 
     /// <summary>
     /// List of posts found in the search
     /// </summary>
-    private IEnumerable<OrigamiPost> _posts = [];
+    private IEnumerable<OrigamiPost> _posts => _hits.OfType<OrigamiPost>().OrderBy(x => x.Title);
 
     /// <summary>
     /// List of social profiles found in the search
     /// </summary>
-    private IEnumerable<OrigamiSocialProfile> _socialProfiles = [];
+    private IEnumerable<OrigamiSocialProfile> _socialProfiles => _hits.OfType<OrigamiSocialProfile>().OrderBy(x => x.SocialNetwork).ThenBy(x => x.GetName());
 
     /// <summary>
     /// List of videos found in the search
     /// </summary>
-    private IEnumerable<OrigamiVideo> _videos = [];
+    private IEnumerable<OrigamiVideo> _videos => _hits.OfType<OrigamiVideo>().OrderBy(x => x.Title);
 
     /// <summary>
     /// List of special pages found in the search
     /// </summary>
-    private IEnumerable<OrigamiSpecialPage> _specialPages = [];
+    private IEnumerable<OrigamiSpecialPage> _specialPages => _hits.OfType<OrigamiSpecialPage>().OrderBy(x => x.Title);
 
     /// <summary>
     /// List of special messages found in the search
     /// </summary>
-    private IEnumerable<OrigamiSpecialMessage> _specialMessages = [];
+    private IEnumerable<OrigamiSpecialMessage> _specialMessages => _hits.OfType<OrigamiSpecialMessage>().OrderBy(x => x.Title);
 
     /// <summary>
     /// List of post comments found in the search
     /// </summary>
-    private IEnumerable<OrigamiContentComment> _contentComments = [];
+    private IEnumerable<OrigamiContentComment> _contentComments => _hits.OfType<OrigamiContentComment>().OrderByDescending(x => x.DateCreated);
 
     /// <summary>
     /// List of tags found in the search
     /// </summary>
-    private IEnumerable<OrigamiTag> _tags = [];
+    private IEnumerable<OrigamiTag> _tags => _hits.OfType<OrigamiTag>().OrderBy(x => x.Tag);
 
     /// <summary>
     /// List of quick notes found in the search
     /// </summary>
-    private IEnumerable<OrigamiQuickNote> _quickNotes = [];
+    private IEnumerable<OrigamiQuickNote> _quickNotes => _hits.OfType<OrigamiQuickNote>().OrderBy(x => x.Note);
+
+    /// <summary>
+    /// List of all hits found in the search, used to check if there are any results or not
+    /// </summary>
+    private List<IId> _hits = [];
 
     /// <summary>
     /// Search timer
@@ -247,37 +253,7 @@
 
     private void _clearHits()
     {
-        this._blogs = [];
-        this._categories = [];
-        this._contentComments = [];
-        this._pages = [];
-        this._posts = [];
-        this._socialProfiles = [];
-        this._tags = [];
-        this._videos = [];
-        this._specialMessages = [];
-        this._specialPages = [];
-        this._quickNotes = [];
-    }
-
-    /// <summary>
-    /// Whether the search has results or not
-    /// </summary>
-    /// <returns></returns>
-    private bool _hasResults()
-    {
-        if (this._blogs.Any() == true) return true;
-        if (this._categories.Any() == true) return true;
-        if (this._contentComments.Any() == true) return true;
-        if (this._pages.Any() == true) return true;
-        if (this._posts.Any() == true) return true;
-        if (this._socialProfiles.Any() == true) return true;
-        if (this._tags.Any() == true) return true;
-        if (this._videos.Any() == true) return true;
-        if (this._specialMessages.Any() == true) return true;
-        if (this._specialPages.Any() == true) return true;
-        if (this._quickNotes.Any() == true) return true;
-        return false;
+        this._hits.Clear();
     }
 
     /// <summary>
@@ -322,24 +298,27 @@
         {
             var tasks = new List<Task>
             {
-                Task.Run(() => this._blogs = this.Super.Blogs.Search(queryTerm).NonDeleted().Active().OrderBy(x => x.Name)),
-                Task.Run(() => this._categories = _super.Categories.Search(queryTerm).NonDeleted().Where(x => this.Super.IsParentDeleted(x) == false).OrderBy(x => x.Name)),
-                Task.Run(() => this._socialProfiles = _super.SocialProfiles.Search(queryTerm).OrderBy(x => x.SocialNetwork.ToString()).ThenBy(x => x.Name())),
-                Task.Run(() => this._contentComments = _super.ContentComments.Search(queryTerm).NonDeleted().Where(x => this.Super.IsParentDeleted(x) == false).OrderByDescending(x => x.GetDate())),
-                Task.Run(() => this._tags = _super.Tags.Search(queryTerm).OrderBy(x => x.Tag)),
+                Task.Run(() => this._hits.AddRange(Super.Blogs.Search(queryTerm).NonDeleted().Active())),
+                Task.Run(() => this._hits.AddRange(Super.Categories.Search(queryTerm).NonDeleted().Where(x => this.Super.IsParentDeleted(x) == false))),
+                Task.Run(() => this._hits.AddRange(Super.SocialProfiles.Search(queryTerm))),
+                Task.Run(() => this._hits.AddRange(Super.ContentComments.Search(queryTerm).NonDeleted().Where(x => this.Super.IsParentDeleted(x) == false))),
+                Task.Run(() => this._hits.AddRange(Super.Tags.Search(queryTerm))),
                 Task.Run(() =>
                 {
-                    var hits = _super.Contents.Search(queryTerm).Published();
-                    this._pages = hits.OfType<OrigamiPage>().Where(x => this.Super.IsParentDeleted(x) == false).OrderBy(x => x.Title);
-                    this._posts = hits.OfType<OrigamiPost>().OrderBy(x => x.Title);
-                    this._videos = hits.OfType<OrigamiVideo>().OrderBy(x => x.Title);
-                    this._specialMessages = hits.OfType<OrigamiSpecialMessage>().OrderBy(x => x.Title);
-                    this._specialPages = hits.OfType<OrigamiSpecialPage>().OrderBy(x => x.Title);
+                    var contents = Super.Contents.Search(queryTerm).Published();
+                    this._hits.AddRange(contents.OfType<OrigamiPage>().Where(x => this.Super.IsParentDeleted(x) == false));
+                    this._hits.AddRange(contents.OfType<OrigamiPost>());
+                    this._hits.AddRange(contents.OfType<OrigamiVideo>());
+                    this._hits.AddRange(contents.OfType<OrigamiSpecialMessage>());
+                    this._hits.AddRange(contents.OfType<OrigamiSpecialPage>());
                 }),
-                Task.Run(() => this._quickNotes = _super.QuickNotes.Search(queryTerm).OrderBy(x => x.Note)),
+                Task.Run(() => this._hits.AddRange(_super.QuickNotes.Search(queryTerm))),
             };
-         
+
             Task.WhenAll(tasks).Wait();
+
+            // filters the hits by type and casts them to IId to be used in the UI
+            this._hits = this._hits.OfType<T>().Cast<IId>().ToList();
         }
 
         this.InvokeAsync(this.StateHasChanged);

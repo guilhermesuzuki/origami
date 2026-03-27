@@ -29,7 +29,7 @@
                                           Immediate="true"
                                           AdornmentIcon="@_pinnedBy?.SocialNetwork.Icon().Value"
                                           Adornment="Adornment.Start"
-                                          Value="@_pinnedBy.Name()"
+                                          Value="@_pinnedBy.GetName()"
                                           Class="social-profile icon"
                                           HelperText="@Text.Lower("Pinned by")"></MudTextField>
                         </li>
@@ -40,7 +40,7 @@
                                           AdornmentIcon="@_moderatedBy?.SocialNetwork.Icon().Value"
                                           Adornment="Adornment.Start"
                                           Class="social-profile icon"
-                                          Value="@_moderatedBy.Name()"
+                                          Value="@_moderatedBy.GetName()"
                                           HelperText="@Text.Lower("Moderated by")"></MudTextField>
                         </li>
                     </ul>

@@ -807,7 +807,7 @@ namespace Origami.Core
         /// </summary>
         /// <param name="socialProfile"></param>
         /// <returns></returns>
-        public static string Name(this OrigamiSocialProfile? socialProfile)
+        public static string GetName(this OrigamiSocialProfile? socialProfile)
         {
             if (socialProfile == null) return string.Empty;
             if (socialProfile.Name.Has() == true) return $"{socialProfile.Name}";

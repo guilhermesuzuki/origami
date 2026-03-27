@@ -34,7 +34,7 @@
             {
                 <img class="ps-1 logo" src="@Entity.ProfilePicture()" height="12" onerror="this.src='@(OrigamiConstants.NoUser)'" style="border-radius:unset;" />
             }
-            <span class="ps-1 fw-bold social-profile-name">@Entity.Name()</span>
+            <span class="ps-1 fw-bold social-profile-name">@Entity.GetName()</span>
             <SocialProfileFeatures Entity="Entity"></SocialProfileFeatures>
         </span>
         @if (this.Actions == true)
