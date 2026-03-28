@@ -469,10 +469,6 @@ namespace Origami.Core.Data
                 UserBlogs.RefreshCache();
             }
 
-            var physicalViews = PhysicalPageViews.FastRead().ConfigureAwait(false).GetAwaiter().GetResult();
-
-            PhysicalPageViews.Update(physicalViews);
-
             return new();
         }
 
@@ -485,23 +481,16 @@ namespace Origami.Core.Data
         /// <param name="_super">The repository instance that provides access to the various entities whose search indexes will be refreshed.</param>
         public Result RefreshAllSearchIndexes()
         {
-            try
-            {
-                Blogs.CreateSearchIndex();
-                Categories.CreateSearchIndex();
-                ContentComments.CreateSearchIndex();
-                Contents.CreateSearchIndex();
-                QuickNotes.CreateSearchIndex();
-                Roles.CreateSearchIndex();
-                SocialProfiles.CreateSearchIndex();
-                Tags.CreateSearchIndex();
-                Users.CreateSearchIndex();
-                return new();
-            }
-            catch (Exception ex)
-            {
-                return new Result(ex);
-            }
+            Blogs.CreateSearchIndex();
+            Categories.CreateSearchIndex();
+            ContentComments.CreateSearchIndex();
+            Contents.CreateSearchIndex();
+            QuickNotes.CreateSearchIndex();
+            Roles.CreateSearchIndex();
+            SocialProfiles.CreateSearchIndex();
+            Tags.CreateSearchIndex();
+            Users.CreateSearchIndex();
+            return new();
         }
 
         public Result RegenerateNanoIds()
