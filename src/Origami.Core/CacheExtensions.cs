@@ -68,9 +68,9 @@ namespace Origami.Core
                     return;
                 }
 
-                var found = from b in list where b.Id == entity.Id select b;
-                found.Each(list.Remove);
+                list.RemoveAll(x => x.Id == entity.Id);
                 list.Add(entity);
+
                 memoryCache.Set(key, list);
             }
         }

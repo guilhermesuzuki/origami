@@ -73,7 +73,7 @@ namespace Origami.Core.Data
                 var entity = db.Set<T1>().AsNoTracking().Id(root.Entity.Id);
 
                 // needs to update cache
-                _memoryCache.SaveCache(entity);
+                _memoryCache.SaveCache(entity as OrigamiContent);
 
                 // returns success
                 return new(root) { Success = Text.Original(Text.OperationCompletedSuccessfully), };
@@ -131,7 +131,7 @@ namespace Origami.Core.Data
                 var entity = db.Set<T1>().AsNoTracking().Id(root.Entity.Id);
 
                 // needs to update cache
-                _memoryCache.SaveCache(entity);
+                _memoryCache.SaveCache(entity as OrigamiContent);
 
                 // returns success
                 return new(root) { Success = Text.Original(Text.OperationCompletedSuccessfully), };
@@ -190,7 +190,7 @@ namespace Origami.Core.Data
                 var entity = db.Set<T1>().AsNoTracking().Id(root.Entity.Id);
 
                 // needs to update cache
-                _memoryCache.SaveCache(entity);
+                _memoryCache.SaveCache(entity as OrigamiContent);
 
                 // returns success
                 return new(root) { Success = Text.Original(Text.OperationCompletedSuccessfully), };
@@ -226,7 +226,7 @@ namespace Origami.Core.Data
                 var m1 = Save(db, root.Entity, root.Categories);
                 var m2 = Save(db, root.Entity, root.Tags);
 
-                _memoryCache.SaveCache((OrigamiContent)root.Entity);
+                _memoryCache.SaveCache(root.Entity as OrigamiContent);
                 _memoryCache.SaveCache(m1);
                 _memoryCache.SaveCache(m2);
 
@@ -264,7 +264,7 @@ namespace Origami.Core.Data
                 var entity = db.Set<T1>().AsNoTracking().Id(root.Entity.Id);
 
                 // needs to update cache
-                _memoryCache.SaveCache(entity);
+                _memoryCache.SaveCache(entity as OrigamiContent);
 
                 // returns success
                 return new(root) { Success = Text.Original(Text.OperationCompletedSuccessfully), };
@@ -304,7 +304,7 @@ namespace Origami.Core.Data
                     entity = db.Set<OrigamiPage>().AsNoTracking().Id(root.Entity.Id);
 
                     // needs to update cache
-                    _memoryCache.SaveCache(entity);
+                    _memoryCache.SaveCache(entity as OrigamiContent);
 
                     // returns success
                     return new(root) { Success = Text.Original(Text.OperationCompletedSuccessfully), };
@@ -334,7 +334,7 @@ namespace Origami.Core.Data
                 var entity = db.Set<T1>().AsNoTracking().Id(root.Entity.Id);
 
                 // needs to update cache
-                _memoryCache.SaveCache(entity);
+                _memoryCache.SaveCache(entity as OrigamiContent);
 
                 // returns success
                 return new(root) { Success = Text.Original(Text.OperationCompletedSuccessfully), };
