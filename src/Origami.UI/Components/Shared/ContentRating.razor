@@ -41,7 +41,7 @@
             @if (HasRated() == true)
             {
                 var rating = this.RatingFromCurrentUser();
-                <div class="dummy" style="margin-bottom: -6px;"></div>
+                <div class="dummy" style="margin-bottom: -5px;"></div>
                 <div class="x-small">
                     <span>@Text.Lower("You rated this post: {0} star(s)", rating!.Rating) - </span>
                     <span class="focusable" @onclick="() => this.PurgeRate()" @onclick:stopPropagation="true">
