@@ -446,42 +446,34 @@ namespace Origami.Core.Data
         /// <param name="_super">The <see cref="ISuperRepository"/> instance whose repositories will be refreshed.</param>
         public Result RefreshAllRepositories()
         {
-            try
+            Blogs.RefreshCache();
+            Categories.RefreshCache();
+            ContentCategories.RefreshCache();
+            ContentCommentReactions.RefreshCache();
+            ContentComments.RefreshCache();
+            ContentRatings.RefreshCache();
+            Contents.RefreshCache();
+            ContentTags.RefreshCache();
+            PhysicalPages.RefreshCache();
+            QuickNotes.RefreshCache();
+            Roles.RefreshCache();
+            SocialProfiles.RefreshCache();
+            Subscribers.RefreshCache();
+            Tags.RefreshCache();
+            Users.RefreshCache();
+
+            if (this.AppFacade.Admin.GetValueOrDefault() == true)
             {
-                Blogs.RefreshCache();
-                Categories.RefreshCache();
-                ContentCategories.RefreshCache();
-                ContentCommentReactions.RefreshCache();
-                ContentComments.RefreshCache();
-                ContentRatings.RefreshCache();
-                Contents.RefreshCache();
-                ContentTags.RefreshCache();
-                QuickNotes.RefreshCache();
-                Resumes.RefreshCache();
-                Roles.RefreshCache();
-                Settings.RefreshCache();
-                SocialProfiles.RefreshCache();
-                Subscribers.RefreshCache();
-                Tags.RefreshCache();
-                Users.RefreshCache();
-
-                if (this.AppFacade.Admin.GetValueOrDefault() == true)
-                {
-                    BackupAndRestores.RefreshCache();
-                    UserPasswordResets.RefreshCache();
-                    UserBlogs.RefreshCache();
-                }
-
-                var physicalViews = PhysicalPageViews.FastRead().ConfigureAwait(false).GetAwaiter().GetResult();
-
-                PhysicalPageViews.Update(physicalViews);
-
-                return new();
+                BackupAndRestores.RefreshCache();
+                UserPasswordResets.RefreshCache();
+                UserBlogs.RefreshCache();
             }
-            catch (Exception ex)
-            {
-                return new Result(ex);
-            }
+
+            var physicalViews = PhysicalPageViews.FastRead().ConfigureAwait(false).GetAwaiter().GetResult();
+
+            PhysicalPageViews.Update(physicalViews);
+
+            return new();
         }
 
         /// <summary>
