@@ -1,5 +1,4 @@
-﻿@typeparam T where T : IId
-@inherits Basic
+﻿@inherits Basic
 @inject ISuperRepository _super
 
 <div class="search @Class">
@@ -316,9 +315,6 @@
             };
 
             Task.WhenAll(tasks).Wait();
-
-            // filters the hits by type and casts them to IId to be used in the UI
-            this._hits = this._hits.OfType<T>().Cast<IId>().ToList();
         }
 
         this.InvokeAsync(this.StateHasChanged);

@@ -94,15 +94,6 @@ namespace Origami.UI.Admin
         }
 
         /// <summary>
-        /// Deletes the entity and its children (if appropriate)
-        /// </summary>
-        /// <param name="entity"></param>
-        protected virtual Result<T2> DeleteEntity(T2 entity)
-        {
-            return HubContentRepository.Delete(entity, this.UserFacade.User);
-        }
-
-        /// <summary>
         /// The user wants to delete certain entities
         /// </summary>
         /// <returns></returns>
@@ -117,7 +108,32 @@ namespace Origami.UI.Admin
                         yesText: Text.Lower("Yes"),
                         noText: Text.Lower("No"));
                 },
-                this.DeleteEntity
+                this.HubContentRepository.Delete
+            );
+        }
+
+        protected async Task DemoteFromFrontPageSelectedEntities()
+        {
+            if (this.SelectedEntities.Count != 1)
+            {
+                await this.DialogService.ShowMessageBoxAsync(
+                    Text.Upper("Demoting from front-page"),
+                    Text.Original("You need to select one page"),
+                    Text.Lower("Ok")
+                );
+                return;
+            }
+
+            await ExecuteWithSelectedEntities(
+                async () =>
+                {
+                    return await DialogService.ShowMessageBoxAsync(
+                        Text.Upper("Demoting from front-page", SelectedEntities.Count),
+                        Text.Original("Are you sure?"),
+                        yesText: Text.Lower("Yes"),
+                        noText: Text.Lower("No"));
+                },
+                this.HubContentRepository.DemoteFromFrontPage
             );
         }
 
@@ -154,7 +170,7 @@ namespace Origami.UI.Admin
         /// <param name="mainStep">function to be executed in a transaction</param>
         /// <param name="additionalSteps">functions to be called after the transaction has been committed</param>
         /// <returns></returns>
-        protected virtual async Task ExecuteWithSelectedEntities(Func<Task<bool?>> confirm, Func<T2, Result<T2>> mainStep)
+        protected virtual async Task ExecuteWithSelectedEntities(Func<Task<bool?>> confirm, Func<T2, IId, Result<T2>> mainStep)
         {
             var answer = await confirm();
             if (answer.GetValueOrDefault() == false) return;
@@ -176,7 +192,7 @@ namespace Origami.UI.Admin
                 {
                     using (var transaction = new TransactionScope())
                     {
-                        hub = mainStep.Invoke(entity);
+                        hub = mainStep.Invoke(entity, this.UserFacade.User);
                         if (hub.Ok)
                         {
                             transaction.Complete();
@@ -315,9 +331,32 @@ namespace Origami.UI.Admin
             SelectedEntity = this.HubContentRepository.Get(entity).Clone();
         }
 
-        protected virtual Result<T2> PublishEntity(T2 entity)
+        /// <summary>
+        /// Promote the selected page to front-page
+        /// </summary>
+        protected async Task PromoteToFrontPageSelectedEntities()
         {
-            return HubContentRepository.Publish(entity, this.UserFacade.User);
+            if (this.SelectedEntities.Count != 1)
+            {
+                await this.DialogService.ShowMessageBoxAsync(
+                    Text.Upper("Promoting to front-page"),
+                    Text.Original("You need to select one page"),
+                    Text.Lower("Ok")
+                );
+                return;
+            }
+
+            await ExecuteWithSelectedEntities(
+                async () =>
+                {
+                    return await DialogService.ShowMessageBoxAsync(
+                        Text.Upper("Promoting to front-page"),
+                        Text.Original("Are you sure?"),
+                        yesText: Text.Lower("Yes"),
+                        noText: Text.Lower("No"));
+                },
+                this.HubContentRepository.PromoteToFrontPage
+            );
         }
 
         protected async Task PublishSelectedEntities()
@@ -331,17 +370,8 @@ namespace Origami.UI.Admin
                         yesText: Text.Lower("Yes"),
                         noText: Text.Lower("No"));
                 },
-                this.PublishEntity
+                this.HubContentRepository.Publish
             );
-        }
-
-        /// <summary>
-        /// Purges the entity and its children (if appropriate)
-        /// </summary>
-        /// <param name="entity"></param>
-        protected virtual Result<T2> PurgeEntity(T2 entity)
-        {
-            return HubContentRepository.Purge(entity, this.UserFacade.User);
         }
 
         /// <summary>
@@ -359,7 +389,7 @@ namespace Origami.UI.Admin
                         yesText: Text.Lower("Yes"),
                         noText: Text.Lower("No"));
                 },
-                this.PurgeEntity
+                this.HubContentRepository.Purge
             );
         }
 
@@ -372,15 +402,6 @@ namespace Origami.UI.Admin
             SelectedEntity = CreateEntity();
             SelectedEntities = new();
             await DataGrid.ReloadServerData();
-        }
-
-        /// <summary>
-        /// Restores the entity and its children (if appropriate)
-        /// </summary>
-        /// <param name="entity"></param>
-        protected virtual Result<T2> RestoreEntity(T2 entity)
-        {
-            return HubContentRepository.Restore(entity, this.UserFacade.User);
         }
 
         /// <summary>
@@ -398,7 +419,7 @@ namespace Origami.UI.Admin
                         yesText: Text.Lower("Yes"),
                         noText: Text.Lower("No"));
                 },
-                this.RestoreEntity
+                this.HubContentRepository.Restore
             );
         }
 
@@ -431,11 +452,6 @@ namespace Origami.UI.Admin
             Filter = filter;
         }
 
-        protected virtual Result<T2> UnpublishEntity(T2 entity)
-        {
-            return HubContentRepository.Unpublish(entity, this.UserFacade.User);
-        }
-
         protected async Task UnpublishSelectedEntities()
         {
             await ExecuteWithSelectedEntities(
@@ -447,7 +463,7 @@ namespace Origami.UI.Admin
                         yesText: Text.Lower("Yes"),
                         noText: Text.Lower("No"));
                 },
-                this.UnpublishEntity
+                this.HubContentRepository.Unpublish
             );
         }
     }

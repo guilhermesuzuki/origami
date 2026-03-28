@@ -121,7 +121,7 @@
                                       AdornmentIcon="@Icons.Material.Filled.Search"
                                       Adornment="Adornment.Start"
                                       @bind-Value="CategoriesSearch"
-                                      OnKeyUp="(kea) => Search<OrigamiCategory>(kea)"
+                                      OnKeyUp="SearchCategory"
                                       HelperText="@Text.Lower("Search")"></MudTextField>
                     </li>
                 </ul>
@@ -179,7 +179,7 @@
                                       AdornmentIcon="@Icons.Material.Filled.Search"
                                       Adornment="Adornment.Start"
                                       @bind-Value="TagsSearch"
-                                      OnKeyUp="(kea) => Search<OrigamiTag>(kea)"
+                                      OnKeyUp="SearchTag"
                                       HelperText="@Text.Lower("Search (type ENTER to add a new tag)")"></MudTextField>
                     </li>
                 </ul>

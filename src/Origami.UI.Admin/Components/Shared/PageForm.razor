@@ -1,6 +1,4 @@
-﻿@inherits BasicFormFull<Core.Models.OrigamiPage>
-@inject IPageRepository _page
-@inject IFileRepository _fileRepository
+﻿@inherits BasicFormFullContent2<OrigamiPage, HubContentPage>
 
 <div class="form @Class">
     <div class="row">
@@ -8,11 +6,11 @@
             <div class="p-3">
                 <MudTextField ReadOnly="true"
                               Immediate="true"
-                              Value="@(Text.Lower(Entity.IsDraft.YesNo()))"
+                              Value="@(Text.Lower(Entity.Entity.IsDraft.YesNo()))"
                               HelperText="@Text.Lower("Still a draft?")"
                               Class="cursor-pointer yes-no"
                               title="@Text.Lower("Click here to change it")"
-                              @onclick="() => this.Entity.IsDraft = !this.Entity.IsDraft.GetValueOrDefault()"></MudTextField>
+                              @onclick="() => this.Entity.Entity.IsDraft = !this.Entity.Entity.IsDraft.GetValueOrDefault()"></MudTextField>
             </div>
         </div>
     </div>
@@ -21,19 +19,18 @@
             <div class="p-3">
                 <BasicHeaderNotes Entity="this.Entity"></BasicHeaderNotes>
                 <div class="parent-selector mt-3">
-                    @if (this.Entity.ParentId != null)
+                    @if (this.Entity.Parent != null)
                     {
-                        var parent = this.Repository.ReadFromCache().Id(this.Entity.ParentId.Value);
                         <div class="p-3 border">
                             <div class="p-3 border">
-                                <ContentHeaderInline Class="" Entity="parent"></ContentHeaderInline>
+                                <ContentHeaderInline Class="" Entity="this.Entity.Parent"></ContentHeaderInline>
                             </div>
                             <div class="btn-group mt-2 w-100">
                                 <button class="btn btn-light w-100" @onclick="() => this.ShowParentSelector = !this.ShowParentSelector">
                                     <i class="fa-solid fa-square-check"></i>
                                     @Text.Lower("Select parent page")
                                 </button>
-                                <button class="btn btn-light w-100" @onclick="() => this.Entity.ParentId = null">
+                                <button class="btn btn-light w-100" @onclick="() => { this.Entity.Entity.ParentId = null; this.Entity.Parent = null; }">
                                     <i class="fa-solid fa-trash-can"></i>
                                     @Text.Lower("Clear selection")
                                 </button>
@@ -78,19 +75,19 @@
                     }
                 </div>
 
-                <BasicHeader Class="mt-3" Entity="this.Entity"></BasicHeader>
+                <BasicHeader Class="mt-3" Entity="this.Entity.Entity"></BasicHeader>
 
                 <ul class="inline-list mt-3">
                     <li>
                         <MudTextField Immediate="true"
                                       AdornmentIcon="@Icons.Material.Filled.Description"
                                       Adornment="Adornment.Start"
-                                      @bind-Value="@Entity.Title"
+                                      @bind-Value="@Entity.Entity.Title"
                                       HelperText="@Text.Lower("Title")"
                                       Required="true"></MudTextField>
                     </li>
                     <li>
-                        <LanguageWrittenOn Entity="this.Entity"></LanguageWrittenOn>
+                        <LanguageWrittenOn Entity="this.Entity.Entity"></LanguageWrittenOn>
                     </li>
                 </ul>
                 <ul class="inline-list mt-3">
@@ -98,11 +95,11 @@
                         <MudTextField Immediate="true"
                                       AdornmentIcon="@Icons.Material.Filled.Link"
                                       Adornment="Adornment.Start"
-                                      @bind-Value="@Entity.Slug"
+                                      @bind-Value="@Entity.Entity.Slug"
                                       HelperText="@Text.Lower("Slug")"></MudTextField>
                     </li>
                     <li style="width:140px;">
-                        <button class="btn btn-secondary" @onclick="() => Entity.Slug = Entity.Title.GetSlug()" style="line-height: 15px;">
+                        <button class="btn btn-secondary" @onclick="() => Entity.Entity.Slug = Entity.Entity.Title.GetSlug()" style="line-height: 15px;">
                             @Text.Lower("Create slug")
                             <span class="x-small">@Text.Lower("Based on title")</span>
                         </button>
@@ -111,7 +108,7 @@
                 <ul class="inline-list mt-3">
                     <li>
                         <MudTextField Immediate="true"
-                                      @bind-Value="@(Entity.Keywords)"
+                                      @bind-Value="@(Entity.Entity.Keywords)"
                                       HelperText="@Text.Lower("Keywords")"
                                       AutoGrow="false"></MudTextField>
                     </li>
@@ -120,7 +117,7 @@
         </div>
         <div class="col-12 col-xxl-6">
             <div class="text-center p-3">
-                <HeaderImageLite Entity="@Entity"></HeaderImageLite>
+                <HeaderImageLite Entity="@Entity.Entity"></HeaderImageLite>
                 <MudFileUpload T="IBrowserFile" FilesChanged="UploadHeader" Accept=".png, .jpg, .bmp, .tiff" MaximumFileCount="1">
                     <CustomContent>
                         <div class="btn-group mt-2 w-100">
@@ -149,22 +146,22 @@
             <div class="p-3">
                 <MudTextField FullWidth="true"
                               Immediate="true"
-                              @bind-Value="@Entity.Description"
+                              @bind-Value="@Entity.Entity.Description"
                               AutoGrow="true"
                               HelperText="@Text.Lower("Description")"></MudTextField>
             </div>
             <div class="p-3">
-                <TinyMCEContent Entity="Entity" Title="@Text.Lower("Content")"></TinyMCEContent>
+                <TinyMCEContent Entity="Entity.Entity" Title="@Text.Lower("Content")"></TinyMCEContent>
             </div>
         </div>
     </div>
-    <div class="buttons mt-3 p-3 text-center">
+    <div class="buttons mt-3 p-3 text-center position-sticky z-index-middle" style="bottom:0;">
         <div class="btn-group">
             <button class="btn btn-success text-white fw-bold" @onclick="Save" disabled="@this.DisableTheSaveButton">
                 <i class="fa-solid fa-floppy-disk"></i>
                 @Text.Lower("Save")
             </button>
-            <button class="btn btn-secondary text-white fw-bold" @onclick="UndoChanges" disabled="@this.Entity.New">
+            <button class="btn btn-secondary text-white fw-bold" @onclick="UndoChanges" disabled="@this.Entity.Entity.New">
                 <i class="fa-solid fa-rotate-left"></i>
                 @Text.Lower("Undo changes")
             </button>
@@ -197,22 +194,5 @@
     </div>
 }
 @code {
-    protected override bool DisableTheSaveButton
-    {
-        get
-        {
-            if (this.Entity.Title.Has() == false) return true;
-            return false;
-        }
-    }
-
-    protected override IEnumerable<OrigamiPage> GetParents()
-    {
-        return from x in this.Super.Contents.ReadFromCache().OfType<OrigamiPage>()
-               where x.BlogId == this.UserFacade.BlogId
-               where x.IsDeleted == false
-               where this.Super.IsParentDeleted(x) == false
-               orderby x.Title
-               select x;
-    }
+    
 }

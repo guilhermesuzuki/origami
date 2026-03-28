@@ -1,7 +1,4 @@
 ﻿using Origami.Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Origami.Core.Data
 {
@@ -17,5 +14,7 @@ namespace Origami.Core.Data
         Result<T> Restore(T entity, IId userId);
         Result<T> Publish(T entity, IId userId);
         Result<T> Unpublish(T entity, IId userId);
+        Result<T> PromoteToFrontPage(T entity, IId userId);
+        Result<T> DemoteFromFrontPage(T entity, IId userId);
     }
 }

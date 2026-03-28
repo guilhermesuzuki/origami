@@ -36,7 +36,7 @@
             </Authorized>
         </AuthorizeView>
         <div class="content-max-length p-3">
-            <Search T="IId"></Search>
+            <Search></Search>
             <a id="content-start"></a>
             <article class="content w-100">@Body</article>
         </div>
@@ -60,17 +60,6 @@
 <BlazorErrorUi></BlazorErrorUi>
 
 @code {
-    private string _searchQuery = string.Empty;
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-
-        this._searchQuery = this.NavigationManager.Uri.Split("query=").Length > 1
-            ? Uri.UnescapeDataString(this.NavigationManager.Uri.Split("query=")[1])
-            : string.Empty;
-    }
-
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await base.OnAfterRenderAsync(firstRender);

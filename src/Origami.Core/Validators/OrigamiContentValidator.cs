@@ -18,6 +18,7 @@ namespace Origami.Core.Validators
             RuleFor(x => x.Content).Html(text);
             RuleFor(x => x.HeaderImage).HeaderImage(text, webRootPath);
             RuleFor(x => x.LanguageWrittenOn).Language(text);
+            RuleFor(x => x).TopLevelPageWhenFrontPage(text);
         }
     }
 }

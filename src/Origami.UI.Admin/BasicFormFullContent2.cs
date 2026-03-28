@@ -107,22 +107,15 @@ namespace Origami.UI.Admin
             Tags = Get<OrigamiTag>();
         }
 
-        protected void Search<T>(KeyboardEventArgs kea)
+        protected void SearchCategory(KeyboardEventArgs kea)
         {
-            var t = Activator.CreateInstance<T>();
+            this.Categories = CategoriesSearch.Has() == false ? this.Get<OrigamiCategory>() : this.Get<OrigamiCategory>().Where(x => x.Name.Contains(CategoriesSearch, StringComparison.OrdinalIgnoreCase)).ToList();
+            this.InvokeAsync(this.StateHasChanged);
+        }
 
-            switch (t)
-            {
-                case OrigamiCategory:
-                    this.Categories = CategoriesSearch.Has() == false ? this.Get<OrigamiCategory>() : this.Get<OrigamiCategory>().Where(x => x.Name.Contains(CategoriesSearch, StringComparison.OrdinalIgnoreCase)).ToList();
-                    break;
-                case OrigamiTag:
-                    this.Tags = TagsSearch.Has() == false 
-                        ? this.Get<OrigamiTag>() 
-                        : [new() { Tag = TagsSearch }, .. this.Get<OrigamiTag>().Where(x => x.Tag.Contains(TagsSearch, StringComparison.OrdinalIgnoreCase))];
-                    break;
-            }
-
+        protected void SearchTag(KeyboardEventArgs kea)
+        {
+            this.Tags = TagsSearch.Has() == false ? this.Get<OrigamiTag>() : [new() { Tag = TagsSearch }, .. this.Get<OrigamiTag>().Where(x => x.Tag.Contains(TagsSearch, StringComparison.OrdinalIgnoreCase))];
             this.InvokeAsync(this.StateHasChanged);
         }
 
@@ -130,6 +123,23 @@ namespace Origami.UI.Admin
         {
             entity.Entity.SetAuthor(UserFacade.User);
             entity.Entity.SetBlog(GetBlogFromUserFacade());
+        }
+
+        public override void SetParent(IId entity)
+        {
+            this.Entity.Entity.ParentId = entity.Id;
+        }
+
+        protected virtual IEnumerable<T1> GetParents()
+        {
+            using var db = this.DbContextFactory.CreateDbContext();
+
+            return from x in db.ReadFromCache<T1>(this.MemoryCache)
+                   where x.BlogId == this.UserFacade.BlogId
+                   where x.IsDeleted == false
+                   where this.Super.IsParentDeleted(x) == false
+                   orderby x.Title
+                   select x;
         }
     }
 }

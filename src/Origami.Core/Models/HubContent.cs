@@ -13,6 +13,10 @@ namespace Origami.Core.Models
         /// </summary>
         public T Entity { get; set; } = Activator.CreateInstance<T>();
 
+        public T? Parent { get; set; }
+
+        public List<T> Children { get; set; } = [];
+
         public List<OrigamiContentCategory> Categories { get; set; } = [];
         public List<OrigamiContentComment> Comments { get; set; } = [];
         public List<OrigamiContentRating> Ratings { get; set; } = [];

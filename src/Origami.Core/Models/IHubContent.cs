@@ -11,6 +11,16 @@ namespace Origami.Core.Models
     public interface IHubContent<T> : IHub<T> where T : OrigamiContent
     {
         /// <summary>
+        /// Gets or sets the parent element of the current object.
+        /// </summary>
+        T? Parent { get; set; }
+
+        /// <summary>
+        /// Gets or sets the collection of child elements of this instance.
+        /// </summary>
+        List<T> Children { get; set; }
+
+        /// <summary>
         /// Categories associated with the entity
         /// </summary>
         List<OrigamiContentCategory> Categories { get; set; }

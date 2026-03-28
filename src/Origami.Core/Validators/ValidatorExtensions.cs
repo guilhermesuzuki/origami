@@ -66,7 +66,7 @@ namespace Origami.Core.Validators
         public static IRuleBuilderOptions<T, string> ContentType<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
         {
             return ruleBuilder
-                .Must(type => 
+                .Must(type =>
                 {
                     if (type.Has() == false) return false;
 
@@ -347,6 +347,24 @@ namespace Origami.Core.Validators
                     return true;
                 })
                 .WithMessage(text.Original("{0}: URL must be a valid website address", field));
+        }
+
+        public static IRuleBuilderOptions<T, T> TopLevelPageWhenFrontPage<T>(this IRuleBuilder<T, T> ruleBuilder, Text text)
+        {
+            return ruleBuilder
+                .Must(entity =>
+                {
+                    if (entity is OrigamiPage page)
+                    {
+                        if (page.IsFrontPage == false)
+                        {
+                            return true;
+                        }
+                        return page.ParentId == null;
+                    }
+
+                    return false;
+                }).WithMessage(text.Original("To promote to front-page, that page must be top-level"));
         }
     }
 }

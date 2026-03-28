@@ -108,21 +108,21 @@ namespace Origami.UI
             return entity;
         }
 
-        public void SetParent(T entity)
+        /// <summary>
+        /// Saves the entity in the database, updating cache
+        /// </summary>
+        public virtual void Save() { }
+
+        public virtual void SetParent(IId entity)
         {
             if (Entity is IParentIdNull parent)
             {
                 parent.ParentId = entity.Id;
                 return;
             }
+            
             throw new NotImplementedException("Entity does not support parent");
         }
-
-        /// <summary>
-        /// Saves the entity in the database, updating cache
-        /// </summary>
-        public virtual void Save() { }
-
         /// <summary>
         /// Cancels the edit
         /// </summary>
