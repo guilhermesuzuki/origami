@@ -118,6 +118,7 @@ namespace Origami.Core.Models
         private bool _deleteTags;
         private bool _deleteUserSelf;
         private bool _deleteUsersOtherThanSelf;
+        private bool _demoteFromFrontPage;
         private bool _editBlogs;
         private bool _editCategories;
         private bool _editOtherUsers;
@@ -145,10 +146,10 @@ namespace Origami.Core.Models
         private bool _managePackages;
         private bool _manageThemes;
         private bool _manageWidgets;
-        private bool _markAsFrontPage;
         private bool _markBlogAsPrimary;
         private bool _moderateComments;
         private bool _none;
+        private bool _promoteToFrontPage;
         private bool _publishOtherUsersPages;
         private bool _publishOtherUsersPosts;
         private bool _publishOtherUsersQuickNotes;
@@ -195,7 +196,6 @@ namespace Origami.Core.Models
         private bool _turnSocialProfilesIntoModerators;
         private bool _unblockSocialProfiles;
         private bool _unblockUsers;
-        private bool _unmarkAsFrontPage;
         private bool _unpublishOtherUsersPages;
         private bool _unpublishOtherUsersPosts;
         private bool _unpublishOtherUsersQuickNotes;
@@ -477,6 +477,13 @@ namespace Origami.Core.Models
         }
 
         [NotMapped]
+        public bool DemoteFromFrontPage
+        {
+            get => _demoteFromFrontPage;
+            set => this.Set(ref _demoteFromFrontPage, value, Changed);
+        }
+
+        [NotMapped]
         public bool EditBlogs
         {
             get => _editBlogs;
@@ -666,13 +673,6 @@ namespace Origami.Core.Models
         }
 
         [NotMapped]
-        public bool MarkAsFrontPage
-        {
-            get => _markAsFrontPage;
-            set => this.Set(ref _markAsFrontPage, value, Changed);
-        }
-
-        [NotMapped]
         public bool MarkBlogAsPrimary
         {
             get => _markBlogAsPrimary;
@@ -693,6 +693,12 @@ namespace Origami.Core.Models
             set => this.Set(ref _none, value, Changed);
         }
 
+        [NotMapped]
+        public bool PromoteToFrontPage
+        {
+            get => _promoteToFrontPage;
+            set => this.Set(ref _promoteToFrontPage, value, Changed);
+        }
         [NotMapped]
         public bool PublishOtherUsersPages
         {
@@ -1013,14 +1019,6 @@ namespace Origami.Core.Models
             get => _unblockUsers;
             set => this.Set(ref _unblockUsers, value, Changed);
         }
-
-        [NotMapped]
-        public bool UnmarkAsFrontPage
-        {
-            get => _unmarkAsFrontPage;
-            set => this.Set(ref _unmarkAsFrontPage, value, Changed);
-        }
-
         [NotMapped]
         public bool UnpublishOtherUsersPages
         {

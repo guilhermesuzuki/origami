@@ -40,8 +40,8 @@ namespace Origami.Core.Data
         public virtual string PublishOwnPermission { get; } = string.Empty;
         public virtual string UnpublishOtherUsersPermission { get; } = string.Empty;
         public virtual string UnpublishOwnPermission { get; } = string.Empty;
-        public virtual string MarkAsFrontPagePermission { get; } = string.Empty;
-        public virtual string UnmarkAsFrontPagePermission { get; } = string.Empty;
+        public virtual string PromoteToFrontPagePermission { get; } = string.Empty;
+        public virtual string DemoteFromFrontPagePermission { get; } = string.Empty;
 
         public Result CanRead(IId userId)
         {
@@ -90,8 +90,10 @@ namespace Origami.Core.Data
 
             var tasks = new List<Task>
             {
-                Task.Run(() => result.Entity = this.GetEntity(rootId) ?? Activator.CreateInstance<T1>()),
-                Task.Run(() => result.Parent = this.GetParent(result.Entity) ?? Activator.CreateInstance<T1>()),
+                Task.Run(() => {
+                    result.Entity = this.GetEntity(rootId) ?? Activator.CreateInstance<T1>();
+                    result.Parent = this.GetParent(result.Entity);
+                }),
                 Task.Run(() => result.Children.AddRange(this.GetChildren(result.Entity))),
                 Task.Run(() => result.Categories.AddRange(this.GetEntities<OrigamiContentCategory>(rootId))),
                 Task.Run(() => result.Comments.AddRange(this.GetEntities<OrigamiContentComment>(rootId))),
@@ -256,7 +258,7 @@ namespace Origami.Core.Data
                 using var db = _dbContextFactory.CreateDbContext();
 
                 // check permissions
-                if (UserHasPermission(db, userId.Id, MarkAsFrontPagePermission) == false) return new(root) { Info = MarkAsFrontPagePermission, Error = Text.Original(Text.YouDontHavePermissionForThisFeature), };
+                if (UserHasPermission(db, userId.Id, PromoteToFrontPagePermission) == false) return new(root) { Info = PromoteToFrontPagePermission, Error = Text.Original(Text.YouDontHavePermissionForThisFeature), };
 
                 var entity = db.Set<OrigamiPage>().AsNoTracking().Id(root.Entity.Id);
                 if (entity != null)
@@ -299,7 +301,7 @@ namespace Origami.Core.Data
                 using var db = _dbContextFactory.CreateDbContext();
 
                 // check permissions
-                if (UserHasPermission(db, userId.Id, UnmarkAsFrontPagePermission) == false) return new(root) { Info = UnmarkAsFrontPagePermission, Error = Text.Original(Text.YouDontHavePermissionForThisFeature), };
+                if (UserHasPermission(db, userId.Id, DemoteFromFrontPagePermission) == false) return new(root) { Info = DemoteFromFrontPagePermission, Error = Text.Original(Text.YouDontHavePermissionForThisFeature), };
 
                 // marks as published
                 db.Set<OrigamiPage>().AsNoTracking().Where(x => x.Id == root.Entity.Id).ExecuteUpdate(s => s.SetProperty(x => x.IsFrontPage, false));

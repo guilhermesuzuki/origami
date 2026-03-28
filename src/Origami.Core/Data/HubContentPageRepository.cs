@@ -16,7 +16,7 @@ namespace Origami.Core.Data
         {
 
         }
-
+        public override string ReadPermission => nameof(OrigamiRole.ViewPages);
         public override string CreatePermission => nameof(OrigamiRole.CreateNewPages);
         public override string UpdateOtherUsersPermission => nameof(OrigamiRole.EditOtherUsersPages);
         public override string UpdateOwnPermission => nameof(OrigamiRole.EditOwnPages);
@@ -24,5 +24,11 @@ namespace Origami.Core.Data
         public override string DeleteOwnPermission => nameof(OrigamiRole.DeleteOwnPages);
         public override string PurgePermission => nameof(OrigamiRole.PurgePages);
         public override string RestorePermission => nameof(OrigamiRole.RestorePages);
+        public override string PublishOtherUsersPermission => nameof(OrigamiRole.PublishOtherUsersPages);
+        public override string PublishOwnPermission => nameof(OrigamiRole.PublishOwnPages);
+        public override string UnpublishOtherUsersPermission => nameof(OrigamiRole.UnpublishOtherUsersPages);
+        public override string UnpublishOwnPermission => nameof(OrigamiRole.UnpublishOwnPages);
+        public override string PromoteToFrontPagePermission => nameof(OrigamiRole.PromoteToFrontPage);
+        public override string DemoteFromFrontPagePermission => nameof(OrigamiRole.DemoteFromFrontPage);
     }
 }

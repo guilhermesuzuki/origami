@@ -188,15 +188,15 @@
                 </ul>
                 <ul class="inline-list">
                     <li>
-                        <MudCheckBox @bind-Value="Entity.MarkAsFrontPage">
-                            <span>@Text.Lower("Mark as front-page")</span>
+                        <MudCheckBox @bind-Value="Entity.PromoteToFrontPage">
+                            <span>@Text.Lower("Promote to front-page")</span>
                         </MudCheckBox>
                     </li>
                 </ul>
                 <ul class="inline-list">
                     <li>
-                        <MudCheckBox @bind-Value="Entity.UnmarkAsFrontPage">
-                            <span>@Text.Lower("Unmark as front-page")</span>
+                        <MudCheckBox @bind-Value="Entity.DemoteFromFrontPage">
+                            <span>@Text.Lower("Demote from front-page")</span>
                         </MudCheckBox>
                     </li>
                 </ul>
