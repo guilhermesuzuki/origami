@@ -72,13 +72,8 @@
                                 <CellTemplate>
                                     <div class="cursor-pointer" @onclick="() => OnEdit(context.Item)">
                                         <ContentHeaderInline Entity="context.Item.Entity"></ContentHeaderInline>
-                                        @if (context.Item.Entity.Keywords.Has() == true)
-                                        {
-                                            <div class="x-small">
-                                                <i class="fa-solid fa-hashtag"></i>
-                                                @context.Item.Entity.Keywords
-                                            </div>
-                                        }
+                                        <div class="dummy" style="margin-bottom:-5px;"></div>
+                                        <Id Class="x-small" Entity="context.Item.Entity"></Id>
                                     </div>
                                 </CellTemplate>
                             </TemplateColumn>
