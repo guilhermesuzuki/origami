@@ -255,22 +255,31 @@ namespace Origami.UI.Admin
                 items = items.NonDeleted();
             }
 
-            if (t1 is IBlogId)
+            switch (t1)
             {
-                var query = from a in items.Cast<IBlogId>()
-                            where a.BlogId == this.UserFacade.BlogId
-                            select a;
+                case OrigamiSpecialMessage:
+                case OrigamiSpecialPage:
+                    // does not filter by blog id
+                    break;
+                default:
+                    if (t1 is IBlogId)
+                    {
+                        var query = from a in items.Cast<IBlogId>()
+                                    where a.BlogId == this.UserFacade.BlogId
+                                    select a;
 
-                items = query.Cast<T1>();
-            }
+                        items = query.Cast<T1>();
+                    }
 
-            if (t1 is IBlogIdNull)
-            {
-                var query = from a in items.Cast<IBlogIdNull>()
-                            where a.BlogId == this.UserFacade.BlogId
-                            select a;
+                    if (t1 is IBlogIdNull)
+                    {
+                        var query = from a in items.Cast<IBlogIdNull>()
+                                    where a.BlogId == this.UserFacade.BlogId
+                                    select a;
 
-                items = query.Cast<T1>();
+                        items = query.Cast<T1>();
+                    }
+                    break;
             }
 
             items = this.Filter switch

@@ -1,9 +1,6 @@
 ﻿@page "/specialpages"
 @inherits BasicAdminGridContent<OrigamiSpecialPage, HubContentSpecialPage>
 
-<style>
-    .related-pages .id { display: none !important; }
-</style>
 <Root Access="this.CanAccess()">
     <HeaderTemplate>
         <div class="p-3 border-bottom">
@@ -111,7 +108,7 @@
                             </TemplateColumn>
                         </Columns>
                         <PagerContent>
-                            <MudDataGridPager T="OrigamiSpecialPage" />
+                            <MudDataGridPager T="HubContentSpecialPage" />
                         </PagerContent>
                         <NoRecordsContent>
                             <NoEntriesWereFound></NoEntriesWereFound>
@@ -128,13 +125,6 @@
 @code {
 
     protected override string DefaultOrdering => $"{nameof(OrigamiSpecialPage.Title)}";
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        var filter = this.NavigationManager!.Uri.QueryString("filter");
-        this.Filter = filter.Has() ? filter : this.Filter;
-    }
 
     protected async Task EnterMaintenanceMode()
     {

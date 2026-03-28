@@ -302,6 +302,7 @@ namespace Origami.Core.Data
             return from a in Contents.ReadFromCache().OfType<OrigamiSpecialPage>()
                    where a.Id != page.Id
                    where a.Type == page.Type
+                   where a.Subtype == page.Subtype
                    select a;
         }
 
