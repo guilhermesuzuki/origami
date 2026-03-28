@@ -64,7 +64,8 @@
                             <TemplateColumn Title="@Text.Upper("Title")">
                                 <CellTemplate>
                                     <div class="cursor-pointer" @onclick="() => OnEdit(context.Item)">
-                                        <ContentRating Class="" Entity="context.Item.Entity"></ContentRating><br />
+                                        <ContentRating Entity="context.Item.Entity"></ContentRating>
+                                        <div class="dummy"></div>
                                         <ContentHeaderInline Entity="context.Item.Entity"></ContentHeaderInline>
                                     </div>
                                 </CellTemplate>
@@ -101,6 +102,7 @@
                                     @if (context.Item.Entity.IsPublished)
                                     {
                                         <i class="fa-solid fa-thumbs-up"></i>
+                                        <div class="small">@context.Item.Entity.DatePublished</div>
                                     }
                                 </CellTemplate>
                             </TemplateColumn>

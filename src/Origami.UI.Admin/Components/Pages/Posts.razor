@@ -63,8 +63,6 @@
                                         <ContentRating Entity="context.Item.Entity"></ContentRating>
                                         <div class="dummy"></div>
                                         <ContentHeaderInline Entity="context.Item.Entity"></ContentHeaderInline>
-                                        <div class="dummy" style="margin-bottom:-5px;"></div>
-                                        <Id Class="x-small" Entity="context.Item.Entity"></Id>
                                     </div>
                                 </CellTemplate>
                             </TemplateColumn>
@@ -100,6 +98,7 @@
                                     @if (context.Item.Entity.IsPublished)
                                     {
                                         <i class="fa-solid fa-thumbs-up"></i>
+                                        <div class="small">@context.Item.Entity.DatePublished</div>
                                     }
                                 </CellTemplate>
                             </TemplateColumn>

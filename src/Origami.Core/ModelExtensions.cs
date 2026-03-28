@@ -436,16 +436,10 @@ namespace Origami.Core
         public static DateTime GetDate<T>(this T entity)
             where T : IDateCreated
         {
-            if (entity is IPublished published && published.DatePublished != null)
-            {
-                return published.DatePublished.Value;
-            }
-
             if (entity is IDateModified modified && modified.DateModified != null)
             {
                 return modified.DateModified.Value;
             }
-
             return entity.DateCreated;
         }
 
