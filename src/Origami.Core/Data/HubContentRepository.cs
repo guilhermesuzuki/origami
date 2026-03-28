@@ -144,7 +144,34 @@ namespace Origami.Core.Data
 
         public Result<T2> Purge(T2 root, IId userId)
         {
-            throw new NotImplementedException();
+            using var db = _dbContextFactory.CreateDbContext();
+
+            // check permissions
+            if (UserHasPermission(db, userId.Id, PurgePermission) == false) return new(root) { Info = PurgePermission, Error = Text.Original(Text.YouDontHavePermissionForThisFeature), };
+
+            var commentReactions = from a in db.Set<OrigamiContentCommentReaction>().AsNoTracking()
+                                   join b in db.Set<OrigamiContentComment>().AsNoTracking() on a.CommentId equals b.Id
+                                   where b.ContentId == root.Entity.Id
+                                   select a;
+
+            var comments = from a in db.Set<OrigamiContentComment>().AsNoTracking() where a.ContentId == root.Entity.Id select a;
+            var categories = from a in db.Set<OrigamiContentCategory>().AsNoTracking() where a.ContentId == root.Entity.Id select a;
+            var histories = from a in db.Set<OrigamiContentHistory>().AsNoTracking() where a.ContentId == root.Entity.Id select a;
+            var ratings = from a in db.Set<OrigamiContentRating>().AsNoTracking() where a.ContentId == root.Entity.Id select a;
+            var reactions = from a in db.Set<OrigamiContentReaction>().AsNoTracking() where a.ContentId == root.Entity.Id select a;
+            var tags = from a in db.Set<OrigamiContentTag>().AsNoTracking() where a.ContentId == root.Entity.Id select a;
+            var entity = from a in db.Set<T1>().AsNoTracking() where a.Id == root.Entity.Id select a;
+
+            commentReactions.ExecuteDelete();
+            comments.ExecuteDelete();
+            categories.ExecuteDelete();
+            histories.ExecuteDelete();
+            ratings.ExecuteDelete();
+            reactions.ExecuteDelete();
+            tags.ExecuteDelete();
+            entity.ExecuteDelete();
+
+            return new(root) { Success = Text.Original(Text.OperationCompletedSuccessfully), };
         }
 
         public Result<T2> Restore(T2 root, IId userId)
@@ -153,11 +180,8 @@ namespace Origami.Core.Data
             {
                 using var db = _dbContextFactory.CreateDbContext();
 
-                // needs to hit the database for the entity
-                var permission = root.Entity.AuthorId == userId.Id ? DeleteOwnPermission : DeleteOtherUsersPermission;
-
                 // check permissions
-                if (UserHasPermission(db, userId.Id, permission) == false) return new(root) { Info = permission, Error = Text.Original(Text.YouDontHavePermissionForThisFeature), };
+                if (UserHasPermission(db, userId.Id, RestorePermission) == false) return new(root) { Info = RestorePermission, Error = Text.Original(Text.YouDontHavePermissionForThisFeature), };
 
                 // marks as deleted
                 db.Set<T1>().AsNoTracking().Where(x => x.Id == root.Entity.Id).ExecuteUpdate(s => s.SetProperty(x => x.IsDeleted, false));
