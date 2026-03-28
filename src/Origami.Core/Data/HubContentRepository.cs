@@ -332,8 +332,7 @@ namespace Origami.Core.Data
         /// matching entities are found.</returns>
         protected List<X> GetEntities<X>(IId id) where X : class, IId, IContentId
         {
-            using var db = _dbContextFactory.CreateDbContext();
-            return db.ReadFromCache<X>(this._memoryCache).Where(x => x.ContentId == id.Id).ToList();
+            return _dbContextFactory.ReadFromCache<X>(this._memoryCache).Where(x => x.ContentId == id.Id).ToList();
         }
 
         /// <summary>
@@ -345,8 +344,7 @@ namespace Origami.Core.Data
         /// <returns>The entity of type T1 that matches the specified identifier, or null if no such entity exists.</returns>
         protected T1? GetEntity(IId id)
         {
-            using var db = _dbContextFactory.CreateDbContext();
-            return db.ReadFromCache<T1>(this._memoryCache).Id(id.Id);
+            return _dbContextFactory.ReadFromCache<T1>(this._memoryCache).Id(id.Id);
         }
 
         /// <summary>
@@ -356,8 +354,7 @@ namespace Origami.Core.Data
         /// <returns>The parent entity of type T1 if found; otherwise, null.</returns>
         protected T1? GetParent(IParentIdNull parentId)
         {
-            using var db = _dbContextFactory.CreateDbContext();
-            return db.ReadFromCache<T1>(this._memoryCache).Id(parentId.ParentId);
+            return _dbContextFactory.ReadFromCache<T1>(this._memoryCache).Id(parentId.ParentId);
         }
 
         /// <summary>
@@ -368,8 +365,7 @@ namespace Origami.Core.Data
         /// children are found.</returns>
         protected List<T1> GetChildren(IId id)
         {
-            using var db = _dbContextFactory.CreateDbContext();
-            return db.ReadFromCache<T1>(this._memoryCache).Where(x => x.ParentId == id.Id).ToList();
+            return _dbContextFactory.ReadFromCache<T1>(this._memoryCache).Where(x => x.ParentId == id.Id).ToList();
         }
 
         protected virtual bool UserHasPermission(OrigamiDbContext db, Guid userId, string permission)

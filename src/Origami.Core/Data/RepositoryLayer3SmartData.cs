@@ -78,8 +78,7 @@ namespace Origami.Core.Data
 
         public virtual List<X> ReadFromCache<X>() where X : class
         {
-            using var db = this.DbContextFactory.CreateDbContext();
-            return db.ReadFromCache<X>(MemoryCache);
+            return DbContextFactory.ReadFromCache<X>(MemoryCache);
         }
 
         public Result<T> SmartCreate(DataOperationContext<T> ctx, bool checkPermission)

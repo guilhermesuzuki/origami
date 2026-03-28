@@ -79,8 +79,7 @@ namespace Origami.UI.Admin
         protected virtual List<T> Get<T>() where T : class, IBlogIdNull
         {
             var t = Activator.CreateInstance<T>();
-            var db = this.DbContextFactory.CreateDbContext();
-            var query = from c in db.ReadFromCache<T>(this.MemoryCache) where c.BlogId == Entity.Entity.BlogId select c;
+            var query = from c in this.DbContextFactory.ReadFromCache<T>(this.MemoryCache) where c.BlogId == Entity.Entity.BlogId select c;
 
             try
             {
@@ -94,7 +93,7 @@ namespace Origami.UI.Admin
             }
             finally
             {
-                db.Dispose();
+
             }
         }
 
@@ -132,9 +131,7 @@ namespace Origami.UI.Admin
 
         protected virtual IEnumerable<T1> GetParents()
         {
-            using var db = this.DbContextFactory.CreateDbContext();
-
-            return from x in db.ReadFromCache<T1>(this.MemoryCache)
+            return from x in this.DbContextFactory.ReadFromCache<T1>(this.MemoryCache)
                    where x.BlogId == this.UserFacade.BlogId
                    where x.IsDeleted == false
                    where this.Super.IsParentDeleted(x) == false

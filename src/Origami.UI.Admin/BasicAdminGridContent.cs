@@ -247,9 +247,8 @@ namespace Origami.UI.Admin
         protected virtual IEnumerable<T1> GetItems()
         {
             var t1 = new T1();
-            using var db = this.DbContextFactory.CreateDbContext();
 
-            IEnumerable<T1> items = db.ReadFromCache<T1>(this.MemoryCache);
+            IEnumerable<T1> items = this.DbContextFactory.ReadFromCache<T1>(this.MemoryCache);
 
             if (IncludeDeletedEntitiesInDataGrid == false)
             {

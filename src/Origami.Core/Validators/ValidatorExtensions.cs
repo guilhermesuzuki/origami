@@ -362,8 +362,7 @@ namespace Origami.Core.Validators
                         }
                         return page.ParentId == null;
                     }
-
-                    return false;
+                    return true;
                 }).WithMessage(text.Original("To promote to front-page, that page must be top-level"));
         }
     }

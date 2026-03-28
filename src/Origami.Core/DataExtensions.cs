@@ -11,6 +11,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq.Dynamic.Core;
+using System.Net.WebSockets;
 using System.Reflection;
 
 namespace Origami.Core
@@ -386,7 +387,7 @@ namespace Origami.Core
         /// <param name="memoryCache">The memory cache instance used to store and retrieve cached entities.</param>
         /// <returns>A list of entities of type X retrieved from the cache, or from the database if not cached. Returns an empty
         /// list if no entities are found.</returns>
-        public static List<X> ReadFromCache<X>(this DbContext db, IMemoryCache memoryCache) where X : class
+        public static List<X> ReadFromCache<X>(this IDbContextFactory<OrigamiDbContext> dbContextFactory, IMemoryCache memoryCache) where X : class
         {
             var timestamp = Stopwatch.GetTimestamp();
             var key = typeof(X).KeyForCaching();
@@ -401,7 +402,7 @@ namespace Origami.Core
                     case OrigamiSpecialMessage:
                     case OrigamiSpecialPage:
                     case OrigamiVideo:
-                        return db.ReadFromCache<OrigamiContent>(memoryCache).OfType<X>().ToList();
+                        return dbContextFactory.ReadFromCache<OrigamiContent>(memoryCache).OfType<X>().ToList();
                     default: break;
                 }
             }
@@ -415,6 +416,7 @@ namespace Origami.Core
                     {
                         if (memoryCache.Get(key) == null)
                         {
+                            using var db = dbContextFactory.CreateDbContext();
                             var list = db.Set<X>().AsNoTracking().ToList();
                             memoryCache.Set(key, list);
                         }
