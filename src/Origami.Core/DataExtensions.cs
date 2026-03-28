@@ -523,15 +523,6 @@ namespace Origami.Core
             return read.MemoryCache.Get<long>(key);
         }
 
-        public static IEnumerable<T> WithOnlyIds<T>(this IQueryable<T> entities)
-            where T : class, IId, new()
-        {
-            foreach (var id in entities.Select(x => x.Id))
-            {
-                yield return new T { Id = id };
-            }
-        }
-
         /// <summary>
         /// Language for pages
         /// </summary>
