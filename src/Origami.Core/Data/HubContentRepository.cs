@@ -162,6 +162,15 @@ namespace Origami.Core.Data
             var tags = from a in db.Set<OrigamiContentTag>().AsNoTracking() where a.ContentId == root.Entity.Id select a;
             var entity = from a in db.Set<T1>().AsNoTracking() where a.Id == root.Entity.Id select a;
 
+            _memoryCache.PurgeCache(commentReactions);
+            _memoryCache.PurgeCache(comments);
+            _memoryCache.PurgeCache(categories);
+            _memoryCache.PurgeCache(histories);
+            _memoryCache.PurgeCache(ratings);
+            _memoryCache.PurgeCache(reactions);
+            _memoryCache.PurgeCache(tags);
+            _memoryCache.PurgeCache(entity.FirstOrDefault());
+
             commentReactions.ExecuteDelete();
             comments.ExecuteDelete();
             categories.ExecuteDelete();

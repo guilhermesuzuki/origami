@@ -39,12 +39,18 @@ namespace Origami.Core
                     return;
                 }
 
-                var found = from a in entities
-                            join b in list on a.Id equals b.Id
-                            select b;
+                var found = from a in entities join b in list on a.Id equals b.Id select b;
 
                 found.Each(list.Remove);
                 memoryCache.Set(key, list);
+            }
+        }
+
+        public static void PurgeCache(this IMemoryCache memoryCache, OrigamiContent? entity)
+        {
+            if (entity != null)
+            {
+                memoryCache.PurgeCache([entity]);
             }
         }
 
