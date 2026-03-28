@@ -1,8 +1,6 @@
 ﻿@page "/roles"
 @inherits BasicAdminGrid<OrigamiRole>
-@inject IBlogRepository _blogs
-@inject IUserRoleRepository _userRoleRepository
-@inject IRightRoleRepository _rightRoleRepository
+
 <Root Access="this.CanAccess()">
     <HeaderTemplate>
         <div class="p-3 border-bottom">
@@ -30,7 +28,7 @@
         <div class="p-3 border-bottom">
             <div class="row">
                 <div class="col-12">
-                    <SearchLite T="OrigamiRole" OnHitSelected="this.OnSearchResultSelected"></SearchLite>
+                    <Search></Search>
                 </div>
             </div>
         </div>

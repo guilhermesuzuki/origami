@@ -382,27 +382,27 @@ namespace Origami.Core
         /// OrigamiSpecialPage, and OrigamiVideo, the method retrieves and filters entities from the OrigamiContent
         /// cache. The method is thread-safe and uses locking to prevent race conditions when populating the
         /// cache.</remarks>
-        /// <typeparam name="X">The type of entity to retrieve. Must be a reference type.</typeparam>
+        /// <typeparam name="T">The type of entity to retrieve. Must be a reference type.</typeparam>
         /// <param name="db">The database context used to query entities if they are not present in the cache.</param>
         /// <param name="memoryCache">The memory cache instance used to store and retrieve cached entities.</param>
         /// <returns>A list of entities of type X retrieved from the cache, or from the database if not cached. Returns an empty
         /// list if no entities are found.</returns>
-        public static List<X> ReadFromCache<X>(this IDbContextFactory<OrigamiDbContext> dbContextFactory, IMemoryCache memoryCache) where X : class
+        public static List<T> ReadFromCache<T>(this IDbContextFactory<OrigamiDbContext> dbContextFactory, IMemoryCache memoryCache) where T : class
         {
             var timestamp = Stopwatch.GetTimestamp();
-            var key = typeof(X).KeyForCaching();
+            var key = typeof(T).KeyForCaching();
 
-            if (typeof(X).IsAbstract == false)
+            if (typeof(T).IsAbstract == false)
             {
-                var x = Activator.CreateInstance<X>();
-                switch (x)
+                var t = Activator.CreateInstance<T>();
+                switch (t)
                 {
                     case OrigamiPage:
                     case OrigamiPost:
                     case OrigamiSpecialMessage:
                     case OrigamiSpecialPage:
                     case OrigamiVideo:
-                        return dbContextFactory.ReadFromCache<OrigamiContent>(memoryCache).OfType<X>().ToList();
+                        return dbContextFactory.ReadFromCache<OrigamiContent>(memoryCache).OfType<T>().ToList();
                     default: break;
                 }
             }
@@ -417,13 +417,13 @@ namespace Origami.Core
                         if (memoryCache.Get(key) == null)
                         {
                             using var db = dbContextFactory.CreateDbContext();
-                            var list = db.Set<X>().AsNoTracking().ToList();
+                            var list = db.ReadFromDatabase<T>();
                             memoryCache.Set(key, list);
                         }
                     }
                 }
 
-                return memoryCache.GetList<X>(key) ?? [];
+                return memoryCache.GetList<T>(key) ?? [];
             }
             finally
             {
@@ -433,12 +433,41 @@ namespace Origami.Core
             }
         }
 
-        public static List<X> Set<X, Y>(this DbContext db)
-                                                                                                                                                                                                            where X : class
-            where Y : OrigamiContent
+        public static List<T> ReadFromDatabase<T>(this DbContext db) where T : class
         {
-            return db.Set<X>().AsNoTracking().OfType<Y>().Cast<X>().ToList();
+            if (typeof(T).IsAbstract == false)
+            {
+                var t = Activator.CreateInstance<T>();
+                return t switch
+                {
+                    OrigamiRole => db.GetRolesFromDatabase().Cast<T>().ToList(),
+                    _ => db.Set<T>().AsNoTracking().ToList(),
+                };
+            }
+             
+            return db.Set<T>().AsNoTracking().ToList();
         }
+
+        public static List<OrigamiRole> GetRolesFromDatabase(this DbContext db)
+        {
+            var roles = db.Set<OrigamiRole>().AsNoTracking().ToList();
+
+            foreach (var role in roles)
+            {
+                var rightRoles = db.Set<OrigamiRightRole>().AsNoTracking().Where(x => x.RoleId == role.Id).ToList();
+
+                var match = from property in role.GetType().GetProperties()
+                            join rt in db.Set<OrigamiRight>().AsNoTracking() on property.Name equals rt.Name
+                            join rr in rightRoles on rt.Id equals rr.RightId
+                            where property.CanWrite == true
+                            select property;
+
+                match.Each(x => x.SetValue(role, true));
+            }
+
+            return roles.ToList();
+        }
+
         /// <summary>
         /// Tries to retrieve a blog by its slug. Returns null if not found or if the blog is deleted or inactive.
         /// </summary>
