@@ -8,8 +8,15 @@ namespace Origami.Core.Data
         RepositoryOuterLayer<OrigamiUserTrash>,
         IUserTrashRepository
     {
+        protected readonly IHubContentRepository<HubContentPage> _hubContentPageRepository;
+        protected readonly IHubContentRepository<HubContentPost> _hubContentPostRepository;
+        protected readonly IHubContentRepository<HubContentSpecialMessage> _hubContentSpecialMessageRepository;
+        protected readonly IHubContentRepository<HubContentSpecialPage> _hubContentSpecialPageRepository;
+        protected readonly IHubContentRepository<HubContentVideo> _hubContentVideoRepository;
         private readonly IBlogRepository _blogRepository;
+        private readonly ISettingsRepository _blogSettingsRepository;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IContentRepository _contentRepository;
         private readonly IDirectoryRepository _directoryRepository;
         private readonly IFileRepository _fileRepository;
         private readonly IPageRepository _pageRepository;
@@ -18,7 +25,6 @@ namespace Origami.Core.Data
         private readonly IPostRepository _postRepository;
         private readonly IQuickNoteRepository _quickNoteRepository;
         private readonly IRoleRepository _roleRepository;
-        private readonly ISettingsRepository _blogSettingsRepository;
         private readonly ISocialProfileRepository _socialProfileRepository;
         private readonly ISpecialMessageRepository _specialMessageRepository;
         private readonly ISpecialPageRepository _specialPageRepository;
@@ -31,8 +37,6 @@ namespace Origami.Core.Data
         private readonly IUserViewRepository _userViewRepository;
         private readonly IVideoRepository _videoRepository;
         private readonly IWhatToSeeNextRepository _whatToSeeNextRepository;
-        private readonly IContentRepository _contentRepository;
-
         public UserTrashRepository(
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IMemoryCache memoryCache,
@@ -60,6 +64,13 @@ namespace Origami.Core.Data
             IUserViewRepository userViewRepository,
             IVideoRepository videoRepository,
             IWhatToSeeNextRepository whatToSeeNextRepository,
+
+            IHubContentRepository<HubContentPage> hubContentPageRepository,
+            IHubContentRepository<HubContentPost> hubContentPostRepository,
+            IHubContentRepository<HubContentSpecialMessage> hubContentSpecialMessageRepository,
+            IHubContentRepository<HubContentSpecialPage> hubContentSpecialPageRepository,
+            IHubContentRepository<HubContentVideo> hubContentVideoRepository,
+
             Text text,
             IWebRootPath wwwRoot)
             : base(text, dbContextFactory, memoryCache, wwwRoot)
@@ -88,6 +99,12 @@ namespace Origami.Core.Data
             _userViewRepository = userViewRepository;
             _videoRepository = videoRepository;
             _whatToSeeNextRepository = whatToSeeNextRepository;
+
+            _hubContentPageRepository = hubContentPageRepository;
+            _hubContentPostRepository = hubContentPostRepository;
+            _hubContentSpecialMessageRepository = hubContentSpecialMessageRepository;
+            _hubContentSpecialPageRepository = hubContentSpecialPageRepository;
+            _hubContentVideoRepository = hubContentVideoRepository;
         }
 
         public override string ReadPermission => nameof(OrigamiRole.ViewTrashes);
@@ -97,10 +114,10 @@ namespace Origami.Core.Data
             using var db = DbContextFactory.CreateDbContext();
 
             var query = from x in db.Set<OrigamiUserTrash>().AsNoTracking()
-                        where x.Type.Contains(searchTerm) ||
-                              x.Name.Contains(searchTerm) ||
-                              x.Title.Contains(searchTerm) ||
-                              x.Content.Contains(searchTerm)
+                        where x.Type.Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase) ||
+                              x.Name.Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase) ||
+                              x.Title.Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase) ||
+                              x.Content.Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase)
                         orderby x.Type, string.IsNullOrWhiteSpace(x.Title) == false ? x.Title : x.Name
                         select x;
 
@@ -116,17 +133,27 @@ namespace Origami.Core.Data
 
             if (ctx.Entity.Type.Like("OrigamiPage") == true)
             {
-                return _purge(_contentRepository, ctx);
+                return _purge(_hubContentPageRepository, ctx);
             }
 
             if (ctx.Entity.Type.Like("OrigamiPost") == true)
             {
-                return _purge(_contentRepository, ctx);
+                return _purge(_hubContentPostRepository, ctx);
+            }
+
+            if (ctx.Entity.Type.Like("OrigamiSpecialMessage") == true)
+            {
+                return _purge(_hubContentSpecialMessageRepository, ctx);
+            }
+
+            if (ctx.Entity.Type.Like("OrigamiSpecialPage") == true)
+            {
+                return _purge(_hubContentSpecialPageRepository, ctx);
             }
 
             if (ctx.Entity.Type.Like("OrigamiVideo") == true)
             {
-                return _purge(_contentRepository, ctx);
+                return _purge(_hubContentVideoRepository, ctx);
             }
 
             if (ctx.Entity.Type.Like("Category") == true)
@@ -149,16 +176,6 @@ namespace Origami.Core.Data
                 return _purge(_quickNoteRepository, ctx);
             }
 
-            if (ctx.Entity.Type.Like("OrigamiSpecialPage") == true)
-            {
-                return _purge(_contentRepository, ctx);
-            }
-
-            if (ctx.Entity.Type.Like("OrigamiSpecialMessage") == true)
-            {
-                return _purge(_contentRepository, ctx);
-            }
-
             throw new NotImplementedException();
         }
 
@@ -171,17 +188,27 @@ namespace Origami.Core.Data
 
             if (ctx.Entity.Type.Like("OrigamiPage") == true)
             {
-                return _restore(_contentRepository, ctx);
+                return _restore(_hubContentPageRepository, ctx);
             }
 
             if (ctx.Entity.Type.Like("OrigamiPost") == true)
             {
-                return _restore(_contentRepository, ctx);
+                return _restore(_hubContentPostRepository, ctx);
+            }
+
+            if (ctx.Entity.Type.Like("OrigamiSpecialMessage") == true)
+            {
+                return _restore(_hubContentSpecialMessageRepository, ctx);
+            }
+
+            if (ctx.Entity.Type.Like("OrigamiSpecialPage") == true)
+            {
+                return _restore(_hubContentSpecialPageRepository, ctx);
             }
 
             if (ctx.Entity.Type.Like("OrigamiVideo") == true)
             {
-                return _restore(_contentRepository, ctx);
+                return _restore(_hubContentVideoRepository, ctx);
             }
 
             if (ctx.Entity.Type.Like("Category") == true)
@@ -204,16 +231,6 @@ namespace Origami.Core.Data
                 return _restore(_quickNoteRepository, ctx);
             }
 
-            if (ctx.Entity.Type.Like("OrigamiSpecialPage") == true)
-            {
-                return _restore(_contentRepository, ctx);
-            }
-
-            if (ctx.Entity.Type.Like("OrigamiSpecialMessage") == true)
-            {
-                return _restore(_contentRepository, ctx);
-            }
-
             throw new NotImplementedException();
         }
 
@@ -224,6 +241,15 @@ namespace Origami.Core.Data
             var entity = repo.ReadFromDatabase(trash.Entity);
             var ctx = new DataOperationContext<T>(trash.User, trash.DateTime, entity ?? Activator.CreateInstance<T>());
             return repo.SmartPurge(ctx, false).Push(hub);
+        }
+
+        private Result<OrigamiUserTrash> _purge<T>(IHubContentRepository<T> repo, DataOperationContext<OrigamiUserTrash> trash)
+            where T : class, IId
+        {
+            var hub = new Result<OrigamiUserTrash>(trash.Entity);
+            var entity = repo.Get(trash.Entity);
+            if (entity != null) repo.Purge(entity, trash.User).Push(hub);
+            return hub;
         }
 
         private Result<OrigamiUserTrash> _restore<T>(IRepository<T> repo, DataOperationContext<OrigamiUserTrash> trash)
@@ -237,6 +263,15 @@ namespace Origami.Core.Data
                 return repo.SmartRestore(ctx, false).Push(hub);
             }
             return new(trash.Entity) { Error = Text.Original("Unable to restore trash") };
+        }
+
+        private Result<OrigamiUserTrash> _restore<T>(IHubContentRepository<T> repo, DataOperationContext<OrigamiUserTrash> trash)
+            where T : class, IId
+        {
+            var hub = new Result<OrigamiUserTrash>(trash.Entity);
+            var entity = repo.Get(trash.Entity);
+            if (entity != null) repo.Restore(entity, trash.User).Push(hub);
+            return hub;
         }
     }
 }
