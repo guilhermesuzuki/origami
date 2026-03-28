@@ -1,358 +1,142 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.Extensions.Caching.Memory;
+using MudBlazor;
 using Origami.Core;
 using Origami.Core.Data;
 using Origami.Core.Models;
+using System.Text;
 using System.Transactions;
 
 namespace Origami.UI.Admin
 {
-    /// <summary>
-    /// Basic Form Full Content for Posts, Videos, etc.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <typeparam name="TCat"></typeparam>
-    /// <typeparam name="TTag"></typeparam>
-    public abstract class BasicFormFullContent<T, TCat, TTag> :
-        BasicFormFull<T>
-        where T : BaseContent, IId, new()
-        where TCat : ICategoryId, IId
-        where TTag : ITag, IId
+    public class BasicFormFullContent<T1, T2> :
+        BasicForm<T2>
+        where T1 : OrigamiContent, new()
+        where T2 : class, IHubContent<T1>, new()
     {
-        protected List<TCat> Categories = new();
-        protected List<TTag> Tags = new();
+        [Inject] public IHubContentRepository<T2> HubContentRepository { get; set; } = null!;
 
-        [Inject] public IRepository<TCat> Category { get; set; } = null!;
-        [Inject] public IRepository<TTag> Tag { get; set; } = null!;
+        protected List<OrigamiCategory> Categories { get; set; } = [];
+        protected List<OrigamiTag> Tags { get; set; } = [];
 
-        protected override bool DisableTheSaveButton
-        {
-            get
-            {
-                if (this.Entity == null) return true;
-                if (this.Entity.Title.Has() == false) return true;
-                return false;
-            }
-        }
+        protected string CategoriesSearch { get; set; } = string.Empty;
+        protected string TagsSearch { get; set; } = string.Empty;
 
         public override void Save()
         {
-            var beforeSaving = BeforeSaving();
-            if (beforeSaving.Ok == false)
-            {
-                UserFacade.Result = beforeSaving;
-                return;
-            }
-
-            var hub = new Result<T>(this.Entity);
-            var ctx = new DataOperationContext<T>(this.UserFacade.User, DateTime.UtcNow, this.Entity);
-
             try
             {
                 using (var transaction = new TransactionScope())
                 {
-                    hub.OnSuccess(() => Repository.SmartSave(ctx, true).Push(hub));
-                    if (Entity.New)
-                    {
-                        hub.OnSuccess(() => CreateCategories(Categories).Push(hub));
-                        hub.OnSuccess(() => CreateTags(Tags).Push(hub));
-                    }
-                    else
-                    {
-                        var tagsFromDb = GetTagsFromDb();
-                        var categoriesFromDb = GetCategoriesFromDb();
-
-                        var mergeTags = tagsFromDb.GetMergeTags(Tags);
-                        var mergeCategories = categoriesFromDb.GetMergeCategories(Categories);
-
-                        hub.OnSuccess(() => this.PurgeCategories(mergeCategories.Purge).Push(hub));
-                        hub.OnSuccess(() => this.UpdateCategories(mergeCategories.Update).Push(hub));
-                        hub.OnSuccess(() => this.CreateCategories(mergeCategories.Create).Push(hub));
-                        hub.OnSuccess(() => this.PurgeTags(mergeTags.Purge).Push(hub));
-                        hub.OnSuccess(() => this.UpdateTags(mergeTags.Update).Push(hub));
-                        hub.OnSuccess(() => this.CreateTags(mergeTags.Create).Push(hub));
-                    }
+                    var hub = HubContentRepository.Save(Entity, UserFacade.User);
                     if (hub.Ok)
                     {
                         transaction.Complete();
                     }
+                    this.UserFacade.Result = hub;
+                    this.Saved.InvokeAsync(Entity).Wait();
                 }
-                Saved.InvokeAsync(this.Entity).Wait();
             }
             catch (Exception ex)
             {
-                hub.Error = Text.Get(Text.SomethingWentWrongPleaseTryAgain);
-                hub.Error = ex.GetMessage();
-            }
-            finally
-            {
-                UserFacade.Result = hub;
+                UserFacade.Result = new(ex);
             }
         }
 
         public override void UndoChanges()
         {
-            base.UndoChanges();
-            LoadCategories();
-            LoadTags();
+            this.Entity = HubContentRepository.Get(Entity.Entity).Clone();
         }
 
-        protected override Result<T> BeforeSaving()
+        /// <summary>
+        /// Adds the specified content to the associated collection if it does not already exist.
+        /// </summary>
+        /// <remarks>If the specified content already exists in the collection, no action is taken. Only
+        /// OrigamiCategory and OrigamiTag types are supported; other types are ignored.</remarks>
+        /// <typeparam name="T">The type of the content to add. Supported types are OrigamiCategory and OrigamiTag.</typeparam>
+        /// <param name="content">The content item to add to the collection. Must be of type OrigamiCategory or OrigamiTag.</param>
+        protected void Add<T>(T content)
         {
-            var result = base.BeforeSaving();
-            Tags = Tags.DistinctBy(x => x.Tag).ToList();
-            return result;
-        }
-
-        protected virtual Result<T> CreateCategories(IEnumerable<TCat> create)
-        {
-            var result = new Result<T>(this.Entity);
-
-            foreach (var category in create)
+            if (content is OrigamiCategory category)
             {
-                switch (category)
-                {
-                    case OrigamiContentCategory contentCategory:
-                        contentCategory.ContentId = this.Entity.Id;
-                        break;
-                }
-                var context = new DataOperationContext<TCat>(this.UserFacade.User, DateTime.UtcNow, category);
-                Category.SmartSave(context, false).Push(result);
+                Entity.Categories.Add(new() { CategoryId = category.Id, ContentId = Entity.Entity.Id });
+                Entity.Categories = Entity.Categories.DistinctBy(x => x.CategoryId).ToList();
             }
-
-            return result;
-        }
-
-        protected virtual Result<T> CreateTags(IEnumerable<TTag> create)
-        {
-            var result = new Result<T>(this.Entity);
-
-            foreach (var tag in create)
+            else if (content is OrigamiTag tag)
             {
-                switch (tag)
-                {
-                    case OrigamiContentTag contentTag:
-                        contentTag.ContentId = this.Entity.Id;
-                        break;
-                }
-                var context = new DataOperationContext<TTag>(this.UserFacade.User, DateTime.UtcNow, tag);
-                Tag.SmartSave(context, false).Push(result);
+                Entity.Tags.Add(new() { ContentId = Entity.Entity.Id, Tag = tag.Tag });
+                Entity.Tags = Entity.Tags.DistinctBy(x => x.Tag).ToList();
             }
-
-            return result;
         }
 
-        protected virtual IEnumerable<OrigamiCategory> GetAllCategories()
+        /// <summary>
+        /// This method should retrieve the Entities from database or memory
+        /// </summary>
+        /// <param name="state"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        protected virtual List<T> Get<T>() where T : class, IBlogIdNull
         {
-            return from x in this.Super.Categories.ReadFromCache().Blog(this.UserFacade.BlogId).NonDeleted()
+            var t = Activator.CreateInstance<T>();
+            var query = from c in this.DbContextFactory.ReadFromCache<T>(this.MemoryCache) where c.BlogId == Entity.Entity.BlogId select c;
+
+            try
+            {
+                query = t switch
+                {
+                    IName => query.Cast<IName>().OrderBy(x => x.Name).Cast<T>(),
+                    ITag => query.Cast<ITag>().DistinctBy(x => x.Tag).OrderBy(x => x.Tag).Cast<T>(),
+                    _ => query,
+                };
+                return [.. query];
+            }
+            finally
+            {
+
+            }
+        }
+
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+            Entity.Entity.SetAuthor(UserFacade.User);
+            Entity.Entity.SetBlog(GetBlogFromUserFacade());
+            Categories = Get<OrigamiCategory>();
+            Tags = Get<OrigamiTag>();
+        }
+
+        protected void SearchCategory(KeyboardEventArgs kea)
+        {
+            this.Categories = CategoriesSearch.Has() == false ? this.Get<OrigamiCategory>() : this.Get<OrigamiCategory>().Where(x => x.Name.Contains(CategoriesSearch, StringComparison.OrdinalIgnoreCase)).ToList();
+            this.InvokeAsync(this.StateHasChanged);
+        }
+
+        protected void SearchTag(KeyboardEventArgs kea)
+        {
+            this.Tags = TagsSearch.Has() == false ? this.Get<OrigamiTag>() : [new() { Tag = TagsSearch }, .. this.Get<OrigamiTag>().Where(x => x.Tag.Contains(TagsSearch, StringComparison.OrdinalIgnoreCase))];
+            this.InvokeAsync(this.StateHasChanged);
+        }
+
+        protected override void CreateEntityBeforeEvent(T2 entity)
+        {
+            entity.Entity.SetAuthor(UserFacade.User);
+            entity.Entity.SetBlog(GetBlogFromUserFacade());
+        }
+
+        public override void SetParent(IId entity)
+        {
+            this.Entity.Entity.ParentId = entity.Id;
+        }
+
+        protected virtual IEnumerable<T1> GetParents()
+        {
+            return from x in this.DbContextFactory.ReadFromCache<T1>(this.MemoryCache)
+                   where x.BlogId == this.UserFacade.BlogId
+                   where x.IsDeleted == false
                    where this.Super.IsParentDeleted(x) == false
-                   orderby x.Name
+                   orderby x.Title
                    select x;
-        }
-
-        /// <summary>
-        /// Retrieves all the <typeparamref name="TCat"/> from a <typeparamref name="T"/> saved in the database.
-        /// </summary>
-        /// <returns></returns>
-        protected virtual IEnumerable<TCat> GetCategoriesFromDb()
-        {
-            using var db = DbContextFactory.CreateDbContext();
-
-            IEnumerable<TCat> categoriesFromDb = [];
-
-            switch (Category)
-            {
-                case IRepository<OrigamiContentCategory> postCategories:
-                    categoriesFromDb = db.Set<OrigamiContentCategory>().AsNoTracking().Where(x => x.ContentId == this.Entity.Id).Cast<TCat>().ToList();
-                    break;
-            }
-
-            return categoriesFromDb;
-        }
-        /// <summary>
-        /// Retrieves all the <typeparamref name="TTag"/> from a <typeparamref name="T"/> saved in the database.
-        /// </summary>
-        /// <returns></returns>
-        protected virtual IEnumerable<TTag> GetTagsFromDb()
-        {
-            using var db = DbContextFactory.CreateDbContext();
-
-            IEnumerable<TTag> tagsFromDb = [];
-
-            switch (Tag)
-            {
-                case IRepository<OrigamiContentTag> postTags:
-                    tagsFromDb = db.Set<OrigamiContentTag>().AsNoTracking().Where(x => x.ContentId == this.Entity.Id).Cast<TTag>().ToList();
-                    break;
-            }
-
-            return tagsFromDb;
-        }
-
-        protected virtual bool IsCategorySelected(Guid categoryId)
-        {
-            return Categories.Any(x => x.CategoryId == categoryId);
-        }
-
-        /// <summary>
-        /// This method should load all categories
-        /// </summary>
-        protected virtual void LoadCategories()
-        {
-            Categories.Clear();
-
-            if (this.Entity == null) return;
-            if (this.Entity.New == true) return;
-
-            switch (Category)
-            {
-                case IRepository<OrigamiContentCategory> postCategories:
-                    Categories = postCategories.ReadFromCache().Where(x => x.ContentId == this.Entity.Id).Cast<TCat>().ToList();
-                    break;
-            }
-        }
-
-        /// <summary>
-        /// This method should load all tags
-        /// </summary>
-        protected virtual void LoadTags()
-        {
-            Tags.Clear();
-
-            if (this.Entity == null) return;
-            if (this.Entity.New == true) return;
-
-            switch (Tag)
-            {
-                case IRepository<OrigamiContentTag> postTags:
-                    Tags = postTags.ReadFromCache().Where(x => x.ContentId == this.Entity.Id).Cast<TTag>().ToList();
-                    break;
-            }
-        }
-
-        protected bool NewCategory(Guid categoryId)
-        {
-            if (IsCategorySelected(categoryId) == false) return false;
-
-            switch (Category)
-            {
-                case IRepository<OrigamiContentCategory> postCategories:
-                    return postCategories.ReadFromCache().Where(x => x.CategoryId == categoryId).Where(x => x.ContentId == this.Entity.Id).Any() == false;
-            }
-
-            throw new NotImplementedException();
-        }
-
-        protected override void OnParametersSet()
-        {
-            base.OnParametersSet();
-            LoadCategories();
-            LoadTags();
-        }
-
-        protected virtual Result<T> PurgeCategories(IEnumerable<TCat> purge)
-        {
-            var result = new Result<T>(this.Entity);
-
-            foreach (var category in purge)
-            {
-                var context = new DataOperationContext<TCat>(this.UserFacade.User, DateTime.UtcNow, category);
-                Category.SmartPurge(context, false).Push(result);
-            }
-
-            return result;
-        }
-
-        protected virtual Result<T> PurgeTags(IEnumerable<TTag> purge)
-        {
-            var result = new Result<T>(this.Entity);
-
-            foreach (var tag in purge)
-            {
-                var context = new DataOperationContext<TTag>(this.UserFacade.User, DateTime.UtcNow, tag);
-                Tag.SmartPurge(context, false).Push(result);
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Removes the tag from the collection
-        /// </summary>
-        /// <param name="tag"></param>
-        protected virtual void RemoveTag(TTag tag)
-        {
-            Tags.Remove(tag);
-        }
-        protected virtual void SelectCategory(OrigamiCategory category)
-        {
-            if (IsCategorySelected(category.Id) == true)
-            {
-                Categories.RemoveAll(x => x.CategoryId == category.Id);
-            }
-            else
-            {
-                var entity = Activator.CreateInstance<TCat>();
-
-                entity.CategoryId = category.Id;
-
-                if (entity is IFKPost fkPost) fkPost.PostId = Entity.Id;
-                if (entity is IFKVideo fkVideo) fkVideo.VideoId = Entity.Id;
-
-                Categories.Add(entity);
-            }
-        }
-
-        protected void TagEntered(string tagName)
-        {
-            var tag = Activator.CreateInstance<TTag>();
-            if (tag != null)
-            {
-                tag.Tag = tagName;
-                Tags.Add(tag);
-            }
-        }
-
-        protected virtual Result<T> UpdateCategories(IEnumerable<TCat> update)
-        {
-            var result = new Result<T>(this.Entity);
-
-            foreach (var category in update)
-            {
-                var context = new DataOperationContext<TCat>(this.UserFacade.User, DateTime.UtcNow, category);
-
-                if (category is IDeleted deleted && deleted.IsDeleted)
-                {
-                    Category.SmartDelete(context, false).Push(result);
-                }
-                else
-                {
-                    Category.SmartSave(context, false).Push(result);
-                }
-            }
-
-            return result;
-        }
-
-        protected virtual Result<T> UpdateTags(IEnumerable<TTag> update)
-        {
-            var result = new Result<T>(this.Entity);
-
-            foreach (var tag in update)
-            {
-                var context = new DataOperationContext<TTag>(this.UserFacade.User, DateTime.UtcNow, tag);
-
-                if (tag is IDeleted deleted && deleted.IsDeleted)
-                {
-                    Tag.SmartDelete(context, false).Push(result);
-                }
-                else
-                {
-                    Tag.SmartSave(context, false).Push(result);
-                }
-            }
-
-            return result;
         }
     }
 }
