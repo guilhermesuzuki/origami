@@ -126,6 +126,7 @@ namespace Origami.UI.Admin
 
         public override void SetParent(IId entity)
         {
+            this.Entity.Parent = entity as T1;
             this.Entity.Entity.ParentId = entity.Id;
         }
 

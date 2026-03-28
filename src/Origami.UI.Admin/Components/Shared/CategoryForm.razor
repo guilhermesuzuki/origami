@@ -11,7 +11,9 @@
         {
             var parent = this.Repository.ReadFromCache().Id(this.Entity.ParentId.Value);
             <div class="p-3 border">
-                <CategoryHeaderLite Class="p-3 border" Entity="parent"></CategoryHeaderLite>
+                <div class="wrapper p-3 border">
+                    <CategoryHeaderLite Class="" Entity="parent"></CategoryHeaderLite>
+                </div>
                 <div class="btn-group mt-2 w-100">
                     <button class="btn btn-light w-100" @onclick="() => this.ShowParentSelector = !this.ShowParentSelector">
                         <i class="fa-solid fa-square-check"></i>
