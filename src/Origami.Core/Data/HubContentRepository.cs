@@ -73,7 +73,7 @@ namespace Origami.Core.Data
                 var entity = db.Set<T1>().AsNoTracking().Id(root.Entity.Id);
 
                 // needs to update cache
-                _memoryCache.SaveCache(entity as OrigamiContent);
+                _memoryCache.Save(entity as OrigamiContent);
 
                 // returns success
                 return new(root) { Success = Text.Original(Text.OperationCompletedSuccessfully), };
@@ -131,7 +131,7 @@ namespace Origami.Core.Data
                 var entity = db.Set<T1>().AsNoTracking().Id(root.Entity.Id);
 
                 // needs to update cache
-                _memoryCache.SaveCache(entity as OrigamiContent);
+                _memoryCache.Save(entity as OrigamiContent);
 
                 // returns success
                 return new(root) { Success = Text.Original(Text.OperationCompletedSuccessfully), };
@@ -162,14 +162,14 @@ namespace Origami.Core.Data
             var tags = from a in db.Set<OrigamiContentTag>().AsNoTracking() where a.ContentId == root.Entity.Id select a;
             var entity = from a in db.Set<T1>().AsNoTracking() where a.Id == root.Entity.Id select a;
 
-            _memoryCache.PurgeCache(commentReactions);
-            _memoryCache.PurgeCache(comments);
-            _memoryCache.PurgeCache(categories);
-            _memoryCache.PurgeCache(histories);
-            _memoryCache.PurgeCache(ratings);
-            _memoryCache.PurgeCache(reactions);
-            _memoryCache.PurgeCache(tags);
-            _memoryCache.PurgeCache(entity.FirstOrDefault());
+            _memoryCache.Purge(commentReactions);
+            _memoryCache.Purge(comments);
+            _memoryCache.Purge(categories);
+            _memoryCache.Purge(histories);
+            _memoryCache.Purge(ratings);
+            _memoryCache.Purge(reactions);
+            _memoryCache.Purge(tags);
+            _memoryCache.Purge(entity.FirstOrDefault());
 
             commentReactions.ExecuteDelete();
             comments.ExecuteDelete();
@@ -199,7 +199,7 @@ namespace Origami.Core.Data
                 var entity = db.Set<T1>().AsNoTracking().Id(root.Entity.Id);
 
                 // needs to update cache
-                _memoryCache.SaveCache(entity as OrigamiContent);
+                _memoryCache.Save(entity as OrigamiContent);
 
                 // returns success
                 return new(root) { Success = Text.Original(Text.OperationCompletedSuccessfully), };
@@ -235,7 +235,7 @@ namespace Origami.Core.Data
                 var m1 = Save(db, root.Entity, root.Categories);
                 var m2 = Save(db, root.Entity, root.Tags);
 
-                _memoryCache.SaveCache(root.Entity as OrigamiContent);
+                _memoryCache.Save(root.Entity as OrigamiContent);
                 _memoryCache.SaveCache(m1);
                 _memoryCache.SaveCache(m2);
 
@@ -273,7 +273,7 @@ namespace Origami.Core.Data
                 var entity = db.Set<T1>().AsNoTracking().Id(root.Entity.Id);
 
                 // needs to update cache
-                _memoryCache.SaveCache(entity as OrigamiContent);
+                _memoryCache.Save(entity as OrigamiContent);
 
                 // returns success
                 return new(root) { Success = Text.Original(Text.OperationCompletedSuccessfully), };
@@ -313,7 +313,7 @@ namespace Origami.Core.Data
                     entity = db.Set<OrigamiPage>().AsNoTracking().Id(root.Entity.Id);
 
                     // needs to update cache
-                    _memoryCache.SaveCache(entity as OrigamiContent);
+                    _memoryCache.Save(entity as OrigamiContent);
 
                     // returns success
                     return new(root) { Success = Text.Original(Text.OperationCompletedSuccessfully), };
@@ -343,7 +343,7 @@ namespace Origami.Core.Data
                 var entity = db.Set<T1>().AsNoTracking().Id(root.Entity.Id);
 
                 // needs to update cache
-                _memoryCache.SaveCache(entity as OrigamiContent);
+                _memoryCache.Save(entity as OrigamiContent);
 
                 // returns success
                 return new(root) { Success = Text.Original(Text.OperationCompletedSuccessfully), };

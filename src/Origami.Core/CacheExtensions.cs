@@ -10,7 +10,7 @@ namespace Origami.Core
 {
     public static class CacheExtensions
     {
-        public static void CreateCache<T>(this IMemoryCache memoryCache, IEnumerable<T> entities) where T : class
+        public static void Create<T>(this IMemoryCache memoryCache, IEnumerable<T> entities) where T : class
         {
             var key = typeof(T).KeyForCaching();
 
@@ -27,7 +27,7 @@ namespace Origami.Core
             }
         }
 
-        public static void PurgeCache<T>(this IMemoryCache memoryCache, IEnumerable<T> entities) where T : class, IId
+        public static void Purge<T>(this IMemoryCache memoryCache, IEnumerable<T> entities) where T : class, IId
         {
             var key = typeof(T).KeyForCaching();
 
@@ -46,20 +46,20 @@ namespace Origami.Core
             }
         }
 
-        public static void PurgeCache(this IMemoryCache memoryCache, OrigamiContent? entity)
+        public static void Purge(this IMemoryCache memoryCache, OrigamiContent? entity)
         {
             if (entity != null)
             {
-                memoryCache.PurgeCache([entity]);
+                memoryCache.Purge([entity]);
             }
         }
 
-        public static void SaveCache(this IMemoryCache memoryCache, OrigamiContent? entity)
+        public static void Save(this IMemoryCache memoryCache, OrigamiContent? entity)
         {
-            memoryCache.SaveCache<OrigamiContent>(entity);
+            memoryCache.Save<OrigamiContent>(entity);
         }
 
-        public static void SaveCache<T>(this IMemoryCache memoryCache, T? entity) where T : class, IId
+        public static void Save<T>(this IMemoryCache memoryCache, T? entity) where T : class, IId
         {
             if (entity == null) return;
 
@@ -81,7 +81,7 @@ namespace Origami.Core
             }
         }
 
-        public static void UpdateCache<T>(this IMemoryCache memoryCache, IEnumerable<T> entities) where T : class, IId
+        public static void Update<T>(this IMemoryCache memoryCache, IEnumerable<T> entities) where T : class, IId
         {
             var key = typeof(T).KeyForCaching();
 
