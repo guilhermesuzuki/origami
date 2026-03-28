@@ -1,5 +1,4 @@
-﻿@inherits BasicFormFull<OrigamiSpecialMessage>
-@inject IPageRepository _page
+﻿@inherits BasicFormFullContent2<OrigamiSpecialMessage, HubContentSpecialMessage>
 @inject IFileRepository _fileRepository
 
 <div class="form @Class">
@@ -8,22 +7,22 @@
             <div class="p-3">
                 <MudTextField ReadOnly="true"
                               Immediate="true"
-                              Value="@(Text.Lower(Entity.IsDraft.YesNo()))"
+                              Value="@(Text.Lower(Entity.Entity.IsDraft.YesNo()))"
                               HelperText="@Text.Lower("Still a draft?")"
                               Class="cursor-pointer yes-no"
                               title="@Text.Lower("Click here to change it")"
-                              @onclick="() => this.Entity.IsDraft = !this.Entity.IsDraft.GetValueOrDefault()"></MudTextField>
+                              @onclick="() => this.Entity.Entity.IsDraft = !this.Entity.Entity.IsDraft.GetValueOrDefault()"></MudTextField>
             </div>
         </div>
     </div>
     <div class="row">
         <div class="col-12 col-xxl-6">
             <div class="p-3">
-                <BasicHeaderNotes Entity="this.Entity"></BasicHeaderNotes>
-                <BasicHeader Class="mt-3" Entity="this.Entity"></BasicHeader>
+                <BasicHeaderNotes Entity="this.Entity.Entity"></BasicHeaderNotes>
+                <BasicHeader Class="mt-3" Entity="this.Entity.Entity"></BasicHeader>
                 <ul class="inline-list mt-3">
                     <li>
-                        <MudSelect T="string" @bind-Value="Entity.Type" HelperText="@Text.Lower("Type")" Required="true">
+                        <MudSelect T="string" @bind-Value="Entity.Entity.Subtype" HelperText="@Text.Lower("Type")" Required="true">
                             <MudSelectItem Value="OrigamiSpecialMessageTypes.None.ToString()">@Text.Original("None")</MudSelectItem>
                             <MudSelectItem Value="OrigamiSpecialMessageTypes.Danger.ToString()">
                                 <span class="text-danger">
@@ -54,7 +53,7 @@
                 </ul>
                 <ul class="inline-list mt-3">
                     <li>
-                        <MudDatePicker @bind-Date="Entity.MB_StartDate"
+                        <MudDatePicker @bind-Date="Entity.Entity.MB_StartDate"
                                        Mask="@(new DateMask("yyyy.MM.dd"))"
                                        DateFormat="yyyy.MM.dd"
                                        HelperText="@Text.Lower("Start Date")"
@@ -62,7 +61,7 @@
                                        Clearable="true" />
                     </li>
                     <li>
-                        <MudDatePicker @bind-Date="Entity.MB_EndDate"
+                        <MudDatePicker @bind-Date="Entity.Entity.MB_EndDate"
                                        Mask="@(new DateMask("yyyy.MM.dd"))"
                                        DateFormat="yyyy.MM.dd"
                                        HelperText="@Text.Lower("End Date")"
@@ -75,7 +74,7 @@
                         <MudTextField Immediate="true"
                                       AdornmentIcon="@Icons.Material.Filled.Description"
                                       Adornment="Adornment.Start"
-                                      @bind-Value="@Entity.Title"
+                                      @bind-Value="@Entity.Entity.Title"
                                       HelperText="@Text.Lower("Title")"
                                       Required="true"></MudTextField>
                     </li>
@@ -86,7 +85,7 @@
     <div class="row">
         <div class="col-12">
             <div class="p-3">
-                <TinyMCEContent Entity="Entity" Title="@Text.Lower("Content")"></TinyMCEContent>
+                <TinyMCEContent Entity="Entity.Entity" Title="@Text.Lower("Content")"></TinyMCEContent>
             </div>
         </div>
     </div>
@@ -96,7 +95,7 @@
                 <i class="fa-solid fa-floppy-disk"></i>
                 @Text.Lower("Save")
             </button>
-            <button class="btn btn-secondary text-white fw-bold" @onclick="UndoChanges" disabled="@this.Entity.New">
+            <button class="btn btn-secondary text-white fw-bold" @onclick="UndoChanges" disabled="@this.Entity.Entity.New">
                 <i class="fa-solid fa-rotate-left"></i>
                 @Text.Lower("Undo changes")
             </button>
@@ -108,12 +107,5 @@
     </div>
 </div>
 @code {
-    protected override bool DisableTheSaveButton
-    {
-        get
-        {
-            if (this.Entity.Title.Has() == false) return true;
-            return false;
-        }
-    }
+    
 }

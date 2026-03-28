@@ -1,5 +1,5 @@
 ﻿@page "/specialmessages"
-@inherits BasicAdminGrid<OrigamiSpecialMessage>
+@inherits BasicAdminGridContent<OrigamiSpecialMessage, HubContentSpecialMessage>
 @implements IFilter
 @inject ISpecialMessageRepository _messages
 
@@ -40,7 +40,7 @@
         <div class="p-3 border-bottom">
             <div class="row">
                 <div class="col-12">
-                    <SearchLite T="OrigamiSpecialMessage" OnHitSelected="this.OnSearchResultSelected"></SearchLite>
+                    <Search></Search>
                 </div>
             </div>
         </div>
@@ -52,38 +52,38 @@
                     <DataGridOptions Deleted="this.IncludeDeletedEntitiesInDataGrid" DeletedChanged="this.OnIncludeDeletedEntitiesChanged"></DataGridOptions>
                 </div>
                 <div class="pages col-12">
-                    <MudDataGrid @ref="DataGrid" T="OrigamiSpecialMessage" ServerData="GetEntities" Filterable="false" SortMode="SortMode.None" Class="border selectable" SelectedItems="this.SelectedEntities" MultiSelection="true" SelectedItemsChanged="this.SelectedEntitiesChanged"
+                    <MudDataGrid @ref="DataGrid" T="HubContentSpecialMessage" ServerData="GetEntities" Filterable="false" SortMode="SortMode.None" Class="border selectable" SelectedItems="this.SelectedEntities" MultiSelection="true" SelectedItemsChanged="this.SelectedEntitiesChanged"
                                  RowClassFunc="this.RowClassFunc" Bordered="true" SelectOnRowClick="false">
                         <Columns>
-                            <SelectColumn T="OrigamiSpecialMessage"></SelectColumn>
+                            <SelectColumn T="HubContentSpecialMessage"></SelectColumn>
                             <TemplateColumn Title="@Text.Upper("Title")">
                                 <CellTemplate>
                                     <div class="cursor-pointer" @onclick="() => OnEdit(context.Item)">
-                                        <SpecialMessageHeaderLite Entity="context.Item"></SpecialMessageHeaderLite>
+                                        <SpecialMessageHeaderLite Entity="context.Item.Entity"></SpecialMessageHeaderLite>
                                     </div>
                                 </CellTemplate>
                             </TemplateColumn>
                             <TemplateColumn Title="@Text.Upper("Start Date")" Sortable="false" Filterable="false" CellClass="col-1 text-center">
                                 <CellTemplate>
-                                    @if (context.Item.MB_StartDate.HasValue)
+                                    @if (context.Item.Entity.MB_StartDate.HasValue)
                                     {
                                         <i class="fa-solid fa-calendar"></i>
-                                        <div class="small">@context.Item.MB_StartDate</div>
+                                        <div class="small">@context.Item.Entity.MB_StartDate</div>
                                     }
                                 </CellTemplate>
                             </TemplateColumn>
                             <TemplateColumn Title="@Text.Upper("End Date")" Sortable="false" Filterable="false" CellClass="col-1 text-center">
                                 <CellTemplate>
-                                    @if (context.Item.MB_EndDate.HasValue)
+                                    @if (context.Item.Entity.MB_EndDate.HasValue)
                                     {
                                         <i class="fa-solid fa-calendar"></i>
-                                        <div class="small">@context.Item.MB_EndDate</div>
+                                        <div class="small">@context.Item.Entity.MB_EndDate</div>
                                     }
                                 </CellTemplate>
                             </TemplateColumn>
                             <TemplateColumn Title="@Text.Upper("Published")" Sortable="false" Filterable="false" CellClass="col-1 text-center">
                                 <CellTemplate>
-                                    @if (context.Item.IsPublished)
+                                    @if (context.Item.Entity.IsPublished)
                                     {
                                         <i class="fa-solid fa-thumbs-up"></i>
                                     }
@@ -92,12 +92,12 @@
                             <TemplateColumn Title="@Text.Upper("Date")" Sortable="false" Filterable="false" CellClass="col-1 text-center">
                                 <CellTemplate>
                                     <i class="fa-solid fa-calendar"></i>
-                                    <div class="small">@context.Item.GetDate()</div>
+                                    <div class="small">@context.Item.Entity.GetDate()</div>
                                 </CellTemplate>
                             </TemplateColumn>
                         </Columns>
                         <PagerContent>
-                            <MudDataGridPager T="OrigamiSpecialMessage" />
+                            <MudDataGridPager T="HubContentSpecialMessage" />
                         </PagerContent>
                         <NoRecordsContent>
                             <NoEntriesWereFound></NoEntriesWereFound>
@@ -112,72 +112,5 @@
     </ContentTemplate>
 </Root>
 @code {
-
     protected override string DefaultOrdering => $"{nameof(OrigamiSpecialMessage.Title)}";
-
-    /// <summary>
-    /// Can the user delete the selected entities?
-    /// </summary>
-    protected virtual bool DisableTheFrontPageButton => SelectedEntities.Any() == false;
-
-    protected virtual Result<OrigamiSpecialMessage> PublishEntity(OrigamiSpecialMessage entity)
-    {
-        var context = new DataOperationContext<OrigamiSpecialMessage>(this.UserFacade.User, DateTime.UtcNow, entity);
-        return this._messages.SmartPublish(context, true);
-    }
-
-    protected virtual Result<OrigamiSpecialMessage> UnpublishEntity(OrigamiSpecialMessage entity)
-    {
-        var context = new DataOperationContext<OrigamiSpecialMessage>(this.UserFacade.User, DateTime.UtcNow, entity);
-        return this._messages.SmartUnpublish(context, true);
-    }
-
-    protected async Task PublishSelectedEntities()
-    {
-        await ExecuteWithSelectedEntities(
-            async () =>
-            {
-                return await DialogService.ShowMessageBoxAsync(
-                    Text.Upper("Publish {0} item(s)", SelectedEntities.Count),
-                    Text.Original("Are you sure?"),
-                    yesText: Text.Lower("Yes"),
-                    noText: Text.Lower("No"));
-            },
-            this.PublishEntity
-        );
-    }
-
-    protected async Task UnpublishSelectedEntities()
-    {
-        await ExecuteWithSelectedEntities(
-            async () =>
-            {
-                return await DialogService.ShowMessageBoxAsync(
-                    Text.Upper("Unpublish {0} item(s)", SelectedEntities.Count),
-                    Text.Original("Are you sure?"),
-                    yesText: Text.Lower("Yes"),
-                    noText: Text.Lower("No"));
-            },
-            this.UnpublishEntity
-        );
-    }
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        var filter = this.NavigationManager!.Uri.QueryString("filter");
-        this.Filter = filter.Has() ? filter : this.Filter;
-    }
-
-    protected override IEnumerable<OrigamiSpecialMessage> GetItems()
-    {
-        if (this.IncludeDeletedEntitiesInDataGrid)
-        {
-            return base.GetItems();
-        }
-
-        return from x in base.GetItems() 
-               where x.IsDeleted == false
-               select x;
-    }
 }
