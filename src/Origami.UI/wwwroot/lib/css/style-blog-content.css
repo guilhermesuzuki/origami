@@ -33,3 +33,5 @@
 
 ul.content-rating, .content-rating ul { margin-bottom: 0; }
 .content-ratings .logo { height: 29px !important; }
+
+table .front-page { background-color: #9cef0010 !important; }

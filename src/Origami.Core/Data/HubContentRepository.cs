@@ -296,14 +296,19 @@ namespace Origami.Core.Data
                 var entity = db.Set<OrigamiPage>().AsNoTracking().Id(root.Entity.Id);
                 if (entity != null)
                 {
-                    // validate whether the entity is top-level page (use fluent validator for this?)
-                    _validator.ValidateAndThrow(root);
+                    // only top-level pages can be promoted to front-page
+                    if (entity.ParentId != null) return new(root) { Error = Text.Original("Only top-level pages can be promoted to front page"), };
 
                     // previous front-page, if exists, should be unmarked
                     var frontpage = (from page in db.Set<OrigamiPage>().AsNoTracking() where page.IsFrontPage select page).FirstOrDefault();
-                    if (frontpage != null && frontpage.Id != root.Entity.Id)
+                    if (frontpage != null && frontpage.Id == root.Entity.Id)
                     {
-                        this.DemoteFromFrontPage(this.Get(frontpage), userId);
+                        return new(root) { Error = Text.Original("Page is already the front page"), };
+                    }
+                    if (frontpage != null)
+                    {
+                        var demote = this.DemoteFromFrontPage(this.Get(frontpage), userId);
+                        if (demote.Ok == false) return demote;
                     }
 
                     // promotes to front-page

@@ -1,9 +1,16 @@
 ﻿@inherits Basic
 @implements IEntityNull<OrigamiContent>
 
-@if (Entity is OrigamiPage)
+@if (Entity is OrigamiPage page)
 {
-    <i class="bi bi-globe" title="@Text.Lower("Page")"></i>
+    if (page.IsFrontPage)
+    {
+        <i class="bi bi-globe fw-bold text-success" title="@Text.Lower("Front-page")"></i>
+    }
+    else
+    {
+        <i class="bi bi-globe" title="@Text.Lower("Page")"></i>
+    }
 }
 else if (Entity is OrigamiPost)
 {
