@@ -16,8 +16,8 @@
         <HeadContent>
             <meta property="og:title" content="@Category • @Entity.Title" />
             <meta property="og:description" content="@Entity.Description" />
-            <meta property="og:image" content="@(NavigationManager!.BaseUri.TrimEnd('/') + Entity.Get().HeaderImage.NoHeader())" />
-            <meta property="og:url" content="@NavigationManager!.BaseUri.TrimEnd('/')/categories/@Category/@Entity.NanoId" />
+            <meta property="og:image" content="@(GhostOfTheNavigator!.BaseUri.TrimEnd('/') + Entity.Get().HeaderImage.NoHeader())" />
+            <meta property="og:url" content="@GhostOfTheNavigator!.BaseUri.TrimEnd('/')/categories/@Category/@Entity.NanoId" />
         </HeadContent>
     }
     <div class="category-details @Class">

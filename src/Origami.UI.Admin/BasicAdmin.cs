@@ -22,7 +22,7 @@ namespace Origami.UI.Admin
         {
             await this.JSRuntime.InvokeVoidAsync("$.removeCookie", this.Configuration.GetUserCookieKey(), new { path = "/" });
             this.UserFacade.User = OrigamiUser.AnonymousUser;
-            this.NavigationManager.Refresh(true);
+            this.GhostOfTheNavigator.Refresh(true);
         }
 
         protected override async Task PageTitleAsync(bool firstRender)
@@ -35,7 +35,7 @@ namespace Origami.UI.Admin
         {
             if (firstRender)
             {
-                var uri = new Uri(NavigationManager.Uri);
+                var uri = new Uri(GhostOfTheNavigator.Uri);
                 await JSRuntime.InvokeVoidAsync("origami.physicalpages.viewByPath", uri.AbsolutePath);
             }
         }

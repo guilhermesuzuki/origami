@@ -14,9 +14,9 @@
     /// </summary>
     private void GoToTop()
     {
-        var uri = this.NavigationManager.Uri;
+        var uri = this.GhostOfTheNavigator.Uri;
         var uriSegments = uri.Split(new[] { '#' }, StringSplitOptions.RemoveEmptyEntries);
         // If there's a hash, navigate to the top of the page
-        this.NavigationManager.NavigateTo($"{uriSegments[0]}#top");
+        this.GhostOfTheNavigator.NavigateTo($"{uriSegments[0]}#top");
     }
 }

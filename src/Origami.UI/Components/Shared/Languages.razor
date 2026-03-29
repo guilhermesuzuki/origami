@@ -20,7 +20,7 @@
         var hub = await base.SetLanguage(language);
         if (hub.Ok)
         {
-            this.NavigationManager.Refresh(true);
+            this.GhostOfTheNavigator.Refresh(true);
         }
         this.UserFacade.Result = hub;
         return hub;

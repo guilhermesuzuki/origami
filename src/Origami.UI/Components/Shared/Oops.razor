@@ -45,7 +45,7 @@
     /// </summary>
     protected void LoadError()
     {
-        var error = this.NavigationManager!.Uri.Split("error=");
+        var error = this.GhostOfTheNavigator!.Uri.Split("error=");
         if (error.Length > 1)
         {
             this.Error = Uri.UnescapeDataString(error[1]).ToLower();

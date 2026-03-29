@@ -16,8 +16,8 @@
         <HeadContent>
             <meta property="og:title" content="@Tag • @Entity.Title" />
             <meta property="og:description" content="@Entity.Description" />
-            <meta property="og:image" content="@(NavigationManager.BaseUri.TrimEnd('/') + Entity.Get().HeaderImage.NoHeader())" />
-            <meta property="og:url" content="@NavigationManager.BaseUri.TrimEnd('/')/tags/@Tag/@Entity.NanoId" />
+            <meta property="og:image" content="@(GhostOfTheNavigator.BaseUri.TrimEnd('/') + Entity.Get().HeaderImage.NoHeader())" />
+            <meta property="og:url" content="@GhostOfTheNavigator.BaseUri.TrimEnd('/')/tags/@Tag/@Entity.NanoId" />
         </HeadContent>
     }
     <div class="tag-details @Class">

@@ -43,6 +43,7 @@
             {
                 <button class="w-100 p-2 text-dark bg-light" @onclick="this.Logout" title="@Text.Lower("Log out")">
                     <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>@Text.Lower("Log out")</span>
                 </button>
             }
         }
@@ -75,6 +76,6 @@
     private void GoToProfile()
     {
         if (this.GoToProfileWhenClicking == false) return;
-        this.NavigationManager!.NavigateTo($"/socialprofiles/{Entity?.Id}", true);
+        this.GhostOfTheNavigator!.NavigateTo($"/socialprofiles/{Entity?.Id}", true);
     }
 }

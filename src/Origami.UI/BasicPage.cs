@@ -22,7 +22,7 @@ namespace Origami.UI
         protected async Task ErrorFromQueryStringAsync()
         {
             var key = "error";
-            var error = this.NavigationManager.Uri.QueryString(key);
+            var error = this.GhostOfTheNavigator.Uri.QueryString(key);
             if (error.Has() == true)
             {
                 await JSRuntime.InvokeVoidAsync("removeQueryStringWithoutReload", key);
@@ -37,7 +37,7 @@ namespace Origami.UI
         protected async Task LanguageFromQueryStringAsync()
         {
             var key = "language";
-            var language = this.NavigationManager.Uri.QueryString(key);
+            var language = this.GhostOfTheNavigator.Uri.QueryString(key);
             if (language.Has() == true)
             {
                 await JSRuntime.InvokeVoidAsync("removeQueryStringWithoutReload", key);
@@ -49,7 +49,7 @@ namespace Origami.UI
                     return;
                 }
 
-                this.NavigationManager.Refresh(true);
+                this.GhostOfTheNavigator.Refresh(true);
             }
         }
 
@@ -87,7 +87,7 @@ namespace Origami.UI
             {
                 if (this.UserFacade.IncognitoMode == false)
                 {
-                    var uri = new Uri(NavigationManager.Uri);
+                    var uri = new Uri(GhostOfTheNavigator.Uri);
                     await JSRuntime.InvokeVoidAsync("origami.physicalpages.viewByPath", uri.AbsolutePath);
                 }
             }

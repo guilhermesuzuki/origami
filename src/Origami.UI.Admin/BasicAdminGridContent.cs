@@ -455,7 +455,7 @@ namespace Origami.UI.Admin
 
         protected void SetFilterFromQueryString()
         {
-            var filter = this.NavigationManager!.Uri.QueryString("filter");
+            var filter = this.GhostOfTheNavigator!.Uri.QueryString("filter");
             if (filter.Has() == false) return;
             Filter = filter;
         }

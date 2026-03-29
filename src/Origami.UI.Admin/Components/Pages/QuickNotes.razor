@@ -157,7 +157,7 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        var filter = this.NavigationManager!.Uri.QueryString("filter");
+        var filter = this.GhostOfTheNavigator!.Uri.QueryString("filter");
         this.Filter = filter.Has() ? filter : this.Filter;
     }
 }

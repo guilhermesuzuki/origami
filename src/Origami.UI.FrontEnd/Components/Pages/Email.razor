@@ -11,7 +11,7 @@
         var user = this.Super.Users.ReadFromCache().FirstOrDefault(x => x.Id == pwd.UserId);
         if (user != null)
         {
-            var link = this.NavigationManager.BaseUri.TrimEnd('/') + "/password/reset/" + Key1;
+            var link = this.GhostOfTheNavigator.BaseUri.TrimEnd('/') + "/password/reset/" + Key1;
             <UserHeaderInline Entity="user"></UserHeaderInline>
             <div>
                 <h1>@Text.Original("Password Reset")</h1>

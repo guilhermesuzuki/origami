@@ -324,11 +324,11 @@
 
     private void GoToBlog()
     {
-        this.NavigationManager.NavigateTo($"{this._blog.Hyperlink}#content-start");
+        this.GhostOfTheNavigator.NavigateTo($"{this._blog.Hyperlink}#content-start");
     }
 
     private void GoToRss()
     {
-        this.NavigationManager.NavigateTo($"{this._blog.Hyperlink}rss.xml", true);
+        this.GhostOfTheNavigator.NavigateTo($"{this._blog.Hyperlink}rss.xml", true);
     }
 }

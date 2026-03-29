@@ -355,7 +355,7 @@
     private async Task LeaveIncognito()
     {
         var remove = await this.JSRuntime.InvokeAsync<bool>("$.removeCookie", "incognito-mode", new { path = "/" });
-        if (remove == true) this.NavigationManager.NavigateTo(this.NavigationManager.Uri, true);
+        if (remove == true) this.GhostOfTheNavigator.NavigateTo(this.GhostOfTheNavigator.Uri, true);
     }
 
     /// <summary>
@@ -365,7 +365,7 @@
     {
         var remove = await this.JSRuntime.InvokeAsync<bool>("$.removeCookie", "incognito-mode", new { path = "/" });
         var add = await this.JSRuntime.InvokeAsync<string>("$.cookie", "incognito-mode", 1, new { path = "/", expires = 365, });
-        this.NavigationManager.NavigateTo(this.NavigationManager.Uri, true);
+        this.GhostOfTheNavigator.NavigateTo(this.GhostOfTheNavigator.Uri, true);
     }
 
     protected override void OnInitialized()

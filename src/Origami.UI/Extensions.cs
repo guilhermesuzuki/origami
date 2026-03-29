@@ -175,6 +175,7 @@ namespace Origami.UI
             builder.Services.AddTransient<IWhatToSeeNextRepository, WhatToSeeNextRepository>();
             
             builder.Services.AddScoped<ILoginRules, LoginRules>();
+            builder.Services.AddScoped<IWhatHappensNext, WhatHappensNext>();
 
             builder.Services.AddKeyedSingleton<IIpLocationRepository, IpApiComRepository>(IpApiComRepository.Host);
             builder.Services.AddKeyedSingleton<IIpLocationRepository, IpApiCoRepository>(IpApiCoRepository.Host);

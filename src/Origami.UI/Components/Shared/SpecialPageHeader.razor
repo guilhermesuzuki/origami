@@ -111,7 +111,7 @@
     /// </summary>
     protected void GoToPage()
     {
-        NavigationManager.NavigateTo($"{Entity!.Hyperlink}#content-start");
+        GhostOfTheNavigator.NavigateTo($"{Entity!.Hyperlink}#content-start");
     }
 
     /// <summary>
@@ -119,7 +119,7 @@
     /// </summary>
     protected void GoToPage(OrigamiSpecialPage page)
     {
-        NavigationManager.NavigateTo($"{page.Hyperlink}#content-start");
+        GhostOfTheNavigator.NavigateTo($"{page.Hyperlink}#content-start");
     }
 
     /// <summary>

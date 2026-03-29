@@ -415,7 +415,7 @@
                                 <CellTemplate>
                                     <span class="fs-4">@context.Item.Key</span>
                                     <span class="fs-6 d-block">
-                                        @(this.NavigationManager.BaseUri.TrimEnd('/') + "/password/reset/" + context.Item.Key)
+                                        @(this.GhostOfTheNavigator.BaseUri.TrimEnd('/') + "/password/reset/" + context.Item.Key)
                                     </span>
                                 </CellTemplate>
                             </TemplateColumn>

@@ -118,7 +118,7 @@
                 Rating = rate,
             };
 
-            this.HttpContextAccessor.HttpContext?.TrackFields(this.MemoryCache, rating, NavigationManager.Uri);
+            this.HttpContextAccessor.HttpContext?.TrackFields(this.MemoryCache, rating, GhostOfTheNavigator.Uri);
 
             // social user is rating this
             if (this.UserFacade.SocialProfile.New == false)

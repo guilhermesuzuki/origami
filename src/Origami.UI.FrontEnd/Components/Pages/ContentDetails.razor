@@ -20,8 +20,8 @@
             <HeadContent>
                 <meta property="og:title" content="@_entity.Title" />
                 <meta property="og:description" content="@_entity.Description" />
-                <meta property="og:image" content="@(NavigationManager.BaseUri.TrimEnd('/') + _entity.Get().HeaderImage.NoHeader())" />
-                <meta property="og:url" content="@NavigationManager.BaseUri.TrimEnd('/')/videos/@_entity.NanoId" />
+                <meta property="og:image" content="@(GhostOfTheNavigator.BaseUri.TrimEnd('/') + _entity.Get().HeaderImage.NoHeader())" />
+                <meta property="og:url" content="@GhostOfTheNavigator.BaseUri.TrimEnd('/')/videos/@_entity.NanoId" />
             </HeadContent>
         }
         <div class="content-details @Class">
@@ -193,7 +193,7 @@
         {
             if (this.UserFacade.IncognitoMode == false)
             {
-                var uri = new Uri(NavigationManager.Uri);
+                var uri = new Uri(GhostOfTheNavigator.Uri);
                 await JSRuntime.InvokeVoidAsync("origami.physicalpages.viewByContent", uri.AbsolutePath, this._entity.GetType().Name, this._entity.Id);
             }
         }
