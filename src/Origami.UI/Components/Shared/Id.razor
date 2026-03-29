@@ -44,16 +44,9 @@
         <span class="col-2">
             @if (this.Entity is IDateCreated dateCreated)
             {
-                <span class="me-1" title="@Text.Original("Date Created")">
+                <span class="me-1" title="@Text.Original("Date")">
                     <i class="bi bi-calendar-plus-fill"></i>
-                    <span class="">@dateCreated.DateCreated.ToString()</span>
-                </span>
-            }
-            @if (this.Entity is IDateModified dateModified && dateModified.DateModified.HasValue)
-            {
-                <span class="me-1" title="@Text.Original("Date Modified")">
-                    <i class="bi bi-calendar-check-fill"></i>
-                    <span class="">@dateModified.DateModified.ToString()</span>
+                    <span class="">@dateCreated.GetDate()</span>
                 </span>
             }
             @if (this.Entity is IPublished published && published.IsPublished && published.DatePublished.HasValue)
