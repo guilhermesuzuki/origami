@@ -3,6 +3,10 @@
 
 @if (this.Entity != null)
 {
+    <span class="d-inline-block small">
+        <ContentIcon Entity="Entity"></ContentIcon>
+        <ContentName Entity="Entity"></ContentName>
+    </span>
     <span class="content-header-inline d-flex align-items-center position-relative @Class">
         <span class="language d-inline-block @Entity.LanguageWrittenOn me-1"></span>
         <span class="ellipsis" title="@Entity.Title">@Entity.Title</span>
