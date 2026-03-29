@@ -28,7 +28,7 @@
                         @if (hit.Type.Like("Blog") == true)
                         {
                             var blog = this.Super.Blogs.ReadFromCache().Id(hit.Id);
-                            <BlogHeaderLite Entity="blog"></BlogHeaderLite>
+                            <BlogHeaderInline Entity="blog"></BlogHeaderInline>
                         }
                         else if (hit.Type.Like("Page") == true)
                         {

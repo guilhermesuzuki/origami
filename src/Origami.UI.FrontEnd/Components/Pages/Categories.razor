@@ -6,7 +6,7 @@
     {
         var categories = this.Super.GetCategories().Blog(this._blog.Id);
         <div class="categories pb-3">
-            <BlogHeaderLite2 Class="text-center fs-1" Entity="_blog" DisplayBlogNameEvenWithoutHeaderImage="false"></BlogHeaderLite2>
+            <BlogHeaderLite Class="text-center fs-1" Entity="_blog" DisplayBlogNameEvenWithoutHeaderImage="false"></BlogHeaderLite>
             <div class="mt-3">
                 <div class="row">
                     @if (categories.Any() == true)

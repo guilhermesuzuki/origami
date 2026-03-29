@@ -28,7 +28,7 @@
                     <div class="cursor-pointer col-12 col-xxl-3" @onclick="() => OnSelect(hit)" @onclick:stopPropagation="true">
                         @if (hit is OrigamiBlog blog)
                         {
-                            <BlogHeaderLite Entity="blog"></BlogHeaderLite>
+                            <BlogHeaderInline Entity="blog"></BlogHeaderInline>
                         }
                         else if (hit is OrigamiPage page)
                         {

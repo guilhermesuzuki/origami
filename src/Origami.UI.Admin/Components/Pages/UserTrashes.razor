@@ -50,7 +50,7 @@
                                         @if (context.Item.Type.Like("Blog") == true)
                                         {
                                             var blog = this.Super.Blogs.ReadFromCache().Id(context.Item.Id);
-                                            <BlogHeaderLite Entity="blog"></BlogHeaderLite>
+                                            <BlogHeaderInline Entity="blog"></BlogHeaderInline>
                                         }
                                         else if (context.Item.Type.Like("OrigamiPage") == true)
                                         {

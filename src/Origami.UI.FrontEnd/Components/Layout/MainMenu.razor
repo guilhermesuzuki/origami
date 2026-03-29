@@ -14,7 +14,7 @@
                     <li>
                         <div class="cursor-pointer focusable d-inline-flex align-items-center @(blog.Id == this.UserFacade.BlogId ? "fw-bolder" : "fw-light")"
                              @onclick="() => this.GoToBlog(blog)">
-                            <BlogHeaderLite Class="p-3 text-uppercase" Entity="blog"></BlogHeaderLite>
+                            <BlogHeaderInline Class="p-3 text-uppercase" Entity="blog"></BlogHeaderInline>
                         </div>
                         @if (blog.IsSelected)
                         {
