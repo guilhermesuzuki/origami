@@ -62,9 +62,8 @@ namespace Origami.Core.Data
                 using var db = DbContextFactory.CreateDbContext();
 
                 var query = from view in db.Set<OrigamiPhysicalPageView>()
-                            where view.Content != null
-                            where view.Content!.Id == entity.Id
-                            where view.Content!.Type == entity.GetType().Name
+                            where view.ContentId != null
+                            where view.ContentId == entity.Id
                             select view;
 
                 x = query.LongCount();

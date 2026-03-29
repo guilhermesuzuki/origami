@@ -119,11 +119,7 @@ namespace Origami.UI.FrontEnd.Controllers
                     Id = Guid.NewGuid(),
                     PhysicalPageId = page.Id,
                     Admin = _appFacade.Admin,
-                    Content = new()
-                    {
-                        Type = type,
-                        Id = Guid.Parse(id)
-                    },
+                    ContentId = Guid.Parse(id),
                 };
                 this._fill(view, url, referrer);
                 _physicalPageView.SmartSave(view.GetContext(), false);
@@ -170,11 +166,7 @@ namespace Origami.UI.FrontEnd.Controllers
                     Id = Guid.NewGuid(),
                     PhysicalPageId = page.Id,
                     Admin = _appFacade.Admin,
-                    Content = new()
-                    {
-                        Type = nameof(OrigamiPhysicalPage),
-                        Id = Guid.Empty
-                    },
+                    ContentId = null,
                 };
                 this._fill(view, url, referrer);
                 _physicalPageView.SmartSave(view.GetContext(), false);
