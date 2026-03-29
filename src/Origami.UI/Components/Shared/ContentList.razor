@@ -76,10 +76,10 @@
         {
             2 => posts.OrderBy(x => x.Title),
             3 => posts.OrderByDescending(x => x.Title),
-            4 => posts.OrderBy(x => x.DateCreated),
+            4 => posts.OrderBy(x => x.DatePublished),
             5 => posts.OrderBy(x => x.LanguageWrittenOn).ThenBy(x => x.Title),
-            6 => posts.OrderBy(x => x.LanguageWrittenOn).ThenByDescending(x => x.DateCreated),
-            _ => posts.OrderByDescending(x => x.DateCreated)
+            6 => posts.OrderBy(x => x.LanguageWrittenOn).ThenByDescending(x => x.DatePublished),
+            _ => posts.OrderByDescending(x => x.DatePublished)
         };
 
         this.Contents = posts.Take(Page * PageSize).ToList();
