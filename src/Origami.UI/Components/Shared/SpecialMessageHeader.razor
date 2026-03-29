@@ -5,8 +5,8 @@
 {
     var bg = this.Entity.Subtype switch
     {
-        "None" => string.Empty,
-        _ => $"bg-{this.Entity.Subtype?.ToLower()}",
+        "None" or null => string.Empty,
+        _ => $"bg-{this.Entity.Subtype.ToLower()}",
     };
     <div class="p-3 position-relative text-center text-white @bg @Class">
         <Draft Entity="this.Entity"></Draft>
