@@ -12,7 +12,7 @@ namespace Origami.Core.Validators
     {
         public HubContentSpecialPageValidator(Text text, IWebRootPath webRootPath, IDbContextFactory<OrigamiDbContext> dbContextFactory) : base()
         {
-            RuleFor(x => x.Entity).SetValidator(new OrigamiContentValidator(text, webRootPath));
+            RuleFor(x => x.Entity).SetValidator(new OrigamiContentValidator(text, webRootPath, isBlogIdRequired: false));
         }
     }
 }

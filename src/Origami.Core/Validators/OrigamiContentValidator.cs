@@ -5,12 +5,11 @@ namespace Origami.Core.Validators
 {
     public class OrigamiContentValidator : AbstractValidator<OrigamiContent>
     {
-        public OrigamiContentValidator(Text text, IWebRootPath webRootPath) : base()
+        public OrigamiContentValidator(Text text, IWebRootPath webRootPath, bool isBlogIdRequired = true) : base()
         {
+            RuleFor(x => x.Id).Id(text);
             RuleFor(x => x.Type).ContentType(text);
             RuleFor(x => x.AuthorId).AuthorId(text);
-            RuleFor(x => x.BlogId).BlogId(text);
-            RuleFor(x => x.Id).Id(text);
             RuleFor(x => x.NanoId).NanoId(text);
             RuleFor(x => x.Title).Title(text);
             RuleFor(x => x.Description).Description(text);
@@ -19,6 +18,11 @@ namespace Origami.Core.Validators
             RuleFor(x => x.HeaderImage).HeaderImage(text, webRootPath);
             RuleFor(x => x.LanguageWrittenOn).Language(text);
             RuleFor(x => x).TopLevelPageWhenFrontPage(text);
+
+            if (isBlogIdRequired)
+            {
+                RuleFor(x => x.BlogId).BlogId(text);
+            }
         }
     }
 }
