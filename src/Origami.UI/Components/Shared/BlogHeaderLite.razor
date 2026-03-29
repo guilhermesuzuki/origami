@@ -4,28 +4,21 @@
 @if (this.Entity != null)
 {
     <div class="blog-header-lite @Class">
-        @if (this.HasHeaderImage)
-        {
-            <div class="blog-header-image align-content-center position-relative" style="background-image: url(@Entity.HeaderImage.QueryString("size", "medium"))">
+        <div class="position-relative">
+            @if (this.HasHeaderImage)
+            {
+                <div class="blog-header-image position-absolute zeroes" style="background-image: url(@Entity.HeaderImage.QueryString("size", "medium"))"></div>
                 <div class="position-absolute zeroes" style="background-color: #00000077"></div>
-                <span class="blog-header-title text-white d-inline-block position-relative text-uppercase" style="z-index:5;">
-                    <i class="fa-solid fa-cube pe-1"></i>
-                    <span class="me-1">@Entity.Name</span>
-                </span>
-            </div>
-        }
-        else if (this.DisplayBlogNameEvenWithoutHeaderImage)
-        {
-            <span class="blog-header-title d-inline-block position-relative text-uppercase" style="z-index:5;">
+            }
+            <span class="blog-header-title text-white d-inline-block position-relative text-uppercase z-index-middle">
                 <i class="fa-solid fa-cube pe-1"></i>
                 <span class="me-1">@Entity.Name</span>
             </span>
-        }
+        </div>
     </div>
 }
 
 @code {
-    [Parameter] public bool DisplayBlogNameEvenWithoutHeaderImage { get; set; } = true;
     [Parameter] public OrigamiBlog? Entity { get; set; }
 
     /// <summary>
