@@ -12,7 +12,7 @@
     var ratings = this.Super.ContentRatings.Ratings(Entity).Count();
 
     <AuthorHeaderLite Entity="this.Entity"></AuthorHeaderLite>
-    <div class="content-header position-relative shadow-sm cursor-pointer @Class" @onclick="() => this.GoToContent()">
+    <div class="content-header position-relative shadow-sm cursor-pointer @Class" @onclick="this.Go">
         <div class="content-header-image" style="background-image: url(@header)"></div>
         <div class="content-header-title position-absolute overflow-auto zeroes">
             <ul class="inline-list position-absolute w-100 z-index-middle cursor-pointer focusable p-2" style="top:0;">
@@ -127,9 +127,12 @@
     /// <summary>
     /// Browses to the Post Details
     /// </summary>
-    protected void GoToContent()
+    protected void Go()
     {
-        GhostOfTheNavigator.NavigateTo($"{Hyperlink}#content-start");
+        if (Entity != null)
+        {
+            this.WhatHappensNext.WhenIClickHere(this, new(this.Entity));
+        }
     }
 
     public string Hyperlink

@@ -9,7 +9,7 @@
 
     <div class="wrapper @Class">
         <AuthorHeaderLite Entity="this.Entity"></AuthorHeaderLite>
-        <div class="content-header-lite position-relative shadow-sm cursor-pointer" @onclick="() => this.Go()">
+        <div class="content-header-lite position-relative shadow-sm cursor-pointer" @onclick="this.Go">
             <div class="content-header-image" style="height: 150px; background-image: url(@Entity.HeaderImage.NoHeader())"></div>
             <div class="content-header-title position-absolute overflow-auto zeroes">
                 <ul class="inline-list position-absolute w-100 z-index-middle cursor-pointer focusable p-2" style="top:0;">
@@ -86,7 +86,7 @@
     {
         if (this.Entity != null)
         {
-            this.GhostOfTheNavigator.NavigateTo(this.Entity.Hyperlink);
+            this.WhatHappensNext.WhenIClickHere(this, new(this.Entity));
         }
     }
 }

@@ -26,15 +26,12 @@ public class WhatHappensNext : IWhatHappensNext
 
     public void WhenIClickHere(object? sender, WhenIClickHereEventArgs e)
     {
-        if (WhenClickingHere.GetInvocationList().Any() == true)
+        if (e.StopPropagation)
         {
-            if (e.StopPropagation)
-            {
-                WhenClickingHere.GetInvocationList().LastOrDefault()?.DynamicInvoke(sender, e);
-                return;
-            }
-            this.WhenClickingHere.Invoke(sender, e);
+            WhenClickingHere.GetInvocationList().Last().DynamicInvoke(sender, e);
+            return;
         }
+        this.WhenClickingHere.Invoke(sender, e);
     }
 
     public void WhenTheUserClicksHere(object? sender, WhenIClickHereEventArgs e)
@@ -42,7 +39,10 @@ public class WhatHappensNext : IWhatHappensNext
         if (e.Entity is IHyperlink hyperlink)
         {
             // Navigate to the details page for the entity
-            GhostOfTheNavigator.NavigateTo(hyperlink.Hyperlink);
+            GhostOfTheNavigator.NavigateTo($"{hyperlink.Hyperlink}#content-start");
+            return;
         }
+
+        throw new InvalidOperationException();
     }
 }

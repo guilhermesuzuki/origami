@@ -46,6 +46,7 @@ namespace Origami.UI
         [Inject] protected Text Text { get; set; } = null!;
         [Inject] protected IUserFacade UserFacade { get; set; } = null!;
         [Inject] protected IWebRootPath WebRootPath { get; set; } = null!;
+        [Inject] protected IWhatHappensNext WhatHappensNext { get; set; } = null!;
 
         public OrigamiBlog GetBlogFromSlug()
         {
