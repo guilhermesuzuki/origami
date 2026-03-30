@@ -144,7 +144,7 @@ namespace Origami.Core.Data
 
         protected virtual IEnumerable<WildcardQuery> GetWildcardQueries(string searchTerm)
         {
-            searchTerm = $"{QueryParser.Escape(searchTerm)}";
+            searchTerm = $"{QueryParser.Escape(searchTerm)}*";
 
             var type = typeof(T);
             var queries = new List<WildcardQuery>();

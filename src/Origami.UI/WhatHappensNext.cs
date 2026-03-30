@@ -15,11 +15,14 @@ public class WhatHappensNext : IWhatHappensNext
     /// Default constructor with DI
     /// </summary>
     /// <param name="navigationManager">used for navigation</param>
-    public WhatHappensNext(NavigationManager navigationManager, ISuperRepository superRepository)
+    public WhatHappensNext(NavigationManager navigationManager, IAppFacade appFacade, ISuperRepository superRepository)
     {
         this.GhostOfTheNavigator = navigationManager;
         this.SuperRepository = superRepository;
-        this.WhenClickingHere = WhenTheUserClicksHereInTheFrontEnd;
+
+        this.WhenClickingHere = appFacade.Admin.GetValueOrDefault()
+            ? this.WhenTheUserClicksHereInTheAdmin
+            : this.WhenTheUserClicksHereInTheFrontEnd;
     }
 
     /// <summary>
@@ -35,6 +38,42 @@ public class WhatHappensNext : IWhatHappensNext
             return;
         }
         this.WhenClickingHere.Invoke(sender, e);
+    }
+
+    public void WhenTheUserClicksHereInTheAdmin(object? sender, WhenIClickHereEventArgs e)
+    {
+        var hyperlink = e.Entity switch
+        {
+            OrigamiCategory => $"/categories?nano={(e.Entity as INanoId)?.NanoId}",
+            OrigamiPage => $"/pages?nano={(e.Entity as INanoId)?.NanoId}",
+            OrigamiPost => $"/posts?nano={(e.Entity as INanoId)?.NanoId}",
+            OrigamiSpecialMessage => $"/specialmessages?nano={(e.Entity as INanoId)?.NanoId}",
+            OrigamiSpecialPage => $"/specialpages?nano={(e.Entity as INanoId)?.NanoId}",
+            OrigamiVideo => $"/videos?nano={(e.Entity as INanoId)?.NanoId}",
+            OrigamiSocialProfile => $"/socialprofiles?id={e.Entity.Id}",
+            OrigamiQuickNote => $"/quicknotes?nano={(e.Entity as INanoId)?.NanoId}",
+            OrigamiContentTag => $"/tags?slug={(e.Entity as ISlug)?.Slug}",
+            _ => string.Empty,
+        };
+
+        if (e.Entity is OrigamiContentComment comment)
+        {
+            var content = this.SuperRepository.Contents.ReadFromCache().Id(comment.ContentId);
+            hyperlink = content switch
+            {
+                OrigamiPost => $"/posts/comments?id={comment.Id}",
+                OrigamiVideo => $"/videos/comments?id={comment.Id}",
+                _ => string.Empty,
+            };
+        }
+
+        if (hyperlink.Has() == true)
+        {
+            GhostOfTheNavigator.NavigateTo(hyperlink);
+            return;
+        }
+
+        throw new InvalidOperationException("Navigation aborted: location could not be determined");
     }
 
     public void WhenTheUserClicksHereInTheFrontEnd(object? sender, WhenIClickHereEventArgs e)
