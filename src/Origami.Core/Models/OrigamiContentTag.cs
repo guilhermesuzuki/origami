@@ -11,11 +11,14 @@ namespace Origami.Core.Models
         IId,
         IContentId,
         ITag,
-        ISlug
+        ISlug,
+        IVersion,
+        INew
     {
-        private Guid _id = Guid.NewGuid();
         private Guid _contentId;
+        private Guid _id = Guid.NewGuid();
         private string _tag = string.Empty;
+        protected byte[] _version = Array.Empty<byte>();
 
         /// <summary>
         /// Default constructor
@@ -27,6 +30,12 @@ namespace Origami.Core.Models
 
         public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) => { };
 
+        public Guid ContentId
+        {
+            get => _contentId;
+            set => this.Set(ref _contentId, value, Changed);
+        }
+
         [Key]
         public Guid Id
         {
@@ -34,11 +43,7 @@ namespace Origami.Core.Models
             set => this.Set(ref _id, value, Changed);
         }
 
-        public Guid ContentId
-        {
-            get => _contentId;
-            set => this.Set(ref _contentId, value, Changed);
-        }
+        public bool New => _version.SequenceEqual(Array.Empty<byte>());
 
         public string Slug => Tag.GetSlug();
 
@@ -50,6 +55,13 @@ namespace Origami.Core.Models
         {
             get => _tag;
             set => this.Set(ref _tag, value, Changed);
+        }
+
+        [Timestamp]
+        public byte[] Version
+        {
+            get => _version;
+            set => this.Set(ref _version, value, Changed);
         }
     }
 }

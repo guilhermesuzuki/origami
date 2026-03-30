@@ -9,11 +9,14 @@ namespace Origami.Core.Models
         IChanged,
         IId,
         ICategoryId,
-        IContentId
+        IContentId,
+        IVersion,
+        INew
     {
         protected Guid _categoryId;
-        protected Guid _id = Guid.NewGuid();
         protected Guid _contentId;
+        protected Guid _id = Guid.NewGuid();
+        protected byte[] _version = Array.Empty<byte>();
 
         /// <summary>
         /// Default constructor
@@ -31,6 +34,12 @@ namespace Origami.Core.Models
             set => this.Set(ref _categoryId, value, Changed);
         }
 
+        public Guid ContentId
+        {
+            get => _contentId;
+            set => this.Set(ref _contentId, value, Changed);
+        }
+
         [Key]
         public Guid Id
         {
@@ -38,10 +47,13 @@ namespace Origami.Core.Models
             set => this.Set(ref _id, value, Changed);
         }
 
-        public Guid ContentId
+        public bool New => _version.SequenceEqual(Array.Empty<byte>());
+
+        [Timestamp]
+        public byte[] Version
         {
-            get => _contentId;
-            set => this.Set(ref _contentId, value, Changed);
+            get => _version;
+            set => this.Set(ref _version, value, Changed);
         }
     }
 }

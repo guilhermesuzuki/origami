@@ -185,6 +185,15 @@ namespace Origami.Core.Data
                    select co;
         }
 
+        public IEnumerable<OrigamiContent> GetContents(OrigamiContentTag tag, Guid blogId)
+        {
+            return (from a in ContentTags.ReadFromCache()
+                    join b in Contents.ReadFromCache() on a.ContentId equals b.Id
+                    where b.BlogId == blogId
+                    where a.Tag.Like(tag.Tag)
+                    select b).Distinct();
+        }
+
         /// <summary>
         /// Draft pages
         /// </summary>

@@ -30,6 +30,11 @@ namespace Origami.Core.Data
             _validator = validator;
         }
 
+        public override string DeletePermission => nameof(OrigamiRole.DeleteTags);
+        public override string ReadPermission => nameof(OrigamiRole.ViewTags);
+        public override string PurgePermission => nameof(OrigamiRole.PurgeTags);
+        public override string UpdatePermission => nameof(OrigamiRole.EditTags);
+
         public Result RefreshCache(Guid blog, string before, string current)
         {
             using var db = DbContextFactory.CreateDbContext();

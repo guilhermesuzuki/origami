@@ -81,6 +81,8 @@ namespace Origami.Core.Data
         /// matching author is found.</returns>
         OrigamiUser GetAuthor(IAuthorId authorId);
 
+        IEnumerable<OrigamiContent> GetContents(OrigamiContentTag tag, Guid blogId);
+
         /// <summary>
         /// Get active categories
         /// </summary>

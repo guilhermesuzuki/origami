@@ -1,5 +1,5 @@
 ﻿@page "/tags"
-@inherits BasicAdminGrid<OrigamiTag>
+@inherits BasicAdminGrid<OrigamiContentTag>
 
 <Root Access="this.CanAccess()">
     <HeaderTemplate>
@@ -30,30 +30,30 @@
         <div class="p-3">
             <div class="row">
                 <div class="tags col-12 col-xxl-8">
-                    <MudDataGrid @ref="DataGrid" T="OrigamiTag" ServerData="GetEntities" Filterable="false" SortMode="SortMode.None" Class="border selectable" SelectedItems="this.SelectedEntities" MultiSelection="true"
+                    <MudDataGrid @ref="DataGrid" T="OrigamiContentTag" ServerData="GetEntities" Filterable="false" SortMode="SortMode.None" Class="border selectable" SelectedItems="this.SelectedEntities" MultiSelection="true"
                                  SelectedItemsChanged="this.SelectedEntitiesChanged" RowClassFunc="RowClassFunc" Bordered="true" SelectOnRowClick="false">
                         <Columns>
-                            <SelectColumn T="OrigamiTag"></SelectColumn>
+                            <SelectColumn T="OrigamiContentTag"></SelectColumn>
                             <TemplateColumn Title="@Text.Upper("Name")" Sortable="false" Filterable="false" SortBy="x => nameof(x.Tag)">
                                 <CellTemplate>
                                     <div class="cursor-pointer" @onclick="() => OnEdit(context.Item)">
-                                        <TagHeaderLite Entity="context.Item"></TagHeaderLite>
+                                        <ContentTagHeaderInline Entity="context.Item"></ContentTagHeaderInline>
                                     </div>
                                 </CellTemplate>
                             </TemplateColumn>
                             <TemplateColumn Title="@Text.Upper("Posts, Videos")" Sortable="false" Filterable="false" CellClass="col-2">
                                 <CellTemplate>
                                     <div class="p-1">
-                                        <span>@Text.Lower("{0} Post(s)", this.Super.GetPosts(context.Item).Blog(this.UserFacade.BlogId).Published().Count())</span>
+                                        <span>@Text.Lower("{0} Post(s)", this.Super.GetContents(context.Item, this.UserFacade.BlogId).OfType<OrigamiPost>().Published().Count())</span>
                                     </div>
                                     <div class="p-1 mt-1">
-                                        <span>@Text.Lower("{0} Video(s)", this.Super.GetVideos(context.Item).Blog(this.UserFacade.BlogId).Published().Count())</span>
+                                        <span>@Text.Lower("{0} Video(s)", this.Super.GetContents(context.Item, this.UserFacade.BlogId).OfType<OrigamiVideo>().Published().Count())</span>
                                     </div>
                                 </CellTemplate>
                             </TemplateColumn>
                         </Columns>
                         <PagerContent>
-                            <MudDataGridPager T="OrigamiTag" />
+                            <MudDataGridPager T="OrigamiContentTag" />
                         </PagerContent>
                         <NoRecordsContent>
                             <NoEntriesWereFound></NoEntriesWereFound>
@@ -68,16 +68,16 @@
     </ContentTemplate>
 </Root>
 @code {
-    protected override string DefaultOrdering => $"{nameof(OrigamiTag.Tag)}";
+    protected override string DefaultOrdering => $"{nameof(OrigamiContentTag.Tag)}";
 
-    protected override string RowClassFunc(OrigamiTag entity, int index)
+    protected override string RowClassFunc(OrigamiContentTag entity, int index)
     {
         var result = base.RowClassFunc(entity, index);
         if (entity.Tag == SelectedEntity.Tag && entity.Slug == SelectedEntity.Slug) result += " selected-row";
         return result;
     }
 
-    protected override IEnumerable<OrigamiTag> GetItems()
+    protected override IEnumerable<OrigamiContentTag> GetItems()
     {
         return base.GetItems().DistinctBy(x => x.Tag);
     }
