@@ -219,7 +219,7 @@
                     {
                         var tag = new OrigamiContentTag { ContentId = Entity.Entity.Id, Tag = content.Tag };
                         <div class="d-inline-flex align-items-center p-1 border shadow-sm me-1">
-                            <TagHeaderLite Entity="tag" Class="me-1"></TagHeaderLite>
+                            <ContentTagHeaderInline Entity="tag" Class="me-1"></ContentTagHeaderInline>
                             <button class="cursor-pointer" @onclick="() => this.Entity.Tags.Remove(content)">
                                 <i class="bi bi-trash-fill"></i>
                             </button>
@@ -249,7 +249,7 @@
                     <Columns>
                         <TemplateColumn CellClass="w-100">
                             <CellTemplate>
-                                <TagHeaderLite Entity="context.Item"></TagHeaderLite>
+                                <ContentTagHeaderInline Entity="context.Item"></ContentTagHeaderInline>
                             </CellTemplate>
                         </TemplateColumn>
                         <TemplateColumn>
