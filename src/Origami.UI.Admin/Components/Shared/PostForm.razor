@@ -155,7 +155,7 @@
                 <div class="selected-tags mt-3">
                     @foreach (var content in Entity.Tags)
                     {
-                        var tag = new OrigamiTag { BlogId = Entity.Entity.Id, Tag = content.Tag };
+                        var tag = new OrigamiContentTag { ContentId = Entity.Entity.Id, Tag = content.Tag };
                         <div class="d-inline-flex align-items-center p-1 border shadow-sm me-1">
                             <TagHeaderLite Entity="tag" Class="me-1"></TagHeaderLite>
                             <button class="cursor-pointer" @onclick="() => this.Entity.Tags.Remove(content)">
@@ -183,7 +183,7 @@
                                       HelperText="@Text.Lower("Search")"></MudTextField>
                     </li>
                 </ul>
-                <MudDataGrid T="OrigamiTag" Class="border mt-3" Items="Tags" SortMode="SortMode.None" Filterable="false">
+                <MudDataGrid T="OrigamiContentTag" Class="border mt-3" Items="Tags" SortMode="SortMode.None" Filterable="false">
                     <Columns>
                         <TemplateColumn CellClass="w-100">
                             <CellTemplate>
@@ -199,7 +199,7 @@
                         </TemplateColumn>
                     </Columns>
                     <PagerContent>
-                        <MudDataGridPager T="OrigamiTag" PageSizeOptions="[10, 25, 50, 100]" />
+                        <MudDataGridPager T="OrigamiContentTag" PageSizeOptions="[10, 25, 50, 100]" />
                     </PagerContent>
                 </MudDataGrid>
             </div>

@@ -161,7 +161,6 @@ namespace Origami.UI
             builder.Services.AddTransient<ISpecialPageRepository, SpecialPageRepository>();
             builder.Services.AddTransient<ISubscriberRepository, SubscriberRepository>();
             builder.Services.AddTransient<ISuperRepository, SuperRepository>();
-            builder.Services.AddTransient<ITagRepository, TagRepository>();
             builder.Services.AddTransient<ITrashRepository, TrashRepository>();
             builder.Services.AddTransient<IUserActivityRepository, UserActivityRepository>();
             builder.Services.AddTransient<IUserBlogRepository, UserBlogRepository>();
@@ -199,7 +198,6 @@ namespace Origami.UI
             builder.Services.AddCrud<OrigamiRole, RoleRepository>();
             builder.Services.AddCrud<OrigamiSettings, SettingsRepository>();
             builder.Services.AddCrud<OrigamiSocialProfile, SocialProfileRepository>();
-            builder.Services.AddCrud<OrigamiTag, TagRepository>();
             builder.Services.AddCrud<OrigamiTrash, TrashRepository>();
             builder.Services.AddCrud<OrigamiUser, UserRepository>();
             builder.Services.AddCrud<OrigamiUserTrash, UserTrashRepository>();

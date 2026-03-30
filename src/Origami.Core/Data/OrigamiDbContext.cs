@@ -215,11 +215,6 @@ namespace Origami.Core.Data
         public DbSet<OrigamiSubscriber> Subscribers { get; set; }
 
         /// <summary>
-        /// Tags
-        /// </summary>
-        public DbSet<OrigamiTag> Tags { get; set; }
-
-        /// <summary>
         /// Trashes
         /// </summary>
         public DbSet<OrigamiTrash> Trashes { get; set; }
@@ -323,10 +318,6 @@ namespace Origami.Core.Data
             modelBuilder.Entity<OrigamiUserTrash>().Metadata.SetIsTableExcludedFromMigrations(true);
 
             // Map the entity to the view
-            modelBuilder.Entity<OrigamiTag>().ToView("oi_vw_Tags");
-            modelBuilder.Entity<OrigamiTag>().Metadata.SetIsTableExcludedFromMigrations(true);
-
-            // Map the entity to the view
             modelBuilder.Entity<OrigamiTrash>().ToView("oi_vw_Trashes");
             modelBuilder.Entity<OrigamiTrash>().Metadata.SetIsTableExcludedFromMigrations(true);
 
@@ -342,7 +333,6 @@ namespace Origami.Core.Data
 
             modelBuilder.Entity<OrigamiUserBlog>().HasOne<OrigamiBlog>().WithMany().HasForeignKey(x => x.BlogId);
             modelBuilder.Entity<OrigamiUserBlog>().HasOne<OrigamiUser>().WithMany().HasForeignKey(x => x.UserId);
-            modelBuilder.Entity<OrigamiTag>().HasOne<OrigamiBlog>().WithMany().HasForeignKey(x => x.BlogId);
             modelBuilder.Entity<OrigamiQuickNote>().HasOne<OrigamiBlog>().WithMany().HasForeignKey(x => x.BlogId);
             modelBuilder.Entity<OrigamiQuickNote>().HasOne<OrigamiUser>().WithMany().HasForeignKey(x => x.AuthorId);
         }

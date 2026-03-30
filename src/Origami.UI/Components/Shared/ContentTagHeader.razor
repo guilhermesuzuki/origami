@@ -1,0 +1,37 @@
+﻿@inherits Basic
+@implements IEntityNull<OrigamiContentTag>
+@implements IHyperlink
+
+@if (this.Entity != null)
+{
+    <div class="content-tag-header p-2 text-center border shadow-sm @Class">
+        <a href="@this.Hyperlink">
+            <i class="fa-solid fa-tag" style="font-size:45px;"></i>
+            <div class="mt-1 text-uppercase fw-bold ellipsis name" title="@this.Entity.Tag">@this.Entity.Tag</div>
+            <div class="mt-1 text-center counter">
+                <span class="mx-1">@Text.Lower("{0} post(s)", this.PublishedPosts)</span>
+                <span class="mx-1">@Text.Lower("{0} video(s)", this.PublishedVideos)</span>
+            </div>
+        </a>
+    </div>
+}
+
+@code {
+    [Parameter] public OrigamiContentTag? Entity { get; set; }
+
+    private int PublishedPosts => this.Entity != null ? this.Super.GetContents(this.Entity, this.BlogId).Published().OfType<OrigamiPost>().Count() : 0;
+    private int PublishedVideos => this.Entity != null ? this.Super.GetContents(this.Entity, this.BlogId).Published().OfType<OrigamiVideo>().Count() : 0;
+
+    public string Hyperlink
+    {
+        get
+        {
+            if (Entity != null)
+            {
+                var blog = this.Super.Blogs.ReadFromCache().Id(this.BlogId)!;
+                return $"/blogs/{blog.Slug}/tags/{Entity.Slug}/#content-start";
+            }
+            return string.Empty;
+        }
+    }
+}

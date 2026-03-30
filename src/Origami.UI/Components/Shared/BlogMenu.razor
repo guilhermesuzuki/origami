@@ -63,7 +63,7 @@
                     {
                         @foreach (var tag in _tags)
                         {
-                            <TagHeader Class="mt-2" Entity="tag"></TagHeader>
+                            <ContentTagHeader Class="mt-2" Entity="tag"></ContentTagHeader>
                         }
                     }
                     else
@@ -195,7 +195,7 @@
     private IEnumerable<OrigamiCategory> _categories = [];
     private IEnumerable<OrigamiPage> _pages = [];
     private IEnumerable<OrigamiPost> _posts = [];
-    private IEnumerable<OrigamiTag> _tags = [];
+    private IEnumerable<OrigamiContentTag> _tags = [];
     private IEnumerable<OrigamiVideo> _videos = [];
 
     private string _pageListing = "1";
@@ -289,11 +289,12 @@
 
     private void LoadTags()
     {
-        _tags = this.Super.Tags.ReadFromCache()
-            .Blog(BlogId)
-            .OrderByDescending(x => { return Super.GetPosts(x).Published().Count() + Super.GetVideos(x).Published().Count(); })
-            .Take(7)
-            .OrderBy(x => x.Tag);
+        _tags = this.Super.ContentTags.ReadFromCache().OrderByDescending(x => { return Super.GetContents(x, BlogId).Published().Count(); });
+
+        _tags = from a in _tags
+                join b in this.Super.Contents.ReadFromCache().Published() on a.ContentId equals b.Id
+                where b.BlogId == BlogId
+                select a;
     }
 
     private void LoadVideos(string order = "1")

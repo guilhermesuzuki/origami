@@ -128,7 +128,7 @@
                         @foreach (var tag in _tags)
                         {
                             <div class="col-12 col-xl-4">
-                                <TagHeader Class="mb-3" Entity="@tag"></TagHeader>
+                                <ContentTagHeader Class="mb-3" Entity="@tag"></ContentTagHeader>
                             </div>
                         }
                     </div>
@@ -233,7 +233,7 @@
     /// <summary>
     /// List of tags found in the search
     /// </summary>
-    private IEnumerable<OrigamiTag> _tags => _hits.OfType<OrigamiTag>().OrderBy(x => x.Tag);
+    private IEnumerable<OrigamiContentTag> _tags => _hits.OfType<OrigamiContentTag>().OrderBy(x => x.Tag);
 
     /// <summary>
     /// List of quick notes found in the search
@@ -301,7 +301,7 @@
                 Task.Run(() => this._hits.AddRange(Super.Categories.Search(queryTerm).NonDeleted().Where(x => this.Super.IsParentDeleted(x) == false))),
                 Task.Run(() => this._hits.AddRange(Super.SocialProfiles.Search(queryTerm))),
                 Task.Run(() => this._hits.AddRange(Super.ContentComments.Search(queryTerm).NonDeleted().Where(x => this.Super.IsParentDeleted(x) == false))),
-                Task.Run(() => this._hits.AddRange(Super.Tags.Search(queryTerm))),
+                Task.Run(() => this._hits.AddRange(Super.ContentTags.Search(queryTerm))),
                 Task.Run(() =>
                 {
                     var contents = Super.Contents.Search(queryTerm).Published();

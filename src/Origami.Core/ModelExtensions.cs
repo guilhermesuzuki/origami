@@ -464,7 +464,7 @@ namespace Origami.Core
             return new string(chars);
         }
 
-        public static string GetHyperlink(this OrigamiBlog blog, OrigamiTag tag, INanoId? entity = null)
+        public static string GetHyperlink(this OrigamiBlog blog, OrigamiContentTag tag, INanoId? entity = null)
         {
             return $"/blogs/{blog.Slug}/tags/{tag.Slug}/{entity?.NanoId}";
         }

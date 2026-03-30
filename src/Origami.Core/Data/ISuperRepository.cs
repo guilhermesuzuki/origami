@@ -58,7 +58,6 @@ namespace Origami.Core.Data
         ISpecialMessageRepository SpecialMessages { get; }
         ISpecialPageRepository SpecialPages { get; }
         ISubscriberRepository Subscribers { get; }
-        ITagRepository Tags { get; }
         ITrashRepository Trashes { get; }
         IUserActivityRepository UserActivities { get; }
         IUserBlogRepository UserBlogs { get; }
@@ -149,14 +148,6 @@ namespace Origami.Core.Data
         IEnumerable<OrigamiPost> GetPosts(Guid blog);
 
         /// <summary>
-        /// Retrieves a collection of posts associated with the specified tag.
-        /// </summary>
-        /// <param name="tag">The tag used to filter posts. Must not be <see langword="null"/>.</param>
-        /// <returns>An enumerable collection of <see cref="OrigamiPost"/> objects that are associated with the specified tag. If
-        /// no posts match the tag, the collection will be empty.</returns>
-        IEnumerable<OrigamiPost> GetPosts(OrigamiTag tag);
-
-        /// <summary>
         /// Returns all posts associated with a category
         /// </summary>
         /// <param name="category"></param>
@@ -214,14 +205,6 @@ namespace Origami.Core.Data
         /// <returns>An enumerable collection of videos belonging to the specified blog. The collection is empty if the blog
         /// contains no videos.</returns>
         IEnumerable<OrigamiVideo> GetVideos(Guid blog);
-
-        /// <summary>
-        /// Retrieves a collection of videos associated with the specified tag.
-        /// </summary>
-        /// <param name="tag">The tag used to filter videos. Only videos that are associated with this tag are returned.</param>
-        /// <returns>An enumerable collection of videos that are associated with the specified tag. The collection is empty if no
-        /// videos match the tag.</returns>
-        IEnumerable<OrigamiVideo> GetVideos(OrigamiTag tag);
 
         /// <summary>
         /// Returns all Videos associated with a category

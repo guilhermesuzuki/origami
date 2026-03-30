@@ -5,7 +5,10 @@
 <Root>
     @if (this._blog != null)
     {
-        var tags = this._super.Tags.ReadFromCache().Blog(_blog.Id);
+        var tags = from a in this._super.ContentTags.ReadFromCache()
+                   join b in this._super.Contents.ReadFromCache().Blog(_blog.Id) on a.ContentId equals b.Id
+                   select a;
+
         <div class="tags pb-3">
             <BlogHeaderLite Class="text-center fs-1" Entity="_blog"></BlogHeaderLite>
             <div class="mt-3">
@@ -15,7 +18,7 @@
                         @foreach (var tag in tags)
                         {
                             <div class="col-12 col-xl-3 cursor-pointer">
-                                <TagHeader Class="mb-3" Entity="tag"></TagHeader>
+                                <ContentTagHeader Class="mb-3" Entity="tag"></ContentTagHeader>
                             </div>
                         }
                     }

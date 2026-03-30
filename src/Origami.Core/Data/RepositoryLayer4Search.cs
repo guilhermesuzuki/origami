@@ -103,10 +103,10 @@ namespace Origami.Core.Data
             if (entity is IDescription description && description.Description.Has() == true) doc.Add(new TextField("description", description.Description, Field.Store.YES));
             if (entity is IDescriptionNull descriptionNull && descriptionNull.Description.Has() == true) doc.Add(new TextField("description", descriptionNull.Description, Field.Store.YES));
             if (entity is IName name && name.Name.Has() == true) doc.Add(new TextField("name", name.Name, Field.Store.YES));
+            if (entity is INanoId nano && nano.NanoId.Has() == true) doc.Add(new StringField("nano-id", nano.NanoId, Field.Store.YES));
             if (entity is ISlug slug && slug.Slug.Has() == true) doc.Add(new TextField("slug", slug.Slug, Field.Store.YES));
             if (entity is ITag tag && tag.Tag.Has() == true) doc.Add(new TextField("tag", tag.Tag, Field.Store.YES));
             if (entity is ITitle title && title.Title.Has() == true) doc.Add(new TextField("title", title.Title, Field.Store.YES));
-            if (entity is INanoId nano && nano.NanoId.Has() == true) doc.Add(new StringField("nano-id", nano.NanoId, Field.Store.YES));
 
             if (entity is OrigamiSocialProfile socialProfile)
             {

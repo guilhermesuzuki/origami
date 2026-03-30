@@ -18,7 +18,7 @@ namespace Origami.UI.Admin
         [Inject] public IHubContentRepository<T2> HubContentRepository { get; set; } = null!;
 
         protected List<OrigamiCategory> Categories { get; set; } = [];
-        protected List<OrigamiTag> Tags { get; set; } = [];
+        protected List<OrigamiContentTag> Tags { get; set; } = [];
 
         protected string CategoriesSearch { get; set; } = string.Empty;
         protected string TagsSearch { get; set; } = string.Empty;
@@ -63,7 +63,7 @@ namespace Origami.UI.Admin
                 Entity.Categories.Add(new() { CategoryId = category.Id, ContentId = Entity.Entity.Id });
                 Entity.Categories = Entity.Categories.DistinctBy(x => x.CategoryId).ToList();
             }
-            else if (content is OrigamiTag tag)
+            else if (content is OrigamiContentTag tag)
             {
                 Entity.Tags.Add(new() { ContentId = Entity.Entity.Id, Tag = tag.Tag });
                 Entity.Tags = Entity.Tags.DistinctBy(x => x.Tag).ToList();
@@ -76,10 +76,15 @@ namespace Origami.UI.Admin
         /// <param name="state"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        protected virtual List<T> Get<T>() where T : class, IBlogIdNull
+        protected virtual List<T> Get<T>() where T : class
         {
             var t = Activator.CreateInstance<T>();
-            var query = from c in this.DbContextFactory.ReadFromCache<T>(this.MemoryCache) where c.BlogId == Entity.Entity.BlogId select c;
+            var query = from c in this.DbContextFactory.ReadFromCache<T>(this.MemoryCache) select c;
+
+            if (t is IBlogIdNull blogIdNull)
+            {
+                query = query.Where(x => (x as IBlogIdNull)?.BlogId == this.Entity.Entity.BlogId);
+            }
 
             try
             {
@@ -103,7 +108,7 @@ namespace Origami.UI.Admin
             Entity.Entity.SetAuthor(UserFacade.User);
             Entity.Entity.SetBlog(GetBlogFromUserFacade());
             Categories = Get<OrigamiCategory>();
-            Tags = Get<OrigamiTag>();
+            Tags = Get<OrigamiContentTag>();
         }
 
         protected void SearchCategory(KeyboardEventArgs kea)
@@ -114,7 +119,7 @@ namespace Origami.UI.Admin
 
         protected void SearchTag(KeyboardEventArgs kea)
         {
-            this.Tags = TagsSearch.Has() == false ? this.Get<OrigamiTag>() : [new() { Tag = TagsSearch }, .. this.Get<OrigamiTag>().Where(x => x.Tag.Contains(TagsSearch, StringComparison.OrdinalIgnoreCase))];
+            this.Tags = TagsSearch.Has() == false ? this.Get<OrigamiContentTag>() : [new() { Tag = TagsSearch }, .. this.Get<OrigamiContentTag>().Where(x => x.Tag.Contains(TagsSearch, StringComparison.OrdinalIgnoreCase))];
             this.InvokeAsync(this.StateHasChanged);
         }
 

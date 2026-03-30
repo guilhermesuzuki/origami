@@ -109,7 +109,7 @@
 @code {
     private bool _showHeaderImage = false;
 
-    [Parameter] public OrigamiTag? Tag { get; set; }
+    [Parameter] public OrigamiContentTag? Tag { get; set; }
     [Parameter] public OrigamiCategory? Category { get; set; }
     [Parameter] public OrigamiContent? Entity { get; set; }
     [Parameter] public bool ShowRelatedContent { get; set; } = false;
@@ -141,22 +141,13 @@
         {
             if (this.Entity != null)
             {
-                var blog = this.Super.Blogs.ReadFromCache().Id(this.Entity.BlogId)!;
-                if (this.Tag != null) return blog.GetHyperlink(this.Tag, this.Entity);
-                if (this.Category != null) return blog.GetHyperlink(this.Category, this.Entity);
+                var blog = this.Super.Blogs.ReadFromCache().Id(this.Entity.BlogId);
+                if (blog != null)
+                {
+                    if (this.Tag != null) return blog.GetHyperlink(this.Tag, this.Entity);
+                    if (this.Category != null) return blog.GetHyperlink(this.Category, this.Entity);
+                }
                 return $"{Entity.Hyperlink}";
-            }
-
-            if (this.Tag != null)
-            {
-                var blog = this.Super.Blogs.ReadFromCache().Id(this.Tag.BlogId)!;
-                return blog.GetHyperlink(this.Tag);
-            }
-
-            if (this.Category != null)
-            {
-                var blog = this.Super.Blogs.ReadFromCache().Id(this.Category.BlogId)!;
-                return blog.GetHyperlink(this.Category);
             }
 
             throw new InvalidOperationException("No Entity, tag or category was provided");

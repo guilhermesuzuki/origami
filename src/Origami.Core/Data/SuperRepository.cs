@@ -32,7 +32,6 @@ namespace Origami.Core.Data
             ISpecialMessageRepository specialMessageRepository,
             ISpecialPageRepository specialPageRepository,
             ISubscriberRepository subscriberRepository,
-            ITagRepository tagRepository,
             ITrashRepository trashRepository,
             IUserActivityRepository userActivityRepository,
             IUserBlogRepository userBlogRepository,
@@ -78,7 +77,6 @@ namespace Origami.Core.Data
             SpecialMessages = specialMessageRepository;
             SpecialPages = specialPageRepository;
             Subscribers = subscriberRepository;
-            Tags = tagRepository;
             Trashes = trashRepository;
             UserActivities = userActivityRepository;
             UserBlogs = userBlogRepository;
@@ -132,7 +130,6 @@ namespace Origami.Core.Data
         public ISpecialMessageRepository SpecialMessages { get; }
         public ISpecialPageRepository SpecialPages { get; }
         public ISubscriberRepository Subscribers { get; }
-        public ITagRepository Tags { get; }
         public ITrashRepository Trashes { get; }
         public IUserActivityRepository UserActivities { get; }
         public IUserBlogRepository UserBlogs { get; }
@@ -284,15 +281,6 @@ namespace Origami.Core.Data
             return from p in Contents.ReadFromCache().OfType<OrigamiPage>() where p.BlogId == blog select p;
         }
 
-        public IEnumerable<OrigamiPost> GetPosts(OrigamiTag tag)
-        {
-            return from a in ContentTags.ReadFromCache()
-                   join b in Contents.ReadFromCache().OfType<OrigamiPost>() on a.ContentId equals b.Id
-                   where b.BlogId == tag.BlogId
-                   where a.Tag.Like(tag.Tag)
-                   select b;
-        }
-
         public IEnumerable<OrigamiPost> GetPosts(OrigamiCategory category)
         {
             return from a in ContentCategories.ReadFromCache()
@@ -353,15 +341,6 @@ namespace Origami.Core.Data
                    where b.Id == content.Id
                    orderby a.Tag
                    select a;
-        }
-
-        public IEnumerable<OrigamiVideo> GetVideos(OrigamiTag tag)
-        {
-            return from a in ContentTags.ReadFromCache()
-                   join b in Contents.ReadFromCache().OfType<OrigamiVideo>() on a.ContentId equals b.Id
-                   where a.Tag.Like(tag.Tag)
-                   where b.BlogId == tag.BlogId
-                   select b;
         }
 
         public IEnumerable<OrigamiVideo> GetVideos(OrigamiCategory category)
@@ -469,7 +448,6 @@ namespace Origami.Core.Data
             Roles.RefreshCache();
             SocialProfiles.RefreshCache();
             Subscribers.RefreshCache();
-            Tags.RefreshCache();
             Users.RefreshCache();
 
             if (this.AppFacade.Admin.GetValueOrDefault() == true)
@@ -495,10 +473,10 @@ namespace Origami.Core.Data
             Categories.CreateSearchIndex();
             ContentComments.CreateSearchIndex();
             Contents.CreateSearchIndex();
+            ContentTags.CreateSearchIndex();
             QuickNotes.CreateSearchIndex();
             Roles.CreateSearchIndex();
             SocialProfiles.CreateSearchIndex();
-            Tags.CreateSearchIndex();
             Users.CreateSearchIndex();
             return new();
         }

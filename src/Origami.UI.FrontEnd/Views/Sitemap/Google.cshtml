@@ -9,14 +9,13 @@
 @inject IVideoRepository _video
 @inject ICategoryRepository _category
 @inject IPageRepository _page
-@inject ITagRepository _tag
 @inject ISuperRepository _super
 
 @{
     var oi = $"{this.Context.Request.Scheme}://{this.Context.Request.Host}";
     var blogs = _blog.ReadFromCache().NonDeleted().Active().OrderBy(x => x.Name);
 
-    var tags = _tag.ReadFromCache().ToList();
+    var tags = this._super.ContentTags.ReadFromCache().ToList();
 
     var cookiePolicy = this._super.Contents.ReadFromCache().OfType<OrigamiSpecialPage>()
         .Where(x => x.Subtype.Like("CookiePolicy"));
@@ -38,7 +37,7 @@
 
     <url>
         <loc>@oi?language=en-US</loc>
-        @foreach(var cinfo in OrigamiConstants.AllLanguages())
+        @foreach (var cinfo in OrigamiConstants.AllLanguages())
         {
             <xhtml:link rel="alternate" hreflang="@cinfo.Name" href="@oi?language=@cinfo.Name" />
         }
@@ -125,9 +124,10 @@
 
     @foreach (var tag in tags)
     {
-        var blog = _blog.ReadFromCache().Id(tag.BlogId)!;
-        var posts = this._super.GetPosts(tag).Published();
-        var videos = this._super.GetVideos(tag).Published();
+        var content = this._super.Contents.ReadFromCache().Id(tag.ContentId)!;
+        var blog = _blog.ReadFromCache().Id(content.BlogId)!;
+        var posts = this._super.GetContents(tag, content.BlogId.GetValueOrDefault()).Published().OfType<OrigamiPost>();
+        var videos = this._super.GetContents(tag, content.BlogId.GetValueOrDefault()).Published().OfType<OrigamiVideo>();
 
         @foreach (var post in posts)
         {
