@@ -3,7 +3,7 @@
 
 @if (Entity != null)
 {
-    <div class="content-html mt-3 p-4 border shadow-lg">
+    <div class="content-html @Class">
         @if (Entity.Content.Has() == true)
         {
             @((MarkupString)Entity.Content)

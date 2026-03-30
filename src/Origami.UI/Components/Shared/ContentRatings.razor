@@ -5,10 +5,18 @@
 
 @if (this.Entity != null)
 {
+    var count = _contentRating.Ratings(this.Entity).Count();
     <div class="content-ratings @Class">
         <label class="w-100 text-center fs-3">
             <i class="fa-solid fa-star"></i>
-            @Text.Lower("{0} people rated this content", _contentRating.Ratings(this.Entity).Count())
+            @if (count == 1)
+            {
+                @Text.Lower("{0} person rated this content", count)
+            }
+            else
+            {
+                @Text.Lower("{0} people rated this content", count)
+            }
             <i class="fa-solid fa-star"></i>
         </label>
         <div class="row">
