@@ -73,7 +73,7 @@
     {
         if (this.Entity != null)
         {
-            this.WhatHappensNext.WhenIClickHere(this, new(this.Entity));
+            this.WhatHappensNext.WhenIClickHere(this, new() { Entity = this.Entity });
         }
     }
 }

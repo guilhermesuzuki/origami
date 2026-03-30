@@ -9,12 +9,12 @@ namespace Origami.Core.Models
         /// <summary>
         /// Entity
         /// </summary>
-        public IId Entity { get; }
+        public IId? Entity { get; set; }
 
         /// <summary>
         /// Slug for routing
         /// </summary>
-        public ISlug? Slug { get; }
+        public ISlug? Slug { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether event propagation should be stopped after this event is handled.
@@ -27,19 +27,9 @@ namespace Origami.Core.Models
         /// Default constructor
         /// </summary>
         /// <param name="entity">The entity associated with the event.</param>
-        public WhenIClickHereEventArgs(IId entity)
+        public WhenIClickHereEventArgs() : base()
         {
-            Entity = entity;
-        }
-
-        /// <summary>
-        /// Default constructor with slug
-        /// </summary>
-        /// <param name="slug"></param>
-        /// <param name="entity"></param>
-        public WhenIClickHereEventArgs(ISlug? slug, IId entity) : this(entity)
-        {
-            Slug = slug;
+            
         }
     }
 }

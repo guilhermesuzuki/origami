@@ -26,13 +26,6 @@
                 <div class="p-3">
                     <div class="content-header-title-tinyheader small d-inline-flex align-items-center">
                         <span class="language d-inline-block @Entity.Get().LanguageWrittenOn mx-1"></span>
-                        @if (this.Entity is OrigamiPage page && page.IsFrontPage)
-                        {
-                            <span class="mx-1">
-                                <i class="bi bi-globe"></i>
-                                <span>@Text.Lower("Front-page")</span>
-                            </span>
-                        }
                     </div>
                     <div class="dummy" style="margin-bottom: -8px;"></div>
                     <div class="content-rating">
@@ -86,7 +79,7 @@
     {
         if (this.Entity != null)
         {
-            this.WhatHappensNext.WhenIClickHere(this, new(this.Entity));
+            this.WhatHappensNext.WhenIClickHere(this, new() { Entity = this.Entity });
         }
     }
 }

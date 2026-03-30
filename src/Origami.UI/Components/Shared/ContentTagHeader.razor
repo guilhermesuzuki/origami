@@ -1,18 +1,15 @@
 ﻿@inherits Basic
 @implements IEntityNull<OrigamiContentTag>
-@implements IHyperlink
 
 @if (this.Entity != null)
 {
-    <div class="content-tag-header text-center @Class">
-        <a href="@this.Hyperlink">
-            <i class="fa-solid fa-tag" style="font-size:45px;"></i>
-            <div class="mt-1 text-uppercase fw-bold ellipsis name" title="@this.Entity.Tag">@this.Entity.Tag</div>
-            <div class="mt-1 text-center counter">
-                <span class="mx-1">@Text.Lower("{0} post(s)", this.PublishedPosts)</span>
-                <span class="mx-1">@Text.Lower("{0} video(s)", this.PublishedVideos)</span>
-            </div>
-        </a>
+    <div class="content-tag-header text-center cursor-pointer @Class" @onclick="this.Go">
+        <i class="fa-solid fa-tag" style="font-size:45px;"></i>
+        <div class="mt-1 text-uppercase fw-bold ellipsis name" title="@this.Entity.Tag">@this.Entity.Tag</div>
+        <div class="mt-1 text-center counter">
+            <span class="mx-1">@Text.Lower("{0} post(s)", this.PublishedPosts)</span>
+            <span class="mx-1">@Text.Lower("{0} video(s)", this.PublishedVideos)</span>
+        </div>
     </div>
 }
 
@@ -22,26 +19,11 @@
     private int PublishedPosts => this.Entity != null ? this.Super.GetContents(this.Entity, this.BlogId).Published().OfType<OrigamiPost>().Count() : 0;
     private int PublishedVideos => this.Entity != null ? this.Super.GetContents(this.Entity, this.BlogId).Published().OfType<OrigamiVideo>().Count() : 0;
 
-    public string Hyperlink
+    protected void Go()
     {
-        get
+        if (Entity != null)
         {
-            if (Entity != null)
-            {
-                var blogs = from a in this.Super.ContentTags.ReadFromCache()
-                            join b in this.Super.Contents.ReadFromCache() on a.ContentId equals b.Id
-                            join c in this.Super.Blogs.ReadFromCache() on b.BlogId equals c.Id
-                            where a.Id == Entity.Id
-                            select c;
-
-                var blog = blogs.FirstOrDefault();
-                if (blog != null)
-                {
-                    return $"/blogs/{blog.Slug}/tags/{Entity.Slug}/#content-start";
-                }
-            }
-
-            throw new InvalidOperationException();
+            WhatHappensNext.WhenIClickHere(this, new() { Slug = Entity });
         }
     }
 }
