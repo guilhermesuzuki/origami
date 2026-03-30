@@ -70,26 +70,15 @@
 @code {
     protected override string DefaultOrdering => $"{nameof(OrigamiTag.Tag)}";
 
-    protected override Result<OrigamiTag> RemoveEntityFromCache(OrigamiTag entity)
-    {
-        var result = new Result<OrigamiTag>();
-
-        var query = from t in this.Super.ContentTags.ReadFromCache()
-                    join c in this.Super.Contents.ReadFromCache() on t.ContentId equals c.Id
-                    where t.Tag == entity.Tag && c.BlogId == entity.BlogId
-                    select t;
-
-        query.Each(this.Super.ContentTags.PurgeCache);
-
-        SelectedEntity = SelectedEntity.Id == entity.Id ? this.CreateEntity() : SelectedEntity;
-
-        return result;
-    }
-
     protected override string RowClassFunc(OrigamiTag entity, int index)
     {
         var result = base.RowClassFunc(entity, index);
         if (entity.Tag == SelectedEntity.Tag && entity.Slug == SelectedEntity.Slug) result += " selected-row";
         return result;
+    }
+
+    protected override IEnumerable<OrigamiTag> GetItems()
+    {
+        return base.GetItems().DistinctBy(x => x.Tag);
     }
 }

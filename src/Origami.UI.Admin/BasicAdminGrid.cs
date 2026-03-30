@@ -391,18 +391,6 @@ namespace Origami.UI.Admin
         }
 
         /// <summary>
-        /// Clean <paramref name="entity"/> from cache and its children
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        protected virtual Result<T> RemoveEntityFromCache(T entity)
-        {
-            Repository.PurgeCache(entity);
-            SelectedEntity = SelectedEntity.Id == entity.Id ? CreateEntity() : SelectedEntity;
-            return new(entity);
-        }
-
-        /// <summary>
         /// Restores the entity and its children (if appropriate)
         /// </summary>
         /// <param name="entity"></param>
