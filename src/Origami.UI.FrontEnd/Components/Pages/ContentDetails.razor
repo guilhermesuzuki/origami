@@ -30,7 +30,7 @@
             <div class="mt-3">
                 <ContentHeader Category="@Category" Tag="@Tag" Entity="@_entity" OnUserHasRated="() => this.StateHasChanged()" ShowRelatedContent="true"></ContentHeader>
                 <ContentHtml Class="mt-3 p-4 border shadow-sm" Entity="_entity"></ContentHtml>
-                <WhatToSeeNext Class="mt-5" Entity="whatToSeeNextTitle"></WhatToSeeNext>
+                <ContentWhatToSeeNext Class="mt-3 p-4 border shadow-sm" Entity="whatToSeeNextTitle"></ContentWhatToSeeNext>
                 <ContentRatings Entity="this._entity" Class="mt-3 p-4 border shadow-sm"></ContentRatings>
                 @if (this._entity.IsCommentEnabled == true)
                 {

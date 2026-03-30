@@ -3,13 +3,13 @@
 
 @if (this.Entity != null && this.Entity.Any() == true)
 {
-    <div class="wrapper mt-3 p-4 border shadow-sm">
+    <div class="wrapper @Class">
         <div class="text-center fs-3">
             <i class="fa-solid fa-rectangle-list"></i>
             @Text.Lower("What to see next")
             <i class="fa-solid fa-rectangle-list"></i>
         </div>
-        <div class="what-to-see-next @Class">
+        <div class="what-to-see-next mt-3">
             <div class="row">
                 @foreach (var content in this.Entity.Distinct())
                 {
