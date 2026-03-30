@@ -150,6 +150,18 @@
                 return $"{Entity.Hyperlink}";
             }
 
+            if (this.Tag != null)
+            {
+                var blog = this.Super.Blogs.ReadFromCache().Id(this.UserFacade.BlogId)!;
+                return blog.GetHyperlink(this.Tag);
+            }
+
+            if (this.Category != null)
+            {
+                var blog = this.Super.Blogs.ReadFromCache().Id(this.UserFacade.BlogId)!;
+                return blog.GetHyperlink(this.Category);
+            }
+
             throw new InvalidOperationException("No Entity, tag or category was provided");
         }
     }
