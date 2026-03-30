@@ -158,7 +158,7 @@
 
             if (this.Category != null)
             {
-                var blog = this.Super.Blogs.ReadFromCache().Id(this.UserFacade.BlogId)!;
+                var blog = this.Super.Blogs.ReadFromCache().Id(this.Category.BlogId)!;
                 return blog.GetHyperlink(this.Category);
             }
 
