@@ -289,12 +289,16 @@
 
     private void LoadTags()
     {
-        _tags = this.Super.ContentTags.ReadFromCache().OrderByDescending(x => { return Super.GetContents(x, BlogId).Published().Count(); });
+        _tags = this.Super.ContentTags.ReadFromCache()
+            .DistinctBy(x => x.Tag)
+            .OrderByDescending(x => { return Super.GetContents(x, BlogId).Published().Count(); });
 
         _tags = from a in _tags
                 join b in this.Super.Contents.ReadFromCache().Published() on a.ContentId equals b.Id
                 where b.BlogId == BlogId
                 select a;
+
+        _tags = _tags.Take(7);
     }
 
     private void LoadVideos(string order = "1")

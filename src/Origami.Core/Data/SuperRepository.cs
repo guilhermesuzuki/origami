@@ -186,7 +186,7 @@ namespace Origami.Core.Data
         {
             return (from a in ContentTags.ReadFromCache()
                     join b in Contents.ReadFromCache() on a.ContentId equals b.Id
-                    where b.BlogId == blogId
+                    //where a.ContentId == tag.ContentId
                     where a.Tag.Like(tag.Tag)
                     select b).Distinct();
         }

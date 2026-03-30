@@ -28,10 +28,20 @@
         {
             if (Entity != null)
             {
-                var blog = this.Super.Blogs.ReadFromCache().Id(this.BlogId)!;
-                return $"/blogs/{blog.Slug}/tags/{Entity.Slug}/#content-start";
+                var blogs = from a in this.Super.ContentTags.ReadFromCache()
+                            join b in this.Super.Contents.ReadFromCache() on a.ContentId equals b.Id
+                            join c in this.Super.Blogs.ReadFromCache() on b.BlogId equals c.Id
+                            where a.Id == Entity.Id
+                            select c;
+
+                var blog = blogs.FirstOrDefault();
+                if (blog != null)
+                {
+                    return $"/blogs/{blog.Slug}/tags/{Entity.Slug}/#content-start";
+                }
             }
-            return string.Empty;
+
+            throw new InvalidOperationException();
         }
     }
 }
