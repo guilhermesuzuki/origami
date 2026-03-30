@@ -28,7 +28,7 @@
             <ContentEmbedIFrame Entity="_entity" Class="mb-3"></ContentEmbedIFrame>
             <ContentMediaFile Entity="_entity"></ContentMediaFile>
             <div class="mt-3">
-                <ContentHeader Category="@Category" Tag="@Tag" Entity="@_entity" OnUserHasRated="() => this.StateHasChanged()" ShowRelatedContent="true"></ContentHeader>
+                <ContentHeader Slug="this.Slug" Entity="@_entity" OnUserHasRated="() => this.StateHasChanged()" ShowRelatedContent="true"></ContentHeader>
                 <ContentHtml Class="mt-3 p-4 border shadow-sm" Entity="_entity"></ContentHtml>
                 <ContentWhatToSeeNext Class="mt-3 p-4 border shadow-sm" Entity="whatToSeeNextTitle"></ContentWhatToSeeNext>
                 <ContentRatings Entity="this._entity" Class="mt-3 p-4 border shadow-sm"></ContentRatings>
@@ -106,6 +106,7 @@
 </Root>
 
 @code {
+    [Parameter] public ISlug? Slug { get; set; }
     [Parameter] public OrigamiContentTag? Tag { get; set; }
     [Parameter] public OrigamiCategory? Category { get; set; }
     [Parameter] public OrigamiContent? Entity { get; set; }
@@ -192,6 +193,6 @@
 
     protected override void SetPageTitle()
     {
-        this.PageTitle.SetTitle(Tag, Category, _entity);
+        this.PageTitle.SetTitle(this.Slug as ITag, this.Slug as IName, this._entity);
     }
 }

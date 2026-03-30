@@ -33,7 +33,7 @@
                         {
                             <td>
                                 <div class="pe-1" style="width:300px;">
-                                    <ContentHeader Class="@(this.Entity == content ? "selected" : null)" Category="@this.GetCategory()" Entity="content"></ContentHeader>
+                                    <ContentHeader Class="@(this.Entity == content ? "selected" : null)" Slug="@this.GetCategory()" Entity="content"></ContentHeader>
                                 </div>
                             </td>
                         }
@@ -43,7 +43,7 @@
         }
         @if (this.Entity != null)
         {
-            <ContentDetails OpenGraphMetaTags="false" Class="mt-3" Category="@this.GetCategory()" Entity="this.Entity"></ContentDetails>
+            <ContentDetails OpenGraphMetaTags="false" Class="mt-3" Slug="@this.GetCategory()" Entity="this.Entity"></ContentDetails>
         }
         @if (this.Items.Count == 0)
         {

@@ -4,7 +4,7 @@
 
 @if (Entity != null)
 {
-    <div class="category-header p-2 text-center border shadow-sm @Class">
+    <div class="category-header text-center @Class">
         <a href="@this.Hyperlink">
             <img src="@Entity.HeaderImage" height="45" onerror="this.onerror=null; this.src='@(OrigamiConstants.NoCategory)'" />
             <div class="mt-1 text-uppercase fw-bold ellipsis name" title="@this.Entity.Name">@this.Entity.Name</div>
