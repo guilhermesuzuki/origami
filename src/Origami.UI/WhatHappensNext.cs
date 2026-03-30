@@ -39,6 +39,7 @@ public class WhatHappensNext : IWhatHappensNext
 
     public void WhenTheUserClicksHereInTheFrontEnd(object? sender, WhenIClickHereEventArgs e)
     {
+        // route by category
         if (e.Slug is OrigamiCategory category)
         {
             var blog = this.SuperRepository.Blogs.ReadFromCache().Id(category.BlogId);
@@ -51,12 +52,31 @@ public class WhatHappensNext : IWhatHappensNext
             throw new InvalidOperationException("Navigation aborted: blog not found from the given category");
         }
 
+        // route by tag
+        if (e.Slug is OrigamiContentTag tag)
+        {
+            var blogs = from a in this.SuperRepository.Contents.ReadFromCache()
+                        join b in this.SuperRepository.Blogs.ReadFromCache() on a.BlogId equals b.Id
+                        where a.Id == tag.ContentId
+                        select b;
+
+            var blog = blogs.FirstOrDefault();
+            if (blog != null)
+            {
+                var hyperlink = blog.GetHyperlink(tag, e.Entity as INanoId);
+                GhostOfTheNavigator.NavigateTo($"{hyperlink}#content-start");
+                return;
+            }
+            throw new InvalidOperationException("Navigation aborted: blog not found from the given tag");
+        }
+
+        // default route by hyperlink
         if (e.Entity is IHyperlink link)
         {
             GhostOfTheNavigator.NavigateTo($"{link.Hyperlink}#content-start");
             return;
         }
 
-        throw new InvalidOperationException();
+        throw new InvalidOperationException("Navigation aborted: unable to determine navigation target");
     }
 }
