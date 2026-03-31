@@ -9,11 +9,11 @@
                               FullWidth="true"
                               Immediate="true"
                               HelperText="@Text.Lower("Type in here to search")"
-                              @bind-Value:get="@this.UserFacade.Search"
+                              @bind-Value:get="@this.UserFacade.SearchTerm"
                               @bind-Value:set="@_startQuery"></MudTextField>
             </li>
             <li class="position-relative ms-3" style="flex:none;">
-                <button class="m-auto" @onclick="() => this._startQuery(string.Empty)" disabled="@(this.UserFacade.Search.Has() ? false : true)">
+                <button class="m-auto" @onclick="() => this._startQuery(string.Empty)" disabled="@(this.UserFacade.SearchTerm.Has() ? false : true)">
                     <i class="fa-solid fa-broom"></i>
                 </button>
             </li>
@@ -99,8 +99,8 @@
                     <div class="row mt-3">
                         @foreach (var category in _categories)
                         {
-                            <div class="col-12 col-xl-4">
-                                <CategoryHeader Class="mb-3" Entity="category"></CategoryHeader>
+                            <div class="col-12 col-xl-2">
+                                <CategoryHeader Class="mb-3 p-3 border shadow-sm" Entity="category"></CategoryHeader>
                             </div>
                         }
                     </div>
@@ -127,7 +127,7 @@
                     <div class="row mt-3">
                         @foreach (var tag in _tags)
                         {
-                            <div class="col-12 col-xl-4">
+                            <div class="col-12 col-xl-2">
                                 <ContentTagHeader Class="mb-3 p-2 text-center border shadow-sm" Entity="@tag"></ContentTagHeader>
                             </div>
                         }
@@ -178,7 +178,7 @@
             }
         </div>
     }
-    else if (this.UserFacade.Search.Has() == true)
+    else if (this.UserFacade.SearchTerm.Has() == true)
     {
         <NothingToSeeHere Class="mt-3 shadow-lg p-3 border"></NothingToSeeHere>
     }
@@ -261,7 +261,7 @@
     /// <param name="queryTerm"></param>
     private void _startQuery(string queryTerm)
     {
-        this.UserFacade.Search = queryTerm;
+        this.UserFacade.SearchTerm = queryTerm;
         this._clearHits();
 
         if (_searchTimer != null)

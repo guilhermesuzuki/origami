@@ -33,7 +33,7 @@
         /// <summary>
         /// Gets or sets the search query string used to filter or locate specific items.
         /// </summary>
-        string Search { get; set; }
+        string SearchTerm { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the cookie consent banner should be displayed to the user.

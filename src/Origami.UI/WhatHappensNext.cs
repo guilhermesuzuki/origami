@@ -42,29 +42,42 @@ public class WhatHappensNext : IWhatHappensNext
 
     public void WhenTheUserClicksHereInTheAdmin(object? sender, WhenIClickHereEventArgs e)
     {
-        var hyperlink = e.Entity switch
-        {
-            OrigamiCategory => $"/categories?nano={(e.Entity as INanoId)?.NanoId}",
-            OrigamiPage => $"/pages?nano={(e.Entity as INanoId)?.NanoId}",
-            OrigamiPost => $"/posts?nano={(e.Entity as INanoId)?.NanoId}",
-            OrigamiSpecialMessage => $"/specialmessages?nano={(e.Entity as INanoId)?.NanoId}",
-            OrigamiSpecialPage => $"/specialpages?nano={(e.Entity as INanoId)?.NanoId}",
-            OrigamiVideo => $"/videos?nano={(e.Entity as INanoId)?.NanoId}",
-            OrigamiSocialProfile => $"/socialprofiles?id={e.Entity.Id}",
-            OrigamiQuickNote => $"/quicknotes?nano={(e.Entity as INanoId)?.NanoId}",
-            OrigamiContentTag => $"/tags?slug={(e.Entity as ISlug)?.Slug}",
-            _ => string.Empty,
-        };
+        var hyperlink = string.Empty;
 
-        if (e.Entity is OrigamiContentComment comment)
+        if (e.Slug is OrigamiCategory category)
         {
-            var content = this.SuperRepository.Contents.ReadFromCache().Id(comment.ContentId);
-            hyperlink = content switch
+            hyperlink = $"/categories/{category.NanoId}";
+        }
+        else if (e.Slug is OrigamiContentTag tag)
+        {
+            hyperlink = $"/tags/{tag.Slug}";
+        }
+        else
+        {
+            hyperlink = e.Entity switch
             {
-                OrigamiPost => $"/posts/comments?id={comment.Id}",
-                OrigamiVideo => $"/videos/comments?id={comment.Id}",
+                OrigamiCategory => $"/categories/{(e.Entity as INanoId)?.NanoId}",
+                OrigamiPage => $"/pages/{(e.Entity as INanoId)?.NanoId}",
+                OrigamiPost => $"/posts/{(e.Entity as INanoId)?.NanoId}",
+                OrigamiSpecialMessage => $"/specialmessages/{(e.Entity as INanoId)?.NanoId}",
+                OrigamiSpecialPage => $"/specialpages/{(e.Entity as INanoId)?.NanoId}",
+                OrigamiVideo => $"/videos/{(e.Entity as INanoId)?.NanoId}",
+                OrigamiSocialProfile => $"/socialprofiles/{e.Entity.Id}",
+                OrigamiQuickNote => $"/quicknotes/{(e.Entity as INanoId)?.NanoId}",
+                OrigamiContentTag => $"/tags/{(e.Entity as ISlug)?.Slug}",
                 _ => string.Empty,
             };
+
+            if (e.Entity is OrigamiContentComment comment)
+            {
+                var content = this.SuperRepository.Contents.ReadFromCache().Id(comment.ContentId);
+                hyperlink = content switch
+                {
+                    OrigamiPost => $"/posts/comments/{comment.Id}",
+                    OrigamiVideo => $"/videos/comments/{comment.Id}",
+                    _ => string.Empty,
+                };
+            }
         }
 
         if (hyperlink.Has() == true)

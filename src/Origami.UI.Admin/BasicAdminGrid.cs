@@ -12,13 +12,14 @@ namespace Origami.UI.Admin
     public abstract class BasicAdminGrid<T> :
         BasicAdmin,
         ICreateEntity<T>,
-        IFilter
+        IFilter,
+        INanoId
         where T : class, IId, new()
     {
         public string Filter { get; set; } = "all";
 
+        [Parameter] public string NanoId { get; set; } = string.Empty;
         [Inject] public IRepository<T> Repository { get; set; } = null!;
-
         /// <summary>
         /// DataGrid for this instance
         /// </summary>
@@ -345,6 +346,12 @@ namespace Origami.UI.Admin
             HasBlogChangedInUserFacade();
         }
 
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+            this.SetEntityFromParameter();
+        }
+
         protected virtual void OnSearchResultSelected(T entity)
         {
             SelectedEntity = entity.Clone();
@@ -439,6 +446,24 @@ namespace Origami.UI.Admin
         protected virtual List<T> SelectedEntitiesInOrder()
         {
             return SelectedEntities.ToList();
+        }
+
+        protected void SetEntityFromParameter()
+        {
+            if (this.NanoId.Has() == true)
+            {
+                var entity = (from a in this.DbContextFactory.ReadFromCache<T>(MemoryCache).Cast<INanoId>()
+                              where a.NanoId == this.NanoId
+                              select a).FirstOrDefault();
+
+                if (entity != null)
+                {
+                    SelectedEntity = (entity as T).Clone();
+                    return;
+                }
+
+                this.UserFacade.Result = new() { Error = Text.Original("The entity you are trying to access does not exist") };
+            }
         }
     }
 }

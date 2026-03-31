@@ -2,6 +2,7 @@
 using Microsoft.JSInterop;
 using MudBlazor;
 using MudBlazor.Charts;
+using NanoidDotNet;
 using Origami.Core;
 using Origami.Core.Data;
 using Origami.Core.Models;
@@ -13,7 +14,8 @@ namespace Origami.UI.Admin
     public abstract class BasicAdminGridContent<T1, T2> :
         BasicAdmin,
         ICreateEntity<T2>,
-        IFilter
+        IFilter,
+        INanoId
         where T1 : OrigamiContent, new()
         where T2 : class, IHubContent<T1>, new()
     {
@@ -25,7 +27,7 @@ namespace Origami.UI.Admin
         public string Filter { get; set; } = "all";
 
         [Inject] public IHubContentRepository<T2> HubContentRepository { get; set; } = null!;
-        
+        [Parameter] public string NanoId { get; set; } = string.Empty;
         /// <summary>
         /// Default ordering, in case there's no order-by
         /// </summary>
@@ -35,16 +37,6 @@ namespace Origami.UI.Admin
         /// Can the user delete the selected entities?
         /// </summary>
         protected virtual bool DisableTheDeleteButton => SelectedEntities.Any() == false;
-
-        /// <summary>
-        /// Can the user purge the selected entities?
-        /// </summary>
-        protected virtual bool DisableThePurgeButton => SelectedEntities.Any() == false;
-
-        /// <summary>
-        /// Can the user restore the selected entities?
-        /// </summary>
-        protected virtual bool DisableTheRestoreButton => SelectedEntities.Any() == false;
 
         /// <summary>
         /// Deleted entities should be listed in the DataGrid?
@@ -334,6 +326,12 @@ namespace Origami.UI.Admin
             HasBlogChangedInUserFacade();
         }
 
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+            this.SetEntityFromParameter();
+        }
+
         protected virtual void OnSearchResultSelected(T1 entity)
         {
             SelectedEntity = this.HubContentRepository.Get(entity).Clone();
@@ -460,6 +458,23 @@ namespace Origami.UI.Admin
             Filter = filter;
         }
 
+        protected void SetEntityFromParameter()
+        {
+            if (this.NanoId.Has() == true)
+            {
+                var entity = (from a in this.DbContextFactory.ReadFromCache<T1>(MemoryCache)
+                              where a.NanoId == this.NanoId
+                              select a).FirstOrDefault();
+
+                if (entity != null)
+                {
+                    SelectedEntity = this.HubContentRepository.Get(entity).Clone();
+                    return;
+                }
+
+                this.UserFacade.Result = new() { Error = Text.Original("The entity you are trying to access does not exist") };
+            }
+        }
         protected async Task UnpublishSelectedEntities()
         {
             await ExecuteWithSelectedEntities(

@@ -1,4 +1,5 @@
 ﻿@page "/videos"
+@page "/videos/{NanoId}"
 @inherits BasicAdminGridContent<OrigamiVideo, HubContentVideo>
 
 <style>
@@ -130,4 +131,9 @@
 </Root>
 @code {
     protected override string DefaultOrdering => $"{nameof(OrigamiVideo.Title)}";
+
+    protected override void OnEdit(HubContentVideo entity)
+    {
+        GhostOfTheNavigator.NavigateTo($"/videos/{entity.Entity.NanoId}");
+    }
 }

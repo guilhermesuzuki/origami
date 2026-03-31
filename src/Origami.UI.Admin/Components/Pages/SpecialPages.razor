@@ -1,4 +1,5 @@
 ﻿@page "/specialpages"
+@page "/specialpages/{NanoId}"
 @inherits BasicAdminGridContent<OrigamiSpecialPage, HubContentSpecialPage>
 
 <Root Access="this.CanAccess()">
@@ -127,43 +128,8 @@
 
     protected override string DefaultOrdering => $"{nameof(OrigamiSpecialPage.Title)}";
 
-    protected async Task EnterMaintenanceMode()
+    protected override void OnEdit(HubContentSpecialPage entity)
     {
-        var ok = await DialogService.ShowMessageBoxAsync(
-            Text.Upper("Entering maintenance mode"),
-            Text.Original("Are you sure?"),
-            yesText: Text.Lower("Yes"),
-            noText: Text.Lower("No"));
-
-        if (ok.GetValueOrDefault())
-        {
-            using (var transaction = new TransactionScope())
-            {
-                var ctx = new DataOperationContext(this.UserFacade.User, DateTime.UtcNow);
-                var hub = this.Super.SpecialPages.EnterMaintenanceMode(ctx);
-                if (hub.Ok) transaction.Complete();
-                this.UserFacade.Result = hub;
-            }
-        }
-    }
-
-    protected async Task LeaveMaintenanceMode()
-    {
-        var ok = await DialogService.ShowMessageBoxAsync(
-            Text.Upper("Leaving maintenance mode"),
-            Text.Original("Are you sure?"),
-            yesText: Text.Lower("Yes"),
-            noText: Text.Lower("No"));
-
-        if (ok.GetValueOrDefault())
-        {
-            using (var transaction = new TransactionScope())
-            {
-                var ctx = new DataOperationContext(this.UserFacade.User, DateTime.UtcNow);
-                var hub = this.Super.SpecialPages.LeaveMaintenanceMode(ctx);
-                if (hub.Ok) transaction.Complete();
-                this.UserFacade.Result = hub;
-            }
-        }
+        GhostOfTheNavigator.NavigateTo($"/specialpages/{entity.Entity.NanoId}");
     }
 }

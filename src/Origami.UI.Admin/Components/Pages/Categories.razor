@@ -1,9 +1,7 @@
 ﻿@page "/categories"
+@page "/categories/{NanoId}"
 @inherits BasicAdminGrid<OrigamiCategory>
-<style>
-    .parent-category .id { display: none !important; }
-    .child-categories .id { display: none !important; }
-</style>
+
 <Root Access="this.CanAccess()">
     <HeaderTemplate>
         <div class="p-3 border-bottom">
@@ -100,6 +98,15 @@
         {
             return base.GetItems();
         }
-        return from x in base.GetItems() where this.Super.IsParentDeleted(x) == false select x;
+
+        return from x in base.GetItems() 
+               where x.IsDeleted == false
+               where this.Super.IsParentDeleted(x) == false 
+               select x;
+    }
+
+    protected override void OnEdit(OrigamiCategory entity)
+    {
+        GhostOfTheNavigator.NavigateTo($"/categories/{entity.NanoId}");
     }
 }

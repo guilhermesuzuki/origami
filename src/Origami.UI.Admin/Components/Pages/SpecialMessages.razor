@@ -1,6 +1,6 @@
 ﻿@page "/specialmessages"
+@page "/specialmessages/{NanoId}"
 @inherits BasicAdminGridContent<OrigamiSpecialMessage, HubContentSpecialMessage>
-@implements IFilter
 @inject ISpecialMessageRepository _messages
 
 <Root Access="this.CanAccess()">
@@ -114,4 +114,9 @@
 </Root>
 @code {
     protected override string DefaultOrdering => $"{nameof(OrigamiSpecialMessage.Title)}";
+
+    protected override void OnEdit(HubContentSpecialMessage entity)
+    {
+        GhostOfTheNavigator.NavigateTo($"/specialmessages/{entity.Entity.NanoId}");
+    }
 }
