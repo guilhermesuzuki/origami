@@ -302,6 +302,16 @@ namespace Origami.UI.Admin
                 items = query.Cast<T>();
             }
 
+            if (typeof(T).Implements<IContentId>() == true)
+            {
+                var query = from a in items.Cast<IContentId>()
+                            join b in DbContextFactory.ReadFromCache<OrigamiContent>(MemoryCache) on a.ContentId equals b.Id
+                            where b.BlogId == this.UserFacade.BlogId
+                            select a;
+
+                items = query.Cast<T>();
+            }
+
             return items;
         }
 
@@ -448,7 +458,7 @@ namespace Origami.UI.Admin
             return SelectedEntities.ToList();
         }
 
-        protected void SetEntityFromParameter()
+        protected virtual void SetEntityFromParameter()
         {
             if (this.NanoId.Has() == true)
             {

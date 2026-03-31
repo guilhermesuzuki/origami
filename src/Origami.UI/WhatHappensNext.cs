@@ -50,7 +50,7 @@ public class WhatHappensNext : IWhatHappensNext
         }
         else if (e.Slug is OrigamiContentTag tag)
         {
-            hyperlink = $"/tags/{tag.Slug}";
+            hyperlink = $"/tags/{tag.NanoId}";
         }
         else
         {

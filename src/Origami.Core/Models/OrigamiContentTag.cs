@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using NanoidDotNet;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -13,10 +14,12 @@ namespace Origami.Core.Models
         ITag,
         ISlug,
         IVersion,
-        INew
+        INew,
+        INanoId
     {
         private Guid _contentId;
         private Guid _id = Guid.NewGuid();
+        private string _nanoId = string.Empty;
         private string _tag = string.Empty;
         protected byte[] _version = Array.Empty<byte>();
 
@@ -25,7 +28,7 @@ namespace Origami.Core.Models
         /// </summary>
         public OrigamiContentTag() : base()
         {
-
+            NanoId = Nanoid.Generate(Nanoid.Alphabets.LettersAndDigits, 6);
         }
 
         public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) => { };
@@ -46,6 +49,16 @@ namespace Origami.Core.Models
         public bool New => _version.SequenceEqual(Array.Empty<byte>());
 
         public string Slug => Tag.GetSlug();
+
+        /// <summary>
+        /// Tag
+        /// </summary>
+        [StringLength(6)]
+        public string NanoId
+        {
+            get => _nanoId;
+            set => this.Set(ref _nanoId, value, Changed);
+        }
 
         /// <summary>
         /// Tag
