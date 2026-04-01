@@ -94,6 +94,7 @@ namespace Origami.Core.Validators
                 .NotEmpty().WithMessage(text.Original("Display name is required"))
                 .MaximumLength(200).WithMessage(text.Original("Display name cannot exceed 200 characters"));
         }
+
         public static IRuleBuilderOptions<T, T> DisplayNameMustBeDifferentThanUsername<T>(this IRuleBuilder<T, T> ruleBuilder, Text text)
             where T : IUsername, IDisplayName
         {
@@ -226,6 +227,13 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("Language must be valid"));
         }
 
+        public static IRuleBuilderOptions<T, T> ModificationMustHappenAfterCreation<T>(this IRuleBuilder<T, T> ruleBuilder, Text text) where T : IDateCreated, IDateModified
+        {
+            return ruleBuilder
+                .Must(entity => entity.DateCreated < (entity.DateModified ?? DateTime.MaxValue))
+                .WithMessage(text.Original("Date of modification must happen after the creation date"));
+        }
+
         public static IRuleBuilderOptions<T, string> Name<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
         {
             return ruleBuilder
@@ -313,7 +321,6 @@ namespace Origami.Core.Validators
                     {
                         return false;
                     }
-
                     return true;
                 })
                 .WithMessage(text.Original("Tags must be unique"));
@@ -325,6 +332,23 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("Title is required"))
                 .MaximumLength(255)
                 .WithMessage(text.Original("Title cannot exceed 255 characters"));
+        }
+
+        public static IRuleBuilderOptions<T, T> TopLevelPageWhenFrontPage<T>(this IRuleBuilder<T, T> ruleBuilder, Text text)
+        {
+            return ruleBuilder
+                .Must(entity =>
+                {
+                    if (entity is OrigamiPage page)
+                    {
+                        if (page.IsFrontPage == false)
+                        {
+                            return true;
+                        }
+                        return page.ParentId == null;
+                    }
+                    return true;
+                }).WithMessage(text.Original("To promote to front-page, that page must be top-level"));
         }
 
         public static IRuleBuilderOptions<T, string?> Username<T>(this IRuleBuilder<T, string?> ruleBuilder, Text text)
@@ -347,23 +371,6 @@ namespace Origami.Core.Validators
                     return true;
                 })
                 .WithMessage(text.Original("{0}: URL must be a valid website address", field));
-        }
-
-        public static IRuleBuilderOptions<T, T> TopLevelPageWhenFrontPage<T>(this IRuleBuilder<T, T> ruleBuilder, Text text)
-        {
-            return ruleBuilder
-                .Must(entity =>
-                {
-                    if (entity is OrigamiPage page)
-                    {
-                        if (page.IsFrontPage == false)
-                        {
-                            return true;
-                        }
-                        return page.ParentId == null;
-                    }
-                    return true;
-                }).WithMessage(text.Original("To promote to front-page, that page must be top-level"));
         }
     }
 }

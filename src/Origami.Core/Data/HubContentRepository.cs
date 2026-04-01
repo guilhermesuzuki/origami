@@ -226,6 +226,15 @@ namespace Origami.Core.Data
                 // check permissions
                 if (UserHasPermission(db, userId.Id, permission) == false) return new(root) { Info = permission, Error = Text.Original(Text.YouDontHavePermissionForThisFeature), };
 
+                if (nil)
+                {
+                    root.Entity.DateCreated = DateTime.UtcNow;
+                }
+                else
+                {
+                    root.Entity.DateModified = DateTime.UtcNow;
+                }
+
                 // validate hub
                 _validator.ValidateAndThrow(root);
 
