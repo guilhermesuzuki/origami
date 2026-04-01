@@ -70,9 +70,7 @@ public class SettingsRepository :
             return settings;
         }
         
-        MemoryCache.Set(key, ExtractSettings(), new MemoryCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1) });
-
-        return this.MemoryCache.Get<OrigamiSettings>(key) ?? throw new InvalidOperationException();
+        return MemoryCache.Set(key, ExtractSettings(), new MemoryCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1) });
     }
 
     public override Result<OrigamiSettings> Update(DataOperationContext<OrigamiSettings> ctx)
