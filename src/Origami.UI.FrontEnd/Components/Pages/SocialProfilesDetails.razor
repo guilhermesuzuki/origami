@@ -64,7 +64,7 @@
                                 </div>
                                 <ul>
                                     <li>
-                                        <i class="bi bi-file-earmark-text-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
                                         @_contentRating.RatingsFromProfile(this.SocialProfile).Count()
                                     </li>
                                 </ul>
@@ -75,7 +75,7 @@
                                 </div>
                                 <ul>
                                     <li>
-                                        <i class="bi bi-file-earmark-text-fill"></i>
+                                        <i class="bi bi-emoji-smile-fill"></i>
                                         @_contentCommentReaction.ReactionsFromProfile(this.SocialProfile).Count()
                                     </li>
                                 </ul>
@@ -84,11 +84,11 @@
                         <div class="row mt-3">
                             <div class="col-12">
                                 <div class="fs-5">
-                                    @Text.Lower("Comments [Including Deleted]")
+                                    @Text.Lower("Comments [including deleted]")
                                 </div>
                                 <ul>
                                     <li>
-                                        <i class="bi bi-file-earmark-text-fill"></i>
+                                        <i class="bi bi-chat-fill"></i>
                                         @_contentComment.CommentsFromProfile(this.SocialProfile, true).Count()
                                     </li>
                                 </ul>
