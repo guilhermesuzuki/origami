@@ -1,8 +1,5 @@
 ﻿@page "/settings"
-@using SixLabors.ImageSharp
-@using System.Net.Mail
 @inherits BasicFormFull<OrigamiSettings>
-@inject IEmailStatusRepository _emailStatusRepository
 
 <Root Access="this.CanAccess()">
     <HeaderTemplate>
@@ -509,7 +506,33 @@
 
     public override void Save()
     {
-        base.Save();
-        this.Super.Settings.RefreshCache();
+        var hub = new Result<OrigamiSettings>(this.Entity);
+        var context = new DataOperationContext<OrigamiSettings>(this.UserFacade.User, DateTime.UtcNow, Entity);
+
+        try
+        {
+            using (var transaction = new TransactionScope())
+            {
+                hub = Repository.SmartSave(context, true);
+                if (hub.Ok)
+                {
+                    transaction.Complete();
+                }
+            }
+            Saved.InvokeAsync(hub.Entity).Wait();
+        }
+        catch (Exception ex)
+        {
+            hub.Error = ex.GetMessage();
+        }
+        finally
+        {
+            UserFacade.Result = hub;
+        }
+    }
+
+    public override void UndoChanges()
+    {
+        this.Entity = this.Super.Settings.GetSettings().Clone();
     }
 }

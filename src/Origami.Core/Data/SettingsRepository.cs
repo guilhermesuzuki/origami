@@ -63,7 +63,16 @@ public class SettingsRepository :
 
     public OrigamiSettings GetSettings()
     {
-        return this.ExtractSettings() ?? throw new InvalidOperationException();
+        var key = KeyForCaching;
+        
+        if (MemoryCache.TryGetValue(key, out OrigamiSettings? settings) == true && settings != null)
+        {
+            return settings;
+        }
+        
+        MemoryCache.Set(key, ExtractSettings(), new MemoryCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1) });
+
+        return this.MemoryCache.Get<OrigamiSettings>(key) ?? throw new InvalidOperationException();
     }
 
     public override Result<OrigamiSettings> Update(DataOperationContext<OrigamiSettings> ctx)
