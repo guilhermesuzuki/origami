@@ -4,6 +4,7 @@
 <style>
     .trashes .id .is-deleted { display: none; }
     .deleted { opacity: 1 !important; background: initial !important; }
+    .search-wrapper { display: none !important; }
 </style>
 <Root Access="this.CanAccess()">
     <HeaderTemplate>
@@ -28,6 +29,8 @@
                 </div>
             </div>
         </div>
+    </HeaderTemplate>
+    <ContentTemplate>
         <div class="p-3 border-bottom">
             <div class="row">
                 <div class="col-12">
@@ -35,8 +38,6 @@
                 </div>
             </div>
         </div>
-    </HeaderTemplate>
-    <ContentTemplate>
         <div class="p-3">
             <div class="row">
                 <div class="trashes col-12 col-xxl-8">
