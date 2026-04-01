@@ -64,8 +64,6 @@ main { flex: 1; }
 .footer .id { display: none!important; }
 
 .login .fa-brands { font-size:30px; }
-.social-profile-header .fa-brands { font-size: 12px; margin-top: 2px; }
-.social-profile-header-lite .fa-brands { font-size: 12px; margin-top: 2px; }
 
 .z-index-back { z-index: 001 !important; }
 .z-index-middle { z-index: 100 !important; }

@@ -109,13 +109,9 @@
                             <TemplateColumn Title="@Text.Upper("Type")" Sortable="false" Filterable="false" CellClass="col-1 text-center">
                                 <CellTemplate>
                                     <div class="small">
-                                        @if (context.Item.Type.Like("PostComment") == true)
+                                        @if (context.Item.Type.Like("ContentComment") == true)
                                         {
-                                            <span>@Text.Original("Comment in post")</span>
-                                        }
-                                        else if (context.Item.Type.Like("VideoComment") == true)
-                                        {
-                                            <span>@Text.Original("Comment in video")</span>
+                                            <span>@Text.Original("Comment")</span>
                                         }
                                         else if (context.Item.Type.Like("OrigamiPage") == true)
                                         {

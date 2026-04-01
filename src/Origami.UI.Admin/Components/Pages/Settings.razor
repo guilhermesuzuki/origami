@@ -40,21 +40,7 @@
                         </div>
                         <ul class="inline-list mt-3">
                             <li>
-                                <MudSelect FullWidth="true"
-                                           Immediate="true"
-                                           MultiSelection="false"
-                                           InputClass="d-inline-flex align-items-center"
-                                           @bind-Value:get="@Entity.Language"
-                                           @bind-Value:set="(language) => this.Entity.Language = language"
-                                           HelperText="@Text.Lower("Language")">
-                                    @foreach (var language in OrigamiConstants.ContentLanguages())
-                                    {
-                                        <MudSelectItem Value="language.Language">
-                                            <img class="pe-1" src="@language.Flag" width="20" title="@language.Name" />
-                                            <span>@language.Name</span>
-                                        </MudSelectItem>
-                                    }
-                                </MudSelect>
+                                <LanguageWrittenOn Entity="this.Entity"></LanguageWrittenOn>
                             </li>
                         </ul>
                         <ul class="inline-list">
