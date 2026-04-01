@@ -248,8 +248,8 @@ namespace Origami.Core.Validators
             return ruleBuilder
                 .NotEmpty()
                 .WithMessage(text.Original("NanoId is required"))
-                .MaximumLength(6)
-                .WithMessage(text.Original("NanoId cannot exceed 6 characters"));
+                .MaximumLength(8)
+                .WithMessage(text.Original("NanoId cannot exceed 8 characters"));
         }
 
         public static IRuleBuilderOptions<T, string> Note<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
