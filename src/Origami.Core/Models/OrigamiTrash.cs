@@ -3,7 +3,7 @@
 namespace Origami.Core.Models
 {
     public class OrigamiTrash :
-        IId,
+        BaseModel,
         IType,
         IFakeId,
         IDateCreated,
@@ -14,8 +14,7 @@ namespace Origami.Core.Models
         INew,
         ITitle,
         IName,
-        IContent,
-        INanoId
+        IContent
     {
         public string Content { get; set; } = string.Empty;
         public DateTime DateCreated { get; set; }
@@ -24,11 +23,10 @@ namespace Origami.Core.Models
 
         [Key]
         public Guid FakeId { get; set; }
-        public Guid Id { get; set; }
+        public override Guid Id { get => base.Id; set => base.Id = value; }
         public bool IsDeleted { get; set; }
         public bool IsPublished { get; set; }
         public string Name { get; set; } = string.Empty;
-        public string NanoId { get; set; } = string.Empty;
         public bool New => Version.SequenceEqual([]);
         public string Title { get; set; } = string.Empty;
         public string Type { get; set; } = string.Empty;

@@ -44,7 +44,6 @@ namespace Origami.Core.Models
         /// </summary>
         public BaseContent() : base()
         {
-            NanoId = Nanoid.Generate(Nanoid.Alphabets.LettersAndDigits, 6);
             IsDraft = true;
             IsDeleted = false;
         }
