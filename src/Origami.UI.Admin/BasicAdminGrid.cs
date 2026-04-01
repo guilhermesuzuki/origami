@@ -19,7 +19,9 @@ namespace Origami.UI.Admin
         public string Filter { get; set; } = "all";
 
         [Parameter] public string NanoId { get; set; } = string.Empty;
+
         [Inject] public IRepository<T> Repository { get; set; } = null!;
+
         /// <summary>
         /// DataGrid for this instance
         /// </summary>
