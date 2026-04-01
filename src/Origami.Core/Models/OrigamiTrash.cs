@@ -1,7 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace Origami.Core.Models
 {
+    [PrimaryKey(nameof(FakeId))]
     public class OrigamiTrash :
         BaseModel,
         IType,
@@ -20,10 +22,7 @@ namespace Origami.Core.Models
         public DateTime DateCreated { get; set; }
         public DateTime? DateModified { get; set; }
         public DateTime? DatePublished { get; set; }
-
-        [Key]
         public Guid FakeId { get; set; }
-        public override Guid Id { get => base.Id; set => base.Id = value; }
         public bool IsDeleted { get; set; }
         public bool IsPublished { get; set; }
         public string Name { get; set; } = string.Empty;
