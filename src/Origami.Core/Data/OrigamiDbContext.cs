@@ -215,11 +215,6 @@ namespace Origami.Core.Data
         public DbSet<OrigamiSubscriber> Subscribers { get; set; }
 
         /// <summary>
-        /// Trashes
-        /// </summary>
-        public DbSet<OrigamiTrash> Trashes { get; set; }
-
-        /// <summary>
         /// User Activities
         /// </summary>
         public DbSet<OrigamiUserActivity> UserActivities { get; set; }
@@ -316,10 +311,6 @@ namespace Origami.Core.Data
             // Map the entity to the view
             modelBuilder.Entity<OrigamiUserTrash>().ToView("oi_vw_UserTrashes");
             modelBuilder.Entity<OrigamiUserTrash>().Metadata.SetIsTableExcludedFromMigrations(true);
-
-            // Map the entity to the view
-            modelBuilder.Entity<OrigamiTrash>().ToView("oi_vw_Trashes");
-            modelBuilder.Entity<OrigamiTrash>().Metadata.SetIsTableExcludedFromMigrations(true);
 
             modelBuilder.Entity<ProcessedUserView>().HasNoKey();
             modelBuilder.Entity<ProcessedUserViewForHistory>().HasNoKey();

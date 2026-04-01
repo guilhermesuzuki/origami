@@ -32,7 +32,6 @@ namespace Origami.Core.Data
             ISpecialMessageRepository specialMessageRepository,
             ISpecialPageRepository specialPageRepository,
             ISubscriberRepository subscriberRepository,
-            ITrashRepository trashRepository,
             IUserActivityRepository userActivityRepository,
             IUserBlogRepository userBlogRepository,
             IUserContentRepository userContentRepository,
@@ -77,7 +76,6 @@ namespace Origami.Core.Data
             SpecialMessages = specialMessageRepository;
             SpecialPages = specialPageRepository;
             Subscribers = subscriberRepository;
-            Trashes = trashRepository;
             UserActivities = userActivityRepository;
             UserBlogs = userBlogRepository;
             UserContents = userContentRepository;
@@ -130,7 +128,6 @@ namespace Origami.Core.Data
         public ISpecialMessageRepository SpecialMessages { get; }
         public ISpecialPageRepository SpecialPages { get; }
         public ISubscriberRepository Subscribers { get; }
-        public ITrashRepository Trashes { get; }
         public IUserActivityRepository UserActivities { get; }
         public IUserBlogRepository UserBlogs { get; }
         public IUserContentRepository UserContents { get; }

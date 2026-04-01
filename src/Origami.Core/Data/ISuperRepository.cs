@@ -58,7 +58,6 @@ namespace Origami.Core.Data
         ISpecialMessageRepository SpecialMessages { get; }
         ISpecialPageRepository SpecialPages { get; }
         ISubscriberRepository Subscribers { get; }
-        ITrashRepository Trashes { get; }
         IUserActivityRepository UserActivities { get; }
         IUserBlogRepository UserBlogs { get; }
         IUserContentRepository UserContents { get; }
