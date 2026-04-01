@@ -58,5 +58,31 @@ namespace Origami.Core.Data
 
             return new();
         }
+
+        public override Result<OrigamiContentTag> Update(DataOperationContext<OrigamiContentTag> ctx)
+        {
+            if (ctx.EntityBeforeModifications != null)
+            {
+                using (var db = DbContextFactory.CreateDbContext())
+                {
+                    var blog = from a in db.ContentTags.AsNoTracking()
+                               join b in db.Contents.AsNoTracking() on a.ContentId equals b.Id
+                               where a.NanoId == ctx.Entity.NanoId
+                               select b.BlogId;
+
+                    var query = from a in db.ContentTags.AsNoTracking()
+                                join b in db.Contents.AsNoTracking() on a.ContentId equals b.Id
+                                where b.BlogId == blog.FirstOrDefault()
+                                where a.Tag == ctx.EntityBeforeModifications.Tag
+                                select a;
+
+                    query.ExecuteUpdate(setters => setters.SetProperty(t => t.Tag, ctx.Entity.Tag));
+
+                    this.RefreshCache(blog.FirstOrDefault() ?? throw new InvalidOperationException("Blog not found"), ctx.EntityBeforeModifications.Tag, ctx.Entity.Tag);
+                }
+                return new(ctx.Entity);
+            }
+            return new(ctx.Entity, "Entity before modifications is null, update cannot proceed");
+        }
     }
 }
