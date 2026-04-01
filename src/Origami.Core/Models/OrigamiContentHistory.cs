@@ -9,8 +9,8 @@ namespace Origami.Core.Models
 {
     [Table("oi_ContentHistories")]
     public class OrigamiContentHistory :
+        BaseModel,
         IChanged,
-        IId,
         IContentId,
         IVersion,
         IDateCreated,
@@ -20,7 +20,6 @@ namespace Origami.Core.Models
         protected Guid _authorId;
         protected Guid _contentId;
         protected DateTime _dateCreated = DateTime.UtcNow;
-        protected Guid _id;
         protected byte[] _version = Array.Empty<byte>();
 
         public event EventHandler<PropertyChangedEventArgs> Changed = delegate { };
@@ -41,13 +40,6 @@ namespace Origami.Core.Models
         {
             get => _dateCreated;
             set => this.Set(ref _dateCreated, value, Changed);
-        }
-
-        [Key]
-        public Guid Id
-        {
-            get => _id;
-            set => this.Set(ref _id, value, Changed);
         }
 
         public bool New => this.Version.SequenceEqual(Array.Empty<byte>());

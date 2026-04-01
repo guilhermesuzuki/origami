@@ -34,12 +34,6 @@
                                         </button>
                                     </MudMenuItem>
                                 }
-                                <MudMenuItem>
-                                    <button class="" @onclick="async () => await this.OnCommentReply.InvokeAsync(this.Comment)">
-                                        <MudIcon Icon="@Icons.Material.Filled.Reply"></MudIcon>
-                                        @Text.Lower("Reply comment")
-                                    </button>
-                                </MudMenuItem>
                                 @if (UserFacade.SocialProfile.IsModerator && Comment.PinnedById == null)
                                 {
                                     <MudMenuItem>
@@ -58,6 +52,12 @@
                                         </button>
                                     </MudMenuItem>
                                 }
+                                <MudMenuItem>
+                                    <button class="" @onclick="async () => await this.OnCommentReply.InvokeAsync(this.Comment)">
+                                        <MudIcon Icon="@Icons.Material.Filled.Reply"></MudIcon>
+                                        @Text.Lower("Reply comment")
+                                    </button>
+                                </MudMenuItem>
                             </MudMenu>
                         </div>
                     </Authorized>
