@@ -1,0 +1,25 @@
+﻿@inherits Basic
+@implements IEntityNull<OrigamiContent>
+
+@if (Entity != null)
+{
+    <div class="content-html @Class">
+        @if (Entity.Content.Has() == true)
+        {
+            @((MarkupString)Entity.Content)
+        }
+        else
+        {
+            <p class="fs-3 w-100 text-center">
+                <i class="fa-solid fa-quote-left"></i>
+                @Text.Lower("No text from this content")
+                <i class="fa-solid fa-quote-right"></i>
+            </p>
+        }
+    </div>
+}
+
+
+@code {
+    [Parameter] public OrigamiContent? Entity { get; set; }
+}

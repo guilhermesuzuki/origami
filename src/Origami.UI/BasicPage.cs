@@ -1,10 +1,14 @@
-﻿using Microsoft.JSInterop;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using Origami.Core;
+using Origami.Core.Data;
 
 namespace Origami.UI
 {
     public class BasicPage : Basic
     {
+        [Inject] protected IPageTitleRepository PageTitle { get; set; } = null!;
+
         protected virtual void ChangeBlog()
         {
             if (BlogId == Guid.Empty) return;
@@ -15,10 +19,10 @@ namespace Origami.UI
             }
         }
 
-        protected async Task ErrorFromQueryString()
+        protected async Task ErrorFromQueryStringAsync()
         {
             var key = "error";
-            var error = this.NavigationManager.Uri.QueryString(key);
+            var error = this.GhostOfTheNavigator.Uri.QueryString(key);
             if (error.Has() == true)
             {
                 await JSRuntime.InvokeVoidAsync("removeQueryStringWithoutReload", key);
@@ -30,10 +34,10 @@ namespace Origami.UI
             }
         }
 
-        protected async Task LanguageFromQueryString()
+        protected async Task LanguageFromQueryStringAsync()
         {
             var key = "language";
-            var language = this.NavigationManager.Uri.QueryString(key);
+            var language = this.GhostOfTheNavigator.Uri.QueryString(key);
             if (language.Has() == true)
             {
                 await JSRuntime.InvokeVoidAsync("removeQueryStringWithoutReload", key);
@@ -45,7 +49,7 @@ namespace Origami.UI
                     return;
                 }
 
-                this.NavigationManager.Refresh(true);
+                this.GhostOfTheNavigator.Refresh(true);
             }
         }
 
@@ -55,8 +59,8 @@ namespace Origami.UI
             await PageAsync(firstRender);
             await PageViewAsync(firstRender);
             await PageTitleAsync(firstRender);
-            await ErrorFromQueryString();
-            await LanguageFromQueryString();
+            await ErrorFromQueryStringAsync();
+            await LanguageFromQueryStringAsync();
         }
 
         protected virtual async Task PageAsync(bool firstRender)
@@ -83,7 +87,7 @@ namespace Origami.UI
             {
                 if (this.UserFacade.IncognitoMode == false)
                 {
-                    var uri = new Uri(NavigationManager.Uri);
+                    var uri = new Uri(GhostOfTheNavigator.Uri);
                     await JSRuntime.InvokeVoidAsync("origami.physicalpages.viewByPath", uri.AbsolutePath);
                 }
             }

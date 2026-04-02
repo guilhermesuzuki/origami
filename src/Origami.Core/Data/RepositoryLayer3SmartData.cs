@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using HtmlAgilityPack;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Origami.Core.Models;
 using System.Diagnostics;
@@ -8,7 +9,7 @@ namespace Origami.Core.Data
     public abstract class RepositoryLayer3SmartData<T> :
         RepositoryLayer2Permission<T>,
         IMerge<T>
-        where T : class, IId, new()
+        where T : class, IId
     {
         protected RepositoryLayer3SmartData(
             Text text,
@@ -20,7 +21,7 @@ namespace Origami.Core.Data
 
         }
 
-        public Result Merge(DataOperationContext main, (IEnumerable<T> Purge, IEnumerable<T> Update, IEnumerable<T> Create) merge)
+        public Result Merge(DataOperationContext main, Merge<T> merge)
         {
             var hub = new Result();
 
@@ -31,7 +32,7 @@ namespace Origami.Core.Data
             return hub;
         }
 
-        public Result MergeCache((IEnumerable<T> Purge, IEnumerable<T> Update, IEnumerable<T> Create) merge)
+        public Result MergeCache(Merge<T> merge)
         {
             merge.Purge.Each(this.PurgeCache);
             merge.Update.Each(this.UpdateCache);
@@ -75,34 +76,9 @@ namespace Origami.Core.Data
             return this.ReadFromCache<T>();
         }
 
-        public virtual List<X> ReadFromCache<X>() where X : class, new()
+        public virtual List<X> ReadFromCache<X>() where X : class
         {
-            var key = typeof(X).KeyForCaching();
-            var timestamp = Stopwatch.GetTimestamp();
-
-            try
-            {
-                //race condition
-                if (MemoryCache.Get(key) == null)
-                {
-                    lock (OrigamiConstants.SyncRoot)
-                    {
-                        if (MemoryCache.Get(key) == null)
-                        {
-                            using var db = DbContextFactory.CreateDbContext();
-                            var list = db.Set<X>().AsNoTracking().ToList();
-                            MemoryCache.Set(key, list);
-                        }
-                    }
-                }
-                return MemoryCache.GetList<X>(key) ?? [];
-            }
-            finally
-            {
-                var elapsedTime = Stopwatch.GetElapsedTime(timestamp);
-                Console.ForegroundColor = elapsedTime.Milliseconds >= 200 ? ConsoleColor.Red : ConsoleColor.White;
-                Console.WriteLine($"{key} obtained in {elapsedTime}");
-            }
+            return DbContextFactory.ReadFromCache<X>(MemoryCache);
         }
 
         public Result<T> SmartCreate(DataOperationContext<T> ctx, bool checkPermission)

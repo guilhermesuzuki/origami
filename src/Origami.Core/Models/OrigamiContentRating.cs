@@ -7,7 +7,7 @@ namespace Origami.Core.Models
 {
     [Table("oi_ContentRatings")]
     public class OrigamiContentRating :
-        BaseView,
+        BaseTracking,
         IRatingChanged,
         IId,
         IContentId

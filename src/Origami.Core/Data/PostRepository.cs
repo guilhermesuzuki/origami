@@ -8,12 +8,8 @@ namespace Origami.Core.Data
 {
     public class PostRepository : RepositoryOuterLayer<OrigamiPost>, IPostRepository
     {
-        protected readonly IPostCategoryRepository _postCategoryRepository;
-        protected readonly IPostCommentRepository _postCommentRepository;
-        protected readonly IPostRatingRepository _postRatingRepository;
-        protected readonly IPostTagRepository _postTagRepository;
-        protected readonly IPostViewRepository _postViewRepository;
         protected readonly IValidator<OrigamiPost> _validator;
+
         /// <summary>
         /// Default constructor with DI
         /// </summary>
@@ -21,11 +17,6 @@ namespace Origami.Core.Data
         /// <param name="distributedCache"></param>
         public PostRepository(
             IValidator<OrigamiPost> validator,
-            IPostCategoryRepository postCategoryRepository,
-            IPostCommentRepository postCommentRepository,
-            IPostRatingRepository postRatingRepository,
-            IPostTagRepository postTagRepository,
-            IPostViewRepository postViewRepository,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IMemoryCache memoryCache,
             Text text,
@@ -33,11 +24,6 @@ namespace Origami.Core.Data
             : base(text, dbContextFactory, memoryCache, wwwRoot)
         {
             _validator = validator;
-            _postCategoryRepository = postCategoryRepository;
-            _postCommentRepository = postCommentRepository;
-            _postRatingRepository = postRatingRepository;
-            _postTagRepository = postTagRepository;
-            _postViewRepository = postViewRepository;
         }
 
         public override string CreatePermission => nameof(OrigamiRole.CreateNewPosts);
@@ -64,15 +50,15 @@ namespace Origami.Core.Data
         {
             base.PurgeRelationshipsFromCache(entity);
 
-            var categories = _postCategoryRepository.ReadFromCache().Where(x => x.PostId == entity.Id);
-            var comments = _postCommentRepository.ReadFromCache().Where(x => x.PostId == entity.Id);
-            var ratings = _postRatingRepository.ReadFromCache().Where(x => x.PostId == entity.Id);
-            var tags = _postTagRepository.ReadFromCache().Where(x => x.PostId == entity.Id);
+            //var categories = _postCategoryRepository.ReadFromCache().Where(x => x.PostId == entity.Id);
+            //var comments = _postCommentRepository.ReadFromCache().Where(x => x.PostId == entity.Id);
+            //var ratings = _postRatingRepository.ReadFromCache().Where(x => x.PostId == entity.Id);
+            //var tags = _postTagRepository.ReadFromCache().Where(x => x.PostId == entity.Id);
 
-            categories.Each(_postCategoryRepository.PurgeCache);
-            comments.Each(_postCommentRepository.PurgeCache);
-            ratings.Each(_postRatingRepository.PurgeCache);
-            tags.Each(_postTagRepository.PurgeCache);
+            //categories.Each(_postCategoryRepository.PurgeCache);
+            //comments.Each(_postCommentRepository.PurgeCache);
+            //ratings.Each(_postRatingRepository.PurgeCache);
+            //tags.Each(_postTagRepository.PurgeCache);
         }
 
         public override Result<OrigamiPost> PurgeRelationshipsFromDatabase(DataOperationContext<OrigamiPost> ctx)
@@ -80,17 +66,17 @@ namespace Origami.Core.Data
             using var db = DbContextFactory.CreateDbContext();
             var hub = base.PurgeRelationshipsFromDatabase(ctx);
 
-            var categories = db.Set<OrigamiPostCategory>().AsNoTracking().Where(x => x.PostId == ctx.Entity.Id).WithOnlyIds();
-            var comments = db.Set<OrigamiPostComment>().AsNoTracking().Where(x => x.PostId == ctx.Entity.Id).WithOnlyIds();
-            var ratings = db.Set<OrigamiPostRating>().AsNoTracking().Where(x => x.PostId == ctx.Entity.Id).WithOnlyIds();
-            var tags = db.Set<OrigamiPostTag>().AsNoTracking().Where(x => x.PostId == ctx.Entity.Id).WithOnlyIds();
+            //var categories = db.Set<OrigamiPostCategory>().AsNoTracking().Where(x => x.PostId == ctx.Entity.Id).WithOnlyIds();
+            //var comments = db.Set<OrigamiPostComment>().AsNoTracking().Where(x => x.PostId == ctx.Entity.Id).WithOnlyIds();
+            //var ratings = db.Set<OrigamiPostRating>().AsNoTracking().Where(x => x.PostId == ctx.Entity.Id).WithOnlyIds();
+            //var tags = db.Set<OrigamiPostTag>().AsNoTracking().Where(x => x.PostId == ctx.Entity.Id).WithOnlyIds();
 
-            categories.GetContexts(ctx).Call(_postCategoryRepository.SmartPurge, false).Push(hub);
-            comments.GetContexts(ctx).Call(_postCommentRepository.SmartPurge, false).Push(hub);
-            ratings.GetContexts(ctx).Call(_postRatingRepository.SmartPurge, false).Push(hub);
-            tags.GetContexts(ctx).Call(_postTagRepository.SmartPurge, false).Push(hub);
+            //categories.GetContexts(ctx).Call(_postCategoryRepository.SmartPurge, false).Push(hub);
+            //comments.GetContexts(ctx).Call(_postCommentRepository.SmartPurge, false).Push(hub);
+            //ratings.GetContexts(ctx).Call(_postRatingRepository.SmartPurge, false).Push(hub);
+            //tags.GetContexts(ctx).Call(_postTagRepository.SmartPurge, false).Push(hub);
 
-            hub.RowsAffected += db.Set<OrigamiPostView>().AsNoTracking().Where(x => x.PostId == ctx.Entity.Id).ExecuteDelete();
+            //hub.RowsAffected += db.Set<OrigamiPostView>().AsNoTracking().Where(x => x.PostId == ctx.Entity.Id).ExecuteDelete();
 
             return hub;
         }

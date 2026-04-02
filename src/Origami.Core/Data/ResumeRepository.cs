@@ -25,9 +25,9 @@ namespace Origami.Core.Data
 
         }
 
-        public override IQueryable<Resume> ReadFromDatabase()
+        public override List<Resume> ReadFromCache()
         {
-            IList<Resume> resumes = [];
+            List<Resume> resumes = [];
 
             var dir = Path.Combine(this.WebRootPath.WebRootPath, "files", "resumes");
             if (Directory.Exists(dir) == true)
@@ -41,7 +41,7 @@ namespace Origami.Core.Data
                 }
             }
 
-            return resumes.AsQueryable();
+            return resumes;
         }
     }
 }

@@ -7,7 +7,8 @@
     <div class="row">
         <div class="col-12 col-xxl-4">
             <div class="p-3">
-                <BasicHeader Entity="this.Entity"></BasicHeader>
+                <BasicHeaderNotes Entity="this.Entity"></BasicHeaderNotes>
+                <BasicHeader Class="mt-3" Entity="this.Entity"></BasicHeader>
                 <ul class="inline-list mt-3">
                     <li>
                         <MudTextField Immediate="true"
@@ -82,7 +83,7 @@
                             <Columns>
                                 <TemplateColumn CellClass="w-100">
                                     <CellTemplate>
-                                        <PageHeaderLite2 Entity="context.Item"></PageHeaderLite2>
+                                        <ContentHeaderInline Entity="context.Item"></ContentHeaderInline>
                                     </CellTemplate>
                                 </TemplateColumn>
                             </Columns>
@@ -102,7 +103,7 @@
                             <Columns>
                                 <TemplateColumn CellClass="w-100">
                                     <CellTemplate>
-                                        <PostHeaderLite2 Entity="context.Item"></PostHeaderLite2>
+                                        <ContentHeaderInline Entity="context.Item"></ContentHeaderInline>
                                     </CellTemplate>
                                 </TemplateColumn>
                             </Columns>
@@ -122,7 +123,7 @@
                             <Columns>
                                 <TemplateColumn CellClass="w-100">
                                     <CellTemplate>
-                                        <VideoHeaderLite2 Entity="context.Item"></VideoHeaderLite2>
+                                        <ContentHeaderInline Entity="context.Item"></ContentHeaderInline>
                                     </CellTemplate>
                                 </TemplateColumn>
                             </Columns>
@@ -135,7 +136,7 @@
             </div>
         </div>
     </div>
-    <div class="buttons mt-3 p-3 text-center">
+    <div class="buttons mt-3 p-3 text-center position-sticky" style="bottom: 0;">
         <div class="btn-group">
             <button class="btn btn-success text-white fw-bold" @onclick="Save" disabled="@this.DisableTheSaveButton">
                 <i class="fa-solid fa-floppy-disk"></i>
@@ -174,27 +175,18 @@
     </div>
 }
 @code {
-    protected override bool DisableTheSaveButton
-    {
-        get
-        {
-            if (this.Entity.Name.Has() == false) return true;
-            return false;
-        }    
-    }
-
     private IEnumerable<OrigamiPage> _getPages()
     {
-        return this.Super.Pages.ReadFromCache().NonDeleted().Blog(this.Entity.Id).OrderBy(x => x.Title);
+        return this.Super.Contents.ReadFromCache().OfType<OrigamiPage>().NonDeleted().Blog(this.Entity.Id).OrderBy(x => x.Title);
     }
 
     private IEnumerable<OrigamiPost> _getPosts()
     {
-        return this.Super.Posts.ReadFromCache().NonDeleted().Blog(this.Entity.Id).OrderBy(x => x.Title);
+        return this.Super.Contents.ReadFromCache().OfType<OrigamiPost>().NonDeleted().Blog(this.Entity.Id).OrderBy(x => x.Title);
     }
 
     private IEnumerable<OrigamiVideo> _getVideos()
     {
-        return this.Super.Videos.ReadFromCache().NonDeleted().Blog(this.Entity.Id).OrderBy(x => x.Title);
+        return this.Super.Contents.ReadFromCache().OfType<OrigamiVideo>().NonDeleted().Blog(this.Entity.Id).OrderBy(x => x.Title);
     }
 }

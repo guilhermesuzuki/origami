@@ -121,8 +121,8 @@ namespace Origami.Core
         /// <param name="entities"></param>
         /// <param name="blog"></param>
         /// <returns></returns>
-        public static IEnumerable<T> Blog<T>(this IEnumerable<T> entities, Guid blog)
-            where T : IBlogId
+        public static IEnumerable<T> Blog<T>(this IEnumerable<T> entities, Guid? blog)
+            where T : IBlogIdNull
         {
             return entities.Where(x => x.BlogId == blog);
         }
@@ -149,15 +149,19 @@ namespace Origami.Core
         /// <typeparam name="T"></typeparam>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public static T Clone<T>(this T? entity)
-            where T : class, new()
+        public static T Clone<T>(this T? entity) where T : class
         {
             //TODO: workaround for OrigamiBackupRestore, find a better way to do this
             if (entity is OrigamiBackupRestore restore)
             {
-                return restore.GetClone() as T ?? new T();
+                return restore.GetClone() as T ?? Activator.CreateInstance<T>();
             }
-            return entity != null ? entity.GetClone() : new();
+            if (entity is OrigamiPost post)
+            {
+                return post.GetClone() as T ?? Activator.CreateInstance<T>();
+            }
+
+            return entity != null ? entity.GetClone() : Activator.CreateInstance<T>();
         }
 
         /// <summary>
@@ -432,16 +436,10 @@ namespace Origami.Core
         public static DateTime GetDate<T>(this T entity)
             where T : IDateCreated
         {
-            if (entity is IPublished published && published.DatePublished != null)
-            {
-                return published.DatePublished.Value;
-            }
-
             if (entity is IDateModified modified && modified.DateModified != null)
             {
                 return modified.DateModified.Value;
             }
-
             return entity.DateCreated;
         }
 
@@ -466,7 +464,7 @@ namespace Origami.Core
             return new string(chars);
         }
 
-        public static string GetHyperlink(this OrigamiBlog blog, OrigamiTag tag, INanoId? entity = null)
+        public static string GetHyperlink(this OrigamiBlog blog, OrigamiContentTag tag, INanoId? entity = null)
         {
             return $"/blogs/{blog.Slug}/tags/{tag.Slug}/{entity?.NanoId}";
         }
@@ -494,15 +492,41 @@ namespace Origami.Core
         public static string GetPlural(this Type type)
         {
             var name = type.Name;
+
+            switch (name)
+            {
+                case "OrigamiQuickNote": return "Quick notes";
+                case "OrigamiSocialProfile": return "Social profiles";
+                case "HubContentSpecialPage": return "Special pages";
+                case "HubContentSpecialMessage": return "Special messages";
+                case "OrigamiUserTrash": return "User trashes";
+                default: break;
+            }
+
+            if (name.StartsWith("HubContent") == true)
+            {
+                name = name[10..];
+            }
             if (name.StartsWith("Origami") == true)
             {
                 name = name[7..];
             }
+            if (name.StartsWith("Content") == true)
+            {
+                name = name[7..];
+            }
+
             if (name.EndsWith("y") == true)
             {
                 name = name.TrimEnd('y') + "ies";
                 return name;
             }
+            if (name.EndsWith("sh") == true)
+            {
+                name = name.TrimEnd('s', 'h') + "shes";
+                return name;
+            }
+
             switch (name)
             {
                 case "Settings": return "Settings";
@@ -651,7 +675,7 @@ namespace Origami.Core
         /// <returns>The first entity in the collection with a matching identifier, or <see langword="null"/> if no match is
         /// found or if <paramref name="id"/> is <see langword="null"/>.</returns>
         public static T? Id<T>(this IEnumerable<T> entities, Guid? id)
-            where T : class, IId, new()
+            where T : class, IId
         {
             return entities.FirstOrDefault(x => x.Id == id.GetValueOrDefault());
         }
@@ -803,7 +827,7 @@ namespace Origami.Core
         /// </summary>
         /// <param name="socialProfile"></param>
         /// <returns></returns>
-        public static string Name(this OrigamiSocialProfile? socialProfile)
+        public static string GetName(this OrigamiSocialProfile? socialProfile)
         {
             if (socialProfile == null) return string.Empty;
             if (socialProfile.Name.Has() == true) return $"{socialProfile.Name}";
@@ -823,6 +847,17 @@ namespace Origami.Core
         {
             if (nanoId == null) return null;
             return entities.FirstOrDefault(x => x.NanoId == nanoId);
+        }
+
+        /// <summary>
+        /// Returns no image, if necessary
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="noImage"></param>
+        /// <returns></returns>
+        public static string NoCategoryHeader(this string? source)
+        {
+            return source.Has() ? source : OrigamiConstants.NoCategory;
         }
 
         /// <summary>
@@ -1124,9 +1159,9 @@ namespace Origami.Core
         public static T? SetAuthor<T>(this T? entity, OrigamiUser? author)
         {
             if (author == null) return entity;
-            if (entity is IAuthorId fKAuthor && fKAuthor.AuthorId == Guid.Empty)
+            if (entity is IAuthorId authorId && authorId.AuthorId == Guid.Empty)
             {
-                fKAuthor.AuthorId = author.Id;
+                authorId.AuthorId = author.Id;
             }
             return entity;
         }
@@ -1134,10 +1169,17 @@ namespace Origami.Core
         public static T? SetBlog<T>(this T? entity, OrigamiBlog? blog)
         {
             if (blog == null) return entity;
-            if (entity is IBlogId fkBlog && fkBlog.BlogId == Guid.Empty)
+
+            if (entity is IBlogId blogId && blogId.BlogId == Guid.Empty)
             {
-                fkBlog.BlogId = blog.Id;
+                blogId.BlogId = blog.Id;
             }
+
+            if (entity is IBlogIdNull blogIdNull && blogIdNull.BlogId.GetValueOrDefault() == Guid.Empty)
+            {
+                blogIdNull.BlogId = blog.Id;
+            }
+
             return entity;
         }
 
@@ -1165,12 +1207,13 @@ namespace Origami.Core
         /// <typeparam name="T"></typeparam>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public static T? SetId<T>(this T? entity)
+        public static T? SetId<T>(this T? entity) where T : IId
         {
-            if (entity is IId id && id.Id == Guid.Empty)
+            if (entity != null && entity.Id == Guid.Empty)
             {
-                id.Id = Guid.NewGuid();
+                entity.Id = Guid.NewGuid();
             }
+
             return entity;
         }
 
@@ -1357,6 +1400,14 @@ namespace Origami.Core
             if (depth >= 8) return string.Empty;
             if (exception == null) return string.Empty;
             return string.Concat(" • ", exception.Message, exception.InnerException.M(depth + 1));
+        }
+
+        public static StringBuilder Append(this StringBuilder builder, string value, bool condition)
+        {
+            if (condition == false) return builder;
+
+            builder.Append(value);
+            return builder;
         }
     }
 }

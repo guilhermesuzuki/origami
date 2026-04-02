@@ -1,0 +1,27 @@
+﻿@inherits Basic
+@implements IEntityNull<OrigamiContent>
+
+@if (Entity is OrigamiPage)
+{
+    <span>@Text.Lower("Page")</span>
+}
+else if (Entity is OrigamiPost)
+{
+    <span>@Text.Lower("Post")</span>
+}
+else if (Entity is OrigamiSpecialMessage)
+{
+    <span>@Text.Lower("Special message")</span>
+}
+else if (Entity is OrigamiSpecialPage)
+{
+    <span>@Text.Lower("Special page")</span>
+}
+else if (Entity is OrigamiVideo)
+{
+    <span>@Text.Lower("Video")</span>
+}
+
+@code {
+    [Parameter] public OrigamiContent? Entity { get; set; }
+}

@@ -1,0 +1,169 @@
+﻿@inherits Basic
+@implements IEntityNull<OrigamiContent>
+@inject IContentRatingRepository _contentRating
+
+@if (this.Entity != null)
+{
+    var rating = Math.Round(_contentRating.CalculateRating(this.Entity), 1, MidpointRounding.ToEven);
+    var ratings = _contentRating.Ratings(Entity).Count();
+    <AuthorizeView>
+        <Authorized>
+            <ul class="d-inline-flex align-items-center rating" data-rating="@rating">
+                <li>
+                    <div data-rating-level="1" class="rating-star rating-star-1 rating-star-empty @(HasRated() == true ? null : "cursor-pointer rateable")"
+                         @onclick="() => this.Rate(1)" @onclick:stopPropagation="true"></div>
+                </li>
+                <li>
+                    <div data-rating-level="2" class="rating-star rating-star-2 rating-star-empty @(HasRated() == true ? null : "cursor-pointer rateable")"
+                         @onclick="() => this.Rate(2)" @onclick:stopPropagation="true"></div>
+                </li>
+                <li>
+                    <div data-rating-level="3" class="rating-star rating-star-3 rating-star-empty @(HasRated() == true ? null : "cursor-pointer rateable")"
+                         @onclick="() => this.Rate(3)" @onclick:stopPropagation="true"></div>
+                </li>
+                <li>
+                    <div data-rating-level="4" class="rating-star rating-star-4 rating-star-empty @(HasRated() == true ? null : "cursor-pointer rateable")"
+                         @onclick="() => this.Rate(4)" @onclick:stopPropagation="true"></div>
+                </li>
+                <li>
+                    <div data-rating-level="5" class="rating-star rating-star-5 rating-star-empty @(HasRated() == true ? null : "cursor-pointer rateable")"
+                         @onclick="() => this.Rate(5)" @onclick:stopPropagation="true"></div>
+                </li>
+                <li class="ratings ps-1 x-small">
+                    <span>[ </span>
+                    <span>@rating.ToString("0.0")</span>
+                    <span>, </span>
+                    <i class="fa-solid fa-user"></i>
+                    <span>@ratings</span>
+                    <span>]</span>
+                </li>
+            </ul>
+            @if (HasRated() == true)
+            {
+                var rating = this.RatingFromCurrentUser();
+                <div class="dummy" style="margin-bottom: -5px;"></div>
+                <div class="x-small">
+                    <span>@Text.Lower("You rated this post: {0} star(s)", rating!.Rating) - </span>
+                    <span class="focusable" @onclick="() => this.PurgeRate()" @onclick:stopPropagation="true">
+                        <i class="fa-solid fa-rotate-left"></i>
+                        @Text.Lower("Undo")
+                    </span>
+                </div>
+            }
+        </Authorized>
+        <NotAuthorized>
+            <ul class="d-inline-flex align-items-center rating" data-rating="@rating">
+                @for (byte i = 1; i <= 5; i++)
+                {
+                    <li>
+                        <div data-rating-level="@i" class="rating-star rating-star-@i rating-star-empty"></div>
+                    </li>
+                }
+                <li class="ratings ps-1 x-small">
+                    <span>[ </span>
+                    <span>@rating.ToString("0.0")</span>
+                    <span>, </span>
+                    <i class="fa-solid fa-user"></i>
+                    <span>@ratings</span>
+                    <span>]</span>
+                </li>
+            </ul>
+            <div class="dummy" style="margin-bottom: -6px;"></div>
+            <div class="x-small text-center">
+                <span>
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    @Text.Lower("Login to rate this")
+                </span>
+            </div>
+        </NotAuthorized>
+    </AuthorizeView>
+}
+
+@code {
+    /// <summary>
+    /// Event triggered when the user rates the post (or unrates it)
+    /// </summary>
+    [Parameter] public EventCallback<OrigamiContentRating?> OnUserHasRated { get; set; }
+
+    [Parameter] public OrigamiContent? Entity { get; set; }
+
+    protected OrigamiContentRating? RatingFromCurrentUser()
+    {
+        if (this.UserFacade.SocialProfile.New == false)
+        {
+            return this.Super.ContentRatings.Ratings(this.Entity!).FirstOrDefault(x => x.SocialProfileId == UserFacade.SocialProfile.Id);
+        }
+
+        if (this.UserFacade.User.New == false)
+        {
+            return this.Super.ContentRatings.Ratings(this.Entity!).FirstOrDefault(x => x.UserId == UserFacade.User.Id);
+        }
+
+        return null;
+    }
+
+    protected bool HasRated()
+    {
+        return RatingFromCurrentUser() != null;
+    }
+
+    protected void Rate(byte rate)
+    {
+        if (HasRated() == false)
+        {
+            var rating = new OrigamiContentRating
+            {
+                Id = Guid.NewGuid(),
+                ContentId = this.Entity!.Id,
+                Rating = rate,
+            };
+
+            this.HttpContextAccessor.HttpContext?.TrackFields(this.MemoryCache, rating, GhostOfTheNavigator.Uri);
+
+            // social user is rating this
+            if (this.UserFacade.SocialProfile.New == false)
+            {
+                rating.SocialProfileId = this.UserFacade.SocialProfile.Id;
+                var context = new DataOperationContextFrontEnd<OrigamiContentRating>(UserFacade.SocialProfile, DateTime.UtcNow, rating);
+                var hub = this.Super.ContentRatings.SmartCreate(context);
+                if (hub.Ok) this.OnUserHasRated.InvokeAsync(rating);
+                return;
+            }
+
+            // regular user is rating this
+            if (this.UserFacade.User.New == false)
+            {
+                rating.UserId = this.UserFacade.User.Id;
+                var context = new DataOperationContext<OrigamiContentRating>(UserFacade.User, DateTime.UtcNow, rating);
+                var hub = this.Super.ContentRatings.SmartSave(context, false);
+                if (hub.Ok) this.OnUserHasRated.InvokeAsync(rating);
+                return;
+            }
+        }
+    }
+
+    protected void PurgeRate()
+    {
+        var rating = this.RatingFromCurrentUser();
+        if (rating != null)
+        {
+            // social user is rating this
+            if (this.UserFacade.SocialProfile.New == false)
+            {
+                var context = new DataOperationContextFrontEnd<OrigamiContentRating>(UserFacade.SocialProfile, DateTime.UtcNow, rating);
+                var hub = this.Super.ContentRatings.SmartPurge(context);
+                if (hub.Ok) this.OnUserHasRated.InvokeAsync(rating);
+                return;
+            }
+
+            // regular user is rating this
+            if (this.UserFacade.User.New == false)
+            {
+                var context = new DataOperationContext<OrigamiContentRating>(UserFacade.User, DateTime.UtcNow, rating);
+                var hub = this.Super.ContentRatings.SmartPurge(context, false);
+                if (hub.Ok) this.OnUserHasRated.InvokeAsync(rating);
+                return;
+            }
+        }
+    }
+}

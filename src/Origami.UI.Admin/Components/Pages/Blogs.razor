@@ -1,4 +1,5 @@
 ﻿@page "/blogs"
+@page "/blogs/{NanoId}"
 @inherits BasicAdminGrid<OrigamiBlog>
 <Root Access="this.CanAccess()">
     <HeaderTemplate>
@@ -39,13 +40,6 @@
                 </div>
             </div>
         </div>
-        <div class="p-3 border-bottom">
-            <div class="row">
-                <div class="col-12">
-                    <SearchLite T="OrigamiBlog" OnHitSelected="this.OnSearchResultSelected"></SearchLite>
-                </div>
-            </div>
-        </div>
     </HeaderTemplate>
     <ContentTemplate>
         <div class="p-3">
@@ -63,7 +57,7 @@
                                     <div class="cursor-pointer" @onclick="() => OnEdit(context.Item)">
                                         <ul class="inline-list">
                                             <li>
-                                                <BlogHeaderLite Entity="context.Item"></BlogHeaderLite>
+                                                <BlogHeaderInline Entity="context.Item"></BlogHeaderInline>
                                                 <Id Class="d-block x-small" Entity="context.Item"></Id>
                                             </li>
                                         </ul>
@@ -200,5 +194,10 @@
             this.UserFacade.Result = hub;
             await this.ReloadDataGrid();
         }
+    }
+
+    protected override void OnEdit(OrigamiBlog entity)
+    {
+        GhostOfTheNavigator.NavigateTo($"/blogs/{entity.NanoId}");
     }
 }

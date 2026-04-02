@@ -1,19 +1,19 @@
 ﻿@inherits Basic
 @implements IId
 @inject IVideoRepository _video
-@inject IVideoCommentReactionRepository _videoCommentReaction
-@inject IVideoCommentRepository _videoComment
-@inject IVideoRatingRepository _videoRating
+@inject IContentCommentReactionRepository _videoCommentReaction
+@inject IContentCommentRepository _videoComment
+@inject IContentRatingRepository _videoRating
 
 @if (Id != Guid.Empty)
 {
     var rating = _videoRating.ReadFromCache().Id(Id);
     if (rating != null)
     {
-        var video = _video.ReadFromCache().Id(rating.VideoId);
+        var video = this.Super.Contents.ReadFromCache().OfType<OrigamiVideo>().Id(rating.ContentId);
         <div class="user-activity-video-rating @Class">
-            <label class="fw-bold">@Text.Lower("Rated {0} On:", rating.Rating)</label>
-            <VideoHeaderLite Entity="video"></VideoHeaderLite>
+            <div class="fw-bold">@Text.Lower("Rated {0} On:", rating.Rating)</div>
+            <ContentHeaderLite Entity="video"></ContentHeaderLite>
         </div>
     }
 }

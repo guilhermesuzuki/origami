@@ -1,12 +1,6 @@
 ﻿@page "/pages"
-@inherits BasicAdminGrid<OrigamiPage>
-@implements IFilter
-@inject IBlogRepository _blogs
-@inject ICategoryRepository _category
-@inject IPostCategoryRepository _postCategory
-@inject IVideoCategoryRepository _videoCategory
-@inject IPageRepository _pages
-@inject IPageViewRepository _pageViews
+@page "/pages/{NanoId}"
+@inherits BasicAdminGridContent<OrigamiPage, HubContentPage>
 
 <style>
     .related-pages .id { display: none !important; }
@@ -34,10 +28,10 @@
                                 </button>
                             </div>
                             <div class="btn-group pe-1">
-                                <button class="btn btn-success text-white" title="@Text.Lower("Mark as front-page")" disabled="@this.DisableTheFrontPageButton" @onclick="this.MarkAsFrontPage">
+                                <button class="btn btn-success text-white" title="@Text.Lower("Promote to front-page")" disabled="@this.DisableTheFrontPageButton" @onclick="this.PromoteToFrontPageSelectedEntities">
                                     <i class="fa-solid fa-file-circle-check"></i>
                                 </button>
-                                <button class="btn btn-warning text-white" title="@Text.Lower("Unmark as front-page")" disabled="@this.DisableTheFrontPageButton" @onclick="this.UnmarkAsFrontPage">
+                                <button class="btn btn-warning text-white" title="@Text.Lower("Demote from front-page")" disabled="@this.DisableTheFrontPageButton" @onclick="this.DemoteFromFrontPageSelectedEntities">
                                     <i class="fa-solid fa-file-circle-xmark"></i>
                                 </button>
                             </div>
@@ -56,13 +50,6 @@
                 </div>
             </div>
         </div>
-        <div class="p-3 border-bottom">
-            <div class="row">
-                <div class="col-12">
-                    <SearchLite T="OrigamiPage" OnHitSelected="this.OnSearchResultSelected"></SearchLite>
-                </div>
-            </div>
-        </div>
     </HeaderTemplate>
     <ContentTemplate>
         <div class="p-3">
@@ -71,32 +58,27 @@
                     <DataGridOptions Deleted="this.IncludeDeletedEntitiesInDataGrid" DeletedChanged="this.OnIncludeDeletedEntitiesChanged"></DataGridOptions>
                 </div>
                 <div class="pages col-12">
-                    <MudDataGrid @ref="DataGrid" T="OrigamiPage" ServerData="GetEntities" Filterable="false" SortMode="SortMode.None" Class="border selectable" SelectedItems="this.SelectedEntities" MultiSelection="true" SelectedItemsChanged="this.SelectedEntitiesChanged"
+                    <MudDataGrid @ref="DataGrid" T="HubContentPage" ServerData="GetEntities" Filterable="false" SortMode="SortMode.None" Class="border selectable" SelectedItems="this.SelectedEntities" MultiSelection="true" SelectedItemsChanged="this.SelectedEntitiesChanged"
                                  RowClassFunc="this.RowClassFunc" Bordered="true" SelectOnRowClick="false">
                         <Columns>
-                            <SelectColumn T="OrigamiPage"></SelectColumn>
+                            <SelectColumn T="HubContentPage"></SelectColumn>
                             <TemplateColumn Title="@Text.Upper("Title")">
                                 <CellTemplate>
                                     <div class="cursor-pointer" @onclick="() => OnEdit(context.Item)">
-                                        <PageHeaderLite2 Entity="context.Item"></PageHeaderLite2>
-                                        @if (context.Item.Keywords.Has() == true)
-                                        {
-                                            <div class="x-small">
-                                                <i class="fa-solid fa-hashtag"></i>
-                                                @context.Item.Keywords
-                                            </div>
-                                        }
+                                        <ContentRating Entity="context.Item.Entity"></ContentRating>
+                                        <div class="dummy"></div>
+                                        <ContentHeaderInline Entity="context.Item.Entity"></ContentHeaderInline>
                                     </div>
                                 </CellTemplate>
                             </TemplateColumn>
                             <TemplateColumn Title="@Text.Upper("Header")" CellClass="col-2">
                                 <CellTemplate>
-                                    <div class="w-100" style="height:150px; background-image: url(@context.Item.Get().HeaderImage); background-size: cover; background-position: center;"></div>
+                                    <div class="w-100" style="height:150px; background-image: url(@context.Item.Entity.HeaderImage); background-size: cover; background-position: center;"></div>
                                     <div class="mt-1 p-1 border">
                                         <ul class="inline-list text-center">
                                             <li>
                                                 <i class="fa-solid fa-eye"></i>
-                                                @_pageViews.GetViews(context.Item)
+                                                @this.Super.PhysicalPageViews.GetViews(context.Item.Entity)
                                             </li>
                                         </ul>
                                     </div>
@@ -104,43 +86,40 @@
                             </TemplateColumn>
                             <TemplateColumn Title="@Text.Upper("Related Pages")" Sortable="false" Filterable="false" CellClass="col-2 related-pages">
                                 <CellTemplate>
-                                    @if (context.Item.ParentId != null)
+                                    @if (context.Item.Parent != null)
                                     {
-                                        var parent = this.Repository.ReadFromCache().Id(context.Item.ParentId.Value);
-                                        @if (parent != null)
-                                        {
-                                            <div class="page-parent">
-                                                <div class="xx-small">@Text.Lower("Parent")</div>
-                                                <div class="shadow-sm border p-2">
-                                                    <PageHeaderLite2 Class="" Entity="parent"></PageHeaderLite2>
-                                                </div>
+                                        <div class="parent-page">
+                                            <div class="xx-small">@Text.Lower("Parent")</div>
+                                            <div class="shadow-sm border p-2">
+                                                <ContentHeaderInline Class="" Entity="context.Item.Parent"></ContentHeaderInline>
                                             </div>
-                                        }
+                                        </div>
                                     }
-                                    @foreach (var page in this.Repository.ReadFromCache().GetChildren(context.Item).OrderBy(x => x.Title))
+                                    @foreach (var page in context.Item.Children.OrderBy(x => x.Title))
                                     {
                                         if (this.IncludeDeletedEntitiesInDataGrid == false && page.IsDeleted)
                                         {
                                             continue;
                                         }
                                         <div class="page-child mt-1 shadow-sm border p-2 @(page.IsDeleted ? "deleted" : null)">
-                                            <PageHeaderLite2 Class="" Entity="page"></PageHeaderLite2>
+                                            <ContentHeaderInline Class="" Entity="page"></ContentHeaderInline>
                                         </div>
                                     }
                                 </CellTemplate>
                             </TemplateColumn>
                             <TemplateColumn Title="@Text.Upper("Published")" Sortable="false" Filterable="false" CellClass="col-1 text-center">
                                 <CellTemplate>
-                                    @if (context.Item.IsPublished)
+                                    @if (context.Item.Entity.IsPublished)
                                     {
                                         <i class="fa-solid fa-thumbs-up"></i>
+                                        <div class="small">@context.Item.Entity.DatePublished</div>
                                     }
                                 </CellTemplate>
                             </TemplateColumn>
                             <TemplateColumn Title="@Text.Upper("Date")" Sortable="false" Filterable="false" CellClass="col-1 text-center">
                                 <CellTemplate>
                                     <i class="fa-solid fa-calendar"></i>
-                                    <div class="small">@context.Item.GetDate()</div>
+                                    <div class="small">@context.Item.Entity.GetDate()</div>
                                 </CellTemplate>
                             </TemplateColumn>
                         </Columns>
@@ -153,7 +132,7 @@
                     </MudDataGrid>
                 </div>
                 <div class="pages-form col-12 mt-3">
-                    <PageForm Class="p-3 shadow-sm border position-sticky" Entity="this.SelectedEntity" Saved="this.EntitySaved" Cancelled="this.EntityCancelled"></PageForm>
+                    <PageForm Class="p-3 shadow-sm border position-sticky" Entity="this.SelectedEntity" Saved="this.EntitySaved" Cancelled="this.EntityCancelled" Created="this.EntityCreated"></PageForm>
                 </div>
             </div>
         </div>
@@ -168,120 +147,6 @@
     /// </summary>
     protected virtual bool DisableTheFrontPageButton => SelectedEntities.Any() == false;
 
-    protected virtual Result<OrigamiPage> PublishEntity(OrigamiPage entity)
-    {
-        var context = new DataOperationContext<OrigamiPage>(this.UserFacade.User, DateTime.UtcNow, entity);
-        return this._pages.SmartPublish(context, true);
-    }
-
-    protected virtual Result<OrigamiPage> UnpublishEntity(OrigamiPage entity)
-    {
-        var context = new DataOperationContext<OrigamiPage>(this.UserFacade.User, DateTime.UtcNow, entity);
-        return this._pages.SmartUnpublish(context, true);
-    }
-
-    protected virtual Result<OrigamiPage> MarkAsFrontPage(OrigamiPage entity)
-    {
-        var context = new DataOperationContext<OrigamiPage>(this.UserFacade.User, DateTime.UtcNow, entity);
-        return this._pages.MarkAsFrontPage(context, true);
-    }
-
-    protected virtual Result<OrigamiPage> UnmarkAsFrontPage(OrigamiPage entity)
-    {
-        var context = new DataOperationContext<OrigamiPage>(this.UserFacade.User, DateTime.UtcNow, entity);
-        return this._pages.UnmarkAsFrontPage(context, true);
-    }
-
-    /// <summary>
-    /// Mark the selected page as front-page
-    /// </summary>
-    protected async Task MarkAsFrontPage()
-    {
-        if (this.SelectedEntities.Count != 1)
-        {
-            await this.DialogService.ShowMessageBoxAsync(
-                Text.Upper("Marking as front-page"),
-                Text.Original("You need to select one page"),
-                Text.Lower("Ok")
-            );
-            return;
-        }
-
-        await ExecuteWithSelectedEntities(
-            async () =>
-            {
-                return await DialogService.ShowMessageBoxAsync(
-                    Text.Upper("Marking as front-page"),
-                    Text.Original("Are you sure?"),
-                    yesText: Text.Lower("Yes"),
-                    noText: Text.Lower("No"));
-            },
-            this.MarkAsFrontPage
-        );
-    }
-
-    protected async Task UnmarkAsFrontPage()
-    {
-        if (this.SelectedEntities.Count != 1)
-        {
-            await this.DialogService.ShowMessageBoxAsync(
-                Text.Upper("Unmarking front-page"),
-                Text.Original("You need to select one page"),
-                Text.Lower("Ok")
-            );
-            return;
-        }
-
-        await ExecuteWithSelectedEntities(
-            async () =>
-            {
-                return await DialogService.ShowMessageBoxAsync(
-                    Text.Upper("Unmarking front-page", SelectedEntities.Count),
-                    Text.Original("Are you sure?"),
-                    yesText: Text.Lower("Yes"),
-                    noText: Text.Lower("No"));
-            },
-            this.UnmarkAsFrontPage
-        );
-    }
-
-    protected async Task PublishSelectedEntities()
-    {
-        await ExecuteWithSelectedEntities(
-            async () =>
-            {
-                return await DialogService.ShowMessageBoxAsync(
-                    Text.Upper("Publish {0} item(s)", SelectedEntities.Count),
-                    Text.Original("Are you sure?"),
-                    yesText: Text.Lower("Yes"),
-                    noText: Text.Lower("No"));
-            },
-            this.PublishEntity
-        );
-    }
-
-    protected async Task UnpublishSelectedEntities()
-    {
-        await ExecuteWithSelectedEntities(
-            async () =>
-            {
-                return await DialogService.ShowMessageBoxAsync(
-                    Text.Upper("Unpublish {0} item(s)", SelectedEntities.Count),
-                    Text.Original("Are you sure?"),
-                    yesText: Text.Lower("Yes"),
-                    noText: Text.Lower("No"));
-            },
-            this.UnpublishEntity
-        );
-    }
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        var filter = this.NavigationManager!.Uri.QueryString("filter");
-        this.Filter = filter.Has() ? filter : this.Filter;
-    }
-
     protected override IEnumerable<OrigamiPage> GetItems()
     {
         if (this.IncludeDeletedEntitiesInDataGrid)
@@ -293,5 +158,10 @@
                where x.IsDeleted == false
                where this.Super.IsParentDeleted(x) == false
                select x;
+    }
+
+    protected override void OnEdit(HubContentPage entity)
+    {
+        GhostOfTheNavigator.NavigateTo($"/pages/{entity.Entity.NanoId}");
     }
 }

@@ -9,7 +9,7 @@ namespace Origami.Core.Data
 {
     public abstract class RepositoryLayer0Data<T> : RepositoryBaseLayer<T>,
         ICrud<T>
-        where T : class, IId, new()
+        where T : class, IId
     {
         protected RepositoryLayer0Data(
             Text text,
@@ -98,20 +98,7 @@ namespace Origami.Core.Data
         public virtual T? ReadFromDatabase(IId id)
         {
             using var db = DbContextFactory.CreateDbContext();
-            return db.Set<T>().AsNoTracking().FirstOrDefault(x => x.Id == id.Id);
-        }
-
-        [Obsolete("This method has a memory leak")]
-        public virtual IQueryable<T> ReadFromDatabase()
-        {
-            return this.ReadFromDatabase<T>();
-        }
-
-        [Obsolete("This method has a memory leak")]
-        public virtual IQueryable<X> ReadFromDatabase<X>()
-            where X : class
-        {
-            return DbContextFactory.CreateDbContext().Set<X>().AsNoTracking();
+            return db.Set<T>().AsNoTracking().Id(id.Id);
         }
 
         public virtual Result<T> Restore(DataOperationContext<T> ctx)

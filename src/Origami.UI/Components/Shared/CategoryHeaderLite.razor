@@ -3,20 +3,15 @@
 
 @if (Entity != null)
 {
-    <div class="category-header-lite @Class" title="@Text.Original("Category")">
-        <div class="d-inline-flex align-items-center">
-            <img class="me-1" src="@Entity.HeaderImage" style="height:15px; width:15px;" onerror="this.onerror=null; this.src='@(OrigamiConstants.NoCategory)'" />
-            <div>
-                <span class="category-name">@Entity.Name</span>
-                @if (this.Entity.Slug.Equals(this.Entity.Name, StringComparison.InvariantCultureIgnoreCase) == false)
-                {
-                    <span class="category-slug ms-1 border-bottom" title="@Text.Lower("Slug")" style="opacity: 0.8; font-size: 0.8em;">
-                        @Entity.Slug
-                    </span>
-                }
-            </div>
-        </div>
-        <Id Class="d-block x-small" Entity="Entity"></Id>
+    <div class="category-header-lite d-inline-flex align-items-center @Class" title="@Text.Original("Category")"
+        style="padding-left: 20px; background-image: url(@Entity.HeaderImage.NoCategoryHeader()); background-position:left; background-size: 14px 14px; background-repeat: no-repeat;">
+        <span class="category-name">@Entity.Name</span>
+        @if (this.Entity.Slug.Equals(this.Entity.Name, StringComparison.InvariantCultureIgnoreCase) == false)
+        {
+            <span class="category-slug ms-1" title="@Text.Lower("Slug")" style="opacity: 0.8; font-size: 0.8em;">
+                @Entity.Slug
+            </span>
+        }
     </div>
 }
 

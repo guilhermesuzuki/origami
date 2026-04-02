@@ -11,7 +11,7 @@
     <Root>
         <a id="top"></a>
         <IncognitoMode></IncognitoMode>
-        @foreach (var message in this.Super.SpecialMessages.GetSiteMessages())
+        @foreach (var message in this.Super.SpecialMessages.GetVisibleMessages())
         {
             <SpecialMessageHeader Entity="message" Class="border-bottom border-light-subtle"></SpecialMessageHeader>
         }
@@ -60,17 +60,6 @@
 <BlazorErrorUi></BlazorErrorUi>
 
 @code {
-    private string _searchQuery = string.Empty;
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-
-        this._searchQuery = this.NavigationManager.Uri.Split("query=").Length > 1
-            ? Uri.UnescapeDataString(this.NavigationManager.Uri.Split("query=")[1])
-            : string.Empty;
-    }
-
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await base.OnAfterRenderAsync(firstRender);

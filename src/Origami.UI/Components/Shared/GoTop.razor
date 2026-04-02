@@ -1,7 +1,7 @@
 ﻿@using System.Globalization;
 @inherits Basic
 
-<button class="p-3 border shadow bg-white go-top m-5" title="@Text.Lower("Go to top")" @onclick="GoToTop" style="margin-bottom:1px; margin-right:1px;">
+<button class="p-3 border shadow bg-white go-top m-5 z-index-middle" title="@Text.Lower("Go to top")" @onclick="GoToTop" style="margin-bottom:1px; margin-right:1px;">
     <i class="bi bi-arrow-up-square-fill"></i>
 </button>
 
@@ -14,9 +14,9 @@
     /// </summary>
     private void GoToTop()
     {
-        var uri = this.NavigationManager.Uri;
+        var uri = this.GhostOfTheNavigator.Uri;
         var uriSegments = uri.Split(new[] { '#' }, StringSplitOptions.RemoveEmptyEntries);
         // If there's a hash, navigate to the top of the page
-        this.NavigationManager.NavigateTo($"{uriSegments[0]}#top");
+        this.GhostOfTheNavigator.NavigateTo($"{uriSegments[0]}#top");
     }
 }

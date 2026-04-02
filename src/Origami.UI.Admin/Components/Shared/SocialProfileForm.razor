@@ -2,13 +2,9 @@
 
 @inject IUserActivityRepository _userActivity
 @inject ISocialProfileRepository _socialProfile
-@inject IPostCommentReactionRepository _postCommentReaction
-@inject IPostCommentRepository _postComment
-@inject IPostRatingRepository _postRating
-@inject IVideoCommentReactionRepository _videoCommentReaction
-@inject IVideoCommentRepository _videoComment
-@inject IVideoRatingRepository _videoRating
-
+@inject IContentCommentReactionRepository _postCommentReaction
+@inject IContentCommentRepository _postComment
+@inject IContentRatingRepository _postRating
 <div class="social-profile-form @Class">
     @if (this.Entity.New)
     {
@@ -29,7 +25,7 @@
         </div>
         <BasicHeader Class="mt-3" Entity="this.Entity"></BasicHeader>
         <MudTextField FullWidth="true"
-                      Text="@Entity.Name()"
+                      Text="@Entity.GetName()"
                       HelperText="@Text.Lower("Name")"
                       ReadOnly="true"
                       AdornmentIcon="@Entity.SocialNetwork.Icon().Value"
@@ -62,11 +58,7 @@
                 </div>
                 <div>
                     <i class="bi bi-file-earmark-text-fill"></i>
-                    @Text.Lower("{0} On Posts", _postRating.RatingsFromProfile(this.Entity).Count())
-                </div>
-                <div>
-                    <i class="bi bi-file-earmark-play-fill"></i>
-                    @Text.Lower("{0} On Videos", _videoRating.RatingsFromProfile(this.Entity).Count())
+                    @_postRating.RatingsFromProfile(this.Entity).Count()
                 </div>
             </div>
             <div class="col-12 col-xl-4">
@@ -75,11 +67,7 @@
                 </div>
                 <div>
                     <i class="bi bi-file-earmark-text-fill"></i>
-                    @Text.Lower("{0} On Posts", _postComment.CommentsFromProfile(this.Entity, true).Count())
-                </div>
-                <div>
-                    <i class="bi bi-file-earmark-play-fill"></i>
-                    @Text.Lower("{0} On Videos", _videoComment.CommentsFromProfile(this.Entity, true).Count())
+                    @_postComment.CommentsFromProfile(this.Entity, true).Count()
                 </div>
             </div>
             <div class="col-12 col-xl-4">
@@ -88,11 +76,7 @@
                 </div>
                 <div>
                     <i class="bi bi-file-earmark-text-fill"></i>
-                    @Text.Lower("{0} On Post Comments", _postCommentReaction.ReactionsFromProfile(this.Entity).Count())
-                </div>
-                <div>
-                    <i class="bi bi-file-earmark-play-fill"></i>
-                    @Text.Lower("{0} On Video Comments", _videoCommentReaction.ReactionsFromProfile(this.Entity).Count())
+                    @_postCommentReaction.ReactionsFromProfile(this.Entity).Count()
                 </div>
             </div>
         </div>

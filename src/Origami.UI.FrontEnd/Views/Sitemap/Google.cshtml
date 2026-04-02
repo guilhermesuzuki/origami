@@ -8,31 +8,26 @@
 @inject IPostRepository _post
 @inject IVideoRepository _video
 @inject ICategoryRepository _category
-@inject IPostCategoryRepository _postCategory
-@inject IVideoCategoryRepository _videoCategory
-@inject IPostTagRepository _postTag
-@inject IVideoTagRepository _videoTag
 @inject IPageRepository _page
-@inject ITagRepository _tag
 @inject ISuperRepository _super
 
 @{
     var oi = $"{this.Context.Request.Scheme}://{this.Context.Request.Host}";
     var blogs = _blog.ReadFromCache().NonDeleted().Active().OrderBy(x => x.Name);
 
-    var tags = _tag.ReadFromCache().ToList();
+    var tags = this._super.ContentTags.ReadFromCache().ToList();
 
-    var cookiePolicy = this._super.SpecialPages.ReadFromCache()
-        .Where(x => x.Type.Like("CookiePolicy"));
+    var cookiePolicy = this._super.Contents.ReadFromCache().OfType<OrigamiSpecialPage>()
+        .Where(x => x.Subtype.Like("CookiePolicy"));
 
-    var privacyPolicy = this._super.SpecialPages.ReadFromCache()
-        .Where(x => x.Type.Like("PrivacyPolicy"));
+    var privacyPolicy = this._super.Contents.ReadFromCache().OfType<OrigamiSpecialPage>()
+        .Where(x => x.Subtype.Like("PrivacyPolicy"));
 
-    var termsAndConditions = this._super.SpecialPages.ReadFromCache()
-        .Where(x => x.Type.Like("TermsAndConditions"));
+    var termsAndConditions = this._super.Contents.ReadFromCache().OfType<OrigamiSpecialPage>()
+        .Where(x => x.Subtype.Like("TermsAndConditions"));
 
-    var termsOfService = this._super.SpecialPages.ReadFromCache()
-        .Where(x => x.Type.Like("TermsOfService"));
+    var termsOfService = this._super.Contents.ReadFromCache().OfType<OrigamiSpecialPage>()
+        .Where(x => x.Subtype.Like("TermsOfService"));
 }
 
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
@@ -42,13 +37,13 @@
 
     <url>
         <loc>@oi?language=en-US</loc>
-        @foreach(var cinfo in OrigamiConstants.AllLanguages())
+        @foreach (var cinfo in OrigamiConstants.AllLanguages())
         {
             <xhtml:link rel="alternate" hreflang="@cinfo.Name" href="@oi?language=@cinfo.Name" />
         }
     </url>
 
-    @foreach (var post in _post.ReadFromCache().Published().OrderBy(x => x.Title))
+    @foreach (var post in _super.Contents.ReadFromCache().OfType<OrigamiPost>().Published().OrderBy(x => x.Title))
     {
         var loc = $"{oi}{post.Hyperlink}";
         var header = $"{oi}{post.HeaderImage}";
@@ -64,7 +59,7 @@
         </url>
     }
 
-    @foreach (var video in _video.ReadFromCache().Published().OrderBy(x => x.Title))
+    @foreach (var video in _super.Contents.ReadFromCache().OfType<OrigamiVideo>().Published().OrderBy(x => x.Title))
     {
         var loc = $"{oi}{video.Hyperlink}";
         var vid = $"{oi}{video.MediaFile.WebPath}";
@@ -129,9 +124,10 @@
 
     @foreach (var tag in tags)
     {
-        var blog = _blog.ReadFromCache().Id(tag.BlogId)!;
-        var posts = this._super.GetPosts(tag).Published();
-        var videos = this._super.GetVideos(tag).Published();
+        var content = this._super.Contents.ReadFromCache().Id(tag.ContentId)!;
+        var blog = _blog.ReadFromCache().Id(content.BlogId)!;
+        var posts = this._super.GetContents(tag, content.BlogId.GetValueOrDefault()).Published().OfType<OrigamiPost>();
+        var videos = this._super.GetContents(tag, content.BlogId.GetValueOrDefault()).Published().OfType<OrigamiVideo>();
 
         @foreach (var post in posts)
         {

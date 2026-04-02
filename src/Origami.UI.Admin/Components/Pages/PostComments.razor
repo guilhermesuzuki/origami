@@ -1,8 +1,7 @@
 ﻿@page "/posts/comments"
-@inherits BasicAdminGrid<OrigamiPostComment>
+@inherits BasicAdminGrid<OrigamiContentComment>
 @inject IBlogRepository _blogs
 @inject IPostRepository _post
-@inject IPostCategoryRepository _postCategory
 
 <Root Access="this.CanAccess()">
     <HeaderTemplate>
@@ -20,13 +19,6 @@
                 </div>
             </div>
         </div>
-        <div class="p-3 border-bottom">
-            <div class="row">
-                <div class="col-12">
-                    <SearchLite T="OrigamiPostComment" OnHitSelected="this.OnSearchResultSelected"></SearchLite>
-                </div>
-            </div>
-        </div>
     </HeaderTemplate>
     <ContentTemplate>
         <div class="p-3">
@@ -35,17 +27,17 @@
                     <DataGridOptions Deleted="this.IncludeDeletedEntitiesInDataGrid" DeletedChanged="this.OnIncludeDeletedEntitiesChanged"></DataGridOptions>
                 </div>
                 <div class="posts-comments col-12">
-                    <MudDataGrid @ref="DataGrid" T="OrigamiPostComment" ServerData="GetEntities" Filterable="false" SortMode="SortMode.None" Class="border selectable" SelectedItems="this.SelectedEntities" MultiSelection="true" SelectedItemsChanged="this.SelectedEntitiesChanged"
+                    <MudDataGrid @ref="DataGrid" T="OrigamiContentComment" ServerData="GetEntities" Filterable="false" SortMode="SortMode.None" Class="border selectable" SelectedItems="this.SelectedEntities" MultiSelection="true" SelectedItemsChanged="this.SelectedEntitiesChanged"
                                  RowClassFunc="this.RowClassFunc" Bordered="true" SelectOnRowClick="false">
                         <Columns>
-                            <SelectColumn T="OrigamiPostComment"></SelectColumn>
+                            <SelectColumn T="OrigamiContentComment"></SelectColumn>
                             <TemplateColumn Title="@Text.Upper("Comment")">
                                 <CellTemplate>
                                     <div class="cursor-pointer" @onclick="() => OnEdit(context.Item)">
                                         <CommentLite Entity="context.Item"></CommentLite>
                                         @if (context.Item.ParentId != null)
                                         {
-                                            var parent = this.Super.PostComments.ReadFromCache().Id(context.Item.ParentId.Value);
+                                            var parent = this.Super.ContentComments.ReadFromCache().Id(context.Item.ParentId.Value);
                                             @if (parent != null)
                                             {
                                                 <div class="mt-3 border p-3 shadow-sm">
@@ -62,15 +54,16 @@
                             </TemplateColumn>
                             <TemplateColumn Title="@Text.Upper("Post")" CellClass="col-4">
                                 <CellTemplate>
-                                    @{
-                                        var post = _post.ReadFromCache().Id(context.Item.PostId);
+                                    @if (context.Item != null)
+                                    {
+                                        var post = this.Super.Contents.ReadFromCache().OfType<OrigamiPost>().Id(context.Item.ContentId);
+                                        <ContentHeaderInline Entity="post"></ContentHeaderInline>
                                     }
-                                    <PostHeaderLite2 Entity="post"></PostHeaderLite2>
                                 </CellTemplate>
                             </TemplateColumn>
                         </Columns>
                         <PagerContent>
-                            <MudDataGridPager T="OrigamiPostComment" />
+                            <MudDataGridPager T="OrigamiContentComment" />
                         </PagerContent>
                         <NoRecordsContent>
                             <NoEntriesWereFound></NoEntriesWereFound>
@@ -86,5 +79,12 @@
 </Root>
 @code
 {
-    protected override string DefaultOrdering => $"{nameof(OrigamiPostComment.DateCreated)} DESC";
+    protected override string DefaultOrdering => $"{nameof(OrigamiContentComment.DateCreated)} DESC";
+
+    protected override IEnumerable<OrigamiContentComment> GetItems()
+    {
+        return from comment in base.GetItems()
+               join content in this.Super.Contents.ReadFromCache().OfType<OrigamiPost>() on comment.ContentId equals content.Id
+               select comment;
+    }
 }

@@ -2,7 +2,7 @@
 
 namespace Origami.Core.Data
 {
-    public interface ISpecialPageRepository : IRepository<OrigamiSpecialPage>, IPublish<OrigamiSpecialPage>
+    public interface ISpecialPageRepository : IPublish<OrigamiSpecialPage>
     {
         Result EnterMaintenanceMode(DataOperationContext context);
         Result LeaveMaintenanceMode(DataOperationContext context);

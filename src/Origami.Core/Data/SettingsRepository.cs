@@ -63,22 +63,14 @@ public class SettingsRepository :
 
     public OrigamiSettings GetSettings()
     {
-        return this.ExtractSettings() ?? throw new InvalidOperationException();
-    }
-
-    public override IQueryable<OrigamiSettings> ReadFromDatabase()
-    {
-        return new List<OrigamiSettings>(1) { this.ExtractSettings() }.AsQueryable();
-    }
-
-    public override IQueryable<X> ReadFromDatabase<X>()
-    {
-        var x = Activator.CreateInstance<X>();
-        if (x is OrigamiSettings)
+        var key = $"entity-{typeof(OrigamiSettings).FullName}";
+        
+        if (MemoryCache.TryGetValue(key, out OrigamiSettings? settings) == true && settings != null)
         {
-            return new List<X>(1) { (X)(object)this.ExtractSettings() }.AsQueryable();
+            return settings;
         }
-        return base.ReadFromDatabase<X>();
+        
+        return MemoryCache.Set(key, ExtractSettings(), new MemoryCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1) });
     }
 
     public override Result<OrigamiSettings> Update(DataOperationContext<OrigamiSettings> ctx)

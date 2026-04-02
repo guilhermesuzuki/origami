@@ -5,7 +5,7 @@
 {
     var header = this.Entity.HeaderImage.NoHeader();
     var views = this.Super.PhysicalPageViews.GetViews(Entity);
-    <ContentHeaderLite Entity="this.Entity"></ContentHeaderLite>
+    <AuthorHeaderLite Entity="this.Entity"></AuthorHeaderLite>
     <div class="page-header position-relative shadow-sm cursor-pointer @Class" @onclick="() => this.GoToPage()">
         <div class="page-header-image" style="background-image: url(@header)"></div>
         <div class="page-header-title-wrapper position-absolute overflow-auto zeroes">
@@ -50,7 +50,7 @@
                     <div class="row">
                         @foreach (var child in this.RelatedPages)
                         {
-                            var childViews = this.Super.SpecialPageViews.GetViews(child);
+                            var childViews = this.Super.PhysicalPageViews.GetViews(child);
                             <div class="related-page-header-title col-12 col-xxl-4 mh-100 overflow-auto m-auto" @onclick="() => this.GoToPage(child)" @onclick:stopPropagation="true">
                                 <div class="p-2">
                                     <a class="title fw-bold text-uppercase focusable text-center" href="@child.Hyperlink">
@@ -111,7 +111,7 @@
     /// </summary>
     protected void GoToPage()
     {
-        NavigationManager.NavigateTo($"{Entity!.Hyperlink}#content-start");
+        GhostOfTheNavigator.NavigateTo($"{Entity!.Hyperlink}#content-start");
     }
 
     /// <summary>
@@ -119,7 +119,7 @@
     /// </summary>
     protected void GoToPage(OrigamiSpecialPage page)
     {
-        NavigationManager.NavigateTo($"{page.Hyperlink}#content-start");
+        GhostOfTheNavigator.NavigateTo($"{page.Hyperlink}#content-start");
     }
 
     /// <summary>
@@ -128,7 +128,7 @@
     protected void LoadRelatedPages()
     {
         if (this.Entity == null) return;
-        this.RelatedPages = this.Super.SpecialPages.ReadFromCache().Published().Where(x => x.Type == this.Entity.Type).Except([this.Entity]);
+        this.RelatedPages = this.Super.Contents.ReadFromCache().OfType<OrigamiSpecialPage>().Published().Where(x => x.Type == this.Entity.Type).Except([this.Entity]);
         this.RelatedPages = from a in this.RelatedPages orderby a.LanguageWrittenOn, a.Title select a;
     }
 

@@ -1,6 +1,6 @@
 ﻿@inherits BasicPage
-@implements IItems<BaseContent>
-@implements IEntityNull<BaseContent>
+@implements IItems<OrigamiContent>
+@implements IEntityNull<OrigamiContent>
 
 @page "/blogs/{BlogSlug}/categories/{Category}"
 @page "/blogs/{BlogSlug}/categories/{Category}/{ContentNanoId}"
@@ -11,22 +11,13 @@
         .header .category-header img { height: 80px !important; }
         .header .category-header .name { font-size: xx-large !important; }
     </style>
-    @if (this.Entity is OrigamiPost _post)
+    @if (this.Entity != null)
     {
         <HeadContent>
-            <meta property="og:title" content="@Category • @_post.Title" />
-            <meta property="og:description" content="@_post.Description" />
-            <meta property="og:image" content="@(NavigationManager!.BaseUri.TrimEnd('/') + _post.Get().HeaderImage.NoHeader())" />
-            <meta property="og:url" content="@NavigationManager!.BaseUri.TrimEnd('/')/categories/@Category/@_post.NanoId" />
-        </HeadContent>
-    }
-    @if (this.Entity is OrigamiVideo _video)
-    {
-        <HeadContent>
-            <meta property="og:title" content="@Category • @_video.Title" />
-            <meta property="og:description" content="@_video.Description" />
-            <meta property="og:image" content="@(NavigationManager!.BaseUri.TrimEnd('/') + _video.Get().HeaderImage.NoHeader())" />
-            <meta property="og:url" content="@NavigationManager!.BaseUri.TrimEnd('/')/categories/@Category/@_video.NanoId" />
+            <meta property="og:title" content="@Category • @Entity.Title" />
+            <meta property="og:description" content="@Entity.Description" />
+            <meta property="og:image" content="@(GhostOfTheNavigator!.BaseUri.TrimEnd('/') + Entity.Get().HeaderImage.NoHeader())" />
+            <meta property="og:url" content="@GhostOfTheNavigator!.BaseUri.TrimEnd('/')/categories/@Category/@Entity.NanoId" />
         </HeadContent>
     }
     <div class="category-details @Class">
@@ -42,14 +33,7 @@
                         {
                             <td>
                                 <div class="pe-1" style="width:300px;">
-                                    @if (content is OrigamiPost postHeader)
-                                    {
-                                        <PostHeader Class="@(this.Entity == postHeader ? "selected" : null)" Category="@this.GetCategory()" Entity="postHeader"></PostHeader>
-                                    }
-                                    @if (content is OrigamiVideo videoHeader)
-                                    {
-                                        <VideoHeader Class="@(this.Entity == videoHeader ? "selected" : null)" Category="@this.GetCategory()" Entity="videoHeader"></VideoHeader>
-                                    }
+                                    <ContentHeader Class="@(this.Entity == content ? "selected" : null)" Slug="@this.GetCategory()" Entity="content"></ContentHeader>
                                 </div>
                             </td>
                         }
@@ -57,13 +41,9 @@
                 </table>
             </div>
         }
-        @if (this.Entity != null && this.Entity is OrigamiPost post)
+        @if (this.Entity != null)
         {
-            <PostsDetails OpenGraphMetaTags="false" Class="mt-3" Category="@this.GetCategory()" Post="post"></PostsDetails>
-        }
-        @if (this.Entity != null && this.Entity is OrigamiVideo video)
-        {
-            <VideosDetails OpenGraphMetaTags="false" Class="mt-3" Category="@this.GetCategory()" Video="video"></VideosDetails>
+            <ContentDetails OpenGraphMetaTags="false" Class="mt-3" Slug="@this.GetCategory()" Entity="this.Entity"></ContentDetails>
         }
         @if (this.Items.Count == 0)
         {
@@ -79,12 +59,12 @@
     /// <summary>
     /// List of Posts from the Category
     /// </summary>
-    public List<BaseContent> Items { get; set; } = new();
+    public List<OrigamiContent> Items { get; set; } = new();
 
     /// <summary>
     /// Main Post (the one being displayed)
     /// </summary>
-    public BaseContent? Entity { get; set; }
+    public OrigamiContent? Entity { get; set; }
 
     /// <summary>
     /// Core.Category

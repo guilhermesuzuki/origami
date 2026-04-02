@@ -12,16 +12,20 @@ namespace Origami.UI.Admin
     public abstract class BasicAdminGrid<T> :
         BasicAdmin,
         ICreateEntity<T>,
-        IFilter
+        IFilter,
+        INanoId
         where T : class, IId, new()
     {
         public string Filter { get; set; } = "all";
+
+        [Parameter] public string NanoId { get; set; } = string.Empty;
+
         [Inject] public IRepository<T> Repository { get; set; } = null!;
 
         /// <summary>
         /// DataGrid for this instance
         /// </summary>
-        protected MudDataGrid<T>? DataGrid { get; set; }
+        protected MudDataGrid<T> DataGrid { get; set; } = null!;
 
         /// <summary>
         /// Default ordering, in case there's no order-by
@@ -81,8 +85,8 @@ namespace Origami.UI.Admin
         {
             await JSRuntime.InvokeVoidAsync("removeQueryStringWithoutReload", "filter");
             await JSRuntime.InvokeVoidAsync("addQueryStringWithoutReload", "filter", filter);
+            await DataGrid.ReloadServerData();
             Filter = filter;
-            DataGrid?.ReloadServerData();
         }
 
         protected override Result CanAccess()
@@ -140,7 +144,7 @@ namespace Origami.UI.Admin
         /// <param name="entity"></param>
         protected virtual void EntitySaved(T entity)
         {
-            DataGrid?.ReloadServerData();
+            DataGrid.ReloadServerData();
             SelectedEntity = entity.Clone();
         }
 
@@ -199,7 +203,6 @@ namespace Origami.UI.Admin
             }
 
             await ReloadDataGrid();
-            SelectedEntity = Repository.ReadFromCache().Id(SelectedEntity.Id).Clone();
         }
 
         /// <summary>
@@ -292,6 +295,25 @@ namespace Origami.UI.Admin
                 items = query.Cast<T>();
             }
 
+            if (typeof(T).Implements<IBlogIdNull>() == true)
+            {
+                var query = from a in items.Cast<IBlogIdNull>()
+                            where a.BlogId == this.UserFacade.BlogId
+                            select a;
+
+                items = query.Cast<T>();
+            }
+
+            if (typeof(T).Implements<IContentId>() == true)
+            {
+                var query = from a in items.Cast<IContentId>()
+                            join b in DbContextFactory.ReadFromCache<OrigamiContent>(MemoryCache) on a.ContentId equals b.Id
+                            where b.BlogId == this.UserFacade.BlogId
+                            select a;
+
+                items = query.Cast<T>();
+            }
+
             return items;
         }
 
@@ -336,6 +358,12 @@ namespace Origami.UI.Admin
             HasBlogChangedInUserFacade();
         }
 
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+            this.SetEntityFromParameter();
+        }
+
         protected virtual void OnSearchResultSelected(T entity)
         {
             SelectedEntity = entity.Clone();
@@ -378,19 +406,7 @@ namespace Origami.UI.Admin
         {
             SelectedEntity = CreateEntity();
             SelectedEntities = new();
-            await DataGrid!.ReloadServerData();
-        }
-
-        /// <summary>
-        /// Clean <paramref name="entity"/> from cache and its children
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        protected virtual Result<T> RemoveEntityFromCache(T entity)
-        {
-            Repository.PurgeCache(entity);
-            SelectedEntity = SelectedEntity.Id == entity.Id ? CreateEntity() : SelectedEntity;
-            return new(entity);
+            await DataGrid.ReloadServerData();
         }
 
         /// <summary>
@@ -442,6 +458,45 @@ namespace Origami.UI.Admin
         protected virtual List<T> SelectedEntitiesInOrder()
         {
             return SelectedEntities.ToList();
+        }
+
+        protected virtual void SetEntityFromParameter()
+        {
+            if (this.NanoId.Has() == true)
+            {
+                var entity = (from a in this.DbContextFactory.ReadFromCache<T>(MemoryCache).Cast<INanoId>()
+                              where a.NanoId == this.NanoId
+                              select a).FirstOrDefault();
+
+                if (entity != null)
+                {
+                    SelectedEntity = (entity as T).Clone();
+                    return;
+                }
+
+                this.UserFacade.Result = new() { Error = Text.Original("The entity you are trying to access does not exist") };
+            }
+        }
+
+        protected override void SetPageTitle()
+        {
+            if (SelectedEntity is INew neu && neu.New == true)
+            {
+                this.PageTitle.SetTitle(SelectedEntity.GetType().GetPlural());
+                return;
+            }
+
+            var title = SelectedEntity switch
+            {
+                ITitle t => t.Title,
+                IName n => n.Name,
+                ITag tag => tag.Tag,
+                OrigamiQuickNote quickNote => quickNote.Note,
+                IDisplayName d => d.DisplayName,
+                _ => null,
+            };
+
+            this.PageTitle.SetTitle(SelectedEntity.GetType().GetPlural(), title);
         }
     }
 }

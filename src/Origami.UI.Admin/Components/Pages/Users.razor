@@ -1,4 +1,5 @@
 ﻿@page "/users"
+@page "/users/{NanoId}"
 @inherits BasicAdminGrid<OrigamiUser>
 <style>
     .roles .id { display: none !important; }
@@ -27,13 +28,6 @@
                 </div>
             </div>
         </div>
-        <div class="p-3 border-bottom">
-            <div class="row">
-                <div class="col-12">
-                    <SearchLite T="OrigamiUser" OnHitSelected="this.OnSearchResultSelected"></SearchLite>
-                </div>
-            </div>
-        </div>
     </HeaderTemplate>
     <ContentTemplate>
         <div class="p-3">
@@ -54,7 +48,7 @@
                                                 <HeaderImageLite Entity="context.Item"></HeaderImageLite>
                                             </li>
                                             <li>
-                                                <UserHeaderLite Entity="context.Item"></UserHeaderLite>
+                                                <UserHeader Entity="context.Item"></UserHeader>
                                             </li>
                                         </ul>
                                     </div>
@@ -116,5 +110,10 @@
         {
             await base.DeleteSelectedEntities();
         }
+    }
+
+    protected override void OnEdit(OrigamiUser entity)
+    {
+        GhostOfTheNavigator.NavigateTo($"/users/{entity.NanoId}");
     }
 }

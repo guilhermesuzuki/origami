@@ -10,7 +10,7 @@ namespace Origami.Core.Data
         IUpdateValidation<T>,
         IDeleteValidation<T>,
         IPurgeValidation<T>
-        where T : class, IId, new()
+        where T : class, IId
     {
         protected RepositoryLayer1Validation(
             Text text,

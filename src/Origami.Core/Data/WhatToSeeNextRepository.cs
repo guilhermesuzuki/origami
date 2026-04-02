@@ -4,127 +4,59 @@ namespace Origami.Core.Data
 {
     public class WhatToSeeNextRepository : IWhatToSeeNextRepository
     {
-        private readonly ICategoryRepository _categoryRepository;
-        private readonly IPageRepository _pageRepository;
-        private readonly IPostRepository _postRepository;
-        private readonly IVideoRepository _videoRepository;
-        private readonly IPostCategoryRepository _postCategoryRepository;
-        private readonly IVideoCategoryRepository _videoCategoryRepository;
-        private readonly IPostTagRepository _postTagRepository;
-        private readonly IVideoTagRepository _videoTagRepository;
+        protected readonly IContentRepository _contentRepository;
+        protected readonly IContentCategoryRepository _contentCategoryRepository;
+        protected readonly IContentTagRepository _contentTagRepository;
 
         public WhatToSeeNextRepository(
-            ICategoryRepository categoryRepository,
-            IPageRepository pageRepository,
-            IPostRepository postRepository,
-            IVideoRepository videoRepository,
-            IPostCategoryRepository postCategoryRepository,
-            IVideoCategoryRepository videoCategoryRepository,
-            IPostTagRepository postTagRepository,
-            IVideoTagRepository videoTagRepository)
+            IContentRepository contentRepository,
+            IContentCategoryRepository postCategoryRepository,
+            IContentTagRepository postTagRepository)
             : base()
         {
-            _categoryRepository = categoryRepository;
-            _pageRepository = pageRepository;
-            _postRepository = postRepository;
-            _videoRepository = videoRepository;
-            _postCategoryRepository = postCategoryRepository;
-            _videoCategoryRepository = videoCategoryRepository;
-            _postTagRepository = postTagRepository;
-            _videoTagRepository = videoTagRepository;
+            _contentRepository = contentRepository;
+            _contentCategoryRepository = postCategoryRepository;
+            _contentTagRepository = postTagRepository;
         }
 
-        public IEnumerable<BaseContent> GetWhatToSeeNext<T>(T entity) where T : ITitle, IContent, IId, new()
+        public IEnumerable<OrigamiContent> GetWhatToSeeNext<T>(T entity) where T : ITitle, IContent, IId
         {
-            if (entity is OrigamiPost post)
-            {
-                var content = new List<BaseContent>();
+            var content = new List<OrigamiContent>();
 
-                var categories = _postCategoryRepository.ReadFromCache().Where(x => x.PostId == post.Id).Select(x => x.CategoryId);
-                var tags = _postTagRepository.ReadFromCache().Where(x => x.PostId == post.Id).Select(x => x.Tag);
+            var categories = _contentCategoryRepository.ReadFromCache().Where(x => x.ContentId == entity.Id).Select(x => x.CategoryId);
+            var tags = _contentTagRepository.ReadFromCache().Where(x => x.ContentId == entity.Id).Select(x => x.Tag);
 
-                var ps = from pc in _postCategoryRepository.ReadFromCache()
-                         join pt in _postRepository.ReadFromCache().NonDeleted().Published() on pc.PostId equals pt.Id
-                         where pc.PostId == post.Id
-                         select pt;
+            var ps = from pc in _contentCategoryRepository.ReadFromCache()
+                     join pt in _contentRepository.ReadFromCache().NonDeleted().Published() on pc.ContentId equals pt.Id
+                     where pc.ContentId == entity.Id
+                     select pt;
 
-                var vs = from vc in _videoCategoryRepository.ReadFromCache()
-                         join vt in _videoRepository.ReadFromCache().NonDeleted().Published() on vc.VideoId equals vt.Id
-                         join ct in categories on vc.CategoryId equals ct
-                         select vt;
+            var t1 = from pt in _contentTagRepository.ReadFromCache()
+                     join po in _contentRepository.ReadFromCache().NonDeleted().Published() on pt.ContentId equals po.Id
+                     where tags.Contains(pt.Tag)
+                     select po;
 
-                var t1 = from pt in _postTagRepository.ReadFromCache()
-                         join po in _postRepository.ReadFromCache().NonDeleted().Published() on pt.PostId equals po.Id
-                         where tags.Contains(pt.Tag)
-                         select po;
+            content.AddRange(ps);
+            content.AddRange(t1);
+            content.RemoveAll(x => x.Id == entity.Id);
 
-                var t2 = from vt in _videoTagRepository.ReadFromCache()
-                         join vd in _videoRepository.ReadFromCache().NonDeleted().Published() on vt.VideoId equals vd.Id
-                         where tags.Contains(vt.Tag)
-                         select vd;
-
-                content.AddRange(ps.Cast<BaseContent>());
-                content.AddRange(vs.Cast<BaseContent>());
-                content.AddRange(t1.Cast<BaseContent>());
-                content.AddRange(t2.Cast<BaseContent>());
-                content.RemoveAll(x => x.Id == post.Id);
-
-                return content.GroupBy(x => x).OrderByDescending(x => x.Count()).Select(x => x.Key);
-            }
-
-            if (entity is OrigamiVideo video)
-            {
-                var content = new List<BaseContent>();
-
-                var categories = _videoCategoryRepository.ReadFromCache().Where(x => x.VideoId == video.Id).Select(x => x.CategoryId);
-                var tags = _videoTagRepository.ReadFromCache().Where(x => x.VideoId == video.Id).Select(x => x.Tag);
-
-                var ps = from pc in _videoCategoryRepository.ReadFromCache()
-                         join pt in _videoRepository.ReadFromCache().NonDeleted().Published() on pc.VideoId equals pt.Id
-                         where pc.VideoId == video.Id
-                         select pt;
-
-                var vs = from vc in _postCategoryRepository.ReadFromCache()
-                         join vt in _postRepository.ReadFromCache().NonDeleted().Published() on vc.PostId equals vt.Id
-                         join ct in categories on vc.CategoryId equals ct
-                         select vt;
-
-                var t1 = from pt in _videoTagRepository.ReadFromCache()
-                         join po in _videoRepository.ReadFromCache().NonDeleted().Published() on pt.VideoId equals po.Id
-                         where tags.Contains(pt.Tag)
-                         select po;
-
-                var t2 = from vt in _postTagRepository.ReadFromCache()
-                         join vd in _postRepository.ReadFromCache().NonDeleted().Published() on vt.PostId equals vd.Id
-                         where tags.Contains(vt.Tag)
-                         select vd;
-
-                content.AddRange(ps.Cast<BaseContent>());
-                content.AddRange(vs.Cast<BaseContent>());
-                content.AddRange(t1.Cast<BaseContent>());
-                content.AddRange(t2.Cast<BaseContent>());
-                content.RemoveAll(x => x.Id == video.Id);
-
-                return content.GroupBy(x => x).OrderByDescending(x => x.Count()).Select(x => x.Key);
-            }
-
-            throw new NotImplementedException();
+            return content.GroupBy(x => x).OrderByDescending(x => x.Count()).Select(x => x.Key);
         }
 
-        public IEnumerable<BaseContent> GetWhatToSeeNextTitle<T>(T entity) where T : ITitle, IContent, IId, new()
+        public IEnumerable<OrigamiContent> GetWhatToSeeNextTitle<T>(T entity) where T : ITitle, IContent, IId
         {
             var content = new List<FuzzyContent>();
 
-            var ps1 = from p in _postRepository.ReadFromCache().NonDeleted().Published()
+            var ps1 = from p in _contentRepository.ReadFromCache().NonDeleted().Published()
                       select new FuzzyContent { Content = p, Fuzzy = FuzzySharp.Fuzz.WeightedRatio(entity.Title, p.Title) };
 
-            var ps2 = from p in _postRepository.ReadFromCache().NonDeleted().Published()
+            var ps2 = from p in _contentRepository.ReadFromCache().NonDeleted().Published()
                       select new FuzzyContent { Content = p, Fuzzy = FuzzySharp.Fuzz.Ratio(entity.Title, p.Title) };
 
-            var vs1 = from v in _videoRepository.ReadFromCache().NonDeleted().Published()
+            var vs1 = from v in _contentRepository.ReadFromCache().NonDeleted().Published()
                       select new FuzzyContent { Content = v, Fuzzy = FuzzySharp.Fuzz.WeightedRatio(entity.Title, v.Title) };
 
-            var vs2 = from v in _videoRepository.ReadFromCache().NonDeleted().Published()
+            var vs2 = from v in _contentRepository.ReadFromCache().NonDeleted().Published()
                       select new FuzzyContent { Content = v, Fuzzy = FuzzySharp.Fuzz.Ratio(entity.Title, v.Title) };
 
             content.AddRange(ps1);
@@ -137,7 +69,7 @@ namespace Origami.Core.Data
 
         private class FuzzyContent
         {
-            public BaseContent Content { get; set; } = new OrigamiPost();
+            public OrigamiContent Content { get; set; } = null!;
             public int Fuzzy { get; set; } = 0;
         }
     }

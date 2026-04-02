@@ -1,9 +1,11 @@
 ﻿@page "/user/trashes"
+@page "/user/trashes/{NanoId}"
 @inherits BasicAdminGrid<OrigamiUserTrash>
 
 <style>
     .trashes .id .is-deleted { display: none; }
     .deleted { opacity: 1 !important; background: initial !important; }
+    .search-wrapper { display: none !important; }
 </style>
 <Root Access="this.CanAccess()">
     <HeaderTemplate>
@@ -28,6 +30,8 @@
                 </div>
             </div>
         </div>
+    </HeaderTemplate>
+    <ContentTemplate>
         <div class="p-3 border-bottom">
             <div class="row">
                 <div class="col-12">
@@ -35,8 +39,6 @@
                 </div>
             </div>
         </div>
-    </HeaderTemplate>
-    <ContentTemplate>
         <div class="p-3">
             <div class="row">
                 <div class="trashes col-12 col-xxl-8">
@@ -50,31 +52,26 @@
                                         @if (context.Item.Type.Like("Blog") == true)
                                         {
                                             var blog = this.Super.Blogs.ReadFromCache().Id(context.Item.Id);
-                                            <BlogHeaderLite Entity="blog"></BlogHeaderLite>
+                                            <BlogHeaderInline Entity="blog"></BlogHeaderInline>
                                         }
-                                        else if (context.Item.Type.Like("Page") == true)
+                                        else if (context.Item.Type.Like("OrigamiPage") == true)
                                         {
-                                            var page = this.Super.Pages.ReadFromCache().Id(context.Item.Id);
-                                            <PageHeaderLite2 Entity="page"></PageHeaderLite2>
+                                            var page = this.Super.Contents.ReadFromCache().Id(context.Item.Id);
+                                            <ContentHeaderInline Entity="page"></ContentHeaderInline>
                                         }
-                                        else if (context.Item.Type.Like("Post") == true)
+                                        else if (context.Item.Type.Like("OrigamiPost") == true)
                                         {
-                                            var post = this.Super.Posts.ReadFromCache().Id(context.Item.Id);
-                                            <PostHeaderLite2 Entity="post"></PostHeaderLite2>
+                                            var post = this.Super.Contents.ReadFromCache().Id(context.Item.Id);
+                                            <ContentHeaderInline Entity="post"></ContentHeaderInline>
                                         }
-                                        else if (context.Item.Type.Like("Video") == true)
+                                        else if (context.Item.Type.Like("OrigamiVideo") == true)
                                         {
-                                            var video = this.Super.Videos.ReadFromCache().Id(context.Item.Id);
-                                            <VideoHeaderLite2 Entity="video"></VideoHeaderLite2>
+                                            var video = this.Super.Contents.ReadFromCache().Id(context.Item.Id);
+                                            <ContentHeaderInline Entity="video"></ContentHeaderInline>
                                         }
-                                        else if (context.Item.Type.Like("PostComment") == true)
+                                        else if (context.Item.Type.Like("ContentComment") == true)
                                         {
-                                            var comment = this.Super.PostComments.ReadFromCache().Id(context.Item.Id);
-                                            <CommentLite Entity="comment" ShowParentHeader="true"></CommentLite>
-                                        }
-                                        else if (context.Item.Type.Like("VideoComment") == true)
-                                        {
-                                            var comment = this.Super.VideoComments.ReadFromCache().Id(context.Item.Id);
+                                            var comment = this.Super.ContentComments.ReadFromCache().Id(context.Item.Id);
                                             <CommentLite Entity="comment" ShowParentHeader="true"></CommentLite>
                                         }
                                         else if (context.Item.Type.Like("Category") == true)
@@ -85,7 +82,7 @@
                                         else if (context.Item.Type.Like("User") == true)
                                         {
                                             var user = this.Super.Users.ReadFromCache().Id(context.Item.Id);
-                                            <UserHeaderLite Entity="user"></UserHeaderLite>
+                                            <UserHeader Entity="user"></UserHeader>
                                         }
                                         else if (context.Item.Type.Like("Role") == true)
                                         {
@@ -97,15 +94,15 @@
                                             var note = this.Super.QuickNotes.ReadFromCache().Id(context.Item.Id);
                                             <QuickNoteHeaderLite Entity="note"></QuickNoteHeaderLite>
                                         }
-                                        else if (context.Item.Type.Like("SpecialPage") == true)
+                                        else if (context.Item.Type.Like("OrigamiSpecialPage") == true)
                                         {
-                                            var page = this.Super.SpecialPages.ReadFromCache().Id(context.Item.Id);
-                                            <SpecialPageHeaderLite2 Entity="page"></SpecialPageHeaderLite2>
+                                            var page = this.Super.GetSpecialPages().Id(context.Item.Id);
+                                            <ContentHeaderInline Entity="page"></ContentHeaderInline>
                                         }
-                                        else if (context.Item.Type.Like("SpecialMessage") == true)
+                                        else if (context.Item.Type.Like("OrigamiSpecialMessage") == true)
                                         {
-                                            var message = this.Super.SpecialMessages.ReadFromCache().Id(context.Item.Id);
-                                            <SpecialMessageHeaderLite Entity="message"></SpecialMessageHeaderLite>
+                                            var message = this.Super.GetSpecialMessages().Id(context.Item.Id);
+                                            <ContentHeaderInline Entity="message"></ContentHeaderInline>
                                         }
                                     </div>
                                 </CellTemplate>
@@ -113,25 +110,33 @@
                             <TemplateColumn Title="@Text.Upper("Type")" Sortable="false" Filterable="false" CellClass="col-1 text-center">
                                 <CellTemplate>
                                     <div class="small">
-                                        @if (context.Item.Type.Like("PostComment") == true)
+                                        @if (context.Item.Type.Like("ContentComment") == true)
                                         {
-                                            <span>@Text.Original("Comment in post")</span>
+                                            <span>@Text.Original("Comment")</span>
                                         }
-                                        else if (context.Item.Type.Like("VideoComment") == true)
+                                        else if (context.Item.Type.Like("OrigamiPage") == true)
                                         {
-                                            <span>@Text.Original("Comment in video")</span>
+                                            <span>@Text.Original("Page")</span>
+                                        }
+                                        else if (context.Item.Type.Like("OrigamiPost") == true)
+                                        {
+                                            <span>@Text.Original("Post")</span>
                                         }
                                         else if (context.Item.Type.Like("QuickNote") == true)
                                         {
                                             <span>@Text.Original("Quick note")</span>
                                         }
-                                        else if (context.Item.Type.Like("SpecialPage") == true)
+                                        else if (context.Item.Type.Like("OrigamiSpecialPage") == true)
                                         {
                                             <span>@Text.Original("Special page")</span>
                                         }
-                                        else if (context.Item.Type.Like("SpecialMessage") == true)
+                                        else if (context.Item.Type.Like("OrigamiSpecialMessage") == true)
                                         {
                                             <span>@Text.Original("Special message")</span>
+                                        }
+                                        else if (context.Item.Type.Like("OrigamiVideo") == true)
+                                        {
+                                            <span>@Text.Original("Video")</span>
                                         }
                                         else
                                         {
@@ -179,5 +184,15 @@
                     select trash;
 
         return query.ToList();
+    }
+
+    protected override void OnEdit(OrigamiUserTrash entity)
+    {
+        GhostOfTheNavigator.NavigateTo($"/user/trashes/{entity.NanoId}");
+    }
+
+    protected override void OnSearchResultSelected(OrigamiUserTrash entity)
+    {
+        GhostOfTheNavigator.NavigateTo($"/user/trashes/{entity.NanoId}");
     }
 }

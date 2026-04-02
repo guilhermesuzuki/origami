@@ -3,9 +3,9 @@ using Origami.Core.Models;
 
 namespace Origami.Core.Validators
 {
-    public class OrigamiSpecialPageValidator : BaseValidator<OrigamiSpecialPage>
+    public class OrigamiSpecialPageValidator : AbstractValidator<OrigamiSpecialPage>
     {
-        public OrigamiSpecialPageValidator(Text text, IWebRootPath webRootPath) : base(text, webRootPath)
+        public OrigamiSpecialPageValidator(Text text, IWebRootPath webRootPath) : base()
         {
             RuleFor(x => x.Id).Id(text);
             RuleFor(x => x.NanoId).NanoId(text);

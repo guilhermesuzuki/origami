@@ -15,15 +15,12 @@
     {
         <FrontPage BlogId="this.BlogId" Class="mb-6"></FrontPage>
         <QuickNoteList BlogId="this.BlogId" Class="mb-6" Page="this.QuickNotePage"></QuickNoteList>
-        <VideoMostPopular BlogId="this.BlogId" Class="mb-6"></VideoMostPopular>
-        <VideoList BlogId="this.BlogId" Class="mb-6" Page="this.VideoPage"></VideoList>
-        <PostMostPopular BlogId="this.BlogId" Class="mb-6"></PostMostPopular>
-        <PostList BlogId="this.BlogId" Class="" Page="this.PostPage"></PostList>
+        <ContentMostPopular BlogId="this.BlogId" Class="mb-6"></ContentMostPopular>
+        <ContentList BlogId="this.BlogId" Class="mb-6" Page="this.ContentPage"></ContentList>
     }
     </Root>
 @code {
-    protected int PostPage { get; set; } = 1;
-    protected int VideoPage { get; set; } = 1;
+    protected int ContentPage { get; set; } = 1;
     protected int QuickNotePage { get; set; } = 1;
 
     protected override void OnParametersSet()

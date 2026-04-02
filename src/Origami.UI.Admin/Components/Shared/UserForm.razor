@@ -193,7 +193,7 @@
                         </TemplateColumn>
                         <TemplateColumn CellClass="w-100">
                             <CellTemplate>
-                                <BlogHeaderLite Entity="context.Item"></BlogHeaderLite>
+                                <BlogHeaderInline Entity="context.Item"></BlogHeaderInline>
                             </CellTemplate>
                         </TemplateColumn>
                         <TemplateColumn>
@@ -292,7 +292,7 @@
                             <Columns>
                                 <TemplateColumn>
                                     <CellTemplate>
-                                        <PageHeader Entity="context.Item" ShowRelatedPages="false"></PageHeader>
+                                        <ContentHeader Entity="context.Item" ShowRelatedContent="false"></ContentHeader>
                                     </CellTemplate>
                                 </TemplateColumn>
                             </Columns>
@@ -312,7 +312,7 @@
                             <Columns>
                                 <TemplateColumn>
                                     <CellTemplate>
-                                        <PostHeader Entity="context.Item"></PostHeader>
+                                        <ContentHeader Entity="context.Item"></ContentHeader>
                                     </CellTemplate>
                                 </TemplateColumn>
                             </Columns>
@@ -332,7 +332,7 @@
                             <Columns>
                                 <TemplateColumn>
                                     <CellTemplate>
-                                        <VideoHeader Entity="context.Item"></VideoHeader>
+                                        <ContentHeader Entity="context.Item"></ContentHeader>
                                     </CellTemplate>
                                 </TemplateColumn>
                             </Columns>
@@ -345,7 +345,7 @@
             </div>
         </div>
     }
-    <div class="buttons mt-3 p-3 text-center">
+    <div class="buttons mt-3 p-3 text-center position-sticky" style="bottom:0;">
         <div class="btn-group">
             <button class="btn btn-success text-white fw-bold" @onclick="Save" disabled="@this.DisableTheSaveButton">
                 <i class="fa-solid fa-floppy-disk"></i>
@@ -415,7 +415,7 @@
                                 <CellTemplate>
                                     <span class="fs-4">@context.Item.Key</span>
                                     <span class="fs-6 d-block">
-                                        @(this.NavigationManager.BaseUri.TrimEnd('/') + "/password/reset/" + context.Item.Key)
+                                        @(this.GhostOfTheNavigator.BaseUri.TrimEnd('/') + "/password/reset/" + context.Item.Key)
                                     </span>
                                 </CellTemplate>
                             </TemplateColumn>
@@ -442,7 +442,7 @@
                                                 <HeaderImageLite Entity="author"></HeaderImageLite>
                                             </li>
                                             <li>
-                                                <UserHeaderLite Entity="author"></UserHeaderLite>
+                                                <UserHeader Entity="author"></UserHeader>
                                             </li>
                                         </ul>
                                     }
@@ -565,17 +565,17 @@
 
     protected List<OrigamiPage> GetPages()
     {
-        return this.Super.GetPages().Author(this.Entity).ToList();
+        return this.Super.GetVisiblePages().Author(this.Entity).ToList();
     }
 
     protected List<OrigamiPost> GetPosts()
     {
-        return this.Super.Posts.ReadFromCache().Published().Author(this.Entity).ToList();
+        return this.Super.Contents.ReadFromCache().OfType<OrigamiPost>().Published().Author(this.Entity).ToList();
     }
 
     protected List<OrigamiVideo> GetVideos()
     {
-        return this.Super.Videos.ReadFromCache().Published().Author(this.Entity).ToList();
+        return this.Super.Contents.ReadFromCache().OfType<OrigamiVideo>().Published().Author(this.Entity).ToList();
     }
 
     protected List<OrigamiUserPasswordReset> GetPasswordResetHistory()

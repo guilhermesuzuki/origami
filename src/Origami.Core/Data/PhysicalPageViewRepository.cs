@@ -51,6 +51,7 @@ namespace Origami.Core.Data
             var key = entity.KeyForCachingViews();
             var options = new MemoryCacheEntryOptions() { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(3) };
 
+            // already in cache, return it
             if (this.MemoryCache.TryGetValue(key, out x))
             {
                 return x;
@@ -61,9 +62,8 @@ namespace Origami.Core.Data
                 using var db = DbContextFactory.CreateDbContext();
 
                 var query = from view in db.Set<OrigamiPhysicalPageView>()
-                            where view.Content != null
-                            where view.Content!.Id == entity.Id
-                            where view.Content!.Type == typeof(T).Name
+                            where view.ContentId != null
+                            where view.ContentId == entity.Id
                             select view;
 
                 x = query.LongCount();

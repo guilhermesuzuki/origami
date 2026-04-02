@@ -11,7 +11,7 @@
     @foreach (var blog in this.UserFacade.BlogsTheUserHasAccessTo)
     {
         <MudSelectItem Value="@blog.Id">
-            <BlogHeaderLite Entity="blog"></BlogHeaderLite>
+            <BlogHeaderInline Entity="blog"></BlogHeaderInline>
         </MudSelectItem>
     }
     @if (this.UserFacade.BlogsTheUserHasAccessTo.Any() == false)

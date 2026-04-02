@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.JSInterop;
 using MudBlazor;
@@ -37,14 +38,15 @@ namespace Origami.UI
         [Inject] protected IConfiguration Configuration { get; set; } = null!;
         [Inject] protected IDbContextFactory<OrigamiDbContext> DbContextFactory { get; set; } = null!;
         [Inject] protected IDialogService DialogService { get; set; } = null!;
+        [Inject] protected NavigationManager GhostOfTheNavigator { get; set; } = null!;
         [Inject] protected IHttpContextAccessor HttpContextAccessor { get; set; } = null!;
         [Inject] protected IJSRuntime JSRuntime { get; set; } = null!;
-        [Inject] protected NavigationManager NavigationManager { get; set; } = null!;
-        [Inject] protected IPageTitleRepository PageTitle { get; set; } = null!;
+        [Inject] protected IMemoryCache MemoryCache { get; set; } = null!;
         [Inject] protected ISuperRepository Super { get; set; } = null!;
         [Inject] protected Text Text { get; set; } = null!;
         [Inject] protected IUserFacade UserFacade { get; set; } = null!;
         [Inject] protected IWebRootPath WebRootPath { get; set; } = null!;
+        [Inject] protected IWhatHappensNext WhatHappensNext { get; set; } = null!;
 
         public OrigamiBlog GetBlogFromSlug()
         {
@@ -90,8 +92,8 @@ namespace Origami.UI
         /// </summary>
         protected virtual void Logout()
         {
-            var returnUrl = Uri.EscapeDataString(NavigationManager.Uri);
-            NavigationManager!.NavigateTo($"/login/out?returnUrl={returnUrl}", true);
+            var returnUrl = Uri.EscapeDataString(GhostOfTheNavigator.Uri);
+            GhostOfTheNavigator!.NavigateTo($"/login/out?returnUrl={returnUrl}", true);
         }
 
         protected override void OnInitialized()
@@ -136,7 +138,7 @@ namespace Origami.UI
                 UserFacade.Result = Super.Subscribers.Subscribe(new(OrigamiUser.AnonymousUser, DateTime.UtcNow, UserFacade.SocialProfile));
                 return;
             }
-            NavigationManager.NavigateTo($"/subscribe", false);
+            GhostOfTheNavigator.NavigateTo($"/subscribe", false);
         }
 
         /// <summary>

@@ -14,10 +14,11 @@ namespace Origami.Core.Models
         protected Guid _id = Guid.NewGuid();
         protected bool _incognitoMode = false;
         protected ObservableCollection<Result> _results = new();
-        protected string _search = string.Empty;
+        protected string _searchTerm = string.Empty;
         protected bool _showCookieConsent = false;
-        protected OrigamiSocialProfile _socialProfile = new();
+        protected OrigamiSocialProfile _socialProfile = OrigamiSocialProfile.AnonymousUser;
         protected OrigamiUser _user = OrigamiUser.AnonymousUser;
+
         /// <summary>
         /// Default constructor
         /// </summary>
@@ -76,12 +77,12 @@ namespace Origami.Core.Models
 
         public IList<Result> Results => _results;
 
-        public string Search
+        public string SearchTerm
         {
-            get => _search;
+            get => _searchTerm;
             set
             {
-                this.Set(ref _search, value, Changed);
+                this.Set(ref _searchTerm, value, Changed);
             }
         }
 

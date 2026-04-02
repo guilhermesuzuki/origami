@@ -7,12 +7,11 @@ namespace Origami.Core.Models
 {
     [Table("oi_ContentCommentReactions")]
     public class OrigamiContentCommentReaction :
-        Reaction,
+        BaseTracking,
         IReactionChanged,
         IId,
         ICommentId
     {
-        private OrigamiContentComment? _comment;
         private Guid _commentId = Guid.Empty;
         private Guid _id = Guid.Empty;
         private string _reaction = string.Empty;

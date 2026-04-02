@@ -20,7 +20,7 @@
                     <HeaderImageLite Entity="this.UserFacade.User"></HeaderImageLite>
                 </div>
                 <div class="mt-1 logged-in-user">
-                    <UserHeaderLite Entity="this.UserFacade.User"></UserHeaderLite>
+                    <UserHeader Entity="this.UserFacade.User"></UserHeader>
                 </div>
             </li>
         </ul>
@@ -174,7 +174,7 @@
             if (_memoryCache is MemoryCache memoryCache)
             {
                 memoryCache.Clear();
-                this.NavigationManager!.NavigateTo(this.NavigationManager.Uri, forceLoad: true);
+                this.GhostOfTheNavigator!.NavigateTo(this.GhostOfTheNavigator.Uri, forceLoad: true);
             }
         }
     }
@@ -191,7 +191,7 @@
         {
             await this.JSRuntime.InvokeVoidAsync("$.removeCookie", this.Configuration.GetUserCookieKey(), new { path = "/" });
             this.UserFacade.User = OrigamiUser.AnonymousUser;
-            this.NavigationManager.Refresh(true);
+            this.GhostOfTheNavigator.Refresh(true);
         }
     }
 
@@ -212,112 +212,117 @@
 
     private void GoToBlogs()
     {
-        this.NavigationManager!.NavigateTo($"/blogs");
+        this.GhostOfTheNavigator!.NavigateTo($"/blogs");
     }
 
     private void GoToCategories()
     {
-        this.NavigationManager!.NavigateTo($"/categories");
+        this.GhostOfTheNavigator!.NavigateTo($"/categories");
     }
 
     private void GoToChangePassword()
     {
-        this.NavigationManager!.NavigateTo($"/password/change");
+        this.GhostOfTheNavigator!.NavigateTo($"/password/change");
     }
 
     private void GoToDashboard()
     {
-        this.NavigationManager!.NavigateTo($"/");
+        this.GhostOfTheNavigator!.NavigateTo($"/");
     }
 
     private void GoToFileManager()
     {
-        this.NavigationManager!.NavigateTo($"/filemanager");
+        this.GhostOfTheNavigator!.NavigateTo($"/filemanager");
     }
 
     private void GoToPages()
     {
-        this.NavigationManager!.NavigateTo($"/pages");
+        this.GhostOfTheNavigator!.NavigateTo($"/pages");
     }
 
     private void GoToPostsComments()
     {
-        this.NavigationManager!.NavigateTo($"/posts/comments");
+        this.GhostOfTheNavigator!.NavigateTo($"/posts/comments");
     }
 
     private void GoToPosts()
     {
-        this.NavigationManager!.NavigateTo($"/posts");
+        this.GhostOfTheNavigator!.NavigateTo($"/posts");
+    }
+
+    private void GoToPosts2()
+    {
+        this.GhostOfTheNavigator!.NavigateTo($"/posts2");
     }
 
     private void GoToSpecialMessages()
     {
-        this.NavigationManager!.NavigateTo($"/specialmessages");
+        this.GhostOfTheNavigator!.NavigateTo($"/specialmessages");
     }
 
     private void GoToSpecialPages()
     {
-        this.NavigationManager!.NavigateTo($"/specialpages");
+        this.GhostOfTheNavigator!.NavigateTo($"/specialpages");
     }
 
     private void GoToSocialProfiles()
     {
-        this.NavigationManager!.NavigateTo($"/socialprofiles");
+        this.GhostOfTheNavigator!.NavigateTo($"/socialprofiles");
     }
 
     private void GoToTags()
     {
-        this.NavigationManager!.NavigateTo($"/tags");
+        this.GhostOfTheNavigator!.NavigateTo($"/tags");
     }
 
     private void GoToVideos()
     {
-        this.NavigationManager!.NavigateTo($"/videos");
+        this.GhostOfTheNavigator!.NavigateTo($"/videos");
     }
 
     private void GoToVideosComments()
     {
-        this.NavigationManager!.NavigateTo($"/videos/comments");
+        this.GhostOfTheNavigator!.NavigateTo($"/videos/comments");
     }
 
     private void GoToUsers()
     {
-        this.NavigationManager!.NavigateTo($"/users");
+        this.GhostOfTheNavigator!.NavigateTo($"/users");
     }
 
     private void GoToRoles()
     {
-        this.NavigationManager!.NavigateTo($"/roles");
+        this.GhostOfTheNavigator!.NavigateTo($"/roles");
     }
 
     private void GoToSettings()
     {
-        this.NavigationManager!.NavigateTo($"/settings");
+        this.GhostOfTheNavigator!.NavigateTo($"/settings");
     }
 
     private void GoToHome()
     {
-        this.NavigationManager!.NavigateTo($"/", true);
+        this.GhostOfTheNavigator!.NavigateTo($"/", true);
     }
 
     private void GoToTrashes()
     {
-        this.NavigationManager!.NavigateTo($"/trashes");
+        this.GhostOfTheNavigator!.NavigateTo($"/trashes");
     }
 
     private void GoToUserTrashes()
     {
-        this.NavigationManager!.NavigateTo($"/user/trashes");
+        this.GhostOfTheNavigator!.NavigateTo($"/user/trashes");
     }
 
     private void GoToUserProfile()
     {
-        this.NavigationManager!.NavigateTo($"/user/profile");
+        this.GhostOfTheNavigator!.NavigateTo($"/user/profile");
     }
 
     private void GoToQuickNotes()
     {
-        this.NavigationManager!.NavigateTo($"/quicknotes");
+        this.GhostOfTheNavigator!.NavigateTo($"/quicknotes");
     }
 
     private async Task RegenerateNanoIds()
@@ -337,7 +342,7 @@
                     this.UserFacade.Result = _superRepository.RegenerateNanoIds();
                     transaction.Complete();
                 }
-                this.NavigationManager!.NavigateTo(this.NavigationManager!.Uri, forceLoad: true);
+                this.GhostOfTheNavigator!.NavigateTo(this.GhostOfTheNavigator!.Uri, forceLoad: true);
             }
             catch (Exception ex)
             {
@@ -355,6 +360,6 @@
 
     private void GoToBackupAndRestore()
     {
-        this.NavigationManager!.NavigateTo($"/backups");
+        this.GhostOfTheNavigator!.NavigateTo($"/backups");
     }
 }

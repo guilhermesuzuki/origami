@@ -10,8 +10,8 @@ namespace Origami.Core.Models
         BaseModel,
         IModel,
         IChanged,
-        IBlogId,
-        IParentIdNull<OrigamiCategory>,
+        IBlogIdNull,
+        IParentIdNull,
         IName,
         IDescriptionNull,
         IAdditionalInfo,
@@ -23,7 +23,7 @@ namespace Origami.Core.Models
         ISlug
     {
         protected string? _additionalInfo = string.Empty;
-        protected Guid _blogId;
+        protected Guid? _blogId;
         protected DateTime _dateCreated;
         protected DateTime? _dateModified;
         protected string? _description = string.Empty;
@@ -37,7 +37,7 @@ namespace Origami.Core.Models
         /// </summary>
         public OrigamiCategory() : base()
         {
-            this.NanoId = Nanoid.Generate(Nanoid.Alphabets.LettersAndDigits, 6);
+
         }
 
         public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) => { };
@@ -48,7 +48,7 @@ namespace Origami.Core.Models
             set => this.Set(ref _additionalInfo, value, Changed);
         }
 
-        public Guid BlogId
+        public Guid? BlogId
         {
             get => _blogId;
             set => this.Set(ref _blogId, value, Changed);

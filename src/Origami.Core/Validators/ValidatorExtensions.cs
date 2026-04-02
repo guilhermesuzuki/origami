@@ -1,4 +1,6 @@
 ﻿using FluentValidation;
+using Microsoft.EntityFrameworkCore;
+using Origami.Core.Data;
 using Origami.Core.Models;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
@@ -16,11 +18,66 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("Author is required"));
         }
 
-        public static IRuleBuilderOptions<T, Guid> BlogId<T>(this IRuleBuilder<T, Guid> ruleBuilder, Text text)
+        public static IRuleBuilderOptions<T, Guid?> BlogId<T>(this IRuleBuilder<T, Guid?> ruleBuilder, Text text)
         {
             return ruleBuilder
+                .NotNull()
                 .NotEmpty()
                 .WithMessage(text.Original("Blog is required"));
+        }
+
+        public static IRuleBuilderOptions<T, List<OrigamiContentCategory>> CategoriesMustBeUnique<T>(this IRuleBuilder<T, List<OrigamiContentCategory>> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory)
+        {
+            return ruleBuilder
+                .Must(categories =>
+                {
+                    if (categories.DistinctBy(x => x.CategoryId).Count() != categories.Count)
+                    {
+                        return false;
+                    }
+
+                    return true;
+                })
+                .WithMessage(text.Original("Categories must be unique"));
+        }
+
+        public static IRuleBuilderOptions<T, Guid> Category<T>(this IRuleBuilder<T, Guid> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory)
+        {
+            return ruleBuilder
+                .Must(categoryId =>
+                {
+                    using var db = dbContextFactory.CreateDbContext();
+                    return db.Set<OrigamiCategory>().AsNoTracking().Id(categoryId) != null;
+                })
+                .WithMessage(text.Original("Category must exist"));
+        }
+
+        public static IRuleBuilderOptions<T, Guid> Content<T>(this IRuleBuilder<T, Guid> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory)
+        {
+            return ruleBuilder
+                .Must(contentId =>
+                {
+                    using var db = dbContextFactory.CreateDbContext();
+                    return db.Set<OrigamiContent>().AsNoTracking().Id(contentId) != null;
+                })
+                .WithMessage(text.Original("Content must be valid"));
+        }
+
+        public static IRuleBuilderOptions<T, string> ContentType<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
+        {
+            return ruleBuilder
+                .Must(type =>
+                {
+                    if (type.Has() == false) return false;
+
+                    var types = AppDomain.CurrentDomain
+                        .GetAssemblies()
+                        .SelectMany(a => a.GetTypes())
+                        .Where(t => typeof(OrigamiContent).IsAssignableFrom(t) && t.IsClass && !t.IsAbstract);
+
+                    return types.Any(t => t.Name == type);
+                }).WithMessage("Content type is required")
+                ;
         }
 
         public static IRuleBuilderOptions<T, string?> Description<T>(this IRuleBuilder<T, string?> ruleBuilder, Text text)
@@ -133,6 +190,7 @@ namespace Origami.Core.Validators
                 })
                 .WithMessage(text.Original("Content must be a valid HTML"));
         }
+
         public static IRuleBuilderOptions<T, Guid> Id<T>(this IRuleBuilder<T, Guid> ruleBuilder, Text text)
         {
             return ruleBuilder
@@ -169,6 +227,13 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("Language must be valid"));
         }
 
+        public static IRuleBuilderOptions<T, T> ModificationMustHappenAfterCreation<T>(this IRuleBuilder<T, T> ruleBuilder, Text text) where T : IDateCreated, IDateModified
+        {
+            return ruleBuilder
+                .Must(entity => entity.DateCreated < (entity.DateModified ?? DateTime.MaxValue))
+                .WithMessage(text.Original("Date of modification must happen after the creation date"));
+        }
+
         public static IRuleBuilderOptions<T, string> Name<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
         {
             return ruleBuilder
@@ -183,15 +248,31 @@ namespace Origami.Core.Validators
             return ruleBuilder
                 .NotEmpty()
                 .WithMessage(text.Original("NanoId is required"))
-                .MaximumLength(6)
-                .WithMessage(text.Original("NanoId cannot exceed 6 characters"));
+                .MaximumLength(8)
+                .WithMessage(text.Original("NanoId cannot exceed 8 characters"));
         }
 
-        public static IRuleBuilderOptions<T, T> ParentId<T>(this IRuleBuilder<T, T> ruleBuilder, Text text) where T : IId, IParentIdNull<T>
+        public static IRuleBuilderOptions<T, string> Note<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
+        {
+            return ruleBuilder
+                .NotEmpty()
+                .WithMessage(text.Original("Note is required"))
+                .MaximumLength(255)
+                .WithMessage(text.Original("Note cannot exceed 255 characters"));
+        }
+
+        public static IRuleBuilderOptions<T, T> ParentId<T>(this IRuleBuilder<T, T> ruleBuilder, Text text) where T : IId, IParentIdNull
         {
             return ruleBuilder
                 .Must(x => x.ParentId == null || x.Id != x.ParentId)
                 .WithMessage(text.Original("An entity cannot be its own parent"));
+        }
+
+        public static IRuleBuilderOptions<T, byte> Rating<T>(this IRuleBuilder<T, byte> ruleBuilder, Text text)
+        {
+            return ruleBuilder
+                .LessThanOrEqualTo((byte)5)
+                .WithMessage(text.Original("Rating must be less than or equal to 5"));
         }
 
         public static IRuleBuilderOptions<T, string> RssFeed<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
@@ -224,6 +305,26 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("Slug cannot exceed 255 characters"));
         }
 
+        public static IRuleBuilderOptions<T, string> Tag<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
+        {
+            return ruleBuilder
+                .MaximumLength(128)
+                .WithMessage(text.Original("Tag cannot exceed 128 characters"));
+        }
+
+        public static IRuleBuilderOptions<T, List<OrigamiContentTag>> TagsMustBeUnique<T>(this IRuleBuilder<T, List<OrigamiContentTag>> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory)
+        {
+            return ruleBuilder
+                .Must(tags =>
+                {
+                    if (tags.DistinctBy(x => x.Tag).Count() != tags.Count)
+                    {
+                        return false;
+                    }
+                    return true;
+                })
+                .WithMessage(text.Original("Tags must be unique"));
+        }
         public static IRuleBuilderOptions<T, string> Title<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
         {
             return ruleBuilder
@@ -233,13 +334,21 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("Title cannot exceed 255 characters"));
         }
 
-        public static IRuleBuilderOptions<T, string> Note<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
+        public static IRuleBuilderOptions<T, T> TopLevelPageWhenFrontPage<T>(this IRuleBuilder<T, T> ruleBuilder, Text text)
         {
             return ruleBuilder
-                .NotEmpty()
-                .WithMessage(text.Original("Note is required"))
-                .MaximumLength(255)
-                .WithMessage(text.Original("Note cannot exceed 255 characters"));
+                .Must(entity =>
+                {
+                    if (entity is OrigamiPage page)
+                    {
+                        if (page.IsFrontPage == false)
+                        {
+                            return true;
+                        }
+                        return page.ParentId == null;
+                    }
+                    return true;
+                }).WithMessage(text.Original("To promote to front-page, that page must be top-level"));
         }
 
         public static IRuleBuilderOptions<T, string?> Username<T>(this IRuleBuilder<T, string?> ruleBuilder, Text text)

@@ -4,6 +4,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Origami.Core.Models
 {
+    /// <summary>
+    /// TODO: remove this?
+    /// </summary>
     [Table("oi_PhysicalPageReactions")]
     public class OrigamiPhysicalPageReaction :
         BaseView,

@@ -14,14 +14,16 @@
         {
             <video src="@Entity.WebPath" controls style="width:100%;"></video>
         }
-        else if (Entity.IsAudio) 
+        else if (Entity.IsAudio)
         {
             <audio src="@Entity.WebPath" controls style="width:100%;"></audio>
         }
         <table class="w-100 mt-3 border">
             <tr>
                 <td class="p-3" style="width:25%;">@Text.Lower("Path"):</td>
-                <td class="p-3">@Entity.WebPath</td>
+                <td class="p-3">
+                    <span title="@Entity.WebPath">@Entity.WebPath</span>
+                </td>
             </tr>
             <tr>
                 <td class="p-3" style="width:25%;">@Text.Lower("Name"):</td>
@@ -45,7 +47,9 @@
             </tr>
             <tr>
                 <td class="p-3" style="width:25%;">@Text.Lower("Local Path"):</td>
-                <td class="p-3">@Entity.LocalPath</td>
+                <td class="p-3">
+                    <span title="@Entity.LocalPath">@Entity.LocalPath</span>
+                </td>
             </tr>
         </table>
     </div>

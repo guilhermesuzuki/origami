@@ -48,25 +48,25 @@
     private void Microsoft()
     {
         var returnUrl = Uri.EscapeDataString("/subscribe");
-        this.NavigationManager!.NavigateTo($"/login/openidconnect?returnUrl={returnUrl}", true);
+        this.GhostOfTheNavigator!.NavigateTo($"/login/openidconnect?returnUrl={returnUrl}", true);
     }
 
     private void Google()
     {
         var returnUrl = Uri.EscapeDataString("/subscribe");
-        this.NavigationManager!.NavigateTo($"/login/google?returnUrl={returnUrl}", true);
+        this.GhostOfTheNavigator!.NavigateTo($"/login/google?returnUrl={returnUrl}", true);
     }
 
     private void Facebook()
     {
         var returnUrl = Uri.EscapeDataString("/subscribe");
-        this.NavigationManager!.NavigateTo($"/login/facebook?returnUrl={returnUrl}", true);
+        this.GhostOfTheNavigator!.NavigateTo($"/login/facebook?returnUrl={returnUrl}", true);
     }
 
     private void GitHub()
     {
         var returnUrl = Uri.EscapeDataString("/subscribe");
-        this.NavigationManager!.NavigateTo($"/login/github?returnUrl={returnUrl}", true);
+        this.GhostOfTheNavigator!.NavigateTo($"/login/github?returnUrl={returnUrl}", true);
     }
 
     protected override void OnInitialized()

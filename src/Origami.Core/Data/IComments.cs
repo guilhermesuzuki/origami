@@ -11,14 +11,6 @@ namespace Origami.Core.Data
         /// <param name="entity"></param>
         /// <returns></returns>
         long GetComments(T entity);
-
-        /// <summary>
-        /// Sets the total number of views from a <paramref name="entity"/>
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <param name="count">total view count</param>
-        /// <returns></returns>
-        void SetComments(T entity, long count);
     }
 
     public interface IComments<T, TComment> :

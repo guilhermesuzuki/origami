@@ -5,7 +5,7 @@
 {
     var header = this.Entity.HeaderImage.NoHeader();
     <div class="wrapper @Class">
-        <ContentHeaderLite Entity="this.Entity"></ContentHeaderLite>
+        <AuthorHeaderLite Entity="this.Entity"></AuthorHeaderLite>
         <div class="page-header-lite position-relative shadow-sm cursor-pointer" @onclick="() => this.GoToPage()">
             <div class="page-header-image" style="height: 150px; background-image: url(@Entity.HeaderImage.NoHeader())"></div>
             <div class="page-header-title position-absolute overflow-auto zeroes">
@@ -18,7 +18,7 @@
                         <label class="page-date pe-1">@(Entity.Title)</label>
                         <label class="page-views pe-1">
                             <i class="fa-solid fa-eye"></i>
-                            @this.Super.SpecialPageViews.GetViews(Entity)
+                            @this.Super.PhysicalPageViews.GetViews(Entity)
                         </label>
                     </div>
                 </div>
@@ -65,6 +65,7 @@
 
 @code {
     private bool _showHeaderImage = false;
+
     [Parameter] public OrigamiSpecialPage? Entity { get; set; }
 
     /// <summary>
@@ -72,6 +73,6 @@
     /// </summary>
     protected void GoToPage()
     {
-        this.NavigationManager.NavigateTo($"{this.Entity!.Hyperlink}#content-start");
+        this.GhostOfTheNavigator.NavigateTo($"{this.Entity!.Hyperlink}#content-start");
     }
 }

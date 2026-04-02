@@ -1,10 +1,11 @@
-﻿using Origami.Core.Models;
+﻿using FluentValidation;
+using Origami.Core.Models;
 
 namespace Origami.Core.Validators
 {
-    public class OrigamiPageValidator : BaseValidator<OrigamiPage>
+    public class OrigamiPageValidator : AbstractValidator<OrigamiPage>
     {
-        public OrigamiPageValidator(Text text, IWebRootPath webRootPath) : base(text, webRootPath)
+        public OrigamiPageValidator(Text text, IWebRootPath webRootPath) : base()
         {
             RuleFor(x => x.BlogId).BlogId(text);
             RuleFor(x => x.Id).Id(text);

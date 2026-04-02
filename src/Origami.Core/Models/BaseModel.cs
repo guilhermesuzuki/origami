@@ -13,7 +13,7 @@ namespace Origami.Core.Models
 
         protected BaseModel()
         {
-            this.NanoId = Nanoid.Generate(Nanoid.Alphabets.LettersAndDigits, 6);
+            this.NanoId = Nanoid.Generate(Nanoid.Alphabets.LettersAndDigits, 8);
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace Origami.Core.Models
         /// <summary>
         /// Nano Id
         /// </summary>
-        [StringLength(6)]
+        [StringLength(8)]
         public virtual string NanoId
         {
             get => _nanoId;

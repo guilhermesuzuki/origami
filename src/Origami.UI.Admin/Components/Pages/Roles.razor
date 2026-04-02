@@ -1,8 +1,7 @@
 ﻿@page "/roles"
+@page "/roles/{NanoId}"
 @inherits BasicAdminGrid<OrigamiRole>
-@inject IBlogRepository _blogs
-@inject IUserRoleRepository _userRoleRepository
-@inject IRightRoleRepository _rightRoleRepository
+
 <Root Access="this.CanAccess()">
     <HeaderTemplate>
         <div class="p-3 border-bottom">
@@ -24,13 +23,6 @@
                 </div>
                 <div class="col-12 col-xxl-4">
                     <BlogSelect Disabled="true" Style="visibility: hidden;"></BlogSelect>
-                </div>
-            </div>
-        </div>
-        <div class="p-3 border-bottom">
-            <div class="row">
-                <div class="col-12">
-                    <SearchLite T="OrigamiRole" OnHitSelected="this.OnSearchResultSelected"></SearchLite>
                 </div>
             </div>
         </div>
@@ -80,4 +72,9 @@
 </Root>
 @code {
     protected override string DefaultOrdering => $"{nameof(OrigamiRole.Name)}";
+
+    protected override void OnEdit(OrigamiRole entity)
+    {
+        GhostOfTheNavigator.NavigateTo($"/roles/{entity.NanoId}");
+    }
 }

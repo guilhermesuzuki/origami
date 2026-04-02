@@ -69,31 +69,31 @@
 @code {
     private void Microsoft()
     {
-        var returnUrl = Uri.EscapeDataString(this.NavigationManager.Uri);
-        this.NavigationManager.NavigateTo($"/login/openidconnect?returnUrl={returnUrl}", true);
+        var returnUrl = Uri.EscapeDataString(this.GhostOfTheNavigator.Uri);
+        this.GhostOfTheNavigator.NavigateTo($"/login/openidconnect?returnUrl={returnUrl}", true);
     }
 
     private void Google()
     {
-        var returnUrl = Uri.EscapeDataString(this.NavigationManager.Uri);
-        this.NavigationManager.NavigateTo($"/login/google?returnUrl={returnUrl}", true);
+        var returnUrl = Uri.EscapeDataString(this.GhostOfTheNavigator.Uri);
+        this.GhostOfTheNavigator.NavigateTo($"/login/google?returnUrl={returnUrl}", true);
     }
 
     private void Facebook()
     {
-        var returnUrl = Uri.EscapeDataString(this.NavigationManager.Uri);
-        this.NavigationManager.NavigateTo($"/login/facebook?returnUrl={returnUrl}", true);
+        var returnUrl = Uri.EscapeDataString(this.GhostOfTheNavigator.Uri);
+        this.GhostOfTheNavigator.NavigateTo($"/login/facebook?returnUrl={returnUrl}", true);
     }
 
     private void GitHub()
     {
-        var returnUrl = Uri.EscapeDataString(this.NavigationManager.Uri);
-        this.NavigationManager.NavigateTo($"/login/github?returnUrl={returnUrl}", true);
+        var returnUrl = Uri.EscapeDataString(this.GhostOfTheNavigator.Uri);
+        this.GhostOfTheNavigator.NavigateTo($"/login/github?returnUrl={returnUrl}", true);
     }
 
     private void GoToProfile()
     {
-        this.NavigationManager.NavigateTo($"/socialprofiles/{this.UserFacade.SocialProfile.Id}", true);
+        this.GhostOfTheNavigator.NavigateTo($"/socialprofiles/{this.UserFacade.SocialProfile.Id}", true);
     }
 
     private void TestSubscribeEmail()

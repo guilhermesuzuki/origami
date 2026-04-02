@@ -15,6 +15,7 @@ namespace Origami.Core.Data
         protected readonly IBlogRollRepository _blogRollRepository;
         protected readonly ICategoryRepository _categoryRepository;
         protected readonly IConfiguration _configuration;
+        protected readonly IContentRepository _contentRepository;
         protected readonly IPageRepository _pageRepository;
         protected readonly IPingServiceRepository _pingServiceRepository;
         protected readonly IPostRepository _postRepository;
@@ -27,6 +28,7 @@ namespace Origami.Core.Data
             IBlogRollRepository blogRollRepository,
             ICategoryRepository categoryRepository,
             IConfiguration configuration,
+            IContentRepository contentRepository,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IMemoryCache memoryCache,
             IPageRepository pageRepository,
@@ -40,9 +42,10 @@ namespace Origami.Core.Data
             : base(text, dbContextFactory, memoryCache, wwwRoot)
         {
             _validator = validator;
-            _configuration = configuration;
             _blogRollRepository = blogRollRepository;
             _categoryRepository = categoryRepository;
+            _configuration = configuration;
+            _contentRepository = contentRepository;
             _pageRepository = pageRepository;
             _pingServiceRepository = pingServiceRepository;
             _postRepository = postRepository;
@@ -248,16 +251,12 @@ namespace Origami.Core.Data
         public override void PurgeRelationshipsFromCache(OrigamiBlog entity)
         {
             var categories = _categoryRepository.ReadFromCache().Blog(entity.Id).ToList();
-            var pages = _pageRepository.ReadFromCache().Blog(entity.Id).ToList();
+            var contents = _contentRepository.ReadFromCache().Blog(entity.Id).ToList();
             var pingServices = _pingServiceRepository.ReadFromCache().Blog(entity.Id).ToList();
-            var posts = _postRepository.ReadFromCache().Blog(entity.Id).ToList();
-            var videos = _videoRepository.ReadFromCache().Blog(entity.Id).ToList();
 
             categories.Each(_categoryRepository.PurgeCache);
-            pages.Each(_pageRepository.PurgeCache);
+            contents.Each(_contentRepository.PurgeCache);
             pingServices.Each(_pingServiceRepository.PurgeCache);
-            posts.Each(_postRepository.PurgeCache);
-            videos.Each(_videoRepository.PurgeCache);
         }
 
         public override Result<OrigamiBlog> PurgeRelationshipsFromDatabase(DataOperationContext<OrigamiBlog> ctx)
@@ -266,17 +265,13 @@ namespace Origami.Core.Data
 
             using (var db = DbContextFactory.CreateDbContext())
             {
-                var categories = db.Set<OrigamiCategory>().AsNoTracking().Blog(ctx.Entity.Id).ToList();
-                var pages = db.Set<OrigamiPage>().AsNoTracking().Blog(ctx.Entity.Id).ToList();
-                var pingServices = db.Set<OrigamiPingService>().AsNoTracking().Blog(ctx.Entity.Id).ToList();
-                var posts = db.Set<OrigamiPost>().AsNoTracking().Blog(ctx.Entity.Id).ToList();
-                var videos = db.Set<OrigamiVideo>().AsNoTracking().Blog(ctx.Entity.Id).ToList();
+                var categories = db.Categories.AsNoTracking().Blog(ctx.Entity.Id).ToList();
+                var contents = db.Contents.AsNoTracking().Blog(ctx.Entity.Id).ToList();
+                var pingServices = db.PingServices.AsNoTracking().Blog(ctx.Entity.Id).ToList();
 
                 categories.GetContexts(ctx).Call(_categoryRepository.SmartPurge, false).Push(hub);
-                pages.GetContexts(ctx).Call(_pageRepository.SmartPurge, false).Push(hub);
+                contents.GetContexts(ctx).Call(_contentRepository.SmartPurge, false).Push(hub);
                 pingServices.GetContexts(ctx).Call(_pingServiceRepository.SmartPurge, false).Push(hub);
-                posts.GetContexts(ctx).Call(_postRepository.SmartPurge, false).Push(hub);
-                videos.GetContexts(ctx).Call(_videoRepository.SmartPurge, false).Push(hub);
 
                 hub.RowsAffected += db.CustomFields.Where(x => x.BlogId == ctx.Entity.Id).ExecuteDelete();
                 hub.RowsAffected += db.DataStoreSettings.Where(x => x.BlogId == ctx.Entity.Id).ExecuteDelete();

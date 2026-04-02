@@ -20,7 +20,7 @@ namespace Origami.Core.Data
         /// <summary>
         /// Starts a backup for the specified user
         /// </summary>
-        /// <param name="userId"></param>
+        /// <param name="user"></param>
         /// <returns></returns>
         Task<Result<OrigamiBackup>> BackupAsync(OrigamiUser user);
 

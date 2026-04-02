@@ -1,7 +1,7 @@
-﻿@inherits BasicFormFull<OrigamiVideoComment>
+﻿@inherits BasicFormFull<OrigamiContentComment>
 @inject IVideoRepository _video
 @inject ISocialProfileRepository _socialProfile
-@inject IVideoCommentReactionRepository _videoCommentReaction
+@inject IContentCommentReactionRepository _videoCommentReaction
 
 <div class="video-comment-form @Class">
     @if (this.Entity.New)
@@ -12,14 +12,14 @@
     }
     else
     {
-        var video = this.Super.Videos.ReadFromCache().Id(Entity.VideoId);
+        var video = this.Super.Contents.ReadFromCache().OfType<OrigamiVideo>().Id(Entity.ContentId);
         var socialProfile = this.Super.SocialProfiles.ReadFromCache().Id(Entity.SocialProfileId);
 
         <div class="row">
             <div class="col-12 col-xxl-6">
                 <div class="p-3">
                     <BasicHeaderNotes Entity="this.Entity"></BasicHeaderNotes>
-                    <VideoHeaderLite Class="mt-3" Entity="video"></VideoHeaderLite>
+                    <ContentHeaderLite Class="mt-3" Entity="video"></ContentHeaderLite>
                     <SocialProfileHeader Class="mt-3 p-3 border shadow-sm" Entity="socialProfile"></SocialProfileHeader>
                     <BasicHeader Class="mt-3" Entity="this.Entity"></BasicHeader>
                     <ul class="inline-list mt-3">
@@ -29,7 +29,7 @@
                                           Immediate="true"
                                           AdornmentIcon="@_pinnedBy?.SocialNetwork.Icon().Value"
                                           Adornment="Adornment.Start"
-                                          Value="@_pinnedBy.Name()"
+                                          Value="@_pinnedBy.GetName()"
                                           Class="social-profile icon"
                                           HelperText="@Text.Lower("Pinned by")"></MudTextField>
                         </li>
@@ -40,7 +40,7 @@
                                           AdornmentIcon="@_moderatedBy?.SocialNetwork.Icon().Value"
                                           Adornment="Adornment.Start"
                                           Class="social-profile icon"
-                                          Value="@_moderatedBy.Name()"
+                                          Value="@_moderatedBy.GetName()"
                                           HelperText="@Text.Lower("Moderated by")"></MudTextField>
                         </li>
                     </ul>
@@ -88,7 +88,7 @@
                             <span>@reaction.Count()</span>
                         </label>
                     }
-                    <MudDataGrid Class="mt-3" T="OrigamiVideoCommentReaction" Items="_videoCommentReaction.Reactions(Entity).OrderByDescending(x => x.DateCreated)">
+                    <MudDataGrid Class="mt-3" T="OrigamiContentCommentReaction" Items="_videoCommentReaction.Reactions(Entity).OrderByDescending(x => x.DateCreated)">
                         <Columns>
                             <TemplateColumn>
                                 <CellTemplate>
@@ -106,7 +106,7 @@
                             </TemplateColumn>
                         </Columns>
                         <PagerContent>
-                            <MudDataGridPager T="OrigamiVideoCommentReaction" />
+                            <MudDataGridPager T="OrigamiContentCommentReaction" />
                         </PagerContent>
                     </MudDataGrid>
                 </div>

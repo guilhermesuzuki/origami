@@ -11,20 +11,23 @@ namespace Origami.Core.Data
         protected readonly IFileRepository _fileRepository;
         protected readonly IPostRepository _postRepository;
         protected readonly IVideoRepository _videoRepository;
+        protected readonly IContentRepository _contentRepository;
         protected readonly Text _text;
 
         public RssRepository(
             IBlogRepository blogRepository,
+            IContentRepository contentRepository,
             IPostRepository postRepository,
             IVideoRepository videoRepository,
             IFileRepository fileRepository,
             Text text) : base()
         {
             _blogRepository = blogRepository;
+            _contentRepository = contentRepository;
             _fileRepository = fileRepository;
             _postRepository = postRepository;
-            _videoRepository = videoRepository;
             _text = text;
+            _videoRepository = videoRepository;
         }
 
         public string GetRss(string slug, string oi)
@@ -33,10 +36,9 @@ namespace Origami.Core.Data
             var blog = this._blogRepository.ReadFromCache().NonDeleted().Active().Slug(slug);
             if (blog != null)
             {
-                var posts = this._postRepository.ReadFromCache().Blog(blog.Id).Published().OrderByDescending(x => x.DatePublished).Take(10);
-                var videos = this._videoRepository.ReadFromCache().Blog(blog.Id).Published().OrderByDescending(x => x.DatePublished).Take(10);
+                var contents = this._contentRepository.ReadFromCache().Blog(blog.Id).Published().OrderByDescending(x => x.DatePublished).Take(10);
 
-                IList<BaseContent> allItems = [.. posts, .. videos];
+                IList<BaseContent> allItems = [.. contents];
 
                 var rss = new XDocument(
                     new XElement("rss",

@@ -8,7 +8,6 @@ namespace Origami.Core.Data
     public class PageRepository : RepositoryOuterLayer<OrigamiPage>, IPageRepository
     {
         protected readonly IValidator<OrigamiPage> _validator;
-        protected readonly IPageViewRepository _pageViewRepository;
 
         /// <summary>
         /// Default constructor with DI
@@ -17,7 +16,6 @@ namespace Origami.Core.Data
         /// <param name="distributedCache"></param>
         public PageRepository(
             IValidator<OrigamiPage> validator,
-            IPageViewRepository pageViewRepository,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IMemoryCache memoryCache,
             IWebRootPath wwwRoot,
@@ -25,19 +23,18 @@ namespace Origami.Core.Data
             : base(text, dbContextFactory, memoryCache, wwwRoot)
         {
             _validator = validator;
-            _pageViewRepository = pageViewRepository;
         }
 
         public override string CreatePermission => nameof(OrigamiRole.CreateNewPages);
         public override string DeleteOtherUsersPermission => nameof(OrigamiRole.DeleteOtherUsersPages);
         public override string DeleteOwnPermission => nameof(OrigamiRole.DeleteOwnPages);
-        public string MarkAsFrontPagePermission => nameof(OrigamiRole.MarkAsFrontPage);
+        public string MarkAsFrontPagePermission => nameof(OrigamiRole.PromoteToFrontPage);
         public override string PublishOtherUsersPermission => nameof(OrigamiRole.PublishOtherUsersPages);
         public override string PublishOwnPermission => nameof(OrigamiRole.PublishOwnPages);
         public override string PurgePermission => nameof(OrigamiRole.PurgePages);
         public override string ReadPermission => nameof(OrigamiRole.ViewPages);
         public override string RestorePermission => nameof(OrigamiRole.RestorePages);
-        public string UnmarkAsFrontPagePermission => nameof(OrigamiRole.UnmarkAsFrontPage);
+        public string UnmarkAsFrontPagePermission => nameof(OrigamiRole.DemoteFromFrontPage);
         public override string UnpublishOtherUsersPermission => nameof(OrigamiRole.UnpublishOtherUsersPages);
         public override string UnpublishOwnPermission => nameof(OrigamiRole.UnpublishOwnPages);
         public override string UpdateOtherUsersPermission => nameof(OrigamiRole.EditOtherUsersPages);
@@ -125,8 +122,8 @@ namespace Origami.Core.Data
         public override Result<OrigamiPage> PurgeRelationshipsFromDatabase(DataOperationContext<OrigamiPage> ctx)
         {
             using var db = DbContextFactory.CreateDbContext();
-            var del = db.Set<OrigamiPageView>().Where(x => x.PageId == ctx.Entity.Id).ExecuteDelete();
-            return new Result<OrigamiPage>(ctx.Entity) { RowsAffected = del };
+            //var del = db.Set<OrigamiPageView>().Where(x => x.PageId == ctx.Entity.Id).ExecuteDelete();
+            return new Result<OrigamiPage>(ctx.Entity) { /*RowsAffected = del*/ };
         }
 
         public Result<OrigamiPage> UnmarkAsFrontPage(DataOperationContext<OrigamiPage> ctx, bool checkPermission)
@@ -181,5 +178,7 @@ namespace Origami.Core.Data
 
             return validation;
         }
+
+
     }
 }

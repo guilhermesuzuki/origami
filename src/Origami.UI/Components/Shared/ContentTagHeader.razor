@@ -1,0 +1,29 @@
+﻿@inherits Basic
+@implements IEntityNull<OrigamiContentTag>
+
+@if (this.Entity != null)
+{
+    <div class="content-tag-header text-center cursor-pointer @Class" @onclick="this.Go">
+        <i class="fa-solid fa-tag" style="font-size:45px;"></i>
+        <div class="mt-1 text-uppercase fw-bold ellipsis name" title="@this.Entity.Tag">@this.Entity.Tag</div>
+        <div class="mt-1 text-center counter">
+            <span class="mx-1">@Text.Lower("{0} post(s)", this.PublishedPosts)</span>
+            <span class="mx-1">@Text.Lower("{0} video(s)", this.PublishedVideos)</span>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public OrigamiContentTag? Entity { get; set; }
+
+    private int PublishedPosts => this.Entity != null ? this.Super.GetContents(this.Entity, this.BlogId).Published().OfType<OrigamiPost>().Count() : 0;
+    private int PublishedVideos => this.Entity != null ? this.Super.GetContents(this.Entity, this.BlogId).Published().OfType<OrigamiVideo>().Count() : 0;
+
+    protected void Go()
+    {
+        if (Entity != null)
+        {
+            WhatHappensNext.WhenIClickHere(this, new() { Slug = Entity });
+        }
+    }
+}

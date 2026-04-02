@@ -9,17 +9,17 @@
                               FullWidth="true"
                               Immediate="true"
                               HelperText="@Text.Lower("Type in here to search")"
-                              @bind-Value:get="@this.UserFacade.Search"
+                              @bind-Value:get="@this.UserFacade.SearchTerm"
                               @bind-Value:set="@_startQuery"></MudTextField>
             </li>
             <li class="position-relative ms-3" style="flex:none;">
-                <button class="m-auto" @onclick="() => this._startQuery(string.Empty)" disabled="@(this.UserFacade.Search.Has() ? false : true)">
+                <button class="m-auto" @onclick="() => this._startQuery(string.Empty)" disabled="@(this.UserFacade.SearchTerm.Has() ? false : true)">
                     <i class="fa-solid fa-broom"></i>
                 </button>
             </li>
         </ul>
     </div>
-    @if (this._hasResults() == true)
+    @if (this._hits.Any() == true)
     {
         <div class="search-results mt-3 border shadow-lg p-3">
             @if (this._posts.Any() == true)
@@ -30,7 +30,7 @@
                         @foreach (var post in _posts)
                         {
                             <div class="col-12 col-xl-4">
-                                <PostHeader Class="mb-3" Entity="post"></PostHeader>
+                                <ContentHeader Class="mb-3" Entity="post"></ContentHeader>
                             </div>
                         }
                     </div>
@@ -44,7 +44,7 @@
                         @foreach (var video in _videos)
                         {
                             <div class="col-12 col-xl-4">
-                                <VideoHeader Class="mb-3" Entity="video"></VideoHeader>
+                                <ContentHeader Class="mb-3" Entity="video"></ContentHeader>
                             </div>
                         }
                     </div>
@@ -58,7 +58,35 @@
                         @foreach (var page in _pages)
                         {
                             <div class="col-12 col-xl-4">
-                                <PageHeader Class="mb-3" Entity="page" ShowRelatedPages="false"></PageHeader>
+                                <ContentHeader Class="mb-3" Entity="page" ShowRelatedContent="false"></ContentHeader>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+            @if (this._specialMessages.Any() == true)
+            {
+                <div class="search-specialmessages">
+                    <label class="fs-3 w-100 text-center mt-6">@Text.Lower("Special messages found in the search")</label>
+                    <div class="row mt-3">
+                        @foreach (var page in _specialMessages)
+                        {
+                            <div class="col-12 col-xl-4">
+                                <ContentHeader Class="mb-3" Entity="page" ShowRelatedContent="false"></ContentHeader>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+            @if (this._specialPages.Any() == true)
+            {
+                <div class="search-specialpages">
+                    <label class="fs-3 w-100 text-center mt-6">@Text.Lower("Special pages found in the search")</label>
+                    <div class="row mt-3">
+                        @foreach (var page in _specialPages)
+                        {
+                            <div class="col-12 col-xl-4">
+                                <ContentHeader Class="mb-3" Entity="page" ShowRelatedContent="false"></ContentHeader>
                             </div>
                         }
                     </div>
@@ -71,36 +99,22 @@
                     <div class="row mt-3">
                         @foreach (var category in _categories)
                         {
-                            <div class="col-12 col-xl-4">
-                                <CategoryHeader Class="mb-3" Entity="category"></CategoryHeader>
+                            <div class="col-12 col-xl-2">
+                                <CategoryHeader Class="mb-3 p-3 border shadow-sm" Entity="category"></CategoryHeader>
                             </div>
                         }
                     </div>
                 </div>
             }
-            @if (this._postComments.Any() == true)
+            @if (this._contentComments.Any() == true)
             {
-                <div class="search-post-comments">
-                    <label class="fs-3 w-100 text-center">@Text.Lower("Comments from posts found In the search")</label>
+                <div class="search-content-comments">
+                    <label class="fs-3 w-100 text-center">@Text.Lower("Comments found In the search")</label>
                     <div class="row mt-3">
-                        @foreach (var comment in _postComments)
+                        @foreach (var comment in _contentComments)
                         {
                             <div class="col-12 col-xl-6">
-                                <PostComment Class="mb-3" Comment="comment"></PostComment>
-                            </div>
-                        }
-                    </div>
-                </div>
-            }
-            @if (this._videoComments.Any() == true)
-            {
-                <div class="search-video-comments">
-                    <label class="fs-3 w-100 text-center">@Text.Lower("Comments from videos found In the search")</label>
-                    <div class="row mt-3">
-                        @foreach (var comment in _videoComments)
-                        {
-                            <div class="col-12 col-xl-6">
-                                <VideoComment Class="mb-3" Comment="comment"></VideoComment>
+                                <ContentComment Class="mb-3" Comment="comment"></ContentComment>
                             </div>
                         }
                     </div>
@@ -113,8 +127,8 @@
                     <div class="row mt-3">
                         @foreach (var tag in _tags)
                         {
-                            <div class="col-12 col-xl-4 fs-4 text-center">
-                                <TagHeader Class="mb-3" Entity="@tag"></TagHeader>
+                            <div class="col-12 col-xl-2">
+                                <ContentTagHeader Class="mb-3 p-2 text-center border shadow-sm" Entity="@tag"></ContentTagHeader>
                             </div>
                         }
                     </div>
@@ -127,7 +141,7 @@
                     <div class="row mt-3">
                         @foreach (var socialProfile in _socialProfiles)
                         {
-                            <div class="col-12 col-xl-4 fs-4 text-center">
+                            <div class="col-12 col-xl-4">
                                 <SocialProfileHeader Class="mb-3 p-3 border shadow-sm" Entity="socialProfile"></SocialProfileHeader>
                             </div>
                         }
@@ -141,8 +155,22 @@
                     <div class="row mt-3">
                         @foreach (var blog in _blogs)
                         {
-                            <div class="col-12 col-xl-4 fs-4 text-center">
+                            <div class="col-12 col-xl-4">
                                 <BlogHeaderLite Class="mb-3 p-3 border shadow-sm" Entity="blog"></BlogHeaderLite>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+            @if (this._quickNotes.Any() == true)
+            {
+                <div class="search-quicknotes">
+                    <label class="fs-3 w-100 text-center">@Text.Lower("Quick notes found in the search")</label>
+                    <div class="row mt-3">
+                        @foreach (var quickNote in _quickNotes)
+                        {
+                            <div class="col-12 col-xl-4 text-center">
+                                <QuickNoteHeader Class="mb-3 p-3 border shadow-sm" Entity="quickNote"></QuickNoteHeader>
                             </div>
                         }
                     </div>
@@ -150,7 +178,7 @@
             }
         </div>
     }
-    else if (this.UserFacade.Search.Has() == true)
+    else if (this.UserFacade.SearchTerm.Has() == true)
     {
         <NothingToSeeHere Class="mt-3 shadow-lg p-3 border"></NothingToSeeHere>
     }
@@ -160,47 +188,62 @@
     /// <summary>
     /// List of blogs found in the search
     /// </summary>
-    private IEnumerable<OrigamiBlog> _blogs = [];
+    private IEnumerable<OrigamiBlog> _blogs => _hits.OfType<OrigamiBlog>().OrderBy(x => x.Name);
 
     /// <summary>
     /// List of categories found in the search
     /// </summary>
-    private IEnumerable<OrigamiCategory> _categories = [];
+    private IEnumerable<OrigamiCategory> _categories => _hits.OfType<OrigamiCategory>().OrderBy(x => x.Name);
 
     /// <summary>
     /// List of pages found in the search
     /// </summary>
-    private IEnumerable<OrigamiPage> _pages = [];
+    private IEnumerable<OrigamiPage> _pages => _hits.OfType<OrigamiPage>().OrderBy(x => x.Title);
 
     /// <summary>
     /// List of posts found in the search
     /// </summary>
-    private IEnumerable<OrigamiPost> _posts = [];
+    private IEnumerable<OrigamiPost> _posts => _hits.OfType<OrigamiPost>().OrderBy(x => x.Title);
 
     /// <summary>
     /// List of social profiles found in the search
     /// </summary>
-    private IEnumerable<OrigamiSocialProfile> _socialProfiles = [];
+    private IEnumerable<OrigamiSocialProfile> _socialProfiles => _hits.OfType<OrigamiSocialProfile>().OrderBy(x => x.SocialNetwork).ThenBy(x => x.GetName());
 
     /// <summary>
     /// List of videos found in the search
     /// </summary>
-    private IEnumerable<OrigamiVideo> _videos = [];
+    private IEnumerable<OrigamiVideo> _videos => _hits.OfType<OrigamiVideo>().OrderBy(x => x.Title);
+
+    /// <summary>
+    /// List of special pages found in the search
+    /// </summary>
+    private IEnumerable<OrigamiSpecialPage> _specialPages => _hits.OfType<OrigamiSpecialPage>().OrderBy(x => x.Title);
+
+    /// <summary>
+    /// List of special messages found in the search
+    /// </summary>
+    private IEnumerable<OrigamiSpecialMessage> _specialMessages => _hits.OfType<OrigamiSpecialMessage>().OrderBy(x => x.Title);
 
     /// <summary>
     /// List of post comments found in the search
     /// </summary>
-    private IEnumerable<OrigamiPostComment> _postComments = [];
-
-    /// <summary>
-    /// List of video comments found in the search
-    /// </summary>
-    private IEnumerable<OrigamiVideoComment> _videoComments = [];
+    private IEnumerable<OrigamiContentComment> _contentComments => _hits.OfType<OrigamiContentComment>().OrderByDescending(x => x.DateCreated);
 
     /// <summary>
     /// List of tags found in the search
     /// </summary>
-    private IEnumerable<OrigamiTag> _tags = [];
+    private IEnumerable<OrigamiContentTag> _tags => _hits.OfType<OrigamiContentTag>().OrderBy(x => x.Tag);
+
+    /// <summary>
+    /// List of quick notes found in the search
+    /// </summary>
+    private IEnumerable<OrigamiQuickNote> _quickNotes => _hits.OfType<OrigamiQuickNote>().OrderBy(x => x.Note);
+
+    /// <summary>
+    /// List of all hits found in the search, used to check if there are any results or not
+    /// </summary>
+    private List<IId> _hits = [];
 
     /// <summary>
     /// Search timer
@@ -209,33 +252,7 @@
 
     private void _clearHits()
     {
-        this._blogs = [];
-        this._categories = [];
-        this._pages = [];
-        this._posts = [];
-        this._socialProfiles = [];
-        this._videos = [];
-        this._postComments = [];
-        this._videoComments = [];
-        this._tags = [];
-    }
-
-    /// <summary>
-    /// Whether the search has results or not
-    /// </summary>
-    /// <returns></returns>
-    private bool _hasResults()
-    {
-        if (this._blogs.Any() == true) return true;
-        if (this._categories.Any() == true) return true;
-        if (this._pages.Any() == true) return true;
-        if (this._posts.Any() == true) return true;
-        if (this._socialProfiles.Any() == true) return true;
-        if (this._videos.Any() == true) return true;
-        if (this._postComments.Any() == true) return true;
-        if (this._videoComments.Any() == true) return true;
-        if (this._tags.Any() == true) return true;
-        return false;
+        this._hits.Clear();
     }
 
     /// <summary>
@@ -244,7 +261,7 @@
     /// <param name="queryTerm"></param>
     private void _startQuery(string queryTerm)
     {
-        this.UserFacade.Search = queryTerm;
+        this.UserFacade.SearchTerm = queryTerm;
         this._clearHits();
 
         if (_searchTimer != null)
@@ -278,17 +295,127 @@
 
         if (queryTerm.Length >= 2)
         {
-            this._blogs = this.Super.Blogs.Search(queryTerm).NonDeleted().Active().OrderBy(x => x.Name);
-            this._categories = _super.Categories.Search(queryTerm).NonDeleted().Where(x => this.Super.IsParentDeleted(x) == false).OrderBy(x => x.Name);
-            this._pages = _super.Pages.Search(queryTerm).Published().Where(x => this.Super.IsParentDeleted(x) == false).OrderBy(x => x.Title);
-            this._posts = _super.Posts.Search(queryTerm).Published().OrderBy(x => x.Title);
-            this._videos = _super.Videos.Search(queryTerm).Published().OrderBy(x => x.Title);
-            this._socialProfiles = _super.SocialProfiles.Search(queryTerm).OrderBy(x => x.SocialNetwork.ToString()).ThenBy(x => x.Name());
-            this._postComments = _super.PostComments.Search(queryTerm).NonDeleted().Where(x => this.Super.IsParentDeleted(x) == false).OrderByDescending(x => x.GetDate());
-            this._videoComments = _super.VideoComments.Search(queryTerm).NonDeleted().Where(x => this.Super.IsParentDeleted(x) == false).OrderByDescending(x => x.GetDate());
-            this._tags = _super.Tags.Search(queryTerm).OrderBy(x => x.Name);
+            if (AppFacade.Admin.GetValueOrDefault() == true)
+            {
+                this.AdminSearch(queryTerm);
+            }
+            else
+            {
+                this.FESearch(queryTerm);
+            }
         }
 
         this.InvokeAsync(this.StateHasChanged);
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+
+        if (UserFacade.SearchTerm.Has() == true)
+        {
+            this._clearHits();
+            this._queryLucene(this.UserFacade.SearchTerm);
+        }
+    }
+
+    protected virtual void AdminSearch(string queryTerm)
+    {
+        var allowedBlogs = from a in this.Super.UserBlogs.ReadFromCache()
+                           join b in this.Super.Blogs.ReadFromCache() on a.BlogId equals b.Id
+                           where b.IsDeleted == false
+                           where a.UserId == this.UserFacade.User.Id
+                           select a.BlogId;
+
+        var tasks = new List<Task>
+            {
+                Task.Run(() => this._hits.AddRange(Super.Blogs.Search(queryTerm).NonDeleted())),
+                Task.Run(() => this._hits.AddRange(Super.Categories.Search(queryTerm).NonDeleted().Where(x => this.Super.IsParentDeleted(x) == false))),
+                Task.Run(() => this._hits.AddRange(Super.SocialProfiles.Search(queryTerm))),
+                Task.Run(() => this._hits.AddRange(Super.ContentComments.Search(queryTerm).NonDeleted().Where(x => this.Super.IsParentDeleted(x) == false))),
+                Task.Run(() => this._hits.AddRange(Super.ContentTags.Search(queryTerm).DistinctBy(x => x.Tag))),
+                Task.Run(() =>
+                {
+                    var contents = Super.Contents.Search(queryTerm).NonDeleted();
+                    this._hits.AddRange(contents.OfType<OrigamiPage>().Where(x => this.Super.IsParentDeleted(x) == false));
+                    this._hits.AddRange(contents.OfType<OrigamiPost>());
+                    this._hits.AddRange(contents.OfType<OrigamiVideo>());
+                    this._hits.AddRange(contents.OfType<OrigamiSpecialMessage>());
+                    this._hits.AddRange(contents.OfType<OrigamiSpecialPage>());
+                }),
+                Task.Run(() => this._hits.AddRange(_super.QuickNotes.Search(queryTerm))),
+            };
+
+        Task.WhenAll(tasks).Wait();
+
+        this._hits.RemoveAll(id =>
+        {
+            if (id is OrigamiBlog blog) return allowedBlogs.Contains(blog.Id) == false;
+            if (id is OrigamiCategory category) return allowedBlogs.Contains(category.BlogId.GetValueOrDefault()) == false;
+            if (id is OrigamiContentComment comment)
+            {
+                var content = this.Super.Contents.ReadFromCache().Id(comment.ContentId);
+                return allowedBlogs.Contains(content?.BlogId ?? Guid.Empty) == false;
+            }
+            if (id is OrigamiContentTag tag)
+            {
+                var content = this.Super.Contents.ReadFromCache().Id(tag.ContentId);
+                return allowedBlogs.Contains(content?.BlogId ?? Guid.Empty) == false;
+            }
+            if (id is OrigamiContent ocontent) return allowedBlogs.Contains(ocontent.BlogId.GetValueOrDefault()) == false;
+
+            if (id is IBlogId blogId) return allowedBlogs.Contains(blogId.BlogId) == false;
+            if (id is IBlogIdNull blogIdNull) return allowedBlogs.Contains(blogIdNull.BlogId.GetValueOrDefault()) == false;
+
+            return true;
+        });
+    }
+
+    protected virtual void FESearch(string queryTerm)
+    {
+        var allowedBlogs = from a in this.Super.Blogs.ReadFromCache().GetFrontEnd() select a.Id;
+
+        var tasks = new List<Task>
+            {
+                Task.Run(() => this._hits.AddRange(Super.Blogs.Search(queryTerm).NonDeleted().Active())),
+                Task.Run(() => this._hits.AddRange(Super.Categories.Search(queryTerm).NonDeleted().Where(x => this.Super.IsParentDeleted(x) == false))),
+                Task.Run(() => this._hits.AddRange(Super.SocialProfiles.Search(queryTerm))),
+                Task.Run(() => this._hits.AddRange(Super.ContentComments.Search(queryTerm).NonDeleted().Where(x => this.Super.IsParentDeleted(x) == false))),
+                Task.Run(() => this._hits.AddRange(Super.ContentTags.Search(queryTerm).DistinctBy(x => x.Tag))),
+                Task.Run(() =>
+                {
+                    var contents = Super.Contents.Search(queryTerm).Published();
+                    this._hits.AddRange(contents.OfType<OrigamiPage>().Where(x => this.Super.IsParentDeleted(x) == false));
+                    this._hits.AddRange(contents.OfType<OrigamiPost>());
+                    this._hits.AddRange(contents.OfType<OrigamiVideo>());
+                    this._hits.AddRange(contents.OfType<OrigamiSpecialMessage>());
+                    this._hits.AddRange(contents.OfType<OrigamiSpecialPage>());
+                }),
+                Task.Run(() => this._hits.AddRange(_super.QuickNotes.Search(queryTerm))),
+            };
+
+        Task.WhenAll(tasks).Wait();
+
+        this._hits.RemoveAll(id =>
+        {
+            if (id is OrigamiBlog blog) return allowedBlogs.Contains(blog.Id) == false;
+            if (id is OrigamiCategory category) return allowedBlogs.Contains(category.BlogId.GetValueOrDefault()) == false;
+            if (id is OrigamiContentComment comment)
+            {
+                var content = this.Super.Contents.ReadFromCache().Id(comment.ContentId);
+                return allowedBlogs.Contains(content?.BlogId ?? Guid.Empty) == false;
+            }
+            if (id is OrigamiContentTag tag)
+            {
+                var content = this.Super.Contents.ReadFromCache().Id(tag.ContentId);
+                return allowedBlogs.Contains(content?.BlogId ?? Guid.Empty) == false;
+            }
+            if (id is OrigamiContent ocontent) return allowedBlogs.Contains(ocontent.BlogId.GetValueOrDefault()) == false;
+
+            if (id is IBlogId blogId) return allowedBlogs.Contains(blogId.BlogId) == false;
+            if (id is IBlogIdNull blogIdNull) return allowedBlogs.Contains(blogIdNull.BlogId.GetValueOrDefault()) == false;
+
+            return true;
+        });
     }
 }

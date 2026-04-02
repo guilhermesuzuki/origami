@@ -62,11 +62,18 @@ namespace Origami.Core.Data
             _parts.AddRange(page?.Title);
         }
 
-        public void SetTitle(IName? category1, IName? category2, ITitle? page)
+        public void SetTitle(ITag? category, ITitle? page)
         {
             _parts.Clear();
-            _parts.AddRange(category1?.Name);
-            _parts.AddRange(category2?.Name);
+            _parts.AddRange(category?.Tag);
+            _parts.AddRange(page?.Title);
+        }
+
+        public void SetTitle(ITag? tag, IName? category, ITitle? page)
+        {
+            _parts.Clear();
+            _parts.AddRange(tag?.Tag);
+            _parts.AddRange(category?.Name);
             _parts.AddRange(page?.Title);
         }
     }

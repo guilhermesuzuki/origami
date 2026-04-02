@@ -37,7 +37,7 @@ namespace Origami.Core.Models
         /// </summary>
         public OrigamiBlog() : base()
         {
-            this.NanoId = Nanoid.Generate(Nanoid.Alphabets.LettersAndDigits, 6);
+            
         }
 
         public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) => { };

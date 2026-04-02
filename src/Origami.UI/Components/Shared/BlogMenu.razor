@@ -1,13 +1,13 @@
 ﻿@inherits Basic
 
-<style>
+@* <style>
     .blog-menu .categories .id { display: none; }
     .blog-menu .content-header-lite { display: none; }
     .blog-menu .page-header-image,
     .blog-menu .post-header-image,
     .blog-menu .video-header-image { max-height: 111.03px; }
     .blog-menu .nothing-to-see-here { max-height: 111.03px; }
-</style>
+</style> *@
 <div class="blog-menu @Class">
     <div class="row">
         <div class="col-12 col-xxl-4"></div>
@@ -41,15 +41,15 @@
                     {
                         @foreach (var category in _categories)
                         {
-                            <CategoryHeader Class="mt-1" Entity="category"></CategoryHeader>
+                            <CategoryHeader Class="mt-2 p-2 text-center border shadow-sm" Entity="category"></CategoryHeader>
                         }
                     }
                     else
                     {
-                        <NothingToSeeHere Class="mt-1 border p-3 shadow-sm">
+                        <NothingToSeeHere Class="mt-2 border p-3 shadow-sm">
                             <TitleTemplate>
                                 <i class="fa-solid fa-face-grin-beam-sweat"></i>
-                                <span class="header">@Text.Lower("No categories")</span>
+                                <span class="header">@Text.Lower("No content")</span>
                             </TitleTemplate>
                         </NothingToSeeHere>
                     }
@@ -63,15 +63,15 @@
                     {
                         @foreach (var tag in _tags)
                         {
-                            <TagHeader Class="mt-1" Entity="tag"></TagHeader>
+                            <ContentTagHeader Class="mt-2 p-2 text-center border shadow-sm" Entity="tag"></ContentTagHeader>
                         }
                     }
                     else
                     {
-                        <NothingToSeeHere Class="mt-1 border p-3 shadow-sm">
+                        <NothingToSeeHere Class="mt-2 border p-3 shadow-sm">
                             <TitleTemplate>
                                 <i class="fa-solid fa-face-grin-beam-sweat"></i>
-                                <span class="header">@Text.Lower("No tags")</span>
+                                <span class="header">@Text.Lower("No content")</span>
                             </TitleTemplate>
                         </NothingToSeeHere>
                     }
@@ -100,17 +100,17 @@
                     {
                         @foreach (var page in _pages)
                         {
-                            <div class="mt-1">
-                                <PageHeaderLite Entity="page"></PageHeaderLite>
+                            <div class="mt-2">
+                                <ContentHeaderLite Entity="page"></ContentHeaderLite>
                             </div>
                         }
                     }
                     else
                     {
-                        <NothingToSeeHere Class="mt-1 border p-3 shadow-sm">
+                        <NothingToSeeHere Class="mt-2 border p-3 shadow-sm">
                             <TitleTemplate>
                                 <i class="fa-solid fa-face-grin-beam-sweat"></i>
-                                <span class="header">@Text.Lower("No pages")</span>
+                                <span class="header">@Text.Lower("No content")</span>
                             </TitleTemplate>
                         </NothingToSeeHere>
                     }
@@ -135,17 +135,17 @@
                     {
                         @foreach (var post in _posts)
                         {
-                            <div class="mt-1">
-                                <PostHeaderLite Entity="post"></PostHeaderLite>
+                            <div class="mt-2">
+                                <ContentHeaderLite Entity="post"></ContentHeaderLite>
                             </div>
                         }
                     }
                     else
                     {
-                        <NothingToSeeHere Class="mt-1 border p-3 shadow-sm">
+                        <NothingToSeeHere Class="mt-2 border p-3 shadow-sm">
                             <TitleTemplate>
                                 <i class="fa-solid fa-face-grin-beam-sweat"></i>
-                                <span class="header">@Text.Lower("No posts")</span>
+                                <span class="header">@Text.Lower("No content")</span>
                             </TitleTemplate>
                         </NothingToSeeHere>
                     }
@@ -170,17 +170,17 @@
                     {
                         @foreach (var video in _videos)
                         {
-                            <div class="mt-1">
-                                <VideoHeaderLite Entity="video"></VideoHeaderLite>
+                            <div class="mt-2">
+                                <ContentHeaderLite Entity="video"></ContentHeaderLite>
                             </div>
                         }
                     }
                     else
                     {
-                        <NothingToSeeHere Class="mt-1 border p-3 shadow-sm">
+                        <NothingToSeeHere Class="mt-2 border p-3 shadow-sm">
                             <TitleTemplate>
                                 <i class="fa-solid fa-face-grin-beam-sweat"></i>
-                                <span class="header">@Text.Lower("No videos")</span>
+                                <span class="header">@Text.Lower("No content")</span>
                             </TitleTemplate>
                         </NothingToSeeHere>
                     }
@@ -195,7 +195,7 @@
     private IEnumerable<OrigamiCategory> _categories = [];
     private IEnumerable<OrigamiPage> _pages = [];
     private IEnumerable<OrigamiPost> _posts = [];
-    private IEnumerable<OrigamiTag> _tags = [];
+    private IEnumerable<OrigamiContentTag> _tags = [];
     private IEnumerable<OrigamiVideo> _videos = [];
 
     private string _pageListing = "1";
@@ -251,7 +251,7 @@
     private void LoadPages(string order = "1")
     {
         var list = new List<Core.Models.OrigamiPage>();
-        var items = this.Super.GetPages().Blog(BlogId);
+        var items = this.Super.GetPages(BlogId);
 
         switch (order)
         {
@@ -259,11 +259,11 @@
                 list.AddRange(items.OrderByDescending(x => x.DateCreated).Take(7));
                 break;
             default:
-                list.AddRange(items.OrderByDescending(x => this.Super.PageViews.GetViews(x)).Take(7));
+                list.AddRange(items.OrderByDescending(x => this.Super.PhysicalPageViews.GetViews(x)).Take(7));
                 break;
         }
 
-        var fp = this.Super.Pages.ReadFromCache().FrontPage(BlogId);
+        var fp = this.Super.Contents.ReadFromCache().OfType<OrigamiPage>().FrontPage(BlogId);
         if (fp != null)
         {
             list.Insert(0, fp);
@@ -274,7 +274,7 @@
 
     private void LoadPosts(string order = "1")
     {
-        var items = this.Super.Posts.ReadFromCache().NonDeleted().Published().Blog(BlogId);
+        var items = this.Super.Contents.ReadFromCache().OfType<OrigamiPost>().NonDeleted().Published().Blog(BlogId);
 
         switch (order)
         {
@@ -282,23 +282,28 @@
                 _posts = items.OrderByDescending(x => x.DateCreated).Take(7);
                 break;
             default:
-                _posts = items.OrderByDescending(x => this.Super.PostViews.GetViews(x)).Take(7);
+                _posts = items.OrderByDescending(x => this.Super.PhysicalPageViews.GetViews(x)).Take(7);
                 break;
         }
     }
 
     private void LoadTags()
     {
-        _tags = this.Super.Tags.ReadFromCache()
-            .Blog(BlogId)
-            .OrderByDescending(x => { return Super.GetPosts(x).Published().Count() + Super.GetVideos(x).Published().Count(); })
-            .Take(7)
-            .OrderBy(x => x.Name);
+        _tags = this.Super.ContentTags.ReadFromCache()
+            .DistinctBy(x => x.Tag)
+            .OrderByDescending(x => { return Super.GetContents(x, BlogId).Published().Count(); });
+
+        _tags = from a in _tags
+                join b in this.Super.Contents.ReadFromCache().Published() on a.ContentId equals b.Id
+                where b.BlogId == BlogId
+                select a;
+
+        _tags = _tags.Take(7);
     }
 
     private void LoadVideos(string order = "1")
     {
-        var items = this.Super.Videos.ReadFromCache().NonDeleted().Published().Blog(BlogId);
+        var items = this.Super.Contents.ReadFromCache().OfType<OrigamiVideo>().NonDeleted().Published().Blog(BlogId);
 
         switch (order)
         {
@@ -306,7 +311,7 @@
                 _videos = items.OrderByDescending(x => x.DateCreated).Take(7);
                 break;
             default:
-                _videos = items.OrderByDescending(x => this.Super.VideoViews.GetViews(x)).Take(7);
+                _videos = items.OrderByDescending(x => this.Super.PhysicalPageViews.GetViews(x)).Take(7);
                 break;
         }
     }
@@ -324,11 +329,11 @@
 
     private void GoToBlog()
     {
-        this.NavigationManager.NavigateTo($"{this._blog.Hyperlink}#content-start");
+        this.GhostOfTheNavigator.NavigateTo($"{this._blog.Hyperlink}#content-start");
     }
 
     private void GoToRss()
     {
-        this.NavigationManager.NavigateTo($"{this._blog.Hyperlink}rss.xml", true);
+        this.GhostOfTheNavigator.NavigateTo($"{this._blog.Hyperlink}rss.xml", true);
     }
 }

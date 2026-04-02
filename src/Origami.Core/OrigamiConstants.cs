@@ -116,7 +116,7 @@ namespace Origami.Core
                 { "plugins", "link image imagegrid filemanager code codesample emoticons searchreplace lists" },
                 { "contextmenu", "link image inserttable | cell row column deletetable | imagegrid" },
                 { "toolbar", "undo redo | fontfamily fontsize | emoticons forecolor | bold underline italic | alignleft aligncenter alignright alignjustify | outdent indent bullist numlist | link image | codesample code filemanager" },
-                { "height", 500 },
+                { "height", 1000 },
                 { "content_css", new List<string>() { "https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" } },
                 { "content_style", "body { margin: 20px!important; }" },
             };

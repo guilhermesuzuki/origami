@@ -1,7 +1,7 @@
-﻿@inherits BasicFormFull<OrigamiPostComment>
+﻿@inherits BasicFormFull<OrigamiContentComment>
 @inject IPostRepository _post
 @inject ISocialProfileRepository _socialProfile
-@inject IPostCommentReactionRepository _postCommentReaction
+@inject IContentCommentReactionRepository _postCommentReaction
 
 <div class="trash-form-post-comment @Class">
     @if (this.Entity.New)
@@ -12,13 +12,13 @@
     }
     else
     {
-        var post = this.Super.Posts.ReadFromCache().Id(Entity.PostId);
+        var post = this.Super.Contents.ReadFromCache().OfType<OrigamiPost>().Id(Entity.ContentId);
         var socialProfile = this.Super.SocialProfiles.ReadFromCache().Id(Entity.SocialProfileId);
 
         <div class="row">
             <div class="col-12">
                 <BasicHeaderNotes Entity="this.Entity"></BasicHeaderNotes>
-                <PostHeaderLite Class="mt-3" Entity="post"></PostHeaderLite>
+                <ContentHeaderLite Class="mt-3" Entity="post"></ContentHeaderLite>
                 <SocialProfileHeader Class="mt-3 p-3 border shadow-sm" Entity="socialProfile"></SocialProfileHeader>
                 <BasicHeader Class="mt-3" Entity="this.Entity"></BasicHeader>
                 <ul class="inline-list mt-3">
@@ -28,7 +28,7 @@
                                       Immediate="true"
                                       AdornmentIcon="@_pinnedBy?.SocialNetwork.Icon().Value"
                                       Adornment="Adornment.Start"
-                                      Value="@_pinnedBy.Name()"
+                                      Value="@_pinnedBy.GetName()"
                                       Class="social-profile icon"
                                       HelperText="@Text.Lower("Pinned by")"></MudTextField>
                     </li>
@@ -39,7 +39,7 @@
                                       AdornmentIcon="@_moderatedBy?.SocialNetwork.Icon().Value"
                                       Adornment="Adornment.Start"
                                       Class="social-profile icon"
-                                      Value="@_moderatedBy.Name()"
+                                      Value="@_moderatedBy.GetName()"
                                       HelperText="@Text.Lower("Moderated by")"></MudTextField>
                     </li>
                 </ul>
@@ -86,7 +86,7 @@
                             <span>@reaction.Count()</span>
                         </label>
                     }
-                    <MudDataGrid Class="mt-3" T="OrigamiPostCommentReaction" Items="_postCommentReaction.Reactions(Entity).OrderByDescending(x => x.DateCreated)">
+                    <MudDataGrid Class="mt-3" T="OrigamiContentCommentReaction" Items="_postCommentReaction.Reactions(Entity).OrderByDescending(x => x.DateCreated)">
                         <Columns>
                             <TemplateColumn>
                                 <CellTemplate>
@@ -104,7 +104,7 @@
                             </TemplateColumn>
                         </Columns>
                         <PagerContent>
-                            <MudDataGridPager T="OrigamiPostCommentReaction" />
+                            <MudDataGridPager T="OrigamiContentCommentReaction" />
                         </PagerContent>
                     </MudDataGrid>
                 </div>

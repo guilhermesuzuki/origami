@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using AngleSharp.Text;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using NanoidDotNet;
@@ -10,13 +11,10 @@ namespace Origami.Core.Data
         RepositoryOuterLayer<OrigamiUser>,
         IUserRepository
     {
-        protected readonly IPageRepository _pageRepository;
-        protected readonly IPostRepository _postRepository;
+        protected readonly IContentRepository _contentRepository;
         protected readonly IUserPasswordResetRepository _userPasswordResetRepository;
         protected readonly IUserRoleRepository _userRoleRepository;
         protected readonly IValidator<OrigamiUser> _validator;
-        protected readonly IVideoRepository _videoRepository;
-
 
         /// <summary>
         /// Default constructor with DI
@@ -25,23 +23,19 @@ namespace Origami.Core.Data
         /// <param name="distributedCache"></param>
         public UserRepository(
             IValidator<OrigamiUser> validator,
+            IContentRepository contentRepository,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IMemoryCache memoryCache,
-            IPageRepository pageRepository,
-            IPostRepository postRepository,
             IUserPasswordResetRepository userPasswordResetRepository,
             IUserRoleRepository userRoleRepository,
-            IVideoRepository videoRepository,
             Text text,
             IWebRootPath wwwRoot)
             : base(text, dbContextFactory, memoryCache, wwwRoot)
         {
             _validator = validator;
-            _pageRepository = pageRepository;
-            _postRepository = postRepository;
+            _contentRepository = contentRepository;
             _userPasswordResetRepository = userPasswordResetRepository;
             _userRoleRepository = userRoleRepository;
-            _videoRepository = videoRepository;
         }
 
         public override string CreatePermission => nameof(OrigamiRole.CreateNewUsers);
@@ -159,20 +153,15 @@ namespace Origami.Core.Data
         public override void PurgeRelationshipsFromCache(OrigamiUser entity)
         {
             // Purge roles from cache
-            var pages = _pageRepository.ReadFromCache().Where(x => x.AuthorId == entity.Id).ToList();
-            var posts = _postRepository.ReadFromCache().Where(x => x.AuthorId == entity.Id).ToList();
+            var contents = _contentRepository.ReadFromCache().Where(x => x.AuthorId == entity.Id).ToList();
             var resets1 = _userPasswordResetRepository.ReadFromCache().Where(x => x.UserId == entity.Id).ToList();
             var resets2 = _userPasswordResetRepository.ReadFromCache().Where(x => x.AuthorId == entity.Id).ToList();
             var roles = from x in _userRoleRepository.ReadFromCache() where x.UserId == entity.Id select x;
-            var videos = _videoRepository.ReadFromCache().Where(x => x.AuthorId == entity.Id).ToList();
 
-            pages.Each(this._pageRepository.PurgeCache);
-            posts.Each(this._postRepository.PurgeCache);
-            roles.Each(this._userRoleRepository.PurgeCache);
-            videos.Each(this._videoRepository.PurgeCache);
-
+            contents.Each(this._contentRepository.PurgeCache);
             resets1.Each(this._userPasswordResetRepository.PurgeCache);
             resets2.Each(this._userPasswordResetRepository.PurgeCache);
+            roles.Each(this._userRoleRepository.PurgeCache);
         }
 
         public override Result<OrigamiUser> PurgeRelationshipsFromDatabase(DataOperationContext<OrigamiUser> ctx)
@@ -181,17 +170,16 @@ namespace Origami.Core.Data
             
             using (var db = DbContextFactory.CreateDbContext())
             {
-				var pages = db.Set<OrigamiPage>().AsNoTracking().Where(x => x.AuthorId == ctx.Entity.Id).ToList();
+				var contents = db.Contents.AsNoTracking().Where(x => x.AuthorId == ctx.Entity.Id).ToList();
 				var posts = db.Set<OrigamiPost>().AsNoTracking().Where(x => x.AuthorId == ctx.Entity.Id).ToList();
 				var videos = db.Set<OrigamiVideo>().AsNoTracking().Where(x => x.AuthorId == ctx.Entity.Id).ToList();
 
-				pages.GetContexts(ctx).Call(_pageRepository.SmartPurge, false).Push(hub);
-				posts.GetContexts(ctx).Call(_postRepository.SmartPurge, false).Push(hub);
-				videos.GetContexts(ctx).Call(_videoRepository.SmartPurge, false).Push(hub);
-
-				var del1 = db.UserRoles.Where(x => x.UserId == ctx.Entity.Id).ExecuteDelete();
+                contents.GetContexts(ctx).Call(_contentRepository.SmartPurge, false).Push(hub);
+				
+                var del1 = db.UserRoles.Where(x => x.UserId == ctx.Entity.Id).ExecuteDelete();
                 var del2 = db.UserPasswordResets.Where(x => x.UserId == ctx.Entity.Id).ExecuteDelete();
                 var del3 = db.UserPasswordResets.Where(x => x.AuthorId == ctx.Entity.Id).ExecuteDelete();
+
                 hub.RowsAffected += del1;
                 hub.RowsAffected += del2;
                 hub.RowsAffected += del3;

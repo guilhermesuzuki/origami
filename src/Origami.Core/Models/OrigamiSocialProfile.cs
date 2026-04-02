@@ -12,7 +12,8 @@ namespace Origami.Core.Models
         IEmail,
         IVersion,
         IAdditionalInfo,
-        INew
+        INew,
+        IHyperlink
     {
         private string? _additionalInfo = string.Empty;
         private string _email = string.Empty;
@@ -36,6 +37,11 @@ namespace Origami.Core.Models
         {
 
         }
+
+        /// <summary>
+        /// Anonymous user
+        /// </summary>
+        public static OrigamiSocialProfile AnonymousUser => new() { Id = Guid.Empty };
 
         public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) => { };
 
@@ -196,6 +202,8 @@ namespace Origami.Core.Models
             get => _version;
             set => this.Set(ref _version, value, Changed);
         }
+
+        public string Hyperlink => $"/socialprofiles/{this.Id}";
 
         /// <summary>
         /// First, it tries to get the e-mail from the subscription.

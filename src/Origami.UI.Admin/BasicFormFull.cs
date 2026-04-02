@@ -47,7 +47,7 @@ namespace Origami.UI.Admin
                         transaction.Complete();
                     }
                 }
-                Saved.InvokeAsync(hub.Entity).Wait();
+                hub.OnSuccess(() => Saved.InvokeAsync(hub.Entity));
             }
             catch (Exception ex)
             {
@@ -61,19 +61,26 @@ namespace Origami.UI.Admin
 
         public override void UndoChanges()
         {
-            this.ParentSelector = false;
+            this.ShowParentSelector = false;
             this.Entity = Repository.ReadFromCache().Id(this.Entity.Id).Clone() ?? new();
         }
 
-        protected override Result<T> BeforeSaving()
+        protected virtual Result<T> BeforeSaving()
         {
-            this.ParentSelector = false;
+            this.ShowParentSelector = false;
 
             //sets the FK Blog (or the save process will fail)
-            if (Entity is IFKBlog fkBlog && fkBlog.BlogId == Guid.Empty)
+            if (Entity is IBlogId blogId && blogId.BlogId == Guid.Empty)
             {
-                fkBlog.BlogId = this.UserFacade.BlogId;
-                if (fkBlog.BlogId == Guid.Empty) throw new InvalidOperationException("BlogId is empty");
+                blogId.BlogId = this.UserFacade.BlogId;
+                if (blogId.BlogId == Guid.Empty) throw new InvalidOperationException("BlogId is empty");
+            }
+
+            //sets the FK Blog (or the save process will fail)
+            if (Entity is IBlogIdNull blogIdNull && blogIdNull.BlogId.GetValueOrDefault() == Guid.Empty)
+            {
+                blogIdNull.BlogId = this.UserFacade.BlogId;
+                if (blogIdNull.BlogId.GetValueOrDefault() == Guid.Empty) throw new InvalidOperationException("BlogId is empty");
             }
 
             return new(Entity);

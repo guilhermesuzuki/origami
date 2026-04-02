@@ -11,7 +11,8 @@ namespace Origami.Core.Models
         IChanged,
         IId,
         INew,
-        IHeaderImage
+        IHeaderImage,
+        ILanguageWrittenOn
     {
         public OrigamiSettings() : base()
         {
@@ -112,7 +113,7 @@ namespace Origami.Core.Models
         private bool _isCommentNestingEnabled;
         private bool _isCommentsEnabled;
         private bool _keepTestingTheSmtpServerConnectivity = false;
-        private string _language = string.Empty;
+        private string _languageWrittenOn = string.Empty;
         private int _maxRemoteFileSize = _defaultMaxRemoteFileSize;
         private string _name = string.Empty;
         private int _numberOfReferrerDays;
@@ -1141,10 +1142,10 @@ namespace Origami.Core.Models
         /// <example>
         ///     en-US
         /// </example>
-        public string Language
+        public string LanguageWrittenOn
         {
-            get => _language;
-            set => this.Set(ref _language, value, Changed);
+            get => _languageWrittenOn;
+            set => this.Set(ref _languageWrittenOn, value, Changed);
         }
 
         #endregion

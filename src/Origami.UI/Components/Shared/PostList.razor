@@ -1,13 +1,6 @@
-﻿@using Origami.Core
-@using Origami.Core.Data
-@using Origami.Core.Models
-@inherits Basic
-@implements IBlogId
-@implements IShowFakes
-@inject IBlogRepository _blogRepository
-@inject IPostRepository _postRepository
+﻿@inherits Basic
 
-@if (Posts.Count > 0)
+@if (this.Posts.Count > 0)
 {
     <div class="post-list @Class position-relative">
         <div class="row">
@@ -32,7 +25,7 @@
                 @if (Posts.Count > i)
                 {
                     <div class="col-12 col-xl-4 mb-3">
-                        <PostHeader Entity="Posts[i]"></PostHeader>
+                        <ContentHeader Entity="Posts[i]" ShowRelatedContent="false"></ContentHeader>
                     </div>
                 }
             }
@@ -45,24 +38,10 @@
         </div>
     </div>
 }
-else if (this.ShowFakes == true)
+else
 {
-    <div class="post-list fakes @Class position-relative">
-        <div class="row">
-            @foreach (var post in OrigamiPost.GetFakes())
-            {
-                <div class="col-12 col-xl-4 mb-3">
-                    <PostHeader Class="fake" Entity="post"></PostHeader>
-                </div>
-            }
-        </div>
-        <div class="text-center">
-            <button class="text-center btn btn-light border" style="min-width: 250px; max-width: 100%" disabled="disabled">
-                <div><i class="fa-solid fa-file-lines fs-2"></i></div>
-                @Text.Lower("See more posts")
-            </button>
-        </div>
-        <div class="position-absolute zeroes bg-white bg-opacity-75"></div>
+    <div class="col-12">
+        <NothingToSeeHere Class="p-3 border shadow-sm" Subtitle="@Text.Lower("No posts whatsoever")"></NothingToSeeHere>
     </div>
 }
 
@@ -70,13 +49,12 @@ else if (this.ShowFakes == true)
     [Parameter] public int Page { get; set; } = 1;
     [Parameter] public int PageSize { get; set; } = 9;
     [Parameter] public int OrderBy { get; set; } = 1;
-    [Parameter] public bool ShowFakes { get; set; } = false;
 
     protected List<OrigamiPost> Posts = [];
 
     private bool _disableLoadMore
     {
-        get => _postRepository.ReadFromCache()
+        get => Super.Contents.ReadFromCache().OfType<Core.Models.OrigamiPost>()
             .NonDeleted()
             .Published()
             .Blog(this.BlogId)
@@ -88,8 +66,7 @@ else if (this.ShowFakes == true)
     /// </summary>
     protected void LoadPosts()
     {
-        var posts = _postRepository
-            .ReadFromCache()
+        var posts = Super.Contents.ReadFromCache().OfType<Core.Models.OrigamiPost>()
             .NonDeleted()
             .Published()
             .Blog(this.BlogId);

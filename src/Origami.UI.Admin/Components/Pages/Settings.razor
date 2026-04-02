@@ -1,8 +1,5 @@
 ﻿@page "/settings"
-@using SixLabors.ImageSharp
-@using System.Net.Mail
 @inherits BasicFormFull<OrigamiSettings>
-@inject IEmailStatusRepository _emailStatusRepository
 
 <Root Access="this.CanAccess()">
     <HeaderTemplate>
@@ -40,21 +37,7 @@
                         </div>
                         <ul class="inline-list mt-3">
                             <li>
-                                <MudSelect FullWidth="true"
-                                           Immediate="true"
-                                           MultiSelection="false"
-                                           InputClass="d-inline-flex align-items-center"
-                                           @bind-Value:get="@Entity.Language"
-                                           @bind-Value:set="(language) => this.Entity.Language = language"
-                                           HelperText="@Text.Lower("Language")">
-                                    @foreach (var language in OrigamiConstants.ContentLanguages())
-                                    {
-                                        <MudSelectItem Value="language.Language">
-                                            <img class="pe-1" src="@language.Flag" width="20" title="@language.Name" />
-                                            <span>@language.Name</span>
-                                        </MudSelectItem>
-                                    }
-                                </MudSelect>
+                                <LanguageWrittenOn Entity="this.Entity"></LanguageWrittenOn>
                             </li>
                         </ul>
                         <ul class="inline-list">
@@ -523,7 +506,36 @@
 
     public override void Save()
     {
-        base.Save();
-        this.Super.Settings.RefreshCache();
+        var hub = new Result<OrigamiSettings>(this.Entity);
+        var context = new DataOperationContext<OrigamiSettings>(this.UserFacade.User, DateTime.UtcNow, Entity);
+
+        try
+        {
+            using (var transaction = new TransactionScope())
+            {
+                hub = Repository.SmartSave(context, true);
+                if (hub.Ok)
+                {
+                    transaction.Complete();
+                }
+            }
+            if (hub.Ok)
+            {
+                Saved.InvokeAsync(hub.Entity);
+            }
+        }
+        catch (Exception ex)
+        {
+            hub.Error = ex.GetMessage();
+        }
+        finally
+        {
+            UserFacade.Result = hub;
+        }
+    }
+
+    public override void UndoChanges()
+    {
+        this.Entity = this.Super.Settings.GetSettings().Clone();
     }
 }

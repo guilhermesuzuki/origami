@@ -1,5 +1,6 @@
 ﻿using CloneExtensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
@@ -7,8 +8,10 @@ using Origami.Core;
 using Origami.Core.Data;
 using Origami.Core.Models;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq.Dynamic.Core;
+using System.Net.WebSockets;
 using System.Reflection;
 
 namespace Origami.Core
@@ -16,7 +19,7 @@ namespace Origami.Core
     public static class DataExtensions
     {
         /// <summary>
-        /// TODO: comment this
+        /// 
         /// </summary>
         /// <param name="blogs"></param>
         /// <returns></returns>
@@ -79,12 +82,6 @@ namespace Origami.Core
             return entities.Where(x => x.IsDraft.GetValueOrDefault() == true).NonDeleted();
         }
 
-        public static IEnumerable<T> Drafts<T>(this IEnumerable<T> entities, Guid blog)
-            where T : IDraft, IBlogId
-        {
-            return entities.Blog(blog).Drafts();
-        }
-
         /// <summary>
         /// Gets the front page for a blog
         /// </summary>
@@ -121,13 +118,13 @@ namespace Origami.Core
         }
 
         public static IEnumerable<T> GetAllChildren<T>(this IEnumerable<T>? source, T entity)
-                    where T : class, IId, new()
+                    where T : class, IId
         {
             return source.GetAllChildren([entity]);
         }
 
         public static IEnumerable<T> GetAllChildren<T>(this IEnumerable<T>? source, IEnumerable<T> entities)
-            where T : class, IId, new()
+            where T : class, IId
         {
             if (source == null) return [];
             if (typeof(T).Implements<IParentIdNull<T>>() == false) return [];
@@ -147,7 +144,7 @@ namespace Origami.Core
         }
 
         public static IEnumerable<Guid> GetAllChildren<T>(this IEnumerable<T>? source, Guid id)
-            where T : class, IId, new()
+            where T : class, IId
         {
             if (source == null) return [];
             if (id is not IParentIdNull<T>) return [];
@@ -167,12 +164,12 @@ namespace Origami.Core
         /// Privacy policy (for the current language)
         /// </summary>
         /// <returns></returns>
-        public static IEnumerable<OrigamiSpecialPage> GetByType(this IEnumerable<OrigamiSpecialPage> pages, OrigamiSpecialPageTypes type)
+        public static IEnumerable<OrigamiSpecialPage> GetBySubType(this IEnumerable<OrigamiSpecialPage> pages, OrigamiSpecialPageTypes type)
         {
             return pages
                 .NonDeleted()
                 .Published()
-                .Where(x => x.Type == type.ToString())
+                .Where(x => x.Subtype == type.ToString())
                 .ToList()
                 .OrderBy(x => x.LanguageWrittenOn.Like(CultureInfo.CurrentUICulture.Name) == true ? 0 : 1)
                 .ThenBy(x => x.LanguageWrittenOn.StartsWith(_getLanguage()) == true ? 2 : 3)
@@ -188,7 +185,7 @@ namespace Origami.Core
         /// <param name="entity">The parent entity whose children are to be retrieved.</param>
         /// <returns>A collection of child entities of the given parent entity.</returns>
         public static IEnumerable<T> GetChildren<T, T2>(this IEnumerable<T> entities, T2 entity)
-            where T2 : IParentIdNull<T>, T, IId
+            where T2 : IParentIdNull, T, IId
         {
             return entities.Cast<T2>().Where(x => x.ParentId == entity.Id).Cast<T>().ToList();
         }
@@ -241,10 +238,9 @@ namespace Origami.Core
         /// <param name="key"></param>
         /// <returns></returns>
         public static List<T>? GetList<T>(this IMemoryCache memoryCache, string key)
-            where T : class, new()
+            where T : class
         {
-            var value = memoryCache.Get(key);
-            return value is List<T> list ? list : null;
+            return memoryCache.TryGetValue(key, out List<T>? value) == true ? value : null;
         }
 
         /// <summary>
@@ -324,7 +320,7 @@ namespace Origami.Core
         /// <param name="blog"></param>
         /// <returns></returns>
         public static IEnumerable<T> Published<T>(this IEnumerable<T> entities, Guid blog)
-            where T : IPublished, IDraft, IBlogId
+            where T : IPublished, IDraft, IBlogIdNull
         {
             return entities.Blog(blog).Published();
         }
@@ -340,7 +336,7 @@ namespace Origami.Core
         /// </summary>
         /// <returns></returns>
         public static IEnumerable<T> Published<T>(this IEnumerable<T> entities)
-            where T : IPublished, IDraft
+            where T : IPublished
         {
             return entities.Where(x => x.IsPublished == true).NonDeleted();
         }
@@ -376,6 +372,100 @@ namespace Origami.Core
 
             //returns the result
             return (rowNumber.Count(), query.ToList());
+        }
+
+        /// <summary>
+        /// Retrieves a list of entities of the specified type from the memory cache, loading them from the database if
+        /// they are not already cached.
+        /// </summary>
+        /// <remarks>For certain derived types, such as OrigamiPage, OrigamiPost, OrigamiSpecialMessage,
+        /// OrigamiSpecialPage, and OrigamiVideo, the method retrieves and filters entities from the OrigamiContent
+        /// cache. The method is thread-safe and uses locking to prevent race conditions when populating the
+        /// cache.</remarks>
+        /// <typeparam name="T">The type of entity to retrieve. Must be a reference type.</typeparam>
+        /// <param name="db">The database context used to query entities if they are not present in the cache.</param>
+        /// <param name="memoryCache">The memory cache instance used to store and retrieve cached entities.</param>
+        /// <returns>A list of entities of type X retrieved from the cache, or from the database if not cached. Returns an empty
+        /// list if no entities are found.</returns>
+        public static List<T> ReadFromCache<T>(this IDbContextFactory<OrigamiDbContext> dbContextFactory, IMemoryCache memoryCache) where T : class
+        {
+            var timestamp = Stopwatch.GetTimestamp();
+            var key = typeof(T).KeyForCaching();
+
+            if (typeof(T).IsAbstract == false)
+            {
+                var t = Activator.CreateInstance<T>();
+                switch (t)
+                {
+                    case OrigamiPage:
+                    case OrigamiPost:
+                    case OrigamiSpecialMessage:
+                    case OrigamiSpecialPage:
+                    case OrigamiVideo:
+                        return dbContextFactory.ReadFromCache<OrigamiContent>(memoryCache).OfType<T>().ToList();
+                    default: break;
+                }
+            }
+
+            try
+            {
+                //race condition
+                if (memoryCache.Get(key) == null)
+                {
+                    lock (OrigamiConstants.SyncRoot)
+                    {
+                        if (memoryCache.Get(key) == null)
+                        {
+                            using var db = dbContextFactory.CreateDbContext();
+                            var list = db.ReadFromDatabase<T>();
+                            memoryCache.Set(key, list);
+                        }
+                    }
+                }
+
+                return memoryCache.GetList<T>(key) ?? [];
+            }
+            finally
+            {
+                var elapsedTime = Stopwatch.GetElapsedTime(timestamp);
+                Console.ForegroundColor = elapsedTime.Milliseconds >= 100 ? ConsoleColor.Red : ConsoleColor.White;
+                Console.WriteLine($"{key} obtained in {elapsedTime}");
+            }
+        }
+
+        public static List<T> ReadFromDatabase<T>(this DbContext db) where T : class
+        {
+            if (typeof(T).IsAbstract == false)
+            {
+                var t = Activator.CreateInstance<T>();
+                return t switch
+                {
+                    OrigamiRole => db.GetRolesFromDatabase().Cast<T>().ToList(),
+                    _ => db.Set<T>().AsNoTracking().ToList(),
+                };
+            }
+             
+            return db.Set<T>().AsNoTracking().ToList();
+        }
+
+        public static List<OrigamiRole> GetRolesFromDatabase(this DbContext db)
+        {
+            var roles = db.Set<OrigamiRole>().AsNoTracking().ToList();
+
+            foreach (var role in roles)
+            {
+                var rightRoles = db.Set<OrigamiRightRole>().AsNoTracking().Where(x => x.RoleId == role.Id).ToList();
+
+                var match = from property in role.GetType().GetProperties()
+                            join rt in db.Set<OrigamiRight>().AsNoTracking() on property.Name equals rt.Name
+                            join rr in rightRoles on rt.Id equals rr.RightId
+                            where property.CanWrite == true
+                            select property;
+
+                match.Each(x => x.SetValue(role, true));
+            }
+
+            return roles.ToList();
         }
 
         /// <summary>
@@ -433,15 +523,6 @@ namespace Origami.Core
             return read.MemoryCache.Get<long>(key);
         }
 
-        public static IEnumerable<T> WithOnlyIds<T>(this IQueryable<T> entities)
-            where T : class, IId, new()
-        {
-            foreach (var id in entities.Select(x => x.Id))
-            {
-                yield return new T { Id = id };
-            }
-        }
-
         /// <summary>
         /// Language for pages
         /// </summary>
@@ -450,5 +531,7 @@ namespace Origami.Core
         {
             return CultureInfo.CurrentUICulture.Name.Split('-')[0];
         }
+
+        
     }
 }

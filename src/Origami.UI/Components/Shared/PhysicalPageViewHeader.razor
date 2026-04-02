@@ -4,25 +4,10 @@
 @if (this.Entity != null)
 {
     <div class="physical-page-view-header @Class">
-        @if (this.Entity.Content?.Type == nameof(OrigamiPage))
+        @if (this.Entity.ContentId != null)
         {
-            var page = this.Super.Pages.ReadFromCache().Id(this.Entity.Content.Id);
-            <PageHeaderLite2 Entity="page"></PageHeaderLite2>
-        }
-        else if (this.Entity.Content?.Type == nameof(OrigamiPost))
-        {
-            var post = this.Super.Posts.ReadFromCache().Id(this.Entity.Content.Id);
-            <PostHeaderLite2 Entity="post"></PostHeaderLite2>
-        }
-        else if (this.Entity.Content?.Type == nameof(OrigamiSpecialPage))
-        {
-            var page = this.Super.SpecialPages.ReadFromCache().Id(this.Entity.Content.Id);
-            <SpecialPageHeaderLite2 Entity="page"></SpecialPageHeaderLite2>
-        }
-        else if (this.Entity.Content?.Type == nameof(OrigamiVideo))
-        {
-            var video = this.Super.Videos.ReadFromCache().Id(this.Entity.Content.Id);
-            <VideoHeaderLite2 Entity="video"></VideoHeaderLite2>
+            var entity = this.Super.Contents.ReadFromCache().Id(this.Entity.ContentId);
+            <ContentHeaderInline Entity="entity"></ContentHeaderInline>
         }
     </div>
 }

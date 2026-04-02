@@ -5,7 +5,7 @@ using Origami.Core.Models;
 namespace Origami.Core.Data
 {
     public abstract class RepositoryOuterLayer<T> : RepositoryLayer4Search<T>
-        where T : class, IId, new()
+        where T : class, IId
     {
         protected RepositoryOuterLayer(
             Text text,
@@ -25,7 +25,7 @@ namespace Origami.Core.Data
             lock (OrigamiConstants.SyncRoot)
             {
                 using var db = DbContextFactory.CreateDbContext();
-                var l = db.Set<T>().AsNoTracking().ToList();
+                var l = db.ReadFromDatabase<T>();
                 MemoryCache.Set(k, l);
             }
         }

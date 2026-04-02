@@ -39,7 +39,7 @@ html, body, main { height:100vh; }
 .deleted { background-color: #efefef70; opacity: 0.6; }
 
 .inline-list { display: flex; justify-content: space-around; list-style-type: none; padding: 0; margin: 0; align-items: center; }
-.inline-list li { display: inline; width: 100%; }
+.inline-list > li { display: inline; width: 100%; }
 
 .logo-image { height: 170px; }
 
@@ -64,8 +64,6 @@ main { flex: 1; }
 .footer .id { display: none!important; }
 
 .login .fa-brands { font-size:30px; }
-.social-profile-header .fa-brands { font-size: 12px; margin-top: 2px; }
-.social-profile-header-lite .fa-brands { font-size: 12px; margin-top: 2px; }
 
 .z-index-back { z-index: 001 !important; }
 .z-index-middle { z-index: 100 !important; }

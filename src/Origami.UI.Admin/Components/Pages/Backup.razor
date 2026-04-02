@@ -90,9 +90,9 @@
                             </TemplateColumn>
                             <TemplateColumn Title="@Text.Upper("User")" CellClass="col-2 text-center">
                                 <CellTemplate>
-                                    @if (context.Item.UserId != Guid.Empty)
+                                    @if (context.Item.AuthorId != Guid.Empty)
                                     {
-                                        var user = this.Super.Users.ReadFromCache().Id(context.Item.UserId);
+                                        var user = this.Super.Users.ReadFromCache().Id(context.Item.AuthorId);
                                         @if (user != null)
                                         {
                                             <span><i class="bi bi-person-fill"></i>@user.Username (@user.DisplayName)</span>
@@ -196,7 +196,7 @@
                     if (hub.Ok)
                     {
                         scope.Complete();
-                        await this.InvokeAsync(() => this.DataGrid!.ReloadServerData());
+                        await this.InvokeAsync(async () => await this.DataGrid.ReloadServerData());
                     }
                     UserFacade.Result = hub;
                 }
@@ -228,7 +228,7 @@
                     if (hub.Ok)
                     {
                         scope.Complete();
-                        await this.InvokeAsync(() => this.DataGrid!.ReloadServerData());
+                        await this.InvokeAsync(async () => await this.DataGrid.ReloadServerData());
                     }
                     UserFacade.Result = hub;
                 }

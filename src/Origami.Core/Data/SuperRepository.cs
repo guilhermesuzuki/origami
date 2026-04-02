@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using NanoidDotNet;
 using Origami.Core.Models;
 using System.Globalization;
+using System.Reflection.Metadata;
 using System.Transactions;
 
 namespace Origami.Core.Data
@@ -19,16 +20,9 @@ namespace Origami.Core.Data
             IEmailRepository emailRepository,
             IFileRepository fileRepository,
             IPageRepository pageRepository,
-            IPageViewRepository pageViewRepository,
             IPhysicalPageRepository physicalPageRepository,
             IPhysicalPageViewRepository physicalPageViewRepository,
-            IPostCategoryRepository postCategoryRepository,
-            IPostCommentReactionRepository postCommentReactionRepository,
-            IPostCommentRepository postCommentRepository,
-            IPostRatingRepository postRatingRepository,
             IPostRepository postRepository,
-            IPostTagRepository postTagRepository,
-            IPostViewRepository postViewRepository,
             IQuickNoteRepository quickNoteRepository,
             IResumeRepository resumeRepository,
             IRightRepository rightRepository,
@@ -37,10 +31,7 @@ namespace Origami.Core.Data
             ISocialProfileRepository socialProfileRepository,
             ISpecialMessageRepository specialMessageRepository,
             ISpecialPageRepository specialPageRepository,
-            ISpecialPageViewRepository specialPageViewRepository,
             ISubscriberRepository subscriberRepository,
-            ITagRepository tagRepository,
-            ITrashRepository trashRepository,
             IUserActivityRepository userActivityRepository,
             IUserBlogRepository userBlogRepository,
             IUserContentRepository userContentRepository,
@@ -49,14 +40,18 @@ namespace Origami.Core.Data
             IUserRoleRepository userRoleRepository,
             IUserTrashRepository userTrashRepository,
             IUserViewRepository userViewRepository,
-            IVideoCategoryRepository videoCategoryRepository,
-            IVideoCommentReactionRepository videoCommentReactionRepository,
-            IVideoCommentRepository videoCommentRepository,
-            IVideoRatingRepository videoRatingRepository,
             IVideoRepository videoRepository,
-            IVideoTagRepository videoTagRepository,
-            IVideoViewRepository videoViewRepository,
             IWhatToSeeNextRepository whatToSeeNextRepository,
+
+            IContentCategoryRepository contentCategoryRepository,
+            IContentCommentReactionRepository contentCommentReactionRepository,
+            IContentCommentRepository contentCommentRepository,
+            IContentHistoryRepository contentHistoryRepository,
+            IContentRatingRepository contentRatingRepository,
+            IContentReactionRepository contentReactionRepository,
+            IContentRepository contentRepository,
+            IContentTagRepository contentTagRepository,
+
             IDbContextFactory<OrigamiDbContext> dbContextFactory) : base()
         {
             AppFacade = appFacade;
@@ -69,16 +64,9 @@ namespace Origami.Core.Data
             Emails = emailRepository;
             Files = fileRepository;
             Pages = pageRepository;
-            PageViews = pageViewRepository;
             PhysicalPages = physicalPageRepository;
             PhysicalPageViews = physicalPageViewRepository;
-            PostCategories = postCategoryRepository;
-            PostCommentReactions = postCommentReactionRepository;
-            PostComments = postCommentRepository;
-            PostRatings = postRatingRepository;
             Posts = postRepository;
-            PostTags = postTagRepository;
-            PostViews = postViewRepository;
             QuickNotes = quickNoteRepository;
             Resumes = resumeRepository;
             Rights = rightRepository;
@@ -87,10 +75,7 @@ namespace Origami.Core.Data
             SocialProfiles = socialProfileRepository;
             SpecialMessages = specialMessageRepository;
             SpecialPages = specialPageRepository;
-            SpecialPageViews = specialPageViewRepository;
             Subscribers = subscriberRepository;
-            Tags = tagRepository;
-            Trashes = trashRepository;
             UserActivities = userActivityRepository;
             UserBlogs = userBlogRepository;
             UserContents = userContentRepository;
@@ -99,36 +84,41 @@ namespace Origami.Core.Data
             Users = userRepository;
             UserTrashes = userTrashRepository;
             UserViews = userViewRepository;
-            VideoCategories = videoCategoryRepository;
-            VideoCommentReactions = videoCommentReactionRepository;
-            VideoComments = videoCommentRepository;
-            VideoRatings = videoRatingRepository;
             Videos = videoRepository;
-            VideoTags = videoTagRepository;
-            VideoViews = videoViewRepository;
             WhatToSeeNext = whatToSeeNextRepository;
+
+            ContentCategories = contentCategoryRepository;
+            ContentCommentReactions = contentCommentReactionRepository;
+            ContentComments = contentCommentRepository;
+            ContentHistories = contentHistoryRepository;
+            ContentRatings = contentRatingRepository;
+            ContentReactions = contentReactionRepository;
+            Contents = contentRepository;
+            ContentTags = contentTagRepository;
         }
+
         public IAppFacade AppFacade { get; }
         public IBackupRestoreRepository BackupAndRestores { get; }
         public IBlogRepository Blogs { get; }
         public ICategoryRepository Categories { get; }
         public IConfiguration Configurations { get; }
+        public IContentCategoryRepository ContentCategories { get; }
+        public IContentCommentReactionRepository ContentCommentReactions { get; }
+        public IContentCommentRepository ContentComments { get; }
+        public IContentHistoryRepository ContentHistories { get; }
+        public IContentRatingRepository ContentRatings { get; }
+        public IContentReactionRepository ContentReactions { get; }
+        public IContentRepository Contents { get; }
+        public IContentTagRepository ContentTags { get; }
         public IDbContextFactory<OrigamiDbContext> DbContextFactory { get; }
         public IDirectoryRepository Directories { get; }
         public IEmailRepository Emails { get; }
         public IFileRepository Files { get; }
         public bool MaintenanceLockout => this.GetMaintenancePages().Any();
         public IPageRepository Pages { get; }
-        public IPageViewRepository PageViews { get; }
         public IPhysicalPageRepository PhysicalPages { get; }
         public IPhysicalPageViewRepository PhysicalPageViews { get; }
-        public IPostCategoryRepository PostCategories { get; }
-        public IPostCommentReactionRepository PostCommentReactions { get; }
-        public IPostCommentRepository PostComments { get; }
-        public IPostRatingRepository PostRatings { get; }
         public IPostRepository Posts { get; }
-        public IPostTagRepository PostTags { get; }
-        public IPostViewRepository PostViews { get; }
         public IQuickNoteRepository QuickNotes { get; }
         public IResumeRepository Resumes { get; }
         public IRightRepository Rights { get; }
@@ -137,10 +127,7 @@ namespace Origami.Core.Data
         public ISocialProfileRepository SocialProfiles { get; }
         public ISpecialMessageRepository SpecialMessages { get; }
         public ISpecialPageRepository SpecialPages { get; }
-        public ISpecialPageViewRepository SpecialPageViews { get; }
         public ISubscriberRepository Subscribers { get; }
-        public ITagRepository Tags { get; }
-        public ITrashRepository Trashes { get; }
         public IUserActivityRepository UserActivities { get; }
         public IUserBlogRepository UserBlogs { get; }
         public IUserContentRepository UserContents { get; }
@@ -149,20 +136,12 @@ namespace Origami.Core.Data
         public IUserRepository Users { get; }
         public IUserTrashRepository UserTrashes { get; }
         public IUserViewRepository UserViews { get; }
-        public IVideoCategoryRepository VideoCategories { get; }
-        public IVideoCommentReactionRepository VideoCommentReactions { get; }
-        public IVideoCommentRepository VideoComments { get; }
-        public IVideoRatingRepository VideoRatings { get; }
         public IVideoRepository Videos { get; }
-        public IVideoTagRepository VideoTags { get; }
-        public IVideoViewRepository VideoViews { get; }
         public IWhatToSeeNextRepository WhatToSeeNext { get; }
-
         public bool EmptyHome(Guid blogId)
         {
-            if (Pages.ReadFromCache().FrontPage(blogId) != null) return false;
-            if (Posts.ReadFromCache().Published().Blog(blogId).Any() == true) return false;
-            if (Videos.ReadFromCache().Published().Blog(blogId).Any() == true) return false;
+            if (Contents.ReadFromCache().OfType<OrigamiPage>().FrontPage(blogId) != null) return false;
+            if (Contents.ReadFromCache().Published().Blog(blogId).Any() == true) return false;
             if (QuickNotes.ReadFromCache().Published().Blog(blogId).Any() == true) return false;
             return true;
         }
@@ -181,48 +160,103 @@ namespace Origami.Core.Data
                    select x;
         }
 
-        public IEnumerable<OrigamiCategory> GetCategories(OrigamiPost post)
+        public IEnumerable<OrigamiCategory> GetCategories(OrigamiContent content)
         {
-            return from a in PostCategories.ReadFromCache()
+            return from a in ContentCategories.ReadFromCache()
                    join b in Categories.ReadFromCache() on a.CategoryId equals b.Id
-                   where a.PostId == post.Id
+                   where a.ContentId == content.Id
                    where b.IsDeleted == false
                    where this.IsParentDeleted(b) == false
                    orderby b.Name
                    select b;
         }
 
-        public IEnumerable<OrigamiCategory> GetCategories(OrigamiVideo video)
+        public IEnumerable<OrigamiContentComment> GetComments(Guid blog)
         {
-            return from a in VideoCategories.ReadFromCache()
-                   join b in Categories.ReadFromCache() on a.CategoryId equals b.Id
-                   where a.VideoId == video.Id
-                   where b.IsDeleted == false
-                   where this.IsParentDeleted(b) == false
-                   orderby b.Name
-                   select b;
+            return from co in ContentComments.ReadFromCache()
+                   join ct in Contents.ReadFromCache() on co.ContentId equals ct.Id
+                   where ct.BlogId == blog
+                   select co;
         }
 
-        public IEnumerable<BaseComment> GetComments(Guid blog)
+        public IEnumerable<OrigamiContent> GetContents(OrigamiContentTag tag, Guid blogId)
         {
-            var result = new List<BaseComment>();
+            return (from a in ContentTags.ReadFromCache()
+                    join b in Contents.ReadFromCache() on a.ContentId equals b.Id
+                    //where a.ContentId == tag.ContentId
+                    where a.Tag.Like(tag.Tag)
+                    select b).Distinct();
+        }
 
-            result.AddRange(from x in PostComments.ReadFromCache()
-                            join y in Posts.ReadFromCache() on x.PostId equals y.Id
-                            where y.BlogId == blog
-                            select x);
+        /// <summary>
+        /// Draft pages
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<OrigamiPage> GetDraftPages(Guid blog)
+        {
+            return this.Contents.ReadFromCache()
+                .OfType<OrigamiPage>()
+                .Drafts()
+                .Blog(blog)
+                .Where(x => this.IsParentDeleted(x) == false)
+                .OrderByDescending(x => x.DateCreated);
+        }
 
-            result.AddRange(from x in VideoComments.ReadFromCache()
-                            join y in Videos.ReadFromCache() on x.VideoId equals y.Id
-                            where y.BlogId == blog
-                            select x);
+        /// <summary>
+        /// Draft posts
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<OrigamiPost> GetDraftPosts(Guid blog)
+        {
+            return this.Contents.ReadFromCache()
+                .OfType<OrigamiPost>()
+                .Drafts()
+                .Blog(blog)
+                .OrderByDescending(x => x.DateCreated);
+        }
 
-            return result;
+        /// <summary>
+        /// Draft special messages
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<OrigamiSpecialMessage> GetDraftSpecialMessages()
+        {
+            return this.Contents.ReadFromCache()
+                .OfType<OrigamiSpecialMessage>()
+                .Drafts()
+                .OrderByDescending(x => x.DateCreated)
+                .Take(5);
+        }
+
+        /// <summary>
+        /// Draft special pages
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<OrigamiSpecialPage> GetDraftSpecialPages()
+        {
+            return this.Contents.ReadFromCache()
+                .OfType<OrigamiSpecialPage>()
+                .Drafts()
+                .OrderByDescending(x => x.DateCreated)
+                .Take(5);
+        }
+
+        /// <summary>
+        /// Draft videos
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<OrigamiVideo> GetDraftVideos(Guid blog)
+        {
+            return this.Contents.ReadFromCache()
+                .OfType<OrigamiVideo>()
+                .Drafts()
+                .Blog(blog)
+                .OrderByDescending(x => x.DateCreated);
         }
 
         public IEnumerable<OrigamiSpecialPage> GetMaintenancePages()
         {
-            var pages = from x in SpecialPages.ReadFromCache()
+            var pages = from x in Contents.ReadFromCache().OfType<OrigamiSpecialPage>()
                         where x.Type == OrigamiSpecialPageTypes.Maintenance.ToString()
                         where x.IsDeleted == false
                         where x.IsPublished == true
@@ -239,68 +273,54 @@ namespace Origami.Core.Data
             return [];
         }
 
-        public IEnumerable<OrigamiPage> GetPages()
+        public IEnumerable<OrigamiPage> GetPages(Guid blog)
         {
-            return from x in Pages.ReadFromCache()
-                   where x.IsDeleted == false
-                   where this.IsParentDeleted(x) == false
-                   where x.IsPublished == true
-                   orderby x.Title
-                   select x;
-        }
-
-        public IEnumerable<OrigamiPost> GetPosts(OrigamiTag tag)
-        {
-            return from a in PostTags.ReadFromCache()
-                   join b in Posts.ReadFromCache() on a.PostId equals b.Id
-                   where a.Tag.Like(tag.Name)
-                   where b.BlogId == tag.BlogId
-                   select b;
+            return from p in Contents.ReadFromCache().OfType<OrigamiPage>() where p.BlogId == blog select p;
         }
 
         public IEnumerable<OrigamiPost> GetPosts(OrigamiCategory category)
         {
-            return from a in PostCategories.ReadFromCache()
-                   join b in Posts.ReadFromCache() on a.PostId equals b.Id
+            return from a in ContentCategories.ReadFromCache()
+                   join b in Contents.ReadFromCache().OfType<OrigamiPost>() on a.ContentId equals b.Id
                    where a.CategoryId == category.Id
                    select b;
         }
 
+        public IEnumerable<OrigamiPost> GetPosts(Guid blog)
+        {
+            return from p in Contents.ReadFromCache().OfType<OrigamiPost>() where p.BlogId == blog select p;
+        }
+
         public IEnumerable<OrigamiSpecialPage> GetRelatedPages(OrigamiSpecialPage page)
         {
-            return from a in SpecialPages.ReadFromCache()
+            return from a in Contents.ReadFromCache().OfType<OrigamiSpecialPage>()
                    where a.Id != page.Id
                    where a.Type == page.Type
+                   where a.Subtype == page.Subtype
                    select a;
         }
 
-        public IEnumerable<BaseComment> GetReplies(BaseComment comment)
+        public IEnumerable<OrigamiContentComment> GetReplies(OrigamiContentComment comment)
         {
-            if (comment is OrigamiPostComment)
-            {
-                var replies = from x in PostComments.ReadFromCache().NonDeleted()
-                              where x.ParentId == comment.Id
-                              where x.IsSpam == false
-                              where x.IsDeleted == false
-                              where x.IsApproved == true
-                              orderby x.DateCreated descending
-                              select x;
+            var replies = from x in ContentComments.ReadFromCache().NonDeleted()
+                          where x.ParentId == comment.Id
+                          where x.IsSpam == false
+                          where x.IsDeleted == false
+                          where x.IsApproved == true
+                          orderby x.DateCreated descending
+                          select x;
 
-                return replies;
-            }
-            if (comment is OrigamiVideoComment)
-            {
-                var replies = from x in VideoComments.ReadFromCache().NonDeleted()
-                              where x.ParentId == comment.Id
-                              where x.IsSpam == false
-                              where x.IsDeleted == false
-                              where x.IsApproved == true
-                              orderby x.DateCreated descending
-                              select x;
+            return replies;
+        }
 
-                return replies;
-            }
-            return [];
+        public IEnumerable<OrigamiSpecialMessage> GetSpecialMessages()
+        {
+            return Contents.ReadFromCache().OfType<OrigamiSpecialMessage>();
+        }
+
+        public IEnumerable<OrigamiSpecialPage> GetSpecialPages()
+        {
+            return Contents.ReadFromCache().OfType<OrigamiSpecialPage>();
         }
 
         public OrigamiSubscriber? GetSubscriber(OrigamiSocialProfile socialProfile)
@@ -311,37 +331,37 @@ namespace Origami.Core.Data
                 .FirstOrDefault();
         }
 
-        public IEnumerable<OrigamiPostTag> GetTags(OrigamiPost post)
+        public IEnumerable<OrigamiContentTag> GetTags(OrigamiContent content)
         {
-            return from x in PostTags.ReadFromCache()
-                   where x.PostId == post.Id
-                   orderby x.Tag
-                   select x;
-        }
-
-        public IEnumerable<OrigamiVideoTag> GetTags(OrigamiVideo video)
-        {
-            return from x in VideoTags.ReadFromCache()
-                   where x.VideoId == video.Id
-                   orderby x.Tag
-                   select x;
-        }
-
-        public IEnumerable<OrigamiVideo> GetVideos(OrigamiTag tag)
-        {
-            return from a in VideoTags.ReadFromCache()
-                   join b in Videos.ReadFromCache() on a.VideoId equals b.Id
-                   where a.Tag.Like(tag.Name)
-                   where b.BlogId == tag.BlogId
-                   select b;
+            return from a in ContentTags.ReadFromCache()
+                   join b in Contents.ReadFromCache() on a.ContentId equals b.Id
+                   where b.Id == content.Id
+                   orderby a.Tag
+                   select a;
         }
 
         public IEnumerable<OrigamiVideo> GetVideos(OrigamiCategory category)
         {
-            var query = VideoCategories.ReadFromCache().Where(x => x.CategoryId == category.Id).Select(x => x.VideoId).ToList();
-            return from v in Videos.ReadFromCache() join id in query on v.Id equals id select v;
+            return from a in ContentCategories.ReadFromCache()
+                   join b in Contents.ReadFromCache().OfType<OrigamiVideo>() on a.ContentId equals b.Id
+                   where a.CategoryId == category.Id
+                   select b;
         }
 
+        public IEnumerable<OrigamiVideo> GetVideos(Guid blog)
+        {
+            return from v in Contents.ReadFromCache().OfType<OrigamiVideo>() where v.BlogId == blog select v;
+        }
+
+        public IEnumerable<OrigamiPage> GetVisiblePages()
+        {
+            return from x in Contents.ReadFromCache().OfType<OrigamiPage>()
+                   where x.IsDeleted == false
+                   where this.IsParentDeleted(x) == false
+                   where x.IsPublished == true
+                   orderby x.Title
+                   select x;
+        }
         public object? GuessWho(string text)
         {
             if (Guid.TryParse(text, out var guid) == true)
@@ -369,11 +389,11 @@ namespace Origami.Core.Data
             return false;
         }
 
-        public bool IsParentDeleted(OrigamiPage page)
+        public bool IsParentDeleted(OrigamiContent page)
         {
             if (page.ParentId.HasValue)
             {
-                var parent = Pages.ReadFromCache().Id(page.ParentId.Value);
+                var parent = Contents.ReadFromCache().Id(page.ParentId.Value);
                 if (parent != null)
                 {
                     if (parent.IsDeleted)
@@ -386,25 +406,13 @@ namespace Origami.Core.Data
             return false;
         }
 
-        public bool IsParentDeleted(BaseComment comment)
+        public bool IsParentDeleted(OrigamiContentComment comment)
         {
-            if (comment is OrigamiPostComment pcomment)
+            if (comment.ParentId.HasValue)
             {
-                if (pcomment.ParentId.HasValue)
-                {
-                    var parent = PostComments.ReadFromCache().Id(pcomment.ParentId.Value);
-                    if (parent != null && parent.IsDeleted) return true;
-                    if (parent != null) return this.IsParentDeleted(parent);
-                }
-            }
-            if (comment is OrigamiVideoComment vcomment)
-            {
-                if (vcomment.ParentId.HasValue)
-                {
-                    var parent = VideoComments.ReadFromCache().Id(vcomment.ParentId.Value);
-                    if (parent != null && parent.IsDeleted) return true;
-                    if (parent != null) return this.IsParentDeleted(parent);
-                }
+                var parent = ContentComments.ReadFromCache().Id(comment.ParentId.Value);
+                if (parent != null && parent.IsDeleted) return true;
+                if (parent != null) return this.IsParentDeleted(parent);
             }
             return false;
         }
@@ -424,63 +432,29 @@ namespace Origami.Core.Data
         /// <param name="_super">The <see cref="ISuperRepository"/> instance whose repositories will be refreshed.</param>
         public Result RefreshAllRepositories()
         {
-            try
+            Blogs.RefreshCache();
+            Categories.RefreshCache();
+            ContentCategories.RefreshCache();
+            ContentCommentReactions.RefreshCache();
+            ContentComments.RefreshCache();
+            ContentRatings.RefreshCache();
+            Contents.RefreshCache();
+            ContentTags.RefreshCache();
+            PhysicalPages.RefreshCache();
+            QuickNotes.RefreshCache();
+            Roles.RefreshCache();
+            SocialProfiles.RefreshCache();
+            Subscribers.RefreshCache();
+            Users.RefreshCache();
+
+            if (this.AppFacade.Admin.GetValueOrDefault() == true)
             {
-                Blogs.RefreshCache();
-                Categories.RefreshCache();
-                Pages.RefreshCache();
-                PostCategories.RefreshCache();
-                PostCommentReactions.RefreshCache();
-                PostComments.RefreshCache();
-                PostRatings.RefreshCache();
-                Posts.RefreshCache();
-                PostTags.RefreshCache();
-                QuickNotes.RefreshCache();
-                Resumes.RefreshCache();
-                Roles.RefreshCache();
-                Settings.RefreshCache();
-                SocialProfiles.RefreshCache();
-                SpecialMessages.RefreshCache();
-                SpecialPages.RefreshCache();
-                Subscribers.RefreshCache();
-                Tags.RefreshCache();
-                Users.RefreshCache();
-                VideoCategories.RefreshCache();
-                VideoCommentReactions.RefreshCache();
-                VideoComments.RefreshCache();
-                VideoRatings.RefreshCache();
-                Videos.RefreshCache();
-                VideoTags.RefreshCache();
-
-                if (this.AppFacade.Admin.GetValueOrDefault() == true)
-                {
-                    BackupAndRestores.RefreshCache();
-                    UserPasswordResets.RefreshCache();
-                    UserBlogs.RefreshCache();
-                }
-
-                var pageViews = PageViews.FastRead().ConfigureAwait(false).GetAwaiter().GetResult();
-                var postViews = PostViews.FastRead().ConfigureAwait(false).GetAwaiter().GetResult();
-                var videoViews = VideoViews.FastRead().ConfigureAwait(false).GetAwaiter().GetResult();
-                var postCommentViews = PostComments.FastRead().ConfigureAwait(false).GetAwaiter().GetResult();
-                var videoCommentViews = VideoComments.FastRead().ConfigureAwait(false).GetAwaiter().GetResult();
-                var physicalViews = PhysicalPageViews.FastRead().ConfigureAwait(false).GetAwaiter().GetResult();
-                var specialPageViews = SpecialPageViews.FastRead().ConfigureAwait(false).GetAwaiter().GetResult();
-
-                PageViews.Update(pageViews);
-                PostViews.Update(postViews);
-                VideoViews.Update(videoViews);
-                PostComments.Update(postCommentViews);
-                VideoComments.Update(videoCommentViews);
-                PhysicalPageViews.Update(physicalViews);
-                SpecialPageViews.Update(specialPageViews);
-
-                return new();
+                BackupAndRestores.RefreshCache();
+                UserPasswordResets.RefreshCache();
+                UserBlogs.RefreshCache();
             }
-            catch (Exception ex)
-            {
-                return new Result(ex);
-            }
+
+            return new();
         }
 
         /// <summary>
@@ -492,28 +466,16 @@ namespace Origami.Core.Data
         /// <param name="_super">The repository instance that provides access to the various entities whose search indexes will be refreshed.</param>
         public Result RefreshAllSearchIndexes()
         {
-            try
-            {
-                Blogs.CreateSearchIndex();
-                Categories.CreateSearchIndex();
-                Pages.CreateSearchIndex();
-                PostComments.CreateSearchIndex();
-                Posts.CreateSearchIndex();
-                PostTags.CreateSearchIndex();
-                QuickNotes.CreateSearchIndex();
-                Roles.CreateSearchIndex();
-                SocialProfiles.CreateSearchIndex();
-                Tags.CreateSearchIndex();
-                Users.CreateSearchIndex();
-                VideoComments.CreateSearchIndex();
-                Videos.CreateSearchIndex();
-                VideoTags.CreateSearchIndex();
-                return new();
-            }
-            catch (Exception ex)
-            {
-                return new Result(ex);
-            }
+            Blogs.CreateSearchIndex();
+            Categories.CreateSearchIndex();
+            ContentComments.CreateSearchIndex();
+            Contents.CreateSearchIndex();
+            ContentTags.CreateSearchIndex();
+            QuickNotes.CreateSearchIndex();
+            Roles.CreateSearchIndex();
+            SocialProfiles.CreateSearchIndex();
+            Users.CreateSearchIndex();
+            return new();
         }
 
         public Result RegenerateNanoIds()
@@ -541,22 +503,22 @@ namespace Origami.Core.Data
                     foreach (var page in db.Set<OrigamiPage>().AsNoTracking().ToList())
                     {
                         page.NanoId = Nanoid.Generate(Nanoid.Alphabets.LettersAndDigits, 6);
-                        var ctx = new DataOperationContext<OrigamiPage>(OrigamiUser.AnonymousUser, page);
-                        Pages.SmartSave(ctx, false);
+                        var ctx = new DataOperationContext<OrigamiContent>(OrigamiUser.AnonymousUser, page);
+                        Contents.SmartSave(ctx, false);
                     }
                     // posts
                     foreach (var post in db.Set<OrigamiPost>().AsNoTracking().ToList())
                     {
                         post.NanoId = Nanoid.Generate(Nanoid.Alphabets.LettersAndDigits, 6);
-                        var ctx = new DataOperationContext<OrigamiPost>(OrigamiUser.AnonymousUser, post);
-                        Posts.SmartSave(ctx, false);
+                        var ctx = new DataOperationContext<OrigamiContent>(OrigamiUser.AnonymousUser, post);
+                        Contents.SmartSave(ctx, false);
                     }
                     // videos
                     foreach (var video in db.Set<OrigamiVideo>().AsNoTracking().ToList())
                     {
                         video.NanoId = Nanoid.Generate(Nanoid.Alphabets.LettersAndDigits, 6);
-                        var ctx = new DataOperationContext<OrigamiVideo>(OrigamiUser.AnonymousUser, video);
-                        Videos.SmartSave(ctx, false);
+                        var ctx = new DataOperationContext<OrigamiContent>(OrigamiUser.AnonymousUser, video);
+                        Contents.SmartSave(ctx, false);
                     }
                     // users
                     foreach (var user in db.Set<OrigamiUser>().AsNoTracking().ToList())
@@ -582,9 +544,9 @@ namespace Origami.Core.Data
             return [
                 .. Blogs.ReadFromCache(),
                 .. Categories.ReadFromCache(),
-                .. Pages.ReadFromCache(),
-                .. Posts.ReadFromCache(),
-                .. Videos.ReadFromCache(),
+                .. Contents.ReadFromCache().OfType<OrigamiPage>(),
+                .. Contents.ReadFromCache().OfType<OrigamiPost>(),
+                .. Contents.ReadFromCache().OfType<OrigamiVideo>(),
                 .. Users.ReadFromCache() ];
         }
 
@@ -593,9 +555,9 @@ namespace Origami.Core.Data
             return [
                 .. Blogs.ReadFromCache(),
                 .. Categories.ReadFromCache(),
-                .. Pages.ReadFromCache(),
-                .. Posts.ReadFromCache(),
-                .. Videos.ReadFromCache(),
+                .. Contents.ReadFromCache().OfType<OrigamiPage>(),
+                .. Contents.ReadFromCache().OfType<OrigamiPost>(),
+                .. Contents.ReadFromCache().OfType<OrigamiVideo>(),
                 .. Users.ReadFromCache() ];
         }
     }

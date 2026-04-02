@@ -7,13 +7,9 @@
 @inject IPostRepository _post
 @inject IVideoRepository _video
 
-@inject IPostCommentReactionRepository _postCommentReaction
-@inject IPostCommentRepository _postComment
-@inject IPostRatingRepository _postRating
-
-@inject IVideoCommentReactionRepository _videoCommentReaction
-@inject IVideoCommentRepository _videoComment
-@inject IVideoRatingRepository _videoRating
+@inject IContentCommentReactionRepository _contentCommentReaction
+@inject IContentCommentRepository _contentComment
+@inject IContentRatingRepository _contentRating
 
 @inject ISubscriberRepository _subscriber
 @inject IDialogService _dialogService
@@ -64,12 +60,8 @@
                             <div class="fs-5">@Text.Lower("Ratings")</div>
                             <ul>
                                 <li>
-                                    <i class="bi bi-file-earmark-text-fill"></i>
-                                    @Text.Lower("{0} On posts", _postRating.RatingsFromProfile(this.SocialProfile).Count())
-                                </li>
-                                <li>
-                                    <i class="fa-solid fa-file-video"></i>
-                                    @Text.Lower("{0} On videos", _videoRating.RatingsFromProfile(this.SocialProfile).Count())
+                                    <i class="bi bi-star-fill"></i>
+                                    @_contentRating.RatingsFromProfile(this.SocialProfile).Count()
                                 </li>
                             </ul>
                         </div>
@@ -77,12 +69,8 @@
                             <div class="fs-5">@Text.Lower("Reactions")</div>
                             <ul>
                                 <li>
-                                    <i class="bi bi-file-earmark-text-fill"></i>
-                                    @Text.Lower("{0} On post comments", _postCommentReaction.ReactionsFromProfile(this.SocialProfile).Count())
-                                </li>
-                                <li>
-                                    <i class="fa-solid fa-file-video"></i>
-                                    @Text.Lower("{0} On video comments", _videoCommentReaction.ReactionsFromProfile(this.SocialProfile).Count())
+                                    <i class="bi bi-emoji-smile-fill"></i>
+                                    @_contentCommentReaction.ReactionsFromProfile(this.SocialProfile).Count()
                                 </li>
                             </ul>
                         </div>
@@ -92,12 +80,8 @@
                             <div class="fs-5">@Text.Lower("Comments [including deleted]")</div>
                             <ul>
                                 <li>
-                                    <i class="bi bi-file-earmark-text-fill"></i>
-                                    @Text.Lower("{0} On posts", _postComment.CommentsFromProfile(this.SocialProfile, true).Count())
-                                </li>
-                                <li>
-                                    <i class="fa-solid fa-file-video"></i>
-                                    @Text.Lower("{0} On videos", _videoComment.CommentsFromProfile(this.SocialProfile, true).Count())
+                                    <i class="bi bi-chat-fill"></i>
+                                    @_contentComment.CommentsFromProfile(this.SocialProfile, true).Count()
                                 </li>
                             </ul>
                         </div>
@@ -126,58 +110,31 @@
                             <PropertyColumn Property="x => x.DateCreated" Title="@Text.Lower("Date")"></PropertyColumn>
                             <TemplateColumn CellStyle="width: 85%;">
                                 <CellTemplate>
-                                    @if (context.Item is Core.Models.OrigamiPostCommentReaction postReaction)
+                                    @if (context.Item is OrigamiContentCommentReaction commentReaction)
                                     {
-                                        var comment = _postComment.ReadFromCache().Id(postReaction.CommentId);
-                                        var post = _post.ReadFromCache().Id(comment!.PostId);
+                                        var comment = this.Super.ContentComments.ReadFromCache().Id(commentReaction.CommentId);
+                                        var content = this.Super.Contents.ReadFromCache().Id(comment!.ContentId);
                                         <div class="">
-                                            <label class="fw-bold">@Text.Lower("Reacted {0} To:", postReaction.Reaction)</label>
-                                            <PostHeaderLite Entity="post"></PostHeaderLite>
+                                            <span class="fw-bold">@Text.Lower("Reacted {0} to:", commentReaction.Reaction)</span>
+                                            <ContentHeaderLite Entity="content"></ContentHeaderLite>
                                             <CommentLite Class="mt-2 p-2 frame-purple" Entity="comment"></CommentLite>
                                         </div>
                                     }
-                                    @if (context.Item is OrigamiPostComment postComment)
+                                    @if (context.Item is OrigamiContentComment contentComment)
                                     {
-                                        var post = _post.ReadFromCache().Id(postComment.PostId);
+                                        var content = this.Super.Contents.ReadFromCache().Id(contentComment.ContentId);
                                         <div class="">
-                                            <label class="fw-bold">@Text.Lower("Commented On Post:")</label>
-                                            <PostHeaderLite Entity="post"></PostHeaderLite>
-                                            <CommentLite Class="mt-2 p-2 frame-purple" Entity="postComment"></CommentLite>
+                                            <span class="fw-bold">@Text.Lower("Commented on post:")</span>
+                                            <ContentHeaderLite Entity="content"></ContentHeaderLite>
+                                            <CommentLite Class="mt-2 p-2 frame-purple" Entity="contentComment"></CommentLite>
                                         </div>
                                     }
-                                    @if (context.Item is OrigamiPostRating postRating)
+                                    @if (context.Item is OrigamiContentRating rating)
                                     {
-                                        var post = _post.ReadFromCache().Id(postRating.PostId);
+                                        var content = this.Super.Contents.ReadFromCache().Id(rating.ContentId);
                                         <div class="">
-                                            <label class="fw-bold">@Text.Lower("Rated {0} On:", postRating.Rating)</label>
-                                            <PostHeaderLite Entity="post"></PostHeaderLite>
-                                        </div>
-                                    }
-                                    @if (context.Item is OrigamiVideoCommentReaction videoReaction)
-                                    {
-                                        var comment = _videoComment.ReadFromCache().Id(videoReaction.CommentId);
-                                        var video = _video.ReadFromCache().Id(comment!.VideoId);
-                                        <div class="">
-                                            <label class="fw-bold">@Text.Lower("Reacted {0} To:", videoReaction.Reaction)</label>
-                                            <VideoHeaderLite Entity="video"></VideoHeaderLite>
-                                            <CommentLite Class="mt-2 p-2 frame-purple" Entity="comment"></CommentLite>
-                                        </div>
-                                    }
-                                    @if (context.Item is OrigamiVideoComment videoComment)
-                                    {
-                                        var video = _video.ReadFromCache().Id(videoComment.VideoId);
-                                        <div class="">
-                                            <label class="fw-bold">@Text.Lower("Commented On Video:")</label>
-                                            <VideoHeaderLite Entity="video"></VideoHeaderLite>
-                                            <CommentLite Class="mt-2 p-2 frame-purple" Entity="videoComment"></CommentLite>
-                                        </div>
-                                    }
-                                    @if (context.Item is OrigamiVideoRating videoRating)
-                                    {
-                                        var video = _video.ReadFromCache().Id(videoRating.VideoId);
-                                        <div class="p-2">
-                                            <label class="fw-bold">@Text.Lower("Rated {0} On:", videoRating.Rating)</label>
-                                            <VideoHeaderLite Entity="video"></VideoHeaderLite>
+                                            <span class="fw-bold">@Text.Lower("Rated {0} on:", rating.Rating)</span>
+                                            <ContentHeaderLite Entity="content"></ContentHeaderLite>
                                         </div>
                                     }
                                 </CellTemplate>
@@ -284,33 +241,18 @@ else
 
         var interactions = new List<IDateCreated>();
 
-        //post comment reactions
-        interactions.AddRange(this._postCommentReaction.ReactionsFromProfile(this.SocialProfile!)
+        // comment reactions
+        interactions.AddRange(this._contentCommentReaction.ReactionsFromProfile(this.SocialProfile!)
             .OrderByDescending(x => x.DateCreated)
             .Take(50));
 
-        //post comments
-        interactions.AddRange(this._postComment.CommentsFromProfile(this.SocialProfile!, this.SocialProfileId == UserFacade.SocialProfile.Id)
+        // comments
+        interactions.AddRange(this._contentComment.CommentsFromProfile(this.SocialProfile!, this.SocialProfileId == UserFacade.SocialProfile.Id)
             .OrderByDescending(x => x.DateCreated)
             .Take(50));
 
-        //post ratings
-        interactions.AddRange(this._postRating.RatingsFromProfile(this.SocialProfile!)
-            .OrderByDescending(x => x.DateCreated)
-            .Take(50));
-
-        //video comment reactions
-        interactions.AddRange(this._videoCommentReaction.ReactionsFromProfile(this.SocialProfile!)
-            .OrderByDescending(x => x.DateCreated)
-            .Take(50));
-
-        //video comments
-        interactions.AddRange(this._videoComment.CommentsFromProfile(this.SocialProfile!, this.SocialProfileId == UserFacade.SocialProfile.Id)
-            .OrderByDescending(x => x.DateCreated)
-            .Take(50));
-
-        //video ratings
-        interactions.AddRange(this._videoRating.RatingsFromProfile(this.SocialProfile!)
+        // ratings
+        interactions.AddRange(this._contentRating.RatingsFromProfile(this.SocialProfile!)
             .OrderByDescending(x => x.DateCreated)
             .Take(50));
 
@@ -359,7 +301,7 @@ else
     private async Task LeaveIncognito()
     {
         var remove = await this.JSRuntime.InvokeAsync<bool>("$.removeCookie", "incognito-mode", new { path = "/" });
-        if (remove == true) this.NavigationManager!.NavigateTo(this.NavigationManager!.Uri, true);
+        if (remove == true) this.GhostOfTheNavigator!.NavigateTo(this.GhostOfTheNavigator!.Uri, true);
     }
 
     /// <summary>
@@ -369,7 +311,7 @@ else
     {
         var remove = await this.JSRuntime.InvokeAsync<bool>("$.removeCookie", "incognito-mode", new { path = "/" });
         var add = await this.JSRuntime.InvokeAsync<string>("$.cookie", "incognito-mode", 1, new { path = "/", expires = 365, });
-        this.NavigationManager!.NavigateTo(this.NavigationManager!.Uri, true);
+        this.GhostOfTheNavigator!.NavigateTo(this.GhostOfTheNavigator!.Uri, true);
     }
 
     protected override void OnInitialized()

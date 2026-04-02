@@ -10,8 +10,6 @@ namespace Origami.Core.Data
         ICategoryRepository
     {
         protected readonly IValidator<OrigamiCategory> _validator;
-        protected readonly IPostCategoryRepository _postCategoryRepository;
-        protected readonly IVideoCategoryRepository _videoCategoryRepository;
 
         /// <summary>
         /// Default constructor with DI
@@ -22,15 +20,11 @@ namespace Origami.Core.Data
             IValidator<OrigamiCategory> validator,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IMemoryCache memoryCache,
-            IPostCategoryRepository postCategoryRepository,
-            IVideoCategoryRepository videoCategoryRepository,
             IWebRootPath wwwRoot,
             Text text)
             : base(text, dbContextFactory, memoryCache, wwwRoot)
         {
             _validator = validator;
-            _postCategoryRepository = postCategoryRepository;
-            _videoCategoryRepository = videoCategoryRepository;
         }
 
         public override string CreatePermission => nameof(OrigamiRole.CreateNewCategories);
@@ -56,21 +50,21 @@ namespace Origami.Core.Data
 
         public override void PurgeRelationshipsFromCache(OrigamiCategory entity)
         {
-            var row1 = _postCategoryRepository.ReadFromCache().Where(x => x.CategoryId == entity.Id);
-            var row2 = _videoCategoryRepository.ReadFromCache().Where(x => x.CategoryId == entity.Id);
+            //var row1 = _postCategoryRepository.ReadFromCache().Where(x => x.CategoryId == entity.Id);
+            //var row2 = _videoCategoryRepository.ReadFromCache().Where(x => x.CategoryId == entity.Id);
 
-            row1.Each(_postCategoryRepository.PurgeCache);
-            row2.Each(_videoCategoryRepository.PurgeCache);
+            //row1.Each(_postCategoryRepository.PurgeCache);
+            //row2.Each(_videoCategoryRepository.PurgeCache);
         }
 
         public override Result<OrigamiCategory> PurgeRelationshipsFromDatabase(DataOperationContext<OrigamiCategory> ctx)
         {
             using var db = DbContextFactory.CreateDbContext();
             var hub = new Result<OrigamiCategory>(ctx.Entity);
-            var row1 = db.Set<OrigamiPostCategory>().Where(x => x.CategoryId == ctx.Entity.Id).ExecuteDelete();
-            var row2 = db.Set<OrigamiVideoCategory>().Where(x => x.CategoryId == ctx.Entity.Id).ExecuteDelete();
-            hub.RowsAffected += row1;
-            hub.RowsAffected += row2;
+            //var row1 = db.Set<OrigamiPostCategory>().Where(x => x.CategoryId == ctx.Entity.Id).ExecuteDelete();
+            //var row2 = db.Set<OrigamiVideoCategory>().Where(x => x.CategoryId == ctx.Entity.Id).ExecuteDelete();
+            //hub.RowsAffected += row1;
+            //hub.RowsAffected += row2;
             return hub;
         }
 

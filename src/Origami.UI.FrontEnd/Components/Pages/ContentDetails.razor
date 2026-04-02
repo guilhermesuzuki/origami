@@ -1,0 +1,198 @@
+﻿@page "/contents/{NanoId}"
+@inherits BasicPage
+@implements IEntityNull<OrigamiContent>
+
+@using Microsoft.AspNetCore.Authentication.Google;
+@using Microsoft.AspNetCore.Identity;
+@using System.Text;
+@using Microsoft.Extensions.Options;
+
+<Root>
+    <style>
+            .no-video { display: none; }
+    </style>
+    @if (this._entity.New == false)
+    {
+        var whatToSeeNext = Super.WhatToSeeNext.GetWhatToSeeNext(this._entity).Take(3).OrderBy(x => x.Title);
+        var whatToSeeNextTitle = Super.WhatToSeeNext.GetWhatToSeeNextTitle(this._entity).Take(3).Concat(whatToSeeNext);
+        @if (OpenGraphMetaTags)
+        {
+            <HeadContent>
+                <meta property="og:title" content="@_entity.Title" />
+                <meta property="og:description" content="@_entity.Description" />
+                <meta property="og:image" content="@(GhostOfTheNavigator.BaseUri.TrimEnd('/') + _entity.Get().HeaderImage.NoHeader())" />
+                <meta property="og:url" content="@GhostOfTheNavigator.BaseUri.TrimEnd('/')/videos/@_entity.NanoId" />
+            </HeadContent>
+        }
+        <div class="content-details @Class">
+            <ContentEmbedIFrame Entity="_entity" Class="mb-3"></ContentEmbedIFrame>
+            <ContentMediaFile Entity="_entity"></ContentMediaFile>
+            <div class="mt-3">
+                <ContentHeader Slug="this.Slug" Entity="@_entity" OnUserHasRated="() => this.StateHasChanged()" ShowRelatedContent="true"></ContentHeader>
+                <ContentHtml Class="mt-3 p-4 border shadow-sm" Entity="_entity"></ContentHtml>
+                <ContentWhatToSeeNext Class="mt-3 p-4 border shadow-sm" Entity="whatToSeeNextTitle"></ContentWhatToSeeNext>
+                <ContentRatings Entity="this._entity" Class="mt-3 p-4 border shadow-sm"></ContentRatings>
+                @if (this._entity.IsCommentEnabled == true)
+                {
+                    <div class="wrapper mt-3 p-4 border shadow-sm">
+                        <div class="text-center fs-3">
+                            <i class="fa-solid fa-comment"></i>
+                            @Text.Lower("Comment section")
+                            <i class="fa-solid fa-comment"></i>
+                        </div>
+                        <div class="row mt-5">
+                            <div class="col-12 col-xl-6">
+                                <div class="text-center fs-4">
+                                    @Text.Lower("Place your comment here")
+                                    @if (UserFacade.SocialProfile.New)
+                                    {
+                                        <span>, @Text.Lower("But login first")</span>
+                                    }
+                                </div>
+                                <div class="mt-3 position-sticky" style="top: 1rem;">
+                                    <Login></Login>
+                                    <AuthorizeView>
+                                        <Authorized>
+                                            @if (NewComment.ParentId != null)
+                                            {
+                                                var parent = this.Super.ContentComments.ReadFromCache().Id(NewComment.ParentId.Value);
+                                                @if (parent != null)
+                                                {
+                                                    var socialProfile = this.Super.SocialProfiles.ReadFromCache().Id(parent.SocialProfileId);
+                                                    <div class="video-comment-in-reply-to p-2 mt-2 mb-2 position-relative">
+                                                        <SocialProfileHeaderLite Entity="socialProfile"></SocialProfileHeaderLite>
+                                                        <div class="video-comment-text">@((MarkupString)parent.Content)</div>
+                                                        <button class="position-absolute fw-bold p-2" style="top: 0; right: 0; bottom: 0;" @onclick="() => NewComment.ParentId = null">x</button>
+                                                    </div>
+                                                }
+                                            }
+                                            <div class="new-comment mt-3">
+                                                <TinyMCEComment Entity="this.NewComment"></TinyMCEComment>
+                                                <div class="new-comment-actions mt-2 text-right">
+                                                    <button class="btn btn-light border" disabled="@this._disableSendCommentButton()" @onclick="() => this.CreateComment()">
+                                                        <i class="fa-solid fa-paper-plane pe-1"></i>
+                                                        @Text.Lower("Add comment")
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </Authorized>
+                                    </AuthorizeView>
+                                </div>
+                            </div>
+                            <div class="col-12 col-xl-6">
+                                @if (_comments.Count == 0)
+                                {
+                                    <div class="text-center mb-3 fs-4">
+                                        <i class="fa-solid fa-face-smile-wink"></i>
+                                        @Text.Lower("Be the first to comment")
+                                    </div>
+                                }
+                                else
+                                {
+                                    <label class="w-100 text-center mb-3 fs-4">@Text.Lower("{0} comment(s)", _comments.Count)</label>
+                                    <ContentComments Comments="this._comments" PageSize="@this._pageSize" CurrentPage="@_currentPage" OnCommentUpdated="this.OnCommentUpdated" OnCommentDeleted="this.OnCommentDeleted" OnCurrentPageChanged="(page) => this._currentPage = page" OnCommentReply="(comment) => this.NewComment.ParentId = comment.Id"></ContentComments>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        <NothingToSeeHere></NothingToSeeHere>
+    }
+</Root>
+
+@code {
+    [Parameter] public ISlug? Slug { get; set; }
+    [Parameter] public OrigamiContentTag? Tag { get; set; }
+    [Parameter] public OrigamiCategory? Category { get; set; }
+    [Parameter] public OrigamiContent? Entity { get; set; }
+    [Parameter] public string NanoId { get; set; } = string.Empty;
+    [Parameter] public bool OpenGraphMetaTags { get; set; } = true;
+
+    /// <summary>
+    /// For New Comments
+    /// </summary>
+    private OrigamiContentComment NewComment = new();
+
+    /// <summary>
+    /// Current Video
+    /// </summary>
+    private OrigamiContent _entity = null!;
+
+    /// <summary>
+    /// Comments for the Video
+    /// </summary>
+    public List<OrigamiContentComment> _comments = new();
+
+    private int _currentPage = 1;
+    private int _pageSize = 10;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        this.NewComment.Changed += (sender, e) => this.InvokeAsync(this.StateHasChanged);
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        this._entity = this.Entity ?? this.Super.Contents.ReadFromCache().OfType<OrigamiContent>().NanoId(NanoId) ?? new OrigamiVideo();
+        this._comments = this.Super.ContentComments.AllComments(_entity);
+        this.BlogId = this._entity.BlogId.GetValueOrDefault();
+    }
+
+    private void CreateComment()
+    {
+        this.NewComment.IsApproved = true;
+        this.NewComment.Id = Guid.NewGuid();
+        this.NewComment.ContentId = this._entity.Id;
+        this.NewComment.DateCreated = DateTime.UtcNow;
+        this.NewComment.SocialProfileId = UserFacade.SocialProfile.Id;
+
+        var context = new DataOperationContextFrontEnd<OrigamiContentComment>(UserFacade.SocialProfile, DateTime.UtcNow, this.NewComment);
+        var hub = this.Super.ContentComments.SmartCreate(context);
+
+        hub.OnSuccess(() => this._comments = this.Super.ContentComments.AllComments(_entity));
+
+        this.NewComment = new();
+        this.NewComment.Changed += (sender, e) => this.InvokeAsync(this.StateHasChanged);
+
+        UserFacade.Result = hub;
+    }
+
+    private bool _disableSendCommentButton()
+    {
+        return this.NewComment.Content.Has() == false;
+    }
+
+    private void OnCommentUpdated(OrigamiContentComment comment)
+    {
+        this._comments = this.Super.ContentComments.AllComments(_entity);
+    }
+
+    private void OnCommentDeleted(OrigamiContentComment comment)
+    {
+        this._comments = this.Super.ContentComments.AllComments(_entity);
+    }
+
+    protected override async Task PageViewAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            if (this.UserFacade.IncognitoMode == false)
+            {
+                var uri = new Uri(GhostOfTheNavigator.Uri);
+                await JSRuntime.InvokeVoidAsync("origami.physicalpages.viewByContent", uri.AbsolutePath, this._entity.GetType().Name, this._entity.Id);
+            }
+        }
+    }
+
+    protected override void SetPageTitle()
+    {
+        this.PageTitle.SetTitle(this.Slug as ITag, this.Slug as IName, this._entity);
+    }
+}

@@ -6,7 +6,7 @@
     var header = this.Entity.HeaderImage.NoHeader();
     var views = this.Super.PhysicalPageViews.GetViews(this.Entity);
     <div class="wrapper @Class">
-        <ContentHeaderLite Entity="this.Entity"></ContentHeaderLite>
+        <AuthorHeaderLite Entity="this.Entity"></AuthorHeaderLite>
         <div class="page-header-lite position-relative shadow-sm cursor-pointer" @onclick="() => this.GoToPage()">
             <div class="page-header-image" style="height: 150px; background-image: url(@Entity.HeaderImage.NoHeader())"></div>
             <div class="page-header-title-wrapper position-absolute overflow-auto zeroes">
@@ -79,6 +79,6 @@
     /// </summary>
     protected void GoToPage()
     {
-        this.NavigationManager.NavigateTo($"{this.Entity!.Hyperlink}#content-start");
+        this.GhostOfTheNavigator.NavigateTo($"{this.Entity!.Hyperlink}#content-start");
     }
 }

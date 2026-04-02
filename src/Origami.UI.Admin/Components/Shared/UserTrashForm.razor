@@ -18,30 +18,25 @@
             @Text.Lower("You are viewing an existing trash")
         </div>
         <div class="trash-content mt-3">
-            @if (Entity.Type.Like("Page") == true)
+            @if (Entity.Type.Like("OrigamiPage") == true)
             {
-                var entity = this.Super.Pages.ReadFromCache().Id(Entity.Id);
+                var entity = this.Super.Contents.ReadFromCache().OfType<OrigamiPage>().Id(Entity.Id);
                 <TrashFormPage Entity="entity"></TrashFormPage>
             }
-            else if (Entity.Type.Like("Post") == true)
+            else if (Entity.Type.Like("OrigamiPost") == true)
             {
-                var entity = this.Super.Posts.ReadFromCache().Id(Entity.Id);
+                var entity = this.Super.Contents.ReadFromCache().OfType<OrigamiPost>().Id(Entity.Id);
                 <TrashFormPost Entity="entity"></TrashFormPost>
             }
-            else if (Entity.Type.Like("Video") == true)
+            else if (Entity.Type.Like("OrigamiVideo") == true)
             {
-                var entity = this.Super.Videos.ReadFromCache().Id(Entity.Id);
+                var entity = this.Super.Contents.ReadFromCache().OfType<OrigamiVideo>().Id(Entity.Id);
                 <TrashFormVideo Entity="entity"></TrashFormVideo>
             }
-            else if (Entity.Type.Like("PostComment") == true)
+            else if (Entity.Type.Like("ContentComment") == true)
             {
-                var entity = this.Super.PostComments.ReadFromCache().Id(Entity.Id)!;
+                var entity = this.Super.ContentComments.ReadFromCache().Id(Entity.Id)!;
                 <TrashFormPostComment Entity="entity"></TrashFormPostComment>
-            }
-            else if (Entity.Type.Like("VideoComment") == true)
-            {
-                var entity = this.Super.VideoComments.ReadFromCache().Id(Entity.Id)!;
-                <TrashFormVideoComment Entity="entity"></TrashFormVideoComment>
             }
             else if (Entity.Type.Like("Category") == true)
             {
@@ -68,14 +63,14 @@
                 var entity = this.Super.QuickNotes.ReadFromCache().Id(Entity.Id)!;
                 <TrashFormQuickNote Entity="entity"></TrashFormQuickNote>
             }
-            else if (Entity.Type.Like("SpecialPage") == true)
+            else if (Entity.Type.Like("OrigamiSpecialPage") == true)
             {
-                var entity = this.Super.SpecialPages.ReadFromCache().Id(Entity.Id);
+                var entity = this.Super.Contents.ReadFromCache().OfType<OrigamiSpecialPage>().Id(Entity.Id);
                 <TrashFormSpecialPage Entity="entity"></TrashFormSpecialPage>
             }
-            else if (Entity.Type.Like("SpecialMessage") == true)
+            else if (Entity.Type.Like("OrigamiSpecialMessage") == true)
             {
-                var entity = this.Super.SpecialMessages.ReadFromCache().Id(Entity.Id);
+                var entity = this.Super.Contents.ReadFromCache().OfType<OrigamiSpecialMessage>().Id(Entity.Id);
                 <TrashFormSpecialMessage Entity="entity"></TrashFormSpecialMessage>
             }
         </div>

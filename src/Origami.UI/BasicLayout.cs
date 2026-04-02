@@ -43,20 +43,6 @@ namespace Origami.UI
             this.UserFacade.IncognitoMode = new[] { "1", "true", }.Contains(cookie);
         }
 
-        /// <summary>
-        /// Loads the incognito mode from cookies
-        /// </summary>
-        /// <param name="firstRender"></param>
-        /// <returns></returns>
-        protected async Task LoadIncognitoModeAsync(bool firstRender)
-        {
-            if (firstRender)
-            {
-                this.UserFacade.IncognitoMode = await JSRuntime.IncognitoModeAsync();
-                this.StateHasChanged();
-            }
-        }
-
         protected virtual async Task LoadUserAsync()
         {
             var state = await this.AuthenticationStateProvider.GetAuthenticationStateAsync();
@@ -94,7 +80,8 @@ namespace Origami.UI
         protected override async Task OnInitializedAsync()
         {
             await this.LoadUserAsync();
-            Task.WaitAll(this.LoadIncognitoModeAsync(), this.CookieConsentAsync());
+            await this.LoadIncognitoModeAsync();
+            await this.CookieConsentAsync();
             await base.OnInitializedAsync();
         }
     }
