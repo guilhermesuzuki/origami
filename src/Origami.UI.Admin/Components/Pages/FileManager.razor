@@ -67,11 +67,11 @@
                     <span class="d-block fs-6">
                         @if (this._directories?.Any() == true)
                         {
-                            <span class="me-2">@(this._directories.Count() == 1 ? Text.Lower("{0} Directory", _directories.Count()) : Text.Lower("{0} Directories", _directories.Count()))</span>
+                            <span class="me-2">@(this._directories.Count() == 1 ? Text.Lower("{0} directory", _directories.Count()) : Text.Lower("{0} directories", _directories.Count()))</span>
                         }
                         @if (this._files?.Any() == true)
                         {
-                            <span class="me-2">@(this._files.Count() == 1 ? Text.Lower("{0} File", this._files.Count()) : Text.Lower("{0} Files", this._files.Count()))</span>
+                            <span class="me-2">@(this._files.Count() == 1 ? Text.Lower("{0} file", this._files.Count()) : Text.Lower("{0} files", this._files.Count()))</span>
                         }
                     </span>
                 </div>
@@ -223,7 +223,7 @@
                                             <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
                                                 @if (file.IsImage)
                                                 {
-                                                    <div class="position-absolute w-75 h-75" style="opacity:0.25; background-image:url(@(file.WebPath.QueryString("size", "small").QueryString("v", _version.ToString())));background-repeat:no-repeat;background-position:center;background-size:contain;"></div>
+                                                    <div class="position-absolute w-100 h-100" style="opacity:0.25; background-image:url(@(file.WebPath.QueryString("size", "small").QueryString("v", _version.ToString())));background-repeat:no-repeat;background-position:center;background-size:cover;"></div>
                                                 }
                                                 <div class="mw-100" style="z-index:5;" title="@file.Name">
                                                     @if (file.IsImage)
