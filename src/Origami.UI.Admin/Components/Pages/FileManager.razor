@@ -729,64 +729,71 @@
 
     protected virtual void OnSearch(string query)
     {
-        if (query.Has() == false)
+        try
         {
-            this._hits = null;
-            return;
-        }
-
-        this._hits = [];
-
-        var rootPath = this.directoryRepository.LocalPath(this.VirtualPath);
-        var directories = Directory.GetDirectories(rootPath, "*", SearchOption.AllDirectories);
-        var files = Directory.GetFiles(rootPath, $"*{query}*", SearchOption.AllDirectories);
-
-        foreach (var file in files)
-        {
-            var info = new FileInfo(file);
-            var webpath = $"/{file.ToLower().Split("wwwroot")[1].Replace("\\", "/").TrimStart('/')}";
-            var origamiFile = new OrigamiSystemFile(info.FullName, webpath);
-            this._hits.Add(origamiFile);
-        }
-
-        foreach (var directory in directories)
-        {
-            var info = new DirectoryInfo(directory);
-            var webpath = $"/{directory.ToLower().Split("wwwroot")[1].Replace("\\", "/").TrimStart('/')}";
-            var origamiDirectory = new OrigamiSystemDirectory(info.FullName, webpath);
-            var context = new DirectoryContext(origamiDirectory) { Context = this.Super.GuessWho(info.Name) };
-
-            if (info.Name.Contains(query, StringComparison.CurrentCultureIgnoreCase) == true)
+            if (query.Has() == false)
             {
-                this._hits.Add(context);
-                continue;
+                this._hits = null;
+                return;
             }
 
-            if (context.Name.Contains(query, StringComparison.CurrentCultureIgnoreCase) == true)
-            {
-                this._hits.Add(context);
-                continue;
-            }
-        }
+            this._hits = [];
 
-        this._hits = this._hits
-        .OrderBy(x =>
-        {
-            return x switch
+            var rootPath = this.directoryRepository.LocalPath(this.VirtualPath);
+            var directories = Directory.GetDirectories(rootPath, "*", SearchOption.AllDirectories);
+            var files = Directory.GetFiles(rootPath, $"*{query}*", SearchOption.AllDirectories);
+
+            foreach (var file in files)
             {
-                DirectoryContext context => 2,
-                OrigamiSystemFile file => 1,
-                _ => 3
-            };
-        }).OrderBy(x =>
-        {
-            return x switch
+                var info = new FileInfo(file);
+                var webpath = $"/{file.ToLower().Split("origami.files")[1].Replace("\\", "/").TrimStart('/')}";
+                var origamiFile = new OrigamiSystemFile(info.FullName, webpath);
+                this._hits.Add(origamiFile);
+            }
+
+            foreach (var directory in directories)
             {
-                DirectoryContext context => context.Name.Has() ? context.Name : context.Directory.Name,
-                OrigamiSystemFile file => file.Name,
-                _ => string.Empty
-            };
-        }).ToList();
+                var info = new DirectoryInfo(directory);
+                var webpath = $"/{directory.ToLower().Split("origami.files")[1].Replace("\\", "/").TrimStart('/')}";
+                var origamiDirectory = new OrigamiSystemDirectory(info.FullName, webpath);
+                var context = new DirectoryContext(origamiDirectory) { Context = this.Super.GuessWho(info.Name) };
+
+                if (info.Name.Contains(query, StringComparison.CurrentCultureIgnoreCase) == true)
+                {
+                    this._hits.Add(context);
+                    continue;
+                }
+
+                if (context.Name.Contains(query, StringComparison.CurrentCultureIgnoreCase) == true)
+                {
+                    this._hits.Add(context);
+                    continue;
+                }
+            }
+
+            this._hits = this._hits
+            .OrderBy(x =>
+            {
+                return x switch
+                {
+                    DirectoryContext context => 2,
+                    OrigamiSystemFile file => 1,
+                    _ => 3
+                };
+            }).OrderBy(x =>
+            {
+                return x switch
+                {
+                    DirectoryContext context => context.Name.Has() ? context.Name : context.Directory.Name,
+                    OrigamiSystemFile file => file.Name,
+                    _ => string.Empty
+                };
+            }).ToList();
+        }
+        catch (Exception ex)
+        {
+            this.UserFacade.Result = new() { Error = ex.GetMessage() };
+        }
     }
 }
 
