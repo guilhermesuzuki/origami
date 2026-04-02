@@ -1,4 +1,5 @@
 ﻿@page "/roles"
+@page "/roles/{NanoId}"
 @inherits BasicAdminGrid<OrigamiRole>
 
 <Root Access="this.CanAccess()">
@@ -71,4 +72,9 @@
 </Root>
 @code {
     protected override string DefaultOrdering => $"{nameof(OrigamiRole.Name)}";
+
+    protected override void OnEdit(OrigamiRole entity)
+    {
+        GhostOfTheNavigator.NavigateTo($"/roles/{entity.NanoId}");
+    }
 }

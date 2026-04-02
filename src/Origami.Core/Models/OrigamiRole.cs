@@ -7,8 +7,8 @@ namespace Origami.Core.Models
 {
     [Table("oi_Roles")]
     public class OrigamiRole :
+        BaseModel,
         IChanged,
-        IId,
         IName,
         IVersion,
         INew,
@@ -18,7 +18,6 @@ namespace Origami.Core.Models
     {
         private DateTime _dateCreated;
         private DateTime? _dateModified;
-        private Guid _id = Guid.NewGuid();
         private bool _isDeleted = false;
         private bool _isSystemRole = false;
         private string _name = string.Empty;
@@ -41,13 +40,6 @@ namespace Origami.Core.Models
         {
             get => _dateModified;
             set => this.Set(ref _dateModified, value, Changed);
-        }
-
-        [Key]
-        public Guid Id
-        {
-            get { return _id; }
-            set { this.Set(ref _id, value, Changed); }
         }
 
         public bool IsDeleted

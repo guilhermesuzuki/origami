@@ -492,6 +492,7 @@ namespace Origami.UI.Admin
                 IName n => n.Name,
                 ITag tag => tag.Tag,
                 OrigamiQuickNote quickNote => quickNote.Note,
+                IDisplayName d => d.DisplayName,
                 _ => null,
             };
 

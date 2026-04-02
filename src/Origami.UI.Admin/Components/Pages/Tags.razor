@@ -75,4 +75,9 @@
     {
         return base.GetItems().DistinctBy(x => x.Tag);
     }
+
+    protected override void OnEdit(OrigamiContentTag entity)
+    {
+        GhostOfTheNavigator.NavigateTo($"/tags/{entity.NanoId}");
+    }
 }
