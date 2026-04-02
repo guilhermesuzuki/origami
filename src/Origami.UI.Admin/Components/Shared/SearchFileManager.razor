@@ -27,10 +27,23 @@
                 {
                     @foreach (var hit in this._hits)
                     {
+                        @if (hit is DirectoryContext directory)
+                        {
+                            <div class="mb-3 cursor-pointer col-12 col-xxl-6" @onclick="async () => await OnOpenFolder.InvokeAsync(directory.Directory.WebPath)">
+                                <div class="p-2 border directory position-relative">
+                                    <div class="d-inline-flex align-items-center" title="@directory.Directory.Name" style="height: 100px;">
+                                        <i class="fa-solid fa-folder d-block fs-1"></i>
+                                        <div class="ms-3">
+                                            <FileManagerPath Class="x-small" VirtualPath="@directory.Directory.WebPath" OnPathClicked="async (path) => await this.OnOpenFolder.InvokeAsync(path)"></FileManagerPath>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
                         @if (hit is OrigamiSystemFile file)
                         {
                             <div class="mb-3 cursor-pointer col-12 col-xxl-6 @(this._selectedFile != null && this._selectedFile.WebPath == file.WebPath ? "selected-file" : null) dummy" @onclick="() => _selectFile(file)">
-                                <div class="p-2 border file shadow-sm position-relative">
+                                <div class="p-2 border file position-relative">
                                     <div class="d-inline-flex align-items-center" style="height:100px;" title="@file.Name">
                                         @if (file.IsImage)
                                         {
@@ -46,19 +59,6 @@
                                                 <span class="x-small">@file.FileSize.SizeInBytes()</span>
                                             </span>
                                             <FileManagerPath Class="x-small" VirtualPath="@file.WebPathDirectory" OnPathClicked="async (path) => await this.OnOpenFolder.InvokeAsync(path)"></FileManagerPath>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                        @if (hit is DirectoryContext directory)
-                        {
-                            <div class="mb-3 cursor-pointer col-12 col-xxl-6" @onclick="async () => await OnOpenFolder.InvokeAsync(directory.Directory.WebPath)">
-                                <div class="p-2 border shadow-sm directory position-relative">
-                                    <div class="d-inline-flex align-items-center" title="@directory.Directory.Name" style="height: 100px;">
-                                        <i class="fa-solid fa-folder d-block fs-1"></i>
-                                        <div class="ms-3">
-                                            <FileManagerPath Class="x-small" VirtualPath="@directory.Directory.WebPath" OnPathClicked="async (path) => await this.OnOpenFolder.InvokeAsync(path)"></FileManagerPath>
                                         </div>
                                     </div>
                                 </div>
