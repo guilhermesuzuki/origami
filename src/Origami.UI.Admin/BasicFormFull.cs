@@ -45,9 +45,9 @@ namespace Origami.UI.Admin
                     if (hub.Ok)
                     {
                         transaction.Complete();
-                        Saved.InvokeAsync(hub.Entity).Wait();
                     }
                 }
+                hub.OnSuccess(() => Saved.InvokeAsync(hub.Entity));
             }
             catch (Exception ex)
             {
