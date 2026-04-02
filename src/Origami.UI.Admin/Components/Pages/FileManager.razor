@@ -59,7 +59,7 @@
         </div>
     </HeaderTemplate>
     <ContentTemplate>
-        <SearchFileManagerHeader @ref="this._searchHeader" Class="p-3 border-bottom" OnSearch="this.OnSearch"></SearchFileManagerHeader>
+        <SearchFileManager Class="p-3 border-bottom" VirtualPath="@this.VirtualPath" OnFileClicked="(file) => this._selectFile(file)" OnOpenFolder="(path) => this._openFolder(path)"></SearchFileManager>
         <div class="p-3 fs-3 border-bottom">
             <div class="row">
                 <div class="col-12 col-xxl-8">
@@ -105,103 +105,102 @@
         <div class="p-3">
             <div class="row">
                 <div class="col-12 col-xxl-8">
-                    @if (this._hits != null)
-                    {
-                        <div class="row search-hits">
-                            @if (this._hits.Any() == true)
+                    <div class="filemanager-wrapper row text-center">
+                        @if (this.VirtualPath.Like(RootPath) == false)
+                        {
+                            <div class="mb-3 cursor-pointer col-6 col-xxl-3" @onclick="_goBackInNavigation">
+                                <div class="p-2 border shadow-sm directory position-relative">
+                                    <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
+                                        <i class="fa-solid fa-arrow-up fs-3"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        @if (_directories != null)
+                        {
+                            @foreach (var dir in this._directories)
                             {
-                                @foreach (var hit in this._hits)
-                                {
-                                    @if (hit is OrigamiSystemFile file)
-                                    {
-                                        <div class="mb-3 cursor-pointer col-12 col-xxl-6 @(this._selectedFile != null && this._selectedFile.WebPath == file.WebPath ? "selected-file" : null) dummy" @onclick="() => _selectFile(file)">
-                                            <div class="p-2 border file shadow-sm position-relative">
-                                                <div class="d-inline-flex align-items-center" style="height:100px;" title="@file.Name">
-                                                    @if (file.IsImage)
-                                                    {
-                                                        <img src="@file.WebPath.QueryString("size", "small")" width="50" />
-                                                    }
-                                                    else
-                                                    {
-                                                        <HeaderIcon Entity="file" Class="fs-1"></HeaderIcon>
-                                                    }
-                                                    <div class="ms-3">
-                                                        <span class="ellipsis">
-                                                            @file.Name
-                                                            <span class="x-small">@file.FileSize.SizeInBytes()</span>
-                                                        </span>
-                                                        <FileManagerPath Class="x-small" VirtualPath="@file.WebPathDirectory" OnPathClicked="(path) => this._openFolder(path)"></FileManagerPath>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    }
-                                    @if (hit is DirectoryContext directory)
-                                    {
-                                        <div class="mb-3 cursor-pointer col-12 col-xxl-6" @onclick="() => _openFolder(directory.Directory.WebPath)">
-                                            <div class="p-2 border shadow-sm directory position-relative">
-                                                <div class="d-inline-flex align-items-center" title="@directory.Directory.Name" style="height: 100px;">
-                                                    <i class="fa-solid fa-folder d-block fs-1"></i>
-                                                    <div class="ms-3">
-                                                        <FileManagerPath Class="x-small" VirtualPath="@directory.Directory.WebPath" OnPathClicked="(path) => this._openFolder(path)"></FileManagerPath>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                <NothingToSeeHere Class="col-12"></NothingToSeeHere>
-                            }
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="filemanager-wrapper row text-center">
-                            @if (this.VirtualPath.Like(RootPath) == false)
-                            {
-                                <div class="mb-3 cursor-pointer col-6 col-xxl-3" @onclick="_goBackInNavigation">
+                                <div class="mb-3 cursor-pointer col-6 col-xxl-3" @onclick="() => _openFolder(dir.Directory.WebPath)">
                                     <div class="p-2 border shadow-sm directory position-relative">
+                                        <div class="position-absolute text-left">
+                                            <MudCheckBox T="bool" @bind-Value="dir.Directory.Checked"></MudCheckBox>
+                                        </div>
                                         <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
-                                            <i class="fa-solid fa-arrow-up fs-3"></i>
+                                            <div title="@dir.Directory.Name">
+                                                <i class="fa-solid fa-folder d-block fs-1 mb-1 m-auto"></i>
+                                                <span class="ellipsis">@dir.Directory.Name</span>
+                                                @if (dir.Context != null)
+                                                {
+                                                    <div class="x-small d-block" title="@dir.Directory.Name">
+                                                        <span class="ellipsis">
+                                                            <HeaderLite Entity="dir.Context"></HeaderLite>
+                                                        </span>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="position-absolute p-2 border-top" style="bottom:0;left:0;right:0;z-index:5;">
+                                            <ul class="inline-list">
+                                                <li>
+                                                    <button @onclick="() => _renamingDirectory = dir.Directory" @onclick:stopPropagation="true">
+                                                        <i class="fa-solid fa-pen-to-square"></i>
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button @onclick="() => _deleteFolder(dir.Directory)" @onclick:stopPropagation="true">
+                                                        <i class="fa-solid fa-trash-can"></i>
+                                                    </button>
+                                                </li>
+                                            </ul>
                                         </div>
                                     </div>
                                 </div>
                             }
-                            @if (_directories != null)
+                        }
+                        @if (_files != null)
+                        {
+                            @foreach (var file in this._files)
                             {
-                                @foreach (var dir in this._directories)
-                                {
-                                    <div class="mb-3 cursor-pointer col-6 col-xxl-3" @onclick="() => _openFolder(dir.Directory.WebPath)">
-                                        <div class="p-2 border shadow-sm directory position-relative">
-                                            <div class="position-absolute text-left">
-                                                <MudCheckBox T="bool" @bind-Value="dir.Directory.Checked"></MudCheckBox>
-                                            </div>
-                                            <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
-                                                <div title="@dir.Directory.Name">
-                                                    <i class="fa-solid fa-folder d-block fs-1 mb-1 m-auto"></i>
-                                                    <span class="ellipsis">@dir.Directory.Name</span>
-                                                    @if (dir.Context != null)
-                                                    {
-                                                        <div class="x-small d-block" title="@dir.Directory.Name">
-                                                            <span class="ellipsis">
-                                                                <HeaderLite Entity="dir.Context"></HeaderLite>
-                                                            </span>
-                                                        </div>
-                                                    }
-                                                </div>
+                                <div class="mb-3 cursor-pointer col-6 col-xxl-3 @(this._selectedFile != null && this._selectedFile.WebPath == file.WebPath ? "selected-file" : null) dummy" @onclick="() => _selectFile(file)">
+                                    <div class="p-2 border file shadow-sm position-relative">
+                                        <div class="position-absolute text-left">
+                                            <MudCheckBox T="bool" @bind-Value="file.Checked"></MudCheckBox>
+                                        </div>
+                                        <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
+                                            @if (file.IsImage)
+                                            {
+                                                <div class="position-absolute w-100 h-100" style="opacity:0.25; background-image:url(@(file.WebPath.QueryString("size", "small").QueryString("v", _version.ToString())));background-repeat:no-repeat;background-position:center;background-size:cover;"></div>
+                                            }
+                                            <div class="mw-100" style="z-index:5;" title="@file.Name">
+                                                @if (file.IsImage)
+                                                {
+                                                    <i class="fa-solid fa-image d-block fs-1 mb-1 m-auto"></i>
+                                                }
+                                                else if (file.IsVideo)
+                                                {
+                                                    <i class="fa-solid fa-video d-block fs-1 mb-1 m-auto"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i class="fa-solid fa-file d-block fs-1 mb-1 m-auto"></i>
+                                                }
+                                                <span class="ellipsis">@file.Name</span>
+                                                <span class="d-block x-small">@file.FileSize.SizeInBytes()</span>
                                             </div>
                                             <div class="position-absolute p-2 border-top" style="bottom:0;left:0;right:0;z-index:5;">
                                                 <ul class="inline-list">
                                                     <li>
-                                                        <button @onclick="() => _renamingDirectory = dir.Directory" @onclick:stopPropagation="true">
+                                                        <button @onclick="() => DownloadFile(file)" @onclick:stopPropagation="true">
+                                                            <i class="fa-solid fa-file-arrow-down"></i>
+                                                        </button>
+                                                    </li>
+                                                    <li>
+                                                        <button @onclick="() => _needsToRenameFile(file)" @onclick:stopPropagation="true">
                                                             <i class="fa-solid fa-pen-to-square"></i>
                                                         </button>
                                                     </li>
                                                     <li>
-                                                        <button @onclick="() => _deleteFolder(dir.Directory)" @onclick:stopPropagation="true">
+                                                        <button @onclick="() => _deleteFile(file)" @onclick:stopPropagation="true">
                                                             <i class="fa-solid fa-trash-can"></i>
                                                         </button>
                                                     </li>
@@ -209,64 +208,10 @@
                                             </div>
                                         </div>
                                     </div>
-                                }
+                                </div>
                             }
-                            @if (_files != null)
-                            {
-                                @foreach (var file in this._files)
-                                {
-                                    <div class="mb-3 cursor-pointer col-6 col-xxl-3 @(this._selectedFile != null && this._selectedFile.WebPath == file.WebPath ? "selected-file" : null) dummy" @onclick="() => _selectFile(file)">
-                                        <div class="p-2 border file shadow-sm position-relative">
-                                            <div class="position-absolute text-left">
-                                                <MudCheckBox T="bool" @bind-Value="file.Checked"></MudCheckBox>
-                                            </div>
-                                            <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
-                                                @if (file.IsImage)
-                                                {
-                                                    <div class="position-absolute w-100 h-100" style="opacity:0.25; background-image:url(@(file.WebPath.QueryString("size", "small").QueryString("v", _version.ToString())));background-repeat:no-repeat;background-position:center;background-size:cover;"></div>
-                                                }
-                                                <div class="mw-100" style="z-index:5;" title="@file.Name">
-                                                    @if (file.IsImage)
-                                                    {
-                                                        <i class="fa-solid fa-image d-block fs-1 mb-1 m-auto"></i>
-                                                    }
-                                                    else if (file.IsVideo)
-                                                    {
-                                                        <i class="fa-solid fa-video d-block fs-1 mb-1 m-auto"></i>
-                                                    }
-                                                    else
-                                                    {
-                                                        <i class="fa-solid fa-file d-block fs-1 mb-1 m-auto"></i>
-                                                    }
-                                                    <span class="ellipsis">@file.Name</span>
-                                                    <span class="d-block x-small">@file.FileSize.SizeInBytes()</span>
-                                                </div>
-                                                <div class="position-absolute p-2 border-top" style="bottom:0;left:0;right:0;z-index:5;">
-                                                    <ul class="inline-list">
-                                                        <li>
-                                                            <button @onclick="() => DownloadFile(file)" @onclick:stopPropagation="true">
-                                                                <i class="fa-solid fa-file-arrow-down"></i>
-                                                            </button>
-                                                        </li>
-                                                        <li>
-                                                            <button @onclick="() => _needsToRenameFile(file)" @onclick:stopPropagation="true">
-                                                                <i class="fa-solid fa-pen-to-square"></i>
-                                                            </button>
-                                                        </li>
-                                                        <li>
-                                                            <button @onclick="() => _deleteFile(file)" @onclick:stopPropagation="true">
-                                                                <i class="fa-solid fa-trash-can"></i>
-                                                            </button>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                }
-                            }
-                        </div>
-                    }
+                        }
+                    </div>
                 </div>
                 <div class="col-12 col-xxl-4">
                     <FileForm Class="p-3 shadow-sm border position-sticky" Entity="this._selectedFile"></FileForm>
@@ -343,7 +288,6 @@
 
 @code {
     private Guid _version = Guid.NewGuid();
-    private SearchFileManagerHeader _searchHeader = null!;
 
     /// <summary>
     /// This event happens when a file is selected/clicked in the UI
@@ -599,7 +543,6 @@
     private void _openFolder(string webPath)
     {
         this._hits = null;
-        this._searchHeader.Clear();
         this.VirtualPath = $"/{webPath.Trim('/')}/";
         this._loadFiles(true);
         this._loadDirectories(true);
