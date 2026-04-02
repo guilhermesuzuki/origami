@@ -475,6 +475,7 @@ namespace Origami.UI.Admin
             if (filter.Has() == false) return;
             Filter = filter;
         }
+
         protected override void SetPageTitle()
         {
             if (SelectedEntity is INew neu && neu.New == true)
@@ -483,7 +484,17 @@ namespace Origami.UI.Admin
                 return;
             }
 
-            var title = SelectedEntity switch
+            object entity = SelectedEntity switch
+            {
+                HubContentPage page => page.Entity,
+                HubContentPost post => post.Entity,
+                HubContentSpecialMessage specialMessage => specialMessage.Entity,
+                HubContentSpecialPage specialPage => specialPage.Entity,
+                HubContentVideo video => video.Entity,
+                _ => SelectedEntity,
+            };
+
+            var title = entity switch
             {
                 ITitle t => t.Title,
                 IName n => n.Name,

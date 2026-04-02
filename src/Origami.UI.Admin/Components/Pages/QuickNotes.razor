@@ -1,4 +1,5 @@
 ﻿@page "/quicknotes"
+@page "/quicknotes/{NanoId}"
 @inherits BasicAdminGrid<OrigamiQuickNote>
 
 <Root Access="this.CanAccess()">
@@ -148,10 +149,8 @@
         );
     }
 
-    protected override void OnInitialized()
+    protected override void OnEdit(OrigamiQuickNote entity)
     {
-        base.OnInitialized();
-        var filter = this.GhostOfTheNavigator!.Uri.QueryString("filter");
-        this.Filter = filter.Has() ? filter : this.Filter;
+        GhostOfTheNavigator.NavigateTo($"/quicknotes/{entity.NanoId}");
     }
 }

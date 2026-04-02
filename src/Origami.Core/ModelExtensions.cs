@@ -493,6 +493,16 @@ namespace Origami.Core
         {
             var name = type.Name;
 
+            switch (name)
+            {
+                case "OrigamiQuickNote": return "Quick notes";
+                case "OrigamiSocialProfile": return "Social profiles";
+                case "HubContentSpecialPage": return "Special pages";
+                case "HubContentSpecialMessage": return "Special messages";
+                case "OrigamiUserTrash": return "User trashes";
+                default: break;
+            }
+
             if (name.StartsWith("HubContent") == true)
             {
                 name = name[10..];
