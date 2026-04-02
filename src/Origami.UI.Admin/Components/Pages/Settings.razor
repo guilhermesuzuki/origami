@@ -517,8 +517,11 @@
                 if (hub.Ok)
                 {
                     transaction.Complete();
-                    Saved.InvokeAsync(hub.Entity).Wait();
                 }
+            }
+            if (hub.Ok)
+            {
+                Saved.InvokeAsync(hub.Entity);
             }
         }
         catch (Exception ex)
