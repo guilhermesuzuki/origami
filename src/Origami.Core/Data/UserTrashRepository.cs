@@ -111,10 +111,10 @@ namespace Origami.Core.Data
             using var db = DbContextFactory.CreateDbContext();
 
             var query = from x in db.Set<OrigamiUserTrash>().AsNoTracking()
-                        where x.Type.Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase) ||
-                              x.Name.Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase) ||
-                              x.Title.Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase) ||
-                              x.Content.Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase)
+                        where x.Type.Contains(searchTerm) ||
+                              x.Name.Contains(searchTerm) ||
+                              x.Title.Contains(searchTerm) ||
+                              x.Content.Contains(searchTerm)
                         orderby x.Type, string.IsNullOrWhiteSpace(x.Title) == false ? x.Title : x.Name
                         select x;
 

@@ -190,4 +190,9 @@
     {
         GhostOfTheNavigator.NavigateTo($"/user/trashes/{entity.NanoId}");
     }
+
+    protected override void OnSearchResultSelected(OrigamiUserTrash entity)
+    {
+        GhostOfTheNavigator.NavigateTo($"/user/trashes/{entity.NanoId}");
+    }
 }

@@ -30,30 +30,35 @@
                             var blog = this.Super.Blogs.ReadFromCache().Id(hit.Id);
                             <BlogHeaderInline Entity="blog"></BlogHeaderInline>
                         }
-                        else if (hit.Type.Like("Page") == true)
+                        else if (hit.Type.Like("OrigamiPage") == true)
                         {
                             var page = this.Super.Contents.ReadFromCache().Id(hit.Id);
                             <ContentHeaderInline Entity="page"></ContentHeaderInline>
                         }
-                        else if (hit.Type.Like("Post") == true)
+                        else if (hit.Type.Like("OrigamiPost") == true)
                         {
                             var post = this.Super.Contents.ReadFromCache().Id(hit.Id);
                             <ContentHeaderInline Entity="post"></ContentHeaderInline>
                         }
-                        else if (hit.Type.Like("Video") == true)
+                        else if (hit.Type.Like("OrigamiVideo") == true)
                         {
                             var video = this.Super.Contents.ReadFromCache().Id(hit.Id);
                             <ContentHeaderInline Entity="video"></ContentHeaderInline>
                         }
-                        else if (hit.Type.Like("SpecialPage") == true)
+                        else if (hit.Type.Like("OrigamiSpecialPage") == true)
                         {
                             var specialPage = this.Super.Contents.ReadFromCache().Id(hit.Id);
                             <ContentHeaderInline Entity="specialPage"></ContentHeaderInline>
                         }
+                        else if (hit.Type.Like("OrigamiSpecialMessage") == true)
+                        {
+                            var specialMessage = this.Super.Contents.ReadFromCache().Id(hit.Id);
+                            <ContentHeaderInline Entity="specialMessage"></ContentHeaderInline>
+                        }
                         else if (hit.Type.Like("ContentComment") == true)
                         {
                             var comment = this.Super.ContentComments.ReadFromCache().Id(hit.Id);
-                            <CommentLite Entity="comment"></CommentLite>
+                            <CommentLite Entity="comment" ShowParentHeader="true"></CommentLite>
                         }
                         else if (hit.Type.Like("Category") == true)
                         {
@@ -69,6 +74,11 @@
                         {
                             var role = this.Super.Roles.ReadFromCache().Id(hit.Id);
                             <RoleHeaderLite Entity="role"></RoleHeaderLite>
+                        }
+                        else if (hit.Type.Like("QuickNote") == true)
+                        {
+                            var quickNote = this.Super.QuickNotes.ReadFromCache().Id(hit.Id);
+                            <QuickNoteHeaderLite Entity="quickNote"></QuickNoteHeaderLite>
                         }
                     </div>
                 }

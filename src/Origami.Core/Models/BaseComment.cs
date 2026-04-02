@@ -21,6 +21,7 @@ namespace Origami.Core.Models
         protected bool _isDeleted;
         protected bool _isSpam;
         protected Guid? _moderatedById;
+        protected string _nanoId;
         protected Guid? _pinnedById;
 
         /// <summary>
@@ -28,7 +29,7 @@ namespace Origami.Core.Models
         /// </summary>
         public BaseComment() : base()
         {
-
+            _nanoId = NanoidDotNet.Nanoid.Generate(NanoidDotNet.Nanoid.Alphabets.LettersAndDigits, size: 8);
         }
 
         public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) => { };
@@ -99,6 +100,13 @@ namespace Origami.Core.Models
         {
             get => _moderatedById;
             set => this.Set(ref _moderatedById, value, Changed);
+        }
+
+        [StringLength(8)]
+        public string NanoId
+        {
+            get => _nanoId;
+            set => this.Set(ref _nanoId, value, Changed);
         }
 
         /// <summary>
