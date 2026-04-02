@@ -3,7 +3,8 @@
     public interface ISubtype
     {
         /// <summary>
-        /// TODO: comment this
+        /// Gets or sets the content subtype or specialization for the model,
+        /// such as a special message severity or type, or a special page subtype.
         /// </summary>
         string Subtype { get; set; }
     }
