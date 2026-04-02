@@ -25,18 +25,21 @@ namespace Origami.UI.Admin
 
         public override void Save()
         {
+            var hub = new Result<T2>(this.Entity);
+
             try
             {
                 using (var transaction = new TransactionScope())
                 {
-                    var hub = HubContentRepository.Save(Entity, UserFacade.User);
+                    HubContentRepository.Save(Entity, UserFacade.User).Push(hub);
                     if (hub.Ok)
                     {
                         transaction.Complete();
                     }
                     this.UserFacade.Result = hub;
-                    this.Saved.InvokeAsync(Entity).Wait();
                 }
+                hub.OnSuccess(() => Saved.InvokeAsync(hub.Entity));
+                hub.OnFailure(this.UndoChanges);
             }
             catch (Exception ex)
             {
@@ -46,6 +49,7 @@ namespace Origami.UI.Admin
 
         public override void UndoChanges()
         {
+            this.ShowParentSelector = false;
             this.Entity = HubContentRepository.Get(Entity.Entity).Clone();
         }
 

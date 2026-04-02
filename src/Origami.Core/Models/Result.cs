@@ -141,7 +141,7 @@ namespace Origami.Core.Models
         /// </summary>
         /// <param name="onFail"></param>
         /// <returns></returns>
-        public virtual Result OnFail(Action onFail)
+        public virtual Result OnFailure(Action onFail)
         {
             if (Ok == false) onFail();
             return this;
@@ -319,7 +319,7 @@ namespace Origami.Core.Models
         /// </summary>
         /// <param name="onFail"></param>
         /// <returns></returns>
-        public override Result<T> OnFail(Action onFail)
+        public override Result<T> OnFailure(Action onFail)
         {
             if (Ok == false) onFail();
             return this;
