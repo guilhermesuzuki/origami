@@ -26,7 +26,6 @@ namespace Origami.Core.Models
         /// <summary>
         /// Default constructor
         /// </summary>
-        /// <param name="entity">The entity associated with the event.</param>
         public WhenIClickHereEventArgs() : base()
         {
             
