@@ -746,7 +746,7 @@
             foreach (var file in files)
             {
                 var info = new FileInfo(file);
-                var webpath = $"/{file.ToLower().Split("origami.files")[1].Replace("\\", "/").TrimStart('/')}";
+                var webpath = $"/{file.Split("Origami.Files")[1].Replace("\\", "/").TrimStart('/')}";
                 var origamiFile = new OrigamiSystemFile(info.FullName, webpath);
                 this._hits.Add(origamiFile);
             }
@@ -754,7 +754,7 @@
             foreach (var directory in directories)
             {
                 var info = new DirectoryInfo(directory);
-                var webpath = $"/{directory.ToLower().Split("origami.files")[1].Replace("\\", "/").TrimStart('/')}";
+                var webpath = $"/{directory.Split("Origami.Files")[1].Replace("\\", "/").TrimStart('/')}";
                 var origamiDirectory = new OrigamiSystemDirectory(info.FullName, webpath);
                 var context = new DirectoryContext(origamiDirectory) { Context = this.Super.GuessWho(info.Name) };
 
