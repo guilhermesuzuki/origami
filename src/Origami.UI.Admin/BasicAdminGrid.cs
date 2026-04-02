@@ -477,5 +477,24 @@ namespace Origami.UI.Admin
                 this.UserFacade.Result = new() { Error = Text.Original("The entity you are trying to access does not exist") };
             }
         }
+
+        protected override void SetPageTitle()
+        {
+            if (SelectedEntity is INew neu && neu.New == true)
+            {
+                this.PageTitle.SetTitle(SelectedEntity.GetType().GetPlural());
+                return;
+            }
+
+            var title = SelectedEntity switch
+            {
+                ITitle t => t.Title,
+                IName n => n.Name,
+                ITag tag => tag.Tag,
+                _ => null,
+            };
+
+            this.PageTitle.SetTitle(SelectedEntity.GetType().GetPlural(), title);
+        }
     }
 }

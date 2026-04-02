@@ -713,4 +713,9 @@
             }
         }
     }
+
+    protected override void SetPageTitle()
+    {
+        this.PageTitle.SetTitle(Text.Original("Dashboard"));
+    }
 }

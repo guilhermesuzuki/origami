@@ -7,7 +7,8 @@
     <div class="row">
         <div class="col-12 col-xxl-4">
             <div class="p-3">
-                <BasicHeader Entity="this.Entity"></BasicHeader>
+                <BasicHeaderNotes Entity="this.Entity"></BasicHeaderNotes>
+                <BasicHeader Class="mt-3" Entity="this.Entity"></BasicHeader>
                 <ul class="inline-list mt-3">
                     <li>
                         <MudTextField Immediate="true"
@@ -174,15 +175,6 @@
     </div>
 }
 @code {
-    protected override bool DisableTheSaveButton
-    {
-        get
-        {
-            if (this.Entity.Name.Has() == false) return true;
-            return false;
-        }    
-    }
-
     private IEnumerable<OrigamiPage> _getPages()
     {
         return this.Super.Contents.ReadFromCache().OfType<OrigamiPage>().NonDeleted().Blog(this.Entity.Id).OrderBy(x => x.Title);

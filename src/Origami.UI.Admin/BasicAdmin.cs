@@ -27,6 +27,7 @@ namespace Origami.UI.Admin
 
         protected override async Task PageTitleAsync(bool firstRender)
         {
+            this.SetPageTitle();
             var title = $"{Text.Lower("Admin")}: {PageTitle.GetTitle()}";
             await JSRuntime.InvokeVoidAsync("origami.common.title", title);
         }

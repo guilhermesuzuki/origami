@@ -492,15 +492,31 @@ namespace Origami.Core
         public static string GetPlural(this Type type)
         {
             var name = type.Name;
+
+            if (name.StartsWith("HubContent") == true)
+            {
+                name = name[10..];
+            }
             if (name.StartsWith("Origami") == true)
             {
                 name = name[7..];
             }
+            if (name.StartsWith("Content") == true)
+            {
+                name = name[7..];
+            }
+
             if (name.EndsWith("y") == true)
             {
                 name = name.TrimEnd('y') + "ies";
                 return name;
             }
+            if (name.EndsWith("sh") == true)
+            {
+                name = name.TrimEnd('s', 'h') + "shes";
+                return name;
+            }
+
             switch (name)
             {
                 case "Settings": return "Settings";

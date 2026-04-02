@@ -451,13 +451,6 @@ namespace Origami.UI.Admin
             return SelectedEntities.ToList();
         }
 
-        protected void SetFilterFromQueryString()
-        {
-            var filter = this.GhostOfTheNavigator!.Uri.QueryString("filter");
-            if (filter.Has() == false) return;
-            Filter = filter;
-        }
-
         protected void SetEntityFromParameter()
         {
             if (this.NanoId.Has() == true)
@@ -475,6 +468,32 @@ namespace Origami.UI.Admin
                 this.UserFacade.Result = new() { Error = Text.Original("The entity you are trying to access does not exist") };
             }
         }
+
+        protected void SetFilterFromQueryString()
+        {
+            var filter = this.GhostOfTheNavigator!.Uri.QueryString("filter");
+            if (filter.Has() == false) return;
+            Filter = filter;
+        }
+        protected override void SetPageTitle()
+        {
+            if (SelectedEntity is INew neu && neu.New == true)
+            {
+                this.PageTitle.SetTitle(SelectedEntity.GetType().GetPlural());
+                return;
+            }
+
+            var title = SelectedEntity switch
+            {
+                ITitle t => t.Title,
+                IName n => n.Name,
+                ITag tag => tag.Tag,
+                _ => null,
+            };
+
+            this.PageTitle.SetTitle(SelectedEntity.GetType().GetPlural(), title);
+        }
+
         protected async Task UnpublishSelectedEntities()
         {
             await ExecuteWithSelectedEntities(
