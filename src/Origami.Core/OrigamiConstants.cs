@@ -82,27 +82,6 @@ namespace Origami.Core
         }
 
         /// <summary>
-        /// Available Languages
-        /// </summary>
-        /// <returns></returns>
-        public static List<(string Language, string Name, string Flag)> ContentLanguages()
-        {
-            var result = new List<(string Language, string Name, string Flag)>
-            {
-                ("en-US", "English (US)", "/files/language-en_us.png"),
-                ("en-CA", "English (Canada)", "/files/language-en_ca.png"),
-                ("en-GB", "English (UK)", "/files/language-en_gb.png"),
-                ("pt-BR", "Português (Brasil)", "/files/language-pt_br.png"),
-                ("fr-FR", "Français (France)", "/files/language-fr_fr.png"),
-                ("es-ES", "Español (Spain)", "/files/language-es_es.png"),
-                ("de-DE", "Deutsch (Germany)", "/files/language-de_de.png"),
-                ("ja-JP", "日本語", "/files/language-ja_jp.png"),
-            };
-
-            return result;
-        }
-
-        /// <summary>
         /// TinyMCE
         /// </summary>
         public static class TinyMCE

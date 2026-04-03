@@ -800,14 +800,14 @@ namespace Origami.Core
         {
             if (value.Has() == true)
             {
-                var language1 = OrigamiConstants.ContentLanguages().FirstOrDefault(x => x.Language == value).Language;
+                var language1 = OrigamiConstants.AllLanguages().FirstOrDefault(x => x.Name == value)?.Name;
                 if (language1.Has() == true) return language1;
 
                 var split = value.Split('-')[0];
-                var language2 = OrigamiConstants.ContentLanguages().FirstOrDefault(x => x.Language == split).Language;
+                var language2 = OrigamiConstants.AllLanguages().FirstOrDefault(x => x.Name == split)?.Name;
                 if (language2.Has() == true) return language2;
             }
-            return OrigamiConstants.ContentLanguages().First().Name;
+            return OrigamiConstants.AllLanguages().First().Name;
         }
 
         /// <summary>
