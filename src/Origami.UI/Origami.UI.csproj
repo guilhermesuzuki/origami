@@ -40,10 +40,6 @@
 		<PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.15.1" />
 		<PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.15.1" />
 		<PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.15.0" />
-
-		<ProjectReference Include="..\Origami.LocalizationAnalyzer\Origami.LocalizationAnalyzer.csproj"
-						  OutputItemType="Analyzer"
-						  ReferenceOutputAssembly="false" />
 	</ItemGroup>
 
 	<ItemGroup>
