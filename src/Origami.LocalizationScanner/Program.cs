@@ -2,7 +2,7 @@
 using Origami.LocalizationScanner.Scanners;
 using System.Text.Json;
 
-Console.WriteLine("Hello, Motherfucker!");
+Console.WriteLine("Hello, World!");
 
 var root = args.Length > 0 ? args[0] : Directory.GetCurrentDirectory();
 

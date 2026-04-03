@@ -35,7 +35,7 @@ namespace Origami.Core.Validators
                 })
                 .WithMessage(text.Original("Type must be a valid special message type"));
 
-            RuleFor(x => x).Must(x => x.Entity.StartDate <= x.Entity.EndDate).WithMessage(text.Original("Start Date cannot be later than End Date"));
+            RuleFor(x => x).Must(x => x.Entity.StartDate <= x.Entity.EndDate).WithMessage(text.Original("Start date cannot be later than end date"));
         }
     }
 }
