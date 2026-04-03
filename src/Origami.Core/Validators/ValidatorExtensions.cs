@@ -309,7 +309,7 @@ namespace Origami.Core.Validators
         {
             return ruleBuilder
                 .MaximumLength(128)
-                .WithMessage(text.Original("Tag cannot exceed 128 characters"));
+                .WithMessage(text.Original("Tag cannot exceed {0} characters", 128));
         }
 
         public static IRuleBuilderOptions<T, List<OrigamiContentTag>> TagsMustBeUnique<T>(this IRuleBuilder<T, List<OrigamiContentTag>> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory)
