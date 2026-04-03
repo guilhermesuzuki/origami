@@ -286,7 +286,7 @@ namespace Origami.Core.Validators
                     }
                     return true;
                 })
-                .WithMessage(text.Original("RSS Feed must be a valid website address"));
+                .WithMessage(text.Original("RSS feed must be a valid website address"));
         }
 
         public static IRuleBuilderOptions<T, string> ShortName<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
@@ -356,7 +356,7 @@ namespace Origami.Core.Validators
             return ruleBuilder
                 .NotNull().WithMessage(text.Original("Username is required"))
                 .NotEmpty().WithMessage(text.Original("Username is required"))
-                .MaximumLength(200).WithMessage(text.Original("Username cannot exceed 200 characters"));
+                .MaximumLength(200).WithMessage(text.Original("Username cannot exceed {0} characters", 200));
         }
 
         public static IRuleBuilderOptions<T, string> Website<T>(this IRuleBuilder<T, string> ruleBuilder, Text text, string field = "website")

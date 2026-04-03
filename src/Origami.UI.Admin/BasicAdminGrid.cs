@@ -429,7 +429,7 @@ namespace Origami.UI.Admin
                 async () =>
                 {
                     return await DialogService.ShowMessageBoxAsync(
-                        Text.Upper("Restoring {0} Item(s)", SelectedEntities.Count),
+                        Text.Upper("Restoring {0} item(s)", SelectedEntities.Count),
                         Text.Original("Are you sure?"),
                         yesText: Text.Lower("Yes"),
                         noText: Text.Lower("No"));

@@ -79,23 +79,23 @@
                     <div class="btn-group w-100 fs-small">
                         <button class="btn btn-secondary" @onclick="this._selectAll">
                             <i class="fa-solid fa-square-check"></i>
-                            @Text.Original("Select All")
+                            @Text.Original("Select all")
                         </button>
                         <button class="btn btn-secondary" disabled="@_disableUnselectAll" @onclick="this._unselectAll">
                             <i class="fa-solid fa-square"></i>
-                            @Text.Original("Unselect All")
+                            @Text.Original("Unselect all")
                         </button>
                         <button class="btn btn-danger" disabled="@_disableUnselectAll" @onclick="this._deleteItems">
                             <i class="fa-solid fa-trash-can"></i>
-                            @Text.Original("Delete Selected Item(s)")
+                            @Text.Original("Delete selected item(s)")
                         </button>
                         <button class="btn btn-primary" @onclick="() => _addingFolder = true">
                             <i class="fa-solid fa-folder-plus"></i>
-                            @Text.Original("Add Folder")
+                            @Text.Original("Add folder")
                         </button>
                         <button class="btn btn-primary" @onclick="_uploadFiles">
                             <i class="fa-solid fa-file-circle-plus"></i>
-                            @Text.Original("Upload Files")
+                            @Text.Original("Upload files")
                             <span class="x-small">@Text.Original("(1024 files max)")</span>
                         </button>
                     </div>
