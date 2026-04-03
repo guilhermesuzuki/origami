@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origami.UI.Admin", "src\Ori
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origami.UI.FrontEnd", "src\Origami.UI.FrontEnd\Origami.UI.FrontEnd.csproj", "{EEA72B92-F0FD-A241-D698-4B7F59E28916}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origami.LocalizationAnalyzer", "src\Origami.LocalizationAnalyzer\Origami.LocalizationAnalyzer.csproj", "{F1B77028-F908-4003-B466-101ECC47E199}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "misc", "misc", "{EE190CB5-D5B3-4B7A-BD56-43A9F918D7EF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,9 +55,20 @@ Global
 		{EEA72B92-F0FD-A241-D698-4B7F59E28916}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EEA72B92-F0FD-A241-D698-4B7F59E28916}.Release|x86.ActiveCfg = Release|Any CPU
 		{EEA72B92-F0FD-A241-D698-4B7F59E28916}.Release|x86.Build.0 = Release|Any CPU
+		{F1B77028-F908-4003-B466-101ECC47E199}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1B77028-F908-4003-B466-101ECC47E199}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1B77028-F908-4003-B466-101ECC47E199}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F1B77028-F908-4003-B466-101ECC47E199}.Debug|x86.Build.0 = Debug|Any CPU
+		{F1B77028-F908-4003-B466-101ECC47E199}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1B77028-F908-4003-B466-101ECC47E199}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1B77028-F908-4003-B466-101ECC47E199}.Release|x86.ActiveCfg = Release|Any CPU
+		{F1B77028-F908-4003-B466-101ECC47E199}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F1B77028-F908-4003-B466-101ECC47E199} = {EE190CB5-D5B3-4B7A-BD56-43A9F918D7EF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1324F4CF-2B02-4B2E-BE14-3E341AB55CA0}

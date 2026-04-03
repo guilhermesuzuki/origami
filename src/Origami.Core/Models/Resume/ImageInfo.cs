@@ -17,12 +17,12 @@ namespace Origami.Core.Models.Resume
         /// location where the image was taken
         /// </summary>
         [Serializable]
-        public class Location
+        public class LocationForImages
         {
             /// <summary>
             /// simple constructor
             /// </summary>
-            public Location() : base()
+            public LocationForImages() : base()
             {
 
             }
@@ -44,6 +44,6 @@ namespace Origami.Core.Models.Resume
         /// Location information differs between cultures offered in a multi-localized website
         /// </summary>
         [XmlElement("location")]
-        public Location[] LocationsByCulture { get; set; } = Array.Empty<Location>();
+        public LocationForImages[] LocationsByCulture { get; set; } = Array.Empty<LocationForImages>();
     }
 }

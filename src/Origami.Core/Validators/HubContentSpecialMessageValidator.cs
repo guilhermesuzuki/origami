@@ -19,15 +19,19 @@ namespace Origami.Core.Validators
                 .NotEmpty().WithMessage(text.Original("Type is required for special messages"))
                 .Must(x =>
                 {
-                    var allowedTypes = new List<string>
+                    if (x.Has() == true)
                     {
-                        OrigamiSpecialMessageTypes.None.ToString(),
-                        OrigamiSpecialMessageTypes.Danger.ToString(),
-                        OrigamiSpecialMessageTypes.Info.ToString(),
-                        OrigamiSpecialMessageTypes.Success.ToString(),
-                        OrigamiSpecialMessageTypes.Warning.ToString(),
-                    };
-                    return allowedTypes.Contains(x);
+                        var allowedTypes = new List<string>
+                        {
+                            OrigamiSpecialMessageTypes.None.ToString(),
+                            OrigamiSpecialMessageTypes.Danger.ToString(),
+                            OrigamiSpecialMessageTypes.Info.ToString(),
+                            OrigamiSpecialMessageTypes.Success.ToString(),
+                            OrigamiSpecialMessageTypes.Warning.ToString(),
+                        };
+                        return allowedTypes.Contains(x);
+                    }
+                    return false;
                 })
                 .WithMessage(text.Original("Type must be a valid special message type"));
 

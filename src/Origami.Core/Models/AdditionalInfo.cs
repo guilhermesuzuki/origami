@@ -735,6 +735,7 @@ namespace Origami.Core.Models
             /// </summary>
             [XmlText]
             public string Translation { get; set; } = string.Empty;
+
             /// <summary>
             /// Returns translation string
             /// </summary>
