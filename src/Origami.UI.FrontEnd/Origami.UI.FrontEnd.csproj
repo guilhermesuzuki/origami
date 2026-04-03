@@ -27,9 +27,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Origami.LocalizationAnalyzer\Origami.LocalizationAnalyzer.csproj" 
-						  OutputItemType="Analyzer"
-						  ReferenceOutputAssembly="false" />
 		<ProjectReference Include="..\Origami.UI\Origami.UI.csproj" />
 	</ItemGroup>
 
