@@ -6,6 +6,7 @@
 <style>
     .physical-page-header-lite-3 .id { display: none !important; }
     .rss-feeds thead { display: none !important; }
+    .dashboard-analytics .search-wrapper { display: none !important; }
 </style>
 <HeadContent>
     <meta property="og:title" content="@PageTitle.GetTitle()" />
@@ -216,7 +217,7 @@
         </div>
     </ContentTemplate>
 </Root>
-<Root Access="this.CanAccess()" Class="min-vh-100">
+<Root Access="this.CanAccess()" Class="min-vh-100 dashboard-analytics">
     <HeaderTemplate>
         <div class="sub-header p-3 border-bottom border-top">
             <ul class="inline-list align-items-center">
