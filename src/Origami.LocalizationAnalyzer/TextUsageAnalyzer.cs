@@ -11,12 +11,22 @@ namespace Origami.LocalizationAnalyzer
     public class TextUsageAnalyzer : DiagnosticAnalyzer
     {
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-            ImmutableArray<DiagnosticDescriptor>.Empty;
+            ImmutableArray.Create(MissingKeyRule);
+
+        private static readonly DiagnosticDescriptor MissingKeyRule =
+            new DiagnosticDescriptor(
+                id: "LOC001",
+                title: "Localization key detected",
+                messageFormat: "Key used: '{0}'",
+                category: "Localization",
+                DiagnosticSeverity.Warning,
+                isEnabledByDefault: true);
 
         public override void Initialize(AnalysisContext context)
         {
-            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.ReportDiagnostics);
             context.EnableConcurrentExecution();
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
+
             context.RegisterSyntaxNodeAction(AnalyzeInvocation, SyntaxKind.InvocationExpression);
         }
 
@@ -28,18 +38,17 @@ namespace Origami.LocalizationAnalyzer
                 .GetSymbolInfo(invocation)
                 .Symbol as IMethodSymbol;
 
+            var methods = new string[] { "Get", "Lower", "Upper", "Original" };
+
             if (symbol == null)
                 return;
 
-            // Check class
             if (symbol.ContainingType.Name != "Text")
                 return;
 
-            // Check method
-            if (new string[] { "Get", "Lower", "Upper", "Original" }.Contains(symbol.Name) == false)
+            if (!methods.Contains(symbol.Name))
                 return;
 
-            // Extract argument
             var arg = invocation.ArgumentList.Arguments.FirstOrDefault();
             if (arg == null)
                 return;
@@ -51,8 +60,12 @@ namespace Origami.LocalizationAnalyzer
 
             var key = constant.Value?.ToString();
 
-            // 🎯 THIS is your detected key
-            System.Diagnostics.Debug.WriteLine($"Detected key: {key}");
+            var diagnostic = Diagnostic.Create(
+                MissingKeyRule,
+                arg.GetLocation(),
+                key);
+
+            context.ReportDiagnostic(diagnostic);
         }
     }
 }

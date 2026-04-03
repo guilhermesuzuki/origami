@@ -9,7 +9,7 @@
 	<PropertyGroup>
 		<Version>2.0.0</Version>
 	</PropertyGroup>
-	
+
 	<ItemGroup>
 		<Compile Remove="wwwroot\files\**" />
 		<Content Remove="wwwroot\files\**" />
@@ -27,6 +27,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\Origami.LocalizationAnalyzer\Origami.LocalizationAnalyzer.csproj" 
+						  OutputItemType="Analyzer"
+						  ReferenceOutputAssembly="false" />
 		<ProjectReference Include="..\Origami.UI\Origami.UI.csproj" />
 	</ItemGroup>
 

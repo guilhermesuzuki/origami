@@ -678,9 +678,9 @@ namespace Origami.Core.Models
         {
             public HeaderMedia()
             {
-                YoutubeVideos = new List<Youtube>();
-                DefaultVideos = new List<Video>();
-                Images = new List<Image>();
+                YoutubeVideos = [];
+                DefaultVideos = [];
+                Images = [];
             }
 
             [XmlElement("video", typeof(Video))]
@@ -711,7 +711,7 @@ namespace Origami.Core.Models
             /// <summary>
             /// No icon for categories
             /// </summary>
-            public static Image NoIconForCategories() => new Image() { Source = OrigamiConstants.NoCategory };
+            public static Image NoIconForCategories() => new() { Source = OrigamiConstants.NoCategory };
         }
 
         [Serializable]
