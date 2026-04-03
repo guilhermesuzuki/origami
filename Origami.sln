@@ -20,6 +20,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		src\Directory.Build.props = src\Directory.Build.props
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origami.LocalizationGenerator", "src\Origami.LocalizationGenerator\Origami.LocalizationGenerator.csproj", "{51966AF4-AF8A-0495-3124-205E3ED5CE62}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -68,12 +70,21 @@ Global
 		{F1B77028-F908-4003-B466-101ECC47E199}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F1B77028-F908-4003-B466-101ECC47E199}.Release|x86.ActiveCfg = Release|Any CPU
 		{F1B77028-F908-4003-B466-101ECC47E199}.Release|x86.Build.0 = Release|Any CPU
+		{51966AF4-AF8A-0495-3124-205E3ED5CE62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51966AF4-AF8A-0495-3124-205E3ED5CE62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51966AF4-AF8A-0495-3124-205E3ED5CE62}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{51966AF4-AF8A-0495-3124-205E3ED5CE62}.Debug|x86.Build.0 = Debug|Any CPU
+		{51966AF4-AF8A-0495-3124-205E3ED5CE62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51966AF4-AF8A-0495-3124-205E3ED5CE62}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51966AF4-AF8A-0495-3124-205E3ED5CE62}.Release|x86.ActiveCfg = Release|Any CPU
+		{51966AF4-AF8A-0495-3124-205E3ED5CE62}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{F1B77028-F908-4003-B466-101ECC47E199} = {EE190CB5-D5B3-4B7A-BD56-43A9F918D7EF}
+		{51966AF4-AF8A-0495-3124-205E3ED5CE62} = {EE190CB5-D5B3-4B7A-BD56-43A9F918D7EF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1324F4CF-2B02-4B2E-BE14-3E341AB55CA0}

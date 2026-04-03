@@ -60,29 +60,24 @@ namespace Origami.LocalizationGenerator
 
                     if (!string.IsNullOrWhiteSpace(key))
                         keys.Add(key);
+
+                    if (invocation.ArgumentList.Arguments.Count > 1)
+                    {
+                        for (int i = 1; i < invocation.ArgumentList.Arguments.Count; i++)
+                        {
+                            var argument = invocation.ArgumentList.Arguments[i];
+                            var argumentConstant = semanticModel.GetConstantValue(argument.Expression);
+                            if (!argumentConstant.HasValue)
+                                continue;
+                            var argumentKey = argumentConstant.Value?.ToString();
+                            if (!string.IsNullOrWhiteSpace(argumentKey))
+                                keys.Add(argumentKey);
+                        }
+                    }
                 }
             }
 
-            GenerateClass(context, keys);
             GenerateResxLike(context, keys);
-        }
-
-        private void GenerateClass(GeneratorExecutionContext context, HashSet<string> keys)
-        {
-            var sb = new StringBuilder();
-
-            sb.AppendLine("namespace GeneratedLocalization;");
-            sb.AppendLine("public static class Keys");
-            sb.AppendLine("{");
-
-            foreach (var key in keys.OrderBy(x => x))
-            {
-                sb.AppendLine($"    public const string {Sanitize(key)} = \"{key}\";");
-            }
-
-            sb.AppendLine("}");
-
-            context.AddSource("LocalizationKeys.g.cs", sb.ToString());
         }
 
         private void GenerateResxLike(GeneratorExecutionContext context, HashSet<string> keys)
@@ -100,14 +95,7 @@ namespace Origami.LocalizationGenerator
             sb.AppendLine("</root>");
             sb.AppendLine("*/");
 
-            context.AddSource("LocalizationResxPreview.g.cs", sb.ToString());
-        }
-
-        private string Sanitize(string key)
-        {
-            return key.Replace(" ", "_")
-                      .Replace("-", "_")
-                      .Replace("'", "");
+            context.AddSource("LocalizationResx.g.cs", sb.ToString());
         }
     }
 }
