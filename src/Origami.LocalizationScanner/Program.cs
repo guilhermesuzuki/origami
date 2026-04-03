@@ -37,3 +37,9 @@ var json = JsonSerializer.Serialize(cleaned, new JsonSerializerOptions
 File.WriteAllText("output.json", json);
 
 Console.WriteLine($"Done. Found {cleaned.Count} strings.");
+
+var keys = from item in cleaned
+           orderby item.Text
+           select item.Text;
+
+await File.WriteAllLinesAsync("keys.txt", keys.Distinct());

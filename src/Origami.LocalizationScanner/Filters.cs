@@ -12,6 +12,7 @@ namespace Origami.LocalizationScanner
             if (text.All(char.IsDigit)) return false;
             if (text.Contains("://")) return false;
             if (!text.Any(char.IsLetter)) return false;
+            if (text.StartsWith("data:image")) return false;
             return true;
         }
     }

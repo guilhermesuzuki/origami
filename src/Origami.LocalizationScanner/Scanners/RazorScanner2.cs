@@ -39,7 +39,7 @@ namespace Origami.LocalizationScanner.Scanners
             {
                 if (invocation.Expression is MemberAccessExpressionSyntax m && allowedMethods.Contains(m.Name.Identifier.Text) && m.Expression is IdentifierNameSyntax id && id.Identifier.Text == "Text")
                 {
-                    Console.WriteLine($"Found: {invocation}");
+                    //Console.WriteLine($"Found: {invocation}");
                     foreach (var argument in invocation.ArgumentList.Arguments)
                     {
                         var key = argument.ToString().Trim('\"');
