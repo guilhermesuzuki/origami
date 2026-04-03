@@ -3,7 +3,7 @@
 
 @if (Entity != null)
 {
-    <div class="content-html @Class">
+    <div class="content-html @Class" lang="@Entity.LanguageWrittenOn">
         @if (Entity.Content.Has() == true)
         {
             @((MarkupString)Entity.Content)
