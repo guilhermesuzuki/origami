@@ -12,7 +12,7 @@
     {
         var post = this.Super.Contents.ReadFromCache().OfType<OrigamiPost>().Id(rating.ContentId)!;
         <div class="user-activity-post-rating @Class">
-            <label class="fw-bold">@Text.Lower("Rated {0} On:", rating.Rating)</label>
+            <label class="fw-bold">@Text.Lower("Rated {0} on:", rating.Rating)</label>
             <ContentHeaderLite Entity="post"></ContentHeaderLite>
         </div>
     }

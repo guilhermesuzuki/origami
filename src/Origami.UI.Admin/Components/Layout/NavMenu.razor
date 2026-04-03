@@ -182,7 +182,7 @@
     protected async Task LogoutAsync()
     {
         var answer = await this.DialogService.ShowMessageBoxAsync(
-            this.Text.Upper("Log Out"),
+            this.Text.Upper("Log out"),
             this.Text.Original("Are you sure?"),
             yesText: this.Text.Lower("Yes"),
             noText: this.Text.Lower("No"));

@@ -312,7 +312,7 @@ namespace Origami.Core.Data
                     var frontpage = (from page in db.Set<OrigamiPage>().AsNoTracking() where page.IsFrontPage select page).FirstOrDefault();
                     if (frontpage != null && frontpage.Id == root.Entity.Id)
                     {
-                        return new(root) { Error = Text.Original("Page is already the front page"), };
+                        return new(root) { Error = Text.Original("Page is already front page"), };
                     }
                     if (frontpage != null)
                     {

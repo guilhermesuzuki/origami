@@ -12,7 +12,7 @@
     {
         var video = this.Super.Contents.ReadFromCache().OfType<OrigamiVideo>().Id(rating.ContentId);
         <div class="user-activity-video-rating @Class">
-            <div class="fw-bold">@Text.Lower("Rated {0} On:", rating.Rating)</div>
+            <div class="fw-bold">@Text.Lower("Rated {0} on:", rating.Rating)</div>
             <ContentHeaderLite Entity="video"></ContentHeaderLite>
         </div>
     }

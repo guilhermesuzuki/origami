@@ -240,7 +240,7 @@ namespace Origami.Core.Validators
                 .NotEmpty()
                 .WithMessage(text.Original("Name is required"))
                 .MaximumLength(255)
-                .WithMessage(text.Original("Name cannot exceed 255 characters"));
+                .WithMessage(text.Original("Name cannot exceed {0} characters", 255));
         }
 
         public static IRuleBuilderOptions<T, string> NanoId<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
@@ -249,7 +249,7 @@ namespace Origami.Core.Validators
                 .NotEmpty()
                 .WithMessage(text.Original("NanoId is required"))
                 .MaximumLength(8)
-                .WithMessage(text.Original("NanoId cannot exceed 8 characters"));
+                .WithMessage(text.Original("NanoId cannot exceed {0} characters", 8));
         }
 
         public static IRuleBuilderOptions<T, string> Note<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
@@ -295,14 +295,14 @@ namespace Origami.Core.Validators
                 .NotEmpty()
                 .WithMessage(text.Original("Name is required"))
                 .MaximumLength(50)
-                .WithMessage(text.Original("Name cannot exceed 50 characters"));
+                .WithMessage(text.Original("Name cannot exceed {0} characters", 50));
         }
 
         public static IRuleBuilderOptions<T, string> Slug<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
         {
             return ruleBuilder
                 .MaximumLength(255)
-                .WithMessage(text.Original("Slug cannot exceed 255 characters"));
+                .WithMessage(text.Original("Slug cannot exceed {0} characters", 255));
         }
 
         public static IRuleBuilderOptions<T, string> Tag<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
