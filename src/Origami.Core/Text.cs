@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Localization;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Origami.Core.Models
+namespace Origami.Core
 {
     public class Text
     {

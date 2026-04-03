@@ -11,7 +11,7 @@ root = "c:\\Projects\\github - origami\\src\\";
 var results = new List<ExtractedString>();
 
 var csScanner = new CSharpScanner();
-var razorScanner = new RazorScanner();
+var razorScanner2 = new RazorScanner2();
 
 foreach (var file in Directory.GetFiles(root, "*.*", SearchOption.AllDirectories))
 {
@@ -19,7 +19,7 @@ foreach (var file in Directory.GetFiles(root, "*.*", SearchOption.AllDirectories
         results.AddRange(csScanner.Scan(file));
 
     if (file.EndsWith(".razor"))
-        results.AddRange(razorScanner.Scan(file));
+        results.AddRange(razorScanner2.Scan(file));
 }
 
 // Filter + dedupe
