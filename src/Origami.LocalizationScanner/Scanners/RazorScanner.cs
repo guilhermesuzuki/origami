@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Razor.Language;
-using Microsoft.AspNetCore.Razor.Language.Intermediate;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 
 namespace Origami.LocalizationScanner.Scanners
@@ -12,42 +13,43 @@ namespace Origami.LocalizationScanner.Scanners
     {
         public IEnumerable<ExtractedString> Scan(string filePath)
         {
-            var engine = RazorProjectEngine.Create(
-                RazorConfiguration.Default,
-                RazorProjectFileSystem.Create("."),
-                b => { });
+            var code = string.Join(Environment.NewLine, File.ReadAllLines(filePath));
 
-            var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-            var source = RazorSourceDocument.ReadFrom(fileStream, filePath);
-            var codeDoc = engine.ProcessDesignTime(
-                source,
-                null,
-                Array.Empty<RazorSourceDocument>(),
-                Array.Empty<TagHelperDescriptor>());
+            var projectEngine = RazorProjectEngine.Create(RazorConfiguration.Default, RazorProjectFileSystem.Create("."), builder => { });
 
-            var documentNode = codeDoc.GetDocumentIntermediateNode();
+            var sourceDoc = RazorSourceDocument.Create(code, "test.razor");
 
-            foreach (var node in documentNode.FindDescendantNodes<HtmlContentIntermediateNode>())
+            var codeDoc = projectEngine.Process(sourceDoc, null, Array.Empty<RazorSourceDocument>(), Array.Empty<TagHelperDescriptor>());
+
+            var generatedCSharp = codeDoc.GetCSharpDocument().GeneratedCode;
+
+            // Now use Roslyn on generatedCSharp
+            var tree = CSharpSyntaxTree.ParseText(generatedCSharp);
+            var root = tree.GetRoot();
+
+            var invocations = root.DescendantNodes().OfType<InvocationExpressionSyntax>();
+
+            var compilation = CSharpCompilation.Create("Analysis").AddReferences(MetadataReference.CreateFromFile(typeof(object).Assembly.Location)).AddSyntaxTrees(tree);
+
+            var model = compilation.GetSemanticModel(tree);
+
+            var allowedMethods = new[] { "Get", "Lower", "Upper", "Original" };
+
+            foreach (var invocation in invocations)
             {
-                if (node is HtmlContentIntermediateNode htmlNode)
+                if (invocation.Expression is MemberAccessExpressionSyntax m && allowedMethods.Contains(m.Name.Identifier.Text) && m.Expression is IdentifierNameSyntax id && id.Identifier.Text == "Text")
                 {
-                    foreach (var child in htmlNode.Children)
+                    //Console.WriteLine($"Found: {invocation}");
+                    foreach (var argument in invocation.ArgumentList.Arguments)
                     {
-                        if (child is IntermediateToken token && token.IsHtml)
+                        var key = argument.ToString().Trim('\"');
+                        yield return new ExtractedString
                         {
-                            var text = token.Content?.Trim();
-
-                            if (!string.IsNullOrWhiteSpace(text))
-                            {
-                                yield return new ExtractedString
-                                {
-                                    Text = text,
-                                    File = filePath,
-                                    Line = 0,
-                                    Context = "razor-html"
-                                };
-                            }
-                        }
+                            Text = key,
+                            File = filePath,
+                            Line = invocation.GetLocation().GetLineSpan().StartLinePosition.Line + 1,
+                            Context = $"Razor method: {m.Name.Identifier.Text}"
+                        };
                     }
                 }
             }

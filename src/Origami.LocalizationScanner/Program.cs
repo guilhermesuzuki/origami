@@ -11,7 +11,7 @@ root = "c:\\Projects\\github - origami\\src\\";
 var results = new List<ExtractedString>();
 
 var csScanner = new CSharpScanner();
-var razorScanner2 = new RazorScanner2();
+var razorScanner2 = new RazorScanner();
 
 foreach (var file in Directory.GetFiles(root, "*.*", SearchOption.AllDirectories))
 {

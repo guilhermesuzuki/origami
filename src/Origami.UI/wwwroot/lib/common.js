@@ -246,7 +246,7 @@ window.prepareHTMLForGLightBox = () => {
         GLightbox({
             touchNavigation: true,
             loop: true,
-            autoplayVideos: true
+            autoplayVideos: true,
         });
     });
 }
