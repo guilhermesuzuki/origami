@@ -26,6 +26,13 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("Blog is required"));
         }
 
+        public static IRuleBuilderOptions<T, Guid?> BlogIdMustBeNull<T>(this IRuleBuilder<T, Guid?> ruleBuilder, Text text)
+        {
+            return ruleBuilder
+                .Must(blogId => blogId == null)
+                .WithMessage(text.Original("Blog must be null"));
+        }
+
         public static IRuleBuilderOptions<T, List<OrigamiContentCategory>> CategoriesMustBeUnique<T>(this IRuleBuilder<T, List<OrigamiContentCategory>> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory)
         {
             return ruleBuilder

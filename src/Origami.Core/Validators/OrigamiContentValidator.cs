@@ -24,6 +24,10 @@ namespace Origami.Core.Validators
             {
                 RuleFor(x => x.BlogId).BlogId(text);
             }
+            else
+            {
+                RuleFor(x => x.BlogId).BlogIdMustBeNull(text);
+            }
         }
     }
 }
