@@ -33,11 +33,12 @@ namespace Origami.LocalizationScanner.Scanners
 
             var model = compilation.GetSemanticModel(tree);
 
+            var allowedProperties = new[] { "Text", "_text" };
             var allowedMethods = new[] { "Get", "Lower", "Upper", "Original" };
 
             foreach (var invocation in invocations)
             {
-                if (invocation.Expression is MemberAccessExpressionSyntax m && allowedMethods.Contains(m.Name.Identifier.Text) && m.Expression is IdentifierNameSyntax id && id.Identifier.Text == "Text")
+                if (invocation.Expression is MemberAccessExpressionSyntax m && allowedMethods.Contains(m.Name.Identifier.Text) && m.Expression is IdentifierNameSyntax id && allowedProperties.Contains(id.Identifier.Text))
                 {
                     //Console.WriteLine($"Found: {invocation}");
                     foreach (var argument in invocation.ArgumentList.Arguments)
