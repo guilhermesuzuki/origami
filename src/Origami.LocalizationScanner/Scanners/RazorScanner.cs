@@ -33,7 +33,7 @@ namespace Origami.LocalizationScanner.Scanners
 
             var model = compilation.GetSemanticModel(tree);
 
-            var allowedProperties = new[] { "Text", "_text" };
+            var allowedProperties = new[] { "Text", "_text", "text" };
             var allowedMethods = new[] { "Get", "Lower", "Upper", "Original" };
 
             foreach (var invocation in invocations)

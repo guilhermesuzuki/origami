@@ -12,7 +12,7 @@ public class CSharpScanner
         var tree = CSharpSyntaxTree.ParseText(code);
         var root = tree.GetRoot();
 
-        var allowedProperties = new[] { "Text", "_text" };
+        var allowedProperties = new[] { "Text", "_text", "text" };
         var allowedMethods = new[] { "Get", "Lower", "Upper", "Original" };
 
         var invocations = root.DescendantNodes().OfType<InvocationExpressionSyntax>();

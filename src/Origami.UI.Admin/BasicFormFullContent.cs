@@ -40,10 +40,6 @@ namespace Origami.UI.Admin
                     this.UserFacade.Result = hub;
                 }
                 hub.OnSuccess(() => Saved.InvokeAsync(hub.Entity));
-                if (hub.Ok == false && Entity.Entity.New == false)
-                {
-                    this.UndoChanges();
-                }
             }
             catch (Exception ex)
             {

@@ -48,7 +48,6 @@ namespace Origami.UI.Admin
                     }
                 }
                 hub.OnSuccess(() => Saved.InvokeAsync(hub.Entity));
-                hub.OnFailure(this.UndoChanges);
             }
             catch (Exception ex)
             {

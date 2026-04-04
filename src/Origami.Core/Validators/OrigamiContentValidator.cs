@@ -1,11 +1,13 @@
 ﻿using FluentValidation;
+using Microsoft.EntityFrameworkCore;
+using Origami.Core.Data;
 using Origami.Core.Models;
 
 namespace Origami.Core.Validators
 {
     public class OrigamiContentValidator : AbstractValidator<OrigamiContent>
     {
-        public OrigamiContentValidator(Text text, IWebRootPath webRootPath, bool isBlogIdRequired = true) : base()
+        public OrigamiContentValidator(Text text, IWebRootPath webRootPath, IDbContextFactory<OrigamiDbContext> dbContextFactory, bool isBlogIdRequired = true) : base()
         {
             RuleFor(x => x.Id).Id(text);
             RuleFor(x => x.Type).ContentType(text);
@@ -19,6 +21,7 @@ namespace Origami.Core.Validators
             RuleFor(x => x.LanguageWrittenOn).Language(text);
             RuleFor(x => x).TopLevelPageWhenFrontPage(text);
             RuleFor(x => x).ModificationMustHappenAfterCreation(text);
+            RuleFor(x => x).LoopsAreNotAllowed(text, dbContextFactory);
 
             if (isBlogIdRequired)
             {
