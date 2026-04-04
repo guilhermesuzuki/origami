@@ -53,9 +53,7 @@
                             <TemplateColumn Title="@Text.Upper("Title")">
                                 <CellTemplate>
                                     <div class="cursor-pointer" @onclick="() => OnEdit(context.Item)">
-                                        <ContentHeaderInline Entity="context.Item.Entity"></ContentHeaderInline>
-                                        <div class="dummy" style="margin-bottom:-7px;"></div>
-                                        <Id Class="x-small" Entity="context.Item.Entity"></Id>
+                                        <ContentTitleColumn Entity="context.Item.Entity"></ContentTitleColumn>
                                     </div>
                                 </CellTemplate>
                             </TemplateColumn>
