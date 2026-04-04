@@ -105,7 +105,7 @@
     }
 </Root>
 
-@code {
+    @code {
     [Parameter] public ISlug? Slug { get; set; }
     [Parameter] public OrigamiContentTag? Tag { get; set; }
     [Parameter] public OrigamiCategory? Category { get; set; }
@@ -194,5 +194,11 @@
     protected override void SetPageTitle()
     {
         this.PageTitle.SetTitle(this.Slug as ITag, this.Slug as IName, this._entity);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender) await JSRuntime.InvokeVoidAsync("window.prepareHTMLForGLightBox");
     }
 }

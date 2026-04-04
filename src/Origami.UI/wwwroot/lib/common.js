@@ -237,4 +237,18 @@ window.geoLocation = {
     }
 };
 
+window.prepareHTMLForGLightBox = () => {
+    var img = $(".content-html img");
+    img.each(function () {
+        var element = $(this);
+        element.addClass("glightbox");
+        element.addClass("cursor-pointer");
+        GLightbox({
+            touchNavigation: true,
+            loop: true,
+            autoplayVideos: true
+        });
+    });
+}
+
 $.cookie.raw = true;
