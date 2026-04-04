@@ -23,7 +23,7 @@
                 <BasicHeader Class="mt-3" Entity="this.Entity.Entity"></BasicHeader>
                 <ul class="inline-list mt-3">
                     <li>
-                        <MudSelect T="string" @bind-Value="Entity.Entity.Type" HelperText="@Text.Lower("Type")" Required="true">
+                        <MudSelect T="string" @bind-Value="Entity.Entity.Subtype" HelperText="@Text.Lower("Type")" Required="true">
                             <MudSelectItem Value="OrigamiSpecialPageTypes.CookiePolicy.ToString()">@Text.Lower("Cookie policy")</MudSelectItem>
                             <MudSelectItem Value="OrigamiSpecialPageTypes.HowToDeleteYourData.ToString()">@Text.Lower("How to delete your data")</MudSelectItem>
                             <MudSelectItem Value="OrigamiSpecialPageTypes.PrivacyPolicy.ToString()">@Text.Lower("Privacy policy")</MudSelectItem>

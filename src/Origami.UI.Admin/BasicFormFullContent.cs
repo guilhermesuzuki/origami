@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using AngleSharp.Dom;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.Caching.Memory;
 using MudBlazor;
@@ -39,7 +40,10 @@ namespace Origami.UI.Admin
                     this.UserFacade.Result = hub;
                 }
                 hub.OnSuccess(() => Saved.InvokeAsync(hub.Entity));
-                hub.OnFailure(this.UndoChanges);
+                if (hub.Ok == false && Entity.Entity.New == false)
+                {
+                    this.UndoChanges();
+                }
             }
             catch (Exception ex)
             {
@@ -110,7 +114,12 @@ namespace Origami.UI.Admin
         {
             base.OnInitialized();
             Entity.Entity.SetAuthor(UserFacade.User);
-            Entity.Entity.SetBlog(GetBlogFromUserFacade());
+            Entity.Entity.BlogId = Entity.Entity switch
+            {
+                OrigamiSpecialMessage => null,
+                OrigamiSpecialPage => null,
+                _ => GetBlogFromUserFacade().Id,
+            };
             Categories = Get<OrigamiCategory>();
             Tags = Get<OrigamiContentTag>();
         }
@@ -130,7 +139,12 @@ namespace Origami.UI.Admin
         protected override void CreateEntityBeforeEvent(T2 entity)
         {
             entity.Entity.SetAuthor(UserFacade.User);
-            entity.Entity.SetBlog(GetBlogFromUserFacade());
+            entity.Entity.BlogId = entity.Entity switch 
+            { 
+                OrigamiSpecialMessage => null,
+                OrigamiSpecialPage => null,
+                _ => GetBlogFromUserFacade().Id,
+            };
         }
 
         public override void SetParent(IId entity)
