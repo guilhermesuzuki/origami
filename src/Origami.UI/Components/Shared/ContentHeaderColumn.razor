@@ -1,0 +1,26 @@
+﻿@inherits Basic
+@implements IEntityNull<OrigamiContent>
+
+@if (this.Entity != null)
+{
+    <div class="content-header-column text-center @Class">
+        <div class="w-100" style="height:200px; background-image: url(@this.Entity.HeaderImage); background-size: contain; background-position: center; background-repeat:no-repeat;"></div>
+        @* <img src="@this.Entity.HeaderImage" height="200" /> *@
+        <div class="mt-1 p-1 border">
+            <ul class="inline-list text-center">
+                <li>
+                    <i class="fa-solid fa-eye"></i>
+                    @this.Super.PhysicalPageViews.GetViews(this.Entity)
+                </li>
+                <li>
+                    <i class="fa-solid fa-comment"></i>
+                    @this.Super.ContentComments.GetComments(this.Entity)
+                </li>
+            </ul>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public OrigamiContent? Entity { get; set; }
+}
