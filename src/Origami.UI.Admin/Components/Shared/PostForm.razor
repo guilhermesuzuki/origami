@@ -42,7 +42,8 @@
                                       AdornmentIcon="@Icons.Material.Filled.Description"
                                       Adornment="Adornment.Start"
                                       @bind-Value="@Entity.Entity.Title"
-                                      HelperText="@Text.Lower("Title")"></MudTextField>
+                                      HelperText="@Text.Lower("Title")" 
+                                      MaxLength="255"></MudTextField>
                     </li>
                 </ul>
                 <ul class="inline-list mt-3">
@@ -51,7 +52,8 @@
                                       AdornmentIcon="@Icons.Material.Filled.Link"
                                       Adornment="Adornment.Start"
                                       @bind-Value="@Entity.Entity.Slug"
-                                      HelperText="@Text.Lower("Slug")"></MudTextField>
+                                      HelperText="@Text.Lower("Slug")" 
+                                      MaxLength="255"></MudTextField>
                     </li>
                     <li style="width:140px;">
                         <button class="btn btn-secondary" @onclick="() => Entity.Entity.Slug = Entity.Entity.Title.GetSlug()" style="line-height: 15px;">
@@ -212,7 +214,9 @@
                 <MudTextField FullWidth="true"
                               Immediate="true"
                               @bind-Value="@Entity.Entity.Description"
-                              HelperText="@Text.Lower("Description")"></MudTextField>
+                              HelperText="@Text.Lower("Description")" 
+                              MaxLength="2048" 
+                              MaxLines="16"></MudTextField>
             </div>
             <div class="p-3">
                 <TinyMCEContent Entity="Entity.Entity" Title="@Text.Lower("Content")"></TinyMCEContent>
