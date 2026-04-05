@@ -1,6 +1,5 @@
 ﻿@using System.Text;
 @inherits Basic
-@inject ISocialProfileRepository _socialProfile
 
 @if (Comment != null)
 {
@@ -409,7 +408,7 @@
 
         foreach (var reaction__ in reactions)
         {
-            var socialProfile = _socialProfile.ReadFromCache().Id(reaction__.SocialProfileId);
+            var socialProfile = this.Super.SocialProfiles.ReadFromCache().Id(reaction__.SocialProfileId);
             if (socialProfile != null) result.Append($" • {socialProfile.GetName()} ({socialProfile.SocialNetwork})");
         }
 
