@@ -71,15 +71,7 @@
                             </TemplateColumn>
                             <TemplateColumn Title="@Text.Upper("Header")" CellClass="col-2">
                                 <CellTemplate>
-                                    <div class="w-100" style="height:150px; background-image: url(@context.Item.Entity.HeaderImage); background-size: cover; background-position: center;"></div>
-                                    <div class="mt-1 p-1 border">
-                                        <ul class="inline-list text-center">
-                                            <li>
-                                                <i class="fa-solid fa-eye"></i>
-                                                @this.Super.PhysicalPageViews.GetViews(context.Item.Entity)
-                                            </li>
-                                        </ul>
-                                    </div>
+                                    <ContentHeaderColumn Entity="context.Item.Entity"></ContentHeaderColumn>
                                 </CellTemplate>
                             </TemplateColumn>
                             <TemplateColumn Title="@Text.Upper("Related pages")" Sortable="false" Filterable="false" CellClass="col-2 related-pages">

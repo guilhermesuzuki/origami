@@ -354,7 +354,7 @@ namespace Origami.Core.Data
 
                 this.History(db, 
                     root.Entity, 
-                    DateTime.UtcNow, 
+                    nil ? root.Entity.DateCreated : root.Entity.DateModified.GetValueOrDefault(), 
                     nil ? "Content created" : "Content saved", 
                     userId);
 
