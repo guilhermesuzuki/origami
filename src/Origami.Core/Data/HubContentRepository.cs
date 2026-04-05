@@ -28,7 +28,6 @@ namespace Origami.Core.Data
         }
 
         public virtual string ReadPermission { get; } = string.Empty;
-
         public virtual string CreatePermission { get; } = string.Empty;
         public virtual string DeleteOtherUsersPermission { get; } = string.Empty;
         public virtual string DeleteOwnPermission { get; } = string.Empty;
@@ -100,6 +99,7 @@ namespace Origami.Core.Data
                 Task.Run(() => result.Ratings.AddRange(this.GetEntities<OrigamiContentRating>(rootId))),
                 Task.Run(() => result.Reactions.AddRange(this.GetEntities<OrigamiContentReaction>(rootId))),
                 Task.Run(() => result.Tags.AddRange(this.GetEntities<OrigamiContentTag>(rootId))),
+                Task.Run(() => result.Histories.AddRange(this.GetEntities<OrigamiContentHistory>(rootId))),
             };
 
             Task.WhenAll(tasks);
@@ -149,6 +149,9 @@ namespace Origami.Core.Data
             // check permissions
             if (UserHasPermission(db, userId.Id, PurgePermission) == false) return new(root) { Info = PurgePermission, Error = Text.Original(Text.YouDontHavePermissionForThisFeature), };
 
+            //first, it needs to purge the relationships
+            this.PurgeKids(root, userId);
+
             var commentReactions = from a in db.Set<OrigamiContentCommentReaction>().AsNoTracking()
                                    join b in db.Set<OrigamiContentComment>().AsNoTracking() on a.CommentId equals b.Id
                                    where b.ContentId == root.Entity.Id
@@ -181,6 +184,22 @@ namespace Origami.Core.Data
             entity.ExecuteDelete();
 
             return new(root) { Success = Text.Original(Text.OperationCompletedSuccessfully), };
+        }
+
+        public Result<T2> PurgeKids(T2 root, IId userId)
+        {
+            var hub = new Result<T2>(root);
+            var db = this._dbContextFactory.CreateDbContext();
+            var kids = db.Set<T1>().AsNoTracking().Where(x => x.ParentId == root.Entity.Id).ToList();
+
+            foreach (var child in kids)
+            {
+                var anotherRoot = new T2() { Entity = child };
+                this.PurgeKids(anotherRoot, userId).Push(hub);
+                this.Purge(anotherRoot, userId).Push(hub);
+            }
+
+            return hub;
         }
 
         public Result<T2> Restore(T2 root, IId userId)
