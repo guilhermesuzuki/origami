@@ -136,21 +136,22 @@
         </div>
         <AuthorizeView>
             <Authorized>
-                <div class="p-2 bg-light border border-top-0">
+                <div class="p-2 bg-light border-bottom">
                     <div class="w-100 text-center cursor-pointer" @onclick="() => this._showEmojis = !_showEmojis">
-                        <span class="pe-1">@Text.Lower("Reactions")</span>
                         @if (_showEmojis == false)
                         {
+                            <span class="pe-1">@Text.Lower("Reactions")</span>
                             <i class="fa-solid fa-angle-down"></i>
                         }
                         else
                         {
+                            <span class="pe-1">@Text.Lower("Reactions")</span>
                             <i class="fa-solid fa-angle-up"></i>
                         }
                     </div>
                     @if (_showEmojis)
                     {
-                        <emoji-picker id="@_emojiPickerId" @ref="elementRef" class="mt-2" style="width:100%;height:250px;"></emoji-picker>
+                        <emoji-picker id="@_emojiPickerId" @ref="elementRef" class="mt-2 m-auto" style="height:250px;"></emoji-picker>
                     }
                 </div>
             </Authorized>
