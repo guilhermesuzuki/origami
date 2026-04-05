@@ -83,8 +83,13 @@ namespace Origami.Core.Data
                 {
                     fresh = fresh.OfType<IBlogIdNull>().Where(x => x.BlogId == blogIdNull.BlogId).OfType<T>();
                 }
-                fresh = fresh.OfType<ISlug>().Where(x => x.Slug == slug.Slug).OfType<T>();
-                fresh = fresh.Where(x => x.Id != ctx.Entity.Id);
+
+                fresh = fresh
+                    .Where(x => x.Id != ctx.Entity.Id).ToList()
+                    .OfType<ISlug>()
+                    .Where(x => x.Slug == slug.Slug)
+                    .OfType<T>();
+
                 if (fresh.Any() == true)
                 {
                     validation.Error = Text.Original("Slug is already in use");

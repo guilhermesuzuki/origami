@@ -127,12 +127,12 @@ namespace Origami.Core
             where T : class, IId
         {
             if (source == null) return [];
-            if (typeof(T).Implements<IParentIdNull<T>>() == false) return [];
+            if (typeof(T).Implements<IParentIdNull>() == false) return [];
 
             var list = new List<T>();
             foreach (var entity in entities)
             {
-                var children = source.Cast<IParentIdNull<T>>().Where(x => x.ParentId == entity.Id).Cast<T>().ToList();
+                var children = source.Cast<IParentIdNull>().Where(x => x.ParentId == entity.Id).Cast<T>().ToList();
                 foreach (var child in children)
                 {
                     list.AddRange(source.GetAllChildren(child));

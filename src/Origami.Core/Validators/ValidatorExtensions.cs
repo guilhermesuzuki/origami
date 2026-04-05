@@ -67,7 +67,7 @@ namespace Origami.Core.Validators
                     using var db = dbContextFactory.CreateDbContext();
                     return db.Set<OrigamiContent>().AsNoTracking().Id(contentId) != null;
                 })
-                .WithMessage(text.Original("Content must be valid"));
+                .WithMessage(text.Original("Content must exist"));
         }
 
         public static IRuleBuilderOptions<T, string> ContentType<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
