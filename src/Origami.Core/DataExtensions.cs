@@ -147,10 +147,9 @@ namespace Origami.Core
             where T : class, IId
         {
             if (source == null) return [];
-            if (id is not IParentIdNull<T>) return [];
 
             var list = new List<Guid>();
-            var children = source.Cast<IParentIdNull<T>>().Where(x => x.ParentId == id).Cast<T>().Select(x => x.Id).ToList();
+            var children = source.Cast<IParentIdNull>().Where(x => x.ParentId == id).Cast<T>().Select(x => x.Id).ToList();
             foreach (var child in children)
             {
                 list.AddRange(source.GetAllChildren(child));

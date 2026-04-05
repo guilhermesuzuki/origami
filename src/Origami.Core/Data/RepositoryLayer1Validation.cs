@@ -46,7 +46,7 @@ namespace Origami.Core.Data
 
         public virtual bool IsCycleDetected(DataOperationContext<T> ctx, IList<T> list)
         {
-            if (ctx.Entity is IParentIdNull<T> parent)
+            if (ctx.Entity is IParentIdNull parent)
             {
                 var entity = ctx.Entity;
 
