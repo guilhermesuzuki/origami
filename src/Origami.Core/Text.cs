@@ -11,6 +11,9 @@ namespace Origami.Core
         public const string SomethingWentWrongWhenTryingToAuthenticateYou = "Something went wrong when trying To authenticate you.";
         public const string YouDontHavePermissionForThisFeature = "You don't have permission for this feature.";
         public const string YouMadeTooManyCommentsIn5Minutes = "You made too many comments in 5 minutes.";
+
+
+
         private readonly IStringLocalizer<Text> _localizer;
 
         public Text(IStringLocalizer<Text> localizer) => _localizer = localizer;

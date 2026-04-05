@@ -63,6 +63,18 @@ namespace Origami.Core
             return read.MemoryCache.Get<long>(key);
         }
 
+        public static void CreateCache<T>(this IMemoryCache memoryCache, T entity)
+                    where T : class
+        {
+            var key = typeof(T).KeyForCaching();
+            lock (OrigamiConstants.SyncRoot)
+            {
+                var list = memoryCache.GetList<T>(key) ?? throw new InvalidOperationException("Cache list not found");
+                list.Add(entity);
+                memoryCache.Set(key, list);
+            }
+        }
+
         /// <summary>
         /// Blogs default sorting/ordering
         /// </summary>
@@ -261,6 +273,26 @@ namespace Origami.Core
             throw new Exception("The Origami connection string does NOT exist in the appsettings file");
         }
 
+        public static List<OrigamiRole> GetRolesFromDatabase(this DbContext db)
+        {
+            var roles = db.Set<OrigamiRole>().AsNoTracking().ToList();
+
+            foreach (var role in roles)
+            {
+                var rightRoles = db.Set<OrigamiRightRole>().AsNoTracking().Where(x => x.RoleId == role.Id).ToList();
+
+                var match = from property in role.GetType().GetProperties()
+                            join rt in db.Set<OrigamiRight>().AsNoTracking() on property.Name equals rt.Name
+                            join rr in rightRoles on rt.Id equals rr.RightId
+                            where property.CanWrite == true
+                            select property;
+
+                match.Each(x => x.SetValue(role, true));
+            }
+
+            return roles.ToList();
+        }
+
         /// <summary>
         /// Nulls the FK objects in order to persist the entity
         /// </summary>
@@ -446,27 +478,6 @@ namespace Origami.Core
              
             return db.Set<T>().AsNoTracking().ToList();
         }
-
-        public static List<OrigamiRole> GetRolesFromDatabase(this DbContext db)
-        {
-            var roles = db.Set<OrigamiRole>().AsNoTracking().ToList();
-
-            foreach (var role in roles)
-            {
-                var rightRoles = db.Set<OrigamiRightRole>().AsNoTracking().Where(x => x.RoleId == role.Id).ToList();
-
-                var match = from property in role.GetType().GetProperties()
-                            join rt in db.Set<OrigamiRight>().AsNoTracking() on property.Name equals rt.Name
-                            join rr in rightRoles on rt.Id equals rr.RightId
-                            where property.CanWrite == true
-                            select property;
-
-                match.Each(x => x.SetValue(role, true));
-            }
-
-            return roles.ToList();
-        }
-
         /// <summary>
         /// Tries to retrieve a blog by its slug. Returns null if not found or if the blog is deleted or inactive.
         /// </summary>
@@ -530,7 +541,5 @@ namespace Origami.Core
         {
             return CultureInfo.CurrentUICulture.Name.Split('-')[0];
         }
-
-        
     }
 }
