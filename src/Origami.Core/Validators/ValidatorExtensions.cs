@@ -254,9 +254,9 @@ namespace Origami.Core.Validators
         {
             return ruleBuilder
                 .NotEmpty()
-                .WithMessage(text.Original("NanoId is required"))
+                .WithMessage(text.Original("Nano Id is required"))
                 .MaximumLength(8)
-                .WithMessage(text.Original("NanoId cannot exceed {0} characters", 8));
+                .WithMessage(text.Original("Nano Id cannot exceed {0} characters", 8));
         }
 
         public static IRuleBuilderOptions<T, string> Note<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
@@ -265,7 +265,7 @@ namespace Origami.Core.Validators
                 .NotEmpty()
                 .WithMessage(text.Original("Note is required"))
                 .MaximumLength(255)
-                .WithMessage(text.Original("Note cannot exceed 255 characters"));
+                .WithMessage(text.Original("Note cannot exceed {0} characters", 255));
         }
 
         public static IRuleBuilderOptions<T, T> ParentId<T>(this IRuleBuilder<T, T> ruleBuilder, Text text) where T : IId, IParentIdNull
