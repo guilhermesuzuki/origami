@@ -4,7 +4,7 @@
 
 @if (Entity != null)
 {
-    <div class="@Class">
+    <div class="tinymce-content @Class">
         <TinyMCE.Blazor.Editor ClassName="tinymce tinymce-content"
                                Value="@this.Entity.Content"
                                ValueChanged="(value) => this.Entity.Content = value"
