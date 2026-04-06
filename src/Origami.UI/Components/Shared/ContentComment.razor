@@ -53,7 +53,7 @@
                                     </MudMenuItem>
                                 }
                                 <MudMenuItem>
-                                    <button class="" @onclick="async () => await this.OnCommentReply.InvokeAsync(this.Entity)">
+                                    <button class="" @onclick="this.OnReplyingToComment">
                                         <MudIcon Icon="@Icons.Material.Filled.Reply"></MudIcon>
                                         @Text.Lower("Reply comment")
                                     </button>
@@ -172,6 +172,23 @@
                 }
             </div>
         }
+        @if (_isReplyingToComment)
+        {
+            <div class="reply-to-comment border p-3 mt-3">
+                <ContentCommentAuthor Entity="CommentForReplying"></ContentCommentAuthor>
+                <TinyMCEComment Class="mt-3" Entity="CommentForReplying"></TinyMCEComment>
+                <div class="mt-3 text-right">
+                    <button class="btn btn-light border" @onclick="this.SaveReplyToComment">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        @Text.Lower("Save reply")
+                    </button>
+                    <button class="btn btn-light border" @onclick="this.CancelReplyToComment">
+                        <i class="fa-solid fa-ban"></i>
+                        @Text.Lower("Cancel")
+                    </button>
+                </div>
+            </div>
+        }
     </div>
 }
 
@@ -179,6 +196,7 @@
 
     private Guid _emojiPickerId = Guid.NewGuid();
     private OrigamiContentComment? CommentForUpdating { get; set; }
+    private OrigamiContentComment? CommentForReplying { get; set; }
     private DotNetObjectReference<ContentComment>? objRef;
     private ElementReference elementRef;
 
@@ -208,6 +226,7 @@
     /// Is the comment in edit mode?
     /// </summary>
     private bool _editMode;
+    private bool _isReplyingToComment;
     private bool _showEmojis;
     private bool _showReplies;
 
@@ -221,6 +240,11 @@
     protected void CancelChangesToComment()
     {
         this._editMode = false;
+    }
+
+    protected void CancelReplyToComment()
+    {
+        this._isReplyingToComment = false;
     }
 
     protected void SaveChangesToComment()
@@ -241,6 +265,20 @@
                 .OnSuccess(() => this.CommentHasChanged());
 
             this._editMode = false;
+        }
+    }
+
+    protected void SaveReplyToComment()
+    {
+        if (this.CommentForReplying != null)
+        {
+            var context = new DataOperationContext<OrigamiContentComment>(UserFacade.User, this.CommentForReplying);
+
+            this.Super.ContentComments.SmartSave(context, true)
+                .OnSuccess(() => this.OnCommentUpdated.InvokeAsync(this.CommentForReplying))
+                .OnSuccess(() => this.CommentHasChanged());
+
+            this._isReplyingToComment = false;
         }
     }
 
@@ -419,6 +457,22 @@
         }
 
         return result.ToString();
+    }
+
+    private void OnReplyingToComment()
+    {
+        this.CommentForReplying = new OrigamiContentComment
+        {
+            Id = Guid.NewGuid(),
+            ContentId = this.Entity!.ContentId,
+            ParentId = this.Entity.Id,
+            UserId = this.UserFacade.User.Id,
+            IsSpam = false,
+            IsApproved = true,
+            IsDeleted = false,
+        };
+
+        _isReplyingToComment = true;
     }
 
     public void Dispose() => objRef?.Dispose();
