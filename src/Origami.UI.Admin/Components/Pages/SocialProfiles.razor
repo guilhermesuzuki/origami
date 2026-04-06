@@ -56,7 +56,7 @@
                             <TemplateColumn Title="@Text.Upper("Name")" Sortable="false" Filterable="false">
                                 <CellTemplate>
                                     <div class="cursor-pointer" @onclick="() => OnEdit(context.Item)">
-                                        <SocialProfileHeaderLite Entity="context.Item" GoToProfileWhenClicking="false"></SocialProfileHeaderLite>
+                                        <SocialProfileHeaderInline Entity="context.Item" GoToProfileWhenClicking="false"></SocialProfileHeaderInline>
                                         <Id Class="d-block x-small" Entity="context.Item"></Id>
                                     </div>
                                 </CellTemplate>

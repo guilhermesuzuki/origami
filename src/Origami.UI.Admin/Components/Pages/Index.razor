@@ -327,7 +327,7 @@
                                 @if (context.Item.SocialProfileId != null)
                                 {
                                     var socialProfile = this.Super.SocialProfiles.ReadFromCache().Id(context.Item.SocialProfileId);
-                                    <SocialProfileHeaderLite Class="p-1 border mt-1" Entity="socialProfile"></SocialProfileHeaderLite>
+                                    <SocialProfileHeaderInline Class="p-1 border mt-1" Entity="socialProfile"></SocialProfileHeaderInline>
                                 }
                             </div>
                         </CellTemplate>

@@ -90,7 +90,7 @@
                         <Columns>
                             <TemplateColumn>
                                 <CellTemplate>
-                                    <SocialProfileHeaderLite Entity="_socialProfile.ReadFromCache().Id(context.Item.SocialProfileId)"></SocialProfileHeaderLite>
+                                    <SocialProfileHeaderInline Entity="_socialProfile.ReadFromCache().Id(context.Item.SocialProfileId)"></SocialProfileHeaderInline>
                                     <div class="x-small">
                                         <i class="fa-solid fa-calendar"></i>
                                         @context.Item.DateCreated

@@ -60,7 +60,7 @@
                                                 {
                                                     var socialProfile = this.Super.SocialProfiles.ReadFromCache().Id(parent.SocialProfileId);
                                                     <div class="video-comment-in-reply-to p-2 mt-2 mb-2 position-relative">
-                                                        <SocialProfileHeaderLite Entity="socialProfile"></SocialProfileHeaderLite>
+                                                        <SocialProfileHeaderInline Entity="socialProfile"></SocialProfileHeaderInline>
                                                         <div class="video-comment-text">@((MarkupString)parent.Content)</div>
                                                         <button class="position-absolute fw-bold p-2" style="top: 0; right: 0; bottom: 0;" @onclick="() => NewComment.ParentId = null">x</button>
                                                     </div>
