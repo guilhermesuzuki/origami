@@ -452,7 +452,9 @@
 
         foreach (var reaction__ in reactions)
         {
+            var user = this.Super.Users.ReadFromCache().Id(reaction__.UserId);
             var socialProfile = this.Super.SocialProfiles.ReadFromCache().Id(reaction__.SocialProfileId);
+            if (user != null) result.Append($" • {user.DisplayName}");
             if (socialProfile != null) result.Append($" • {socialProfile.GetName()} ({socialProfile.SocialNetwork})");
         }
 
