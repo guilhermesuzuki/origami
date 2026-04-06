@@ -57,17 +57,17 @@
                                         else if (context.Item.Type.Like("OrigamiPage") == true)
                                         {
                                             var page = this.Super.Contents.ReadFromCache().Id(context.Item.Id);
-                                            <ContentHeaderInline Entity="page"></ContentHeaderInline>
+                                            <ContentTitleColumn Entity="page"></ContentTitleColumn>
                                         }
                                         else if (context.Item.Type.Like("OrigamiPost") == true)
                                         {
                                             var post = this.Super.Contents.ReadFromCache().Id(context.Item.Id);
-                                            <ContentHeaderInline Entity="post"></ContentHeaderInline>
+                                            <ContentTitleColumn Entity="post"></ContentTitleColumn>
                                         }
                                         else if (context.Item.Type.Like("OrigamiVideo") == true)
                                         {
                                             var video = this.Super.Contents.ReadFromCache().Id(context.Item.Id);
-                                            <ContentHeaderInline Entity="video"></ContentHeaderInline>
+                                            <ContentTitleColumn Entity="video"></ContentTitleColumn>
                                         }
                                         else if (context.Item.Type.Like("ContentComment") == true)
                                         {
@@ -97,12 +97,12 @@
                                         else if (context.Item.Type.Like("OrigamiSpecialPage") == true)
                                         {
                                             var page = this.Super.GetSpecialPages().Id(context.Item.Id);
-                                            <ContentHeaderInline Entity="page"></ContentHeaderInline>
+                                            <ContentTitleColumn Entity="page"></ContentTitleColumn>
                                         }
                                         else if (context.Item.Type.Like("OrigamiSpecialMessage") == true)
                                         {
                                             var message = this.Super.GetSpecialMessages().Id(context.Item.Id);
-                                            <ContentHeaderInline Entity="message"></ContentHeaderInline>
+                                            <ContentTitleColumn Entity="message"></ContentTitleColumn>
                                         }
                                     </div>
                                 </CellTemplate>
