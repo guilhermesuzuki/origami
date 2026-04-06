@@ -108,6 +108,20 @@ namespace Origami.Core.Data
             return new(ctx.Entity) { Error = Text.Original(Text.SomethingWentWrongPleaseTryAgain) };
         }
 
+        public Result<OrigamiContentComment> Pin(DataOperationContext<OrigamiContentComment> ctx, bool checkPermission)
+        {
+            try
+            {
+                
+            }
+            catch (Exception)
+            {
+                return new(ctx.Entity) { Error = Text.Original(Text.SomethingWentWrongPleaseTryAgain) };
+            }
+
+            return new(ctx.Entity) { Error = Text.Original(Text.SomethingWentWrongPleaseTryAgain) };
+        }
+
         public override void PurgeRelationshipsFromCache(OrigamiContentComment entity)
         {
             base.PurgeRelationshipsFromCache(entity);
@@ -221,6 +235,11 @@ namespace Origami.Core.Data
             }
 
             return new(ctx.Entity) { Error = Text.Original(Text.SomethingWentWrongPleaseTryAgain) };
+        }
+
+        public Result<OrigamiContentComment> Unpin(DataOperationContext<OrigamiContentComment> ctx, bool checkPermission)
+        {
+            throw new NotImplementedException();
         }
 
         public override Result<OrigamiContentComment> UpdateValidation(DataOperationContext<OrigamiContentComment> ctx)

@@ -67,6 +67,8 @@ namespace Origami.Core.Data
         /// the pinned comment if the operation is successful.</returns>
         Result<TComment> Pin(DataOperationContextFrontEnd<TComment> ctx);
 
+        Result<TComment> Pin(DataOperationContext<TComment> ctx, bool checkPermission);
+
         /// <summary>
         /// Removes the pinned status from a comment in the specified ctx.
         /// </summary>
@@ -76,6 +78,8 @@ namespace Origami.Core.Data
         /// <returns>A <see cref="Result{TComment}"/> representing the outcome of the operation.  If successful, the result
         /// contains the updated comment with its pinned status removed.</returns>
         Result<TComment> Unpin(DataOperationContextFrontEnd<TComment> ctx);
+
+        Result<TComment> Unpin(DataOperationContext<TComment> ctx, bool checkPermission);
 
         /// <summary>
         /// Updates an existing comment in the data store based on the provided ctx.

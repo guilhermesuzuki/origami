@@ -22,9 +22,11 @@ namespace Origami.Core.Models
         protected bool _isDeleted;
         protected bool _isSpam;
         protected Guid? _moderatedById;
+        protected Guid? _moderatedByUserId;
         protected string _nanoId;
         protected Guid? _pinnedById;
 
+        protected Guid? _pinnedByUserId;
         /// <summary>
         /// Default constructor
         /// </summary>
@@ -85,6 +87,10 @@ namespace Origami.Core.Models
             set => this.Set(ref _isDeleted, value, Changed);
         }
 
+        public bool IsModeratedBySomeone => ModeratedById != null || ModeratedByUserId != null;
+
+        public bool IsPinnedBySomeone => PinnedById != null || PinnedByUserId != null;
+
         /// <summary>
         /// Is this comment a SPAM or not?
         /// </summary>
@@ -93,14 +99,22 @@ namespace Origami.Core.Models
             get => _isSpam;
             set => this.Set(ref _isSpam, value, Changed);
         }
-
         /// <summary>
-        /// Comment was Moderated By (ID, FK)
+        /// Comment was moderated by a social profile (ID, FK)
         /// </summary>
         public Guid? ModeratedById
         {
             get => _moderatedById;
             set => this.Set(ref _moderatedById, value, Changed);
+        }
+
+        /// <summary>
+        /// Comment was moderated by an admin user (ID, FK)
+        /// </summary>
+        public Guid? ModeratedByUserId
+        {
+            get => _moderatedByUserId;
+            set => this.Set(ref _moderatedByUserId, value, Changed);
         }
 
         [StringLength(8)]
@@ -111,12 +125,21 @@ namespace Origami.Core.Models
         }
 
         /// <summary>
-        /// Comment was Pinned By (ID, FK)
+        /// Comment was pinned by a social profile (ID, FK)
         /// </summary>
         public Guid? PinnedById
         {
             get => _pinnedById;
             set => this.Set(ref _pinnedById, value, Changed);
+        }
+
+        /// <summary>
+        /// Comment was pinned by an admin user (ID, FK)
+        /// </summary>
+        public Guid? PinnedByUserId
+        {
+            get => _pinnedByUserId;
+            set => this.Set(ref _pinnedByUserId, value, Changed);
         }
     }
 }
