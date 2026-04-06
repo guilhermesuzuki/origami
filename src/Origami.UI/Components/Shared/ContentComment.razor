@@ -63,18 +63,10 @@
                 </AuthorizeView>
             </div>
             <div class="post-comment-date small text-center">
-                <span class="ms-1" title="@Text.Original("Date created")">
-                    <i class="bi bi-calendar-plus-fill"></i>
-                    <span class="">@Comment.DateCreated.ToString()</span>
+                <span class="ms-1" title="@Text.Original("Date")">
+                    <i class="bi bi-calendar-fill"></i>
+                    <span class="">@Comment.GetDate()</span>
                 </span>
-                @if (Comment.DateModified != null)
-                {
-                    <span class="ms-1" title="@Text.Original("Date modified")">
-                        <span>•</span>
-                        <i class="bi bi-calendar-check-fill"></i>
-                        <span class="">@Comment.DateModified.ToString()</span>
-                    </span>
-                }
                 @if (Comment.PinnedById != null)
                 {
                     <span class="ms-1" title="@Text.Original("Pinned")">
@@ -85,7 +77,7 @@
                 @if (replies.Any() == true)
                 {
                     <span class="cursor-pointer ms-1 @(_showReplies ? "fw-bold": null)" title="@Text.Original("Direct replies")" @onclick="() => this._showReplies = !this._showReplies">
-                        <span>•</span>
+                        <span>• </span>
                         @if (replies.Count() == 1)
                         {
                             <span class="">@Text.Lower("{0} reply", replies.Count())</span>
