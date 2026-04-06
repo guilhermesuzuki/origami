@@ -98,6 +98,7 @@ namespace Origami.Core
                 { "height", 1000 },
                 { "content_css", new List<string>() { "https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" } },
                 { "content_style", "body { margin: 20px!important; }" },
+                { "promotion", false },
             };
 
             /// <summary>
