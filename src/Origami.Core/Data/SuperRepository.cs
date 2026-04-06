@@ -438,6 +438,7 @@ namespace Origami.Core.Data
             ContentCommentReactions.RefreshCache();
             ContentComments.RefreshCache();
             ContentRatings.RefreshCache();
+            ContentReactions.RefreshCache();
             Contents.RefreshCache();
             ContentTags.RefreshCache();
             PhysicalPages.RefreshCache();
