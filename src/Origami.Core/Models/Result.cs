@@ -133,7 +133,18 @@ namespace Origami.Core.Models
         /// <returns></returns>
         public virtual object? GetEntity()
         {
-            return GetType().GetRuntimeProperty(nameof(Result<IId>.Entity))?.GetValue(this);
+            var entity = GetType().GetRuntimeProperty(nameof(Result<IId>.Entity))?.GetValue(this);
+
+            return entity switch
+            {
+                null => null,
+                HubContentPage page => page.Entity,
+                HubContentPost post => post.Entity,
+                HubContentSpecialMessage specialMessage => specialMessage.Entity,
+                HubContentSpecialPage specialPage => specialPage.Entity,
+                HubContentVideo video => video.Entity,
+                _ => entity
+            };
         }
 
         /// <summary>
