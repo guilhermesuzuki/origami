@@ -1,8 +1,5 @@
 ﻿@using System.Linq
 @inherits Basic
-
-@inject Text _text
-@inject IUserFacade _userFacade
 @inject IContentCommentRepository _postComment
 
 @if (Comments.Count() > 0)
@@ -19,9 +16,19 @@
             </div>
         }
         <div class="p-1 fw-bold text-center border mb-3 bg-secondary text-white">@Text.Lower("All comments")</div>
-        @foreach (var comment in Comments.Take(this._currentPage * this._pageSize))
+        @if (AppFacade.Admin.GetValueOrDefault() == true)
         {
-            <ContentComment Class="mb-3 shadow-sm" Comment="comment" OnCommentUpdated="OnCommentUpdated" OnCommentDeleted="OnCommentDeleted" OnCommentReply="OnCommentReply"></ContentComment>
+            @foreach (var comment in Comments.Take(this._currentPage * this._pageSize))
+            {
+                <ContentComment2 Class="mb-3 shadow-sm" Entity="comment" OnCommentUpdated="OnCommentUpdated" OnCommentDeleted="OnCommentDeleted" OnCommentReply="OnCommentReply"></ContentComment2>
+            }
+        }
+        else
+        {
+            @foreach (var comment in Comments.Take(this._currentPage * this._pageSize))
+            {
+                <ContentComment Class="mb-3 shadow-sm" Entity="comment" OnCommentUpdated="OnCommentUpdated" OnCommentDeleted="OnCommentDeleted" OnCommentReply="OnCommentReply"></ContentComment>
+            }
         }
         <button class="w-100 text-center btn btn-light border @(_disableLoadMoreComments ? "cursor-not-allowed" : null)" disabled="@this._disableLoadMoreComments" @onclick="() => {this._currentPage += 1; this.OnCurrentPageChanged.InvokeAsync(this._currentPage);}">@Text.Lower("See more comments")</button>
     </div>
@@ -45,7 +52,7 @@
             var ids = Comments.DistinctBy(x => x.ContentId).Select(x => x.ContentId);
 
             return this.Super.ContentComments
-                .CommentsFromProfile(this._userFacade.SocialProfile, false)
+                .CommentsFromProfile(this.UserFacade.SocialProfile, false)
                 .Where(x => ids.Contains(x.ContentId));
         }
     }

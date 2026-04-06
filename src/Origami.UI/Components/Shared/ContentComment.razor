@@ -1,21 +1,22 @@
 ﻿@using System.Text;
 @inherits Basic
+@implements IEntityNull<OrigamiContentComment>
 
-@if (Comment != null)
+@if (Entity != null)
 {
-    var parent = this.Super.ContentComments.ReadFromCache().Id(Comment.ParentId);
-    var socialProfile = this.Super.SocialProfiles.ReadFromCache().Id(Comment.SocialProfileId);
-    var replies = this.Super.GetReplies(Comment);
-    <a id="@Comment.Id"></a>
-    <div class="wrapper border @Class @(this.Comment.SocialProfileId == this.UserFacade.SocialProfile.Id ? "border-dark" : null)">
+    var parent = this.Super.ContentComments.ReadFromCache().Id(Entity.ParentId);
+    var socialProfile = this.Super.SocialProfiles.ReadFromCache().Id(Entity.SocialProfileId);
+    var replies = this.Super.GetReplies(Entity);
+    <a id="@Entity.Id"></a>
+    <div class="wrapper border @Class @(this.Entity.SocialProfileId == this.UserFacade.SocialProfile.Id ? "border-dark" : null)">
         <div class="post-comment p-3 border">
             <div class="post-comment-header position-relative">
-                <SocialProfileHeader Entity="socialProfile"></SocialProfileHeader>
+                <ContentCommentAuthor Entity="this.Entity"></ContentCommentAuthor>
                 <AuthorizeView>
                     <Authorized>
                         <div class="post-comment-actions position-absolute" style="right:0;top:0;">
                             <MudMenu AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" Icon="@Icons.Material.Filled.Menu">
-                                @if (Comment.SocialProfileId == UserFacade.SocialProfile.Id)
+                                @if (Entity.SocialProfileId == UserFacade.SocialProfile.Id)
                                 {
                                     <MudMenuItem>
                                         <button class="" @onclick="() => this._editMode = true">
@@ -24,7 +25,7 @@
                                         </button>
                                     </MudMenuItem>
                                 }
-                                @if (Comment.SocialProfileId == UserFacade.SocialProfile.Id || UserFacade.SocialProfile.IsModerator)
+                                @if (Entity.SocialProfileId == UserFacade.SocialProfile.Id || UserFacade.SocialProfile.IsModerator)
                                 {
                                     <MudMenuItem>
                                         <button class="text-danger" @onclick="this.DeleteComment">
@@ -33,7 +34,7 @@
                                         </button>
                                     </MudMenuItem>
                                 }
-                                @if (UserFacade.SocialProfile.IsModerator && Comment.PinnedById == null)
+                                @if (UserFacade.SocialProfile.IsModerator && Entity.PinnedById == null)
                                 {
                                     <MudMenuItem>
                                         <button class="" @onclick="this.PinComment">
@@ -42,7 +43,7 @@
                                         </button>
                                     </MudMenuItem>
                                 }
-                                @if (UserFacade.SocialProfile.IsModerator && Comment.PinnedById != null)
+                                @if (UserFacade.SocialProfile.IsModerator && Entity.PinnedById != null)
                                 {
                                     <MudMenuItem>
                                         <button class="" @onclick="this.UnpinComment">
@@ -52,7 +53,7 @@
                                     </MudMenuItem>
                                 }
                                 <MudMenuItem>
-                                    <button class="" @onclick="async () => await this.OnCommentReply.InvokeAsync(this.Comment)">
+                                    <button class="" @onclick="async () => await this.OnCommentReply.InvokeAsync(this.Entity)">
                                         <MudIcon Icon="@Icons.Material.Filled.Reply"></MudIcon>
                                         @Text.Lower("Reply comment")
                                     </button>
@@ -65,9 +66,9 @@
             <div class="post-comment-date small text-center">
                 <span class="ms-1" title="@Text.Original("Date")">
                     <i class="bi bi-calendar-fill"></i>
-                    <span class="">@Comment.GetDate()</span>
+                    <span class="">@Entity.GetDate()</span>
                 </span>
-                @if (Comment.PinnedById != null)
+                @if (Entity.IsPinnedBySomeone == true)
                 {
                     <span class="ms-1" title="@Text.Original("Pinned")">
                         <span>•</span>
@@ -109,17 +110,17 @@
                         }
                         else
                         {
-                            @((MarkupString)Comment.Content)
+                            @((MarkupString)Entity.Content)
                         }
                     </Authorized>
                     <NotAuthorized>
-                        @((MarkupString)Comment.Content)
+                        @((MarkupString)Entity.Content)
                     </NotAuthorized>
                 </AuthorizeView>
             </div>
             <div class="post-comment-reactions mt-3">
                 <div class="reactions">
-                    @foreach (var reaction in this.Super.ContentCommentReactions.Reactions(Comment).GroupBy(x => x.Reaction))
+                    @foreach (var reaction in this.Super.ContentCommentReactions.Reactions(Entity).GroupBy(x => x.Reaction))
                     {
                         <MudTooltip Text="@WhoReacted(reaction.Key)">
                             <label class="post-comment-reaction @(HasReactionClass(reaction.Key, this.UserFacade.SocialProfile)) me-1 @(this.UserFacade.SocialProfile.New ? null : "cursor-pointer")"
@@ -181,7 +182,7 @@
     private DotNetObjectReference<ContentComment>? objRef;
     private ElementReference elementRef;
 
-    [Parameter] public OrigamiContentComment? Comment { get; set; }
+    [Parameter] public OrigamiContentComment? Entity { get; set; }
 
     /// <summary>
     /// Event triggered when the comment was successfully updated
@@ -212,9 +213,9 @@
 
     private void CommentHasChanged()
     {
-        if (this.Comment == null) return;
+        if (this.Entity == null) return;
         if (YourCommentsMustUpdate.GetInvocationList().Length == 0) return;
-        YourCommentsMustUpdate.Invoke(this, this.Comment);
+        YourCommentsMustUpdate.Invoke(this, this.Entity);
     }
 
     protected void CancelChangesToComment()
@@ -226,7 +227,7 @@
     {
         if (this.CommentForUpdating != null)
         {
-            this.Comment = this.Comment ?? new();
+            this.Entity = this.Entity ?? new();
 
             var context = new DataOperationContextFrontEnd<OrigamiContentComment>(
                 UserFacade.SocialProfile,
@@ -234,8 +235,8 @@
                 this.CommentForUpdating);
 
             this.Super.ContentComments.SmartSave(context, false)
-                .OnSuccess(() => this.Comment.Version = CommentForUpdating.Version)
-                .OnSuccess(() => this.Comment.Content = CommentForUpdating.Content)
+                .OnSuccess(() => this.Entity.Version = CommentForUpdating.Version)
+                .OnSuccess(() => this.Entity.Content = CommentForUpdating.Content)
                 .OnSuccess(() => this.OnCommentUpdated.InvokeAsync(this.CommentForUpdating))
                 .OnSuccess(() => this.CommentHasChanged());
 
@@ -245,7 +246,7 @@
 
     protected async Task DeleteComment()
     {
-        if (this.Comment != null)
+        if (this.Entity != null)
         {
             var yes = await DialogService.ShowMessageBoxAsync(
                 Text.Upper("Delete comment"),
@@ -259,10 +260,10 @@
                 var context = new DataOperationContextFrontEnd<OrigamiContentComment>(
                     UserFacade.SocialProfile,
                     DateTime.UtcNow,
-                    this.Comment);
+                    this.Entity);
 
                 this.UserFacade.Result = this.Super.ContentComments.SmartDelete(context)
-                    .OnSuccess(() => this.OnCommentDeleted.InvokeAsync(this.Comment))
+                    .OnSuccess(() => this.OnCommentDeleted.InvokeAsync(this.Entity))
                     .OnSuccess(() => this.CommentHasChanged());
             }
         }
@@ -270,22 +271,22 @@
 
     protected void PinComment()
     {
-        if (this.Comment != null)
+        if (this.Entity != null)
         {
-            var context = new DataOperationContextFrontEnd<OrigamiContentComment>(UserFacade.SocialProfile, DateTime.UtcNow, this.Comment);
+            var context = new DataOperationContextFrontEnd<OrigamiContentComment>(UserFacade.SocialProfile, DateTime.UtcNow, this.Entity);
             this.Super.ContentComments.Pin(context)     
-                .OnSuccess(async () => await this.OnCommentUpdated.InvokeAsync(this.Comment))
+                .OnSuccess(async () => await this.OnCommentUpdated.InvokeAsync(this.Entity))
                 .OnSuccess(() => this.CommentHasChanged());
         }
     }
 
     protected void UnpinComment()
     {
-        if (this.Comment != null)
+        if (this.Entity != null)
         {
-            var context = new DataOperationContextFrontEnd<OrigamiContentComment>(UserFacade.SocialProfile, DateTime.UtcNow, this.Comment);
+            var context = new DataOperationContextFrontEnd<OrigamiContentComment>(UserFacade.SocialProfile, DateTime.UtcNow, this.Entity);
             this.Super.ContentComments.Unpin(context)
-                .OnSuccess(async () => await this.OnCommentUpdated.InvokeAsync(this.Comment))
+                .OnSuccess(async () => await this.OnCommentUpdated.InvokeAsync(this.Entity))
                 .OnSuccess(() => this.CommentHasChanged());
         }
     }
@@ -293,14 +294,14 @@
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        this.CommentForUpdating = Comment?.Clone();
+        this.CommentForUpdating = Entity?.Clone();
 
         //keeps an eye open for comments changing
         YourCommentsMustUpdate += (sender, comment) =>
         {
             if (this == sender) return;
-            if (this.Comment == null) return;
-            if (this.Comment.Id != comment.Id) return;
+            if (this.Entity == null) return;
+            if (this.Entity.Id != comment.Id) return;
             this.InvokeAsync(this.StateHasChanged);
         };
     }
@@ -318,9 +319,9 @@
 
     protected bool HasReaction(string reaction, OrigamiSocialProfile socialProfile)
     {
-        if (Comment != null)
+        if (Entity != null)
         {
-            var reactions = this.Super.ContentCommentReactions.Reactions(Comment)
+            var reactions = this.Super.ContentCommentReactions.Reactions(Entity)
                 .Where(x => x.Reaction == reaction)
                 .Where(x => x.SocialProfileId == socialProfile.Id)
                 .Any();
@@ -339,7 +340,7 @@
     [JSInvokable]
     public void Reaction(string reaction)
     {
-        var reactions = this.Super.ContentCommentReactions.Reactions(Comment!)
+        var reactions = this.Super.ContentCommentReactions.Reactions(Entity!)
             .Where(x => x.SocialProfileId == UserFacade.SocialProfile.Id)
             .Where(x => x.Reaction.Like(reaction))
             .Count();
@@ -349,7 +350,7 @@
             var postCommentReaction = new Core.Models.OrigamiContentCommentReaction
             {
                 Id = Guid.NewGuid(),
-                CommentId = Comment!.Id,
+                CommentId = Entity!.Id,
                 SocialProfileId = UserFacade.SocialProfile.Id,
                 Reaction = reaction,
             };
@@ -374,7 +375,7 @@
             if (HasReaction(reaction, socialProfile) == true)
             {
                 var remove = this.Super.ContentCommentReactions.ReadFromCache()
-                    .Where(x => x.CommentId == this.Comment!.Id)
+                    .Where(x => x.CommentId == this.Entity!.Id)
                     .Where(x => x.SocialProfileId == socialProfile.Id)
                     .Where(x => x.Reaction == reaction)
                     .FirstOrDefault();
@@ -390,7 +391,7 @@
                 var add = new Core.Models.OrigamiContentCommentReaction
                 {
                     Id = Guid.NewGuid(),
-                    CommentId = this.Comment!.Id,
+                    CommentId = this.Entity!.Id,
                     SocialProfileId = this.UserFacade.SocialProfile.Id,
                     Reaction = reaction,
                 };
@@ -403,7 +404,7 @@
 
     private string WhoReacted(string reaction)
     {
-        var reactions = this.Super.ContentCommentReactions.Reactions(Comment!).Where(x => x.Reaction == reaction);
+        var reactions = this.Super.ContentCommentReactions.Reactions(Entity!).Where(x => x.Reaction == reaction);
 
         var result = new StringBuilder(
             this.UserFacade.SocialProfile.New ? Text.Lower("Click to Add this Reaction (Login First)") :

@@ -12,7 +12,7 @@
         else if (this.Entity.SocialProfileId != null)
         {
             var socialprofile = this.Super.SocialProfiles.ReadFromCache().Id(this.Entity.SocialProfileId);
-            <SocialProfileHeaderLite Entity="socialprofile"></SocialProfileHeaderLite>
+            <SocialProfileHeader Entity="socialprofile"></SocialProfileHeader>
         }
         else
         {

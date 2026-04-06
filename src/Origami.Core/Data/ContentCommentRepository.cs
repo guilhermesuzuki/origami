@@ -34,10 +34,12 @@ namespace Origami.Core.Data
             _contentCommentReactionRepository = contentCommentReactionRepository;
         }
 
+        public override string CreatePermission => nameof(OrigamiRole.ModerateComments);
         public override string DeletePermission => nameof(OrigamiRole.ModerateComments);
         public override string PurgePermission => nameof(OrigamiRole.PurgeComments);
         public override string ReadPermission => nameof(OrigamiRole.ViewComments);
         public override string RestorePermission => nameof(OrigamiRole.RestoreComments);
+        public override string UpdatePermission => nameof(OrigamiRole.ModerateComments);
 
         public List<OrigamiContentComment> AllComments(OrigamiContent? entity)
         {
@@ -45,7 +47,7 @@ namespace Origami.Core.Data
             {
                 //comments from a post
                 var comments = ReadFromCache().NonDeleted().Where(x => x.ContentId == entity.Id);
-                return comments.OrderBy(x => x.PinnedById != null ? 0 : 1).ThenBy(x => x.DateCreated).ToList();
+                return comments.OrderBy(x => x.IsPinnedBySomeone ? 0 : 1).ThenBy(x => x.DateCreated).ToList();
             }
             return [];
         }
