@@ -6,6 +6,7 @@
     var parent = this.Super.ContentComments.ReadFromCache().Id(Comment.ParentId);
     var user = this.Super.Users.ReadFromCache().Id(Comment.UserId);
     var replies = this.Super.GetReplies(Comment);
+    var moderator = this.Super.Users.CanTheUserModerateComments(user);
     <a id="@Comment.Id"></a>
     <div class="wrapper border @Class @(this.Comment.SocialProfileId == this.UserFacade.SocialProfile.Id ? "border-dark" : null)">
         <div class="post-comment p-3 border">
@@ -24,7 +25,7 @@
                                         </button>
                                     </MudMenuItem>
                                 }
-                                @if (Comment.UserId == UserFacade.User.Id || UserFacade.SocialProfile.IsModerator)
+                                @if (Comment.UserId == UserFacade.User.Id || moderator)
                                 {
                                     <MudMenuItem>
                                         <button class="text-danger" @onclick="this.DeleteComment">
@@ -33,7 +34,7 @@
                                         </button>
                                     </MudMenuItem>
                                 }
-                                @if (UserFacade.SocialProfile.IsModerator && Comment.PinnedByUserId == null)
+                                @if (moderator && Comment.IsPinnedBySomeone == false)
                                 {
                                     <MudMenuItem>
                                         <button class="" @onclick="this.PinComment">
@@ -42,7 +43,7 @@
                                         </button>
                                     </MudMenuItem>
                                 }
-                                @if (UserFacade.SocialProfile.IsModerator && Comment.PinnedByUserId != null)
+                                @if (moderator && Comment.IsPinnedBySomeone == true)
                                 {
                                     <MudMenuItem>
                                         <button class="" @onclick="this.UnpinComment">
@@ -67,7 +68,7 @@
                     <i class="bi bi-calendar-fill"></i>
                     <span class="">@Comment.GetDate()</span>
                 </span>
-                @if (Comment.PinnedById != null)
+                @if (Comment.IsPinnedBySomeone)
                 {
                     <span class="ms-1" title="@Text.Original("Pinned")">
                         <span>•</span>

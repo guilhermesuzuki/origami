@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Origami.Core.Models
 {
@@ -87,8 +88,10 @@ namespace Origami.Core.Models
             set => this.Set(ref _isDeleted, value, Changed);
         }
 
+        [NotMapped]
         public bool IsModeratedBySomeone => ModeratedById != null || ModeratedByUserId != null;
 
+        [NotMapped]
         public bool IsPinnedBySomeone => PinnedById != null || PinnedByUserId != null;
 
         /// <summary>

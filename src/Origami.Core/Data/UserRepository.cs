@@ -61,6 +61,11 @@ namespace Origami.Core.Data
             return this.SmartUpdate(ctx, false);
         }
 
+        public bool CanTheUserModerateComments(IId user)
+        {
+            return this.CheckPermission(user.Id, nameof(OrigamiRole.ModerateComments)).Ok;
+        }
+
         public Result<OrigamiUser> ChangePassword(DataOperationContext<OrigamiUser> ctx, string oldPassword, string newPassword1, string newPassword2)
         {
             using var db = DbContextFactory.CreateDbContext();
