@@ -50,6 +50,34 @@
                     }
                 </div>
             </div>
+            <ul class="inline-list position-absolute w-100 z-index-middle p-2" style="bottom:0;">
+                <li class="text-left" style="width: 50px;">
+                    
+                </li>
+                <li class="text-center">
+                    @foreach (var reaction in _getReactions().GroupBy(x => x.Reaction))
+                    {
+                        <MudTooltip Text="@WhoReacted(reaction.Key)">
+                            <span class="d-inline-block post-comment-reaction @(HasReactionClass(reaction.Key)) me-1 mb-1 @(this.UserFacade.SocialProfile.New ? null : "cursor-pointer")"
+                                  style="border-radius: 12px; padding-left: 3px; padding-right: 6px; padding-bottom: 3px;"
+                                  @onclick="() => this.ReactionClick(reaction.Key)" @onclick:stopPropagation="true">
+                                <span>@reaction.Key</span>
+                                <span>@reaction.Count()</span>
+                            </span>
+                        </MudTooltip>
+                    }
+                </li>
+                <li class="text-right" style="width: 50px;">
+                    <AuthorizeView>
+                        <Authorized>
+                            <i class="bi bi-emoji-laughing-fill cursor-pointer focusable" @onclick="() => _showEmojis = !_showEmojis" @onclick:stopPropagation="true"></i>
+                        </Authorized>
+                        <NotAuthorized>
+                            <i class="bi bi-emoji-laughing-fill" title="@Text.Original("Login to react")"></i>
+                        </NotAuthorized>
+                    </AuthorizeView>
+                </li>
+            </ul>
         </div>
     </div>
     @if (this.ShowRelatedContent == true && this.RelatedContent.Any() == true)
@@ -96,10 +124,18 @@
             </div>
         </div>
     }
+    @if (_showEmojis)
+    {
+        <div class="emoji-wrapper border p-3">
+            <EmojiPickerElement Class="m-auto" OnEmojiSelected="this._onEmojiSelected"></EmojiPickerElement>
+        </div>
+        
+    }
 }
 
 @code {
     private bool _showHeaderImage = false;
+    private bool _showEmojis = false;
 
     [Parameter] public ISlug? Slug { get; set; }
     [Parameter] public OrigamiContent? Entity { get; set; }
@@ -141,5 +177,163 @@
     {
         base.OnParametersSet();
         this.LoadRelatedContent();
+    }
+
+    private void _onEmojiSelected(string reaction)
+    {
+        if (this.UserFacade.SocialProfile.New == false)
+        {
+            var contentReaction = new Core.Models.OrigamiContentReaction
+            {
+                Id = Guid.NewGuid(),
+                ContentId = Entity!.Id,
+                SocialProfileId = UserFacade.SocialProfile.Id,
+                Reaction = reaction,
+            };
+
+            var context = new DataOperationContextFrontEnd<OrigamiContentReaction>(UserFacade.SocialProfile, DateTime.UtcNow, contentReaction);
+            var hub = this.Super.ContentReactions.SmartCreate(context).OnSuccess(this.StateHasChanged);
+
+            return;
+        }
+
+        if (this.UserFacade.User.New == false)
+        {
+            var contentReaction = new Core.Models.OrigamiContentReaction
+            {
+                Id = Guid.NewGuid(),
+                ContentId = Entity!.Id,
+                UserId = UserFacade.User.Id,
+                Reaction = reaction,
+            };
+
+            var context = new DataOperationContext<OrigamiContentReaction>(UserFacade.User, contentReaction);
+            var hub = this.Super.ContentReactions.SmartSave(context, false).OnSuccess(this.StateHasChanged);
+
+            return;
+        }
+
+        throw new InvalidOperationException("Reaction author could not be found");
+    }
+
+    private IEnumerable<OrigamiContentReaction> _getReactions()
+    {
+        if (Entity != null)
+        {
+            return this.Super.ContentReactions.Reactions(Entity);
+        }
+        return [];
+    }
+
+    private string WhoReacted(string reaction)
+    {
+        var reactions = this.Super.ContentReactions.Reactions(Entity!).Where(x => x.Reaction == reaction);
+
+        var result = new StringBuilder(
+            this.UserFacade.SocialProfile.New && this.UserFacade.User.New ? Text.Lower("Click to add this reaction (login first)") :
+            HasReaction(reaction)
+                ? Text.Lower("Click to remove")
+                : Text.Lower("Click to add this reaction"));
+
+        foreach (var reaction__ in reactions)
+        {
+            var user = this.Super.Users.ReadFromCache().Id(reaction__.UserId);
+            var socialProfile = this.Super.SocialProfiles.ReadFromCache().Id(reaction__.SocialProfileId);
+            if (user != null) result.Append($" • {user.DisplayName}");
+            if (socialProfile != null) result.Append($" • {socialProfile.GetName()} ({socialProfile.SocialNetwork})");
+        }
+
+        return result.ToString();
+    }
+
+    protected bool HasReaction(string reaction)
+    {
+        if (Entity != null && this.UserFacade.SocialProfile.New == false)
+        {
+            return this.Super.ContentReactions.Reactions(Entity)
+                .Where(x => x.Reaction == reaction)
+                .Where(x => x.SocialProfileId == this.UserFacade.SocialProfile.Id)
+                .Any();
+        }
+        else if (Entity != null && this.UserFacade.User.New == false)
+        {
+            return this.Super.ContentReactions.Reactions(Entity)
+                .Where(x => x.Reaction == reaction)
+                .Where(x => x.UserId == this.UserFacade.User.Id)
+                .Any();
+        }
+        return false;
+    }
+
+    protected string HasReactionClass(string reaction)
+    {
+        return this.HasReaction(reaction) ? "reaction-selected" : "border";
+    }
+
+    private void ReactionClick(string reaction)
+    {
+        if (this.UserFacade.SocialProfile.New == false)
+        {
+            if (HasReaction(reaction) == true)
+            {
+                var remove = this.Super.ContentReactions.ReadFromCache()
+                    .Where(x => x.ContentId == this.Entity!.Id)
+                    .Where(x => x.SocialProfileId == this.UserFacade.SocialProfile.Id)
+                    .Where(x => x.Reaction == reaction)
+                    .FirstOrDefault();
+
+                if (remove != null)
+                {
+                    var context = new DataOperationContextFrontEnd<OrigamiContentReaction>(UserFacade.SocialProfile, DateTime.UtcNow, remove);
+                    this.Super.ContentReactions.SmartPurge(context);
+                }
+            }
+            else
+            {
+                var add = new Core.Models.OrigamiContentReaction
+                {
+                    Id = Guid.NewGuid(),
+                    ContentId = this.Entity!.Id,
+                    SocialProfileId = this.UserFacade.SocialProfile.Id,
+                    Reaction = reaction,
+                };
+
+                var context = new DataOperationContextFrontEnd<OrigamiContentReaction>(UserFacade.SocialProfile, DateTime.UtcNow, add);
+                this.Super.ContentReactions.SmartCreate(context);
+            }
+            return;
+        }
+
+        if (this.UserFacade.User.New == false)
+        {
+            if (HasReaction(reaction) == true)
+            {
+                var remove = this.Super.ContentReactions.ReadFromCache()
+                    .Where(x => x.ContentId == this.Entity!.Id)
+                    .Where(x => x.UserId == this.UserFacade.User.Id)
+                    .Where(x => x.Reaction == reaction)
+                    .FirstOrDefault();
+
+                if (remove != null)
+                {
+                    var context = new DataOperationContext<OrigamiContentReaction>(UserFacade.User, remove);
+                    this.Super.ContentReactions.SmartPurge(context, false);
+                }
+            }
+            else
+            {
+                var add = new Core.Models.OrigamiContentReaction
+                {
+                    Id = Guid.NewGuid(),
+                    ContentId = this.Entity!.Id,
+                    UserId = this.UserFacade.User.Id,
+                    Reaction = reaction,
+                };
+
+                var context = new DataOperationContext<OrigamiContentReaction>(UserFacade.User, add);
+                this.Super.ContentReactions.SmartSave(context, false);
+            }
+            return;
+        }
     }
 }
