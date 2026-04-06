@@ -32,7 +32,7 @@
                                 <i class="bi bi-image"></i>
                                 @Text.Lower("Logo")
                             </div>
-                            <HeaderImageLite Entity="@Entity"></HeaderImageLite>
+                            <HeaderImageCard Entity="@Entity"></HeaderImageCard>
                             <ImageCropper OnImageWasCropped="this.UploadHeader" OnClearImage="this.ClearHeader" OnPickImageFromFileManager="() => this.FileManagerForImages = true"></ImageCropper>
                         </div>
                         <ul class="inline-list mt-3">
