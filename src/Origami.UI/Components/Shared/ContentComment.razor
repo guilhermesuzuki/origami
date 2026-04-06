@@ -331,9 +331,9 @@
             var reactions = this.Super.ContentCommentReactions.Reactions(Comment)
                 .Where(x => x.Reaction == reaction)
                 .Where(x => x.SocialProfileId == socialProfile.Id)
-                .Count();
+                .Any();
 
-            return reactions != 0;
+            return reactions;
         }
 
         return false;
