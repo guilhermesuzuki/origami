@@ -124,12 +124,12 @@
                     @foreach (var reaction in this.Super.ContentCommentReactions.Reactions(Entity).GroupBy(x => x.Reaction))
                     {
                         <MudTooltip Text="@WhoReacted(reaction.Key)">
-                            <label class="post-comment-reaction @(HasReactionClass(reaction.Key, this.UserFacade.User)) me-1 @(this.UserFacade.User.New ? null : "cursor-pointer")"
+                            <span class="d-inline-block post-comment-reaction @(HasReactionClass(reaction.Key, this.UserFacade.User)) me-1 mb-1 @(this.UserFacade.User.New ? null : "cursor-pointer")"
                                    style="border-radius: 12px; padding-left: 3px; padding-right: 6px; padding-bottom: 3px;"
                                    @onclick="() => this.ReactionClick(reaction.Key, this.UserFacade.User)">
                                 <span>@reaction.Key</span>
                                 <span>@reaction.Count()</span>
-                            </label>
+                            </span>
                         </MudTooltip>
                     }
                 </div>

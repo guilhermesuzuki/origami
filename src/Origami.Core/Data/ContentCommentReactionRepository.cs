@@ -11,6 +11,11 @@ namespace Origami.Core.Data
     {
         protected readonly IValidator<OrigamiContentCommentReaction> _validator;
 
+        public override string CreatePermission => nameof(OrigamiRole.ModerateComments);
+        public override string DeletePermission => nameof(OrigamiRole.ModerateComments);
+        public override string UpdatePermission => nameof(OrigamiRole.ModerateComments);
+        public override string PurgePermission => nameof(OrigamiRole.ModerateComments);
+
         /// <summary>
         /// Default constructor with DI
         /// </summary>
