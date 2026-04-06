@@ -10,7 +10,8 @@ namespace Origami.Core.Models
         IContent,
         IDateModified,
         IDeleted,
-        IAdditionalInfo
+        IAdditionalInfo,
+        INanoId
     {
         protected string? _additionalInfo;
         protected string _content = string.Empty;

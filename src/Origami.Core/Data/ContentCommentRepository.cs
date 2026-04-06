@@ -123,7 +123,7 @@ namespace Origami.Core.Data
         {
             var hub = base.PurgeRelationshipsFromDatabase(ctx);
             using var db = DbContextFactory.CreateDbContext();
-            hub.RowsAffected += (from x in db.Set<OrigamiContentCommentReaction>().AsNoTracking() where x.CommentId == ctx.Entity.Id select x.Id).ExecuteDelete();
+            hub.RowsAffected += (from x in db.Set<OrigamiContentCommentReaction>().AsNoTracking() where x.CommentId == ctx.Entity.Id select x).ExecuteDelete();
             return hub;
         }
 
