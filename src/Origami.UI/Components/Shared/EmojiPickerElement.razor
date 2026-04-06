@@ -1,12 +1,11 @@
 ﻿@inherits Basic
 
-<emoji-picker id="@Id" @ref="elementRef" class="@Class" style="@_getStyle()"></emoji-picker>
+<emoji-picker id="@_emojiId" @ref="elementRef" class="@Class" style="@_getStyle()"></emoji-picker>
 
 @code {
     private DotNetObjectReference<EmojiPickerElement> objRef = null!;
     private ElementReference elementRef;
-
-    public override Guid Id { get; set; } = Guid.NewGuid();
+    private Guid _emojiId = Guid.NewGuid();
 
     [Parameter] public EventCallback<string> OnEmojiSelected { get; set; }
     [Parameter] public Dictionary<string, string> Style { get; set; } = new Dictionary<string, string>();
@@ -28,7 +27,7 @@
         if (elementRef.Context != null)
         {
             await JSRuntime!.InvokeVoidAsync("assignDotNetHelper", elementRef, objRef);
-            await JSRuntime!.InvokeVoidAsync("emojiClick", this.Id.ToString());
+            await JSRuntime!.InvokeVoidAsync("emojiClick", this._emojiId.ToString());
         }
     }
 
