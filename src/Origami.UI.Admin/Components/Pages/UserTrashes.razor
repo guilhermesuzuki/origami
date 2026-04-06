@@ -53,6 +53,8 @@
                                         {
                                             var blog = this.Super.Blogs.ReadFromCache().Id(context.Item.Id);
                                             <BlogHeaderInline Entity="blog"></BlogHeaderInline>
+                                            <div class="dummy"></div>
+                                            <Id Entity="blog" Class="x-small"></Id>
                                         }
                                         else if (context.Item.Type.Like("OrigamiPage") == true)
                                         {
