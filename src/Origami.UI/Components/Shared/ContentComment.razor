@@ -86,7 +86,14 @@
                 {
                     <span class="cursor-pointer ms-1 @(_showReplies ? "fw-bold": null)" title="@Text.Original("Direct replies")" @onclick="() => this._showReplies = !this._showReplies">
                         <span>•</span>
-                        <span class="">@Text.Lower("{0} replies", replies.Count())</span>
+                        @if (replies.Count() == 1)
+                        {
+                            <span class="">@Text.Lower("{0} reply", replies.Count())</span>
+                        }
+                        else
+                        {
+                            <span class="">@Text.Lower("{0} replies", replies.Count())</span>
+                        }
                     </span>
                 }
             </div>
