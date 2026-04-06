@@ -356,9 +356,14 @@
 
             var context = new DataOperationContextFrontEnd<OrigamiContentCommentReaction>(UserFacade.SocialProfile, DateTime.UtcNow, postCommentReaction);
 
-            this.Super.ContentCommentReactions.SmartCreate(context)
+            var hub = this.Super.ContentCommentReactions.SmartCreate(context)
                 .OnSuccess(() => this.CommentHasChanged())
                 .OnSuccess(this.StateHasChanged);
+
+            if (hub.Ok == false)
+            {
+                this.UserFacade.Result = hub;
+            }
         }
     }
 
