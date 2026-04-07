@@ -143,18 +143,18 @@
             <div class="border shadow-lg position-relative" style="width: 90%; height: 90%;">
                 <div class="overflow-auto text-center h-100 w-100" style="padding-bottom: 70px;">
                     <div class="mw-100 mh-100 position-absolute" style="top:50%;left:50%;transform:translate(-50%,-50%)">
-                        @* <ContentHeaderLite Entity="this.Entity"></ContentHeaderLite> *@
-                        <ContentCommentAuthor Entity="this._quickReply"></ContentCommentAuthor>
+                        <ContentHeaderLite Entity="this.Entity"></ContentHeaderLite>
+                        <ContentCommentAuthor Class="mt-3" Entity="this._quickReply"></ContentCommentAuthor>
                         <TinyMCEComment Class="mt-3" Entity="this._quickReply"></TinyMCEComment>
                         <div class="mt-3 text-right">
                             <button class="btn btn-light border" @onclick="this.SaveReplyToComment">
                                 <i class="fa-solid fa-paper-plane"></i>
-                                @Text.Lower("Save changes")
+                                @Text.Lower("Reply")
                             </button>
-                            <button class="btn btn-light border" @onclick="this.CancelReplyToComment">
+                            @* <button class="btn btn-light border" @onclick="this.CancelReplyToComment">
                                 <i class="fa-solid fa-ban"></i>
                                 @Text.Lower("Cancel")
-                            </button>
+                            </button> *@
                         </div>
                     </div>
                 </div>
@@ -162,7 +162,7 @@
                     <li></li>
                     <li class="text-right">
                         <div class="btn-group p-3">
-                            <button class="btn btn-secondary" @onclick="() => this._showQuickReply = false">
+                            <button class="btn btn-secondary" @onclick="this.CancelReplyToComment">
                                 <i class="fa-solid fa-circle-xmark"></i>
                                 @Text.Lower("Close window")
                             </button>
