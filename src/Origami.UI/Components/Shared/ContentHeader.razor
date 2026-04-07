@@ -52,7 +52,14 @@
             </div>
             <ul class="inline-list position-absolute w-100 z-index-middle p-2" style="bottom:0;">
                 <li class="text-left" style="width: 50px;">
-                    
+                    <AuthorizeView>
+                        <Authorized>
+                            <i class="bi bi-chat-left-dots-fill cursor-pointer focusable" title="@Text.Original("Quick reply")" @onclick="_quickReplies" @onclick:stopPropagation="true"></i>
+                        </Authorized>
+                        <NotAuthorized>
+                            <i class="bi bi-chat-left-dots-fill" title="@Text.Original("Login to quick reply")"></i>
+                        </NotAuthorized>
+                    </AuthorizeView>
                 </li>
                 <li class="text-center">
                     @foreach (var reaction in _getReactions().GroupBy(x => x.Reaction))
@@ -129,13 +136,50 @@
         <div class="emoji-wrapper border p-3">
             <EmojiPickerElement Class="m-auto" OnEmojiSelected="this._onEmojiSelected"></EmojiPickerElement>
         </div>
-        
+    }
+    @if (_showQuickReply)
+    {
+        <div class="position-fixed popup-container z-index-front">
+            <div class="border shadow-lg position-relative" style="width: 90%; height: 90%;">
+                <div class="overflow-auto text-center h-100 w-100" style="padding-bottom: 70px;">
+                    <div class="mw-100 mh-100 position-absolute" style="top:50%;left:50%;transform:translate(-50%,-50%)">
+                        @* <ContentHeaderLite Entity="this.Entity"></ContentHeaderLite> *@
+                        <ContentCommentAuthor Entity="this._quickReply"></ContentCommentAuthor>
+                        <TinyMCEComment Class="mt-3" Entity="this._quickReply"></TinyMCEComment>
+                        <div class="mt-3 text-right">
+                            <button class="btn btn-light border" @onclick="this.SaveReplyToComment">
+                                <i class="fa-solid fa-paper-plane"></i>
+                                @Text.Lower("Save changes")
+                            </button>
+                            <button class="btn btn-light border" @onclick="this.CancelReplyToComment">
+                                <i class="fa-solid fa-ban"></i>
+                                @Text.Lower("Cancel")
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <ul class="inline-list position-absolute w-100 border bg-white" style="bottom:0;">
+                    <li></li>
+                    <li class="text-right">
+                        <div class="btn-group p-3">
+                            <button class="btn btn-secondary" @onclick="() => this._showQuickReply = false">
+                                <i class="fa-solid fa-circle-xmark"></i>
+                                @Text.Lower("Close window")
+                            </button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
     }
 }
 
 @code {
     private bool _showHeaderImage = false;
     private bool _showEmojis = false;
+    private bool _showQuickReply = false;
+
+    private OrigamiContentComment _quickReply = new();
 
     [Parameter] public ISlug? Slug { get; set; }
     [Parameter] public OrigamiContent? Entity { get; set; }
@@ -335,5 +379,40 @@
             }
             return;
         }
+    }
+
+    private void _quickReplies()
+    {
+        this._quickReply = new()
+        {
+            ContentId = this.Entity != null ? this.Entity.Id : throw new InvalidOperationException("Entity is null"),
+            UserId = this.UserFacade.User.New ? null : this.UserFacade.User.Id,
+            SocialProfileId = this.UserFacade.SocialProfile.New ? null : this.UserFacade.SocialProfile.Id,
+        };
+        this._showQuickReply = true;
+    }
+
+    protected void SaveReplyToComment()
+    {
+        if (this.UserFacade.User.New == false)
+        {
+            var context = new DataOperationContext<OrigamiContentComment>(UserFacade.User, this._quickReply);
+            this.Super.ContentComments.SmartSave(context, true);
+            this._showQuickReply = false;
+            return;
+        }
+
+        if (this.UserFacade.SocialProfile.New == false)
+        {
+            var context = new DataOperationContextFrontEnd<OrigamiContentComment>(UserFacade.SocialProfile, DateTime.UtcNow, this._quickReply);
+            this.Super.ContentComments.SmartCreate(context);
+            this._showQuickReply = false;
+            return;
+        }
+    }
+
+    protected void CancelReplyToComment()
+    {
+        this._showQuickReply = false;
     }
 }
