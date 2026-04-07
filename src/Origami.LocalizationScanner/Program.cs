@@ -42,4 +42,15 @@ var keys = from item in cleaned
            orderby item.Text
            select item.Text;
 
-await File.WriteAllLinesAsync("keys.txt", keys.Distinct());
+keys = keys.Distinct();
+
+await File.WriteAllLinesAsync("keys.txt", keys);
+
+/*
+foreach (var key in keys)
+{
+    var translation = await Ollama.PromptAsync($"Translate this to pt-BR: {key}");
+    Console.WriteLine($"Key: {key}");
+    Console.WriteLine(translation);
+}
+*/
