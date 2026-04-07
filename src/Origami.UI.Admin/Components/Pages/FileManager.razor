@@ -166,6 +166,28 @@
                                         <div class="position-absolute text-left">
                                             <MudCheckBox T="bool" @bind-Value="file.Checked"></MudCheckBox>
                                         </div>
+                                        @if (file.IsImage && Mode.Like("tinymce") == true)
+                                        {
+                                            <div class="position-absolute me-2 z-index-middle" style="right:0;">
+                                                <MudMenu AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" Icon="@Icons.Material.Filled.Menu">
+                                                    <MudMenuItem OnClick="@(() => _addToEditor(file, "thumbnail"))">
+                                                        <button>@Text.Lower("Thumbnail")</button>
+                                                    </MudMenuItem>
+                                                    <MudMenuItem OnClick="@(() => _addToEditor(file, "small"))">
+                                                        <button>@Text.Lower("Small")</button>
+                                                    </MudMenuItem>
+                                                    <MudMenuItem OnClick="@(() => _addToEditor(file, "medium"))">
+                                                        <button>@Text.Lower("Medium")</button>
+                                                    </MudMenuItem>
+                                                    <MudMenuItem OnClick="@(() => _addToEditor(file, "large"))">
+                                                        <button>@Text.Lower("Large")</button>
+                                                    </MudMenuItem>
+                                                    <MudMenuItem OnClick="@(() => _addToEditor(file, "original"))">
+                                                        <button>@Text.Lower("Original")</button>
+                                                    </MudMenuItem>
+                                                </MudMenu>
+                                            </div>
+                                        }
                                         <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
                                             @if (file.IsImage)
                                             {
@@ -372,10 +394,10 @@
         }
     }
 
-    private async Task _addToEditor(OrigamiSystemFile file)
+    private async Task _addToEditor(OrigamiSystemFile file, string size)
     {
         await this.JSRuntime.InvokeVoidAsync("origami.editor.add",
-            file.WebPath,
+            file.WebPath + (file.IsImage ? $"?size={size}" : string.Empty),
             file.Name,
             file.FileSize.SizeInBytes(),
             file.IsImage ? "image" : file.IsVideo ? "video" : file.IsAudio ? "audio" : string.Empty
