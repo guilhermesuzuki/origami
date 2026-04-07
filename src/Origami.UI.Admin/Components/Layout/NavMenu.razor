@@ -142,6 +142,10 @@
         <i class="fa-solid fa-broom"></i>
         <span>@Text.Lower("Regenerate nano-ids")</span>
     </div>
+    <div class="menu border-bottom text-danger" @onclick="GoToCacheExplorer">
+        <i class="fa-solid fa-book"></i>
+        <span>@Text.Lower("Cache explorer")</span>
+    </div>
     @if (this.GetUserLocation() != null)
     {
         var location = this.GetUserLocation()!;
@@ -323,6 +327,11 @@
     private void GoToQuickNotes()
     {
         this.GhostOfTheNavigator!.NavigateTo($"/quicknotes");
+    }
+
+    private void GoToCacheExplorer()
+    {
+        this.GhostOfTheNavigator!.NavigateTo($"/cache/explorer");
     }
 
     private async Task RegenerateNanoIds()
