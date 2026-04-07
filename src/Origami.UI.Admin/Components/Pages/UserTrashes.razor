@@ -84,7 +84,7 @@
                                         else if (context.Item.Type.Like("User") == true)
                                         {
                                             var user = this.Super.Users.ReadFromCache().Id(context.Item.Id);
-                                            <UserHeader Entity="user"></UserHeader>
+                                            <UserHeaderInline Entity="user"></UserHeaderInline>
                                         }
                                         else if (context.Item.Type.Like("Role") == true)
                                         {

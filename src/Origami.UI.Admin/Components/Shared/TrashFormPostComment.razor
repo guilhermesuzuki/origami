@@ -14,12 +14,14 @@
     {
         var post = this.Super.Contents.ReadFromCache().OfType<OrigamiPost>().Id(Entity.ContentId);
         var socialProfile = this.Super.SocialProfiles.ReadFromCache().Id(Entity.SocialProfileId);
+        var user = this.Super.Users.ReadFromCache().Id(Entity.UserId);
 
         <div class="row">
             <div class="col-12">
                 <BasicHeaderNotes Entity="this.Entity"></BasicHeaderNotes>
                 <ContentHeaderLite Class="mt-3" Entity="post"></ContentHeaderLite>
-                <SocialProfileHeader Class="mt-3 p-3 border shadow-sm" Entity="socialProfile"></SocialProfileHeader>
+                <SocialProfileCard Class="mt-3 p-3 border shadow-sm" Entity="socialProfile"></SocialProfileCard>
+                <UserHeaderCard Class="mt-3 p-3 border shadow-sm" Entity="user"></UserHeaderCard>
                 <BasicHeader Class="mt-3" Entity="this.Entity"></BasicHeader>
                 <ul class="inline-list mt-3">
                     <li>
