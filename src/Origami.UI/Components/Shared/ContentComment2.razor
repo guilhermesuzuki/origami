@@ -5,9 +5,9 @@
 @if (Entity != null)
 {
     var parent = this.Super.ContentComments.ReadFromCache().Id(Entity.ParentId);
-    var user = this.Super.Users.ReadFromCache().Id(Entity.UserId);
+    var commentUser = this.Super.Users.ReadFromCache().Id(Entity.UserId);
     var replies = this.Super.GetReplies(Entity);
-    var moderator = user != null ? this.Super.Users.CanTheUserModerateComments(user) : false;
+    var moderator = this.UserFacade.User.New ? false : this.Super.Users.CanTheUserModerateComments(this.UserFacade.User);
     <a id="@Entity.Id"></a>
     <div class="wrapper border @Class @(this.Entity.SocialProfileId == this.UserFacade.SocialProfile.Id ? "border-dark" : null)">
         <div class="post-comment p-3 border">
