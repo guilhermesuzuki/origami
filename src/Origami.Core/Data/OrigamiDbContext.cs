@@ -282,10 +282,6 @@ namespace Origami.Core.Data
             modelBuilder.Entity<OrigamiUserView>().Metadata.SetIsTableExcludedFromMigrations(true);
 
             // Map the entity to the view
-            modelBuilder.Entity<OrigamiUserContent>().ToView("oi_vw_UserContents");
-            modelBuilder.Entity<OrigamiUserContent>().Metadata.SetIsTableExcludedFromMigrations(true);
-
-            // Map the entity to the view
             modelBuilder.Entity<OrigamiUserTrash>().ToView("oi_vw_UserTrashes");
             modelBuilder.Entity<OrigamiUserTrash>().Metadata.SetIsTableExcludedFromMigrations(true);
 

@@ -34,7 +34,6 @@ namespace Origami.Core.Data
             ISubscriberRepository subscriberRepository,
             IUserActivityRepository userActivityRepository,
             IUserBlogRepository userBlogRepository,
-            IUserContentRepository userContentRepository,
             IUserPasswordResetRepository userPasswordResetRepository,
             IUserRepository userRepository,
             IUserRoleRepository userRoleRepository,
@@ -78,7 +77,6 @@ namespace Origami.Core.Data
             Subscribers = subscriberRepository;
             UserActivities = userActivityRepository;
             UserBlogs = userBlogRepository;
-            UserContents = userContentRepository;
             UserPasswordResets = userPasswordResetRepository;
             UserRoles = userRoleRepository;
             Users = userRepository;
@@ -130,7 +128,6 @@ namespace Origami.Core.Data
         public ISubscriberRepository Subscribers { get; }
         public IUserActivityRepository UserActivities { get; }
         public IUserBlogRepository UserBlogs { get; }
-        public IUserContentRepository UserContents { get; }
         public IUserPasswordResetRepository UserPasswordResets { get; }
         public IUserRoleRepository UserRoles { get; }
         public IUserRepository Users { get; }

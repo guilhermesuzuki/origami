@@ -31,7 +31,6 @@ namespace Origami.Core.Data
         private readonly ISpecialPageRepository _specialPageRepository;
         private readonly ISubscriberRepository _subscriberRepository;
         private readonly IUserActivityRepository _userActivityRepository;
-        private readonly IUserContentRepository _userContentRepository;
         private readonly IUserRepository _userRepository;
         private readonly IUserRoleRepository _userRoleRepository;
         private readonly IUserViewRepository _userViewRepository;
@@ -58,7 +57,6 @@ namespace Origami.Core.Data
             ISpecialPageRepository specialPageRepository,
             ISubscriberRepository subscriberRepository,
             IUserActivityRepository userActivityRepository,
-            IUserContentRepository userContentRepository,
             IUserRepository userRepository,
             IUserRoleRepository userRoleRepository,
             IUserViewRepository userViewRepository,
@@ -93,7 +91,6 @@ namespace Origami.Core.Data
             _specialPageRepository = specialPageRepository;
             _subscriberRepository = subscriberRepository;
             _userActivityRepository = userActivityRepository;
-            _userContentRepository = userContentRepository;
             _userRepository = userRepository;
             _userRoleRepository = userRoleRepository;
             _userViewRepository = userViewRepository;

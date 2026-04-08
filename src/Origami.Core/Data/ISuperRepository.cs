@@ -60,7 +60,6 @@ namespace Origami.Core.Data
         ISubscriberRepository Subscribers { get; }
         IUserActivityRepository UserActivities { get; }
         IUserBlogRepository UserBlogs { get; }
-        IUserContentRepository UserContents { get; }
         IUserPasswordResetRepository UserPasswordResets { get; }
         IUserRoleRepository UserRoles { get; }
         IUserRepository Users { get; }
