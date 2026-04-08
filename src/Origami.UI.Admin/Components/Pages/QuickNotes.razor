@@ -105,7 +105,7 @@
 </Root>
 @code {
 
-    protected override string DefaultOrdering => $"{nameof(OrigamiQuickNote.Note)}";
+    protected override string DefaultOrdering => $"{nameof(OrigamiQuickNote.Title)}";
 
     protected virtual Result<OrigamiQuickNote> PublishEntity(OrigamiQuickNote entity)
     {

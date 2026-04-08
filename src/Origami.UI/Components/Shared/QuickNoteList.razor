@@ -70,10 +70,10 @@
 
         pages = this.OrderBy switch
         {
-            2 => pages.OrderBy(x => x.Note),
-            3 => pages.OrderByDescending(x => x.Note),
+            2 => pages.OrderBy(x => x.Title),
+            3 => pages.OrderByDescending(x => x.Title),
             4 => pages.OrderBy(x => x.DateCreated),
-            5 => pages.OrderBy(x => x.LanguageWrittenOn).ThenBy(x => x.Note),
+            5 => pages.OrderBy(x => x.LanguageWrittenOn).ThenBy(x => x.Title),
             6 => pages.OrderBy(x => x.LanguageWrittenOn).ThenByDescending(x => x.DateCreated),
             _ => pages.OrderByDescending(x => x.DateCreated)
         };

@@ -11,7 +11,7 @@ namespace Origami.Core.Validators
             RuleFor(x => x.BlogId).BlogId(text);
             RuleFor(x => x.Id).Id(text);
             RuleFor(x => x.NanoId).NanoId(text);
-            RuleFor(x => x.Note).Note(text);
+            RuleFor(x => x.Title).Title(text);
         }
     }
 }

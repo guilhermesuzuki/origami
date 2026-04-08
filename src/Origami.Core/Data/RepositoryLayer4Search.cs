@@ -134,11 +134,6 @@ namespace Origami.Core.Data
                 if (post?.Title.Has() == true) doc.Add(new TextField("comment_postTitle", post.Title, Field.Store.YES));
             }
 
-            if (entity is OrigamiQuickNote quickNote)
-            {
-                if (quickNote.Note.Has() == true) doc.Add(new TextField("quickNote", quickNote.Note, Field.Store.YES));
-            }
-
             return doc;
         }
 

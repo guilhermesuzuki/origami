@@ -197,6 +197,7 @@ namespace Origami.Core.Data
                 .HasValue<OrigamiPage>(nameof(OrigamiPage))
                 .HasValue<OrigamiPost>(nameof(OrigamiPost))
                 .HasValue<OrigamiSpecialPage>(nameof(OrigamiSpecialPage))
+                .HasValue<OrigamiQuickNote>(nameof(OrigamiQuickNote))
                 .HasValue<OrigamiVideo>(nameof(OrigamiVideo))
                 ;
 

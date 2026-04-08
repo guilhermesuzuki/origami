@@ -250,7 +250,7 @@
     /// <summary>
     /// List of quick notes found in the search
     /// </summary>
-    private IEnumerable<OrigamiQuickNote> _quickNotes => _hits.OfType<OrigamiQuickNote>().OrderBy(x => x.Note);
+    private IEnumerable<OrigamiQuickNote> _quickNotes => _hits.OfType<OrigamiQuickNote>().OrderBy(x => x.Title);
 
     /// <summary>
     /// List of all hits found in the search, used to check if there are any results or not
