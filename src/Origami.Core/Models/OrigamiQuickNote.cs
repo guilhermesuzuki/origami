@@ -12,6 +12,7 @@ namespace Origami.Core.Models
         public OrigamiQuickNote() : base()
         {
             Type = nameof(OrigamiQuickNote);
+            IsDraft = false;
         }
 
         [NotMapped]
