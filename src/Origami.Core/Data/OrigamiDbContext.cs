@@ -181,10 +181,17 @@ namespace Origami.Core.Data
         /// Users
         /// </summary>
         public DbSet<OrigamiUser> Users { get; set; }
+
         /// <summary>
         /// User Trashes
         /// </summary>
         public DbSet<OrigamiUserTrash> UserTrashes { get; set; }
+
+        /// <summary>
+        /// Videos
+        /// </summary>
+        public DbSet<OrigamiVideo> Videos { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

@@ -202,6 +202,7 @@ namespace Origami.UI
             builder.Services.AddTransient<IHubContentRepository<HubContentPost>, HubContentPostRepository>();
             builder.Services.AddTransient<IHubContentRepository<HubContentSpecialMessage>, HubContentSpecialMessageRepository>();
             builder.Services.AddTransient<IHubContentRepository<HubContentSpecialPage>, HubContentSpecialPageRepository>();
+            builder.Services.AddTransient<IHubContentRepository<HubContentQuickNote>, HubContentQuickNoteRepository>();
             builder.Services.AddTransient<IHubContentRepository<HubContentVideo>, HubContentVideoRepository>();
 
             //sets the blog as the primary one
@@ -228,6 +229,7 @@ namespace Origami.UI
             builder.Services.AddSingleton<IValidator<HubContentPost>, HubContentPostValidator>();
             builder.Services.AddSingleton<IValidator<HubContentSpecialMessage>, HubContentSpecialMessageValidator>();
             builder.Services.AddSingleton<IValidator<HubContentSpecialPage>, HubContentSpecialPageValidator>();
+            builder.Services.AddSingleton<IValidator<HubContentQuickNote>, HubContentQuickNoteValidator>();
             builder.Services.AddSingleton<IValidator<HubContentVideo>, HubContentVideoValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiBlog>, OrigamiBlogValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiCategory>, OrigamiCategoryValidator>();

@@ -10,12 +10,17 @@ namespace Origami.Core.Models
         protected DateOnly _endDate = DateOnly.MaxValue;
         protected DateOnly _startDate = DateOnly.MinValue;
 
-        public event EventHandler<PropertyChangedEventArgs> OrigamiSpecialMessageChanged = (sender, e) => { };
-
         public OrigamiSpecialMessage() : base()
         {
             this.Type = nameof(OrigamiSpecialMessage);
         }
+
+        public event EventHandler<PropertyChangedEventArgs> OrigamiSpecialMessageChanged = (sender, e) => { };
+
+        /// <summary>
+        /// Special messages are not attached to a particular blog
+        /// </summary>
+        public override Guid? BlogId { get => null; set { } }
 
         public DateOnly EndDate
         {
@@ -23,10 +28,14 @@ namespace Origami.Core.Models
             set => this.Set(ref _endDate, value, OrigamiSpecialMessageChanged);
         }
 
-        public DateOnly StartDate
+        /// <summary>
+        /// MudBlazor compatible End Date
+        /// </summary>
+        [NotMapped]
+        public DateTime? MB_EndDate
         {
-            get => _startDate;
-            set => this.Set(ref _startDate, value, OrigamiSpecialMessageChanged);
+            get => EndDate == DateOnly.MaxValue ? null : EndDate.ToDateTime(new TimeOnly(0, 0));
+            set => EndDate = value.HasValue ? DateOnly.FromDateTime(value.Value) : DateOnly.MaxValue;
         }
 
         /// <summary>
@@ -39,14 +48,10 @@ namespace Origami.Core.Models
             set => StartDate = value.HasValue ? DateOnly.FromDateTime(value.Value) : DateOnly.MinValue;
         }
 
-        /// <summary>
-        /// MudBlazor compatible End Date
-        /// </summary>
-        [NotMapped]
-        public DateTime? MB_EndDate
+        public DateOnly StartDate
         {
-            get => EndDate == DateOnly.MaxValue ? null : EndDate.ToDateTime(new TimeOnly(0, 0));
-            set => EndDate = value.HasValue ? DateOnly.FromDateTime(value.Value) : DateOnly.MaxValue;
+            get => _startDate;
+            set => this.Set(ref _startDate, value, OrigamiSpecialMessageChanged);
         }
     }
 }

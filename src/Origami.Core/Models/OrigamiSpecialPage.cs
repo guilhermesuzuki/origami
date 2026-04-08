@@ -41,18 +41,8 @@ namespace Origami.Core.Models
         public event EventHandler<PropertyChangedEventArgs> OrigamiSpecialPageChanged = delegate { };
 
         /// <summary>
-        /// Fake page
+        /// Special messages are not attached to a particular blog
         /// </summary>
-        public static OrigamiSpecialPage GetFake() => new() { Id = Guid.Empty, Title = "Veritas et Sapientia: De Vita et Cogitationibus" };
-
-        /// <summary>
-        /// Fake pages
-        /// </summary>
-        /// <param name="count"></param>
-        /// <returns></returns>
-        public static IEnumerable<OrigamiSpecialPage> GetFakes(int count = 6)
-        {
-            for (int i = 0; i < count; i++) yield return GetFake();
-        }
+        public override Guid? BlogId { get => null; set { } }
     }
 }
