@@ -73,30 +73,6 @@ namespace Origami.Core.Data
         public DbSet<OrigamiContentTag> ContentTags { get; set; }
 
         /// <summary>
-        /// File Store Directories
-        /// </summary>
-        public DbSet<OrigamiFileStoreDirectory> FileStoreDirectories { get; set; }
-
-        /// <summary>
-        /// File Store Files
-        /// </summary>
-        public DbSet<OrigamiFileStoreFile> FileStoreFiles { get; set; }
-
-        /// <summary>
-        /// File Store File Thumbs
-        /// </summary>
-        public DbSet<OrigamiFileStoreFileThumb> FileStoreFileThumbs { get; set; }
-        /// <summary>
-        /// Package Files
-        /// </summary>
-        public DbSet<OrigamiPackageFile> PackageFiles { get; set; }
-
-        /// <summary>
-        /// Packages
-        /// </summary>
-        public DbSet<OrigamiPackage> Packages { get; set; }
-
-        /// <summary>
         /// Pages
         /// </summary>
         public DbSet<OrigamiPage> Pages { get; set; }
