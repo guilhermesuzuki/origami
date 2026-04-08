@@ -17,7 +17,6 @@ namespace Origami.Core.Data
         protected readonly IConfiguration _configuration;
         protected readonly IContentRepository _contentRepository;
         protected readonly IPageRepository _pageRepository;
-        protected readonly IPingServiceRepository _pingServiceRepository;
         protected readonly IPostRepository _postRepository;
         protected readonly IRoleRepository _roleRepository;
         protected readonly IUserRepository _userRepository;
@@ -32,7 +31,6 @@ namespace Origami.Core.Data
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IMemoryCache memoryCache,
             IPageRepository pageRepository,
-            IPingServiceRepository pingServiceRepository,
             IPostRepository postRepository,
             IRoleRepository roleRepository,
             IUserRepository userRepository,
@@ -47,7 +45,6 @@ namespace Origami.Core.Data
             _configuration = configuration;
             _contentRepository = contentRepository;
             _pageRepository = pageRepository;
-            _pingServiceRepository = pingServiceRepository;
             _postRepository = postRepository;
             _roleRepository = roleRepository;
             _userRepository = userRepository;
@@ -252,11 +249,9 @@ namespace Origami.Core.Data
         {
             var categories = _categoryRepository.ReadFromCache().Blog(entity.Id).ToList();
             var contents = _contentRepository.ReadFromCache().Blog(entity.Id).ToList();
-            var pingServices = _pingServiceRepository.ReadFromCache().Blog(entity.Id).ToList();
 
             categories.Each(_categoryRepository.PurgeCache);
             contents.Each(_contentRepository.PurgeCache);
-            pingServices.Each(_pingServiceRepository.PurgeCache);
         }
 
         public override Result<OrigamiBlog> PurgeRelationshipsFromDatabase(DataOperationContext<OrigamiBlog> ctx)
@@ -267,17 +262,12 @@ namespace Origami.Core.Data
             {
                 var categories = db.Categories.AsNoTracking().Blog(ctx.Entity.Id).ToList();
                 var contents = db.Contents.AsNoTracking().Blog(ctx.Entity.Id).ToList();
-                var pingServices = db.PingServices.AsNoTracking().Blog(ctx.Entity.Id).ToList();
 
                 categories.GetContexts(ctx).Call(_categoryRepository.SmartPurge, false).Push(hub);
                 contents.GetContexts(ctx).Call(_contentRepository.SmartPurge, false).Push(hub);
-                pingServices.GetContexts(ctx).Call(_pingServiceRepository.SmartPurge, false).Push(hub);
 
-                hub.RowsAffected += db.CustomFields.Where(x => x.BlogId == ctx.Entity.Id).ExecuteDelete();
-                hub.RowsAffected += db.DataStoreSettings.Where(x => x.BlogId == ctx.Entity.Id).ExecuteDelete();
                 hub.RowsAffected += db.QuickNotes.Where(x => x.BlogId == ctx.Entity.Id).ExecuteDelete();
                 hub.RowsAffected += db.QuickSettings.Where(x => x.BlogId == ctx.Entity.Id).ExecuteDelete();
-                hub.RowsAffected += db.StopWords.Where(x => x.BlogId == ctx.Entity.Id).ExecuteDelete();
             }
 
             return hub;

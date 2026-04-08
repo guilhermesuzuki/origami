@@ -78,16 +78,6 @@ namespace Origami.Core.Data
         public DbSet<OrigamiContentTag> ContentTags { get; set; }
 
         /// <summary>
-        /// Custom Fields
-        /// </summary>
-        public DbSet<OrigamiCustomField> CustomFields { get; set; }
-
-        /// <summary>
-        /// Data Store Settings
-        /// </summary>
-        public DbSet<OrigamiDataStoreSetting> DataStoreSettings { get; set; }
-
-        /// <summary>
         /// File Store Directories
         /// </summary>
         public DbSet<OrigamiFileStoreDirectory> FileStoreDirectories { get; set; }
@@ -132,13 +122,10 @@ namespace Origami.Core.Data
         public DbSet<OrigamiPhysicalPageView> PhysicalPageViews { get; set; }
 
         /// <summary>
-        /// Ping Services
-        /// </summary>
-        public DbSet<OrigamiPingService> PingServices { get; set; }
-        /// <summary>
         /// Posts
         /// </summary>
         public DbSet<OrigamiPost> Posts { get; set; }
+
         /// <summary>
         /// Processed User Views for Histories
         /// </summary>
@@ -203,11 +190,6 @@ namespace Origami.Core.Data
         /// Special Pages
         /// </summary>
         public DbSet<OrigamiSpecialPage> SpecialPages { get; set; }
-
-        /// <summary>
-        /// Stop Words
-        /// </summary>
-        public DbSet<OrigamiStopWord> StopWords { get; set; }
 
         /// <summary>
         /// Subscribers
@@ -288,12 +270,12 @@ namespace Origami.Core.Data
 
             modelBuilder.Entity<OrigamiUserPasswordReset>().HasOne<OrigamiUser>().WithMany().HasForeignKey(x => x.AuthorId);
             modelBuilder.Entity<OrigamiUserPasswordReset>().HasOne<OrigamiUser>().WithMany().HasForeignKey(x => x.UserId);
-            modelBuilder.Entity<OrigamiCustomField>().HasOne<OrigamiBlog>().WithMany().HasForeignKey(x => x.BlogId);
 
             modelBuilder.Entity<OrigamiUserRole>().HasOne<OrigamiUser>().WithMany().HasForeignKey(x => x.UserId);
             modelBuilder.Entity<OrigamiUserRole>().HasOne<OrigamiRole>().WithMany().HasForeignKey(x => x.RoleId);
 
             modelBuilder.Entity<OrigamiContentCommentReaction>().Property(c => c.Reaction).UseCollation("Latin1_General_BIN2");
+            modelBuilder.Entity<OrigamiContentReaction>().Property(c => c.Reaction).UseCollation("Latin1_General_BIN2");
             modelBuilder.Entity<OrigamiPhysicalPageReaction>().Property(c => c.Reaction).UseCollation("Latin1_General_BIN2");
 
             // Map the entity to the view

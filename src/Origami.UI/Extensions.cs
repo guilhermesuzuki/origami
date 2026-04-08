@@ -145,7 +145,6 @@ namespace Origami.UI
             builder.Services.AddTransient<IPageTitleRepository, PageTitleRepository>();
             builder.Services.AddTransient<IPhysicalPageRepository, PhysicalPageRepository>();
             builder.Services.AddTransient<IPhysicalPageViewRepository, PhysicalPageViewRepository>();
-            builder.Services.AddTransient<IPingServiceRepository, PingServiceRepository>();
             builder.Services.AddTransient<IPostRepository, PostRepository>();
             builder.Services.AddTransient<IQuickNoteRepository, QuickNoteRepository>();
             builder.Services.AddTransient<IResumeRepository, ResumeRepository>();
