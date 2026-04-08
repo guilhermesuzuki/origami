@@ -1,4 +1,5 @@
-﻿using Origami.LocalizationScanner;
+﻿using Google.Cloud.Translation.V2;
+using Origami.LocalizationScanner;
 using Origami.LocalizationScanner.Scanners;
 using System.Text.Json;
 
@@ -47,10 +48,16 @@ keys = keys.Distinct();
 await File.WriteAllLinesAsync("keys.txt", keys);
 
 /*
+var client = TranslationClient.Create();
+var translatedKeys = new List<string>();
+
 foreach (var key in keys)
 {
-    var translation = await Ollama.PromptAsync($"Translate this to pt-BR: {key}");
+    var response = await client.TranslateTextAsync(key, "pt-BR");
     Console.WriteLine($"Key: {key}");
-    Console.WriteLine(translation);
+    Console.WriteLine($"Translation: {response.TranslatedText}");
+    translatedKeys.Add($"{key}={response.TranslatedText}");
 }
+
+await File.WriteAllLinesAsync("keys.translated.txt", translatedKeys);
 */
