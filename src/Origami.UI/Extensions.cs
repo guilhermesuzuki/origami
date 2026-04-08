@@ -126,7 +126,6 @@ namespace Origami.UI
             builder.Services.AddSingleton<IBackupRestoreRepository, BackupRestoreRepository>();
             builder.Services.AddSingleton<IRepository<OrigamiBackup>, BackupRestoreRepository>();
             builder.Services.AddTransient<IBlogRepository, BlogRepository>();
-            builder.Services.AddTransient<IBlogRollRepository, BlogRollRepository>();
             builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
             builder.Services.AddTransient<IContentCategoryRepository, ContentCategoryRepository>();
             builder.Services.AddTransient<IContentCommentReactionRepository, ContentCommentReactionRepository>();

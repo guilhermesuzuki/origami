@@ -12,7 +12,6 @@ namespace Origami.Core.Data
         IBlogRepository
     {
         protected readonly IValidator<OrigamiBlog> _validator;
-        protected readonly IBlogRollRepository _blogRollRepository;
         protected readonly ICategoryRepository _categoryRepository;
         protected readonly IConfiguration _configuration;
         protected readonly IContentRepository _contentRepository;
@@ -24,7 +23,6 @@ namespace Origami.Core.Data
 
         public BlogRepository(
             IValidator<OrigamiBlog> validator,
-            IBlogRollRepository blogRollRepository,
             ICategoryRepository categoryRepository,
             IConfiguration configuration,
             IContentRepository contentRepository,
@@ -40,7 +38,6 @@ namespace Origami.Core.Data
             : base(text, dbContextFactory, memoryCache, wwwRoot)
         {
             _validator = validator;
-            _blogRollRepository = blogRollRepository;
             _categoryRepository = categoryRepository;
             _configuration = configuration;
             _contentRepository = contentRepository;

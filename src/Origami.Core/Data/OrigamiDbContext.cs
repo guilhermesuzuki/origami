@@ -23,11 +23,6 @@ namespace Origami.Core.Data
         public DbSet<OrigamiBackup> Backups { get; set; }
 
         /// <summary>
-        /// Blog Rolls
-        /// </summary>
-        public DbSet<OrigamiBlogRoll> BlogRolls { get; set; }
-
-        /// <summary>
         /// Blogs
         /// </summary>
         public DbSet<OrigamiBlog> Blogs { get; set; }
