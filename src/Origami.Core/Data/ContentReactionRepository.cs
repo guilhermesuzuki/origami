@@ -85,6 +85,7 @@ namespace Origami.Core.Data
         public override Result<OrigamiContentReaction> CreateValidation(DataOperationContext<OrigamiContentReaction> ctx)
         {
             var hasReacted = ReadFromCache()
+                .Where(x => x.ContentId == ctx.Entity.ContentId)
                 .Where(x => x.SocialProfileId == ctx.Entity.SocialProfileId)
                 .Where(x => x.Reaction.Like(ctx.Entity.Reaction))
                 .Any();
