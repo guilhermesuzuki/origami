@@ -62,7 +62,7 @@
                     </AuthorizeView>
                 </li>
                 <li class="text-center">
-                    @foreach (var reaction in _getReactions().GroupBy(x => x.Reaction))
+                    @foreach (var reaction in _getReactions().GroupBy(x => x.Reaction).OrderBy(x => x.Key))
                     {
                         <MudTooltip Text="@WhoReacted(reaction.Key)">
                             <span class="d-inline-block post-comment-reaction @(HasReactionClass(reaction.Key)) me-1 mb-1 @(this.UserFacade.SocialProfile.New ? null : "cursor-pointer")"
