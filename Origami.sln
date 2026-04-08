@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "misc", "misc", "{EE190CB5-D
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9E81A690-CDBE-4DA8-A135-3417E081312C}"
 	ProjectSection(SolutionItems) = preProject
+		src\Origami.Files\dbsettings.Development.json = src\Origami.Files\dbsettings.Development.json
+		src\Origami.Files\dbsettings.json = src\Origami.Files\dbsettings.json
 		src\Directory.Build.props = src\Directory.Build.props
 	EndProjectSection
 EndProject

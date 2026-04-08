@@ -10,8 +10,6 @@ namespace Origami.Core
         public const string YouDontHavePermissionForThisFeature = "You don't have permission for this feature";
         public const string YouMadeTooManyCommentsIn5Minutes = "Calm down, you made too many comments in 5 minutes";
 
-
-
         private readonly IStringLocalizer<Text> _localizer;
 
         public Text(IStringLocalizer<Text> localizer) => _localizer = localizer;
