@@ -264,7 +264,6 @@ namespace Origami.Core.Data
                 contents.GetContexts(ctx).Call(_contentRepository.SmartPurge, false).Push(hub);
 
                 hub.RowsAffected += db.QuickNotes.Where(x => x.BlogId == ctx.Entity.Id).ExecuteDelete();
-                hub.RowsAffected += db.QuickSettings.Where(x => x.BlogId == ctx.Entity.Id).ExecuteDelete();
             }
 
             return hub;

@@ -137,16 +137,6 @@ namespace Origami.Core.Data
         public DbSet<OrigamiQuickNote> QuickNotes { get; set; }
 
         /// <summary>
-        /// Quick Settings
-        /// </summary>
-        public DbSet<OrigamiQuickSetting> QuickSettings { get; set; }
-
-        /// <summary>
-        /// Referrers
-        /// </summary>
-        public DbSet<OrigamiReferrer> Referrers { get; set; }
-
-        /// <summary>
         /// Right Roles
         /// </summary>
         public DbSet<OrigamiRightRole> RightRoles { get; set; }
@@ -257,7 +247,6 @@ namespace Origami.Core.Data
 
             modelBuilder.Entity<OrigamiCategory>().HasOne<OrigamiCategory>().WithMany().HasForeignKey(x => x.ParentId);
             modelBuilder.Entity<OrigamiCategory>().HasOne<OrigamiBlog>().WithMany().HasForeignKey(x => x.BlogId);
-            modelBuilder.Entity<OrigamiQuickSetting>().HasOne<OrigamiBlog>().WithMany().HasForeignKey(x => x.BlogId);
             modelBuilder.Entity<OrigamiPhysicalPageView>().HasOne<OrigamiPhysicalPage>().WithMany().HasForeignKey(x => x.PhysicalPageId);
             modelBuilder.Entity<OrigamiPhysicalPageReaction>().HasOne<OrigamiPhysicalPage>().WithMany().HasForeignKey(x => x.PhysicalPageId);
             modelBuilder.Entity<OrigamiRightRole>().HasOne<OrigamiRole>().WithMany().HasForeignKey(x => x.RoleId);
