@@ -495,6 +495,7 @@ namespace Origami.Core
 
             switch (name)
             {
+                case "OrigamiContent": return "Contents";
                 case "OrigamiQuickNote": return "Quick notes";
                 case "OrigamiSocialProfile": return "Social profiles";
                 case "HubContentSpecialPage": return "Special pages";
@@ -523,7 +524,7 @@ namespace Origami.Core
             }
             if (name.EndsWith("sh") == true)
             {
-                name = name.TrimEnd('s', 'h') + "shes";
+                name = name + "es";
                 return name;
             }
 
