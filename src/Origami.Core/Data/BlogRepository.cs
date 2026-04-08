@@ -16,8 +16,6 @@ namespace Origami.Core.Data
         protected readonly IHubContentRepository<HubContentPage> _hubPageRepository;
         protected readonly IHubContentRepository<HubContentPost> _hubPostRepository;
         protected readonly IHubContentRepository<HubContentQuickNote> _hubQuickNoteRepository;
-        protected readonly IHubContentRepository<HubContentSpecialMessage> _hubSpecialMessageRepository;
-        protected readonly IHubContentRepository<HubContentSpecialPage> _hubSpecialPageRepository;
         protected readonly IHubContentRepository<HubContentVideo> _hubVideoRepository;
 
         public BlogRepository(
@@ -28,8 +26,6 @@ namespace Origami.Core.Data
             IHubContentRepository<HubContentPage> hubPageRepository,
             IHubContentRepository<HubContentPost> hubPostRepository,
             IHubContentRepository<HubContentQuickNote> hubQuickNoteRepository,
-            IHubContentRepository<HubContentSpecialMessage> hubSpecialMessageRepository,
-            IHubContentRepository<HubContentSpecialPage> hubSpecialPageRepository,
             IHubContentRepository<HubContentVideo> hubVideoRepository,
             IWebRootPath wwwRoot,
             Text text)
@@ -39,8 +35,6 @@ namespace Origami.Core.Data
             _categoryRepository = categoryRepository;
             _hubPageRepository = hubPageRepository;
             _hubPostRepository = hubPostRepository;
-            _hubSpecialMessageRepository = hubSpecialMessageRepository;
-            _hubSpecialPageRepository = hubSpecialPageRepository;
             _hubVideoRepository = hubVideoRepository;
             _hubQuickNoteRepository = hubQuickNoteRepository;
         }
