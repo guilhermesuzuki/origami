@@ -95,29 +95,21 @@
                                     <i class="fa-solid fa-calendar"></i>
                                     @context.Item.Date
                                 </div>
-                                @if (context.Item.Type.Like("PostCommentReaction") == true)
+                                @if (context.Item.Type.Like("ContentCommentReaction") == true)
                                 {
-                                    <UserActivityPostCommentReaction Id="@context.Item.Id"></UserActivityPostCommentReaction>
+                                    <UserActivityContentCommentReaction Id="@context.Item.Id"></UserActivityContentCommentReaction>
                                 }
-                                else if (context.Item.Type.Like("PostComment") == true)
+                                else if (context.Item.Type.Like("ContentComment") == true)
                                 {
-                                    <UserActivityPostComment Id="@context.Item.Id"></UserActivityPostComment>
+                                    <UserActivityContentComment Id="@context.Item.Id"></UserActivityContentComment>
                                 }
-                                else if (context.Item.Type.Like("PostRating") == true)
+                                else if (context.Item.Type.Like("ContentRating") == true)
                                 {
-                                    <UserActivityPostRating Id="@context.Item.Id"></UserActivityPostRating>
+                                    <UserActivityContentRating Id="@context.Item.Id"></UserActivityContentRating>
                                 }
-                                else if (context.Item.Type.Like("VideoCommentReaction") == true)
+                                else if (context.Item.Type.Like("ContentReaction") == true)
                                 {
-                                    <UserActivityVideoCommentReaction Id="@context.Item.Id"></UserActivityVideoCommentReaction>
-                                }
-                                else if (context.Item.Type.Like("VideoComment") == true)
-                                {
-                                    <UserActivityVideoComment Id="@context.Item.Id"></UserActivityVideoComment>
-                                }
-                                else if (context.Item.Type.Like("VideoRating") == true)
-                                {
-                                    <UserActivityVideoRating Id="@context.Item.Id"></UserActivityVideoRating>
+                                    <UserActivityContentReaction Id="@context.Item.Id"></UserActivityContentReaction>
                                 }
                                 else if (context.Item.Type.Like("SocialProfileDelete") == true)
                                 {

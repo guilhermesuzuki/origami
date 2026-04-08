@@ -10,10 +10,10 @@
     var rating = _postRating.ReadFromCache().Id(Id);
     if (rating != null)
     {
-        var post = this.Super.Contents.ReadFromCache().OfType<OrigamiPost>().Id(rating.ContentId)!;
-        <div class="user-activity-post-rating @Class">
+        var content = this.Super.Contents.ReadFromCache().Id(rating.ContentId)!;
+        <div class="user-activity-content-rating @Class">
             <label class="fw-bold">@Text.Lower("Rated {0} on:", rating.Rating)</label>
-            <ContentHeaderLite Entity="post"></ContentHeaderLite>
+            <ContentHeaderLite Entity="content"></ContentHeaderLite>
         </div>
     }
 }
