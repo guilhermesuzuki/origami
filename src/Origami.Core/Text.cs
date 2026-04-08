@@ -5,12 +5,10 @@ namespace Origami.Core
 {
     public class Text
     {
-        public const string OperationCompletedSuccessfully = "Operation completed successfully.";
-        public const string PermissionIsNotConfiguredSoByPassingValidationAndAllowingTheUser = "Permission is not configured, so by-passing validation and allowing the user.";
-        public const string SomethingWentWrongPleaseTryAgain = "Something went wrong. Please, try again.";
-        public const string SomethingWentWrongWhenTryingToAuthenticateYou = "Something went wrong when trying To authenticate you.";
-        public const string YouDontHavePermissionForThisFeature = "You don't have permission for this feature.";
-        public const string YouMadeTooManyCommentsIn5Minutes = "You made too many comments in 5 minutes.";
+        public const string OperationCompletedSuccessfully = "Yay! Everything went smoothly";
+        public const string SomethingWentWrongPleaseTryAgain = "Ah heck, something went wrong, try again";
+        public const string YouDontHavePermissionForThisFeature = "You don't have permission for this feature";
+        public const string YouMadeTooManyCommentsIn5Minutes = "Calm down, you made too many comments in 5 minutes";
 
 
 

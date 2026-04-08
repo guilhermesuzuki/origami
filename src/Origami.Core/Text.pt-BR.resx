@@ -2214,9 +2214,6 @@
   <data name="Turn social profiles into moderators" xml:space="preserve">
     <value>Transforme perfis sociais em moderadores</value>
   </data>
-  <data name="Type" xml:space="preserve">
-    <value>Tipo</value>
-  </data>
   <data name="Type Here" xml:space="preserve">
     <value>Digite aqui</value>
   </data>
@@ -2533,10 +2530,10 @@
     <value>Você não pode editar este comentário</value>
   </data>
   <data name="You did NOT change passwords, current and new are the same" xml:space="preserve">
-    <value>Você NÃO alterou as senhas, as atuais e as novas são iguais</value>
+    <value>Você NÃO alterou as senhas, a atual e a nova são iguais</value>
   </data>
-  <data name="You don't have access to any blogs." xml:space="preserve">
-    <value>Você não tem acesso a nenhum blog.</value>
+  <data name="You don't have access to any blogs" xml:space="preserve">
+    <value>Você não tem acesso a nenhum blog</value>
   </data>
   <data name="You don't have access to this feature" xml:space="preserve">
     <value>Você não tem acesso a este recurso</value>
@@ -2585,5 +2582,20 @@
   </data>
   <data name="ZIP file created successfully." xml:space="preserve">
     <value>Arquivo ZIP criado com sucesso.</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Tipo</value>
+  </data>
+  <data name="Yay! Everything went smoothly" xml:space="preserve">
+    <value>Yes! Tudo correu bem</value>
+  </data>
+  <data name="Ah heck, something went wrong, try again" xml:space="preserve">
+    <value>Ah droga, alguma coisa deu errada, tente novamente</value>
+  </data>
+  <data name="You don't have permission for this feature" xml:space="preserve">
+    <value>Você não tem permissão para esta funcionalidade</value>
+  </data>
+  <data name="Calm down, you made too many comments in 5 minutes" xml:space="preserve">
+    <value>Calma aê, você fez muitos comentários em 5 minutos</value>
   </data>
 </root>
