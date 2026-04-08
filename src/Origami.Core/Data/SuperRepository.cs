@@ -24,7 +24,6 @@ namespace Origami.Core.Data
             IPhysicalPageViewRepository physicalPageViewRepository,
             IPostRepository postRepository,
             IQuickNoteRepository quickNoteRepository,
-            IResumeRepository resumeRepository,
             IRightRepository rightRepository,
             IRoleRepository roleRepository,
             ISettingsRepository settingsRepository,
@@ -67,7 +66,6 @@ namespace Origami.Core.Data
             PhysicalPageViews = physicalPageViewRepository;
             Posts = postRepository;
             QuickNotes = quickNoteRepository;
-            Resumes = resumeRepository;
             Rights = rightRepository;
             Roles = roleRepository;
             Settings = settingsRepository;
@@ -118,7 +116,6 @@ namespace Origami.Core.Data
         public IPhysicalPageViewRepository PhysicalPageViews { get; }
         public IPostRepository Posts { get; }
         public IQuickNoteRepository QuickNotes { get; }
-        public IResumeRepository Resumes { get; }
         public IRightRepository Rights { get; }
         public IRoleRepository Roles { get; }
         public ISettingsRepository Settings { get; }
