@@ -1081,7 +1081,7 @@
     <value>Como excluir seus dados</value>
   </data>
   <data name="Id" xml:space="preserve">
-    <value>Eu ia</value>
+    <value>Id</value>
   </data>
   <data name="Id is required" xml:space="preserve">
     <value>O ID é obrigatório</value>
@@ -1174,7 +1174,7 @@
     <value>Últimas notícias</value>
   </data>
   <data name="Leave" xml:space="preserve">
-    <value>Deixar</value>
+    <value>Sair</value>
   </data>
   <data name="Leave incognito" xml:space="preserve">
     <value>Sair anônimo</value>
