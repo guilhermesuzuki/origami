@@ -55,8 +55,9 @@ namespace Origami.Core.Data
 
             var hasReacted = db.Set<OrigamiContentReaction>()
                 .AsNoTracking()
+                .Where(x => x.ContentId == ctx.Entity.ContentId)
                 .Where(x => x.SocialProfileId == ctx.SocialProfile.Id)
-                .Where(x => x.Reaction.Like(ctx.Entity.Reaction))
+                .Where(x => x.Reaction == ctx.Entity.Reaction)
                 .Any();
 
             if (hasReacted)
@@ -87,7 +88,7 @@ namespace Origami.Core.Data
             var hasReacted = ReadFromCache()
                 .Where(x => x.ContentId == ctx.Entity.ContentId)
                 .Where(x => x.SocialProfileId == ctx.Entity.SocialProfileId)
-                .Where(x => x.Reaction.Like(ctx.Entity.Reaction))
+                .Where(x => x.Reaction == ctx.Entity.Reaction)
                 .Any();
 
             if (hasReacted)
