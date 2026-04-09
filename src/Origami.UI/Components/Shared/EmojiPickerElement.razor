@@ -22,12 +22,14 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender) objRef = DotNetObjectReference.Create(this);
-
-        if (elementRef.Context != null)
+        if (firstRender)
         {
-            await JSRuntime!.InvokeVoidAsync("assignDotNetHelper", elementRef, objRef);
-            await JSRuntime!.InvokeVoidAsync("emojiClick", this._emojiId.ToString());
+            objRef = DotNetObjectReference.Create(this);
+            if (elementRef.Context != null)
+            {
+                await JSRuntime!.InvokeVoidAsync("assignDotNetHelper", elementRef, objRef);
+                await JSRuntime!.InvokeVoidAsync("emojiClick", this._emojiId.ToString());
+            }
         }
     }
 
