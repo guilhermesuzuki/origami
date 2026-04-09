@@ -380,7 +380,7 @@
     {
         var reactions = this.Super.ContentCommentReactions.Reactions(Entity!)
             .Where(x => x.SocialProfileId == UserFacade.SocialProfile.Id)
-            .Where(x => x.Reaction.Like(reaction))
+            .Where(x => x.Reaction == reaction)
             .Count();
 
         if (reactions == 0)
