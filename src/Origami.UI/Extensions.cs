@@ -66,7 +66,7 @@ namespace Origami.UI
 
         public static void AddOrigami(this WebApplicationBuilder builder, string[] args, bool admin = false)
         {
-            var files = Path.GetFullPath("..\\Origami.Files\\");
+            var files = Path.GetFullPath($"..{Path.DirectorySeparatorChar}Origami.Files{Path.DirectorySeparatorChar}");
 
             builder.Configuration.AddJsonFile(Path.Combine(files, "dbsettings.json"), false, reloadOnChange: true);
             builder.Configuration.AddJsonFile(Path.Combine(files, $"dbsettings.{builder.Environment.EnvironmentName}.json"), true, reloadOnChange: true);

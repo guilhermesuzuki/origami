@@ -4,7 +4,7 @@
     {
         public WwwRoot(string wwwRootPath)
         {
-            this.WebRootPath = Path.GetFullPath("..\\Origami.Files\\");
+            this.WebRootPath = Path.GetFullPath($"..{Path.DirectorySeparatorChar}Origami.Files{Path.DirectorySeparatorChar}");
             this.WebRootPathForBackups = Path.Combine(this.WebRootPath, "files-backup");
             this.WebRootPathForRestores = Path.Combine(this.WebRootPath, "files-restore");
         }
