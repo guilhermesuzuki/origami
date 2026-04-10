@@ -12,14 +12,14 @@ using System.Text;
 
 namespace Origami.UI
 {
-    public class OrigamiJwtUserMiddleware : IMiddleware
+    public class OrigamiUserMiddleware : IMiddleware
     {
         private readonly IConfiguration _configuration;
         private readonly IOptionsSnapshot<JwtConfiguration> _jwtConfiguration;
         private readonly IAppFacade _appFacade;
         private readonly IUserRepository _userRepository;
 
-        public OrigamiJwtUserMiddleware(
+        public OrigamiUserMiddleware(
             IAppFacade appFacade,
             IConfiguration configuration, 
             IOptionsSnapshot<JwtConfiguration> jwtConfiguration,
