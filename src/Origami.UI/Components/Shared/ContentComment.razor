@@ -272,9 +272,9 @@
     {
         if (this.CommentForReplying != null)
         {
-            var context = new DataOperationContext<OrigamiContentComment>(UserFacade.User, this.CommentForReplying);
+            var context = new DataOperationContextFrontEnd<OrigamiContentComment>(UserFacade.SocialProfile, DateTime.UtcNow, this.CommentForReplying);
 
-            this.Super.ContentComments.SmartSave(context, true)
+            this.Super.ContentComments.SmartCreate(context)
                 .OnSuccess(() => this.OnCommentUpdated.InvokeAsync(this.CommentForReplying))
                 .OnSuccess(() => this.CommentHasChanged());
 
@@ -468,7 +468,7 @@
             Id = Guid.NewGuid(),
             ContentId = this.Entity!.ContentId,
             ParentId = this.Entity.Id,
-            UserId = this.UserFacade.User.Id,
+            SocialProfileId = this.UserFacade.SocialProfile.Id,
             IsSpam = false,
             IsApproved = true,
             IsDeleted = false,

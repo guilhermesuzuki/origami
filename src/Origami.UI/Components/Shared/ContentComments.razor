@@ -20,7 +20,7 @@
         {
             @foreach (var comment in Comments.Take(this._currentPage * this._pageSize))
             {
-                <ContentComment2 Class="mb-3 shadow-sm" Entity="comment" OnCommentUpdated="OnCommentUpdated" OnCommentDeleted="OnCommentDeleted" OnCommentReply="OnCommentReply"></ContentComment2>
+                <ContentCommentAdmin Class="mb-3 shadow-sm" Entity="comment" OnCommentUpdated="OnCommentUpdated" OnCommentDeleted="OnCommentDeleted" OnCommentReply="OnCommentReply"></ContentCommentAdmin>
             }
         }
         else
