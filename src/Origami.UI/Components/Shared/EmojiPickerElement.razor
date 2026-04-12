@@ -1,4 +1,5 @@
 ﻿@inherits Basic
+@implements IDisposable
 
 <emoji-picker id="@_emojiId" @ref="elementRef" class="@Class" style="@_getStyle()"></emoji-picker>
 
@@ -37,5 +38,10 @@
     public async Task Reaction(string reaction)
     {
         await this.OnEmojiSelected.InvokeAsync(reaction);
+    }
+
+    public void Dispose()
+    {
+        objRef?.Dispose();
     }
 }

@@ -143,6 +143,7 @@ namespace Origami.Core.Models
                 HubContentSpecialMessage specialMessage => specialMessage.Entity,
                 HubContentSpecialPage specialPage => specialPage.Entity,
                 HubContentVideo video => video.Entity,
+                HubContentQuickNote quickNote => quickNote.Entity,
                 _ => entity
             };
         }

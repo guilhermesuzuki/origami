@@ -197,11 +197,11 @@ window.prepareHTMLForGLightBox = () => {
         var element = $(this);
         element.addClass("glightbox");
         element.addClass("cursor-pointer");
-        GLightbox({
-            touchNavigation: true,
-            loop: true,
-            autoplayVideos: true,
-        });
+    });
+    GLightbox({
+        touchNavigation: true,
+        loop: true,
+        autoplayVideos: true,
     });
 }
 
