@@ -148,7 +148,7 @@ namespace Origami.Core.Data
 
                 if (File.Exists(zipPath) == false)
                 {
-                    return new(restore) { Error = Text.Original("Backup file not found.") };
+                    return new(restore) { Error = Text.Original("Backup file not found") };
                 }
 
                 await ZipFile.ExtractToDirectoryAsync(zipPath, extractPath);
@@ -270,14 +270,14 @@ namespace Origami.Core.Data
                 return new() { Error = $"BACPAC export failed: {error}" };
             }
 
-            return new(target) { Success = Text.Original("BACPAC file created successfully.") };
+            return new(target) { Success = Text.Original("BACPAC file created successfully") };
         }
 
         protected async Task<Result> RestoreTheDatabaseAsync(string bacpacPath)
         {
             if (File.Exists(bacpacPath) == false)
             {
-                return new() { Error = "BACPAC file not found." };
+                return new() { Error = "BACPAC file not found" };
             }
 
             if (Current == null)
@@ -345,10 +345,10 @@ namespace Origami.Core.Data
                 {
                     node["ConnectionStrings"]!["origami"] = builder.ToString();
                     await File.WriteAllTextAsync(file, node.ToJsonString(new() { WriteIndented = true, }));
-                    return new() { Success = Text.Original("Db settings file updated successfully..") };
+                    return new() { Success = Text.Original("Db settings file updated successfully") };
                 }
 
-                return new() { Error = Text.Original("Error parsing the JSON file.") };
+                return new() { Error = Text.Original("Error parsing the JSON file") };
             }
             catch (Exception ex)
             {

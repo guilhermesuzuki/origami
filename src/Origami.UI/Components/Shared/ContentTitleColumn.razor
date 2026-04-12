@@ -1,0 +1,17 @@
+﻿@inherits Basic
+@implements IEntityNull<OrigamiContent>
+
+@if (this.Entity != null)
+{
+    <div class="content-title-column @Class">
+        <ContentRating Entity="this.Entity" Class="" />
+        <div class="dummy"></div>
+        <ContentHeaderInline Entity="this.Entity" Class="" />
+        <div class="dummy"></div>
+        <Id Entity="this.Entity" Class="x-small" />
+    </div>
+}
+
+@code {
+    [Parameter] public OrigamiContent? Entity { get; set; }
+}

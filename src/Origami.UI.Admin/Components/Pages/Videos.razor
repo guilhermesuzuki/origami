@@ -58,27 +58,13 @@
                             <TemplateColumn Title="@Text.Upper("Title")">
                                 <CellTemplate>
                                     <div class="cursor-pointer" @onclick="() => OnEdit(context.Item)">
-                                        <ContentRating Entity="context.Item.Entity"></ContentRating>
-                                        <div class="dummy"></div>
-                                        <ContentHeaderInline Entity="context.Item.Entity"></ContentHeaderInline>
+                                        <ContentTitleColumn Entity="context.Item.Entity"></ContentTitleColumn>
                                     </div>
                                 </CellTemplate>
                             </TemplateColumn>
                             <TemplateColumn Title="@Text.Upper("Header")" CellClass="col-1 text-center">
                                 <CellTemplate>
-                                    <img src="@context.Item.Entity.HeaderImage" style="height: 200px; width: auto;" title="@context.Item.Entity.HeaderImage" />
-                                    <div class="mt-1 p-1 border">
-                                        <ul class="inline-list text-center">
-                                            <li>
-                                                <i class="fa-solid fa-eye"></i>
-                                                @this.Super.PhysicalPageViews.GetViews(context.Item.Entity)
-                                            </li>
-                                            <li>
-                                                <i class="fa-solid fa-comment"></i>
-                                                @this.Super.ContentComments.GetComments(context.Item.Entity)
-                                            </li>
-                                        </ul>
-                                    </div>
+                                    <ContentHeaderColumn Entity="context.Item.Entity"></ContentHeaderColumn>
                                 </CellTemplate>
                             </TemplateColumn>
                             <TemplateColumn Title="@Text.Upper("Categories")" Sortable="false" Filterable="false" CellClass="col-2 categories">

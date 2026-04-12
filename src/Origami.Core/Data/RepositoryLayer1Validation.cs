@@ -46,7 +46,7 @@ namespace Origami.Core.Data
 
         public virtual bool IsCycleDetected(DataOperationContext<T> ctx, IList<T> list)
         {
-            if (ctx.Entity is IParentIdNull<T> parent)
+            if (ctx.Entity is IParentIdNull parent)
             {
                 var entity = ctx.Entity;
 
@@ -74,13 +74,22 @@ namespace Origami.Core.Data
             if (ctx.Entity is ISlug slug && slug.Slug.Has() == true)
             {
                 using var db = this.DbContextFactory.CreateDbContext();
-                IEnumerable<T> fresh = db.Set<T>().AsNoTracking().ToList();
+                IEnumerable<T> fresh = db.Set<T>().AsNoTracking();
                 if (ctx.Entity is IBlogId blogId)
                 {
                     fresh = fresh.OfType<IBlogId>().Where(x => x.BlogId == blogId.BlogId).OfType<T>();
                 }
-                fresh = fresh.OfType<ISlug>().Where(x => x.Slug == slug.Slug).OfType<T>();
-                fresh = fresh.Where(x => x.Id != ctx.Entity.Id);
+                if (ctx.Entity is IBlogIdNull blogIdNull)
+                {
+                    fresh = fresh.OfType<IBlogIdNull>().Where(x => x.BlogId == blogIdNull.BlogId).OfType<T>();
+                }
+
+                fresh = fresh
+                    .Where(x => x.Id != ctx.Entity.Id).ToList()
+                    .OfType<ISlug>()
+                    .Where(x => x.Slug == slug.Slug)
+                    .OfType<T>();
+
                 if (fresh.Any() == true)
                 {
                     validation.Error = Text.Original("Slug is already in use");

@@ -24,9 +24,11 @@
                                 </span>
                                 <br />
                                 <span class="fw-bold">
-                                    @Text.Original("Be careful when choosing a username, you won't be able to change it later.")
+                                    @Text.Original("Be careful when choosing a username, you won't be able to change it later")
+                                    <span>.</span>
                                     <br />
-                                    @Text.Original("You can change your display name at any time though.")
+                                    @Text.Original("You can change your display name at any time though")
+                                    <span>.</span>
                                 </span>
                             </div>
                         </li>
@@ -84,7 +86,7 @@
             <div class="text-center p-3 mt-3">
                 <ul class="expand p-3 border">
                     <li>
-                        <HeaderImageLite Entity="this.Entity" ImgMaxWidth="256px" Footer="true"></HeaderImageLite>
+                        <HeaderImageCard Entity="this.Entity" ImgMaxWidth="256px" Footer="true"></HeaderImageCard>
                     </li>
                     <li class="position-relative ms-3">
                         <MudFileUpload T="IBrowserFile" FilesChanged="UploadHeaderBase64" Accept=".png, .jpg, .bmp, .tiff" MaximumFileCount="1">
@@ -93,7 +95,7 @@
                                     <button class="btn btn-light w-100" @onclick="context.OpenFilePickerAsync" style="height:34%;">
                                         <i class="fa-solid fa-cloud-arrow-up"></i>
                                         <div>@Text.Lower("Only image files")</div>
-                                        <div class="x-small">@Text.Original("{0} MB max.", 2)</div>
+                                        <div class="x-small">@Text.Original("{0}MB max.", 2)</div>
                                     </button>
                                     <button class="btn btn-light w-100" @onclick="() => this.FileManagerForImages = true" style="height:33%;">
                                         <i class="fa-solid fa-folder"></i>
@@ -439,7 +441,7 @@
                                         var author = this.Super.Users.ReadFromCache().Id(context.Item.AuthorId);
                                         <ul class="inline-list">
                                             <li class="pe-1" style="width:50px;">
-                                                <HeaderImageLite Entity="author"></HeaderImageLite>
+                                                <HeaderImageCard Entity="author"></HeaderImageCard>
                                             </li>
                                             <li>
                                                 <UserHeader Entity="author"></UserHeader>

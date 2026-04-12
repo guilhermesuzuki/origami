@@ -32,6 +32,6 @@
 .content-comment-text p { margin-top: 7px !important; margin-bottom: 0 !important; }
 
 ul.content-rating, .content-rating ul { margin-bottom: 0; }
-.content-ratings .logo { height: 29px !important; }
+/*.content-ratings .logo { height: 29px!important; width:29px!important; }*/
 
 table .front-page { background-color: #9cef0010 !important; }

@@ -17,9 +17,17 @@
             </div>
         }
         <div></div>
-        <div class="comment-header d-inline-flex align-items-center">
-            <SocialProfileHeaderLite Entity="socialProfile"></SocialProfileHeaderLite>
-        </div>
+        @if (this.Entity.SocialProfileId != null)
+        {
+            <div class="comment-header d-inline-flex align-items-center">
+                <SocialProfileHeaderInline Entity="socialProfile"></SocialProfileHeaderInline>
+            </div>
+        }
+        else if (this.Entity.UserId != null)
+        {
+            var user = this.Super.Users.ReadFromCache().Id(this.Entity.UserId);
+            <UserHeaderInline Entity="user"></UserHeaderInline>
+        }
         <div class="comment-info x-small">
             @if (Entity.PinnedById != null)
             {

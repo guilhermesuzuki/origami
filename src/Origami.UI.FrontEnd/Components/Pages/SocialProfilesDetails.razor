@@ -41,7 +41,7 @@
                         <div class="row mt-3">
                             <div class="col-12">
                                 <div class="fs-5">@Text.Lower("Name")</div>
-                                <SocialProfileHeaderLite ProfilePicture="false" Entity="this.SocialProfile"></SocialProfileHeaderLite>
+                                <SocialProfileHeaderInline ProfilePicture="false" Entity="this.SocialProfile"></SocialProfileHeaderInline>
                             </div>
                         </div>
                         <div class="row mt-3">
@@ -177,7 +177,7 @@
                                         {
                                             var post = this.Super.Contents.ReadFromCache().Id(postRating.ContentId);
                                             <div class="">
-                                                <span class="fw-bold">@Text.Lower("Rated {0} On:", postRating.Rating)</span>
+                                                <span class="fw-bold">@Text.Lower("Rated {0} on:", postRating.Rating)</span>
                                                 <ContentHeaderLite Entity="post"></ContentHeaderLite>
                                             </div>
                                         }
@@ -206,7 +206,7 @@
                                         </label>
                                         <MudDataGrid Class="border-top" Items="this.SocialProfileForDeletions" SortMode="SortMode.None" Filterable="false">
                                             <Columns>
-                                                <PropertyColumn Property="x => x.DateCreated" Title="@Text.Lower("Request Date")"></PropertyColumn>
+                                                <PropertyColumn Property="x => x.DateCreated" Title="@Text.Lower("Request date")"></PropertyColumn>
                                                 <PropertyColumn Property="x => x.PostComments" Context="gContext">
                                                     <HeaderTemplate>
                                                         <i class="fa-solid fa-comment"></i>

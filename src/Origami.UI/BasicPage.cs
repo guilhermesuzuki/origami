@@ -68,7 +68,6 @@ namespace Origami.UI
             if (firstRender)
             {
                 await JSRuntime.InvokeVoidAsync("origami.common.lazy");
-                await JSRuntime.InvokeVoidAsync("origami.common.yoxview");
                 await JSRuntime.InvokeVoidAsync("origami.common.prism");
             }
             ChangeBlog();

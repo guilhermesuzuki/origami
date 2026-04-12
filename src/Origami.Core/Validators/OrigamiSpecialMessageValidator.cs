@@ -31,7 +31,7 @@ namespace Origami.Core.Validators
 
             RuleFor(x => x)
                 .Must(x => x.StartDate <= x.EndDate)
-                .WithMessage(text.Original("Start Date cannot be later than End Date"));
+                .WithMessage(text.Original("Start date cannot be later than end date"));
         }
     }
 }

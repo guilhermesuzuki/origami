@@ -26,6 +26,13 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("Blog is required"));
         }
 
+        public static IRuleBuilderOptions<T, Guid?> BlogIdMustBeNull<T>(this IRuleBuilder<T, Guid?> ruleBuilder, Text text)
+        {
+            return ruleBuilder
+                .Must(blogId => blogId == null)
+                .WithMessage(text.Original("Blog must be null"));
+        }
+
         public static IRuleBuilderOptions<T, List<OrigamiContentCategory>> CategoriesMustBeUnique<T>(this IRuleBuilder<T, List<OrigamiContentCategory>> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory)
         {
             return ruleBuilder
@@ -60,7 +67,7 @@ namespace Origami.Core.Validators
                     using var db = dbContextFactory.CreateDbContext();
                     return db.Set<OrigamiContent>().AsNoTracking().Id(contentId) != null;
                 })
-                .WithMessage(text.Original("Content must be valid"));
+                .WithMessage(text.Original("Content must exist"));
         }
 
         public static IRuleBuilderOptions<T, string> ContentType<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
@@ -84,7 +91,7 @@ namespace Origami.Core.Validators
         {
             return ruleBuilder
                 .MaximumLength(1024)
-                .WithMessage(x => text.Original("Description cannot exceed 1024 characters"));
+                .WithMessage(x => text.Original("Description cannot exceed {0} characters", 1024));
         }
 
         public static IRuleBuilderOptions<T, string?> DisplayName<T>(this IRuleBuilder<T, string?> ruleBuilder, Text text)
@@ -92,7 +99,7 @@ namespace Origami.Core.Validators
             return ruleBuilder
                 .NotNull().WithMessage(text.Original("Display name is required"))
                 .NotEmpty().WithMessage(text.Original("Display name is required"))
-                .MaximumLength(200).WithMessage(text.Original("Display name cannot exceed 200 characters"));
+                .MaximumLength(200).WithMessage(text.Original("Display name cannot exceed {0} characters", 200));
         }
 
         public static IRuleBuilderOptions<T, T> DisplayNameMustBeDifferentThanUsername<T>(this IRuleBuilder<T, T> ruleBuilder, Text text)
@@ -240,16 +247,16 @@ namespace Origami.Core.Validators
                 .NotEmpty()
                 .WithMessage(text.Original("Name is required"))
                 .MaximumLength(255)
-                .WithMessage(text.Original("Name cannot exceed 255 characters"));
+                .WithMessage(text.Original("Name cannot exceed {0} characters", 255));
         }
 
         public static IRuleBuilderOptions<T, string> NanoId<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
         {
             return ruleBuilder
                 .NotEmpty()
-                .WithMessage(text.Original("NanoId is required"))
+                .WithMessage(text.Original("Nano Id is required"))
                 .MaximumLength(8)
-                .WithMessage(text.Original("NanoId cannot exceed 8 characters"));
+                .WithMessage(text.Original("Nano Id cannot exceed {0} characters", 8));
         }
 
         public static IRuleBuilderOptions<T, string> Note<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
@@ -258,7 +265,7 @@ namespace Origami.Core.Validators
                 .NotEmpty()
                 .WithMessage(text.Original("Note is required"))
                 .MaximumLength(255)
-                .WithMessage(text.Original("Note cannot exceed 255 characters"));
+                .WithMessage(text.Original("Note cannot exceed {0} characters", 255));
         }
 
         public static IRuleBuilderOptions<T, T> ParentId<T>(this IRuleBuilder<T, T> ruleBuilder, Text text) where T : IId, IParentIdNull
@@ -286,7 +293,7 @@ namespace Origami.Core.Validators
                     }
                     return true;
                 })
-                .WithMessage(text.Original("RSS Feed must be a valid website address"));
+                .WithMessage(text.Original("RSS feed must be a valid website address"));
         }
 
         public static IRuleBuilderOptions<T, string> ShortName<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
@@ -295,21 +302,21 @@ namespace Origami.Core.Validators
                 .NotEmpty()
                 .WithMessage(text.Original("Name is required"))
                 .MaximumLength(50)
-                .WithMessage(text.Original("Name cannot exceed 50 characters"));
+                .WithMessage(text.Original("Name cannot exceed {0} characters", 50));
         }
 
         public static IRuleBuilderOptions<T, string> Slug<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
         {
             return ruleBuilder
                 .MaximumLength(255)
-                .WithMessage(text.Original("Slug cannot exceed 255 characters"));
+                .WithMessage(text.Original("Slug cannot exceed {0} characters", 255));
         }
 
         public static IRuleBuilderOptions<T, string> Tag<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
         {
             return ruleBuilder
                 .MaximumLength(128)
-                .WithMessage(text.Original("Tag cannot exceed 128 characters"));
+                .WithMessage(text.Original("Tag cannot exceed {0} characters", 128));
         }
 
         public static IRuleBuilderOptions<T, List<OrigamiContentTag>> TagsMustBeUnique<T>(this IRuleBuilder<T, List<OrigamiContentTag>> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory)
@@ -356,7 +363,7 @@ namespace Origami.Core.Validators
             return ruleBuilder
                 .NotNull().WithMessage(text.Original("Username is required"))
                 .NotEmpty().WithMessage(text.Original("Username is required"))
-                .MaximumLength(200).WithMessage(text.Original("Username cannot exceed 200 characters"));
+                .MaximumLength(200).WithMessage(text.Original("Username cannot exceed {0} characters", 200));
         }
 
         public static IRuleBuilderOptions<T, string> Website<T>(this IRuleBuilder<T, string> ruleBuilder, Text text, string field = "website")

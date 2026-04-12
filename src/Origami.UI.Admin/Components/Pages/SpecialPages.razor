@@ -53,26 +53,16 @@
                             <TemplateColumn Title="@Text.Upper("Title")">
                                 <CellTemplate>
                                     <div class="cursor-pointer" @onclick="() => OnEdit(context.Item)">
-                                        <ContentHeaderInline Entity="context.Item.Entity"></ContentHeaderInline>
-                                        <div class="dummy" style="margin-bottom:-7px;"></div>
-                                        <Id Class="x-small" Entity="context.Item.Entity"></Id>
+                                        <ContentTitleColumn Entity="context.Item.Entity"></ContentTitleColumn>
                                     </div>
                                 </CellTemplate>
                             </TemplateColumn>
                             <TemplateColumn Title="@Text.Upper("Header")" CellClass="col-2">
                                 <CellTemplate>
-                                    <div class="w-100" style="height:150px; background-image: url(@context.Item.Entity.HeaderImage); background-size: cover; background-position: center;"></div>
-                                    <div class="mt-1 p-1 border">
-                                        <ul class="inline-list text-center">
-                                            <li>
-                                                <i class="fa-solid fa-eye"></i>
-                                                @this.Super.PhysicalPageViews.GetViews(context.Item.Entity)
-                                            </li>
-                                        </ul>
-                                    </div>
+                                    <ContentHeaderColumn Entity="context.Item.Entity"></ContentHeaderColumn>
                                 </CellTemplate>
                             </TemplateColumn>
-                            <TemplateColumn Title="@Text.Upper("Related Pages")" Sortable="false" Filterable="false" CellClass="col-2 related-pages">
+                            <TemplateColumn Title="@Text.Upper("Related pages")" Sortable="false" Filterable="false" CellClass="col-2 related-pages">
                                 <CellTemplate>
                                     @foreach (var page in this.Super.GetRelatedPages(context.Item.Entity).OrderBy(x => x.Title))
                                     {

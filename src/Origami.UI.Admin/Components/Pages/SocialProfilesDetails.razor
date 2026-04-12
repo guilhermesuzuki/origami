@@ -37,7 +37,7 @@
                     <div class="row mt-3">
                         <div class="col-12">
                             <div class="fs-5">@Text.Lower("Name")</div>
-                            <SocialProfileHeaderLite ProfilePicture="false" Entity="this.SocialProfile"></SocialProfileHeaderLite>
+                            <SocialProfileHeaderInline ProfilePicture="false" Entity="this.SocialProfile"></SocialProfileHeaderInline>
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -158,51 +158,51 @@
                                 <div class="p-3 shadow-lg">
                                     <label class="w-100 text-center fs-4 p-2">
                                         <i class="fa-solid fa-user"></i>
-                                        @Text.Lower("Requests for Information Wipe-Out")
+                                        @Text.Lower("Requests for information wipe-out")
                                     </label>
                                     <MudDataGrid Class="border-top" Items="this.SocialProfileForDeletions" SortMode="SortMode.None" Filterable="false">
                                         <Columns>
-                                            <PropertyColumn Property="x => x.DateCreated" Title="@Text.Lower("Request Date")"></PropertyColumn>
+                                            <PropertyColumn Property="x => x.DateCreated" Title="@Text.Lower("Request date")"></PropertyColumn>
                                             <PropertyColumn Property="x => x.PostComments" Context="gContext">
                                                 <HeaderTemplate>
                                                     <i class="fa-solid fa-comment"></i>
-                                                    @Text.Lower("Comments on Posts")<br />
-                                                    @Text.Lower("[At The Time]")
+                                                    @Text.Lower("Comments on posts")<br />
+                                                    @Text.Lower("[At the time]")
                                                 </HeaderTemplate>
                                             </PropertyColumn>
                                             <PropertyColumn Property="x => x.PostCommentReactions" Context="gContext">
                                                 <HeaderTemplate>
                                                     <i class="fa-solid fa-thumbs-up"></i>
-                                                    @Text.Lower("Comment Reactions on Posts")<br />
-                                                    @Text.Lower("[At The Time]")
+                                                    @Text.Lower("Comment reactions on posts")<br />
+                                                    @Text.Lower("[At the time]")
                                                 </HeaderTemplate>
                                             </PropertyColumn>
                                             <PropertyColumn Property="x => x.PostRatings" Context="gContext">
                                                 <HeaderTemplate>
                                                     <i class="fa-solid fa-star"></i>
-                                                    @Text.Lower("Ratings on Posts")<br />
-                                                    @Text.Lower("[At The Time]")
+                                                    @Text.Lower("Ratings on posts")<br />
+                                                    @Text.Lower("[At the time]")
                                                 </HeaderTemplate>
                                             </PropertyColumn>
                                             <PropertyColumn Property="x => x.VideoComments" Context="gContext">
                                                 <HeaderTemplate>
                                                     <i class="fa-solid fa-comment"></i>
-                                                    @Text.Lower("Comments on Videos")<br />
-                                                    @Text.Lower("[At The Time]")
+                                                    @Text.Lower("Comments on videos")<br />
+                                                    @Text.Lower("[At the time]")
                                                 </HeaderTemplate>
                                             </PropertyColumn>
                                             <PropertyColumn Property="x => x.VideoCommentReactions" Context="gContext">
                                                 <HeaderTemplate>
                                                     <i class="fa-solid fa-thumbs-up"></i>
-                                                    @Text.Lower("Comment Reactions on Videos")<br />
-                                                    @Text.Lower("[At The Time]")
+                                                    @Text.Lower("Comment reactions on videos")<br />
+                                                    @Text.Lower("[At the time]")
                                                 </HeaderTemplate>
                                             </PropertyColumn>
                                             <PropertyColumn Property="x => x.VideoRatings" Context="gContext">
                                                 <HeaderTemplate>
                                                     <i class="fa-solid fa-star"></i>
-                                                    @Text.Lower("Ratings on Videos")<br />
-                                                    @Text.Lower("[At The Time]")
+                                                    @Text.Lower("Ratings on videos")<br />
+                                                    @Text.Lower("[At the time]")
                                                 </HeaderTemplate>
                                             </PropertyColumn>
                                         </Columns>

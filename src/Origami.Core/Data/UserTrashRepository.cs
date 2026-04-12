@@ -13,6 +13,7 @@ namespace Origami.Core.Data
         protected readonly IHubContentRepository<HubContentSpecialMessage> _hubContentSpecialMessageRepository;
         protected readonly IHubContentRepository<HubContentSpecialPage> _hubContentSpecialPageRepository;
         protected readonly IHubContentRepository<HubContentVideo> _hubContentVideoRepository;
+        protected readonly IContentCommentRepository _contentCommentRepository;
         private readonly IBlogRepository _blogRepository;
         private readonly ISettingsRepository _blogSettingsRepository;
         private readonly ICategoryRepository _categoryRepository;
@@ -30,12 +31,12 @@ namespace Origami.Core.Data
         private readonly ISpecialPageRepository _specialPageRepository;
         private readonly ISubscriberRepository _subscriberRepository;
         private readonly IUserActivityRepository _userActivityRepository;
-        private readonly IUserContentRepository _userContentRepository;
         private readonly IUserRepository _userRepository;
         private readonly IUserRoleRepository _userRoleRepository;
         private readonly IUserViewRepository _userViewRepository;
         private readonly IVideoRepository _videoRepository;
         private readonly IWhatToSeeNextRepository _whatToSeeNextRepository;
+
         public UserTrashRepository(
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IMemoryCache memoryCache,
@@ -56,7 +57,6 @@ namespace Origami.Core.Data
             ISpecialPageRepository specialPageRepository,
             ISubscriberRepository subscriberRepository,
             IUserActivityRepository userActivityRepository,
-            IUserContentRepository userContentRepository,
             IUserRepository userRepository,
             IUserRoleRepository userRoleRepository,
             IUserViewRepository userViewRepository,
@@ -68,6 +68,7 @@ namespace Origami.Core.Data
             IHubContentRepository<HubContentSpecialMessage> hubContentSpecialMessageRepository,
             IHubContentRepository<HubContentSpecialPage> hubContentSpecialPageRepository,
             IHubContentRepository<HubContentVideo> hubContentVideoRepository,
+            IContentCommentRepository contentCommentRepository,
 
             Text text,
             IWebRootPath wwwRoot)
@@ -90,7 +91,6 @@ namespace Origami.Core.Data
             _specialPageRepository = specialPageRepository;
             _subscriberRepository = subscriberRepository;
             _userActivityRepository = userActivityRepository;
-            _userContentRepository = userContentRepository;
             _userRepository = userRepository;
             _userRoleRepository = userRoleRepository;
             _userViewRepository = userViewRepository;
@@ -102,6 +102,7 @@ namespace Origami.Core.Data
             _hubContentSpecialMessageRepository = hubContentSpecialMessageRepository;
             _hubContentSpecialPageRepository = hubContentSpecialPageRepository;
             _hubContentVideoRepository = hubContentVideoRepository;
+            _contentCommentRepository = contentCommentRepository;
         }
 
         public override string ReadPermission => nameof(OrigamiRole.ViewTrashes);
@@ -151,6 +152,11 @@ namespace Origami.Core.Data
             if (ctx.Entity.Type.Like("OrigamiVideo") == true)
             {
                 return _purge(_hubContentVideoRepository, ctx);
+            }
+
+            if (ctx.Entity.Type.Like("ContentComment") == true)
+            {
+                return _purge(_contentCommentRepository, ctx);
             }
 
             if (ctx.Entity.Type.Like("Category") == true)
@@ -208,6 +214,11 @@ namespace Origami.Core.Data
                 return _restore(_hubContentVideoRepository, ctx);
             }
 
+            if (ctx.Entity.Type.Like("ContentComment") == true)
+            {
+                return _restore(_contentCommentRepository, ctx);
+            }
+
             if (ctx.Entity.Type.Like("Category") == true)
             {
                 return _restore(_categoryRepository, ctx);
@@ -237,7 +248,7 @@ namespace Origami.Core.Data
             var hub = new Result<OrigamiUserTrash>(trash.Entity);
             var entity = repo.ReadFromDatabase(trash.Entity);
             var ctx = new DataOperationContext<T>(trash.User, trash.DateTime, entity ?? Activator.CreateInstance<T>());
-            return repo.SmartPurge(ctx, false).Push(hub);
+            return repo.SmartPurge(ctx, true).Push(hub);
         }
 
         private Result<OrigamiUserTrash> _purge<T>(IHubContentRepository<T> repo, DataOperationContext<OrigamiUserTrash> trash)
@@ -257,7 +268,7 @@ namespace Origami.Core.Data
             var ctx = new DataOperationContext<T>(trash.User, trash.DateTime, entity ?? Activator.CreateInstance<T>());
             if (entity != null)
             {
-                return repo.SmartRestore(ctx, false).Push(hub);
+                return repo.SmartRestore(ctx, true).Push(hub);
             }
             return new(trash.Entity) { Error = Text.Original("Unable to restore trash") };
         }

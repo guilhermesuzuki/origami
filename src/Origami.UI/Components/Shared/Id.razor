@@ -45,13 +45,13 @@
             @if (this.Entity is IDateCreated dateCreated)
             {
                 <span class="me-1" title="@Text.Original("Date")">
-                    <i class="bi bi-calendar-plus-fill"></i>
+                    <i class="bi bi-calendar-fill"></i>
                     <span class="">@dateCreated.GetDate()</span>
                 </span>
             }
             @if (this.Entity is IPublished published && published.IsPublished && published.DatePublished.HasValue)
             {
-                <span class="me-1" title="@Text.Original("Date Published")">
+                <span class="me-1" title="@Text.Original("Date published")">
                     <i class="bi bi-calendar-heart-fill"></i>
                     <span class="">@published.DatePublished.ToString()</span>
                 </span>

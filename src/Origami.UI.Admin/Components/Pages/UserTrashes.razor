@@ -53,21 +53,23 @@
                                         {
                                             var blog = this.Super.Blogs.ReadFromCache().Id(context.Item.Id);
                                             <BlogHeaderInline Entity="blog"></BlogHeaderInline>
+                                            <div class="dummy"></div>
+                                            <Id Entity="blog" Class="x-small"></Id>
                                         }
                                         else if (context.Item.Type.Like("OrigamiPage") == true)
                                         {
                                             var page = this.Super.Contents.ReadFromCache().Id(context.Item.Id);
-                                            <ContentHeaderInline Entity="page"></ContentHeaderInline>
+                                            <ContentTitleColumn Entity="page"></ContentTitleColumn>
                                         }
                                         else if (context.Item.Type.Like("OrigamiPost") == true)
                                         {
                                             var post = this.Super.Contents.ReadFromCache().Id(context.Item.Id);
-                                            <ContentHeaderInline Entity="post"></ContentHeaderInline>
+                                            <ContentTitleColumn Entity="post"></ContentTitleColumn>
                                         }
                                         else if (context.Item.Type.Like("OrigamiVideo") == true)
                                         {
                                             var video = this.Super.Contents.ReadFromCache().Id(context.Item.Id);
-                                            <ContentHeaderInline Entity="video"></ContentHeaderInline>
+                                            <ContentTitleColumn Entity="video"></ContentTitleColumn>
                                         }
                                         else if (context.Item.Type.Like("ContentComment") == true)
                                         {
@@ -82,7 +84,7 @@
                                         else if (context.Item.Type.Like("User") == true)
                                         {
                                             var user = this.Super.Users.ReadFromCache().Id(context.Item.Id);
-                                            <UserHeader Entity="user"></UserHeader>
+                                            <UserHeaderInline Entity="user"></UserHeaderInline>
                                         }
                                         else if (context.Item.Type.Like("Role") == true)
                                         {
@@ -97,12 +99,12 @@
                                         else if (context.Item.Type.Like("OrigamiSpecialPage") == true)
                                         {
                                             var page = this.Super.GetSpecialPages().Id(context.Item.Id);
-                                            <ContentHeaderInline Entity="page"></ContentHeaderInline>
+                                            <ContentTitleColumn Entity="page"></ContentTitleColumn>
                                         }
                                         else if (context.Item.Type.Like("OrigamiSpecialMessage") == true)
                                         {
                                             var message = this.Super.GetSpecialMessages().Id(context.Item.Id);
-                                            <ContentHeaderInline Entity="message"></ContentHeaderInline>
+                                            <ContentTitleColumn Entity="message"></ContentTitleColumn>
                                         }
                                     </div>
                                 </CellTemplate>

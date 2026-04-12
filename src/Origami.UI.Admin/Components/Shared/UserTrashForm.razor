@@ -36,7 +36,7 @@
             else if (Entity.Type.Like("ContentComment") == true)
             {
                 var entity = this.Super.ContentComments.ReadFromCache().Id(Entity.Id)!;
-                <TrashFormPostComment Entity="entity"></TrashFormPostComment>
+                <TrashFormContentComment Entity="entity"></TrashFormContentComment>
             }
             else if (Entity.Type.Like("Category") == true)
             {

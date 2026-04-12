@@ -60,7 +60,7 @@
                                                 {
                                                     var socialProfile = this.Super.SocialProfiles.ReadFromCache().Id(parent.SocialProfileId);
                                                     <div class="video-comment-in-reply-to p-2 mt-2 mb-2 position-relative">
-                                                        <SocialProfileHeaderLite Entity="socialProfile"></SocialProfileHeaderLite>
+                                                        <SocialProfileHeaderInline Entity="socialProfile"></SocialProfileHeaderInline>
                                                         <div class="video-comment-text">@((MarkupString)parent.Content)</div>
                                                         <button class="position-absolute fw-bold p-2" style="top: 0; right: 0; bottom: 0;" @onclick="() => NewComment.ParentId = null">x</button>
                                                     </div>
@@ -105,7 +105,7 @@
     }
 </Root>
 
-@code {
+    @code {
     [Parameter] public ISlug? Slug { get; set; }
     [Parameter] public OrigamiContentTag? Tag { get; set; }
     [Parameter] public OrigamiCategory? Category { get; set; }
@@ -194,5 +194,11 @@
     protected override void SetPageTitle()
     {
         this.PageTitle.SetTitle(this.Slug as ITag, this.Slug as IName, this._entity);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender) await JSRuntime.InvokeVoidAsync("window.prepareHTMLForGLightBox");
     }
 }

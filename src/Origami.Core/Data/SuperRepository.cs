@@ -24,7 +24,6 @@ namespace Origami.Core.Data
             IPhysicalPageViewRepository physicalPageViewRepository,
             IPostRepository postRepository,
             IQuickNoteRepository quickNoteRepository,
-            IResumeRepository resumeRepository,
             IRightRepository rightRepository,
             IRoleRepository roleRepository,
             ISettingsRepository settingsRepository,
@@ -34,7 +33,6 @@ namespace Origami.Core.Data
             ISubscriberRepository subscriberRepository,
             IUserActivityRepository userActivityRepository,
             IUserBlogRepository userBlogRepository,
-            IUserContentRepository userContentRepository,
             IUserPasswordResetRepository userPasswordResetRepository,
             IUserRepository userRepository,
             IUserRoleRepository userRoleRepository,
@@ -68,7 +66,6 @@ namespace Origami.Core.Data
             PhysicalPageViews = physicalPageViewRepository;
             Posts = postRepository;
             QuickNotes = quickNoteRepository;
-            Resumes = resumeRepository;
             Rights = rightRepository;
             Roles = roleRepository;
             Settings = settingsRepository;
@@ -78,7 +75,6 @@ namespace Origami.Core.Data
             Subscribers = subscriberRepository;
             UserActivities = userActivityRepository;
             UserBlogs = userBlogRepository;
-            UserContents = userContentRepository;
             UserPasswordResets = userPasswordResetRepository;
             UserRoles = userRoleRepository;
             Users = userRepository;
@@ -120,7 +116,6 @@ namespace Origami.Core.Data
         public IPhysicalPageViewRepository PhysicalPageViews { get; }
         public IPostRepository Posts { get; }
         public IQuickNoteRepository QuickNotes { get; }
-        public IResumeRepository Resumes { get; }
         public IRightRepository Rights { get; }
         public IRoleRepository Roles { get; }
         public ISettingsRepository Settings { get; }
@@ -130,7 +125,6 @@ namespace Origami.Core.Data
         public ISubscriberRepository Subscribers { get; }
         public IUserActivityRepository UserActivities { get; }
         public IUserBlogRepository UserBlogs { get; }
-        public IUserContentRepository UserContents { get; }
         public IUserPasswordResetRepository UserPasswordResets { get; }
         public IUserRoleRepository UserRoles { get; }
         public IUserRepository Users { get; }
@@ -438,6 +432,7 @@ namespace Origami.Core.Data
             ContentCommentReactions.RefreshCache();
             ContentComments.RefreshCache();
             ContentRatings.RefreshCache();
+            ContentReactions.RefreshCache();
             Contents.RefreshCache();
             ContentTags.RefreshCache();
             PhysicalPages.RefreshCache();

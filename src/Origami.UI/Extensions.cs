@@ -66,7 +66,7 @@ namespace Origami.UI
 
         public static void AddOrigami(this WebApplicationBuilder builder, string[] args, bool admin = false)
         {
-            var files = Path.GetFullPath("..\\Origami.Files\\");
+            var files = Path.GetFullPath($"..{Path.DirectorySeparatorChar}Origami.Files{Path.DirectorySeparatorChar}");
 
             builder.Configuration.AddJsonFile(Path.Combine(files, "dbsettings.json"), false, reloadOnChange: true);
             builder.Configuration.AddJsonFile(Path.Combine(files, $"dbsettings.{builder.Environment.EnvironmentName}.json"), true, reloadOnChange: true);
@@ -116,7 +116,7 @@ namespace Origami.UI
 
             builder.Services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<OrigamiIdentityDbContext>();
 
-            builder.Services.AddScoped<OrigamiJwtUserMiddleware>();
+            builder.Services.AddScoped<OrigamiUserMiddleware>();
             builder.Services.AddScoped<OrigamiLocationMiddleware>();
 
             builder.Services.AddSingleton<Text>();
@@ -126,7 +126,6 @@ namespace Origami.UI
             builder.Services.AddSingleton<IBackupRestoreRepository, BackupRestoreRepository>();
             builder.Services.AddSingleton<IRepository<OrigamiBackup>, BackupRestoreRepository>();
             builder.Services.AddTransient<IBlogRepository, BlogRepository>();
-            builder.Services.AddTransient<IBlogRollRepository, BlogRollRepository>();
             builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
             builder.Services.AddTransient<IContentCategoryRepository, ContentCategoryRepository>();
             builder.Services.AddTransient<IContentCommentReactionRepository, ContentCommentReactionRepository>();
@@ -145,10 +144,8 @@ namespace Origami.UI
             builder.Services.AddTransient<IPageTitleRepository, PageTitleRepository>();
             builder.Services.AddTransient<IPhysicalPageRepository, PhysicalPageRepository>();
             builder.Services.AddTransient<IPhysicalPageViewRepository, PhysicalPageViewRepository>();
-            builder.Services.AddTransient<IPingServiceRepository, PingServiceRepository>();
             builder.Services.AddTransient<IPostRepository, PostRepository>();
             builder.Services.AddTransient<IQuickNoteRepository, QuickNoteRepository>();
-            builder.Services.AddTransient<IResumeRepository, ResumeRepository>();
             builder.Services.AddTransient<IRightRepository, RightRepository>();
             builder.Services.AddTransient<IRightRoleRepository, RightRoleRepository>();
             builder.Services.AddTransient<IRoleRepository, RoleRepository>();
@@ -163,7 +160,6 @@ namespace Origami.UI
             builder.Services.AddTransient<ISuperRepository, SuperRepository>();
             builder.Services.AddTransient<IUserActivityRepository, UserActivityRepository>();
             builder.Services.AddTransient<IUserBlogRepository, UserBlogRepository>();
-            builder.Services.AddTransient<IUserContentRepository, UserContentRepository>();
             builder.Services.AddTransient<IUserPasswordResetRepository, UserPasswordResetRepository>();
             builder.Services.AddTransient<IUserRepository, UserRepository>();
             builder.Services.AddTransient<IUserRoleRepository, UserRoleRepository>();
@@ -205,6 +201,7 @@ namespace Origami.UI
             builder.Services.AddTransient<IHubContentRepository<HubContentPost>, HubContentPostRepository>();
             builder.Services.AddTransient<IHubContentRepository<HubContentSpecialMessage>, HubContentSpecialMessageRepository>();
             builder.Services.AddTransient<IHubContentRepository<HubContentSpecialPage>, HubContentSpecialPageRepository>();
+            builder.Services.AddTransient<IHubContentRepository<HubContentQuickNote>, HubContentQuickNoteRepository>();
             builder.Services.AddTransient<IHubContentRepository<HubContentVideo>, HubContentVideoRepository>();
 
             //sets the blog as the primary one
@@ -231,6 +228,7 @@ namespace Origami.UI
             builder.Services.AddSingleton<IValidator<HubContentPost>, HubContentPostValidator>();
             builder.Services.AddSingleton<IValidator<HubContentSpecialMessage>, HubContentSpecialMessageValidator>();
             builder.Services.AddSingleton<IValidator<HubContentSpecialPage>, HubContentSpecialPageValidator>();
+            builder.Services.AddSingleton<IValidator<HubContentQuickNote>, HubContentQuickNoteValidator>();
             builder.Services.AddSingleton<IValidator<HubContentVideo>, HubContentVideoValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiBlog>, OrigamiBlogValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiCategory>, OrigamiCategoryValidator>();
@@ -567,7 +565,7 @@ namespace Origami.UI
             app.UseAuthorization();
             app.UseAntiforgery();
 
-            app.UseMiddleware<OrigamiJwtUserMiddleware>();
+            app.UseMiddleware<OrigamiUserMiddleware>();
             app.UseMiddleware<OrigamiLocationMiddleware>();
 
             app.MapRazorPages();

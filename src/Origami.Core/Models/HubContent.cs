@@ -22,6 +22,7 @@ namespace Origami.Core.Models
         public List<OrigamiContentRating> Ratings { get; set; } = [];
         public List<OrigamiContentReaction> Reactions { get; set; } = [];
         public List<OrigamiContentTag> Tags { get; set; } = [];
+        public List<OrigamiContentHistory> Histories { get; set; } = [];
 
         /// <summary>
         /// Dummy implementation to satisfy IHubContent interface, since the actual ID is stored in the Entity

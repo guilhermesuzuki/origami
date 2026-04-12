@@ -63,6 +63,18 @@ namespace Origami.Core
             return read.MemoryCache.Get<long>(key);
         }
 
+        public static void CreateCache<T>(this IMemoryCache memoryCache, T entity)
+                    where T : class
+        {
+            var key = typeof(T).KeyForCaching();
+            lock (OrigamiConstants.SyncRoot)
+            {
+                var list = memoryCache.GetList<T>(key) ?? throw new InvalidOperationException("Cache list not found");
+                list.Add(entity);
+                memoryCache.Set(key, list);
+            }
+        }
+
         /// <summary>
         /// Blogs default sorting/ordering
         /// </summary>
@@ -127,12 +139,12 @@ namespace Origami.Core
             where T : class, IId
         {
             if (source == null) return [];
-            if (typeof(T).Implements<IParentIdNull<T>>() == false) return [];
+            if (typeof(T).Implements<IParentIdNull>() == false) return [];
 
             var list = new List<T>();
             foreach (var entity in entities)
             {
-                var children = source.Cast<IParentIdNull<T>>().Where(x => x.ParentId == entity.Id).Cast<T>().ToList();
+                var children = source.Cast<IParentIdNull>().Where(x => x.ParentId == entity.Id).Cast<T>().ToList();
                 foreach (var child in children)
                 {
                     list.AddRange(source.GetAllChildren(child));
@@ -147,10 +159,9 @@ namespace Origami.Core
             where T : class, IId
         {
             if (source == null) return [];
-            if (id is not IParentIdNull<T>) return [];
 
             var list = new List<Guid>();
-            var children = source.Cast<IParentIdNull<T>>().Where(x => x.ParentId == id).Cast<T>().Select(x => x.Id).ToList();
+            var children = source.Cast<IParentIdNull>().Where(x => x.ParentId == id).Cast<T>().Select(x => x.Id).ToList();
             foreach (var child in children)
             {
                 list.AddRange(source.GetAllChildren(child));
@@ -260,6 +271,26 @@ namespace Origami.Core
             }
 
             throw new Exception("The Origami connection string does NOT exist in the appsettings file");
+        }
+
+        public static List<OrigamiRole> GetRolesFromDatabase(this DbContext db)
+        {
+            var roles = db.Set<OrigamiRole>().AsNoTracking().ToList();
+
+            foreach (var role in roles)
+            {
+                var rightRoles = db.Set<OrigamiRightRole>().AsNoTracking().Where(x => x.RoleId == role.Id).ToList();
+
+                var match = from property in role.GetType().GetProperties()
+                            join rt in db.Set<OrigamiRight>().AsNoTracking() on property.Name equals rt.Name
+                            join rr in rightRoles on rt.Id equals rr.RightId
+                            where property.CanWrite == true
+                            select property;
+
+                match.Each(x => x.SetValue(role, true));
+            }
+
+            return roles.ToList();
         }
 
         /// <summary>
@@ -447,27 +478,6 @@ namespace Origami.Core
              
             return db.Set<T>().AsNoTracking().ToList();
         }
-
-        public static List<OrigamiRole> GetRolesFromDatabase(this DbContext db)
-        {
-            var roles = db.Set<OrigamiRole>().AsNoTracking().ToList();
-
-            foreach (var role in roles)
-            {
-                var rightRoles = db.Set<OrigamiRightRole>().AsNoTracking().Where(x => x.RoleId == role.Id).ToList();
-
-                var match = from property in role.GetType().GetProperties()
-                            join rt in db.Set<OrigamiRight>().AsNoTracking() on property.Name equals rt.Name
-                            join rr in rightRoles on rt.Id equals rr.RightId
-                            where property.CanWrite == true
-                            select property;
-
-                match.Each(x => x.SetValue(role, true));
-            }
-
-            return roles.ToList();
-        }
-
         /// <summary>
         /// Tries to retrieve a blog by its slug. Returns null if not found or if the blog is deleted or inactive.
         /// </summary>
@@ -531,7 +541,5 @@ namespace Origami.Core
         {
             return CultureInfo.CurrentUICulture.Name.Split('-')[0];
         }
-
-        
     }
 }

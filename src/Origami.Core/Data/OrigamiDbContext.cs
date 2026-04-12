@@ -23,11 +23,6 @@ namespace Origami.Core.Data
         public DbSet<OrigamiBackup> Backups { get; set; }
 
         /// <summary>
-        /// Blog Rolls
-        /// </summary>
-        public DbSet<OrigamiBlogRoll> BlogRolls { get; set; }
-
-        /// <summary>
         /// Blogs
         /// </summary>
         public DbSet<OrigamiBlog> Blogs { get; set; }
@@ -78,40 +73,6 @@ namespace Origami.Core.Data
         public DbSet<OrigamiContentTag> ContentTags { get; set; }
 
         /// <summary>
-        /// Custom Fields
-        /// </summary>
-        public DbSet<OrigamiCustomField> CustomFields { get; set; }
-
-        /// <summary>
-        /// Data Store Settings
-        /// </summary>
-        public DbSet<OrigamiDataStoreSetting> DataStoreSettings { get; set; }
-
-        /// <summary>
-        /// File Store Directories
-        /// </summary>
-        public DbSet<OrigamiFileStoreDirectory> FileStoreDirectories { get; set; }
-
-        /// <summary>
-        /// File Store Files
-        /// </summary>
-        public DbSet<OrigamiFileStoreFile> FileStoreFiles { get; set; }
-
-        /// <summary>
-        /// File Store File Thumbs
-        /// </summary>
-        public DbSet<OrigamiFileStoreFileThumb> FileStoreFileThumbs { get; set; }
-        /// <summary>
-        /// Package Files
-        /// </summary>
-        public DbSet<OrigamiPackageFile> PackageFiles { get; set; }
-
-        /// <summary>
-        /// Packages
-        /// </summary>
-        public DbSet<OrigamiPackage> Packages { get; set; }
-
-        /// <summary>
         /// Pages
         /// </summary>
         public DbSet<OrigamiPage> Pages { get; set; }
@@ -132,13 +93,10 @@ namespace Origami.Core.Data
         public DbSet<OrigamiPhysicalPageView> PhysicalPageViews { get; set; }
 
         /// <summary>
-        /// Ping Services
-        /// </summary>
-        public DbSet<OrigamiPingService> PingServices { get; set; }
-        /// <summary>
         /// Posts
         /// </summary>
         public DbSet<OrigamiPost> Posts { get; set; }
+
         /// <summary>
         /// Processed User Views for Histories
         /// </summary>
@@ -153,16 +111,6 @@ namespace Origami.Core.Data
         /// Quick Notes
         /// </summary>
         public DbSet<OrigamiQuickNote> QuickNotes { get; set; }
-
-        /// <summary>
-        /// Quick Settings
-        /// </summary>
-        public DbSet<OrigamiQuickSetting> QuickSettings { get; set; }
-
-        /// <summary>
-        /// Referrers
-        /// </summary>
-        public DbSet<OrigamiReferrer> Referrers { get; set; }
 
         /// <summary>
         /// Right Roles
@@ -205,11 +153,6 @@ namespace Origami.Core.Data
         public DbSet<OrigamiSpecialPage> SpecialPages { get; set; }
 
         /// <summary>
-        /// Stop Words
-        /// </summary>
-        public DbSet<OrigamiStopWord> StopWords { get; set; }
-
-        /// <summary>
         /// Subscribers
         /// </summary>
         public DbSet<OrigamiSubscriber> Subscribers { get; set; }
@@ -238,10 +181,17 @@ namespace Origami.Core.Data
         /// Users
         /// </summary>
         public DbSet<OrigamiUser> Users { get; set; }
+
         /// <summary>
         /// User Trashes
         /// </summary>
         public DbSet<OrigamiUserTrash> UserTrashes { get; set; }
+
+        /// <summary>
+        /// Videos
+        /// </summary>
+        public DbSet<OrigamiVideo> Videos { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -254,6 +204,7 @@ namespace Origami.Core.Data
                 .HasValue<OrigamiPage>(nameof(OrigamiPage))
                 .HasValue<OrigamiPost>(nameof(OrigamiPost))
                 .HasValue<OrigamiSpecialPage>(nameof(OrigamiSpecialPage))
+                .HasValue<OrigamiQuickNote>(nameof(OrigamiQuickNote))
                 .HasValue<OrigamiVideo>(nameof(OrigamiVideo))
                 ;
 
@@ -280,7 +231,6 @@ namespace Origami.Core.Data
 
             modelBuilder.Entity<OrigamiCategory>().HasOne<OrigamiCategory>().WithMany().HasForeignKey(x => x.ParentId);
             modelBuilder.Entity<OrigamiCategory>().HasOne<OrigamiBlog>().WithMany().HasForeignKey(x => x.BlogId);
-            modelBuilder.Entity<OrigamiQuickSetting>().HasOne<OrigamiBlog>().WithMany().HasForeignKey(x => x.BlogId);
             modelBuilder.Entity<OrigamiPhysicalPageView>().HasOne<OrigamiPhysicalPage>().WithMany().HasForeignKey(x => x.PhysicalPageId);
             modelBuilder.Entity<OrigamiPhysicalPageReaction>().HasOne<OrigamiPhysicalPage>().WithMany().HasForeignKey(x => x.PhysicalPageId);
             modelBuilder.Entity<OrigamiRightRole>().HasOne<OrigamiRole>().WithMany().HasForeignKey(x => x.RoleId);
@@ -288,12 +238,12 @@ namespace Origami.Core.Data
 
             modelBuilder.Entity<OrigamiUserPasswordReset>().HasOne<OrigamiUser>().WithMany().HasForeignKey(x => x.AuthorId);
             modelBuilder.Entity<OrigamiUserPasswordReset>().HasOne<OrigamiUser>().WithMany().HasForeignKey(x => x.UserId);
-            modelBuilder.Entity<OrigamiCustomField>().HasOne<OrigamiBlog>().WithMany().HasForeignKey(x => x.BlogId);
 
             modelBuilder.Entity<OrigamiUserRole>().HasOne<OrigamiUser>().WithMany().HasForeignKey(x => x.UserId);
             modelBuilder.Entity<OrigamiUserRole>().HasOne<OrigamiRole>().WithMany().HasForeignKey(x => x.RoleId);
 
             modelBuilder.Entity<OrigamiContentCommentReaction>().Property(c => c.Reaction).UseCollation("Latin1_General_BIN2");
+            modelBuilder.Entity<OrigamiContentReaction>().Property(c => c.Reaction).UseCollation("Latin1_General_BIN2");
             modelBuilder.Entity<OrigamiPhysicalPageReaction>().Property(c => c.Reaction).UseCollation("Latin1_General_BIN2");
 
             // Map the entity to the view
@@ -303,10 +253,6 @@ namespace Origami.Core.Data
             // Map the entity to the view
             modelBuilder.Entity<OrigamiUserView>().ToView("oi_vw_UserViews");
             modelBuilder.Entity<OrigamiUserView>().Metadata.SetIsTableExcludedFromMigrations(true);
-
-            // Map the entity to the view
-            modelBuilder.Entity<OrigamiUserContent>().ToView("oi_vw_UserContents");
-            modelBuilder.Entity<OrigamiUserContent>().Metadata.SetIsTableExcludedFromMigrations(true);
 
             // Map the entity to the view
             modelBuilder.Entity<OrigamiUserTrash>().ToView("oi_vw_UserTrashes");

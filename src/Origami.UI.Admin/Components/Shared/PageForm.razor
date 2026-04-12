@@ -1,6 +1,7 @@
 ﻿@inherits BasicFormFullContent<OrigamiPage, HubContentPage>
 
 <div class="form @Class">
+    <ContentHistories Class="p-3" Entity="this.Entity.Entity"></ContentHistories>
     <div class="row">
         <div class="col-12">
             <div class="p-3">
@@ -74,9 +75,7 @@
                         </div>
                     }
                 </div>
-
                 <BasicHeader Class="mt-3" Entity="this.Entity.Entity"></BasicHeader>
-
                 <ul class="inline-list mt-3">
                     <li>
                         <MudTextField Immediate="true"
@@ -84,7 +83,7 @@
                                       Adornment="Adornment.Start"
                                       @bind-Value="@Entity.Entity.Title"
                                       HelperText="@Text.Lower("Title")"
-                                      Required="true"></MudTextField>
+                                      MaxLength="255"></MudTextField>
                     </li>
                     <li>
                         <LanguageWrittenOn Entity="this.Entity.Entity"></LanguageWrittenOn>
@@ -96,7 +95,8 @@
                                       AdornmentIcon="@Icons.Material.Filled.Link"
                                       Adornment="Adornment.Start"
                                       @bind-Value="@Entity.Entity.Slug"
-                                      HelperText="@Text.Lower("Slug")"></MudTextField>
+                                      HelperText="@Text.Lower("Slug")" 
+                                      MaxLength="255"></MudTextField>
                     </li>
                     <li style="width:140px;">
                         <button class="btn btn-secondary" @onclick="() => Entity.Entity.Slug = Entity.Entity.Title.GetSlug()" style="line-height: 15px;">
@@ -109,22 +109,22 @@
                     <li>
                         <MudTextField Immediate="true"
                                       @bind-Value="@(Entity.Entity.Keywords)"
-                                      HelperText="@Text.Lower("Keywords")"
-                                      AutoGrow="false"></MudTextField>
+                                      HelperText="@Text.Lower("Keywords")" 
+                                      MaxLength="1024"></MudTextField>
                     </li>
                 </ul>
             </div>
         </div>
         <div class="col-12 col-xxl-6">
             <div class="text-center p-3">
-                <HeaderImageLite Entity="@Entity.Entity"></HeaderImageLite>
+                <HeaderImageCard Entity="@Entity.Entity"></HeaderImageCard>
                 <MudFileUpload T="IBrowserFile" FilesChanged="UploadHeader" Accept=".png, .jpg, .bmp, .tiff" MaximumFileCount="1">
                     <CustomContent>
                         <div class="btn-group mt-2 w-100">
                             <button class="btn btn-light w-100" @onclick="context.OpenFilePickerAsync">
                                 <i class="fa-solid fa-cloud-arrow-up"></i>
                                 <div>@Text.Lower("Only image files")</div>
-                                <div class="x-small">@Text.Original("{0} MB max.", 6)</div>
+                                <div class="x-small">@Text.Original("{0}MB max.", 6)</div>
                             </button>
                             <button class="btn btn-light w-100" @onclick="() => this.FileManagerForImages = true">
                                 <i class="fa-solid fa-folder"></i>
@@ -147,8 +147,9 @@
                 <MudTextField FullWidth="true"
                               Immediate="true"
                               @bind-Value="@Entity.Entity.Description"
-                              AutoGrow="true"
-                              HelperText="@Text.Lower("Description")"></MudTextField>
+                              HelperText="@Text.Lower("Description")"
+                              MaxLength="2048"
+                              MaxLines="16"></MudTextField>
             </div>
             <div class="p-3">
                 <TinyMCEContent Entity="Entity.Entity" Title="@Text.Lower("Content")"></TinyMCEContent>

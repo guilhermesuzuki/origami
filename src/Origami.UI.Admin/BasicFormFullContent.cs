@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using AngleSharp.Dom;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.Caching.Memory;
 using MudBlazor;
@@ -25,18 +26,20 @@ namespace Origami.UI.Admin
 
         public override void Save()
         {
+            var hub = new Result<T2>(this.Entity);
+
             try
             {
                 using (var transaction = new TransactionScope())
                 {
-                    var hub = HubContentRepository.Save(Entity, UserFacade.User);
+                    HubContentRepository.Save(Entity, UserFacade.User).Push(hub);
                     if (hub.Ok)
                     {
                         transaction.Complete();
                     }
                     this.UserFacade.Result = hub;
-                    this.Saved.InvokeAsync(Entity).Wait();
                 }
+                hub.OnSuccess(() => Saved.InvokeAsync(hub.Entity));
             }
             catch (Exception ex)
             {
@@ -46,6 +49,7 @@ namespace Origami.UI.Admin
 
         public override void UndoChanges()
         {
+            this.ShowParentSelector = false;
             this.Entity = HubContentRepository.Get(Entity.Entity).Clone();
         }
 
@@ -106,7 +110,12 @@ namespace Origami.UI.Admin
         {
             base.OnInitialized();
             Entity.Entity.SetAuthor(UserFacade.User);
-            Entity.Entity.SetBlog(GetBlogFromUserFacade());
+            Entity.Entity.BlogId = Entity.Entity switch
+            {
+                OrigamiSpecialMessage => null,
+                OrigamiSpecialPage => null,
+                _ => GetBlogFromUserFacade().Id,
+            };
             Categories = Get<OrigamiCategory>();
             Tags = Get<OrigamiContentTag>();
         }
@@ -126,7 +135,12 @@ namespace Origami.UI.Admin
         protected override void CreateEntityBeforeEvent(T2 entity)
         {
             entity.Entity.SetAuthor(UserFacade.User);
-            entity.Entity.SetBlog(GetBlogFromUserFacade());
+            entity.Entity.BlogId = entity.Entity switch 
+            { 
+                OrigamiSpecialMessage => null,
+                OrigamiSpecialPage => null,
+                _ => GetBlogFromUserFacade().Id,
+            };
         }
 
         public override void SetParent(IId entity)

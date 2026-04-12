@@ -1,7 +1,6 @@
 ﻿@page "/users/{UserId:guid}"
 @inherits BasicPage
 @inject IUserRepository _users
-@inject IUserContentRepository _userContents
 @inject IPageRepository _pages
 @inject IPostRepository _posts
 @inject IVideoRepository _videos
@@ -16,7 +15,7 @@
                 <div>
                     <ul class="inline-list p-3 border">
                         <li class="w-25">
-                            <HeaderImageLite Entity="user"></HeaderImageLite>
+                            <HeaderImageCard Entity="user"></HeaderImageCard>
                         </li>
                         <li class="p-3">
                             <ul class="inline-list">

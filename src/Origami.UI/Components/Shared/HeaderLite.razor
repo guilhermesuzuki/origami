@@ -11,17 +11,40 @@
         }
         else
         {
-            @if (this.Entity is ITitle title)
+            @if (this.Entity is ITitle title && title.Title.Has() == true)
             {
                 <span class="ps-1">@title.Title</span>
             }
-            @if (this.Entity is IName name)
+            else if (this.Entity is IName name && name.Name.Has() == true)
             {
                 <span class="ps-1">@name.Name</span>
             }
-            @if (this.Entity is OrigamiUser user)
+            else if (this.Entity is IDisplayName displayname && displayname.DisplayName.Has() == true)
             {
-                <span class="ps-1">@user.Username</span>
+                <span class="ps-1">@displayname.DisplayName</span>
+            }
+            else if (this.Entity is IFirstName firstName && this.Entity is ILastName lastName)
+            {
+                <span class="ps-1">@firstName.FirstName @lastName.LastName</span>
+            }
+            else if (this.Entity is OrigamiUser user)
+            {
+                <span class="ps-1">@user.DisplayName</span>
+            }
+            else if (this.Entity is OrigamiUserTrash trash)
+            {
+                @if (trash.Title.Has() == true)
+                {
+                    <span class="ps-1">@trash.Title</span>
+                }
+                @if (trash.Name.Has() == true)
+                {
+                    <span class="ps-1">@trash.Name</span>
+                }
+            }
+            else
+            {
+                <span>@Text.Lower("No header information available")</span>
             }
         }
     </div>

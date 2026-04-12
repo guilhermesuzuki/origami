@@ -38,52 +38,6 @@ var origami = {
             Prism.highlightAll();
         },
 
-        //prepares images for yoxview
-        yoxview: () => {
-            var selector = ".post-content, .video-content, .page-content, .resume .resume-profile";
-
-            var items = function () {
-                var img = $(this);
-                var src = img.attr("src");
-
-                src = src.replace(/&size=\w*/i, "&size=original");
-                src = src.replace(/\?size=\w*/i, "?size=original");
-
-                var title = img.attr("title");
-                if (title === null || title === undefined) title = img.attr("data-title");
-                if (title === null || title === undefined) title = img.attr("alt");
-
-                img.attr("title", null);
-                img.attr("data-title", title);
-                img.wrap("<div class='yoxview yoxview-activate' style='text-align:center;' " + (title !== null && title !== undefined ? " title='" + title + "'" : "") + "><a class='no-link' href='" + src + "'></a></div>");
-            };
-
-            $(selector).find("img").each(items);
-            $(selector).find(".yoxview-activate").each(
-                function () {
-                    var elm = $(this);
-                    var lang = $("html").attr("lang").toLowerCase();
-
-                    switch (lang) {
-                        case "pt-br":
-                        case "zh-cn":
-                        case "zh-tw":
-                            break;
-                        default:
-                            lang = lang.split("-")[0];
-                            break;
-                    }
-
-                    elm.yoxview({
-                        allowedUrls: [ /(.*)$/i ],
-                        lang: lang,
-                        titleAttribute: "data-title",
-                    });
-                    elm.removeClass("yoxview-activate");
-                }
-            );
-        },
-
         //lazy images loading
         lazy: () => {
             sleep(350).then(x => { $(function () { $('.lazy').lazy(); }); });
@@ -236,5 +190,19 @@ window.geoLocation = {
         });
     }
 };
+
+window.prepareHTMLForGLightBox = () => {
+    var img = $(".content-html img");
+    img.each(function () {
+        var element = $(this);
+        element.addClass("glightbox");
+        element.addClass("cursor-pointer");
+    });
+    GLightbox({
+        touchNavigation: true,
+        loop: true,
+        autoplayVideos: true,
+    });
+}
 
 $.cookie.raw = true;

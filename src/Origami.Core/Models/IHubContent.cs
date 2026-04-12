@@ -44,5 +44,10 @@ namespace Origami.Core.Models
         /// Tags associated with the entity
         /// </summary>
         List<OrigamiContentTag> Tags { get; set; }
+
+        /// <summary>
+        /// Histories associated with the entity
+        /// </summary>
+        List<OrigamiContentHistory> Histories { get; set; }
     }
 }

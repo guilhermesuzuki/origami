@@ -133,7 +133,19 @@ namespace Origami.Core.Models
         /// <returns></returns>
         public virtual object? GetEntity()
         {
-            return GetType().GetRuntimeProperty(nameof(Result<IId>.Entity))?.GetValue(this);
+            var entity = GetType().GetRuntimeProperty(nameof(Result<IId>.Entity))?.GetValue(this);
+
+            return entity switch
+            {
+                null => null,
+                HubContentPage page => page.Entity,
+                HubContentPost post => post.Entity,
+                HubContentSpecialMessage specialMessage => specialMessage.Entity,
+                HubContentSpecialPage specialPage => specialPage.Entity,
+                HubContentVideo video => video.Entity,
+                HubContentQuickNote quickNote => quickNote.Entity,
+                _ => entity
+            };
         }
 
         /// <summary>
@@ -141,7 +153,7 @@ namespace Origami.Core.Models
         /// </summary>
         /// <param name="onFail"></param>
         /// <returns></returns>
-        public virtual Result OnFail(Action onFail)
+        public virtual Result OnFailure(Action onFail)
         {
             if (Ok == false) onFail();
             return this;
@@ -319,7 +331,7 @@ namespace Origami.Core.Models
         /// </summary>
         /// <param name="onFail"></param>
         /// <returns></returns>
-        public override Result<T> OnFail(Action onFail)
+        public override Result<T> OnFailure(Action onFail)
         {
             if (Ok == false) onFail();
             return this;

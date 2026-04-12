@@ -35,7 +35,7 @@
     {
         if (this.Entity != null)
         {
-            var language = OrigamiConstants.ContentLanguages().FirstOrDefault(x => x.Language.Like(this.Entity.LanguageWrittenOn)).Language;
+            var language = OrigamiConstants.AllLanguages().FirstOrDefault(x => x.Name.Like(this.Entity.LanguageWrittenOn))?.Name;
             if (language.Has() == false) this.Entity.LanguageWrittenOn = this.Entity.LanguageWrittenOn.Language();
         }
     }

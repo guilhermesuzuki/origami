@@ -27,21 +27,20 @@ namespace Origami.Core.Data
             Text = text;
         }
 
-        public virtual string ReadPermission { get; } = string.Empty;
-
         public virtual string CreatePermission { get; } = string.Empty;
         public virtual string DeleteOtherUsersPermission { get; } = string.Empty;
         public virtual string DeleteOwnPermission { get; } = string.Empty;
-        public virtual string UpdateOtherUsersPermission { get; } = string.Empty;
-        public virtual string UpdateOwnPermission { get; } = string.Empty;
-        public virtual string RestorePermission { get; } = string.Empty;
-        public virtual string PurgePermission { get; } = string.Empty;
+        public virtual string DemoteFromFrontPagePermission { get; } = string.Empty;
+        public virtual string PromoteToFrontPagePermission { get; } = string.Empty;
         public virtual string PublishOtherUsersPermission { get; } = string.Empty;
         public virtual string PublishOwnPermission { get; } = string.Empty;
+        public virtual string PurgePermission { get; } = string.Empty;
+        public virtual string ReadPermission { get; } = string.Empty;
+        public virtual string RestorePermission { get; } = string.Empty;
         public virtual string UnpublishOtherUsersPermission { get; } = string.Empty;
         public virtual string UnpublishOwnPermission { get; } = string.Empty;
-        public virtual string PromoteToFrontPagePermission { get; } = string.Empty;
-        public virtual string DemoteFromFrontPagePermission { get; } = string.Empty;
+        public virtual string UpdateOtherUsersPermission { get; } = string.Empty;
+        public virtual string UpdateOwnPermission { get; } = string.Empty;
 
         public Result CanRead(IId userId)
         {
@@ -75,6 +74,37 @@ namespace Origami.Core.Data
                 // needs to update cache
                 _memoryCache.Save(entity as OrigamiContent);
 
+                this.History(db, root.Entity, DateTime.UtcNow, "Content deleted", userId);
+
+                // returns success
+                return new(root) { Success = Text.Original(Text.OperationCompletedSuccessfully), };
+            }
+            catch (Exception ex)
+            {
+                return new(root) { Error = ex.GetMessage(), };
+            }
+        }
+
+        public Result<T2> DemoteFromFrontPage(T2 root, IId userId)
+        {
+            try
+            {
+                using var db = _dbContextFactory.CreateDbContext();
+
+                // check permissions
+                if (UserHasPermission(db, userId.Id, DemoteFromFrontPagePermission) == false) return new(root) { Info = DemoteFromFrontPagePermission, Error = Text.Original(Text.YouDontHavePermissionForThisFeature), };
+
+                // marks as published
+                db.Set<OrigamiPage>().AsNoTracking().Where(x => x.Id == root.Entity.Id).ExecuteUpdate(s => s.SetProperty(x => x.IsFrontPage, false));
+
+                // needs to hit the database for the entity
+                var entity = db.Set<T1>().AsNoTracking().Id(root.Entity.Id);
+
+                // needs to update cache
+                _memoryCache.Save(entity as OrigamiContent);
+
+                this.History(db, root.Entity, DateTime.UtcNow, "Content demoted from front page", userId);
+
                 // returns success
                 return new(root) { Success = Text.Original(Text.OperationCompletedSuccessfully), };
             }
@@ -100,11 +130,62 @@ namespace Origami.Core.Data
                 Task.Run(() => result.Ratings.AddRange(this.GetEntities<OrigamiContentRating>(rootId))),
                 Task.Run(() => result.Reactions.AddRange(this.GetEntities<OrigamiContentReaction>(rootId))),
                 Task.Run(() => result.Tags.AddRange(this.GetEntities<OrigamiContentTag>(rootId))),
+                Task.Run(() => result.Histories.AddRange(this.GetEntities<OrigamiContentHistory>(rootId))),
             };
 
             Task.WhenAll(tasks);
 
             return result;
+        }
+
+        public Result<T2> PromoteToFrontPage(T2 root, IId userId)
+        {
+            try
+            {
+                using var db = _dbContextFactory.CreateDbContext();
+
+                // check permissions
+                if (UserHasPermission(db, userId.Id, PromoteToFrontPagePermission) == false) return new(root) { Info = PromoteToFrontPagePermission, Error = Text.Original(Text.YouDontHavePermissionForThisFeature), };
+
+                var entity = db.Set<OrigamiPage>().AsNoTracking().Id(root.Entity.Id);
+                if (entity != null)
+                {
+                    // only top-level pages can be promoted to front-page
+                    if (entity.ParentId != null) return new(root) { Error = Text.Original("Only top-level pages can be promoted to front page"), };
+
+                    // previous front-page, if exists, should be unmarked
+                    var frontpage = (from page in db.Set<OrigamiPage>().AsNoTracking() where page.IsFrontPage select page).FirstOrDefault();
+                    if (frontpage != null && frontpage.Id == root.Entity.Id)
+                    {
+                        return new(root) { Error = Text.Original("Page is already front-page"), };
+                    }
+                    if (frontpage != null)
+                    {
+                        var demote = this.DemoteFromFrontPage(this.Get(frontpage), userId);
+                        if (demote.Ok == false) return demote;
+                    }
+
+                    // promotes to front-page
+                    db.Set<OrigamiPage>().AsNoTracking().Where(x => x.Id == root.Entity.Id).ExecuteUpdate(s => s.SetProperty(x => x.IsFrontPage, true));
+
+                    // needs to hit the database again for the entity that was updated
+                    entity = db.Set<OrigamiPage>().AsNoTracking().Id(root.Entity.Id);
+
+                    // needs to update cache
+                    _memoryCache.Save(entity as OrigamiContent);
+
+                    this.History(db, root.Entity, DateTime.UtcNow, "Content promoted to front page", userId);
+
+                    // returns success
+                    return new(root) { Success = Text.Original(Text.OperationCompletedSuccessfully), };
+                }
+
+                return new(root) { Error = Text.Original("Page not found"), };
+            }
+            catch (Exception ex)
+            {
+                return new(root) { Error = ex.GetMessage(), };
+            }
         }
 
         public Result<T2> Publish(T2 root, IId userId)
@@ -133,6 +214,8 @@ namespace Origami.Core.Data
                 // needs to update cache
                 _memoryCache.Save(entity as OrigamiContent);
 
+                this.History(db, root.Entity, DateTime.UtcNow, "Content published", userId);
+
                 // returns success
                 return new(root) { Success = Text.Original(Text.OperationCompletedSuccessfully), };
             }
@@ -148,6 +231,9 @@ namespace Origami.Core.Data
 
             // check permissions
             if (UserHasPermission(db, userId.Id, PurgePermission) == false) return new(root) { Info = PurgePermission, Error = Text.Original(Text.YouDontHavePermissionForThisFeature), };
+
+            //first, it needs to purge the relationships
+            this.PurgeKids(root, userId);
 
             var commentReactions = from a in db.Set<OrigamiContentCommentReaction>().AsNoTracking()
                                    join b in db.Set<OrigamiContentComment>().AsNoTracking() on a.CommentId equals b.Id
@@ -183,6 +269,22 @@ namespace Origami.Core.Data
             return new(root) { Success = Text.Original(Text.OperationCompletedSuccessfully), };
         }
 
+        public Result<T2> PurgeKids(T2 root, IId userId)
+        {
+            var hub = new Result<T2>(root);
+            var db = this._dbContextFactory.CreateDbContext();
+            var kids = db.Set<T1>().AsNoTracking().Where(x => x.ParentId == root.Entity.Id).ToList();
+
+            foreach (var child in kids)
+            {
+                var anotherRoot = new T2() { Entity = child };
+                this.PurgeKids(anotherRoot, userId).Push(hub);
+                this.Purge(anotherRoot, userId).Push(hub);
+            }
+
+            return hub;
+        }
+
         public Result<T2> Restore(T2 root, IId userId)
         {
             try
@@ -200,6 +302,8 @@ namespace Origami.Core.Data
 
                 // needs to update cache
                 _memoryCache.Save(entity as OrigamiContent);
+
+                this.History(db, root.Entity, DateTime.UtcNow, "Content restored", userId);
 
                 // returns success
                 return new(root) { Success = Text.Original(Text.OperationCompletedSuccessfully), };
@@ -248,6 +352,12 @@ namespace Origami.Core.Data
                 _memoryCache.SaveCache(m1);
                 _memoryCache.SaveCache(m2);
 
+                this.History(db, 
+                    root.Entity, 
+                    nil ? root.Entity.DateCreated : root.Entity.DateModified.GetValueOrDefault(), 
+                    nil ? "Content created" : "Content saved", 
+                    userId);
+
                 hub.Success = Text.Original(Text.OperationCompletedSuccessfully);
 
                 return hub;
@@ -284,80 +394,7 @@ namespace Origami.Core.Data
                 // needs to update cache
                 _memoryCache.Save(entity as OrigamiContent);
 
-                // returns success
-                return new(root) { Success = Text.Original(Text.OperationCompletedSuccessfully), };
-            }
-            catch (Exception ex)
-            {
-                return new(root) { Error = ex.GetMessage(), };
-            }
-        }
-
-        public Result<T2> PromoteToFrontPage(T2 root, IId userId)
-        {
-            try
-            {
-                using var db = _dbContextFactory.CreateDbContext();
-
-                // check permissions
-                if (UserHasPermission(db, userId.Id, PromoteToFrontPagePermission) == false) return new(root) { Info = PromoteToFrontPagePermission, Error = Text.Original(Text.YouDontHavePermissionForThisFeature), };
-
-                var entity = db.Set<OrigamiPage>().AsNoTracking().Id(root.Entity.Id);
-                if (entity != null)
-                {
-                    // only top-level pages can be promoted to front-page
-                    if (entity.ParentId != null) return new(root) { Error = Text.Original("Only top-level pages can be promoted to front page"), };
-
-                    // previous front-page, if exists, should be unmarked
-                    var frontpage = (from page in db.Set<OrigamiPage>().AsNoTracking() where page.IsFrontPage select page).FirstOrDefault();
-                    if (frontpage != null && frontpage.Id == root.Entity.Id)
-                    {
-                        return new(root) { Error = Text.Original("Page is already the front page"), };
-                    }
-                    if (frontpage != null)
-                    {
-                        var demote = this.DemoteFromFrontPage(this.Get(frontpage), userId);
-                        if (demote.Ok == false) return demote;
-                    }
-
-                    // promotes to front-page
-                    db.Set<OrigamiPage>().AsNoTracking().Where(x => x.Id == root.Entity.Id).ExecuteUpdate(s => s.SetProperty(x => x.IsFrontPage, true));
-
-                    // needs to hit the database again for the entity that was updated
-                    entity = db.Set<OrigamiPage>().AsNoTracking().Id(root.Entity.Id);
-
-                    // needs to update cache
-                    _memoryCache.Save(entity as OrigamiContent);
-
-                    // returns success
-                    return new(root) { Success = Text.Original(Text.OperationCompletedSuccessfully), };
-                }
-
-                return new(root) { Error = Text.Original("Page not found"), };
-            }
-            catch (Exception ex)
-            {
-                return new(root) { Error = ex.GetMessage(), };
-            }
-        }
-
-        public Result<T2> DemoteFromFrontPage(T2 root, IId userId)
-        {
-            try
-            {
-                using var db = _dbContextFactory.CreateDbContext();
-
-                // check permissions
-                if (UserHasPermission(db, userId.Id, DemoteFromFrontPagePermission) == false) return new(root) { Info = DemoteFromFrontPagePermission, Error = Text.Original(Text.YouDontHavePermissionForThisFeature), };
-
-                // marks as published
-                db.Set<OrigamiPage>().AsNoTracking().Where(x => x.Id == root.Entity.Id).ExecuteUpdate(s => s.SetProperty(x => x.IsFrontPage, false));
-
-                // needs to hit the database for the entity
-                var entity = db.Set<T1>().AsNoTracking().Id(root.Entity.Id);
-
-                // needs to update cache
-                _memoryCache.Save(entity as OrigamiContent);
+                this.History(db, root.Entity, DateTime.UtcNow, "Content unpublished", userId);
 
                 // returns success
                 return new(root) { Success = Text.Original(Text.OperationCompletedSuccessfully), };
@@ -366,6 +403,16 @@ namespace Origami.Core.Data
             {
                 return new(root) { Error = ex.GetMessage(), };
             }
+        }
+        /// <summary>
+        /// Retrieves a list of child entities associated with the specified parent identifier.
+        /// </summary>
+        /// <param name="id">The identifier of the parent entity whose children are to be retrieved. Cannot be null.</param>
+        /// <returns>A list of child entities of type T1 that have the specified parent identifier. Returns an empty list if no
+        /// children are found.</returns>
+        protected List<T1> GetChildren(IId id)
+        {
+            return _dbContextFactory.ReadFromCache<T1>(this._memoryCache).Where(x => x.ParentId == id.Id).ToList();
         }
 
         /// <summary>
@@ -403,18 +450,6 @@ namespace Origami.Core.Data
         {
             return _dbContextFactory.ReadFromCache<T1>(this._memoryCache).Id(parentId.ParentId);
         }
-
-        /// <summary>
-        /// Retrieves a list of child entities associated with the specified parent identifier.
-        /// </summary>
-        /// <param name="id">The identifier of the parent entity whose children are to be retrieved. Cannot be null.</param>
-        /// <returns>A list of child entities of type T1 that have the specified parent identifier. Returns an empty list if no
-        /// children are found.</returns>
-        protected List<T1> GetChildren(IId id)
-        {
-            return _dbContextFactory.ReadFromCache<T1>(this._memoryCache).Where(x => x.ParentId == id.Id).ToList();
-        }
-
         protected virtual bool UserHasPermission(OrigamiDbContext db, Guid userId, string permission)
         {
             var user = db.Users.AsNoTracking().Id(userId);
@@ -433,6 +468,24 @@ namespace Origami.Core.Data
                         select 1;
 
             return query.Any();
+        }
+
+        private Result History(OrigamiDbContext db, IId entity, DateTime timestamp, string description, IId author)
+        {
+            var history = new OrigamiContentHistory()
+            {
+                ContentId = entity.Id,
+                DateCreated = timestamp,
+                Description = description,
+                AuthorId = author.Id,
+            };
+
+            db.Entry(history).State = EntityState.Added;
+            db.SaveChanges();
+
+            this._memoryCache.CreateCache(history);
+
+            return new();
         }
 
         private Merge<T> Save<T>(OrigamiDbContext db, T1 entity, IEnumerable<T> entities) where T : class, IId, IContentId

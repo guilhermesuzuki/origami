@@ -65,7 +65,7 @@ namespace Origami.Core.Models
             set => this.Set(ref _authorId, value, Changed);
         }
 
-        public Guid? BlogId
+        public virtual Guid? BlogId
         {
             get => _blogId;
             set => this.Set(ref _blogId, value, Changed);

@@ -35,13 +35,13 @@
                                     </div>
                                 </CellTemplate>
                             </TemplateColumn>
-                            <TemplateColumn Title="@Text.Upper("Posts, Videos")" Sortable="false" Filterable="false" CellClass="col-2">
+                            <TemplateColumn Title="@Text.Upper("Posts, videos")" Sortable="false" Filterable="false" CellClass="col-2">
                                 <CellTemplate>
                                     <div class="p-1">
-                                        <span>@Text.Lower("{0} Post(s)", this.Super.GetContents(context.Item, this.UserFacade.BlogId).OfType<OrigamiPost>().Published().Count())</span>
+                                        <span>@Text.Lower("{0} post(s)", this.Super.GetContents(context.Item, this.UserFacade.BlogId).OfType<OrigamiPost>().Published().Count())</span>
                                     </div>
                                     <div class="p-1 mt-1">
-                                        <span>@Text.Lower("{0} Video(s)", this.Super.GetContents(context.Item, this.UserFacade.BlogId).OfType<OrigamiVideo>().Published().Count())</span>
+                                        <span>@Text.Lower("{0} video(s)", this.Super.GetContents(context.Item, this.UserFacade.BlogId).OfType<OrigamiVideo>().Published().Count())</span>
                                     </div>
                                 </CellTemplate>
                             </TemplateColumn>

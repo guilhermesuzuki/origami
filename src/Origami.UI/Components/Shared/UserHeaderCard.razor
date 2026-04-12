@@ -1,0 +1,18 @@
+﻿@inherits Basic
+@implements IEntityNull<OrigamiUser>
+
+@if (this.Entity != null)
+{
+    <div class="user-header-card text-center @Class">
+        <img src="@Entity.HeaderImage" alt="@Entity.Username" class="profile-image logo" style="max-height: 77px;" />
+        <span class="d-block fs-5">
+            <span class="display-name fw-bold" title="@Text.Lower("Display name")">
+                @Entity.DisplayName
+            </span>
+        </span>
+    </div>
+}
+
+@code {
+    [Parameter] public OrigamiUser? Entity { get; set; }
+}

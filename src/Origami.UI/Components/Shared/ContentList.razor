@@ -59,6 +59,9 @@
             .NonDeleted()
             .Published()
             .Blog(this.BlogId)
+            .Where(x => x is not OrigamiSpecialMessage)
+            .Where(x => x is not OrigamiSpecialPage)
+            .Where(x => x is not OrigamiQuickNote)
             .Count() <= this.Page * this.PageSize;
     }
 
@@ -70,7 +73,10 @@
         var posts = this.Super.Contents.ReadFromCache()
             .NonDeleted()
             .Published()
-            .Blog(this.BlogId);
+            .Blog(this.BlogId)
+            .Where(x => x is not OrigamiSpecialMessage)
+            .Where(x => x is not OrigamiSpecialPage)
+            .Where(x => x is not OrigamiQuickNote);
 
         posts = this.OrderBy switch
         {

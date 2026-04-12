@@ -30,14 +30,14 @@
                                       FullWidth="true"
                                       Immediate="true"
                                       Value="@(Text.Lower(Entity.IsPrimary.YesNo()))"
-                                      HelperText="@Text.Lower("Primary?")"></MudTextField>
+                                      HelperText="@Text.Lower("Primary")"></MudTextField>
                     </li>
                     <li>
                         <MudTextField ReadOnly="true"
                                       FullWidth="true"
                                       Immediate="true"
                                       Value="@(Text.Lower(Entity.IsActive.YesNo()))"
-                                      HelperText="@Text.Lower("Active?")"></MudTextField>
+                                      HelperText="@Text.Lower("Active")"></MudTextField>
                     </li>
                 </ul>
             </div>
@@ -46,14 +46,14 @@
             <div class="row">
                 <div class="col-12">
                     <div class="text-center p-3">
-                        <HeaderImageLite Entity="@Entity"></HeaderImageLite>
+                        <HeaderImageCard Entity="@Entity"></HeaderImageCard>
                         <MudFileUpload T="IBrowserFile" FilesChanged="UploadHeader" Accept=".png, .jpg, .bmp, .tiff" MaximumFileCount="1">
                             <CustomContent>
                                 <div class="btn-group mt-2 w-100">
                                     <button class="btn btn-light w-100" @onclick="context.OpenFilePickerAsync">
                                         <i class="fa-solid fa-cloud-arrow-up"></i>
                                         <div>@Text.Lower("Only image files")</div>
-                                        <div class="x-small">@Text.Original("{0} MB max.", 6)</div>
+                                        <div class="x-small">@Text.Original("{0}MB max.", 6)</div>
                                     </button>
                                     <button class="btn btn-light w-100" @onclick="() => this.FileManagerForImages = true">
                                         <i class="fa-solid fa-folder"></i>

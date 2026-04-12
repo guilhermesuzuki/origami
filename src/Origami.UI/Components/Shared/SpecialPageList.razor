@@ -1,5 +1,4 @@
 ﻿@inherits Basic
-@implements IShowFakes
 @inject ISuperRepository _super
 
 @if (this.SpecialPages.Count > 0)
@@ -40,32 +39,11 @@
         </div>
     </div>
 }
-else if (this.ShowFakes == true)
-{
-    <div class="post-list fakes @Class position-relative">
-        <div class="row">
-            @foreach (var page in Core.Models.OrigamiSpecialPage.GetFakes())
-            {
-                <div class="col-12 col-xl-4 mb-3">
-                    <SpecialPageHeader Class="fake" Entity="page" ShowRelatedPages="false"></SpecialPageHeader>
-                </div>
-            }
-        </div>
-        <div class="text-center">
-            <button class="text-center btn btn-light border" style="min-width: 250px; max-width: 100%" disabled="disabled">
-                <div><i class="fa-solid fa-file-lines fs-2"></i></div>
-                @Text.Lower("See more pages")
-            </button>
-        </div>
-        <div class="position-absolute zeroes bg-white bg-opacity-75"></div>
-    </div>
-}
 
 @code {
     [Parameter] public int Page { get; set; } = 1;
     [Parameter] public int PageSize { get; set; } = 9;
     [Parameter] public int OrderBy { get; set; } = 1;
-    [Parameter] public bool ShowFakes { get; set; } = false;
 
     protected List<OrigamiSpecialPage> SpecialPages = [];
 

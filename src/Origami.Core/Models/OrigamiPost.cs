@@ -16,20 +16,5 @@ namespace Origami.Core.Models
         }
 
         public event EventHandler<PropertyChangedEventArgs> OrigamiPostChanged = delegate { };
-
-        /// <summary>
-        /// Fake post
-        /// </summary>
-        public static OrigamiPost GetFake() => new() { Id = Guid.Empty, Title = "Veritas et Sapientia: De Vita et Cogitationibus" };
-
-        /// <summary>
-        /// Fake posts
-        /// </summary>
-        /// <param name="count"></param>
-        /// <returns></returns>
-        public static IEnumerable<OrigamiPost> GetFakes(int count = 6)
-        {
-            for (int i = 0; i < count; i++) yield return GetFake();
-        }
     }
 }

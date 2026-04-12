@@ -9,7 +9,7 @@
             <div class="row">
                 <div class="d-inline-flex align-items-center col-12 col-xxl-8">
                     <i class="fa-solid fa-comment pe-1"></i>
-                    <span class="me-3">@Text.Upper("Videos Comments")</span>
+                    <span class="me-3">@Text.Upper("Videos comments")</span>
                     <button class="btn btn-light text-danger border border-danger" disabled="@this.DisableTheDeleteButton" @onclick="this.DeleteSelectedEntities">
                         <i class="fa-solid fa-trash-can"></i>
                     </button>
@@ -68,7 +68,7 @@
                     </MudDataGrid>
                 </div>
                 <div class="videos-comments-form col-12 mt-3">
-                    <VideoCommentForm Class="p-3 shadow-sm border position-sticky" Entity="this.SelectedEntity" Saved="this.EntitySaved" Cancelled="this.EntityCancelled"></VideoCommentForm>
+                    <ContentCommentForm Class="p-3 shadow-sm border position-sticky" Entity="this.SelectedEntity" Saved="this.EntitySaved" Cancelled="this.EntityCancelled"></ContentCommentForm>
                 </div>
             </div>
         </div>

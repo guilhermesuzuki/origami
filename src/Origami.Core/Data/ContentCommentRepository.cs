@@ -34,10 +34,12 @@ namespace Origami.Core.Data
             _contentCommentReactionRepository = contentCommentReactionRepository;
         }
 
+        public override string CreatePermission => nameof(OrigamiRole.ModerateComments);
         public override string DeletePermission => nameof(OrigamiRole.ModerateComments);
         public override string PurgePermission => nameof(OrigamiRole.PurgeComments);
         public override string ReadPermission => nameof(OrigamiRole.ViewComments);
         public override string RestorePermission => nameof(OrigamiRole.RestoreComments);
+        public override string UpdatePermission => nameof(OrigamiRole.ModerateComments);
 
         public List<OrigamiContentComment> AllComments(OrigamiContent? entity)
         {
@@ -45,7 +47,7 @@ namespace Origami.Core.Data
             {
                 //comments from a post
                 var comments = ReadFromCache().NonDeleted().Where(x => x.ContentId == entity.Id);
-                return comments.OrderBy(x => x.PinnedById != null ? 0 : 1).ThenBy(x => x.DateCreated).ToList();
+                return comments.OrderBy(x => x.IsPinnedBySomeone ? 0 : 1).ThenBy(x => x.DateCreated).ToList();
             }
             return [];
         }
@@ -108,6 +110,25 @@ namespace Origami.Core.Data
             return new(ctx.Entity) { Error = Text.Original(Text.SomethingWentWrongPleaseTryAgain) };
         }
 
+        public Result<OrigamiContentComment> Pin(DataOperationContext<OrigamiContentComment> ctx, bool checkPermission)
+        {
+            try
+            {
+                if (checkPermission)
+                {
+                    var permission = this.CheckPermission(ctx.User.Id, nameof(OrigamiRole.ModerateComments));
+                    if (permission.Ok == false) return new(ctx.Entity) { Error = Text.Original(Text.YouDontHavePermissionForThisFeature) };
+                }
+
+                ctx.Entity.PinnedByUserId = ctx.User.Id;
+                return base.SmartUpdate(ctx, false);
+            }
+            catch (Exception)
+            {
+                return new(ctx.Entity) { Error = Text.Original(Text.SomethingWentWrongPleaseTryAgain) };
+            }
+        }
+
         public override void PurgeRelationshipsFromCache(OrigamiContentComment entity)
         {
             base.PurgeRelationshipsFromCache(entity);
@@ -123,7 +144,7 @@ namespace Origami.Core.Data
         {
             var hub = base.PurgeRelationshipsFromDatabase(ctx);
             using var db = DbContextFactory.CreateDbContext();
-            hub.RowsAffected += (from x in db.Set<OrigamiContentCommentReaction>().AsNoTracking() where x.CommentId == ctx.Entity.Id select x.Id).ExecuteDelete();
+            hub.RowsAffected += (from x in db.Set<OrigamiContentCommentReaction>().AsNoTracking() where x.CommentId == ctx.Entity.Id select x).ExecuteDelete();
             return hub;
         }
 
@@ -221,6 +242,25 @@ namespace Origami.Core.Data
             }
 
             return new(ctx.Entity) { Error = Text.Original(Text.SomethingWentWrongPleaseTryAgain) };
+        }
+
+        public Result<OrigamiContentComment> Unpin(DataOperationContext<OrigamiContentComment> ctx, bool checkPermission)
+        {
+            try
+            {
+                if (checkPermission)
+                {
+                    var permission = this.CheckPermission(ctx.User.Id, nameof(OrigamiRole.ModerateComments));
+                    if (permission.Ok == false) return new(ctx.Entity) { Error = Text.Original(Text.YouDontHavePermissionForThisFeature) };
+                }
+
+                ctx.Entity.PinnedByUserId = null;
+                return base.SmartUpdate(ctx, false);
+            }
+            catch (Exception)
+            {
+                return new(ctx.Entity) { Error = Text.Original(Text.SomethingWentWrongPleaseTryAgain) };
+            }
         }
 
         public override Result<OrigamiContentComment> UpdateValidation(DataOperationContext<OrigamiContentComment> ctx)

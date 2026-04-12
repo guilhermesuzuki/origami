@@ -4,7 +4,7 @@
 <div class="position-relative login @Class">
     <AuthorizeView>
         <Authorized>
-            <SocialProfileHeader Entity="this.UserFacade.SocialProfile"></SocialProfileHeader>
+            <SocialProfileCard Entity="this.UserFacade.SocialProfile"></SocialProfileCard>
             <div class="social-profile-actions position-absolute" style="right:0;top:0;">
                 <MudMenu AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" Icon="@Icons.Material.Filled.Menu">
                     @if (System.Diagnostics.Debugger.IsAttached)
@@ -27,7 +27,7 @@
                     <MudMenuItem @onclick="this.Logout">
                         <button class="text-danger">
                             <i class="fa-solid fa-right-from-bracket pe-1"></i>
-                            @Text.Lower("Log Out")
+                            @Text.Lower("Log out")
                         </button>
                     </MudMenuItem>
                 </MudMenu>

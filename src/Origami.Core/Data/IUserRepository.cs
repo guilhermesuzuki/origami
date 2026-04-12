@@ -15,6 +15,13 @@ namespace Origami.Core.Data
         Result<OrigamiUser> Block(DataOperationContext<OrigamiUser> ctx, bool checkPermission);
 
         /// <summary>
+        /// Determines whether the specified user has permission to moderate comments.
+        /// </summary>
+        /// <param name="user">The user whose moderation permissions are being evaluated. Cannot be null.</param>
+        /// <returns>true if the user is authorized to moderate comments; otherwise, false.</returns>
+        bool CanTheUserModerateComments(IId user);
+
+        /// <summary>
         /// Changes the user password, validating the old and the new one
         /// </summary>
         /// <param name="ctx"></param>
@@ -29,6 +36,14 @@ namespace Origami.Core.Data
         /// <param name="ctx"></param>
         /// <returns>a clean and new temporary password</returns>
         Result<string> ForgotOwnPassword(DataOperationContext<OrigamiUser> ctx, bool checkPermission);
+
+        /// <summary>
+        /// Looks up a user with a password in the database
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="cleanPassword"></param>
+        /// <returns></returns>
+        OrigamiUser? LookupUserInDatabase(string username, string cleanPassword);
 
         /// <summary>
         /// Resets the 2FA for a user, forcing it to go through the 2FA setup process again. This is typically used when a user has lost access to their 2FA device or needs to reconfigure their 2FA settings for security reasons.
@@ -56,15 +71,6 @@ namespace Origami.Core.Data
         /// langword="true"/> to check permissions; otherwise, <see langword="false"/>.</param>
         /// <returns>A <see cref="Result"/> indicating the success or failure of the password reset operation.</returns>
         Result ResetPassword(DataOperationContext<OrigamiUser> ctx, string key, string newPassword1, string newPassword2, bool checkPermission);
-
-        /// <summary>
-        /// Looks up a user with a password in the database
-        /// </summary>
-        /// <param name="username"></param>
-        /// <param name="cleanPassword"></param>
-        /// <returns></returns>
-        OrigamiUser? LookupUserInDatabase(string username, string cleanPassword);
-
         /// <summary>
         /// Unblocks a user in the specified data operation context.
         /// </summary>

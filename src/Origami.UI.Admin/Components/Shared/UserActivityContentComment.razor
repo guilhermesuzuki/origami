@@ -1,0 +1,24 @@
+﻿@inherits Basic
+@implements IId
+@inject IPostRepository _post
+@inject IContentCommentReactionRepository _postCommentReaction
+@inject IContentCommentRepository _postComment
+@inject IContentRatingRepository _postRating
+
+@if (Id != Guid.Empty)
+{
+    var comment = _postComment.ReadFromCache().Id(Id);
+    if (comment != null)
+    {
+        var content = this.Super.Contents.ReadFromCache().Id(comment!.ContentId)!;
+        <div class="user-activity-content-comment @Class">
+            <label class="fw-bold">@Text.Lower("Commented on post:")</label>
+            <ContentHeaderLite Entity="content"></ContentHeaderLite>
+            <CommentLite Class="mt-2 p-2 frame-purple" Entity="comment"></CommentLite>
+        </div>
+    }
+}
+
+@code {
+    [Parameter] public override Guid Id { get; set; }
+}

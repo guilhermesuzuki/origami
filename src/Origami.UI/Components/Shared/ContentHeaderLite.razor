@@ -7,7 +7,7 @@
     var header = this.Entity.HeaderImage.NoHeader();
     var views = this.Super.PhysicalPageViews.GetViews(this.Entity);
 
-    <div class="wrapper @Class">
+    <div class="wrapper @Class" lang="@Entity.LanguageWrittenOn">
         <AuthorHeaderLite Entity="this.Entity"></AuthorHeaderLite>
         <div class="content-header-lite position-relative shadow-sm cursor-pointer" @onclick="this.Go">
             <div class="content-header-image" style="height: 150px; background-image: url(@header)"></div>

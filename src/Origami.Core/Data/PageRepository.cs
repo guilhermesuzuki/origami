@@ -116,7 +116,7 @@ namespace Origami.Core.Data
                     return new(ctx.Entity, ex.GetMessage());
                 }
             }
-            return new(ctx.Entity) { Error = Text.Original($"Page cannot be retrieved") };
+            return new(ctx.Entity) { Error = Text.Original("Page cannot be retrieved") };
         }
 
         public override Result<OrigamiPage> PurgeRelationshipsFromDatabase(DataOperationContext<OrigamiPage> ctx)
@@ -160,9 +160,9 @@ namespace Origami.Core.Data
                         return new(ctx.Entity, ex.GetMessage());
                     }
                 }
-                return new(ctx.Entity) { Error = Text.Original($"Page is not front-page") };
+                return new(ctx.Entity) { Error = Text.Original("Page is not front-page") };
             }
-            return new(ctx.Entity) { Error = Text.Original($"Page does not exist") };
+            return new(ctx.Entity) { Error = Text.Original("Page does not exist") };
         }
 
         public override Result<OrigamiPage> UpdateValidation(DataOperationContext<OrigamiPage> ctx)
@@ -171,7 +171,7 @@ namespace Origami.Core.Data
 
             if (this.IsCycleDetected(ctx, []) == true)
             {
-                validation.Error = $"Cycle detected: you must choose another parent";
+                validation.Error = Text.Original("Cycle detected: you must choose another parent");
             }
 
             this.ValidateSlug(ctx).Push(validation);

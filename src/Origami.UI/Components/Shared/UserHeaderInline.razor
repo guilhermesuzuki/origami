@@ -5,7 +5,7 @@
 {
     @if (this.Entity.DisplayName.Has() == true)
     {
-        <span class="user-header-lite-2 cursor-pointer @Class ellipsis d-inline-flex align-items-center" title="@Text.Lower("Author")" @onclick="_goToDetails">
+        <span class="user-header-inline cursor-pointer @Class ellipsis d-inline-flex align-items-center" title="@Text.Lower("User")" @onclick="_goToDetails">
             @if (this.Entity.HeaderImage.Has() == true)
             {
                 <img class="me-1" src="@this.Entity.HeaderImage" style="height: 15px;" />

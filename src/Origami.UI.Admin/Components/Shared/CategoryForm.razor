@@ -65,7 +65,7 @@
     </div>
     <div class="mt-3 text-center p-3 border">
         <div>
-            <HeaderImageLite Entity="this.Entity" Footer="true" ImgMaxWidth="120px;"></HeaderImageLite>
+            <HeaderImageCard Entity="this.Entity" Footer="true" ImgMaxWidth="120px;"></HeaderImageCard>
         </div>
         <MudFileUpload T="IBrowserFile" FilesChanged="UploadHeaderBase64" Accept=".png, .jpg, .bmp, .tiff, .gif" MaximumFileCount="1">
             <CustomContent>
@@ -109,7 +109,6 @@
                   FullWidth="true"
                   Immediate="true"
                   @bind-Value="@Entity.Description"
-                  AutoGrow="true"
                   HelperText="@Text.Lower("Description")"></MudTextField>
 
     <div class="buttons btn-group mt-3 w-100">

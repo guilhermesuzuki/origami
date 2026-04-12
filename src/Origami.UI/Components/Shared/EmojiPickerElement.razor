@@ -1,0 +1,47 @@
+﻿@inherits Basic
+@implements IDisposable
+
+<emoji-picker id="@_emojiId" @ref="elementRef" class="@Class" style="@_getStyle()"></emoji-picker>
+
+@code {
+    private DotNetObjectReference<EmojiPickerElement> objRef = null!;
+    private ElementReference elementRef;
+    private Guid _emojiId = Guid.NewGuid();
+
+    [Parameter] public EventCallback<string> OnEmojiSelected { get; set; }
+    [Parameter] public Dictionary<string, string> Style { get; set; } = new Dictionary<string, string>();
+
+    private string _getStyle()
+    {
+        var style = new StringBuilder();
+        foreach (var kvp in this.Style)
+        {
+            style.Append($"{kvp.Key}:{kvp.Value};");
+        }
+        return style.ToString();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            objRef = DotNetObjectReference.Create(this);
+            if (elementRef.Context != null)
+            {
+                await JSRuntime!.InvokeVoidAsync("assignDotNetHelper", elementRef, objRef);
+                await JSRuntime!.InvokeVoidAsync("emojiClick", this._emojiId.ToString());
+            }
+        }
+    }
+
+    [JSInvokable]
+    public async Task Reaction(string reaction)
+    {
+        await this.OnEmojiSelected.InvokeAsync(reaction);
+    }
+
+    public void Dispose()
+    {
+        objRef?.Dispose();
+    }
+}

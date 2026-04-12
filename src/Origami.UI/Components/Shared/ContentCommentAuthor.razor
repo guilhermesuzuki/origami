@@ -1,0 +1,26 @@
+﻿@inherits Basic
+@implements IEntityNull<OrigamiContentComment>
+
+@if (this.Entity != null)
+{
+    <div class="content-comment-author @Class">
+        @if (this.Entity.UserId != null)
+        {
+            var user = this.Super.Users.ReadFromCache().Id(this.Entity.UserId);
+            <UserHeaderCard Entity="user"></UserHeaderCard>
+        }
+        else if (this.Entity.SocialProfileId != null)
+        {
+            var socialprofile = this.Super.SocialProfiles.ReadFromCache().Id(this.Entity.SocialProfileId);
+            <SocialProfileCard Entity="socialprofile"></SocialProfileCard>
+        }
+        else
+        {
+            throw new InvalidOperationException("There's something odd with the comment: author could not be determined");
+        }
+    </div>
+}
+
+@code {
+    [Parameter] public OrigamiContentComment? Entity { get; set; }
+}

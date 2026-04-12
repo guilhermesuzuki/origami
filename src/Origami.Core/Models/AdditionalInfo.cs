@@ -384,137 +384,6 @@ namespace Origami.Core.Models
         }
 
         /// <summary>
-        /// Additional Info for Comments
-        /// </summary>
-        [XmlRoot("additionalInfo")]
-        public class ForComments : AdditionalInfo
-        {
-            /// <summary>
-            /// constructor
-            /// </summary>
-            public ForComments()
-                : base()
-            {
-                Ratings = new Ratings();
-                OriginalText = string.Empty;
-                FirstContent = string.Empty;
-            }
-
-            /// <summary>
-            /// first content to check if the comment was edited or modified
-            /// </summary>
-            [XmlElement("first-content", IsNullable = true)]
-            public string FirstContent { get; set; }
-
-            /// <summary>
-            /// Original text with swearing and badwords
-            /// </summary>
-            [XmlElement("original-text", IsNullable = true)]
-            public string OriginalText { get; set; }
-
-            /// <summary>
-            /// History of ratings
-            /// </summary>
-            [XmlElement("ratings")]
-            public new Ratings Ratings { get; set; }
-        }
-
-        /// <summary>
-        /// Additional Info for Pages
-        /// </summary>
-        [XmlRoot("additionalInfo")]
-        public class ForPages : AdditionalInfo, ILanguageWrittenOn
-        {
-            /// <summary>
-            /// Default constructor
-            /// </summary>
-            public ForPages() : base()
-            {
-                LanguageWrittenOn = Thread.CurrentThread.CurrentUICulture.Name;
-            }
-
-            /// <summary>
-            /// the language the post was written on
-            /// </summary>
-            [XmlElement("language-written-on", IsNullable = true)]
-            public string LanguageWrittenOn { get; set; }
-        }
-
-        /// <summary>
-        /// Additional info for Posts
-        /// </summary>
-        [XmlRoot("additionalInfo")]
-        public class ForPosts : AdditionalInfo, ILanguageWrittenOn
-        {
-            private const string keyHeader = "header-image";
-
-            /// <summary>
-            /// 
-            /// </summary>
-            public ForPosts()
-                : base()
-            {
-                HeaderMedia = new HeaderMedia();
-                LanguageWrittenOn = Thread.CurrentThread.CurrentUICulture.Name;
-            }
-
-            /// <summary>
-            /// Post Header image
-            /// </summary>
-            [XmlIgnore]
-            public override string HeaderImage
-            {
-                get
-                {
-                    var img = HeaderMedia.Images.FirstOrDefault(x => x.IsSocialMedia && x.Key == keyHeader) ?? new();
-                    return img.Source.NoHeader();
-                }
-                set
-                {
-                    var img = HeaderMedia.Images.FirstOrDefault(x => x.IsSocialMedia && x.Key == keyHeader)
-                        ?? new Image { Key = keyHeader, IsSocialMedia = true, };
-
-                    img.Source = value;
-
-                    if (HeaderMedia.Images.Contains(img) == false) HeaderMedia.Images.Add(img);
-                }
-            }
-
-            /// <summary>
-            /// Header media
-            /// </summary>
-            [XmlElement("headerMedia")]
-            public new HeaderMedia HeaderMedia { get; set; }
-
-            /// <summary>
-            /// the language the post was written on
-            /// </summary>
-            [XmlElement("language-written-on", IsNullable = true)]
-            public string LanguageWrittenOn { get; set; }
-        }
-
-        /// <summary>
-        /// Additional Info for Pages
-        /// </summary>
-        [XmlRoot("additionalInfo")]
-        public class ForSitePages : AdditionalInfo, ILanguageWrittenOn
-        {
-            /// <summary>
-            /// Default constructor
-            /// </summary>
-            public ForSitePages() : base()
-            {
-                LanguageWrittenOn = Thread.CurrentThread.CurrentUICulture.Name;
-            }
-
-            /// <summary>
-            /// the language the post was written on
-            /// </summary>
-            [XmlElement("language-written-on", IsNullable = true)]
-            public string LanguageWrittenOn { get; set; }
-        }
-
-        /// <summary>
         /// Additional info for Users
         /// </summary>
         [XmlRoot("additionalInfo")]
@@ -573,56 +442,6 @@ namespace Origami.Core.Models
         /// Additional info for Videos
         /// </summary>
         [XmlRoot("additionalInfo")]
-        public class ForVideos : AdditionalInfo, ILanguageWrittenOn, IHeaderImage, IEmbedIFrame
-        {
-            private const string keyHeader = "header-image";
-
-            /// <summary>
-            /// Default constructor
-            /// </summary>
-            public ForVideos() : base()
-            {
-                HeaderMedia = new HeaderMedia();
-                LanguageWrittenOn = Thread.CurrentThread.CurrentUICulture.Name;
-                EmbedIFrame = string.Empty;
-            }
-
-            /// <summary>
-            /// Post Header image
-            /// </summary>
-            [XmlIgnore]
-            public override string HeaderImage
-            {
-                get
-                {
-                    var img = HeaderMedia.Images.FirstOrDefault(x => x.IsSocialMedia && x.Key == keyHeader);
-                    return img != null ? img.Source.NoHeader() : OrigamiConstants.NoHeader;
-                }
-                set
-                {
-                    var img = HeaderMedia.Images.FirstOrDefault(x => x.IsSocialMedia && x.Key == keyHeader) ?? new Image { Key = keyHeader, IsSocialMedia = true, };
-                    img.Source = value;
-                    if (HeaderMedia.Images.Contains(img) == false) HeaderMedia.Images.Add(img);
-                }
-            }
-
-            /// <summary>
-            /// Header media
-            /// </summary>
-            [XmlElement("headerMedia")]
-            public new HeaderMedia HeaderMedia { get; set; }
-
-            [XmlElement("language-written-on", IsNullable = true)]
-            public string LanguageWrittenOn { get; set; }
-
-            [XmlElement("embed-iframe", IsNullable = true)]
-            public string EmbedIFrame { get; set; }
-        }
-
-        /// <summary>
-        /// Additional info for Videos
-        /// </summary>
-        [XmlRoot("additionalInfo")]
         public class ForContents : AdditionalInfo, ILanguageWrittenOn, IHeaderImage, IEmbedIFrame
         {
             private const string keyHeader = "header-image";
@@ -635,6 +454,7 @@ namespace Origami.Core.Models
                 HeaderMedia = new HeaderMedia();
                 LanguageWrittenOn = Thread.CurrentThread.CurrentUICulture.Name;
                 EmbedIFrame = string.Empty;
+                Background = string.Empty;
             }
 
             /// <summary>
@@ -667,6 +487,9 @@ namespace Origami.Core.Models
 
             [XmlElement("embed-iframe", IsNullable = true)]
             public string EmbedIFrame { get; set; }
+
+            [XmlElement("background", IsNullable = true)]
+            public string Background { get; set; }
         }
 
         /// <summary>
@@ -678,9 +501,9 @@ namespace Origami.Core.Models
         {
             public HeaderMedia()
             {
-                YoutubeVideos = new List<Youtube>();
-                DefaultVideos = new List<Video>();
-                Images = new List<Image>();
+                YoutubeVideos = [];
+                DefaultVideos = [];
+                Images = [];
             }
 
             [XmlElement("video", typeof(Video))]
@@ -711,7 +534,7 @@ namespace Origami.Core.Models
             /// <summary>
             /// No icon for categories
             /// </summary>
-            public static Image NoIconForCategories() => new Image() { Source = OrigamiConstants.NoCategory };
+            public static Image NoIconForCategories() => new() { Source = OrigamiConstants.NoCategory };
         }
 
         [Serializable]
@@ -735,6 +558,7 @@ namespace Origami.Core.Models
             /// </summary>
             [XmlText]
             public string Translation { get; set; } = string.Empty;
+
             /// <summary>
             /// Returns translation string
             /// </summary>
@@ -796,33 +620,6 @@ namespace Origami.Core.Models
             [XmlElement("zipCode")]
             [JsonPropertyName("zipCode")]
             public virtual string ZipCode { get; set; } = string.Empty;
-        }
-
-        [Serializable]
-        [XmlRoot("rating")]
-        public class Rating : ClientTracking
-        {
-            /// <summary>
-            /// 
-            /// </summary>
-            [XmlAttribute("rating-level")]
-            public float Rate { get; set; }
-        }
-
-        [Serializable]
-        [XmlRoot("ratings")]
-        public class Ratings
-        {
-            public Ratings()
-            {
-                RatingHistory = new List<Rating>();
-            }
-
-            /// <summary>
-            /// History of ratings
-            /// </summary>
-            [XmlElement("rating", typeof(Rating))]
-            public List<Rating> RatingHistory { get; set; }
         }
 
         [Serializable]

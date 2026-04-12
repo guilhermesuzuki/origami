@@ -38,7 +38,7 @@
                                     </div>
                                 </CellTemplate>
                             </TemplateColumn>
-                            <TemplateColumn Title="@Text.Upper("Parent Category")" Sortable="false" Filterable="false" CellClass="col-3 parent-category">
+                            <TemplateColumn Title="@Text.Upper("Parent category")" Sortable="false" Filterable="false" CellClass="col-3 parent-category">
                                 <CellTemplate>
                                     @if (context.Item.ParentId != null)
                                     {
@@ -52,7 +52,7 @@
                                     }
                                 </CellTemplate>
                             </TemplateColumn>
-                            <TemplateColumn Title="@Text.Upper("Child Categories")" Sortable="false" Filterable="false" CellClass="col-3 child-categories">
+                            <TemplateColumn Title="@Text.Upper("Child categories")" Sortable="false" Filterable="false" CellClass="col-3 child-categories">
                                 <CellTemplate>
                                     @foreach (var category in this.Repository.ReadFromCache().GetChildren(context.Item).OrderBy(x => x.Name))
                                     {

@@ -6,6 +6,7 @@
 @inject IFileRepository _fileRepository
 
 <div class="video-form @Class">
+    <ContentHistories Class="p-3" Entity="this.Entity.Entity"></ContentHistories>
     <div class="row">
         <div class="col-12">
             <div class="p-3">
@@ -47,7 +48,7 @@
                                       Adornment="Adornment.Start"
                                       @bind-Value="@Entity.Entity.Title"
                                       HelperText="@Text.Lower("Title")"
-                                      Required="true"></MudTextField>
+                                      MaxLength="255"></MudTextField>
                     </li>
                 </ul>
                 <ul class="inline-list mt-3">
@@ -56,7 +57,8 @@
                                       AdornmentIcon="@Icons.Material.Filled.Link"
                                       Adornment="Adornment.Start"
                                       @bind-Value="@Entity.Entity.Slug"
-                                      HelperText="@Text.Lower("Slug")"></MudTextField>
+                                      HelperText="@Text.Lower("Slug")" 
+                                      MaxLength="255"></MudTextField>
                     </li>
                     <li style="width:140px;">
                         <button class="btn btn-secondary" @onclick="() => Entity.Entity.Slug = Entity.Entity.Title.GetSlug()" style="line-height: 15px;">
@@ -84,7 +86,8 @@
                 <MudTextField FullWidth="true"
                               Immediate="true"
                               @bind-Value="@Entity.Entity.EmbedIFrame"
-                              HelperText="@Text.Lower("Paste your HTML iframe here to embed, like YouTube and so on")"></MudTextField>
+                              HelperText="@Text.Lower("Paste your HTML iframe here to embed, like YouTube and so on")"
+                              MaxLength="1024"></MudTextField>
                 @if (Entity.Entity.EmbedIFrame.IsIFrame() == true)
                 {
                     <div class="border p-3 mt-3 embed-iframe">
@@ -104,7 +107,7 @@
                             <button class="btn btn-light" @onclick="context.OpenFilePickerAsync" style="width:33.33%;">
                                 <i class="fa-solid fa-cloud-arrow-up"></i>
                                 <div>@Text.Lower("Only video files")</div>
-                                <div class="x-small">@Text.Original("{0} GB max.", 2)</div>
+                                <div class="x-small">@Text.Original("{0}GB max.", 2)</div>
                             </button>
                             <button class="btn btn-light" @onclick="() => this.FileManagerForVideos = true" style="width:33.34%;">
                                 <i class="fa-solid fa-folder"></i>
@@ -126,14 +129,14 @@
         </div>
         <div class="col-12 col-xxl-6">
             <div class="text-center p-3">
-                <HeaderImageLite Entity="@Entity.Entity"></HeaderImageLite>
+                <HeaderImageCard Entity="@Entity.Entity"></HeaderImageCard>
                 <MudFileUpload T="IBrowserFile" FilesChanged="UploadHeader" Accept=".png, .jpg, .bmp, .tiff" MaximumFileCount="1">
                     <CustomContent>
                         <div class="btn-group mt-2 w-100">
                             <button class="btn btn-light" @onclick="context.OpenFilePickerAsync" style="width:33.33%;">
                                 <i class="fa-solid fa-cloud-arrow-up"></i>
                                 <div>@Text.Lower("Only image files")</div>
-                                <div class="x-small">@Text.Original("{0} MB max.", 6)</div>
+                                <div class="x-small">@Text.Original("{0}MB max.", 6)</div>
                             </button>
                             <button class="btn btn-light" @onclick="() => this.FileManagerForImages = true" style="width:33.34%;">
                                 <i class="fa-solid fa-folder"></i>
@@ -273,8 +276,9 @@
                 <MudTextField FullWidth="true"
                               Immediate="true"
                               @bind-Value="@Entity.Entity.Description"
-                              AutoGrow="true"
-                              HelperText="@Text.Lower("Description")"></MudTextField>
+                              HelperText="@Text.Lower("Description")" 
+                              MaxLength="2048" 
+                              MaxLines="16"></MudTextField>
             </div>
             <div class="p-3">
                 <TinyMCEContent Entity="Entity.Entity" Title="@Text.Lower("Content")"></TinyMCEContent>
