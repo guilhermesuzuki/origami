@@ -23,7 +23,7 @@ namespace Origami.Core.Data
             IConfiguration configuration,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IFileRepository fileRepository,
-            IMemoryCache memoryCache,
+            IMyMemoryCache memoryCache,
             IUserRepository userRepository,
             IWebRootPath wwwRoot,
             Text text)

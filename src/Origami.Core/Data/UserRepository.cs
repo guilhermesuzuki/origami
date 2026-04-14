@@ -25,7 +25,7 @@ namespace Origami.Core.Data
             IValidator<OrigamiUser> validator,
             IContentRepository contentRepository,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
-            IMemoryCache memoryCache,
+            IMyMemoryCache memoryCache,
             IUserPasswordResetRepository userPasswordResetRepository,
             IUserRoleRepository userRoleRepository,
             Text text,

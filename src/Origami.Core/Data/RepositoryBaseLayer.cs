@@ -8,7 +8,7 @@ namespace Origami.Core.Data
         ICache<T>
         where T : class, IId
     {
-        protected RepositoryBaseLayer(Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory, IMemoryCache memoryCache, IWebRootPath webRootPath) : base()
+        protected RepositoryBaseLayer(Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory, IMyMemoryCache memoryCache, IWebRootPath webRootPath) : base()
         {
             DbContextFactory = dbContextFactory;
             MemoryCache = memoryCache;
@@ -18,7 +18,7 @@ namespace Origami.Core.Data
 
         public IDbContextFactory<OrigamiDbContext> DbContextFactory { get; }
         public string KeyForCaching => typeof(T).KeyForCaching();
-        public IMemoryCache MemoryCache { get; }
+        public IMyMemoryCache MemoryCache { get; }
         public Text Text { get; }
         public IWebRootPath WebRootPath { get; }
 

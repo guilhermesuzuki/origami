@@ -405,66 +405,7 @@ namespace Origami.Core
             return (rowNumber.Count(), query.ToList());
         }
 
-        /// <summary>
-        /// Retrieves a list of entities of the specified type from the memory cache, loading them from the database if
-        /// they are not already cached.
-        /// </summary>
-        /// <remarks>For certain derived types, such as OrigamiPage, OrigamiPost, OrigamiSpecialMessage,
-        /// OrigamiSpecialPage, and OrigamiVideo, the method retrieves and filters entities from the OrigamiContent
-        /// cache. The method is thread-safe and uses locking to prevent race conditions when populating the
-        /// cache.</remarks>
-        /// <typeparam name="T">The type of entity to retrieve. Must be a reference type.</typeparam>
-        /// <param name="db">The database context used to query entities if they are not present in the cache.</param>
-        /// <param name="memoryCache">The memory cache instance used to store and retrieve cached entities.</param>
-        /// <returns>A list of entities of type X retrieved from the cache, or from the database if not cached. Returns an empty
-        /// list if no entities are found.</returns>
-        public static List<T> ReadFromCache<T>(this IDbContextFactory<OrigamiDbContext> dbContextFactory, IMemoryCache memoryCache) where T : class
-        {
-            var timestamp = Stopwatch.GetTimestamp();
-            var key = typeof(T).KeyForCaching();
-
-            if (typeof(T).IsAbstract == false)
-            {
-                var t = Activator.CreateInstance<T>();
-                switch (t)
-                {
-                    case OrigamiPage:
-                    case OrigamiPost:
-                    case OrigamiSpecialMessage:
-                    case OrigamiSpecialPage:
-                    case OrigamiVideo:
-                        return dbContextFactory.ReadFromCache<OrigamiContent>(memoryCache).OfType<T>().ToList();
-                    default: break;
-                }
-            }
-
-            try
-            {
-                //race condition
-                if (memoryCache.Get(key) == null)
-                {
-                    lock (OrigamiConstants.SyncRoot)
-                    {
-                        if (memoryCache.Get(key) == null)
-                        {
-                            using var db = dbContextFactory.CreateDbContext();
-                            var list = db.ReadFromDatabase<T>();
-                            memoryCache.Set(key, list);
-                        }
-                    }
-                }
-
-                return memoryCache.GetList<T>(key) ?? [];
-            }
-            finally
-            {
-                var elapsedTime = Stopwatch.GetElapsedTime(timestamp);
-                Console.ForegroundColor = elapsedTime.Milliseconds >= 100 ? ConsoleColor.Red : ConsoleColor.White;
-                Console.WriteLine($"{key} obtained in {elapsedTime}");
-            }
-        }
-
-        public static List<T> ReadFromDatabase<T>(this DbContext db) where T : class
+        public static List<T> Read<T>(this DbContext db) where T : class
         {
             if (typeof(T).IsAbstract == false)
             {

@@ -20,7 +20,7 @@ public class SettingsRepository :
     /// <param name="distributedCache"></param>
     public SettingsRepository(
         IDbContextFactory<OrigamiDbContext> dbContextFactory,
-        IMemoryCache memoryCache,
+        IMyMemoryCache memoryCache,
         ISettingRepository settingRepository,
         IValidator<OrigamiSettings> validator,
         Text text,

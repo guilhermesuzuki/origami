@@ -10,12 +10,12 @@ namespace Origami.Core.Data
         where T2 : class, IHubContent<T1>, new()
     {
         protected readonly IDbContextFactory<OrigamiDbContext> _dbContextFactory;
-        protected readonly IMemoryCache _memoryCache;
+        protected readonly IMyMemoryCache _memoryCache;
         protected readonly IValidator<T2> _validator;
         protected readonly Text Text;
 
         protected HubContentRepository(
-            IMemoryCache memoryCache,
+            IMyMemoryCache memoryCache,
             IValidator<T2> validator,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             Text text
@@ -412,7 +412,7 @@ namespace Origami.Core.Data
         /// children are found.</returns>
         protected List<T1> GetChildren(IId id)
         {
-            return _dbContextFactory.ReadFromCache<T1>(this._memoryCache).Where(x => x.ParentId == id.Id).ToList();
+            return _memoryCache.Read<T1>().Where(x => x.ParentId == id.Id).ToList();
         }
 
         /// <summary>
@@ -426,7 +426,7 @@ namespace Origami.Core.Data
         /// matching entities are found.</returns>
         protected List<X> GetEntities<X>(IId id) where X : class, IId, IContentId
         {
-            return _dbContextFactory.ReadFromCache<X>(this._memoryCache).Where(x => x.ContentId == id.Id).ToList();
+            return _memoryCache.Read<X>().Where(x => x.ContentId == id.Id).ToList();
         }
 
         /// <summary>
@@ -438,7 +438,7 @@ namespace Origami.Core.Data
         /// <returns>The entity of type T1 that matches the specified identifier, or null if no such entity exists.</returns>
         protected T1? GetEntity(IId id)
         {
-            return _dbContextFactory.ReadFromCache<T1>(this._memoryCache).Id(id.Id);
+            return _memoryCache.Read<T1>().Id(id.Id);
         }
 
         /// <summary>
@@ -448,7 +448,7 @@ namespace Origami.Core.Data
         /// <returns>The parent entity of type T1 if found; otherwise, null.</returns>
         protected T1? GetParent(IParentIdNull parentId)
         {
-            return _dbContextFactory.ReadFromCache<T1>(this._memoryCache).Id(parentId.ParentId);
+            return _memoryCache.Read<T1>().Id(parentId.ParentId);
         }
         protected virtual bool UserHasPermission(OrigamiDbContext db, Guid userId, string permission)
         {

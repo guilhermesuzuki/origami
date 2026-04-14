@@ -13,7 +13,7 @@ namespace Origami.Core.Data
 
         public SubscriberRepository(
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
-            IMemoryCache memoryCache,
+            IMyMemoryCache memoryCache,
             IEmailRepository emailRepository,
             ISettingsRepository settingsRepository,
             Text text,

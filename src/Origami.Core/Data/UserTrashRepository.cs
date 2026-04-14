@@ -39,7 +39,7 @@ namespace Origami.Core.Data
 
         public UserTrashRepository(
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
-            IMemoryCache memoryCache,
+            IMyMemoryCache memoryCache,
             IBlogRepository blogRepository,
             ICategoryRepository categoryRepository,
             IContentRepository contentRepository,

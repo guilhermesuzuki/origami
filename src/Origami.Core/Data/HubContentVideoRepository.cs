@@ -8,7 +8,7 @@ namespace Origami.Core.Data
     public class HubContentVideoRepository : HubContentRepository<OrigamiVideo, HubContentVideo>
     {
         public HubContentVideoRepository(
-            IMemoryCache memoryCache,
+            IMyMemoryCache memoryCache,
             IValidator<HubContentVideo> validator,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             Text text

@@ -22,7 +22,7 @@ namespace Origami.Core.Data
         public RoleRepository(
             IValidator<OrigamiRole> validator,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
-            IMemoryCache memoryCache,
+            IMyMemoryCache memoryCache,
             IRightRepository rightRepository,
             IRightRoleRepository rightRoleRepository,
             IUserRoleRepository userRoleRepository,

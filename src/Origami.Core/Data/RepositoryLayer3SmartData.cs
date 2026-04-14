@@ -14,7 +14,7 @@ namespace Origami.Core.Data
         protected RepositoryLayer3SmartData(
             Text text,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
-            IMemoryCache memoryCache,
+            IMyMemoryCache memoryCache,
             IWebRootPath webRootPath)
             : base(text, dbContextFactory, memoryCache, webRootPath)
         {
@@ -73,12 +73,7 @@ namespace Origami.Core.Data
 
         public virtual List<T> ReadFromCache()
         {
-            return this.ReadFromCache<T>();
-        }
-
-        public virtual List<X> ReadFromCache<X>() where X : class
-        {
-            return DbContextFactory.ReadFromCache<X>(MemoryCache);
+            return this.MemoryCache.Read<T>();
         }
 
         public Result<T> SmartCreate(DataOperationContext<T> ctx, bool checkPermission)

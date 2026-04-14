@@ -22,7 +22,7 @@ namespace Origami.Core.Data
         public ContentReactionRepository(
             IValidator<OrigamiContentReaction> validator,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
-            IMemoryCache memoryCache,
+            IMyMemoryCache memoryCache,
             IWebRootPath wwwRoot,
             Text text)
             : base(text, dbContextFactory, memoryCache, wwwRoot)

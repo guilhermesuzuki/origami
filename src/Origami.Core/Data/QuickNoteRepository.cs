@@ -17,7 +17,7 @@ namespace Origami.Core.Data
         public QuickNoteRepository(
             IValidator<OrigamiQuickNote> validator,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
-            IMemoryCache memoryCache,
+            IMyMemoryCache memoryCache,
             IWebRootPath wwwRoot,
             Text text)
             : base(text, dbContextFactory, memoryCache, wwwRoot)

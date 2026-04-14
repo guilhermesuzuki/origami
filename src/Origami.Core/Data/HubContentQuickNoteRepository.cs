@@ -8,7 +8,7 @@ namespace Origami.Core.Data
     public class HubContentQuickNoteRepository : HubContentRepository<OrigamiQuickNote, HubContentQuickNote>
     {
         public HubContentQuickNoteRepository(
-            IMemoryCache memoryCache,
+            IMyMemoryCache memoryCache,
             IValidator<HubContentQuickNote> validator,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             Text text

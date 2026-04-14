@@ -20,7 +20,7 @@ namespace Origami.Core.Data
         protected RepositoryLayer4Search(
             Text text,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
-            IMemoryCache memoryCache,
+            IMyMemoryCache memoryCache,
             IWebRootPath webRootPath)
             : base(text, dbContextFactory, memoryCache, webRootPath)
         {
@@ -125,8 +125,8 @@ namespace Origami.Core.Data
 
             if (entity is OrigamiContentComment pcomment)
             {
-                var post = this.ReadFromCache<OrigamiContent>().Id(pcomment.ContentId);
-                var pcSocialProfile = this.ReadFromCache<OrigamiSocialProfile>().Id(pcomment.SocialProfileId);
+                var post = this.MemoryCache.Read<OrigamiContent>().Id(pcomment.ContentId);
+                var pcSocialProfile = this.MemoryCache.Read<OrigamiSocialProfile>().Id(pcomment.SocialProfileId);
                 if (pcSocialProfile?.FirstName.Has() == true) doc.Add(new TextField("comment_socialProfileFirstName", pcSocialProfile.FirstName, Field.Store.YES));
                 if (pcSocialProfile?.LastName.Has() == true) doc.Add(new TextField("comment_socialProfileLastName", pcSocialProfile.LastName, Field.Store.YES));
                 if (pcSocialProfile?.Name.Has() == true) doc.Add(new TextField("comment_socialProfileName", pcSocialProfile.Name, Field.Store.YES));

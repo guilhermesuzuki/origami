@@ -73,6 +73,7 @@ namespace Origami.Core
                 new CultureInfo("fr-CA"),
                 new CultureInfo("fr-FR"),
                 new CultureInfo("hi-IN"),
+                new CultureInfo("it-IT"),
                 new CultureInfo("ja-JP"),
                 new CultureInfo("ko-KR"),
                 new CultureInfo("pt-BR"),

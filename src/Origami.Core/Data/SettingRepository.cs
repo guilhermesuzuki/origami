@@ -15,7 +15,7 @@ namespace Origami.Core.Data
         /// <param name="distributedCache"></param>
         public SettingRepository(
             Text text,
-            IMemoryCache memoryCache,
+            IMyMemoryCache memoryCache,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IWebRootPath wwwRoot)
             : base(text, dbContextFactory, memoryCache, wwwRoot)

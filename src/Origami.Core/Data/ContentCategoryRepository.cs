@@ -22,7 +22,7 @@ namespace Origami.Core.Data
         public ContentCategoryRepository(
             IValidator<OrigamiContentCategory> validator,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
-            IMemoryCache memoryCache,
+            IMyMemoryCache memoryCache,
             IWebRootPath wwwRoot,
             Text text)
             : base(text, dbContextFactory, memoryCache, wwwRoot)

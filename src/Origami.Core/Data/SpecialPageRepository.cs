@@ -20,7 +20,7 @@ namespace Origami.Core.Data
         public SpecialPageRepository(
             IValidator<OrigamiSpecialPage> validator,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
-            IMemoryCache memoryCache,
+            IMyMemoryCache memoryCache,
             ISettingRepository settingRepository,
             Text text,
             IWebRootPath wwwRoot)

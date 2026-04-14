@@ -8,7 +8,7 @@ namespace Origami.Core.Data
     public class HubContentSpecialPageRepository : HubContentRepository<OrigamiSpecialPage, HubContentSpecialPage>
     {
         public HubContentSpecialPageRepository(
-            IMemoryCache memoryCache,
+            IMyMemoryCache memoryCache,
             IValidator<HubContentSpecialPage> validator,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             Text text
