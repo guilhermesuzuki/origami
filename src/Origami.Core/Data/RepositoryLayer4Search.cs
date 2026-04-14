@@ -125,8 +125,8 @@ namespace Origami.Core.Data
 
             if (entity is OrigamiContentComment pcomment)
             {
-                var post = this.ReadFromCache<OrigamiContent>().Id(pcomment.ContentId);
-                var pcSocialProfile = this.ReadFromCache<OrigamiSocialProfile>().Id(pcomment.SocialProfileId);
+                var post = this.DbContextFactory.ReadFromCache<OrigamiContent>(MemoryCache).Id(pcomment.ContentId);
+                var pcSocialProfile = this.DbContextFactory.ReadFromCache<OrigamiSocialProfile>(MemoryCache).Id(pcomment.SocialProfileId);
                 if (pcSocialProfile?.FirstName.Has() == true) doc.Add(new TextField("comment_socialProfileFirstName", pcSocialProfile.FirstName, Field.Store.YES));
                 if (pcSocialProfile?.LastName.Has() == true) doc.Add(new TextField("comment_socialProfileLastName", pcSocialProfile.LastName, Field.Store.YES));
                 if (pcSocialProfile?.Name.Has() == true) doc.Add(new TextField("comment_socialProfileName", pcSocialProfile.Name, Field.Store.YES));

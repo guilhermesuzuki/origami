@@ -39,15 +39,15 @@ namespace Origami.Core.Data
         {
             using var db = DbContextFactory.CreateDbContext();
 
-            var q1 = from b in this.ReadFromCache<OrigamiBlog>()
-                     join v in this.ReadFromCache<OrigamiContent>() on b.Id equals v.BlogId
+            var q1 = from b in this.DbContextFactory.ReadFromCache<OrigamiBlog>(MemoryCache)
+                     join v in this.DbContextFactory.ReadFromCache<OrigamiContent>(MemoryCache) on b.Id equals v.BlogId
                      join t in this.ReadFromCache() on v.Id equals t.ContentId
                      where b.Id == blog
                      where t.Tag == before
                      select t;
 
-            var q2 = from b in this.ReadFromCache<OrigamiBlog>()
-                     join v in this.ReadFromCache<OrigamiContent>() on b.Id equals v.BlogId
+            var q2 = from b in this.DbContextFactory.ReadFromCache<OrigamiBlog>(MemoryCache)
+                     join v in this.DbContextFactory.ReadFromCache<OrigamiContent>(MemoryCache) on b.Id equals v.BlogId
                      join t in db.Set<OrigamiContentTag>().AsNoTracking() on v.Id equals t.ContentId
                      where b.Id == blog
                      where t.Tag == current
