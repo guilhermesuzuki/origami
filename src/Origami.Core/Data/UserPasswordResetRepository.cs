@@ -10,7 +10,7 @@ namespace Origami.Core.Data
     {
         public UserPasswordResetRepository(
             Text text,
-            IMemoryCache memoryCache,
+            IMyMemoryCache memoryCache,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IWebRootPath wwwRoot)
             : base(text, dbContextFactory, memoryCache, wwwRoot)

@@ -24,7 +24,7 @@ namespace Origami.Core.Data
             IValidator<OrigamiContentRating> validator,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             ISocialProfileRepository socialProfileRepository,
-            IMemoryCache memoryCache,
+            IMyMemoryCache memoryCache,
             IWebRootPath wwwRoot,
             Text text)
             : base(text, dbContextFactory, memoryCache, wwwRoot)

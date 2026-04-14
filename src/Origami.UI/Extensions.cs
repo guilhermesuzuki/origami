@@ -125,6 +125,7 @@ namespace Origami.UI
             builder.Services.AddSingleton<IEmailStatusRepository, EmailStatusRepository>();
             builder.Services.AddSingleton<IBackupRestoreRepository, BackupRestoreRepository>();
             builder.Services.AddSingleton<IRepository<OrigamiBackup>, BackupRestoreRepository>();
+            builder.Services.AddSingleton<IMyMemoryCache, MyMemoryCache>();
             builder.Services.AddTransient<IBlogRepository, BlogRepository>();
             builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
             builder.Services.AddTransient<IContentCategoryRepository, ContentCategoryRepository>();
@@ -167,8 +168,7 @@ namespace Origami.UI
             builder.Services.AddTransient<IUserViewRepository, UserViewRepository>();
             builder.Services.AddTransient<IVideoRepository, VideoRepository>();
             builder.Services.AddTransient<IWhatToSeeNextRepository, WhatToSeeNextRepository>();
-            builder.Services.AddTransient<IMyMemoryCache, MyMemoryCache>();
-
+            
             builder.Services.AddScoped<ILoginRules, LoginRules>();
             builder.Services.AddScoped<IWhatHappensNext, WhatHappensNext>();
 

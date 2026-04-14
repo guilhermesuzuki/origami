@@ -14,7 +14,7 @@ namespace Origami.Core.Data
         protected RepositoryLayer3SmartData(
             Text text,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
-            IMemoryCache memoryCache,
+            IMyMemoryCache memoryCache,
             IWebRootPath webRootPath)
             : base(text, dbContextFactory, memoryCache, webRootPath)
         {

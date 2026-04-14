@@ -25,7 +25,7 @@ namespace Origami.Core.Data
             IValidator<OrigamiContentComment> validator,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IContentCommentReactionRepository contentCommentReactionRepository,
-            IMemoryCache memoryCache,
+            IMyMemoryCache memoryCache,
             IWebRootPath wwwRoot,
             Text text)
             : base(text, dbContextFactory, memoryCache, wwwRoot)

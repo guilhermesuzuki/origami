@@ -22,7 +22,7 @@ namespace Origami.Core.Data
             IValidator<OrigamiBlog> validator,
             ICategoryRepository categoryRepository,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
-            IMemoryCache memoryCache,
+            IMyMemoryCache memoryCache,
             IHubContentRepository<HubContentPage> hubPageRepository,
             IHubContentRepository<HubContentPost> hubPostRepository,
             IHubContentRepository<HubContentQuickNote> hubQuickNoteRepository,

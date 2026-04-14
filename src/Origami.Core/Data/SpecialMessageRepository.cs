@@ -19,7 +19,7 @@ namespace Origami.Core.Data
         public SpecialMessageRepository(
             IValidator<OrigamiSpecialMessage> validator,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
-            IMemoryCache memoryCache,
+            IMyMemoryCache memoryCache,
             Text text,
             IWebRootPath wwwRoot)
             : base(text, dbContextFactory, memoryCache, wwwRoot)
