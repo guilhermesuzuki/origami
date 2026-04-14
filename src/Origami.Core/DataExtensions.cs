@@ -448,7 +448,7 @@ namespace Origami.Core
                         if (memoryCache.Get(key) == null)
                         {
                             using var db = dbContextFactory.CreateDbContext();
-                            var list = db.ReadFromDatabase<T>();
+                            var list = db.Read<T>();
                             memoryCache.Set(key, list);
                         }
                     }
@@ -464,7 +464,7 @@ namespace Origami.Core
             }
         }
 
-        public static List<T> ReadFromDatabase<T>(this DbContext db) where T : class
+        public static List<T> Read<T>(this DbContext db) where T : class
         {
             if (typeof(T).IsAbstract == false)
             {
