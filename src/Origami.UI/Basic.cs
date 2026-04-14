@@ -41,7 +41,7 @@ namespace Origami.UI
         [Inject] protected NavigationManager GhostOfTheNavigator { get; set; } = null!;
         [Inject] protected IHttpContextAccessor HttpContextAccessor { get; set; } = null!;
         [Inject] protected IJSRuntime JSRuntime { get; set; } = null!;
-        [Inject] protected IMemoryCache MemoryCache { get; set; } = null!;
+        [Inject] protected IMyMemoryCache MemoryCache { get; set; } = null!;
         [Inject] protected ISuperRepository Super { get; set; } = null!;
         [Inject] protected Text Text { get; set; } = null!;
         [Inject] protected IUserFacade UserFacade { get; set; } = null!;

@@ -17,6 +17,6 @@ namespace Origami.Core.Data
         /// <summary>
         /// Cache in Memory
         /// </summary>
-        IMemoryCache MemoryCache { get; }
+        IMyMemoryCache MemoryCache { get; }
     }
 }

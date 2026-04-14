@@ -7,6 +7,8 @@ namespace Origami.Core.Data
 {
     public interface IMyMemoryCache : IMemoryCache
     {
+        IEnumerable<object> Keys { get; }
+
         List<T> Read<T>() where T : class;
     }
 }

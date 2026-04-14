@@ -18,7 +18,7 @@ namespace Origami.Core.Data
 
         public IDbContextFactory<OrigamiDbContext> DbContextFactory { get; }
         public string KeyForCaching => typeof(T).KeyForCaching();
-        public IMemoryCache MemoryCache { get; }
+        public IMyMemoryCache MemoryCache { get; }
         public Text Text { get; }
         public IWebRootPath WebRootPath { get; }
 

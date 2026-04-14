@@ -7,6 +7,18 @@ namespace Origami.Core.Data
 {
     public class MyMemoryCache(IMemoryCache memoryCache, IDbContextFactory<OrigamiDbContext> dbContextFactory) : IMyMemoryCache
     {
+        public IEnumerable<object> Keys
+        {
+            get
+            {
+                if (memoryCache is MemoryCache memCache)
+                {
+                    return memCache.Keys;
+                }
+                throw new InvalidOperationException("Underlying cache is not a MemoryCache.");
+            }
+        }
+
         public ICacheEntry CreateEntry(object key)
         {
             return memoryCache.CreateEntry(key);
@@ -27,7 +39,7 @@ namespace Origami.Core.Data
             return memoryCache.TryGetValue(key, out value);
         }
 
-        public List<T> Read<T>() where T : class 
+        public List<T> Read<T>() where T : class
         {
             var timestamp = Stopwatch.GetTimestamp();
             var key = typeof(T).KeyForCaching();

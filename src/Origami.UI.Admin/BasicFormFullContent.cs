@@ -83,7 +83,7 @@ namespace Origami.UI.Admin
         protected virtual List<T> Get<T>() where T : class
         {
             var t = Activator.CreateInstance<T>();
-            var query = from c in this.DbContextFactory.ReadFromCache<T>(this.MemoryCache) select c;
+            var query = from c in this.MemoryCache.Read<T>() select c;
 
             if (t is IBlogIdNull blogIdNull)
             {
@@ -151,7 +151,7 @@ namespace Origami.UI.Admin
 
         protected virtual IEnumerable<T1> GetParents()
         {
-            return from x in this.DbContextFactory.ReadFromCache<T1>(this.MemoryCache)
+            return from x in this.MemoryCache.Read<T1>()
                    where x.BlogId == this.UserFacade.BlogId
                    where x.IsDeleted == false
                    where this.Super.IsParentDeleted(x) == false

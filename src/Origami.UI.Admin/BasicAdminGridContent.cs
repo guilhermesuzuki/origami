@@ -240,7 +240,7 @@ namespace Origami.UI.Admin
         {
             var t1 = new T1();
 
-            IEnumerable<T1> items = this.DbContextFactory.ReadFromCache<T1>(this.MemoryCache);
+            IEnumerable<T1> items = this.MemoryCache.Read<T1>();
 
             if (IncludeDeletedEntitiesInDataGrid == false)
             {
@@ -455,7 +455,7 @@ namespace Origami.UI.Admin
         {
             if (this.NanoId.Has() == true)
             {
-                var entity = (from a in this.DbContextFactory.ReadFromCache<T1>(MemoryCache)
+                var entity = (from a in this.MemoryCache.Read<T1>()
                               where a.NanoId == this.NanoId
                               select a).FirstOrDefault();
 
