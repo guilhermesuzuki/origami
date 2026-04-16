@@ -40,7 +40,7 @@
                                     <span class="me-1">@context.Item.Value</span>
                                     @if (context.Item.Value is IList list)
                                     {
-                                        <span class="text-decoration-underline">@list.Count @Text.Lower("item(s)")</span>
+                                        <span class="p-1 shadow-sm border">@list.Count @Text.Lower("item(s)")</span>
                                     }
                                 </CellTemplate>
                             </TemplateColumn>

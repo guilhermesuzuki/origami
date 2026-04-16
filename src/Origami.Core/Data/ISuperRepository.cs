@@ -66,6 +66,7 @@ namespace Origami.Core.Data
         IUserViewRepository UserViews { get; }
         IVideoRepository Videos { get; }
         IWhatToSeeNextRepository WhatToSeeNext { get; }
+        IMyMemoryCache MyMemoryCache { get; }
         
         bool EmptyHome(Guid blogId);
 

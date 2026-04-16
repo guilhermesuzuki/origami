@@ -50,7 +50,9 @@ namespace Origami.Core.Data
             IContentRepository contentRepository,
             IContentTagRepository contentTagRepository,
 
-            IDbContextFactory<OrigamiDbContext> dbContextFactory) : base()
+            IDbContextFactory<OrigamiDbContext> dbContextFactory,
+            IMyMemoryCache myMemoryCache
+            ) : base()
         {
             AppFacade = appFacade;
             BackupAndRestores = backupAndRestores;
@@ -91,6 +93,8 @@ namespace Origami.Core.Data
             ContentReactions = contentReactionRepository;
             Contents = contentRepository;
             ContentTags = contentTagRepository;
+
+            MyMemoryCache = myMemoryCache;
         }
 
         public IAppFacade AppFacade { get; }
@@ -111,6 +115,7 @@ namespace Origami.Core.Data
         public IEmailRepository Emails { get; }
         public IFileRepository Files { get; }
         public bool MaintenanceLockout => this.GetMaintenancePages().Any();
+        public IMyMemoryCache MyMemoryCache { get; }
         public IPageRepository Pages { get; }
         public IPhysicalPageRepository PhysicalPages { get; }
         public IPhysicalPageViewRepository PhysicalPageViews { get; }
@@ -132,6 +137,7 @@ namespace Origami.Core.Data
         public IUserViewRepository UserViews { get; }
         public IVideoRepository Videos { get; }
         public IWhatToSeeNextRepository WhatToSeeNext { get; }
+
         public bool EmptyHome(Guid blogId)
         {
             if (Contents.ReadFromCache().OfType<OrigamiPage>().FrontPage(blogId) != null) return false;
@@ -426,6 +432,8 @@ namespace Origami.Core.Data
         /// <param name="_super">The <see cref="ISuperRepository"/> instance whose repositories will be refreshed.</param>
         public Result RefreshAllRepositories()
         {
+            MyMemoryCache.Clear();
+
             Blogs.RefreshCache();
             Categories.RefreshCache();
             ContentCategories.RefreshCache();

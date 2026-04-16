@@ -28,6 +28,15 @@ namespace Origami.Core.Data
             return new(ctx.Entity);
         }
 
+        /// <summary>
+        /// Does nothing, views shouldn't be added to cache
+        /// </summary>
+        /// <param name="entity"></param>
+        public override void CreateCache(OrigamiPhysicalPageView entity)
+        {
+            return;
+        }
+
         public async Task<List<PhysicalPageViewTotal>> FastRead()
         {
             using var dbContextFactory = DbContextFactory.CreateDbContext();
@@ -81,6 +90,14 @@ namespace Origami.Core.Data
         {
             entities.Each(entity => this.SetViews(new(entity.PhysicalPageId), entity.TotalViews));
             return Task.CompletedTask;
+        }
+        /// <summary>
+        /// Does nothing, views shouldn't be updated in cache
+        /// </summary>
+        /// <param name="entity"></param>
+        public override void UpdateCache(OrigamiPhysicalPageView entity)
+        {
+            return;
         }
     }
 }

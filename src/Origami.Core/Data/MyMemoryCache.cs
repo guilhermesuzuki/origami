@@ -19,6 +19,20 @@ namespace Origami.Core.Data
             }
         }
 
+        public void Clear()
+        {
+            if (memoryCache is MemoryCache mc)
+            {
+                mc.Clear();
+                return;
+            }
+
+            lock (OrigamiConstants.SyncRoot)
+            {
+                Keys.Each(memoryCache.Remove);
+            }
+        }
+
         public ICacheEntry CreateEntry(object key)
         {
             return memoryCache.CreateEntry(key);
@@ -27,16 +41,6 @@ namespace Origami.Core.Data
         public void Dispose()
         {
             memoryCache.Dispose();
-        }
-
-        public void Remove(object key)
-        {
-            memoryCache.Remove(key);
-        }
-
-        public bool TryGetValue(object key, out object? value)
-        {
-            return memoryCache.TryGetValue(key, out value);
         }
 
         public List<T> Read<T>() where T : class
@@ -92,6 +96,16 @@ namespace Origami.Core.Data
                     Console.ForegroundColor = previousForegroundColor;
                 }
             }
+        }
+
+        public void Remove(object key)
+        {
+            memoryCache.Remove(key);
+        }
+
+        public bool TryGetValue(object key, out object? value)
+        {
+            return memoryCache.TryGetValue(key, out value);
         }
     }
 }
