@@ -28,6 +28,7 @@ namespace Origami.UI.Admin
 
         [Inject] public IHubContentRepository<T2> HubContentRepository { get; set; } = null!;
         [Parameter] public string NanoId { get; set; } = string.Empty;
+
         /// <summary>
         /// Default ordering, in case there's no order-by
         /// </summary>
@@ -455,10 +456,7 @@ namespace Origami.UI.Admin
         {
             if (this.NanoId.Has() == true)
             {
-                var entity = (from a in this.MemoryCache.Read<T1>()
-                              where a.NanoId == this.NanoId
-                              select a).FirstOrDefault();
-
+                var entity = (from a in this.MemoryCache.Read<T1>() where a.NanoId == this.NanoId select a).FirstOrDefault();
                 if (entity != null)
                 {
                     SelectedEntity = this.HubContentRepository.Get(entity).Clone();
