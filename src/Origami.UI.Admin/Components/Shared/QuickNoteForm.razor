@@ -1,18 +1,18 @@
-﻿@inherits BasicFormFull<OrigamiQuickNote>
+﻿@inherits BasicFormFullContent<OrigamiQuickNote, HubContentQuickNote>
 
 <div class="quick-note @Class">
     <BasicHeaderNotes Entity="this.Entity"></BasicHeaderNotes>
     <BasicHeader Class="mt-3" Entity="this.Entity"></BasicHeader>
     <ul class="inline-list mt-3">
         <li>
-            <LanguageWrittenOn Entity="this.Entity"></LanguageWrittenOn>
+            <LanguageWrittenOn Entity="this.Entity.Entity"></LanguageWrittenOn>
         </li>
     </ul>
     <ul class="inline-list mt-3">
         <li>
             <MudTextField FullWidth="true"
                           Immediate="true"
-                          @bind-Value="@Entity.Title"
+                          @bind-Value="@Entity.Entity.Title"
                           HelperText="@Text.Lower("Type your note here")"></MudTextField>
         </li>
     </ul>
@@ -24,7 +24,7 @@
                     @foreach (var bg in OrigamiConstants.BackgroundGradients)
                     {
                         var bgStyle = $"background: {bg}; width: 40px; height: 40px;";
-                        @if (Entity.Background == bg)
+                        @if (Entity.Entity.Background == bg)
                         {
                             bgStyle += "border: 2px solid var(--site-highlight);";
                         }
@@ -32,7 +32,7 @@
                                    Size="Size.Large"
                                    Style="@bgStyle"
                                    Square="true"
-                                   @onclick="@(() => Entity.Background = bg)">
+                                   @onclick="@(() => Entity.Entity.Background = bg)">
                         </MudAvatar>
                     }
                 </div>
@@ -45,7 +45,7 @@
                 <i class="fa-solid fa-floppy-disk"></i>
                 @Text.Lower("Save")
             </button>
-            <button class="btn btn-secondary text-white fw-bold" @onclick="UndoChanges" disabled="@this.Entity.New">
+            <button class="btn btn-secondary text-white fw-bold" @onclick="UndoChanges" disabled="@this.Entity.Entity.New">
                 <i class="fa-solid fa-rotate-left"></i>
                 @Text.Lower("Undo changes")
             </button>
@@ -58,18 +58,19 @@
 </div>
 
 @code {
-    protected override Result<OrigamiQuickNote> BeforeSaving()
+    public override void Save()
     {
-        if (Entity.New)
+        if (Entity.Entity.New)
         {
-            Entity.AuthorId = this.UserFacade.User.Id;
-            Entity.BlogId = this.UserFacade.BlogId;
-            Entity.DateCreated = DateTime.UtcNow;
-            if (Entity.Background.Has() == false)
+            Entity.Entity.AuthorId = this.UserFacade.User.Id;
+            Entity.Entity.BlogId = this.UserFacade.BlogId;
+            Entity.Entity.DateCreated = DateTime.UtcNow;
+            if (Entity.Entity.Background.Has() == false)
             {
-                Entity.Background = OrigamiConstants.BackgroundGradients[Random.Shared.Next(OrigamiConstants.BackgroundGradients.Length)];
+                Entity.Entity.Background = OrigamiConstants.BackgroundGradients[Random.Shared.Next(OrigamiConstants.BackgroundGradients.Length)];
             }
         }
-        return new(Entity);
+
+        base.Save();
     }
 }
