@@ -23,8 +23,8 @@
 
 	<ItemGroup>
 		<PackageReference Include="BootstrapBlazor.ImageCropper" Version="10.0.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.5" />
-		<PackageReference Include="System.ServiceModel.Syndication" Version="10.0.5" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.6" />
+		<PackageReference Include="System.ServiceModel.Syndication" Version="10.0.6" />
 	</ItemGroup>
 
 </Project>
