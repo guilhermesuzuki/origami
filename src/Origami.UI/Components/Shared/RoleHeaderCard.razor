@@ -1,0 +1,22 @@
+﻿@inherits Basic
+@implements IEntityNull<OrigamiRole>
+
+@if (Entity != null)
+{
+    <div class="role-header-card cursor-pointer @Class" @onclick="Go">
+        <i class="fa-solid fa-id-badge d-block m-auto" style="font-size: 77px;" title="@Text.Original("Role")"></i>
+        <span class="name fs-5 fw-bold">@Entity.Name</span>
+    </div>
+}
+
+@code {
+    [Parameter] public OrigamiRole? Entity { get; set; }
+
+    public void Go()
+    {
+        if (this.Entity != null)
+        {
+            this.WhatHappensNext.WhenIClickHere(this, new() { Entity = this.Entity });
+        }
+    }
+}
