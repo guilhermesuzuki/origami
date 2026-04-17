@@ -175,7 +175,7 @@ namespace Origami.Core.Data
                 return _purge(_roleRepository, ctx);
             }
 
-            if (ctx.Entity.Type.Like("QuickNote") == true)
+            if (ctx.Entity.Type.Like("OrigamiQuickNote") == true)
             {
                 return _purge(_hubContentQuickNoteRepository, ctx);
             }
@@ -235,7 +235,7 @@ namespace Origami.Core.Data
                 return _restore(_roleRepository, ctx);
             }
 
-            if (ctx.Entity.Type.Like("QuickNote") == true)
+            if (ctx.Entity.Type.Like("OrigamiQuickNote") == true)
             {
                 return _restore(_hubContentQuickNoteRepository, ctx);
             }
