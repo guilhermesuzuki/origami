@@ -146,7 +146,6 @@ namespace Origami.UI
             builder.Services.AddTransient<IPhysicalPageRepository, PhysicalPageRepository>();
             builder.Services.AddTransient<IPhysicalPageViewRepository, PhysicalPageViewRepository>();
             builder.Services.AddTransient<IPostRepository, PostRepository>();
-            builder.Services.AddTransient<IQuickNoteRepository, QuickNoteRepository>();
             builder.Services.AddTransient<IRightRepository, RightRepository>();
             builder.Services.AddTransient<IRightRoleRepository, RightRoleRepository>();
             builder.Services.AddTransient<IRoleRepository, RoleRepository>();
@@ -190,7 +189,6 @@ namespace Origami.UI
             builder.Services.AddCrud<OrigamiFile, FileManagerRepository>();
             builder.Services.AddCrud<OrigamiPage, PageRepository>();
             builder.Services.AddCrud<OrigamiPost, PostRepository>();
-            builder.Services.AddCrud<OrigamiQuickNote, QuickNoteRepository>();
             builder.Services.AddCrud<OrigamiRole, RoleRepository>();
             builder.Services.AddCrud<OrigamiSettings, SettingsRepository>();
             builder.Services.AddCrud<OrigamiSocialProfile, SocialProfileRepository>();

@@ -91,9 +91,9 @@
                                             var role = this.Super.Roles.ReadFromCache().Id(context.Item.Id);
                                             <RoleHeaderLite Entity="role"></RoleHeaderLite>
                                         }
-                                        else if (context.Item.Type.Like("QuickNote") == true)
+                                        else if (context.Item.Type.Like("OrigamiQuickNote") == true)
                                         {
-                                            var note = this.Super.QuickNotes.ReadFromCache().Id(context.Item.Id);
+                                            var note = this.Super.Contents.ReadFromCache().OfType<OrigamiQuickNote>().Id(context.Item.Id);
                                             <QuickNoteHeaderLite Entity="note"></QuickNoteHeaderLite>
                                         }
                                         else if (context.Item.Type.Like("OrigamiSpecialPage") == true)
@@ -124,7 +124,7 @@
                                         {
                                             <span>@Text.Original("Post")</span>
                                         }
-                                        else if (context.Item.Type.Like("QuickNote") == true)
+                                        else if (context.Item.Type.Like("OrigamiQuickNote") == true)
                                         {
                                             <span>@Text.Original("Quick note")</span>
                                         }

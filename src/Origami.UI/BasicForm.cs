@@ -55,15 +55,15 @@ namespace Origami.UI
         /// <summary>
         /// Author from the Entity (when available)
         /// </summary>
-        protected OrigamiUser Author
+        protected virtual OrigamiUser Author
         {
             get
             {
                 if (Entity is IAuthorId author)
                 {
-                    return Super.Users.ReadFromCache().Id(author.AuthorId) ?? new();
+                    return Super.Users.ReadFromCache().Id(author.AuthorId) ?? new() { Username = "Unknown" };
                 }
-                return new();
+                return new() { Username = "Unknown" };
             }
         }
 

@@ -90,20 +90,13 @@ namespace Origami.UI.Admin
                 query = query.Where(x => (x as IBlogIdNull)?.BlogId == this.Entity.Entity.BlogId);
             }
 
-            try
+            query = t switch
             {
-                query = t switch
-                {
-                    IName => query.Cast<IName>().OrderBy(x => x.Name).Cast<T>(),
-                    ITag => query.Cast<ITag>().DistinctBy(x => x.Tag).OrderBy(x => x.Tag).Cast<T>(),
-                    _ => query,
-                };
-                return [.. query];
-            }
-            finally
-            {
-
-            }
+                IName => query.Cast<IName>().OrderBy(x => x.Name).Cast<T>(),
+                ITag => query.Cast<ITag>().DistinctBy(x => x.Tag).OrderBy(x => x.Tag).Cast<T>(),
+                _ => query,
+            };
+            return [.. query];
         }
 
         protected override void OnInitialized()

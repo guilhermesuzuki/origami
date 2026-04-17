@@ -1,10 +1,9 @@
-﻿@inherits BasicForm<OrigamiQuickNote>
-@inject IPostRepository _post
+﻿@inherits BasicFormFullContent<OrigamiQuickNote, HubContentQuickNote>
 
 <div class="quick-note @Class">
     <ul class="inline-list">
         <li class="w-50">
-            <LanguageWrittenOn Entity="this.Entity"></LanguageWrittenOn>
+            <LanguageWrittenOn Entity="this.Entity.Entity"></LanguageWrittenOn>
         </li>
         <li class="w-50">
             <MudTextField ReadOnly="true"
@@ -18,9 +17,8 @@
         <li>
             <MudTextField FullWidth="true"
             Immediate="true"
-            @bind-Value="@Entity.Title"
-            HelperText="@Text.Lower("Type Here")"
-            Required="true"></MudTextField>
+            @bind-Value="@Entity.Entity.Title"
+            HelperText="@Text.Lower("Type Here")"></MudTextField>
         </li>
     </ul>
     <div class="btn-group w-100 mt-3">
@@ -29,31 +27,23 @@
 </div>
 
 @code {
-
     public override void Save()
     {
         try
         {
-            var hub = new Core.Models.Result<OrigamiQuickNote>(Entity);
+            var hub = new Core.Models.Result<OrigamiQuickNote>(Entity.Entity);
 
-            Entity.AuthorId = this.UserFacade.User.Id;
-            Entity.BlogId = this.UserFacade.BlogId;
-            Entity.DateCreated = DateTime.UtcNow;
-            Entity.Background = OrigamiConstants.BackgroundGradients[Random.Shared.Next(OrigamiConstants.BackgroundGradients.Length)];
-
-            var context = new DataOperationContext<OrigamiQuickNote>(this.UserFacade.User, DateTime.UtcNow, this.Entity);
+            Entity.Entity.AuthorId = this.UserFacade.User.Id;
+            Entity.Entity.BlogId = this.UserFacade.BlogId;
+            Entity.Entity.DateCreated = DateTime.UtcNow;
+            Entity.Entity.Background = OrigamiConstants.BackgroundGradients[Random.Shared.Next(OrigamiConstants.BackgroundGradients.Length)];
 
             using (var transaction = new TransactionScope())
             {
-                this.Super.QuickNotes.SmartSave(context, true).Push(hub);
-
-                if (hub.Ok)
-                {
-                    transaction.Complete();
-                }
+                this.HubContentRepository.Save(this.Entity, this.UserFacade.User).Push(hub);
+                hub.OnSuccess(() => this.HubContentRepository.Publish(this.Entity, this.UserFacade.User).Push(hub));
+                hub.OnSuccess(() => transaction.Complete());
             }
-
-            this.Super.QuickNotes.SmartPublish(context, true).Push(hub);
 
             this.CreateEntity().Wait();
 

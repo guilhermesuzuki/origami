@@ -351,11 +351,11 @@
                     var contents = Super.Contents.Search(queryTerm).NonDeleted();
                     this._hits.AddRange(contents.OfType<OrigamiPage>().Where(x => this.Super.IsParentDeleted(x) == false));
                     this._hits.AddRange(contents.OfType<OrigamiPost>());
-                    this._hits.AddRange(contents.OfType<OrigamiVideo>());
+                    this._hits.AddRange(contents.OfType<OrigamiQuickNote>());
                     this._hits.AddRange(contents.OfType<OrigamiSpecialMessage>());
                     this._hits.AddRange(contents.OfType<OrigamiSpecialPage>());
+                    this._hits.AddRange(contents.OfType<OrigamiVideo>());
                 }),
-                Task.Run(() => this._hits.AddRange(_super.QuickNotes.Search(queryTerm))),
             };
 
         Task.WhenAll(tasks).Wait();
@@ -399,11 +399,11 @@
                     var contents = Super.Contents.Search(queryTerm).Published();
                     this._hits.AddRange(contents.OfType<OrigamiPage>().Where(x => this.Super.IsParentDeleted(x) == false));
                     this._hits.AddRange(contents.OfType<OrigamiPost>());
-                    this._hits.AddRange(contents.OfType<OrigamiVideo>());
+                    this._hits.AddRange(contents.OfType<OrigamiQuickNote>());
                     this._hits.AddRange(contents.OfType<OrigamiSpecialMessage>());
                     this._hits.AddRange(contents.OfType<OrigamiSpecialPage>());
+                    this._hits.AddRange(contents.OfType<OrigamiVideo>());
                 }),
-                Task.Run(() => this._hits.AddRange(_super.QuickNotes.Search(queryTerm))),
             };
 
         Task.WhenAll(tasks).Wait();

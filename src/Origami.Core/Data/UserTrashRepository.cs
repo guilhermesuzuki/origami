@@ -10,10 +10,12 @@ namespace Origami.Core.Data
     {
         protected readonly IHubContentRepository<HubContentPage> _hubContentPageRepository;
         protected readonly IHubContentRepository<HubContentPost> _hubContentPostRepository;
+        protected readonly IHubContentRepository<HubContentQuickNote> _hubContentQuickNoteRepository;
         protected readonly IHubContentRepository<HubContentSpecialMessage> _hubContentSpecialMessageRepository;
         protected readonly IHubContentRepository<HubContentSpecialPage> _hubContentSpecialPageRepository;
         protected readonly IHubContentRepository<HubContentVideo> _hubContentVideoRepository;
         protected readonly IContentCommentRepository _contentCommentRepository;
+
         private readonly IBlogRepository _blogRepository;
         private readonly ISettingsRepository _blogSettingsRepository;
         private readonly ICategoryRepository _categoryRepository;
@@ -24,7 +26,6 @@ namespace Origami.Core.Data
         private readonly IPhysicalPageRepository _physicalPageRepository;
         private readonly IPhysicalPageViewRepository _physicalPageViewRepository;
         private readonly IPostRepository _postRepository;
-        private readonly IQuickNoteRepository _quickNoteRepository;
         private readonly IRoleRepository _roleRepository;
         private readonly ISocialProfileRepository _socialProfileRepository;
         private readonly ISpecialMessageRepository _specialMessageRepository;
@@ -49,7 +50,6 @@ namespace Origami.Core.Data
             IPhysicalPageRepository physicalPageRepository,
             IPhysicalPageViewRepository physicalPageViewRepository,
             IPostRepository postRepository,
-            IQuickNoteRepository quickNoteRepository,
             IRoleRepository roleRepository,
             ISettingsRepository blogSettingsRepository,
             ISocialProfileRepository socialProfileRepository,
@@ -65,6 +65,7 @@ namespace Origami.Core.Data
 
             IHubContentRepository<HubContentPage> hubContentPageRepository,
             IHubContentRepository<HubContentPost> hubContentPostRepository,
+            IHubContentRepository<HubContentQuickNote> hubContentQuickNoteRepository,
             IHubContentRepository<HubContentSpecialMessage> hubContentSpecialMessageRepository,
             IHubContentRepository<HubContentSpecialPage> hubContentSpecialPageRepository,
             IHubContentRepository<HubContentVideo> hubContentVideoRepository,
@@ -84,7 +85,6 @@ namespace Origami.Core.Data
             _physicalPageRepository = physicalPageRepository;
             _physicalPageViewRepository = physicalPageViewRepository;
             _postRepository = postRepository;
-            _quickNoteRepository = quickNoteRepository;
             _roleRepository = roleRepository;
             _socialProfileRepository = socialProfileRepository;
             _specialMessageRepository = specialMessageRepository;
@@ -99,6 +99,7 @@ namespace Origami.Core.Data
 
             _hubContentPageRepository = hubContentPageRepository;
             _hubContentPostRepository = hubContentPostRepository;
+            _hubContentQuickNoteRepository = hubContentQuickNoteRepository;
             _hubContentSpecialMessageRepository = hubContentSpecialMessageRepository;
             _hubContentSpecialPageRepository = hubContentSpecialPageRepository;
             _hubContentVideoRepository = hubContentVideoRepository;
@@ -176,7 +177,7 @@ namespace Origami.Core.Data
 
             if (ctx.Entity.Type.Like("QuickNote") == true)
             {
-                return _purge(_quickNoteRepository, ctx);
+                return _purge(_hubContentQuickNoteRepository, ctx);
             }
 
             throw new NotImplementedException();
@@ -236,7 +237,7 @@ namespace Origami.Core.Data
 
             if (ctx.Entity.Type.Like("QuickNote") == true)
             {
-                return _restore(_quickNoteRepository, ctx);
+                return _restore(_hubContentQuickNoteRepository, ctx);
             }
 
             throw new NotImplementedException();

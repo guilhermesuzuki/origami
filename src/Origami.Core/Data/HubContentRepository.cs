@@ -450,6 +450,7 @@ namespace Origami.Core.Data
         {
             return _memoryCache.Read<T1>().Id(parentId.ParentId);
         }
+
         protected virtual bool UserHasPermission(OrigamiDbContext db, Guid userId, string permission)
         {
             var user = db.Users.AsNoTracking().Id(userId);

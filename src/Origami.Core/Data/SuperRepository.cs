@@ -23,7 +23,6 @@ namespace Origami.Core.Data
             IPhysicalPageRepository physicalPageRepository,
             IPhysicalPageViewRepository physicalPageViewRepository,
             IPostRepository postRepository,
-            IQuickNoteRepository quickNoteRepository,
             IRightRepository rightRepository,
             IRoleRepository roleRepository,
             ISettingsRepository settingsRepository,
@@ -67,7 +66,6 @@ namespace Origami.Core.Data
             PhysicalPages = physicalPageRepository;
             PhysicalPageViews = physicalPageViewRepository;
             Posts = postRepository;
-            QuickNotes = quickNoteRepository;
             Rights = rightRepository;
             Roles = roleRepository;
             Settings = settingsRepository;
@@ -120,7 +118,6 @@ namespace Origami.Core.Data
         public IPhysicalPageRepository PhysicalPages { get; }
         public IPhysicalPageViewRepository PhysicalPageViews { get; }
         public IPostRepository Posts { get; }
-        public IQuickNoteRepository QuickNotes { get; }
         public IRightRepository Rights { get; }
         public IRoleRepository Roles { get; }
         public ISettingsRepository Settings { get; }
@@ -142,7 +139,6 @@ namespace Origami.Core.Data
         {
             if (Contents.ReadFromCache().OfType<OrigamiPage>().FrontPage(blogId) != null) return false;
             if (Contents.ReadFromCache().Published().Blog(blogId).Any() == true) return false;
-            if (QuickNotes.ReadFromCache().Published().Blog(blogId).Any() == true) return false;
             return true;
         }
 
@@ -439,12 +435,12 @@ namespace Origami.Core.Data
             ContentCategories.RefreshCache();
             ContentCommentReactions.RefreshCache();
             ContentComments.RefreshCache();
+            ContentHistories.RefreshCache();
             ContentRatings.RefreshCache();
             ContentReactions.RefreshCache();
             Contents.RefreshCache();
             ContentTags.RefreshCache();
             PhysicalPages.RefreshCache();
-            QuickNotes.RefreshCache();
             Roles.RefreshCache();
             SocialProfiles.RefreshCache();
             Subscribers.RefreshCache();
@@ -474,7 +470,6 @@ namespace Origami.Core.Data
             ContentComments.CreateSearchIndex();
             Contents.CreateSearchIndex();
             ContentTags.CreateSearchIndex();
-            QuickNotes.CreateSearchIndex();
             Roles.CreateSearchIndex();
             SocialProfiles.CreateSearchIndex();
             Users.CreateSearchIndex();

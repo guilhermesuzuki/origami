@@ -77,7 +77,7 @@
                         }
                         else if (hit.Type.Like("QuickNote") == true)
                         {
-                            var quickNote = this.Super.QuickNotes.ReadFromCache().Id(hit.Id);
+                            var quickNote = this.Super.Contents.ReadFromCache().OfType<OrigamiQuickNote>().Id(hit.Id);
                             <QuickNoteHeaderLite Entity="quickNote"></QuickNoteHeaderLite>
                         }
                     </div>

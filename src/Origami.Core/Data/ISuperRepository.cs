@@ -49,7 +49,6 @@ namespace Origami.Core.Data
         IPhysicalPageRepository PhysicalPages { get; }
         IPhysicalPageViewRepository PhysicalPageViews { get; }
         IPostRepository Posts { get; }
-        IQuickNoteRepository QuickNotes { get; }
         IRightRepository Rights { get; }
         IRoleRepository Roles { get; }
         ISettingsRepository Settings { get; }

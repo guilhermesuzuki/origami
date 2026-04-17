@@ -49,8 +49,9 @@
 
     private bool _disableLoadMore
     {
-        get => _super.QuickNotes
+        get => _super.Contents
             .ReadFromCache()
+            .OfType<OrigamiQuickNote>()
             .NonDeleted()
             .Published()
             .Blog(this.BlogId)
@@ -62,8 +63,9 @@
     /// </summary>
     protected void LoadQuickNotes()
     {
-        var pages = _super.QuickNotes
+        var pages = _super.Contents
             .ReadFromCache()
+            .OfType<OrigamiQuickNote>()
             .NonDeleted()
             .Published()
             .Blog(this.BlogId);
