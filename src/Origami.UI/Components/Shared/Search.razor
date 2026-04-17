@@ -188,6 +188,34 @@
                     </div>
                 </div>
             }
+            @if (this._users.Any() == true)
+            {
+                <div class="search-users">
+                    <label class="fs-3 w-100 text-center">@Text.Lower("Users found in the search")</label>
+                    <div class="row mt-3">
+                        @foreach (var user in _users)
+                        {
+                            <div class="col-12 col-xl-4 text-center">
+                                <UserHeaderCard Class="mb-3 p-3 border shadow-sm" Entity="user"></UserHeaderCard>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+            @if (this._roles.Any() == true)
+            {
+                <div class="search-roles">
+                    <label class="fs-3 w-100 text-center">@Text.Lower("Roles found in the search")</label>
+                    <div class="row mt-3">
+                        @foreach (var role in _roles)
+                        {
+                            <div class="col-12 col-xl-4 text-center">
+                                <RoleHeaderLite Class="mb-3 p-3 border shadow-sm" Entity="role"></RoleHeaderLite>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
         </div>
     }
     else if (this.UserFacade.SearchTerm.Has() == true)
@@ -251,6 +279,16 @@
     /// List of quick notes found in the search
     /// </summary>
     private IEnumerable<OrigamiQuickNote> _quickNotes => _hits.OfType<OrigamiQuickNote>().OrderBy(x => x.Title);
+
+    /// <summary>
+    /// List of users found in the search
+    /// </summary>
+    private IEnumerable<OrigamiUser> _users => _hits.OfType<OrigamiUser>().OrderBy(x => x.DisplayName);
+
+    /// <summary>
+    /// List of users found in the search
+    /// </summary>
+    private IEnumerable<OrigamiRole> _roles => _hits.OfType<OrigamiRole>().OrderBy(x => x.Name);
 
     /// <summary>
     /// List of all hits found in the search, used to check if there are any results or not
@@ -343,9 +381,11 @@
             {
                 Task.Run(() => this._hits.AddRange(Super.Blogs.Search(queryTerm).NonDeleted())),
                 Task.Run(() => this._hits.AddRange(Super.Categories.Search(queryTerm).NonDeleted().Where(x => this.Super.IsParentDeleted(x) == false))),
-                Task.Run(() => this._hits.AddRange(Super.SocialProfiles.Search(queryTerm))),
                 Task.Run(() => this._hits.AddRange(Super.ContentComments.Search(queryTerm).NonDeleted().Where(x => this.Super.IsParentDeleted(x) == false))),
                 Task.Run(() => this._hits.AddRange(Super.ContentTags.Search(queryTerm).DistinctBy(x => x.Tag))),
+                Task.Run(() => this._hits.AddRange(Super.Roles.Search(queryTerm))),
+                Task.Run(() => this._hits.AddRange(Super.SocialProfiles.Search(queryTerm))),
+                Task.Run(() => this._hits.AddRange(Super.Users.Search(queryTerm))),
                 Task.Run(() =>
                 {
                     var contents = Super.Contents.Search(queryTerm).NonDeleted();
@@ -379,7 +419,7 @@
             if (id is IBlogId blogId) return allowedBlogs.Contains(blogId.BlogId) == false;
             if (id is IBlogIdNull blogIdNull) return allowedBlogs.Contains(blogIdNull.BlogId.GetValueOrDefault()) == false;
 
-            return true;
+            return false;
         });
     }
 
@@ -391,9 +431,9 @@
             {
                 Task.Run(() => this._hits.AddRange(Super.Blogs.Search(queryTerm).NonDeleted().Active())),
                 Task.Run(() => this._hits.AddRange(Super.Categories.Search(queryTerm).NonDeleted().Where(x => this.Super.IsParentDeleted(x) == false))),
-                Task.Run(() => this._hits.AddRange(Super.SocialProfiles.Search(queryTerm))),
                 Task.Run(() => this._hits.AddRange(Super.ContentComments.Search(queryTerm).NonDeleted().Where(x => this.Super.IsParentDeleted(x) == false))),
                 Task.Run(() => this._hits.AddRange(Super.ContentTags.Search(queryTerm).DistinctBy(x => x.Tag))),
+                Task.Run(() => this._hits.AddRange(Super.SocialProfiles.Search(queryTerm))),
                 Task.Run(() =>
                 {
                     var contents = Super.Contents.Search(queryTerm).Published();
@@ -427,7 +467,7 @@
             if (id is IBlogId blogId) return allowedBlogs.Contains(blogId.BlogId) == false;
             if (id is IBlogIdNull blogIdNull) return allowedBlogs.Contains(blogIdNull.BlogId.GetValueOrDefault()) == false;
 
-            return true;
+            return false;
         });
     }
 }

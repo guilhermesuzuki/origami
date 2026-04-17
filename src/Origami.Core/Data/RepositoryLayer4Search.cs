@@ -108,6 +108,10 @@ namespace Origami.Core.Data
             if (entity is ITag tag && tag.Tag.Has() == true) doc.Add(new TextField("tag", tag.Tag, Field.Store.YES));
             if (entity is ITitle title && title.Title.Has() == true) doc.Add(new TextField("title", title.Title, Field.Store.YES));
 
+            if (entity is IDisplayName dname && dname.DisplayName.Has() == true) doc.Add(new TextField("displayName", dname.DisplayName, Field.Store.YES));
+            if (entity is IFirstName fname && fname.FirstName.Has() == true) doc.Add(new TextField("firstName", fname.FirstName, Field.Store.YES));
+            if (entity is ILastName lname && lname.LastName.Has() == true) doc.Add(new TextField("lastName", lname.LastName, Field.Store.YES));
+
             if (entity is OrigamiSocialProfile socialProfile)
             {
                 doc.Add(new TextField("socialProfileSocialNetwork", socialProfile.SocialNetwork.ToString(), Field.Store.YES));
@@ -118,9 +122,6 @@ namespace Origami.Core.Data
             if (entity is OrigamiUser user)
             {
                 if (user.Username.Has() == true) doc.Add(new TextField("userName", user.Username, Field.Store.YES));
-                if (user.DisplayName.Has() == true) doc.Add(new TextField("displayName", user.DisplayName, Field.Store.YES));
-                if (user.FirstName.Has() == true) doc.Add(new TextField("firstName", user.FirstName, Field.Store.YES));
-                if (user.LastName.Has() == true) doc.Add(new TextField("lastName", user.LastName, Field.Store.YES));
             }
 
             if (entity is OrigamiContentComment pcomment)
@@ -154,6 +155,10 @@ namespace Origami.Core.Data
             if (type.Implements<ITitle>() == true) queries.Add(new(new("title", searchTerm)));
             if (type.Implements<INanoId>() == true) queries.Add(new(new("nano-id", searchTerm)));
 
+            if (type.Implements<IDisplayName>() == true) queries.Add(new(new("displayName", searchTerm)));
+            if (type.Implements<IFirstName>() == true) queries.Add(new(new("firstName", searchTerm)));
+            if (type.Implements<ILastName>() == true) queries.Add(new(new("lastName", searchTerm)));
+
             if (type.IsAssignableFrom(typeof(OrigamiSocialProfile)) == true)
             {
                 queries.Add(new(new("socialProfileSocialNetwork", searchTerm)));
@@ -164,9 +169,6 @@ namespace Origami.Core.Data
             if (type.IsAssignableFrom(typeof(OrigamiUser)) == true)
             {
                 queries.Add(new(new("userName", searchTerm)));
-                queries.Add(new(new("displayName", searchTerm)));
-                queries.Add(new(new("firstName", searchTerm)));
-                queries.Add(new(new("lastName", searchTerm)));
             }
 
             if (type.IsAssignableFrom(typeof(OrigamiContentComment)) == true)
