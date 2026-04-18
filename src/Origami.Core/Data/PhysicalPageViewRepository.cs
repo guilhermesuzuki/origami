@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AngleSharp.Dom;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Origami.Core.Models;
 
@@ -56,29 +57,8 @@ namespace Origami.Core.Data
 
         public long GetViews<T>(T entity) where T : IId
         {
-            var x = 0L;
             var key = entity.KeyForCachingViews();
-            var options = new MemoryCacheEntryOptions() { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(3) };
-
-            // already in cache, return it
-            if (this.MemoryCache.TryGetValue(key, out x))
-            {
-                return x;
-            }
-
-            try
-            {
-                using var db = DbContextFactory.CreateDbContext();
-
-                var query = from view in db.Set<OrigamiPhysicalPageView>().AsNoTracking() where view.ContentId == entity.Id select view;
-                x = query.LongCount();
-
-                return x;
-            }
-            finally
-            {
-                this.MemoryCache.Set(key, x, options);
-            }
+            return this.MemoryCache.TryGetValue(key, out long x) ? x : 0;
         }
 
         public void SetViews(OrigamiPhysicalPage entity, long count) => this.Views(entity, count);
@@ -96,6 +76,22 @@ namespace Origami.Core.Data
         public override void UpdateCache(OrigamiPhysicalPageView entity)
         {
             return;
+        }
+
+        public override void RefreshCache()
+        {
+            using var db = DbContextFactory.CreateDbContext();
+            var query = from view in db.Set<OrigamiPhysicalPageView>().AsNoTracking() group view by view.ContentId into g select new { ContentId = g.Key, TotalViews = g.LongCount() };
+            var options = new MemoryCacheEntryOptions() { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(3) };
+            foreach (var view in query)
+            {
+                var content = this.MemoryCache.Read<OrigamiContent>().Id(view.ContentId);
+                if (content != null)
+                {
+                    var key = content.KeyForCachingViews();
+                    this.MemoryCache.Set(key, view.TotalViews, options);
+                }
+            }
         }
     }
 }

@@ -441,6 +441,7 @@ namespace Origami.Core.Data
             Contents.RefreshCache();
             ContentTags.RefreshCache();
             PhysicalPages.RefreshCache();
+            PhysicalPageViews.RefreshCache();
             Roles.RefreshCache();
             SocialProfiles.RefreshCache();
             Subscribers.RefreshCache();
