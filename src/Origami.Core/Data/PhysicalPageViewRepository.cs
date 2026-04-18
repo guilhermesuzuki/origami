@@ -70,12 +70,9 @@ namespace Origami.Core.Data
             {
                 using var db = DbContextFactory.CreateDbContext();
 
-                var query = from view in db.Set<OrigamiPhysicalPageView>()
-                            where view.ContentId != null
-                            where view.ContentId == entity.Id
-                            select view;
-
+                var query = from view in db.Set<OrigamiPhysicalPageView>().AsNoTracking() where view.ContentId == entity.Id select view;
                 x = query.LongCount();
+
                 return x;
             }
             finally
@@ -91,6 +88,7 @@ namespace Origami.Core.Data
             entities.Each(entity => this.SetViews(new(entity.PhysicalPageId), entity.TotalViews));
             return Task.CompletedTask;
         }
+
         /// <summary>
         /// Does nothing, views shouldn't be updated in cache
         /// </summary>
