@@ -5,7 +5,7 @@
 <Root>
     @if (this._blog != null)
     {
-        var tags = from a in this._super.ContentTags.ReadFromCache()
+        var tags = from a in this._super.ContentTags.ReadFromCache().DistinctBy(x => x.Tag)
                    join b in this._super.Contents.ReadFromCache().Blog(_blog.Id) on a.ContentId equals b.Id
                    select a;
 
