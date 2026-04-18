@@ -432,13 +432,13 @@ namespace Origami.Core.Data
 
             Blogs.RefreshCache();
             Categories.RefreshCache();
+            Contents.RefreshCache();
             ContentCategories.RefreshCache();
             ContentCommentReactions.RefreshCache();
             ContentComments.RefreshCache();
             ContentHistories.RefreshCache();
             ContentRatings.RefreshCache();
             ContentReactions.RefreshCache();
-            Contents.RefreshCache();
             ContentTags.RefreshCache();
             PhysicalPages.RefreshCache();
             PhysicalPageViews.RefreshCache();

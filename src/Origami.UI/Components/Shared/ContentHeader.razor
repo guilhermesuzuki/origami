@@ -5,7 +5,7 @@
 {
     var header = this.Entity.Get().HeaderImage.NoHeader();
     var views = this.Super.PhysicalPageViews.GetViews(Entity);
-    var comments = this.Super.ContentComments.AllComments(Entity).Count();
+    var comments = this.Super.ContentComments.GetComments(Entity);
 
     var rating = Math.Round(this.Super.ContentRatings.CalculateRating(this.Entity), 1, MidpointRounding.ToEven);
     var ratings = this.Super.ContentRatings.Ratings(Entity).Count();

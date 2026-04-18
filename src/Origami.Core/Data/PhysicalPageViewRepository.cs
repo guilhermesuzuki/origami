@@ -38,13 +38,6 @@ namespace Origami.Core.Data
             return;
         }
 
-        public async Task<List<PhysicalPageViewTotal>> FastRead()
-        {
-            using var dbContextFactory = DbContextFactory.CreateDbContext();
-            var sql = "SELECT COUNT_BIG(pv.Id) as TotalViews, p.Id as PhysicalPageId FROM dbo.oi_PhysicalPageViews pv RIGHT JOIN dbo.oi_PhysicalPages p ON p.Id = pv.PhysicalPageId GROUP BY p.Id";
-            return await dbContextFactory.Database.SqlQueryRaw<PhysicalPageViewTotal>(sql).ToListAsync();
-        }
-
         /// <summary>
         /// Returns the total number of views from a page
         /// </summary>
