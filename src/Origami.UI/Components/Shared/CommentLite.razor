@@ -38,7 +38,7 @@
             }
             <Id Entity="Entity" Class="pe-1"></Id>
         </div>
-        <div class="comment-text mt-2">@(Entity.Content.Markup())</div>
+        <div class="comment-text mt-2 @(Entity.IsDeleted ? "text-decoration-line-through" : null)">@(Entity.Content.Markup())</div>
     </div>
 }
 

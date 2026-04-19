@@ -262,7 +262,9 @@ namespace Origami.Core.Data
         protected void RefreshCacheII()
         {
             using var db = DbContextFactory.CreateDbContext();
-            var query = from view in db.Set<OrigamiContentComment>().AsNoTracking() group view by view.ContentId into g select new { ContentId = g.Key, TotalComments = g.LongCount() };
+            var query = from view in db.Set<OrigamiContentComment>().AsNoTracking()
+                        where view.IsDeleted == false
+                        group view by view.ContentId into g select new { ContentId = g.Key, TotalComments = g.LongCount() };
             var options = new MemoryCacheEntryOptions() { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(3) };
 
             foreach (var view in query)

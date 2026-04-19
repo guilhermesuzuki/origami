@@ -9,12 +9,12 @@
     var replies = this.Super.GetReplies(Entity);
     <a id="@Entity.Id"></a>
     <div class="wrapper border @Class @(this.Entity.SocialProfileId == this.UserFacade.SocialProfile.Id ? "border-dark" : null)">
-        <div class="post-comment p-3 border">
-            <div class="post-comment-header position-relative">
+        <div class="content-comment p-3 border">
+            <div class="content-comment-header position-relative">
                 <ContentCommentAuthor Entity="this.Entity"></ContentCommentAuthor>
                 <AuthorizeView>
                     <Authorized>
-                        <div class="post-comment-actions position-absolute" style="right:0;top:0;">
+                        <div class="content-comment-actions position-absolute" style="right:0;top:0;">
                             <MudMenu AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" Icon="@Icons.Material.Filled.Menu">
                                 @if (Entity.SocialProfileId == UserFacade.SocialProfile.Id)
                                 {
@@ -63,7 +63,7 @@
                     </Authorized>
                 </AuthorizeView>
             </div>
-            <div class="post-comment-date small text-center">
+            <div class="content-comment-date small text-center">
                 <span class="ms-1" title="@Text.Original("Date")">
                     <i class="bi bi-calendar-fill"></i>
                     <span class="">@Entity.GetDate()</span>
@@ -91,7 +91,7 @@
                 }
             </div>
             <CommentLite Entity="parent" Class="border p-2 mt-3"></CommentLite>
-            <div class="post-comment-text mt-3">
+            <div class="content-comment-text mt-3">
                 <AuthorizeView>
                     <Authorized>
                         @if (_editMode)
@@ -118,12 +118,12 @@
                     </NotAuthorized>
                 </AuthorizeView>
             </div>
-            <div class="post-comment-reactions mt-3">
+            <div class="content-comment-reactions mt-3">
                 <div class="reactions">
                     @foreach (var reaction in this.Super.ContentCommentReactions.Reactions(Entity).GroupBy(x => x.Reaction))
                     {
                         <MudTooltip Text="@WhoReacted(reaction.Key)">
-                            <span class="d-inline-block post-comment-reaction @(HasReactionClass(reaction.Key, this.UserFacade.SocialProfile)) me-1 mb-1 @(this.UserFacade.SocialProfile.New ? null : "cursor-pointer")"
+                            <span class="d-inline-block content-comment-reaction @(HasReactionClass(reaction.Key, this.UserFacade.SocialProfile)) me-1 mb-1 @(this.UserFacade.SocialProfile.New ? null : "cursor-pointer")"
                                    style="border-radius: 12px; padding-left: 3px; padding-right: 6px; padding-bottom: 3px;"
                                    @onclick="() => this.ReactionClick(reaction.Key, this.UserFacade.SocialProfile)">
                                 <span>@reaction.Key</span>
