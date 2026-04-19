@@ -118,22 +118,16 @@ namespace Origami.Core.Data
         {
             var result = new T2();
 
-            var tasks = new List<Task>
-            {
-                Task.Run(() => {
-                    result.Entity = this.GetEntity(rootId) ?? Activator.CreateInstance<T1>();
-                    result.Parent = this.GetParent(result.Entity);
-                }),
-                Task.Run(() => result.Children.AddRange(this.GetChildren(result.Entity))),
-                Task.Run(() => result.Categories.AddRange(this.GetEntities<OrigamiContentCategory>(rootId))),
-                Task.Run(() => result.Comments.AddRange(this.GetEntities<OrigamiContentComment>(rootId))),
-                Task.Run(() => result.Ratings.AddRange(this.GetEntities<OrigamiContentRating>(rootId))),
-                Task.Run(() => result.Reactions.AddRange(this.GetEntities<OrigamiContentReaction>(rootId))),
-                Task.Run(() => result.Tags.AddRange(this.GetEntities<OrigamiContentTag>(rootId))),
-                Task.Run(() => result.Histories.AddRange(this.GetEntities<OrigamiContentHistory>(rootId))),
-            };
+            result.Entity = this.GetEntity(rootId) ?? Activator.CreateInstance<T1>();
+            result.Parent = this.GetParent(result.Entity);
 
-            Task.WhenAll(tasks);
+            result.Children.AddRange(this.GetChildren(result.Entity));
+            result.Categories.AddRange(this.GetEntities<OrigamiContentCategory>(rootId));
+            result.Comments.AddRange(this.GetEntities<OrigamiContentComment>(rootId));
+            result.Ratings.AddRange(this.GetEntities<OrigamiContentRating>(rootId));
+            result.Reactions.AddRange(this.GetEntities<OrigamiContentReaction>(rootId));
+            result.Tags.AddRange(this.GetEntities<OrigamiContentTag>(rootId));
+            result.Histories.AddRange(this.GetEntities<OrigamiContentHistory>(rootId));
 
             return result;
         }
