@@ -389,38 +389,13 @@
                 Task.Run(() =>
                 {
                     var contents = Super.Contents.Search(queryTerm).NonDeleted();
-                    this._hits.AddRange(contents.OfType<OrigamiPage>().Where(x => this.Super.IsParentDeleted(x) == false));
-                    this._hits.AddRange(contents.OfType<OrigamiPost>());
-                    this._hits.AddRange(contents.OfType<OrigamiQuickNote>());
-                    this._hits.AddRange(contents.OfType<OrigamiSpecialMessage>());
-                    this._hits.AddRange(contents.OfType<OrigamiSpecialPage>());
-                    this._hits.AddRange(contents.OfType<OrigamiVideo>());
+                    this._hits.AddRange(contents.Where(x => this.Super.IsParentDeleted(x) == false));
                 }),
             };
 
         Task.WhenAll(tasks).Wait();
 
-        this._hits.RemoveAll(id =>
-        {
-            if (id is OrigamiBlog blog) return allowedBlogs.Contains(blog.Id) == false;
-            if (id is OrigamiCategory category) return allowedBlogs.Contains(category.BlogId.GetValueOrDefault()) == false;
-            if (id is OrigamiContentComment comment)
-            {
-                var content = this.Super.Contents.ReadFromCache().Id(comment.ContentId);
-                return allowedBlogs.Contains(content?.BlogId ?? Guid.Empty) == false;
-            }
-            if (id is OrigamiContentTag tag)
-            {
-                var content = this.Super.Contents.ReadFromCache().Id(tag.ContentId);
-                return allowedBlogs.Contains(content?.BlogId ?? Guid.Empty) == false;
-            }
-            if (id is OrigamiContent ocontent) return allowedBlogs.Contains(ocontent.BlogId.GetValueOrDefault()) == false;
-
-            if (id is IBlogId blogId) return allowedBlogs.Contains(blogId.BlogId) == false;
-            if (id is IBlogIdNull blogIdNull) return allowedBlogs.Contains(blogIdNull.BlogId.GetValueOrDefault()) == false;
-
-            return false;
-        });
+        this._hits.RemoveAll(id => this.FilterHits(allowedBlogs, id));
     }
 
     protected virtual void FESearch(string queryTerm)
@@ -437,37 +412,40 @@
                 Task.Run(() =>
                 {
                     var contents = Super.Contents.Search(queryTerm).Published();
-                    this._hits.AddRange(contents.OfType<OrigamiPage>().Where(x => this.Super.IsParentDeleted(x) == false));
-                    this._hits.AddRange(contents.OfType<OrigamiPost>());
-                    this._hits.AddRange(contents.OfType<OrigamiQuickNote>());
-                    this._hits.AddRange(contents.OfType<OrigamiSpecialMessage>());
-                    this._hits.AddRange(contents.OfType<OrigamiSpecialPage>());
-                    this._hits.AddRange(contents.OfType<OrigamiVideo>());
+                    this._hits.AddRange(contents.Where(x => this.Super.IsParentDeleted(x) == false));
                 }),
             };
 
         Task.WhenAll(tasks).Wait();
 
-        this._hits.RemoveAll(id =>
+        this._hits.RemoveAll(id => this.FilterHits(allowedBlogs, id));
+    }
+
+    protected bool FilterHits(IEnumerable<Guid> allowedBlogs, IId id)
+    {
+        if (id is OrigamiSpecialPage) return false;
+
+        if (id is OrigamiBlog blog) return allowedBlogs.Contains(blog.Id) == false;
+        if (id is OrigamiCategory category) return allowedBlogs.Contains(category.BlogId.GetValueOrDefault()) == false;
+        if (id is OrigamiContentComment comment)
         {
-            if (id is OrigamiBlog blog) return allowedBlogs.Contains(blog.Id) == false;
-            if (id is OrigamiCategory category) return allowedBlogs.Contains(category.BlogId.GetValueOrDefault()) == false;
-            if (id is OrigamiContentComment comment)
-            {
-                var content = this.Super.Contents.ReadFromCache().Id(comment.ContentId);
-                return allowedBlogs.Contains(content?.BlogId ?? Guid.Empty) == false;
-            }
-            if (id is OrigamiContentTag tag)
-            {
-                var content = this.Super.Contents.ReadFromCache().Id(tag.ContentId);
-                return allowedBlogs.Contains(content?.BlogId ?? Guid.Empty) == false;
-            }
-            if (id is OrigamiContent ocontent) return allowedBlogs.Contains(ocontent.BlogId.GetValueOrDefault()) == false;
+            var content = this.Super.Contents.ReadFromCache().Id(comment.ContentId);
+            return allowedBlogs.Contains(content?.BlogId ?? Guid.Empty) == false;
+        }
+        if (id is OrigamiContentTag tag)
+        {
+            var content = this.Super.Contents.ReadFromCache().Id(tag.ContentId);
+            return allowedBlogs.Contains(content?.BlogId ?? Guid.Empty) == false;
+        }
 
-            if (id is IBlogId blogId) return allowedBlogs.Contains(blogId.BlogId) == false;
-            if (id is IBlogIdNull blogIdNull) return allowedBlogs.Contains(blogIdNull.BlogId.GetValueOrDefault()) == false;
+        if (id is OrigamiPage page) return allowedBlogs.Contains(page.BlogId.GetValueOrDefault()) == false;
+        if (id is OrigamiPost post) return allowedBlogs.Contains(post.BlogId.GetValueOrDefault()) == false;
+        if (id is OrigamiSpecialMessage specialMessage) return allowedBlogs.Contains(specialMessage.BlogId.GetValueOrDefault()) == false;
+        if (id is OrigamiVideo video) return allowedBlogs.Contains(video.BlogId.GetValueOrDefault()) == false;
 
-            return false;
-        });
+        if (id is IBlogId blogId) return allowedBlogs.Contains(blogId.BlogId) == false;
+        if (id is IBlogIdNull blogIdNull) return allowedBlogs.Contains(blogIdNull.BlogId.GetValueOrDefault()) == false;
+
+        return false;
     }
 }
