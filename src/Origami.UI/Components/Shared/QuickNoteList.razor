@@ -26,7 +26,7 @@
                 @if (QuickNotes.Count > i)
                 {
                     <div class="col-12 col-xl-4 mb-3">
-                        <QuickNoteHeader Entity="QuickNotes[i]"></QuickNoteHeader>
+                        <ContentHeader Entity="QuickNotes[i]"></ContentHeader>
                     </div>
                 }
             }
@@ -52,7 +52,6 @@
         get => _super.Contents
             .ReadFromCache()
             .OfType<OrigamiQuickNote>()
-            .NonDeleted()
             .Published()
             .Blog(this.BlogId)
             .Count() <= this.Page * this.PageSize;
@@ -66,7 +65,6 @@
         var pages = _super.Contents
             .ReadFromCache()
             .OfType<OrigamiQuickNote>()
-            .NonDeleted()
             .Published()
             .Blog(this.BlogId);
 
