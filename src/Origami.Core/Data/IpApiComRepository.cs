@@ -21,7 +21,7 @@ namespace Origami.Core.Data
             using var client = new HttpClient
             {
                 BaseAddress = new Uri($"http://{Host}/"),
-                Timeout = TimeSpan.FromMilliseconds(500),
+                Timeout = TimeSpan.FromMilliseconds(150),
                 DefaultRequestVersion = new Version(2, 0),
             };
 

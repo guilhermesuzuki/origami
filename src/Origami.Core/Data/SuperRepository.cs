@@ -428,8 +428,6 @@ namespace Origami.Core.Data
         /// <param name="_super">The <see cref="ISuperRepository"/> instance whose repositories will be refreshed.</param>
         public Result RefreshAllRepositories()
         {
-            MyMemoryCache.Clear();
-
             Blogs.RefreshCache();
             Categories.RefreshCache();
             Contents.RefreshCache();
