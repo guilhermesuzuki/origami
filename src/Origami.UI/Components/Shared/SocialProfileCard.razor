@@ -6,7 +6,7 @@
 @if (Entity != null)
 {
     <div class="social-profile-card text-center cursor-pointer @Class" @onclick="this.Go">
-        <div class="logo position-relative m-auto" style="height: 77px; width: 77px; background-image: url('@Entity.ProfilePicture()'); background-repeat: no-repeat; background-size: contain; background-position: center;">
+        <div class="logo position-relative m-auto" style="height: 77px; width: 77px; background-image: url('@Entity.ProfilePicture()'), url('@OrigamiConstants.NoUser'); background-repeat: no-repeat; background-size: contain; background-position: center;">
             <div class="position-absolute z-index-middle bg-dark text-white" style="right:0; bottom: 0;">
                 @if (Entity.SocialNetwork == SocialNetworks.Google)
                 {
