@@ -301,6 +301,7 @@ namespace Origami.UI
             //adds command line
             builder.Configuration.AddCommandLine(args);
         }
+
         public static string Error(this IEnumerable<IdentityError> errors)
         {
             if (errors.Count() > 0)

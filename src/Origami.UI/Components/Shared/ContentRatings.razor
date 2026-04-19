@@ -3,7 +3,7 @@
 @inject IContentRatingRepository _contentRating
 @inject ISocialProfileRepository _socialProfile
 
-@if (this.Entity != null)
+@if (this.Entity != null && this.Entity.CanBeRated() == true)
 {
     var count = _contentRating.Ratings(this.Entity).Count();
     <div class="content-ratings @Class">

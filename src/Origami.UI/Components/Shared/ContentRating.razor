@@ -2,7 +2,7 @@
 @implements IEntityNull<OrigamiContent>
 @inject IContentRatingRepository _contentRating
 
-@if (this.Entity != null)
+@if (this.Entity != null && this.Entity.CanBeRated() == true)
 {
     var rating = Math.Round(_contentRating.CalculateRating(this.Entity), 1, MidpointRounding.ToEven);
     var ratings = _contentRating.Ratings(Entity).Count();

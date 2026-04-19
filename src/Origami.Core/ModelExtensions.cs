@@ -95,6 +95,14 @@ namespace Origami.Core
             return (zeroTime + span).Year - 1;
         }
 
+        public static StringBuilder Append(this StringBuilder builder, string value, bool condition)
+        {
+            if (condition == false) return builder;
+
+            builder.Append(value);
+            return builder;
+        }
+
         /// <summary>
         /// Converts the <paramref name="base64image"/> into a byte array
         /// </summary>
@@ -141,6 +149,21 @@ namespace Origami.Core
             }
 
             return result;
+        }
+
+        public static bool CanBeRated(this OrigamiContent? origamiContent)
+        {
+            if (origamiContent != null)
+            {
+                return origamiContent switch
+                {
+                    OrigamiPage => true,
+                    OrigamiPost => true,
+                    OrigamiVideo => true,
+                    _ => false,
+                };
+            }
+            return false;
         }
 
         /// <summary>
@@ -485,6 +508,18 @@ namespace Origami.Core
         }
 
         /// <summary>
+        /// Name or FirstName and LastName
+        /// </summary>
+        /// <param name="socialProfile"></param>
+        /// <returns></returns>
+        public static string GetName(this OrigamiSocialProfile? socialProfile)
+        {
+            if (socialProfile == null) return string.Empty;
+            if (socialProfile.Name.Has() == true) return $"{socialProfile.Name}";
+            return $"{socialProfile.FirstName} {socialProfile.LastName}";
+        }
+
+        /// <summary>
         /// Gets the plural from a <paramref name="type"/>'s name
         /// </summary>
         /// <param name="type"></param>
@@ -822,19 +857,6 @@ namespace Origami.Core
         {
             return string.Equals(a, b, comparison);
         }
-
-        /// <summary>
-        /// Name or FirstName and LastName
-        /// </summary>
-        /// <param name="socialProfile"></param>
-        /// <returns></returns>
-        public static string GetName(this OrigamiSocialProfile? socialProfile)
-        {
-            if (socialProfile == null) return string.Empty;
-            if (socialProfile.Name.Has() == true) return $"{socialProfile.Name}";
-            return $"{socialProfile.FirstName} {socialProfile.LastName}";
-        }
-
         /// <summary>
         /// Retrieves the first entity from the collection that matches the specified Nano ID.
         /// </summary>
@@ -1401,14 +1423,6 @@ namespace Origami.Core
             if (depth >= 8) return string.Empty;
             if (exception == null) return string.Empty;
             return string.Concat(" • ", exception.Message, exception.InnerException.M(depth + 1));
-        }
-
-        public static StringBuilder Append(this StringBuilder builder, string value, bool condition)
-        {
-            if (condition == false) return builder;
-
-            builder.Append(value);
-            return builder;
         }
     }
 }
