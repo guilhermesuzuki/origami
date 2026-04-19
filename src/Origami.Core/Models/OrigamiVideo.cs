@@ -24,6 +24,7 @@ namespace Origami.Core.Models
         {
             this.Type = nameof(OrigamiVideo);
             this.LanguageWrittenOn = CultureInfo.DefaultThreadCurrentUICulture?.Name ?? "en-US";
+            this.IsCommentEnabled = true;
         }
 
         /// <summary>

@@ -13,6 +13,8 @@ namespace Origami.Core.Models
         public OrigamiPost() : base()
         {
             Type = nameof(OrigamiPost);
+            this.LanguageWrittenOn = CultureInfo.DefaultThreadCurrentUICulture?.Name ?? "en-US";
+            this.IsCommentEnabled = true;
         }
 
         public event EventHandler<PropertyChangedEventArgs> OrigamiPostChanged = delegate { };
