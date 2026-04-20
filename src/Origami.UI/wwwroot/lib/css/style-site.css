@@ -75,6 +75,8 @@ main { flex: 1; }
 
 html body .reaction-selected { border: 1px solid var(--site-highlight) !important; color: var(--site-highlight); }
 
+.blog-slug, .category-slug, .tag-slug { display: none!important; }
+
 @media (max-width: 576px) {
     html body .footer { display:block!important; }
     html body .footer > * { display: block !important; margin: 0px !important; margin-bottom:10px!important; }
