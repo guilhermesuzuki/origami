@@ -50,11 +50,11 @@ else
     [Parameter] public int PageSize { get; set; } = 9;
     [Parameter] public int OrderBy { get; set; } = 1;
 
-    protected List<OrigamiPost> Videos = [];
+    protected List<OrigamiVideo> Videos = [];
 
     private bool _disableLoadMore
     {
-        get => Super.Contents.ReadFromCache().OfType<Core.Models.OrigamiPost>()
+        get => Super.Contents.ReadFromCache().OfType<Core.Models.OrigamiVideo>()
             .NonDeleted()
             .Published()
             .Blog(this.BlogId)
@@ -66,7 +66,7 @@ else
     /// </summary>
     protected void LoadVideos()
     {
-        var videos = Super.Contents.ReadFromCache().OfType<Core.Models.OrigamiPost>()
+        var videos = Super.Contents.ReadFromCache().OfType<Core.Models.OrigamiVideo>()
             .NonDeleted()
             .Published()
             .Blog(this.BlogId);
