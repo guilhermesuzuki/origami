@@ -30,14 +30,15 @@
                         <i class="fa-solid fa-layer-group"></i>
                         <span>@Text.Lower("Categories")</span>
                     </a>
-                    @if (_categories.Any() == true)
+                    @foreach (var category in _categories)
                     {
-                        @foreach (var category in _categories)
-                        {
-                            <CategoryHeader Class="mt-2 p-2 text-center border shadow-sm" Entity="category"></CategoryHeader>
-                        }
+                        <a href="@_blog.GetHyperlink(category)#content-start">
+                            <div class="mt-2 p-3 border cursor-pointer shadow-sm">
+                                <CategoryHeaderInline Class="" Entity="category"></CategoryHeaderInline>
+                            </div>
+                        </a>
                     }
-                    else
+                    @if (_categories.Any() == false)
                     {
                         <NothingToSeeHere Class="mt-2 border p-3 shadow-sm">
                             <TitleTemplate>
@@ -52,14 +53,15 @@
                         <i class="fa-solid fa-tag"></i>
                         <span>@Text.Lower("Tags")</span>
                     </a>
-                    @if (_tags.Any() == true)
+                    @foreach (var tag in _tags)
                     {
-                        @foreach (var tag in _tags)
-                        {
-                            <ContentTagHeader Class="mt-2 p-2 text-center border shadow-sm" Entity="tag"></ContentTagHeader>
-                        }
+                        <a href="@_blog.GetHyperlink(tag)#content-start">
+                            <div class="mt-2 p-3 border cursor-pointer shadow-sm">
+                                <ContentTagHeaderInline Entity="tag"></ContentTagHeaderInline>
+                            </div>
+                        </a>
                     }
-                    else
+                    @if (_tags.Any() == false)
                     {
                         <NothingToSeeHere Class="mt-2 border p-3 shadow-sm">
                             <TitleTemplate>
@@ -89,16 +91,15 @@
                             </select>
                         </li>
                     </ul>
-                    @if (_pages.Any() == true)
+                    @foreach (var page in _pages)
                     {
-                        @foreach (var page in _pages)
-                        {
-                            <div class="mt-2">
-                                <ContentHeaderLite Entity="page"></ContentHeaderLite>
+                        <a href="@(page.Hyperlink)#content-start">
+                            <div class="mt-2 p-3 border cursor-pointer shadow-sm">
+                                <ContentHeaderInline Entity="page"></ContentHeaderInline>
                             </div>
-                        }
+                        </a>
                     }
-                    else
+                    @if (_pages.Any() == false)
                     {
                         <NothingToSeeHere Class="mt-2 border p-3 shadow-sm">
                             <TitleTemplate>
@@ -124,16 +125,15 @@
                             </select>
                         </li>
                     </ul>
-                    @if (_posts.Any() == true)
+                    @foreach (var post in _posts)
                     {
-                        @foreach (var post in _posts)
-                        {
-                            <div class="mt-2">
-                                <ContentHeaderLite Entity="post"></ContentHeaderLite>
+                        <a href="@post.Hyperlink#content-start">
+                            <div class="mt-2 p-3 border cursor-pointer shadow-sm">
+                                <ContentHeaderInline Entity="post"></ContentHeaderInline>
                             </div>
-                        }
+                        </a>
                     }
-                    else
+                    @if (_posts.Any() == false)
                     {
                         <NothingToSeeHere Class="mt-2 border p-3 shadow-sm">
                             <TitleTemplate>
@@ -159,16 +159,15 @@
                             </select>
                         </li>
                     </ul>
-                    @if (_videos.Any() == true)
+                    @foreach (var video in _videos)
                     {
-                        @foreach (var video in _videos)
-                        {
-                            <div class="mt-2">
-                                <ContentHeaderLite Entity="video"></ContentHeaderLite>
+                        <a href="@video.Hyperlink#content-start">
+                            <div class="mt-2 p-3 border cursor-pointer shadow-sm">
+                                <ContentHeaderInline Entity="video"></ContentHeaderInline>
                             </div>
-                        }
+                        </a>
                     }
-                    else
+                    @if (_videos.Any() == false)
                     {
                         <NothingToSeeHere Class="mt-2 border p-3 shadow-sm">
                             <TitleTemplate>

@@ -102,7 +102,7 @@
                     {
                         var category = this.Get<OrigamiCategory>().Id(content.CategoryId);
                         <div class="d-inline-flex align-items-center p-1 border shadow-sm me-1">
-                            <CategoryHeaderLite Entity="category" Class="me-1"></CategoryHeaderLite>
+                            <CategoryHeaderInline Entity="category" Class="me-1"></CategoryHeaderInline>
                             <button class="cursor-pointer" @onclick="() => this.Entity.Categories.Remove(content)">
                                 <i class="bi bi-trash-fill"></i>
                             </button>
@@ -132,7 +132,7 @@
                     <Columns>
                         <TemplateColumn CellClass="w-100">
                             <CellTemplate>
-                                <CategoryHeaderLite Entity="@context.Item"></CategoryHeaderLite>
+                                <CategoryHeaderInline Entity="@context.Item"></CategoryHeaderInline>
                             </CellTemplate>
                         </TemplateColumn>
                         <TemplateColumn>

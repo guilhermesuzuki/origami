@@ -79,7 +79,7 @@
                                         else if (context.Item.Type.Like("Category") == true)
                                         {
                                             var category = this.Super.Categories.ReadFromCache().Id(context.Item.Id);
-                                            <CategoryHeaderLite Entity="category"></CategoryHeaderLite>
+                                            <CategoryHeaderInline Entity="category"></CategoryHeaderInline>
                                         }
                                         else if (context.Item.Type.Like("User") == true)
                                         {
