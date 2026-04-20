@@ -33,7 +33,7 @@
                     @foreach (var category in _categories)
                     {
                         <a href="@_blog.GetHyperlink(category)#content-start">
-                            <div class="mt-2 p-3 border cursor-pointer shadow-sm">
+                            <div class="mt-2 p-3 border cursor-pointer shadow-sm text-left">
                                 <CategoryHeaderInline Class="" Entity="category"></CategoryHeaderInline>
                             </div>
                         </a>
@@ -56,7 +56,7 @@
                     @foreach (var tag in _tags)
                     {
                         <a href="@_blog.GetHyperlink(tag)#content-start">
-                            <div class="mt-2 p-3 border cursor-pointer shadow-sm">
+                            <div class="mt-2 p-3 border cursor-pointer shadow-sm text-left">
                                 <ContentTagHeaderInline Entity="tag"></ContentTagHeaderInline>
                             </div>
                         </a>
