@@ -30,7 +30,7 @@
                         <i class="fa-solid fa-layer-group"></i>
                         <span>@Text.Lower("Categories")</span>
                     </a>
-                    <MudTable Class="mt-3" Items="_categories">
+                    <MudTable Class="mt-3" Items="_categories" Dense="true">
                         <RowTemplate>
                             <MudTd>
                                 <a href="@_blog.GetHyperlink(context)#content-start">
@@ -62,7 +62,7 @@
                         <i class="fa-solid fa-tag"></i>
                         <span>@Text.Lower("Tags")</span>
                     </a>
-                    <MudTable Class="mt-3" Items="_tags">
+                    <MudTable Class="mt-3" Items="_tags" Dense="true">
                         <RowTemplate>
                             <MudTd>
                                 <a href="@_blog.GetHyperlink(context)#content-start">
