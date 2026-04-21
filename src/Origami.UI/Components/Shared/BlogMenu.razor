@@ -30,14 +30,23 @@
                         <i class="fa-solid fa-layer-group"></i>
                         <span>@Text.Lower("Categories")</span>
                     </a>
-                    @foreach (var category in _categories)
-                    {
-                        <a href="@_blog.GetHyperlink(category)#content-start">
-                            <div class="mt-2 p-3 border cursor-pointer shadow-sm text-left">
-                                <CategoryHeaderInline Class="" Entity="category"></CategoryHeaderInline>
-                            </div>
-                        </a>
-                    }
+                    <MudTable Class="mt-3" Items="_categories">
+                        <RowTemplate>
+                            <MudTd>
+                                <a href="@_blog.GetHyperlink(context)#content-start">
+                                    <div class="cursor-pointer text-left">
+                                        <CategoryHeaderInline Class="" Entity="context"></CategoryHeaderInline>
+                                    </div>
+                                </a>
+                            </MudTd>
+                        </RowTemplate>
+                        <PagerContent>
+                            <MudTablePager PageSizeOptions="new int[] { 10, 25, 50, 100 }"
+                                           HorizontalAlignment="HorizontalAlignment.Center"
+                                           HideRowsPerPage="true"
+                                           HidePageNumber="true" />
+                        </PagerContent>
+                    </MudTable>
                     @if (_categories.Any() == false)
                     {
                         <NothingToSeeHere Class="mt-2 border p-3 shadow-sm">
@@ -53,14 +62,23 @@
                         <i class="fa-solid fa-tag"></i>
                         <span>@Text.Lower("Tags")</span>
                     </a>
-                    @foreach (var tag in _tags)
-                    {
-                        <a href="@_blog.GetHyperlink(tag)#content-start">
-                            <div class="mt-2 p-3 border cursor-pointer shadow-sm text-left">
-                                <ContentTagHeaderInline Entity="tag"></ContentTagHeaderInline>
-                            </div>
-                        </a>
-                    }
+                    <MudTable Class="mt-3" Items="_tags">
+                        <RowTemplate>
+                            <MudTd>
+                                <a href="@_blog.GetHyperlink(context)#content-start">
+                                    <div class="cursor-pointer text-left">
+                                        <ContentTagHeaderInline Entity="context"></ContentTagHeaderInline>
+                                    </div>
+                                </a>
+                            </MudTd>
+                        </RowTemplate>
+                        <PagerContent>
+                            <MudTablePager PageSizeOptions="new int[] { 10, 25, 50, 100 }"
+                                           HorizontalAlignment="HorizontalAlignment.Center"
+                                           HideRowsPerPage="true"
+                                           HidePageNumber="true" />
+                        </PagerContent>
+                    </MudTable>
                     @if (_tags.Any() == false)
                     {
                         <NothingToSeeHere Class="mt-2 border p-3 shadow-sm">
@@ -236,8 +254,6 @@
         _categories = this.Super
             .GetCategories()
             .Blog(BlogId)
-            .OrderByDescending(x => { return Super.GetPosts(x).Published().Count() + Super.GetVideos(x).Published().Count(); })
-            .Take(7)
             .OrderBy(x => x.Name);
     }
 
@@ -285,14 +301,12 @@
         _tags = this.Super.ContentTags
             .ReadFromCache()
             .DistinctBy(x => x.Tag)
-            .OrderByDescending(x => { return Super.GetContents(x, BlogId).Published().Count(); });
+            .OrderBy(x => x.Tag);
 
         _tags = from a in _tags
                 join b in this.Super.Contents.ReadFromCache().Published() on a.ContentId equals b.Id
                 where b.BlogId == BlogId
                 select a;
-
-        _tags = _tags.Take(7).OrderBy(x => x.Tag);
     }
 
     private void LoadVideos(string order = "1")
