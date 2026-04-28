@@ -1381,6 +1381,7 @@ namespace Origami.Core
         {
             return Uri.UnescapeDataString(value ?? string.Empty);
         }
+
         public static T Version<T>(this T entity, T version)
         {
             var to = entity as IVersion;
@@ -1421,6 +1422,14 @@ namespace Origami.Core
             if (depth >= 8) return string.Empty;
             if (exception == null) return string.Empty;
             return string.Concat(" • ", exception.Message, exception.InnerException.M(depth + 1));
+        }
+
+        public static void GenerateTimestamp(this IId entity)
+        {
+            if (entity is IVersion version)
+            {
+                version.Version = BitConverter.GetBytes(DateTime.UtcNow.Ticks);
+            }
         }
     }
 }
