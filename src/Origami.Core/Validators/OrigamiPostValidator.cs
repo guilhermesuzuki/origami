@@ -1,11 +1,13 @@
 ﻿using FluentValidation;
+using Microsoft.EntityFrameworkCore;
+using Origami.Core.Data;
 using Origami.Core.Models;
 
 namespace Origami.Core.Validators
 {
     public class OrigamiPostValidator : AbstractValidator<OrigamiPost>
     {
-        public OrigamiPostValidator(Text text, IWebRootPath webRootPath) : base()
+        public OrigamiPostValidator(Text text, IWebRootPath webRootPath, IDbContextFactory<OrigamiDbContext> dbContextFactory) : base()
         {
             RuleFor(x => x.AuthorId).AuthorId(text);
             RuleFor(x => x.BlogId).BlogId(text);
@@ -17,6 +19,7 @@ namespace Origami.Core.Validators
             RuleFor(x => x.Content).Html(text);
             RuleFor(x => x.HeaderImage).HeaderImage(text, webRootPath);
             RuleFor(x => x.LanguageWrittenOn).Language(text);
+            RuleFor(x => x).SlugMustBeUnique(text, dbContextFactory);
         }
     }
 }

@@ -1,11 +1,13 @@
 ﻿using FluentValidation;
+using Microsoft.EntityFrameworkCore;
+using Origami.Core.Data;
 using Origami.Core.Models;
 
 namespace Origami.Core.Validators
 {
     public class OrigamiSpecialPageValidator : AbstractValidator<OrigamiSpecialPage>
     {
-        public OrigamiSpecialPageValidator(Text text, IWebRootPath webRootPath) : base()
+        public OrigamiSpecialPageValidator(Text text, IWebRootPath webRootPath, IDbContextFactory<OrigamiDbContext> dbContextFactory) : base()
         {
             RuleFor(x => x.Id).Id(text);
             RuleFor(x => x.NanoId).NanoId(text);
@@ -25,6 +27,7 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("Type must be a valid special page type"));
 
             RuleFor(x => x.LanguageWrittenOn).Language(text);
+            RuleFor(x => x).SlugMustBeUnique(text, dbContextFactory);
         }
     }
 }

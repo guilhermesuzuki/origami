@@ -42,9 +42,7 @@ namespace Origami.Core.Data
 
         public override Result<OrigamiVideo> CreateValidation(DataOperationContext<OrigamiVideo> ctx)
         {
-            var validation = new Result<OrigamiVideo>(ctx.Entity, _validator);
-            this.ValidateSlug(ctx).Push(validation);
-            return validation;
+            return new(ctx.Entity, _validator);
         }
 
         public override void PurgeRelationshipsFromCache(OrigamiVideo entity)
@@ -85,9 +83,7 @@ namespace Origami.Core.Data
 
         public override Result<OrigamiVideo> UpdateValidation(DataOperationContext<OrigamiVideo> ctx)
         {
-            var validation = new Result<OrigamiVideo>(ctx.Entity, _validator);
-            this.ValidateSlug(ctx).Push(validation);
-            return validation;
+            return new(ctx.Entity, _validator);
         }
     }
 }

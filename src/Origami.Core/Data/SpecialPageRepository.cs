@@ -45,9 +45,7 @@ namespace Origami.Core.Data
 
         public override Result<OrigamiSpecialPage> CreateValidation(DataOperationContext<OrigamiSpecialPage> ctx)
         {
-            var validation = new Result<OrigamiSpecialPage>(ctx.Entity, _validator);
-            this.ValidateSlug(ctx).Push(validation);
-            return validation;
+            return new(ctx.Entity, _validator);
         }
 
         public Result EnterMaintenanceMode(DataOperationContext context)
@@ -98,9 +96,7 @@ namespace Origami.Core.Data
 
         public override Result<OrigamiSpecialPage> UpdateValidation(DataOperationContext<OrigamiSpecialPage> ctx)
         {
-            var validation = new Result<OrigamiSpecialPage>(ctx.Entity, _validator);
-            this.ValidateSlug(ctx).Push(validation);
-            return validation;
+            return new(ctx.Entity, _validator);
         }
     }
 }

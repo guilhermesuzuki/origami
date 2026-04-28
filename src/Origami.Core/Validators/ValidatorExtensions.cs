@@ -5,7 +5,6 @@ using Origami.Core.Models;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using System.Globalization;
-using System.Text.RegularExpressions;
 
 namespace Origami.Core.Validators
 {
@@ -85,6 +84,14 @@ namespace Origami.Core.Validators
                     return types.Any(t => t.Name == type);
                 }).WithMessage("Content type is required")
                 ;
+        }
+
+        public static IRuleBuilderOptions<T, T> CyclesAreNotAllowed<T>(this IRuleBuilder<T, T> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory) where T : class, IId, IParentIdNull
+        {
+            return ruleBuilder
+                .Must(entity => IsCycleDetected(dbContextFactory, entity, []))
+                .When(entity => entity.ParentId != null)
+                .WithMessage(text.Original("Cycle detected: you must choose another parent"));
         }
 
         public static IRuleBuilderOptions<T, string?> Description<T>(this IRuleBuilder<T, string?> ruleBuilder, Text text)
@@ -210,6 +217,26 @@ namespace Origami.Core.Validators
             return ruleBuilder
                 .Must(iframe => iframe.Has() ? iframe.IsIFrame() : true)
                 .WithMessage(text.Original("Iframe must be valid"));
+        }
+
+        public static bool IsCycleDetected<T>(IDbContextFactory<OrigamiDbContext> dbContextFactory, T entity, IList<T> list) where T : class, IId, IParentIdNull
+        {
+            if (list.Id(entity.Id) != null) return true;
+            if (entity.Id == entity.ParentId) return true;
+
+            list.Add(entity);
+
+            if (entity.ParentId != null)
+            {
+                using var db = dbContextFactory.CreateDbContext();
+                var fresh = db.Set<T>().AsNoTracking().Id(entity.ParentId.GetValueOrDefault());
+                if (fresh != null)
+                {
+                    return IsCycleDetected(dbContextFactory, fresh, list);
+                }
+            }
+
+            return false;
         }
 
         public static IRuleBuilderOptions<T, string> Language<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)

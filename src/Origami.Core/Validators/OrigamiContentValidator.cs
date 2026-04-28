@@ -19,9 +19,10 @@ namespace Origami.Core.Validators
             RuleFor(x => x.Content).Html(text);
             RuleFor(x => x.HeaderImage).HeaderImage(text, webRootPath);
             RuleFor(x => x.LanguageWrittenOn).Language(text);
-            RuleFor(x => x).TopLevelPageWhenFrontPage(text);
-            RuleFor(x => x).ModificationMustHappenAfterCreation(text);
             RuleFor(x => x).LoopsAreNotAllowed(text, dbContextFactory);
+            RuleFor(x => x).ModificationMustHappenAfterCreation(text);
+            RuleFor(x => x).SlugMustBeUnique(text, dbContextFactory);
+            RuleFor(x => x).TopLevelPageWhenFrontPage(text);
 
             if (isBlogIdRequired)
             {
