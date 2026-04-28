@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Origami.Core;
 using Origami.Core.Data;
 using Shouldly;
@@ -11,6 +12,78 @@ namespace Origami.UI.Admin.IntegrationTests
         public Blog(CustomWebApplicationFactory factory) : base(factory)
         {
 
+        }
+
+        [Fact]
+        public void Activate_WhenEntityIsValid_ShouldPersistRecord()
+        {
+            using var transaction = new TransactionScope();
+
+            this.CreateTestRole();
+            this.CreateTestUser();
+
+            var blogRepository = _scope.ServiceProvider.GetService<IBlogRepository>()!;
+
+            blogRepository
+                .SmartSave(TestBlog.GetContext(TestUser), true)
+                .OnFailure(r => throw new Exception($"Failed to create test blog: {r.GetMessages()}"));
+
+            using var db = blogRepository.DbContextFactory.CreateDbContext();
+            var blog = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
+
+            blog.ShouldNotBeNull();
+            blog.Name.ShouldBe(TestBlog.Name);
+            blog.DateCreated.ShouldBe(TestBlog.DateCreated);
+            blog.NanoId.ShouldBe(TestBlog.NanoId);
+            blog.IsActive.ShouldBe(TestBlog.IsActive);
+
+            blogRepository
+                .Activate(TestBlog.GetContext(TestUser), true)
+                .OnFailure(r => throw new Exception($"Failed to activate test blog: {r.GetMessages()}"));
+
+            var activatedBlog = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
+            activatedBlog.ShouldNotBeNull();
+            activatedBlog.IsActive.ShouldBeTrue();
+        }
+
+        [Fact]
+        public void Deactivate_WhenEntityIsValid_ShouldPersistRecord()
+        {
+            using var transaction = new TransactionScope();
+
+            this.CreateTestRole();
+            this.CreateTestUser();
+
+            var blogRepository = _scope.ServiceProvider.GetService<IBlogRepository>()!;
+
+            blogRepository
+                .SmartSave(TestBlog.GetContext(TestUser), true)
+                .OnFailure(r => throw new Exception($"Failed to create test blog: {r.GetMessages()}"));
+
+            using var db = blogRepository.DbContextFactory.CreateDbContext();
+            var blog = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
+
+            blog.ShouldNotBeNull();
+            blog.Name.ShouldBe(TestBlog.Name);
+            blog.DateCreated.ShouldBe(TestBlog.DateCreated);
+            blog.NanoId.ShouldBe(TestBlog.NanoId);
+            blog.IsActive.ShouldBe(TestBlog.IsActive);
+
+            blogRepository
+                .Activate(TestBlog.GetContext(TestUser), true)
+                .OnFailure(r => throw new Exception($"Failed to activate test blog: {r.GetMessages()}"));
+
+            var activatedBlog = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
+            activatedBlog.ShouldNotBeNull();
+            activatedBlog.IsActive.ShouldBeTrue();
+
+            blogRepository
+                .Deactivate(TestBlog.GetContext(TestUser), true)
+                .OnFailure(r => throw new Exception($"Failed to activate test blog: {r.GetMessages()}"));
+
+            var deactivatedBlog = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
+            deactivatedBlog.ShouldNotBeNull();
+            deactivatedBlog.IsActive.ShouldBeFalse();
         }
 
         [Fact]
@@ -56,6 +129,41 @@ namespace Origami.UI.Admin.IntegrationTests
             dbBlog.Name.ShouldBe(TestBlog.Name);
             dbBlog.DateCreated.ShouldBe(TestBlog.DateCreated);
             dbBlog.NanoId.ShouldBe(TestBlog.NanoId);
+        }
+
+        [Fact]
+        public void SetPrimary_WhenEntityIsValid_ShouldPersistRecord()
+        {
+            using var transaction = new TransactionScope();
+
+            this.CreateTestRole();
+            this.CreateTestUser();
+
+            var blogRepository = _scope.ServiceProvider.GetService<IBlogRepository>()!;
+
+            blogRepository
+                .SmartSave(TestBlog.GetContext(TestUser), true)
+                .OnFailure(r => throw new Exception($"Failed to create test blog: {r.GetMessages()}"));
+
+            using var db = blogRepository.DbContextFactory.CreateDbContext();
+            var dbBlog = db.Blogs.FirstOrDefault(b => b.Id == TestBlog.Id);
+
+            dbBlog.ShouldNotBeNull();
+            dbBlog.Name.ShouldBe(TestBlog.Name);
+            dbBlog.DateCreated.ShouldBe(TestBlog.DateCreated);
+            dbBlog.NanoId.ShouldBe(TestBlog.NanoId);
+
+            var primary = db.Blogs.Single(x => x.IsPrimary);
+
+            blogRepository
+                .SetPrimary(TestBlog.GetContext(TestUser), true)
+                .OnFailure(r => throw new Exception($"Failed to activate test blog: {r.GetMessages()}"));
+
+            var oldPrimary = db.Blogs.Id(primary.Id)!;
+            var newPrimary = db.Blogs.Single(x => x.IsPrimary);
+
+            oldPrimary.Id.ShouldBe(primary.Id);
+            newPrimary.Id.ShouldBe(dbBlog.Id);
         }
 
         [Fact]

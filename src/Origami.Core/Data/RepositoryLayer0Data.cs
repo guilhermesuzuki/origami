@@ -27,10 +27,10 @@ namespace Origami.Core.Data
             {
                 var clone = ctx.Entity.Clone();
 
-                using (var dbContext = DbContextFactory.CreateDbContext())
+                using (var db = DbContextFactory.CreateDbContext())
                 {
-                    clone = dbContext.Add(clone).Entity;
-                    dbContext.SaveChanges();
+                    clone = db.Add(clone).Entity;
+                    db.SaveChanges();
                 }
 
                 ctx.Entity.Version(clone);

@@ -22,12 +22,15 @@ namespace Origami.UI.Admin.IntegrationTests
         public OrigamiRole TestRole = new() 
         { 
             Id = RoleId,
-            Name = "Test role",
             DateCreated = DateTime.UtcNow,
-            CreateNewBlogs = true,
-            EditBlogs = true,
-            DeleteBlogs = true,
+            Name = "Test role",
             NanoId = RoleId.ToString().Substring(0, 8),
+            ActivateBlogs = true,
+            CreateNewBlogs = true,
+            DeactivateBlogs = true,
+            DeleteBlogs = true,
+            EditBlogs = true,
+            MarkBlogAsPrimary = true,
         };
 
         public OrigamiUser TestUser = new OrigamiUser
