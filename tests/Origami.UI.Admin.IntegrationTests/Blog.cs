@@ -97,13 +97,12 @@ namespace Origami.UI.Admin.IntegrationTests
                 .SmartSave(TestBlog.GetContext(TestUser), true)
                 .OnFailure(r => throw new Exception($"Failed to create test blog: {r.GetMessages()}"));
             using var db = blogRepository.DbContextFactory.CreateDbContext();
-            var dbBlog = db.Blogs.FirstOrDefault(b => b.Id == TestBlog.Id);
+            var dbBlog = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
             dbBlog.ShouldNotBeNull();
             blogRepository
                 .SmartDelete(dbBlog.GetContext(TestUser), true)
                 .OnFailure(r => throw new Exception($"Failed to delete test blog: {r.GetMessages()}"));
-            using var dbAfterDelete = blogRepository.DbContextFactory.CreateDbContext();
-            var dbBlogAfterDelete = dbAfterDelete.Blogs.FirstOrDefault(b => b.Id == TestBlog.Id);
+            var dbBlogAfterDelete = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
             dbBlogAfterDelete.ShouldNotBeNull();
             dbBlogAfterDelete.IsDeleted.ShouldBeTrue();
         }
@@ -123,7 +122,7 @@ namespace Origami.UI.Admin.IntegrationTests
                 .OnFailure(r => throw new Exception($"Failed to create test blog: {r.GetMessages()}"));
 
             using var db = blogRepository.DbContextFactory.CreateDbContext();
-            var dbBlog = db.Blogs.FirstOrDefault(b => b.Id == TestBlog.Id);
+            var dbBlog = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
 
             dbBlog.ShouldNotBeNull();
             dbBlog.Name.ShouldBe(TestBlog.Name);
@@ -146,21 +145,21 @@ namespace Origami.UI.Admin.IntegrationTests
                 .OnFailure(r => throw new Exception($"Failed to create test blog: {r.GetMessages()}"));
 
             using var db = blogRepository.DbContextFactory.CreateDbContext();
-            var dbBlog = db.Blogs.FirstOrDefault(b => b.Id == TestBlog.Id);
+            var dbBlog = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
 
             dbBlog.ShouldNotBeNull();
             dbBlog.Name.ShouldBe(TestBlog.Name);
             dbBlog.DateCreated.ShouldBe(TestBlog.DateCreated);
             dbBlog.NanoId.ShouldBe(TestBlog.NanoId);
 
-            var primary = db.Blogs.Single(x => x.IsPrimary);
+            var primary = db.Blogs.AsNoTracking().Single(x => x.IsPrimary);
 
             blogRepository
                 .SetPrimary(TestBlog.GetContext(TestUser), true)
                 .OnFailure(r => throw new Exception($"Failed to activate test blog: {r.GetMessages()}"));
 
-            var oldPrimary = db.Blogs.Id(primary.Id)!;
-            var newPrimary = db.Blogs.Single(x => x.IsPrimary);
+            var oldPrimary = db.Blogs.AsNoTracking().Id(primary.Id)!;
+            var newPrimary = db.Blogs.AsNoTracking().Single(x => x.IsPrimary);
 
             oldPrimary.Id.ShouldBe(primary.Id);
             newPrimary.Id.ShouldBe(dbBlog.Id);
@@ -181,7 +180,7 @@ namespace Origami.UI.Admin.IntegrationTests
                 .OnFailure(r => throw new Exception($"Failed to create test blog: {r.GetMessages()}"));
 
             using var db = blogRepository.DbContextFactory.CreateDbContext();
-            var dbBlog = db.Blogs.FirstOrDefault(b => b.Id == TestBlog.Id);
+            var dbBlog = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
 
             dbBlog.ShouldNotBeNull();
             dbBlog.Name.ShouldBe(TestBlog.Name);
@@ -194,8 +193,7 @@ namespace Origami.UI.Admin.IntegrationTests
                 .SmartSave(dbBlog.GetContext(TestUser), true)
                 .OnFailure(r => throw new Exception($"Failed to update test blog: {r.GetMessages()}"));
 
-            using var dbAfterUpdate = blogRepository.DbContextFactory.CreateDbContext();
-            var dbBlogAfterUpdate = dbAfterUpdate.Blogs.FirstOrDefault(b => b.Id == TestBlog.Id);
+            var dbBlogAfterUpdate = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
 
             dbBlogAfterUpdate.ShouldNotBeNull();
             dbBlogAfterUpdate.Name.ShouldBe("Updated Blog Name");
