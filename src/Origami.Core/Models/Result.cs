@@ -148,7 +148,7 @@ namespace Origami.Core.Models
             };
         }
 
-        public string GetMessage()
+        public string GetMessages()
         {
             return string.Join(Environment.NewLine, Messages.Select(x => x.Message));
         }
