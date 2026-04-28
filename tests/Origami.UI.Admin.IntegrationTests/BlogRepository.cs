@@ -1,6 +1,6 @@
 ﻿namespace Origami.UI.Admin.IntegrationTests
 {
-    public class UnitTest1
+    public class BlogRepository
     {
         [Fact]
         public void Test1()
