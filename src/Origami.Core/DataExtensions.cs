@@ -264,9 +264,9 @@ namespace Origami.Core
         {
             var words = new List<string> { "origami", "Origami", "oriGami", "ORIGAMI", };
 
-            foreach (var word in words)
+            foreach (var origami in words)
             {
-                var connection = configuration.GetConnectionString(word);
+                var connection = configuration.GetConnectionString(origami);
                 if (connection != null) return connection;
             }
 
