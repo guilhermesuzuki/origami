@@ -86,14 +86,6 @@ namespace Origami.Core.Validators
                 ;
         }
 
-        public static IRuleBuilderOptions<T, T> CyclesAreNotAllowed<T>(this IRuleBuilder<T, T> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory) where T : class, IId, IParentIdNull
-        {
-            return ruleBuilder
-                .Must(entity => IsCycleDetected(dbContextFactory, entity, []))
-                .When(entity => entity.ParentId != null)
-                .WithMessage(text.Original("Cycle detected: you must choose another parent"));
-        }
-
         public static IRuleBuilderOptions<T, string?> Description<T>(this IRuleBuilder<T, string?> ruleBuilder, Text text)
         {
             return ruleBuilder
@@ -344,7 +336,7 @@ namespace Origami.Core.Validators
             return ruleBuilder.Must(x =>
             {
                 using var db = dbContextFactory.CreateDbContext();
-                var fresh = db.Set<T>().AsNoTracking().FirstOrDefault(e => e.Slug == x.Slug);
+                var fresh = db.Set<T>().AsNoTracking().ToList().FirstOrDefault(e => e.Slug == x.Slug);
                 return fresh == null || fresh.Id == x.Id;
             }).WithMessage(text.Original("Slug is already in use"));
         }

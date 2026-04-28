@@ -92,11 +92,13 @@ namespace Origami.UI
             {
                 builder.Services.AddDbContextFactory<OrigamiDbContext>(options =>
                 {
+                    options.EnableSensitiveDataLogging();
                     options.UseInMemoryDatabase("origami-testing");
                 });
 
                 builder.Services.AddDbContextFactory<OrigamiIdentityDbContext>(options =>
                 {
+                    options.EnableSensitiveDataLogging();
                     options.UseInMemoryDatabase("origami-testing");
                 });
             }

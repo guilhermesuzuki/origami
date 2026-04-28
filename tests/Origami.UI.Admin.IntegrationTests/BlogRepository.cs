@@ -3,13 +3,11 @@ using Origami.Core.Data;
 
 namespace Origami.UI.Admin.IntegrationTests
 {
-    public class BlogRepository: IClassFixture<CustomWebApplicationFactory>
+    public class BlogRepository: CustomClassFixture
     {
-        private readonly CustomWebApplicationFactory _factory;
-
-        public BlogRepository(CustomWebApplicationFactory factory)
+        public BlogRepository(CustomWebApplicationFactory factory) : base(factory)
         {
-            _factory = factory;
+
         }
 
         [Fact]

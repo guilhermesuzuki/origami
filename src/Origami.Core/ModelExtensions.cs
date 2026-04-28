@@ -1383,11 +1383,9 @@ namespace Origami.Core
         }
         public static T Version<T>(this T entity, T version)
         {
-            var version1 = entity as IVersion;
-            var version2 = version as IVersion;
-
-            if (version1 != null) version1.Version = version2!.Version;
-
+            var to = entity as IVersion;
+            var from = version as IVersion;
+            if (to != null) to.Version = from!.Version;
             return entity;
         }
 
