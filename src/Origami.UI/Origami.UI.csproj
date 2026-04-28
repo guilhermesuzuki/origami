@@ -24,7 +24,6 @@
 
 	<ItemGroup>
 		<PackageReference Include="DeviceDetector.NET" Version="6.5.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.7" />
 		<PackageReference Include="MudBlazor" Version="9.4.0" />
 		<PackageReference Include="Octokit" Version="14.0.0" />
 		<PackageReference Include="Polly" Version="8.6.6" />

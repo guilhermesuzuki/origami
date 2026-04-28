@@ -46,36 +46,26 @@ namespace Origami.UI
 
                 builder.Configuration.AddJsonFile(Path.Combine(files, "dbsettings.json"), false, reloadOnChange: true);
                 builder.Configuration.AddJsonFile(Path.Combine(files, $"dbsettings.{builder.Environment.EnvironmentName}.json"), true, reloadOnChange: true);
-
-                //origami connection string
-                var origami = builder.Configuration.GetOrigamiConnectionString();
-
-                builder.Services.AddDbContextFactory<OrigamiDbContext>(options =>
-                {
-                    options.EnableSensitiveDataLogging();
-                    options.UseSqlServer(origami);
-                });
-
-                builder.Services.AddDbContextFactory<OrigamiIdentityDbContext>(options =>
-                {
-                    options.EnableSensitiveDataLogging();
-                    options.UseSqlServer(origami);
-                });
             }
             else
             {
-                builder.Services.AddDbContextFactory<OrigamiDbContext>(options =>
-                {
-                    options.EnableSensitiveDataLogging();
-                    options.UseInMemoryDatabase("origami-testing");
-                });
-
-                builder.Services.AddDbContextFactory<OrigamiIdentityDbContext>(options =>
-                {
-                    options.EnableSensitiveDataLogging();
-                    options.UseInMemoryDatabase("origami-testing");
-                });
+                builder.Configuration.AddJsonFile(Path.GetFullPath("dbsettings.json"), false, reloadOnChange: true);
             }
+
+            //origami connection string
+            var origami = builder.Configuration.GetOrigamiConnectionString();
+
+            builder.Services.AddDbContextFactory<OrigamiDbContext>(options =>
+            {
+                options.EnableSensitiveDataLogging();
+                options.UseSqlServer(origami);
+            });
+
+            builder.Services.AddDbContextFactory<OrigamiIdentityDbContext>(options =>
+            {
+                options.EnableSensitiveDataLogging();
+                options.UseSqlServer(origami);
+            });
 
             // Add services to the container.
             builder.Services.AddRazorPages();
