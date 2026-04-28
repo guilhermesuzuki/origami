@@ -25,6 +25,8 @@ namespace Origami.UI.Admin.IntegrationTests
             Name = "Test role",
             DateCreated = DateTime.UtcNow,
             CreateNewBlogs = true,
+            EditBlogs = true,
+            DeleteBlogs = true,
             NanoId = RoleId.ToString().Substring(0, 8),
         };
 

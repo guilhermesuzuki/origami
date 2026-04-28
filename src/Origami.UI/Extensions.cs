@@ -42,6 +42,7 @@ namespace Origami.UI
         {
             if (builder.Environment.IsEnvironment("Testing") == false)
             {
+                /* For non-testing environments, the dbsettings.json file is located in the Origami.Files directory */
                 var files = Path.GetFullPath($"..{Path.DirectorySeparatorChar}Origami.Files{Path.DirectorySeparatorChar}");
 
                 builder.Configuration.AddJsonFile(Path.Combine(files, "dbsettings.json"), false, reloadOnChange: true);
@@ -49,6 +50,7 @@ namespace Origami.UI
             }
             else
             {
+                /* For testing environment, the dbsettings.json file is located in the current directory */
                 builder.Configuration.AddJsonFile(Path.GetFullPath("dbsettings.json"), false, reloadOnChange: true);
             }
 
