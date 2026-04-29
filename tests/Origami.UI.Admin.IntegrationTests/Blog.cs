@@ -127,6 +127,7 @@ namespace Origami.UI.Admin.IntegrationTests
             blogAfterDelete.ShouldNotBeNull();
             blogAfterDelete.IsDeleted.ShouldBeTrue();
         }
+
         [Fact]
         public void GetPrimary_WhenEntityIsValid_ShouldNotThrowException()
         {
@@ -194,7 +195,7 @@ namespace Origami.UI.Admin.IntegrationTests
 
             var blogRepository = _scope.ServiceProvider.GetService<IBlogRepository>()!;
 
-            var exception = Record.Exception(() => 
+            var exception = Record.Exception(() =>
                 blogRepository
                 .SmartSave(TestBlog.GetContext(TestUser), true)
                 .OnFailure(r => throw new Exception($"Failed to create test blog: {r.GetMessages()}")));
@@ -207,6 +208,31 @@ namespace Origami.UI.Admin.IntegrationTests
             blog.ShouldBeNull();
         }
 
+        [Fact]
+        public void Purge_WhenBlogIsPrimary_ShouldFail()
+        {
+            using var transaction = new TransactionScope();
+            this.CreateTestRole(TestRole);
+            this.CreateTestUser(TestUser, TestRole);
+            var blogRepository = _scope.ServiceProvider.GetService<IBlogRepository>()!;
+
+            OrigamiBlog primary = null!;
+
+            var exception = Record.Exception(() => primary = blogRepository.GetPrimary());
+            exception.ShouldBeNull();
+
+            primary.ShouldNotBeNull();
+            primary.IsPrimary.ShouldBeTrue();
+
+            var result = blogRepository.SmartPurge(primary.GetContext(TestUser), true);
+
+            result.ShouldNotBeNull();
+            result.Ok.ShouldBeFalse();
+            result.Messages.ShouldNotBeNull();
+            result.Messages.Count.ShouldBe(1);
+            result.Messages[0].MessageType.ShouldBe(ResultMessage.MessageTypes.Error);
+            result.Messages[0].Message.ShouldBe("Primary blog cannot be purged");
+        }
         [Fact]
         public void Purge_WhenEntityIsValid_ShouldPersistRecord()
         {
