@@ -170,6 +170,30 @@ namespace Origami.UI.Admin.IntegrationTests
             dbBlog.DateCreated.ShouldBe(TestBlog.DateCreated);
             dbBlog.NanoId.ShouldBe(TestBlog.NanoId);
         }
+
+        [Fact]
+        public void Insert_WhenNoPermissions_ShouldFail()
+        {
+            using var transaction = new TransactionScope();
+
+            this.CreateTestRole(TestRoleNoPermissions);
+            this.CreateTestUser(TestUser, TestRoleNoPermissions);
+
+            var blogRepository = _scope.ServiceProvider.GetService<IBlogRepository>()!;
+
+            var exception = Record.Exception(() => 
+                blogRepository
+                .SmartSave(TestBlog.GetContext(TestUser), true)
+                .OnFailure(r => throw new Exception($"Failed to create test blog: {r.GetMessages()}")));
+
+            exception.ShouldNotBeNull();
+            exception.Message.ShouldBe("Failed to create test blog: CreateNewBlogs\r\nYou don't have permission for this feature");
+
+            using var db = blogRepository.DbContextFactory.CreateDbContext();
+            var blog = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
+            blog.ShouldBeNull();
+        }
+
         [Fact]
         public void SetPrimary_WhenEntityIsValid_ShouldPersistRecord()
         {
