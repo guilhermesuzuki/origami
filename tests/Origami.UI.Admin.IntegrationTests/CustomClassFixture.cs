@@ -110,6 +110,13 @@ namespace Origami.UI.Admin.IntegrationTests
                 .OnFailure(r => throw new Exception($"Failed to create test blog: {r.GetMessages()}"));
         }
 
+        protected void CreateTestCategory(OrigamiCategory category)
+        {
+            _scope.ServiceProvider.GetService<ICategoryRepository>()!
+                .SmartSave(TestCategory.GetContext(TestUser), true)
+                .OnFailure(r => throw new Exception($"Failed to create test category: {r.GetMessages()}"));
+        }
+
         protected void CreateTestUser(OrigamiUser user, OrigamiRole role)
         {
             var userRepository = _scope.ServiceProvider.GetService<IUserRepository>()!;

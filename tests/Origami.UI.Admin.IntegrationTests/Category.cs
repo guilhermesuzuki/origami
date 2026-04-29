@@ -16,19 +16,45 @@ namespace Origami.UI.Admin.IntegrationTests
         }
 
         [Fact]
+        public void Delete_WhenEntityIsValid_ShouldPersistRecord()
+        {
+            using var transaction = new TransactionScope();
+
+            this.CreateTestBlog(TestBlog, TestRole, TestUser);
+            this.CreateTestCategory(TestCategory);
+
+            using var db = _scope.ServiceProvider.GetService<IDbContextFactory<OrigamiDbContext>>()!.CreateDbContext();
+            var category = db.Categories.AsNoTracking().Id(TestCategory.Id);
+
+            category.ShouldNotBeNull();
+            category.Name.ShouldBe(TestCategory.Name);
+            category.DateCreated.ShouldBe(TestCategory.DateCreated);
+            category.NanoId.ShouldBe(TestCategory.NanoId);
+            category.IsDeleted.ShouldBe(TestCategory.IsDeleted);
+
+            var categoryRepository = _scope.ServiceProvider.GetService<ICategoryRepository>()!;
+            var result = categoryRepository.SmartDelete(category.GetContext(TestUser), true);
+
+            result.ShouldNotBeNull();
+            result.Ok.ShouldBeTrue();
+
+            var categoryAfterDelete = categoryRepository.ReadFromDatabase(TestCategory);
+            categoryAfterDelete.ShouldNotBeNull();
+            categoryAfterDelete.Name.ShouldBe(TestCategory.Name);
+            categoryAfterDelete.DateCreated.ShouldBe(TestCategory.DateCreated);
+            categoryAfterDelete.NanoId.ShouldBe(TestCategory.NanoId);
+            categoryAfterDelete.IsDeleted.ShouldBe(true);
+        }
+
+        [Fact]
         public void Insert_WhenEntityIsValid_ShouldPersistRecord()
         {
             using var transaction = new TransactionScope();
 
             this.CreateTestBlog(TestBlog, TestRole, TestUser);
+            this.CreateTestCategory(TestCategory);
 
-            var categoryRepository = _scope.ServiceProvider.GetService<ICategoryRepository>()!;
-            using var db = categoryRepository.DbContextFactory.CreateDbContext();
-
-            categoryRepository
-                .SmartSave(TestCategory.GetContext(TestUser), true)
-                .OnFailure(r => throw new Exception($"Failed to create test category: {r.GetMessages()}"));
-
+            using var db = _scope.ServiceProvider.GetService<IDbContextFactory<OrigamiDbContext>>()!.CreateDbContext();
             var category = db.Categories.AsNoTracking().FirstOrDefault(c => c.Id == TestCategory.Id);
 
             category.ShouldNotBeNull();
@@ -62,19 +88,53 @@ namespace Origami.UI.Admin.IntegrationTests
         }
 
         [Fact]
+        public void Purge_WhenEntityIsDeleted_ShouldPersistRecord()
+        {
+            using var transaction = new TransactionScope();
+
+            this.CreateTestBlog(TestBlog, TestRole, TestUser);
+            this.CreateTestCategory(TestCategory);
+
+            using var db = _scope.ServiceProvider.GetService<IDbContextFactory<OrigamiDbContext>>()!.CreateDbContext();
+            var category = db.Categories.AsNoTracking().Id(TestCategory.Id);
+
+            category.ShouldNotBeNull();
+            category.Name.ShouldBe(TestCategory.Name);
+            category.DateCreated.ShouldBe(TestCategory.DateCreated);
+            category.NanoId.ShouldBe(TestCategory.NanoId);
+            category.IsDeleted.ShouldBe(TestCategory.IsDeleted);
+
+            var categoryRepository = _scope.ServiceProvider.GetService<ICategoryRepository>()!;
+            var delete = categoryRepository.SmartDelete(category.GetContext(TestUser), true);
+
+            delete.ShouldNotBeNull();
+            delete.Ok.ShouldBeTrue();
+
+            var categoryAfterDelete = categoryRepository.ReadFromDatabase(TestCategory);
+            categoryAfterDelete.ShouldNotBeNull();
+            categoryAfterDelete.Name.ShouldBe(TestCategory.Name);
+            categoryAfterDelete.DateCreated.ShouldBe(TestCategory.DateCreated);
+            categoryAfterDelete.NanoId.ShouldBe(TestCategory.NanoId);
+            categoryAfterDelete.IsDeleted.ShouldBe(true);
+
+            var purge = categoryRepository.SmartPurge(categoryAfterDelete.GetContext(TestUser), true);
+            purge.ShouldNotBeNull();
+            purge.Ok.ShouldBeTrue();
+
+            var categoryAfterPurge = categoryRepository.ReadFromDatabase(TestCategory);
+            categoryAfterPurge.ShouldBeNull();
+        }
+
+        [Fact]
         public void Update_WhenEntityIsValid_ShouldPersistRecord()
         {
             using var transaction = new TransactionScope();
 
             this.CreateTestBlog(TestBlog, TestRole, TestUser);
+            this.CreateTestCategory(TestCategory);
 
             var categoryRepository = _scope.ServiceProvider.GetService<ICategoryRepository>()!;
             using var db = categoryRepository.DbContextFactory.CreateDbContext();
-
-            categoryRepository
-                .SmartSave(TestCategory.GetContext(TestUser), true)
-                .OnFailure(r => throw new Exception($"Failed to create test category: {r.GetMessages()}"));
-
             var category = db.Categories.AsNoTracking().FirstOrDefault(c => c.Id == TestCategory.Id);
 
             category.ShouldNotBeNull();
