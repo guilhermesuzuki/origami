@@ -10,7 +10,7 @@ namespace Origami.UI.Admin.IntegrationTests
         public static Guid BlogId = new Guid("b6af1155-5c2a-4fb5-ae64-fd1f1f19b1de");
         public static Guid BlogId1 = new Guid("405bac29-0d05-49a2-b368-d811553e6e6f");
         public static Guid CategoryId = new Guid("c1d2e3f4-5a6b-7c8d-9e0f-1a2b3c4d5e6f");
-        public static Guid CategoryId1 = new Guid("c1d2e3f4-5a6b-7c8d-9e0f-1a2b3c4d5e6f");
+        public static Guid CategoryId1 = new Guid("f8358f3e-073d-44f9-bd12-a87b8af2bd31");
         public static Guid UserId = new Guid("d2c9e5b8-1c3a-4f8e-9a1b-2f3e4d5c6a7b");
         public static Guid RoleId = new Guid("e1f2d3c4-b5a6-7d8e-9f0a-1b2c3d4e5f6a");
         public static Guid RoleId1 = new Guid("f1e2d3c4-b5a6-7d8e-9f0a-1b2c3d4e5f6b");
@@ -38,6 +38,15 @@ namespace Origami.UI.Admin.IntegrationTests
             Name = "Test category",
             DateCreated = DateTime.UtcNow,
             NanoId = CategoryId.ToString().Substring(0, 8),
+        };
+
+        public OrigamiCategory TestCategoryWithBigName = new OrigamiCategory
+        {
+            BlogId = BlogId,
+            Id = CategoryId1,
+            Name = new string('a', 500),
+            DateCreated = DateTime.UtcNow,
+            NanoId = CategoryId1.ToString().Substring(0, 8),
         };
 
         public OrigamiRole TestRole = new() 

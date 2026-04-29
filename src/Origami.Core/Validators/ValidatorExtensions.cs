@@ -324,6 +324,13 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("Name cannot exceed {0} characters", 50));
         }
 
+        public static IRuleBuilderOptions<T, string> ShortSlug<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
+        {
+            return ruleBuilder
+                .MaximumLength(50)
+                .WithMessage(text.Original("Slug cannot exceed {0} characters", 50));
+        }
+
         public static IRuleBuilderOptions<T, string> Slug<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
         {
             return ruleBuilder
