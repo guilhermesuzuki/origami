@@ -82,6 +82,32 @@ namespace Origami.UI.Admin.IntegrationTests
         }
 
         [Fact]
+        public void Delete_WhenBlogIsPrimary_ShouldFail()
+        {
+            using var transaction = new TransactionScope();
+            this.CreateTestRole(TestRole);
+            this.CreateTestUser(TestUser, TestRole);
+            var blogRepository = _scope.ServiceProvider.GetService<IBlogRepository>()!;
+
+            OrigamiBlog primary = null!;
+
+            var exception = Record.Exception(() => primary = blogRepository.GetPrimary());
+            exception.ShouldBeNull();
+
+            primary.ShouldNotBeNull();
+            primary.IsPrimary.ShouldBeTrue();
+
+            var result = blogRepository.SmartDelete(primary.GetContext(TestUser), true);
+
+            result.ShouldNotBeNull();
+            result.Ok.ShouldBeFalse();
+            result.Messages.ShouldNotBeNull();
+            result.Messages.Count.ShouldBe(1);
+            result.Messages[0].MessageType.ShouldBe(ResultMessage.MessageTypes.Error);
+            result.Messages[0].Message.ShouldBe("Primary blog cannot be deleted");
+        }
+
+        [Fact]
         public void Delete_WhenEntityIsValid_ShouldPersistRecord()
         {
             using var transaction = new TransactionScope();
@@ -92,16 +118,15 @@ namespace Origami.UI.Admin.IntegrationTests
                 .SmartSave(TestBlog.GetContext(TestUser), true)
                 .OnFailure(r => throw new Exception($"Failed to create test blog: {r.GetMessages()}"));
             using var db = blogRepository.DbContextFactory.CreateDbContext();
-            var dbBlog = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
-            dbBlog.ShouldNotBeNull();
+            var blog = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
+            blog.ShouldNotBeNull();
             blogRepository
-                .SmartDelete(dbBlog.GetContext(TestUser), true)
+                .SmartDelete(blog.GetContext(TestUser), true)
                 .OnFailure(r => throw new Exception($"Failed to delete test blog: {r.GetMessages()}"));
-            var dbBlogAfterDelete = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
-            dbBlogAfterDelete.ShouldNotBeNull();
-            dbBlogAfterDelete.IsDeleted.ShouldBeTrue();
+            var blogAfterDelete = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
+            blogAfterDelete.ShouldNotBeNull();
+            blogAfterDelete.IsDeleted.ShouldBeTrue();
         }
-
         [Fact]
         public void GetPrimary_WhenEntityIsValid_ShouldNotThrowException()
         {
