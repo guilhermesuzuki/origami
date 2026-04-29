@@ -54,7 +54,7 @@ namespace Origami.UI.Admin.IntegrationTests
             this.CreateTestBlog(TestBlog, TestRole, TestUser);
             this.CreateTestCategory(TestCategory);
 
-            using var db = _scope.ServiceProvider.GetService<IDbContextFactory<OrigamiDbContext>>()!.CreateDbContext();
+            using var db = _superRepository.DbContextFactory.CreateDbContext();
             var category = db.Categories.AsNoTracking().FirstOrDefault(c => c.Id == TestCategory.Id);
 
             category.ShouldNotBeNull();
@@ -106,7 +106,6 @@ namespace Origami.UI.Admin.IntegrationTests
 
             var categoryRepository = _scope.ServiceProvider.GetService<ICategoryRepository>()!;
             var delete = categoryRepository.SmartDelete(category.GetContext(TestUser), true);
-
             delete.ShouldNotBeNull();
             delete.Ok.ShouldBeTrue();
 

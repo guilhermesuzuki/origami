@@ -15,6 +15,8 @@ namespace Origami.UI.Admin.IntegrationTests
         public static Guid RoleId = new Guid("e1f2d3c4-b5a6-7d8e-9f0a-1b2c3d4e5f6a");
         public static Guid RoleId1 = new Guid("f1e2d3c4-b5a6-7d8e-9f0a-1b2c3d4e5f6b");
 
+        protected readonly ISuperRepository _superRepository;
+
         public OrigamiBlog TestBlog = new OrigamiBlog
         {
             Id = BlogId,
@@ -98,6 +100,7 @@ namespace Origami.UI.Admin.IntegrationTests
         {
             _factory = factory;
             _scope = _factory.Services.CreateScope();
+            _superRepository = _scope.ServiceProvider.GetService<ISuperRepository>()!;
         }
 
         protected void CreateTestBlog(OrigamiBlog blog, OrigamiRole role, OrigamiUser user)
