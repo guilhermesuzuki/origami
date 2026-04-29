@@ -23,7 +23,7 @@ namespace Origami.UI.Admin.IntegrationTests
             this.CreateTestBlog(TestBlog, TestRole, TestUser);
             this.CreateTestCategory(TestCategory);
 
-            using var db = _scope.ServiceProvider.GetService<IDbContextFactory<OrigamiDbContext>>()!.CreateDbContext();
+            using var db = _superRepository.DbContextFactory.CreateDbContext();
             var category = db.Categories.AsNoTracking().Id(TestCategory.Id);
 
             category.ShouldNotBeNull();
@@ -71,7 +71,7 @@ namespace Origami.UI.Admin.IntegrationTests
             this.CreateTestBlog(TestBlog, TestRole, TestUser);
 
             var categoryRepository = _scope.ServiceProvider.GetService<ICategoryRepository>()!;
-            using var db = categoryRepository.DbContextFactory.CreateDbContext();
+            using var db = _superRepository.DbContextFactory.CreateDbContext();
             var result = categoryRepository.SmartSave(TestCategoryWithBigName.GetContext(TestUser), true);
 
             result.ShouldNotBeNull();
@@ -160,7 +160,7 @@ namespace Origami.UI.Admin.IntegrationTests
             this.CreateTestBlog(TestBlog, TestRole, TestUser);
 
             var categoryRepository = _scope.ServiceProvider.GetService<ICategoryRepository>()!;
-            using var db = categoryRepository.DbContextFactory.CreateDbContext();
+            using var db = _superRepository.DbContextFactory.CreateDbContext();
 
             categoryRepository
                 .SmartSave(TestCategory.GetContext(TestUser), true)

@@ -45,6 +45,8 @@ namespace Origami.Core.Data
         /// Is Origami in maintenance lock-out mode?
         /// </summary>
         bool MaintenanceLockout { get; }
+
+        IMyMemoryCache MyMemoryCache { get; }
         IPageRepository Pages { get; }
         IPhysicalPageRepository PhysicalPages { get; }
         IPhysicalPageViewRepository PhysicalPageViews { get; }
@@ -65,8 +67,7 @@ namespace Origami.Core.Data
         IUserViewRepository UserViews { get; }
         IVideoRepository Videos { get; }
         IWhatToSeeNextRepository WhatToSeeNext { get; }
-        IMyMemoryCache MyMemoryCache { get; }
-        
+
         bool EmptyHome(Guid blogId);
 
         /// <summary>
@@ -76,8 +77,6 @@ namespace Origami.Core.Data
         /// <returns>An instance of OrigamiUser representing the author associated with the given identifier. Returns null if no
         /// matching author is found.</returns>
         OrigamiUser GetAuthor(IAuthorId authorId);
-
-        IEnumerable<OrigamiContent> GetContents(OrigamiContentTag tag, Guid blogId);
 
         /// <summary>
         /// Get active categories
@@ -92,6 +91,7 @@ namespace Origami.Core.Data
         /// <returns></returns>
         IEnumerable<OrigamiContentComment> GetComments(Guid blogId);
 
+        IEnumerable<OrigamiContent> GetContents(OrigamiContentTag tag, Guid blogId);
         /// <summary>
         /// Draft pages
         /// </summary>
@@ -218,9 +218,7 @@ namespace Origami.Core.Data
 
         object? GuessWho(string text);
 
-        bool IsParentDeleted(OrigamiCategory category);
-        bool IsParentDeleted(OrigamiContentComment comment);
-        bool IsParentDeleted(OrigamiContent content);
+        bool IsParentDeleted<T>(T entity) where T : class, IId, IParentIdNull, IDeleted;
 
         Result RefreshAllRepositories();
         Result RefreshAllSearchIndexes();
