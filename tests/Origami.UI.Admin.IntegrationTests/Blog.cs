@@ -123,6 +123,29 @@ namespace Origami.UI.Admin.IntegrationTests
         }
 
         [Fact]
+        public void Insert_WhenEntityIsValid_ShouldPersistRecord()
+        {
+            using var transaction = new TransactionScope();
+
+            this.CreateTestRole(TestRole);
+            this.CreateTestUser(TestUser, TestRole);
+
+            var blogRepository = _scope.ServiceProvider.GetService<IBlogRepository>()!;
+
+            blogRepository
+                .SmartSave(TestBlog.GetContext(TestUser), true)
+                .OnFailure(r => throw new Exception($"Failed to create test blog: {r.GetMessages()}"));
+
+            using var db = blogRepository.DbContextFactory.CreateDbContext();
+            var blog = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
+
+            blog.ShouldNotBeNull();
+            blog.Name.ShouldBe(TestBlog.Name);
+            blog.DateCreated.ShouldBe(TestBlog.DateCreated);
+            blog.NanoId.ShouldBe(TestBlog.NanoId);
+        }
+
+        [Fact]
         public void Insert_WhenNameExceeds255Characters_ShouldFail()
         {
             using var transaction = new TransactionScope();
@@ -149,29 +172,6 @@ namespace Origami.UI.Admin.IntegrationTests
         }
 
         [Fact]
-        public void Insert_WhenEntityIsValid_ShouldPersistRecord()
-        {
-            using var transaction = new TransactionScope();
-
-            this.CreateTestRole(TestRole);
-            this.CreateTestUser(TestUser, TestRole);
-
-            var blogRepository = _scope.ServiceProvider.GetService<IBlogRepository>()!;
-
-            blogRepository
-                .SmartSave(TestBlog.GetContext(TestUser), true)
-                .OnFailure(r => throw new Exception($"Failed to create test blog: {r.GetMessages()}"));
-
-            using var db = blogRepository.DbContextFactory.CreateDbContext();
-            var dbBlog = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
-
-            dbBlog.ShouldNotBeNull();
-            dbBlog.Name.ShouldBe(TestBlog.Name);
-            dbBlog.DateCreated.ShouldBe(TestBlog.DateCreated);
-            dbBlog.NanoId.ShouldBe(TestBlog.NanoId);
-        }
-
-        [Fact]
         public void Insert_WhenNoPermissions_ShouldFail()
         {
             using var transaction = new TransactionScope();
@@ -192,6 +192,71 @@ namespace Origami.UI.Admin.IntegrationTests
             using var db = blogRepository.DbContextFactory.CreateDbContext();
             var blog = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
             blog.ShouldBeNull();
+        }
+
+        [Fact]
+        public void Purge_WhenEntityIsValid_ShouldPersistRecord()
+        {
+            using var transaction = new TransactionScope();
+            this.CreateTestRole(TestRole);
+            this.CreateTestUser(TestUser, TestRole);
+            var blogRepository = _scope.ServiceProvider.GetService<IBlogRepository>()!;
+
+            blogRepository
+                .SmartSave(TestBlog.GetContext(TestUser), true)
+                .OnFailure(r => throw new Exception($"Failed to create test blog: {r.GetMessages()}"));
+
+            using var db = blogRepository.DbContextFactory.CreateDbContext();
+            var blog = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
+            blog.ShouldNotBeNull();
+
+            blogRepository
+                .SmartDelete(blog.GetContext(TestUser), true)
+                .OnFailure(r => throw new Exception($"Failed to delete test blog: {r.GetMessages()}"));
+
+            var blogAfterDelete = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
+            blogAfterDelete.ShouldNotBeNull();
+            blogAfterDelete.IsDeleted.ShouldBeTrue();
+
+            blogRepository
+                .SmartPurge(blogAfterDelete.GetContext(TestUser), true)
+                .OnFailure(r => throw new Exception($"Failed to purge test blog: {r.GetMessages()}"));
+
+            var blogAfterPurge = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
+            blogAfterPurge.ShouldBeNull();
+        }
+
+        [Fact]
+        public void Restore_WhenEntityIsValid_ShouldPersistRecord()
+        {
+            using var transaction = new TransactionScope();
+            this.CreateTestRole(TestRole);
+            this.CreateTestUser(TestUser, TestRole);
+            var blogRepository = _scope.ServiceProvider.GetService<IBlogRepository>()!;
+
+            blogRepository
+                .SmartSave(TestBlog.GetContext(TestUser), true)
+                .OnFailure(r => throw new Exception($"Failed to create test blog: {r.GetMessages()}"));
+
+            using var db = blogRepository.DbContextFactory.CreateDbContext();
+            var blog = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
+            blog.ShouldNotBeNull();
+
+            blogRepository
+                .SmartDelete(blog.GetContext(TestUser), true)
+                .OnFailure(r => throw new Exception($"Failed to delete test blog: {r.GetMessages()}"));
+
+            var blogAfterDelete = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
+            blogAfterDelete.ShouldNotBeNull();
+            blogAfterDelete.IsDeleted.ShouldBeTrue();
+
+            blogRepository
+                .SmartRestore(blogAfterDelete.GetContext(TestUser), true)
+                .OnFailure(r => throw new Exception($"Failed to restore test blog: {r.GetMessages()}"));
+
+            var blogAfterRestore = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
+            blogAfterRestore.ShouldNotBeNull();
+            blogAfterRestore.IsDeleted.ShouldBeFalse();
         }
 
         [Fact]
@@ -244,24 +309,24 @@ namespace Origami.UI.Admin.IntegrationTests
                 .OnFailure(r => throw new Exception($"Failed to create test blog: {r.GetMessages()}"));
 
             using var db = blogRepository.DbContextFactory.CreateDbContext();
-            var dbBlog = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
+            var blog = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
 
-            dbBlog.ShouldNotBeNull();
-            dbBlog.Name.ShouldBe(TestBlog.Name);
-            dbBlog.DateCreated.ShouldBe(TestBlog.DateCreated);
-            dbBlog.NanoId.ShouldBe(TestBlog.NanoId);
+            blog.ShouldNotBeNull();
+            blog.Name.ShouldBe(TestBlog.Name);
+            blog.DateCreated.ShouldBe(TestBlog.DateCreated);
+            blog.NanoId.ShouldBe(TestBlog.NanoId);
 
-            dbBlog.Name = "Updated Blog Name";
+            blog.Name = "Updated Blog Name";
 
             blogRepository
-                .SmartSave(dbBlog.GetContext(TestUser), true)
+                .SmartSave(blog.GetContext(TestUser), true)
                 .OnFailure(r => throw new Exception($"Failed to update test blog: {r.GetMessages()}"));
 
-            var dbBlogAfterUpdate = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
+            var blogAfterUpdate = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
 
-            dbBlogAfterUpdate.ShouldNotBeNull();
-            dbBlogAfterUpdate.Name.ShouldBe("Updated Blog Name");
-            dbBlogAfterUpdate.DateModified.ShouldNotBeNull();
+            blogAfterUpdate.ShouldNotBeNull();
+            blogAfterUpdate.Name.ShouldBe("Updated Blog Name");
+            blogAfterUpdate.DateModified.ShouldNotBeNull();
         }
 
         [Fact]
