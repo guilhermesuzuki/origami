@@ -100,6 +100,16 @@ namespace Origami.UI.Admin.IntegrationTests
             _scope = _factory.Services.CreateScope();
         }
 
+        protected void CreateTestBlog(OrigamiBlog blog, OrigamiRole role, OrigamiUser user)
+        {
+            this.CreateTestRole(role);
+            this.CreateTestUser(user, role);
+
+            _scope.ServiceProvider.GetService<IBlogRepository>()!
+                .SmartSave(blog.GetContext(), false)
+                .OnFailure(r => throw new Exception($"Failed to create test blog: {r.GetMessages()}"));
+        }
+
         protected void CreateTestUser(OrigamiUser user, OrigamiRole role)
         {
             var userRepository = _scope.ServiceProvider.GetService<IUserRepository>()!;

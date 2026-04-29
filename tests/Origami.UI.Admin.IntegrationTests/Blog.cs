@@ -20,15 +20,9 @@ namespace Origami.UI.Admin.IntegrationTests
         {
             using var transaction = new TransactionScope();
 
-            this.CreateTestRole(TestRole);
-            this.CreateTestUser(TestUser, TestRole);
+            this.CreateTestBlog(TestBlog, TestRole, TestUser);
 
             var blogRepository = _scope.ServiceProvider.GetService<IBlogRepository>()!;
-
-            blogRepository
-                .SmartSave(TestBlog.GetContext(TestUser), true)
-                .OnFailure(r => throw new Exception($"Failed to create test blog: {r.GetMessages()}"));
-
             using var db = blogRepository.DbContextFactory.CreateDbContext();
             var blog = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
 
@@ -127,15 +121,9 @@ namespace Origami.UI.Admin.IntegrationTests
         {
             using var transaction = new TransactionScope();
 
-            this.CreateTestRole(TestRole);
-            this.CreateTestUser(TestUser, TestRole);
+            this.CreateTestBlog(TestBlog, TestRole, TestUser);
 
             var blogRepository = _scope.ServiceProvider.GetService<IBlogRepository>()!;
-
-            blogRepository
-                .SmartSave(TestBlog.GetContext(TestUser), true)
-                .OnFailure(r => throw new Exception($"Failed to create test blog: {r.GetMessages()}"));
-
             using var db = blogRepository.DbContextFactory.CreateDbContext();
             var blog = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
 
@@ -167,8 +155,8 @@ namespace Origami.UI.Admin.IntegrationTests
             result.Messages[1].Message.ShouldBe("Slug cannot exceed 255 characters");
 
             using var db = blogRepository.DbContextFactory.CreateDbContext();
-            var dbBlog = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlogWithBigName.Id);
-            dbBlog.ShouldBeNull();
+            var blog = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlogWithBigName.Id);
+            blog.ShouldBeNull();
         }
 
         [Fact]
