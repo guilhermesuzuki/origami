@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Origami.Core;
 using Origami.Core.Data;
+using Origami.Core.Models;
 using Shouldly;
 using System.Transactions;
 
@@ -105,6 +106,20 @@ namespace Origami.UI.Admin.IntegrationTests
             var dbBlogAfterDelete = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
             dbBlogAfterDelete.ShouldNotBeNull();
             dbBlogAfterDelete.IsDeleted.ShouldBeTrue();
+        }
+
+        [Fact]
+        public void GetPrimary_WhenEntityIsValid_ShouldNotThrowException()
+        {
+            var blogRepository = _scope.ServiceProvider.GetService<IBlogRepository>()!;
+
+            OrigamiBlog primary = null!;
+
+            var exception = Record.Exception(() => primary = blogRepository.GetPrimary());
+            exception.ShouldBeNull();
+
+            primary.ShouldNotBeNull();
+            primary.IsPrimary.ShouldBeTrue();
         }
 
         [Fact]
