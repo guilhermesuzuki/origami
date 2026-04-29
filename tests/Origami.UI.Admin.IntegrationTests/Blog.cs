@@ -20,8 +20,8 @@ namespace Origami.UI.Admin.IntegrationTests
         {
             using var transaction = new TransactionScope();
 
-            this.CreateTestRole();
-            this.CreateTestUser();
+            this.CreateTestRole(TestRole);
+            this.CreateTestUser(TestUser, TestRole);
 
             var blogRepository = _scope.ServiceProvider.GetService<IBlogRepository>()!;
 
@@ -52,8 +52,8 @@ namespace Origami.UI.Admin.IntegrationTests
         {
             using var transaction = new TransactionScope();
 
-            this.CreateTestRole();
-            this.CreateTestUser();
+            this.CreateTestRole(TestRole);
+            this.CreateTestUser(TestUser, TestRole);
 
             var blogRepository = _scope.ServiceProvider.GetService<IBlogRepository>()!;
 
@@ -91,8 +91,8 @@ namespace Origami.UI.Admin.IntegrationTests
         public void Delete_WhenEntityIsValid_ShouldPersistRecord()
         {
             using var transaction = new TransactionScope();
-            this.CreateTestRole();
-            this.CreateTestUser();
+            this.CreateTestRole(TestRole);
+            this.CreateTestUser(TestUser, TestRole);
             var blogRepository = _scope.ServiceProvider.GetService<IBlogRepository>()!;
             blogRepository
                 .SmartSave(TestBlog.GetContext(TestUser), true)
@@ -123,12 +123,38 @@ namespace Origami.UI.Admin.IntegrationTests
         }
 
         [Fact]
+        public void Insert_WhenNameExceeds255Characters_ShouldFail()
+        {
+            using var transaction = new TransactionScope();
+
+            this.CreateTestRole(TestRole);
+            this.CreateTestUser(TestUser, TestRole);
+
+            var blogRepository = _scope.ServiceProvider.GetService<IBlogRepository>()!;
+
+            var result = blogRepository.SmartSave(TestBlogWithBigName.GetContext(TestUser), true);
+
+            result.ShouldNotBeNull();
+            result.Ok.ShouldBeFalse();
+            result.Messages.ShouldNotBeNull();
+            result.Messages.Count.ShouldBe(2);
+            result.Messages[0].MessageType.ShouldBe(ResultMessage.MessageTypes.Error);
+            result.Messages[1].MessageType.ShouldBe(ResultMessage.MessageTypes.Error);
+            result.Messages[0].Message.ShouldBe("Name cannot exceed 255 characters");
+            result.Messages[1].Message.ShouldBe("Slug cannot exceed 255 characters");
+
+            using var db = blogRepository.DbContextFactory.CreateDbContext();
+            var dbBlog = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlogWithBigName.Id);
+            dbBlog.ShouldBeNull();
+        }
+
+        [Fact]
         public void Insert_WhenEntityIsValid_ShouldPersistRecord()
         {
             using var transaction = new TransactionScope();
 
-            this.CreateTestRole();
-            this.CreateTestUser();
+            this.CreateTestRole(TestRole);
+            this.CreateTestUser(TestUser, TestRole);
 
             var blogRepository = _scope.ServiceProvider.GetService<IBlogRepository>()!;
 
@@ -144,14 +170,13 @@ namespace Origami.UI.Admin.IntegrationTests
             dbBlog.DateCreated.ShouldBe(TestBlog.DateCreated);
             dbBlog.NanoId.ShouldBe(TestBlog.NanoId);
         }
-
         [Fact]
         public void SetPrimary_WhenEntityIsValid_ShouldPersistRecord()
         {
             using var transaction = new TransactionScope();
 
-            this.CreateTestRole();
-            this.CreateTestUser();
+            this.CreateTestRole(TestRole);
+            this.CreateTestUser(TestUser, TestRole);
 
             var blogRepository = _scope.ServiceProvider.GetService<IBlogRepository>()!;
 
@@ -185,8 +210,8 @@ namespace Origami.UI.Admin.IntegrationTests
         {
             using var transaction = new TransactionScope();
 
-            this.CreateTestRole();
-            this.CreateTestUser();
+            this.CreateTestRole(TestRole);
+            this.CreateTestUser(TestUser, TestRole);
 
             var blogRepository = _scope.ServiceProvider.GetService<IBlogRepository>()!;
 
@@ -213,6 +238,48 @@ namespace Origami.UI.Admin.IntegrationTests
             dbBlogAfterUpdate.ShouldNotBeNull();
             dbBlogAfterUpdate.Name.ShouldBe("Updated Blog Name");
             dbBlogAfterUpdate.DateModified.ShouldNotBeNull();
+        }
+
+        [Fact]
+        public void Update_WhenNameExceeds255Characters_ShouldFail()
+        {
+            using var transaction = new TransactionScope();
+
+            this.CreateTestRole(TestRole);
+            this.CreateTestUser(TestUser, TestRole);
+
+            var blogRepository = _scope.ServiceProvider.GetService<IBlogRepository>()!;
+
+            blogRepository
+                .SmartSave(TestBlog.GetContext(TestUser), true)
+                .OnFailure(r => throw new Exception($"Failed to create test blog: {r.GetMessages()}"));
+
+            using var db = blogRepository.DbContextFactory.CreateDbContext();
+            var blog = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
+
+            blog.ShouldNotBeNull();
+            blog.Name.ShouldBe(TestBlog.Name);
+            blog.DateCreated.ShouldBe(TestBlog.DateCreated);
+            blog.NanoId.ShouldBe(TestBlog.NanoId);
+
+            blog.Name = "Updated Blog Name " + new string('a', 500);
+
+            var result = blogRepository.SmartSave(blog.GetContext(TestUser), true);
+
+            result.ShouldNotBeNull();
+            result.Ok.ShouldBeFalse();
+            result.Messages.ShouldNotBeNull();
+            result.Messages.Count.ShouldBe(2);
+            result.Messages[0].MessageType.ShouldBe(ResultMessage.MessageTypes.Error);
+            result.Messages[1].MessageType.ShouldBe(ResultMessage.MessageTypes.Error);
+            result.Messages[0].Message.ShouldBe("Name cannot exceed 255 characters");
+            result.Messages[1].Message.ShouldBe("Slug cannot exceed 255 characters");
+
+            var dbBlogAfterUpdate = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
+
+            dbBlogAfterUpdate.ShouldNotBeNull();
+            dbBlogAfterUpdate.Name.ShouldBe(TestBlog.Name);
+            dbBlogAfterUpdate.DateModified.ShouldBeNull();
         }
     }
 }
