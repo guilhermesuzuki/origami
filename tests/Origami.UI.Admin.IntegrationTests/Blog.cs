@@ -8,6 +8,9 @@ using System.Transactions;
 
 namespace Origami.UI.Admin.IntegrationTests
 {
+    /// <summary>
+    /// TODO: add assertions for cache where applicable
+    /// </summary>
     public class Blog : CustomClassFixture
     {
         public Blog(CustomWebApplicationFactory factory) : base(factory)
@@ -210,7 +213,7 @@ namespace Origami.UI.Admin.IntegrationTests
             this.CreateTestRole(TestRoleNoPermissions);
             this.CreateTestUser(TestUser, TestRoleNoPermissions);
 
-            var blogRepository = _scope.ServiceProvider.GetService<IBlogRepository>()!;
+            var blogRepository = _scope.ServiceProvider.GetRequiredService<IBlogRepository>();
 
             var exception = Record.Exception(() =>
                 blogRepository
@@ -231,7 +234,7 @@ namespace Origami.UI.Admin.IntegrationTests
             using var transaction = new TransactionScope();
             this.CreateTestRole(TestRole);
             this.CreateTestUser(TestUser, TestRole);
-            var blogRepository = _scope.ServiceProvider.GetService<IBlogRepository>()!;
+            var blogRepository = _scope.ServiceProvider.GetRequiredService<IBlogRepository>();
 
             OrigamiBlog primary = null!;
 
