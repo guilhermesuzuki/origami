@@ -27,7 +27,15 @@ namespace Origami.Core.Data
             lock (OrigamiConstants.SyncRoot)
             {
                 var value = MemoryCache.GetList<T>(KeyForCaching);
-                if (value != null) value.Add(entity); else value = [entity];
+                if (value != null)
+                {
+                    value.RemoveAll(x => x.Id == entity.Id);
+                    value.Add(entity);
+                }
+                else
+                {
+                    value = [entity];
+                }
                 MemoryCache.Set(KeyForCaching, value);
             }
         }

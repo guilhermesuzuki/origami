@@ -44,6 +44,61 @@ namespace Origami.UI.Admin.IntegrationTests
             categoryAfterDelete.DateCreated.ShouldBe(TestCategory.DateCreated);
             categoryAfterDelete.NanoId.ShouldBe(TestCategory.NanoId);
             categoryAfterDelete.IsDeleted.ShouldBe(true);
+
+            var cacheCategory = _superRepository.MyMemoryCache.Read<OrigamiCategory>().Id(TestCategory.Id)!;
+            cacheCategory.ShouldNotBeNull();
+            cacheCategory.Name.ShouldBe(TestCategory.Name);
+            cacheCategory.DateCreated.ShouldBe(TestCategory.DateCreated);
+            cacheCategory.NanoId.ShouldBe(TestCategory.NanoId);
+            cacheCategory.IsDeleted.ShouldBe(true);
+        }
+
+        [Fact]
+        public void Insert_When3CategoriesAreLinkedToEachOther_ShouldPersistRecords()
+        {
+            using var transaction = new TransactionScope();
+
+            this.CreateTestBlog(TestBlog, TestRole, TestUser);
+
+            var categoryRepository = _scope.ServiceProvider.GetService<ICategoryRepository>()!;
+            using var db = _superRepository.DbContextFactory.CreateDbContext();
+
+            var resultA = categoryRepository.SmartSave(TestCategoryA.GetContext(TestUser), true);
+            var resultB = categoryRepository.SmartSave(TestCategoryB.GetContext(TestUser), true);
+            var resultC = categoryRepository.SmartSave(TestCategoryC.GetContext(TestUser), true);
+
+            IList<Result<OrigamiCategory>> results = [resultA, resultB, resultC];
+
+            foreach (var result in results)
+            {
+                result.ShouldNotBeNull();
+                result.Ok.ShouldBeTrue();
+                result.Entity.ShouldNotBeNull();
+                result.Messages.ShouldNotBeNull();
+                result.Messages.Count.ShouldBe(0);
+                var category = db.Categories.Id(result.Entity.Id)!;
+                var memCategory = results.IndexOf(result) switch
+                {
+                    0 => TestCategoryA,
+                    1 => TestCategoryB,
+                    2 => TestCategoryC,
+                    _ => throw new Exception("Invalid category index")
+                };
+                category.BlogId.ShouldBe(memCategory.BlogId);
+                category.ParentId.ShouldBe(memCategory.ParentId);
+                category.Id.ShouldBe(memCategory.Id);
+                category.Name.ShouldBe(memCategory.Name);
+                category.DateCreated.ShouldBe(memCategory.DateCreated);
+                category.NanoId.ShouldBe(memCategory.NanoId);
+                category.IsDeleted.ShouldBe(memCategory.IsDeleted);
+
+                var cacheCategory = _superRepository.MyMemoryCache.Read<OrigamiCategory>().Id(memCategory.Id)!;
+                cacheCategory.ShouldNotBeNull();
+                cacheCategory.Name.ShouldBe(memCategory.Name);
+                cacheCategory.DateCreated.ShouldBe(memCategory.DateCreated);
+                cacheCategory.NanoId.ShouldBe(memCategory.NanoId);
+                cacheCategory.IsDeleted.ShouldBe(memCategory.IsDeleted);
+            }
         }
 
         [Fact]
@@ -55,12 +110,19 @@ namespace Origami.UI.Admin.IntegrationTests
             this.CreateTestCategory(TestCategory);
 
             using var db = _superRepository.DbContextFactory.CreateDbContext();
-            var category = db.Categories.AsNoTracking().FirstOrDefault(c => c.Id == TestCategory.Id);
 
+            var category = db.Categories.AsNoTracking().FirstOrDefault(c => c.Id == TestCategory.Id);
             category.ShouldNotBeNull();
             category.Name.ShouldBe(TestCategory.Name);
             category.DateCreated.ShouldBe(TestCategory.DateCreated);
             category.NanoId.ShouldBe(TestCategory.NanoId);
+
+            var cacheCategory = _superRepository.MyMemoryCache.Read<OrigamiCategory>().Id(TestCategory.Id);
+            cacheCategory.ShouldNotBeNull();
+            cacheCategory.Name.ShouldBe(TestCategory.Name);
+            cacheCategory.DateCreated.ShouldBe(TestCategory.DateCreated);
+            cacheCategory.NanoId.ShouldBe(TestCategory.NanoId);
+            cacheCategory.IsDeleted.ShouldBe(false);
         }
 
         [Fact]
@@ -85,6 +147,9 @@ namespace Origami.UI.Admin.IntegrationTests
 
             var category = db.Categories.AsNoTracking().FirstOrDefault(c => c.Id == TestCategoryWithBigName.Id);
             category.ShouldBeNull();
+
+            var cacheCategory = _superRepository.MyMemoryCache.Read<OrigamiCategory>().Id(TestCategory.Id);
+            cacheCategory.ShouldBeNull();
         }
 
         [Fact]
@@ -122,6 +187,9 @@ namespace Origami.UI.Admin.IntegrationTests
 
             var categoryAfterPurge = categoryRepository.ReadFromDatabase(TestCategory);
             categoryAfterPurge.ShouldBeNull();
+
+            var cacheCategory = _superRepository.MyMemoryCache.Read<OrigamiCategory>().Id(TestCategory.Id);
+            cacheCategory.ShouldBeNull();
         }
 
         [Fact]
@@ -150,6 +218,10 @@ namespace Origami.UI.Admin.IntegrationTests
             var categoryAfterUpdate = db.Categories.AsNoTracking().FirstOrDefault(c => c.Id == TestCategory.Id); 
             categoryAfterUpdate.ShouldNotBeNull();
             categoryAfterUpdate.Name.ShouldBe("Updated category name");
+
+            var cacheCategory = _superRepository.MyMemoryCache.Read<OrigamiCategory>().Id(TestCategory.Id);
+            cacheCategory.ShouldNotBeNull();
+            cacheCategory.Name.ShouldBe("Updated category name");
         }
 
         [Fact]
@@ -189,6 +261,10 @@ namespace Origami.UI.Admin.IntegrationTests
             var categoryAfterUpdate = db.Categories.AsNoTracking().FirstOrDefault(c => c.Id == TestCategory.Id);
             categoryAfterUpdate.ShouldNotBeNull();
             categoryAfterUpdate.Name.ShouldBe("Test category");
+
+            var cacheCategory = _superRepository.MyMemoryCache.Read<OrigamiCategory>().Id(TestCategory.Id);
+            cacheCategory.ShouldNotBeNull();
+            cacheCategory.Name.ShouldBe("Test category");
         }
     }
 }

@@ -39,6 +39,8 @@ namespace Origami.UI.Admin.IntegrationTests
             var activatedBlog = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
             activatedBlog.ShouldNotBeNull();
             activatedBlog.IsActive.ShouldBeTrue();
+
+            blogRepository.PurgeCache(TestBlog);
         }
 
         [Fact]
@@ -79,6 +81,8 @@ namespace Origami.UI.Admin.IntegrationTests
             var deactivatedBlog = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
             deactivatedBlog.ShouldNotBeNull();
             deactivatedBlog.IsActive.ShouldBeFalse();
+
+            blogRepository.PurgeCache(TestBlog);
         }
 
         [Fact]
@@ -105,19 +109,20 @@ namespace Origami.UI.Admin.IntegrationTests
             result.Messages.Count.ShouldBe(1);
             result.Messages[0].MessageType.ShouldBe(ResultMessage.MessageTypes.Error);
             result.Messages[0].Message.ShouldBe("Primary blog cannot be deleted");
+
+            var cacheBlog = _superRepository.MyMemoryCache.Read<OrigamiBlog>().Id(TestBlog.Id);
+            cacheBlog.ShouldBeNull();
         }
 
         [Fact]
         public void Delete_WhenEntityIsValid_ShouldPersistRecord()
         {
             using var transaction = new TransactionScope();
-            this.CreateTestRole(TestRole);
-            this.CreateTestUser(TestUser, TestRole);
+            
+            this.CreateTestBlog(TestBlog, TestRole, TestUser);
+
             var blogRepository = _scope.ServiceProvider.GetService<IBlogRepository>()!;
-            blogRepository
-                .SmartSave(TestBlog.GetContext(TestUser), true)
-                .OnFailure(r => throw new Exception($"Failed to create test blog: {r.GetMessages()}"));
-            using var db = blogRepository.DbContextFactory.CreateDbContext();
+            using var db = _superRepository.DbContextFactory.CreateDbContext();
             var blog = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
             blog.ShouldNotBeNull();
             blogRepository
@@ -126,6 +131,16 @@ namespace Origami.UI.Admin.IntegrationTests
             var blogAfterDelete = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
             blogAfterDelete.ShouldNotBeNull();
             blogAfterDelete.IsDeleted.ShouldBeTrue();
+
+            var cacheBlog = _superRepository.MyMemoryCache.Read<OrigamiBlog>().Id(TestBlog.Id)!;
+            cacheBlog.ShouldNotBeNull();
+            cacheBlog.Name.ShouldBe(TestBlog.Name);
+            cacheBlog.DateCreated.ShouldBe(TestBlog.DateCreated);
+            cacheBlog.NanoId.ShouldBe(TestBlog.NanoId);
+            cacheBlog.IsDeleted.ShouldBe(true);
+
+            // Cleanup cache
+            blogRepository.PurgeCache(cacheBlog);
         }
 
         [Fact]
@@ -150,13 +165,15 @@ namespace Origami.UI.Admin.IntegrationTests
             this.CreateTestBlog(TestBlog, TestRole, TestUser);
 
             var blogRepository = _scope.ServiceProvider.GetService<IBlogRepository>()!;
-            using var db = blogRepository.DbContextFactory.CreateDbContext();
+            using var db = _superRepository.DbContextFactory.CreateDbContext();
             var blog = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
 
             blog.ShouldNotBeNull();
             blog.Name.ShouldBe(TestBlog.Name);
             blog.DateCreated.ShouldBe(TestBlog.DateCreated);
             blog.NanoId.ShouldBe(TestBlog.NanoId);
+
+            blogRepository.PurgeCache(blog);
         }
 
         [Fact]
@@ -366,6 +383,8 @@ namespace Origami.UI.Admin.IntegrationTests
             blogAfterUpdate.ShouldNotBeNull();
             blogAfterUpdate.Name.ShouldBe("Updated Blog Name");
             blogAfterUpdate.DateModified.ShouldNotBeNull();
+
+            blogRepository.PurgeCache(TestBlog);
         }
 
         [Fact]
