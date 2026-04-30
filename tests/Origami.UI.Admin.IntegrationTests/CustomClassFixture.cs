@@ -18,8 +18,6 @@ namespace Origami.UI.Admin.IntegrationTests
         public static Guid RoleId = new Guid("e1f2d3c4-b5a6-7d8e-9f0a-1b2c3d4e5f6a");
         public static Guid RoleId1 = new Guid("f1e2d3c4-b5a6-7d8e-9f0a-1b2c3d4e5f6b");
 
-        protected readonly ISuperRepository _superRepository;
-
         public OrigamiBlog TestBlog = new OrigamiBlog
         {
             Id = BlogId,
@@ -126,59 +124,10 @@ namespace Origami.UI.Admin.IntegrationTests
         };
 
         protected readonly CustomWebApplicationFactory _factory;
-        protected readonly IServiceScope _scope;
 
         public CustomClassFixture(CustomWebApplicationFactory factory) : base()
         {
             _factory = factory;
-            _scope = _factory.Services.CreateScope();
-            _superRepository = _scope.ServiceProvider.GetService<ISuperRepository>()!;
-        }
-
-        protected void CreateTestBlog(OrigamiBlog blog, OrigamiRole role, OrigamiUser user)
-        {
-            this.CreateTestRole(role);
-            this.CreateTestUser(user, role);
-
-            _scope.ServiceProvider.GetService<IBlogRepository>()!
-                .SmartSave(blog.GetContext(), false)
-                .OnFailure(r => throw new Exception($"Failed to create test blog: {r.GetMessages()}"));
-        }
-
-        protected void CreateTestCategory(OrigamiCategory category)
-        {
-            _scope.ServiceProvider.GetService<ICategoryRepository>()!
-                .SmartSave(TestCategory.GetContext(TestUser), true)
-                .OnFailure(r => throw new Exception($"Failed to create test category: {r.GetMessages()}"));
-        }
-
-        protected void CreateTestUser(OrigamiUser user, OrigamiRole role)
-        {
-            var userRepository = _scope.ServiceProvider.GetService<IUserRepository>()!;
-            userRepository
-                .SmartSave(user.GetContext(), false)
-                .OnFailure(r => throw new Exception($"Failed to create test user: {r.GetMessages()}"));
-
-            var userRoleRepository = _scope.ServiceProvider.GetService<IUserRoleRepository>()!;
-            userRoleRepository
-                .SmartSave(new OrigamiUserRole { UserId = user.Id, RoleId = role.Id }.GetContext(), false)
-                .OnFailure(r => throw new Exception($"Failed to create test user role: {r.GetMessages()}"));
-        }
-
-        protected void CreateTestRole(OrigamiRole role)
-        {
-            var roleRepository = _scope.ServiceProvider.GetService<IRoleRepository>()!;
-            roleRepository
-                .SmartSave(role.GetContext(), false)
-                .OnFailure(r => throw new Exception($"Failed to create test role: {r.GetMessages()}"));
-        }
-
-        protected void CreateTestRoleNoPermissions()
-        {
-            var roleRepository = _scope.ServiceProvider.GetService<IRoleRepository>()!;
-            roleRepository
-                .SmartSave(TestRoleNoPermissions.GetContext(), false)
-                .OnFailure(r => throw new Exception($"Failed to create test role (no permissions): {r.GetMessages()}"));
         }
     }
 }

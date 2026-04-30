@@ -22,11 +22,13 @@ namespace Origami.UI.Admin.IntegrationTests
         public void Activate_WhenEntityIsValid_ShouldPersistRecord()
         {
             using var transaction = new TransactionScope();
+            using var scope = _factory.Services.CreateScope();
+            var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
-            this.CreateTestBlog(TestBlog, TestRole, TestUser);
+            scope.CreateTestBlog(TestBlog, TestRole, TestUser);
 
-            var blogRepository = _scope.ServiceProvider.GetService<IBlogRepository>()!;
-            using var db = blogRepository.DbContextFactory.CreateDbContext();
+            using var db = superRepository.DbContextFactory.CreateDbContext();
+            var blogRepository = scope.ServiceProvider.GetService<IBlogRepository>()!;
             var blog = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
 
             blog.ShouldNotBeNull();
@@ -50,17 +52,19 @@ namespace Origami.UI.Admin.IntegrationTests
         public void Deactivate_WhenEntityIsValid_ShouldPersistRecord()
         {
             using var transaction = new TransactionScope();
+            using var scope = _factory.Services.CreateScope();
+            var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
-            this.CreateTestRole(TestRole);
-            this.CreateTestUser(TestUser, TestRole);
+            scope.CreateTestRole(TestRole);
+            scope.CreateTestUser(TestUser, TestRole);
 
-            var blogRepository = _scope.ServiceProvider.GetService<IBlogRepository>()!;
+            var blogRepository = scope.ServiceProvider.GetService<IBlogRepository>()!;
 
             blogRepository
                 .SmartSave(TestBlog.GetContext(TestUser), true)
                 .OnFailure(r => throw new Exception($"Failed to create test blog: {r.GetMessages()}"));
 
-            using var db = blogRepository.DbContextFactory.CreateDbContext();
+            using var db = superRepository.DbContextFactory.CreateDbContext();
             var blog = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
 
             blog.ShouldNotBeNull();
@@ -92,9 +96,13 @@ namespace Origami.UI.Admin.IntegrationTests
         public void Delete_WhenBlogIsPrimary_ShouldFail()
         {
             using var transaction = new TransactionScope();
-            this.CreateTestRole(TestRole);
-            this.CreateTestUser(TestUser, TestRole);
-            var blogRepository = _scope.ServiceProvider.GetService<IBlogRepository>()!;
+            using var scope = _factory.Services.CreateScope();
+            var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
+
+            scope.CreateTestRole(TestRole);
+            scope.CreateTestUser(TestUser, TestRole);
+
+            var blogRepository = scope.ServiceProvider.GetService<IBlogRepository>()!;
 
             OrigamiBlog primary = null!;
 
@@ -113,7 +121,7 @@ namespace Origami.UI.Admin.IntegrationTests
             result.Messages[0].MessageType.ShouldBe(ResultMessage.MessageTypes.Error);
             result.Messages[0].Message.ShouldBe("Primary blog cannot be deleted");
 
-            var cacheBlog = _superRepository.MyMemoryCache.Read<OrigamiBlog>().Id(TestBlog.Id);
+            var cacheBlog = superRepository.MyMemoryCache.Read<OrigamiBlog>().Id(TestBlog.Id);
             cacheBlog.ShouldBeNull();
         }
 
@@ -121,11 +129,13 @@ namespace Origami.UI.Admin.IntegrationTests
         public void Delete_WhenEntityIsValid_ShouldPersistRecord()
         {
             using var transaction = new TransactionScope();
-            
-            this.CreateTestBlog(TestBlog, TestRole, TestUser);
+            using var scope = _factory.Services.CreateScope();
+            var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
-            var blogRepository = _scope.ServiceProvider.GetService<IBlogRepository>()!;
-            using var db = _superRepository.DbContextFactory.CreateDbContext();
+            scope.CreateTestBlog(TestBlog, TestRole, TestUser);
+
+            var blogRepository = scope.ServiceProvider.GetService<IBlogRepository>()!;
+            using var db = superRepository.DbContextFactory.CreateDbContext();
             var blog = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
             blog.ShouldNotBeNull();
             blogRepository
@@ -135,7 +145,7 @@ namespace Origami.UI.Admin.IntegrationTests
             blogAfterDelete.ShouldNotBeNull();
             blogAfterDelete.IsDeleted.ShouldBeTrue();
 
-            var cacheBlog = _superRepository.MyMemoryCache.Read<OrigamiBlog>().Id(TestBlog.Id)!;
+            var cacheBlog = superRepository.MyMemoryCache.Read<OrigamiBlog>().Id(TestBlog.Id)!;
             cacheBlog.ShouldNotBeNull();
             cacheBlog.Name.ShouldBe(TestBlog.Name);
             cacheBlog.DateCreated.ShouldBe(TestBlog.DateCreated);
@@ -149,7 +159,9 @@ namespace Origami.UI.Admin.IntegrationTests
         [Fact]
         public void GetPrimary_WhenEntityIsValid_ShouldNotThrowException()
         {
-            var blogRepository = _scope.ServiceProvider.GetService<IBlogRepository>()!;
+            using var scope = _factory.Services.CreateScope();
+            var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
+            var blogRepository = scope.ServiceProvider.GetService<IBlogRepository>()!;
 
             OrigamiBlog primary = null!;
 
@@ -164,11 +176,13 @@ namespace Origami.UI.Admin.IntegrationTests
         public void Insert_WhenEntityIsValid_ShouldPersistRecord()
         {
             using var transaction = new TransactionScope();
+            using var scope = _factory.Services.CreateScope();
+            var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
-            this.CreateTestBlog(TestBlog, TestRole, TestUser);
+            scope.CreateTestBlog(TestBlog, TestRole, TestUser);
 
-            var blogRepository = _scope.ServiceProvider.GetService<IBlogRepository>()!;
-            using var db = _superRepository.DbContextFactory.CreateDbContext();
+            var blogRepository = scope.ServiceProvider.GetService<IBlogRepository>()!;
+            using var db = superRepository.DbContextFactory.CreateDbContext();
             var blog = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
 
             blog.ShouldNotBeNull();
@@ -183,11 +197,13 @@ namespace Origami.UI.Admin.IntegrationTests
         public void Insert_WhenNameExceeds255Characters_ShouldFail()
         {
             using var transaction = new TransactionScope();
+            using var scope = _factory.Services.CreateScope();
+            var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
-            this.CreateTestRole(TestRole);
-            this.CreateTestUser(TestUser, TestRole);
+            scope.CreateTestRole(TestRole);
+            scope.CreateTestUser(TestUser, TestRole);
 
-            var blogRepository = _scope.ServiceProvider.GetService<IBlogRepository>()!;
+            var blogRepository = scope.ServiceProvider.GetService<IBlogRepository>()!;
 
             var result = blogRepository.SmartSave(TestBlogWithBigName.GetContext(TestUser), true);
 
@@ -209,19 +225,23 @@ namespace Origami.UI.Admin.IntegrationTests
         public void Insert_WhenNoPermissions_ShouldFail()
         {
             using var transaction = new TransactionScope();
+            using var scope = _factory.Services.CreateScope();
+            var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
-            this.CreateTestRole(TestRoleNoPermissions);
-            this.CreateTestUser(TestUser, TestRoleNoPermissions);
+            scope.CreateTestRole(TestRoleNoPermissions);
+            scope.CreateTestUser(TestUser, TestRoleNoPermissions);
 
-            var blogRepository = _scope.ServiceProvider.GetRequiredService<IBlogRepository>();
+            var blogRepository = scope.ServiceProvider.GetRequiredService<IBlogRepository>();
 
-            var exception = Record.Exception(() =>
-                blogRepository
-                .SmartSave(TestBlog.GetContext(TestUser), true)
-                .OnFailure(r => throw new Exception($"Failed to create test blog: {r.GetMessages()}")));
+            var exception = blogRepository.SmartSave(TestBlog.GetContext(TestUser), true);
 
             exception.ShouldNotBeNull();
-            exception.Message.ShouldBe("Failed to create test blog: CreateNewBlogs\r\nYou don't have permission for this feature");
+            exception.Ok.ShouldBeFalse();
+            exception.Messages.Count.ShouldBe(2);
+            exception.Messages[0].MessageType.ShouldBe(ResultMessage.MessageTypes.Info);
+            exception.Messages[0].Message.ShouldBe("CreateNewBlogs");
+            exception.Messages[1].MessageType.ShouldBe(ResultMessage.MessageTypes.Error);
+            exception.Messages[1].Message.ShouldBe("You don't have permission for this feature");
 
             using var db = blogRepository.DbContextFactory.CreateDbContext();
             var blog = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
@@ -232,14 +252,14 @@ namespace Origami.UI.Admin.IntegrationTests
         public void Purge_WhenBlogIsPrimary_ShouldFail()
         {
             using var transaction = new TransactionScope();
-            this.CreateTestRole(TestRole);
-            this.CreateTestUser(TestUser, TestRole);
-            var blogRepository = _scope.ServiceProvider.GetRequiredService<IBlogRepository>();
+            using var scope = _factory.Services.CreateScope();
+            var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
-            OrigamiBlog primary = null!;
+            scope.CreateTestRole(TestRole);
+            scope.CreateTestUser(TestUser, TestRole);
+            var blogRepository = scope.ServiceProvider.GetRequiredService<IBlogRepository>();
 
-            var exception = Record.Exception(() => primary = blogRepository.GetPrimary());
-            exception.ShouldBeNull();
+            OrigamiBlog primary = blogRepository.GetPrimary();
 
             primary.ShouldNotBeNull();
             primary.IsPrimary.ShouldBeTrue();
@@ -257,9 +277,12 @@ namespace Origami.UI.Admin.IntegrationTests
         public void Purge_WhenEntityIsValid_ShouldPersistRecord()
         {
             using var transaction = new TransactionScope();
-            this.CreateTestRole(TestRole);
-            this.CreateTestUser(TestUser, TestRole);
-            var blogRepository = _scope.ServiceProvider.GetService<IBlogRepository>()!;
+            using var scope = _factory.Services.CreateScope();
+            var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
+
+            scope.CreateTestRole(TestRole);
+            scope.CreateTestUser(TestUser, TestRole);
+            var blogRepository = scope.ServiceProvider.GetService<IBlogRepository>()!;
 
             blogRepository
                 .SmartSave(TestBlog.GetContext(TestUser), true)
@@ -289,9 +312,12 @@ namespace Origami.UI.Admin.IntegrationTests
         public void Restore_WhenEntityIsValid_ShouldPersistRecord()
         {
             using var transaction = new TransactionScope();
-            this.CreateTestRole(TestRole);
-            this.CreateTestUser(TestUser, TestRole);
-            var blogRepository = _scope.ServiceProvider.GetService<IBlogRepository>()!;
+            using var scope = _factory.Services.CreateScope();
+            var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
+
+            scope.CreateTestRole(TestRole);
+            scope.CreateTestUser(TestUser, TestRole);
+            var blogRepository = scope.ServiceProvider.GetService<IBlogRepository>()!;
 
             blogRepository
                 .SmartSave(TestBlog.GetContext(TestUser), true)
@@ -322,11 +348,13 @@ namespace Origami.UI.Admin.IntegrationTests
         public void SetPrimary_WhenEntityIsValid_ShouldPersistRecord()
         {
             using var transaction = new TransactionScope();
+            using var scope = _factory.Services.CreateScope();
+            var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
-            this.CreateTestRole(TestRole);
-            this.CreateTestUser(TestUser, TestRole);
+            scope.CreateTestRole(TestRole);
+            scope.CreateTestUser(TestUser, TestRole);
 
-            var blogRepository = _scope.ServiceProvider.GetService<IBlogRepository>()!;
+            var blogRepository = scope.ServiceProvider.GetService<IBlogRepository>()!;
 
             blogRepository
                 .SmartSave(TestBlog.GetContext(TestUser), true)
@@ -357,11 +385,13 @@ namespace Origami.UI.Admin.IntegrationTests
         public void Update_WhenEntityIsValid_ShouldPersistRecord()
         {
             using var transaction = new TransactionScope();
+            using var scope = _factory.Services.CreateScope();
+            var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
-            this.CreateTestRole(TestRole);
-            this.CreateTestUser(TestUser, TestRole);
+            scope.CreateTestRole(TestRole);
+            scope.CreateTestUser(TestUser, TestRole);
 
-            var blogRepository = _scope.ServiceProvider.GetService<IBlogRepository>()!;
+            var blogRepository = scope.ServiceProvider.GetService<IBlogRepository>()!;
 
             blogRepository
                 .SmartSave(TestBlog.GetContext(TestUser), true)
@@ -394,11 +424,13 @@ namespace Origami.UI.Admin.IntegrationTests
         public void Update_WhenNameExceeds255Characters_ShouldFail()
         {
             using var transaction = new TransactionScope();
+            using var scope = _factory.Services.CreateScope();
+            var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
-            this.CreateTestRole(TestRole);
-            this.CreateTestUser(TestUser, TestRole);
+            scope.CreateTestRole(TestRole);
+            scope.CreateTestUser(TestUser, TestRole);
 
-            var blogRepository = _scope.ServiceProvider.GetService<IBlogRepository>()!;
+            var blogRepository = scope.ServiceProvider.GetService<IBlogRepository>()!;
 
             blogRepository
                 .SmartSave(TestBlog.GetContext(TestUser), true)

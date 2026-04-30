@@ -19,11 +19,13 @@ namespace Origami.UI.Admin.IntegrationTests
         public void Delete_WhenEntityIsValid_ShouldPersistRecord()
         {
             using var transaction = new TransactionScope();
+            using var scope = _factory.Services.CreateScope();
+            var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
-            this.CreateTestBlog(TestBlog, TestRole, TestUser);
-            this.CreateTestCategory(TestCategory);
+            scope.CreateTestBlog(TestBlog, TestRole, TestUser);
+            scope.CreateTestCategory(TestCategory, TestUser);
 
-            using var db = _superRepository.DbContextFactory.CreateDbContext();
+            using var db = superRepository.DbContextFactory.CreateDbContext();
             var category = db.Categories.AsNoTracking().Id(TestCategory.Id);
 
             category.ShouldNotBeNull();
@@ -32,7 +34,7 @@ namespace Origami.UI.Admin.IntegrationTests
             category.NanoId.ShouldBe(TestCategory.NanoId);
             category.IsDeleted.ShouldBe(TestCategory.IsDeleted);
 
-            var categoryRepository = _scope.ServiceProvider.GetRequiredService<ICategoryRepository>();
+            var categoryRepository = scope.ServiceProvider.GetRequiredService<ICategoryRepository>();
             var result = categoryRepository.SmartDelete(category.GetContext(TestUser), true);
 
             result.ShouldNotBeNull();
@@ -45,7 +47,7 @@ namespace Origami.UI.Admin.IntegrationTests
             categoryAfterDelete.NanoId.ShouldBe(TestCategory.NanoId);
             categoryAfterDelete.IsDeleted.ShouldBe(true);
 
-            var cacheCategory = _superRepository.MyMemoryCache.Read<OrigamiCategory>().Id(TestCategory.Id)!;
+            var cacheCategory = superRepository.MyMemoryCache.Read<OrigamiCategory>().Id(TestCategory.Id)!;
             cacheCategory.ShouldNotBeNull();
             cacheCategory.Name.ShouldBe(TestCategory.Name);
             cacheCategory.DateCreated.ShouldBe(TestCategory.DateCreated);
@@ -59,11 +61,13 @@ namespace Origami.UI.Admin.IntegrationTests
         public void Insert_When3CategoriesAreLinkedToEachOther_ShouldPersistRecords()
         {
             using var transaction = new TransactionScope();
+            using var scope = _factory.Services.CreateScope();
+            var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
-            this.CreateTestBlog(TestBlog, TestRole, TestUser);
+            scope.CreateTestBlog(TestBlog, TestRole, TestUser);
 
-            var categoryRepository = _scope.ServiceProvider.GetRequiredService<ICategoryRepository>();
-            using var db = _superRepository.DbContextFactory.CreateDbContext();
+            var categoryRepository = scope.ServiceProvider.GetRequiredService<ICategoryRepository>();
+            using var db = superRepository.DbContextFactory.CreateDbContext();
 
             var resultA = categoryRepository.SmartSave(TestCategoryA.GetContext(TestUser), true);
             var resultB = categoryRepository.SmartSave(TestCategoryB.GetContext(TestUser), true);
@@ -94,7 +98,7 @@ namespace Origami.UI.Admin.IntegrationTests
                 category.NanoId.ShouldBe(memCategory.NanoId);
                 category.IsDeleted.ShouldBe(memCategory.IsDeleted);
 
-                var cacheCategory = _superRepository.MyMemoryCache.Read<OrigamiCategory>().Id(memCategory.Id)!;
+                var cacheCategory = superRepository.MyMemoryCache.Read<OrigamiCategory>().Id(memCategory.Id)!;
                 cacheCategory.ShouldNotBeNull();
                 cacheCategory.Name.ShouldBe(memCategory.Name);
                 cacheCategory.DateCreated.ShouldBe(memCategory.DateCreated);
@@ -111,11 +115,13 @@ namespace Origami.UI.Admin.IntegrationTests
         public void Insert_When3CategoriesAreLoopedToEachOther_ShouldFail()
         {
             using var transaction = new TransactionScope();
+            using var scope = _factory.Services.CreateScope();
+            var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
-            this.CreateTestBlog(TestBlog, TestRole, TestUser);
+            scope.CreateTestBlog(TestBlog, TestRole, TestUser);
 
-            var categoryRepository = _scope.ServiceProvider.GetRequiredService<ICategoryRepository>();
-            using var db = _superRepository.DbContextFactory.CreateDbContext();
+            var categoryRepository = scope.ServiceProvider.GetRequiredService<ICategoryRepository>();
+            using var db = superRepository.DbContextFactory.CreateDbContext();
 
             var resultA = categoryRepository.SmartSave(TestCategoryA.GetContext(TestUser), true);
             var resultB = categoryRepository.SmartSave(TestCategoryB.GetContext(TestUser), true);
@@ -146,7 +152,7 @@ namespace Origami.UI.Admin.IntegrationTests
                 category.NanoId.ShouldBe(memCategory.NanoId);
                 category.IsDeleted.ShouldBe(memCategory.IsDeleted);
 
-                var cacheCategory = _superRepository.MyMemoryCache.Read<OrigamiCategory>().Id(memCategory.Id)!;
+                var cacheCategory = superRepository.MyMemoryCache.Read<OrigamiCategory>().Id(memCategory.Id)!;
                 cacheCategory.ShouldNotBeNull();
                 cacheCategory.Name.ShouldBe(memCategory.Name);
                 cacheCategory.DateCreated.ShouldBe(memCategory.DateCreated);
@@ -168,7 +174,7 @@ namespace Origami.UI.Admin.IntegrationTests
             categoryAfterLoop.ShouldNotBeNull();
             categoryAfterLoop.ParentId.ShouldBeNull();
 
-            var cacheAfterLoop = _superRepository.MyMemoryCache.Read<OrigamiCategory>().Id(TestCategoryA.Id);
+            var cacheAfterLoop = superRepository.MyMemoryCache.Read<OrigamiCategory>().Id(TestCategoryA.Id);
             cacheAfterLoop.ShouldNotBeNull();
             cacheAfterLoop.ParentId.ShouldBeNull();
 
@@ -181,11 +187,13 @@ namespace Origami.UI.Admin.IntegrationTests
         public void Insert_WhenEntityIsValid_ShouldPersistRecord()
         {
             using var transaction = new TransactionScope();
+            using var scope = _factory.Services.CreateScope();
+            var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
-            this.CreateTestBlog(TestBlog, TestRole, TestUser);
-            this.CreateTestCategory(TestCategory);
+            scope.CreateTestBlog(TestBlog, TestRole, TestUser);
+            scope.CreateTestCategory(TestCategory, TestUser);
 
-            using var db = _superRepository.DbContextFactory.CreateDbContext();
+            using var db = superRepository.DbContextFactory.CreateDbContext();
 
             var category = db.Categories.AsNoTracking().FirstOrDefault(c => c.Id == TestCategory.Id);
             category.ShouldNotBeNull();
@@ -193,25 +201,27 @@ namespace Origami.UI.Admin.IntegrationTests
             category.DateCreated.ShouldBe(TestCategory.DateCreated);
             category.NanoId.ShouldBe(TestCategory.NanoId);
 
-            var cacheCategory = _superRepository.MyMemoryCache.Read<OrigamiCategory>().Id(TestCategory.Id);
+            var cacheCategory = superRepository.MyMemoryCache.Read<OrigamiCategory>().Id(TestCategory.Id);
             cacheCategory.ShouldNotBeNull();
             cacheCategory.Name.ShouldBe(TestCategory.Name);
             cacheCategory.DateCreated.ShouldBe(TestCategory.DateCreated);
             cacheCategory.NanoId.ShouldBe(TestCategory.NanoId);
             cacheCategory.IsDeleted.ShouldBe(false);
 
-            _scope.ServiceProvider.GetRequiredService<ICategoryRepository>().PurgeCache(TestCategory);
+            scope.ServiceProvider.GetRequiredService<ICategoryRepository>().PurgeCache(TestCategory);
         }
 
         [Fact]
         public void Insert_WhenNameExceeds50Characters_ShouldFail()
         {
             using var transaction = new TransactionScope();
+            using var scope = _factory.Services.CreateScope();
+            var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
-            this.CreateTestBlog(TestBlog, TestRole, TestUser);
+            scope.CreateTestBlog(TestBlog, TestRole, TestUser);
 
-            using var db = _superRepository.DbContextFactory.CreateDbContext();
-            var categoryRepository = _scope.ServiceProvider.GetRequiredService<ICategoryRepository>();
+            using var db = superRepository.DbContextFactory.CreateDbContext();
+            var categoryRepository = scope.ServiceProvider.GetRequiredService<ICategoryRepository>();
             var result = categoryRepository.SmartSave(TestCategoryWithBigName.GetContext(TestUser), true);
 
             result.ShouldNotBeNull();
@@ -226,7 +236,7 @@ namespace Origami.UI.Admin.IntegrationTests
             var category = db.Categories.AsNoTracking().FirstOrDefault(c => c.Id == TestCategoryWithBigName.Id);
             category.ShouldBeNull();
 
-            var cacheCategory = _superRepository.MyMemoryCache.Read<OrigamiCategory>().Id(TestCategory.Id);
+            var cacheCategory = superRepository.MyMemoryCache.Read<OrigamiCategory>().Id(TestCategory.Id);
             cacheCategory.ShouldBeNull();
         }
 
@@ -234,11 +244,13 @@ namespace Origami.UI.Admin.IntegrationTests
         public void Purge_WhenEntityIsDeleted_ShouldPersistRecord()
         {
             using var transaction = new TransactionScope();
+            using var scope = _factory.Services.CreateScope();
+            var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
-            this.CreateTestBlog(TestBlog, TestRole, TestUser);
-            this.CreateTestCategory(TestCategory);
+            scope.CreateTestBlog(TestBlog, TestRole, TestUser);
+            scope.CreateTestCategory(TestCategory, TestUser);
 
-            using var db = _scope.ServiceProvider.GetService<IDbContextFactory<OrigamiDbContext>>()!.CreateDbContext();
+            using var db = superRepository.DbContextFactory.CreateDbContext();
             var category = db.Categories.AsNoTracking().Id(TestCategory.Id);
 
             category.ShouldNotBeNull();
@@ -247,7 +259,7 @@ namespace Origami.UI.Admin.IntegrationTests
             category.NanoId.ShouldBe(TestCategory.NanoId);
             category.IsDeleted.ShouldBe(TestCategory.IsDeleted);
 
-            var categoryRepository = _scope.ServiceProvider.GetService<ICategoryRepository>()!;
+            var categoryRepository = scope.ServiceProvider.GetService<ICategoryRepository>()!;
             var delete = categoryRepository.SmartDelete(category.GetContext(TestUser), true);
             delete.ShouldNotBeNull();
             delete.Ok.ShouldBeTrue();
@@ -266,7 +278,7 @@ namespace Origami.UI.Admin.IntegrationTests
             var categoryAfterPurge = categoryRepository.ReadFromDatabase(TestCategory);
             categoryAfterPurge.ShouldBeNull();
 
-            var cacheCategory = _superRepository.MyMemoryCache.Read<OrigamiCategory>().Id(TestCategory.Id);
+            var cacheCategory = superRepository.MyMemoryCache.Read<OrigamiCategory>().Id(TestCategory.Id);
             cacheCategory.ShouldBeNull();
         }
 
@@ -274,12 +286,14 @@ namespace Origami.UI.Admin.IntegrationTests
         public void Update_WhenEntityIsValid_ShouldPersistRecord()
         {
             using var transaction = new TransactionScope();
+            using var scope = _factory.Services.CreateScope();
+            var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
-            this.CreateTestBlog(TestBlog, TestRole, TestUser);
-            this.CreateTestCategory(TestCategory);
+            scope.CreateTestBlog(TestBlog, TestRole, TestUser);
+            scope.CreateTestCategory(TestCategory, TestUser);
 
-            using var db = _superRepository.DbContextFactory.CreateDbContext();
-            var categoryRepository = _scope.ServiceProvider.GetRequiredService<ICategoryRepository>();
+            using var db = superRepository.DbContextFactory.CreateDbContext();
+            var categoryRepository = scope.ServiceProvider.GetRequiredService<ICategoryRepository>();
             var category = db.Categories.AsNoTracking().FirstOrDefault(c => c.Id == TestCategory.Id);
 
             category.ShouldNotBeNull();
@@ -297,7 +311,7 @@ namespace Origami.UI.Admin.IntegrationTests
             categoryAfterUpdate.ShouldNotBeNull();
             categoryAfterUpdate.Name.ShouldBe("Updated category name");
 
-            var cacheCategory = _superRepository.MyMemoryCache.Read<OrigamiCategory>().Id(TestCategory.Id);
+            var cacheCategory = superRepository.MyMemoryCache.Read<OrigamiCategory>().Id(TestCategory.Id);
             cacheCategory.ShouldNotBeNull();
             cacheCategory.Name.ShouldBe("Updated category name");
 
@@ -308,12 +322,14 @@ namespace Origami.UI.Admin.IntegrationTests
         public void Update_WhenNameExceeds50Characters_ShouldPersistRecord()
         {
             using var transaction = new TransactionScope();
+            using var scope = _factory.Services.CreateScope();
+            var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
-            this.CreateTestBlog(TestBlog, TestRole, TestUser);
-            this.CreateTestCategory(TestCategory);
+            scope.CreateTestBlog(TestBlog, TestRole, TestUser);
+            scope.CreateTestCategory(TestCategory, TestUser);
 
-            using var db = _superRepository.DbContextFactory.CreateDbContext();
-            var categoryRepository = _scope.ServiceProvider.GetRequiredService<ICategoryRepository>();
+            using var db = superRepository.DbContextFactory.CreateDbContext();
+            var categoryRepository = scope.ServiceProvider.GetRequiredService<ICategoryRepository>();
             var category = db.Categories.AsNoTracking().FirstOrDefault(c => c.Id == TestCategory.Id);
 
             category.ShouldNotBeNull();
@@ -338,7 +354,7 @@ namespace Origami.UI.Admin.IntegrationTests
             categoryAfterUpdate.ShouldNotBeNull();
             categoryAfterUpdate.Name.ShouldBe("Test category");
 
-            var cacheCategory = _superRepository.MyMemoryCache.Read<OrigamiCategory>().Id(TestCategory.Id);
+            var cacheCategory = superRepository.MyMemoryCache.Read<OrigamiCategory>().Id(TestCategory.Id);
             cacheCategory.ShouldNotBeNull();
             cacheCategory.Name.ShouldBe("Test category");
 
