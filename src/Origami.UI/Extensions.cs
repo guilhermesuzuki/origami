@@ -301,6 +301,7 @@ namespace Origami.UI
 
             return services;
         }
+
         public static string Error(this IEnumerable<IdentityError> errors)
         {
             if (errors.Count() > 0)
@@ -342,11 +343,7 @@ namespace Origami.UI
             return string.Empty;
         }
 
-        public static WebApplication FoldTheOrigami<T>(
-            this WebApplicationBuilder builder,
-            string[] args,
-            bool admin = false,
-            Action? inject = null)
+        public static WebApplication FoldTheOrigami<T>(this WebApplicationBuilder builder, string[] args, bool admin = false, Action? inject = null)
         {
             //first thing in the morning
             builder.AddOrigami(args, admin: admin);
@@ -575,7 +572,7 @@ namespace Origami.UI
 
             if (admin == false)
             {
-                // RSS feed endpoint
+                // RSS feed endpoint (minimal API)
                 app.MapGet("/blogs/{slug}/rss.xml", async (string slug, HttpContext context, IRssRepository rss) =>
                 {
                     var oi = context.Request.Scheme + "://" + context.Request.Host.Value;
