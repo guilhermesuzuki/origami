@@ -237,6 +237,7 @@ namespace Origami.UI.Admin.IntegrationTests
 
             exception.ShouldNotBeNull();
             exception.Ok.ShouldBeFalse();
+            exception.Messages.ShouldNotBeNull();
             exception.Messages.Count.ShouldBe(2);
             exception.Messages[0].MessageType.ShouldBe(ResultMessage.MessageTypes.Info);
             exception.Messages[0].Message.ShouldBe("CreateNewBlogs");
