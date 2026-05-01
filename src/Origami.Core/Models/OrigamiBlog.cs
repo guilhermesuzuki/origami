@@ -32,6 +32,8 @@ namespace Origami.Core.Models
         protected string _name = string.Empty;
         protected byte[] _version = [];
 
+        protected string _slug = string.Empty;
+
         /// <summary>
         /// Default constructor
         /// </summary>
@@ -40,7 +42,16 @@ namespace Origami.Core.Models
             
         }
 
-        public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) => { };
+        public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) => 
+        { 
+            if (sender is OrigamiBlog blog)
+            {
+                if (e.PropertyName == nameof(Name))
+                {
+                    blog.Slug = blog.Name.GetSlug();
+                }
+            }
+        };
 
         public string? AdditionalInfo
         {
@@ -119,8 +130,12 @@ namespace Origami.Core.Models
             set => Set(info => info.Order = value);
         }
 
-        [NotMapped]
-        public string Slug => Name.GetSlug();
+        [StringLength(255)]
+        public string Slug 
+        {
+            get => _slug;
+            set => this.Set(ref _slug, value, Changed);
+        }
 
         [Timestamp]
         public byte[] Version
@@ -128,6 +143,7 @@ namespace Origami.Core.Models
             get => _version;
             set => this.Set(ref _version, value, Changed);
         }
+
         public AdditionalInfo.ForBlogs Get()
         {
             return AdditionalInfo.To<AdditionalInfo.ForBlogs>();
