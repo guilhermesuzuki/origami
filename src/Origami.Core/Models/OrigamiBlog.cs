@@ -143,6 +143,7 @@ namespace Origami.Core.Models
             get => _version;
             set => this.Set(ref _version, value, Changed);
         }
+
         public AdditionalInfo.ForBlogs Get()
         {
             return AdditionalInfo.To<AdditionalInfo.ForBlogs>();
