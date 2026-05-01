@@ -121,8 +121,8 @@ namespace Origami.UI.Admin.IntegrationTests
             result.Messages[0].MessageType.ShouldBe(ResultMessage.MessageTypes.Error);
             result.Messages[0].Message.ShouldBe("Primary blog cannot be deleted");
 
-            var cacheBlog = superRepository.MyMemoryCache.Read<OrigamiBlog>().Id(TestBlog.Id);
-            cacheBlog.ShouldBeNull();
+            var cacheBlog = superRepository.MyMemoryCache.Read<OrigamiBlog>().Id(primary.Id);
+            cacheBlog.ShouldNotBeNull();
         }
 
         [Fact]
@@ -194,7 +194,7 @@ namespace Origami.UI.Admin.IntegrationTests
         }
 
         [Fact]
-        public void Insert_WhenNameExceeds255Characters_ShouldFail()
+        public void Insert_WhenNameIsTooLarge_ShouldFail()
         {
             using var transaction = new TransactionScope();
             using var scope = _factory.Services.CreateScope();
@@ -422,7 +422,7 @@ namespace Origami.UI.Admin.IntegrationTests
         }
 
         [Fact]
-        public void Update_WhenNameExceeds255Characters_ShouldFail()
+        public void Update_WhenNameIsTooLarge_ShouldFail()
         {
             using var transaction = new TransactionScope();
             using var scope = _factory.Services.CreateScope();

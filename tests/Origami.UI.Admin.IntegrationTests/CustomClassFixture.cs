@@ -90,16 +90,21 @@ namespace Origami.UI.Admin.IntegrationTests
             ActivateBlogs = true,
             CreateNewBlogs = true,
             CreateNewCategories = true,
+            CreateNewRoles = true,
             DeactivateBlogs = true,
             DeleteBlogs = true,
             DeleteCategories = true,
+            DeleteRoles = true,
             EditBlogs = true,
             EditCategories = true,
+            EditRoles = true,
             MarkBlogAsPrimary = true,
             PurgeBlogs = true,
             PurgeCategories = true,
+            PurgeRoles = true,
             RestoreBlogs = true,
             RestoreCategories = true,
+            RestoreRoles = true,
         };
 
         public OrigamiRole TestRoleNoPermissions = new()

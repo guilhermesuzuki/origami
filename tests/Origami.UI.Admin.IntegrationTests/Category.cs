@@ -212,7 +212,7 @@ namespace Origami.UI.Admin.IntegrationTests
         }
 
         [Fact]
-        public void Insert_WhenNameExceeds50Characters_ShouldFail()
+        public void Insert_WhenNameIsTooLarge_ShouldFail()
         {
             using var transaction = new TransactionScope();
             using var scope = _factory.Services.CreateScope();
@@ -283,6 +283,56 @@ namespace Origami.UI.Admin.IntegrationTests
         }
 
         [Fact]
+        public void Restore_WhenEntityIsDeleted_ShouldPersistRecord()
+        {
+            using var transaction = new TransactionScope();
+            using var scope = _factory.Services.CreateScope();
+            var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
+
+            scope.CreateTestBlog(TestBlog, TestRole, TestUser);
+            scope.CreateTestCategory(TestCategory, TestUser);
+
+            using var db = superRepository.DbContextFactory.CreateDbContext();
+            var category = db.Categories.AsNoTracking().Id(TestCategory.Id);
+
+            category.ShouldNotBeNull();
+            category.Name.ShouldBe(TestCategory.Name);
+            category.DateCreated.ShouldBe(TestCategory.DateCreated);
+            category.NanoId.ShouldBe(TestCategory.NanoId);
+            category.IsDeleted.ShouldBe(TestCategory.IsDeleted);
+
+            var categoryRepository = scope.ServiceProvider.GetService<ICategoryRepository>()!;
+            var delete = categoryRepository.SmartDelete(category.GetContext(TestUser), true);
+            delete.ShouldNotBeNull();
+            delete.Ok.ShouldBeTrue();
+
+            var categoryAfterDelete = categoryRepository.ReadFromDatabase(TestCategory);
+            categoryAfterDelete.ShouldNotBeNull();
+            categoryAfterDelete.Name.ShouldBe(TestCategory.Name);
+            categoryAfterDelete.DateCreated.ShouldBe(TestCategory.DateCreated);
+            categoryAfterDelete.NanoId.ShouldBe(TestCategory.NanoId);
+            categoryAfterDelete.IsDeleted.ShouldBe(true);
+
+            var restore = categoryRepository.SmartRestore(categoryAfterDelete.GetContext(TestUser), true);
+            restore.ShouldNotBeNull();
+            restore.Ok.ShouldBeTrue();
+
+            var categoryAfterRestore = categoryRepository.ReadFromDatabase(TestCategory);
+            categoryAfterRestore.ShouldNotBeNull();
+            categoryAfterRestore.Name.ShouldBe(TestCategory.Name);
+            categoryAfterRestore.DateCreated.ShouldBe(TestCategory.DateCreated);
+            categoryAfterRestore.NanoId.ShouldBe(TestCategory.NanoId);
+            categoryAfterRestore.IsDeleted.ShouldBe(false);
+
+            var cacheCategory = superRepository.MyMemoryCache.Read<OrigamiCategory>().Id(TestCategory.Id);
+            cacheCategory.ShouldNotBeNull();
+            cacheCategory.Name.ShouldBe(TestCategory.Name);
+            cacheCategory.DateCreated.ShouldBe(TestCategory.DateCreated);
+            cacheCategory.NanoId.ShouldBe(TestCategory.NanoId);
+            cacheCategory.IsDeleted.ShouldBeFalse();
+        }
+
+        [Fact]
         public void Update_WhenEntityIsValid_ShouldPersistRecord()
         {
             using var transaction = new TransactionScope();
@@ -319,7 +369,7 @@ namespace Origami.UI.Admin.IntegrationTests
         }
 
         [Fact]
-        public void Update_WhenNameExceeds50Characters_ShouldPersistRecord()
+        public void Update_WhenNameIsTooLarge_ShouldPersistRecord()
         {
             using var transaction = new TransactionScope();
             using var scope = _factory.Services.CreateScope();
