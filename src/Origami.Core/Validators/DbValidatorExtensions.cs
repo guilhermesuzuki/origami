@@ -7,21 +7,6 @@ namespace Origami.Core.Validators
 {
     public static class DbValidatorExtensions
     {
-        public static IRuleBuilderOptions<T, List<OrigamiContentCategory>> CategoriesMustBeUnique<T>(this IRuleBuilder<T, List<OrigamiContentCategory>> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory)
-        {
-            return ruleBuilder
-                .Must(categories =>
-                {
-                    if (categories.DistinctBy(x => x.CategoryId).Count() != categories.Count)
-                    {
-                        return false;
-                    }
-
-                    return true;
-                })
-                .WithMessage(text.Original("Categories must be unique"));
-        }
-
         public static IRuleBuilderOptions<T, Guid> Category<T>(this IRuleBuilder<T, Guid> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory)
         {
             return ruleBuilder
@@ -135,18 +120,6 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("Slug is already in use"));
         }
 
-        public static IRuleBuilderOptions<T, List<OrigamiContentTag>> TagsMustBeUnique<T>(this IRuleBuilder<T, List<OrigamiContentTag>> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory)
-        {
-            return ruleBuilder
-                .Must(tags =>
-                {
-                    if (tags.DistinctBy(x => x.Tag).Count() != tags.Count)
-                    {
-                        return false;
-                    }
-                    return true;
-                })
-                .WithMessage(text.Original("Tags must be unique"));
-        }
+        
     }
 }

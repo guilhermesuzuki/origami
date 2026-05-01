@@ -322,5 +322,34 @@ namespace Origami.Core.Validators
                 })
                 .WithMessage(text.Original("{0}: URL must be a valid website address", field));
         }
+
+        public static IRuleBuilderOptions<T, List<OrigamiContentTag>> TagsMustBeUnique<T>(this IRuleBuilder<T, List<OrigamiContentTag>> ruleBuilder, Text text)
+        {
+            return ruleBuilder
+                .Must(tags =>
+                {
+                    if (tags.DistinctBy(x => x.Tag).Count() != tags.Count)
+                    {
+                        return false;
+                    }
+                    return true;
+                })
+                .WithMessage(text.Original("Tags must be unique"));
+        }
+
+        public static IRuleBuilderOptions<T, List<OrigamiContentCategory>> CategoriesMustBeUnique<T>(this IRuleBuilder<T, List<OrigamiContentCategory>> ruleBuilder, Text text)
+        {
+            return ruleBuilder
+                .Must(categories =>
+                {
+                    if (categories.DistinctBy(x => x.CategoryId).Count() != categories.Count)
+                    {
+                        return false;
+                    }
+
+                    return true;
+                })
+                .WithMessage(text.Original("Categories must be unique"));
+        }
     }
 }
