@@ -80,7 +80,7 @@ namespace Origami.Core.Data
             if (newPassword1 != newPassword2) return new() { Error = Text.Original("New passwords do NOT match, they differ from each other") };
             if (oldPassword == newPassword1) return new() { Error = Text.Original("You did NOT change passwords, current and new are the same") };
 
-            var hub = new Result<OrigamiUser>(user).Pull(newPassword1.IsPasswordStrong());
+            var hub = new Result<OrigamiUser>(user).Pull(newPassword1.IsPasswordStrong(Text));
             if (hub.Ok == false) return hub;
 
             // sets the new password
@@ -268,7 +268,7 @@ namespace Origami.Core.Data
                 if (permission.Ok == false) return permission;
             }
 
-            var hub = newPassword1.IsPasswordStrong();
+            var hub = newPassword1.IsPasswordStrong(Text);
             if (hub.Ok)
             {
                 if (newPassword1 != newPassword2)

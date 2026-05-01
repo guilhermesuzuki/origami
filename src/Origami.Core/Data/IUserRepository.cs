@@ -71,6 +71,7 @@ namespace Origami.Core.Data
         /// langword="true"/> to check permissions; otherwise, <see langword="false"/>.</param>
         /// <returns>A <see cref="Result"/> indicating the success or failure of the password reset operation.</returns>
         Result ResetPassword(DataOperationContext<OrigamiUser> ctx, string key, string newPassword1, string newPassword2, bool checkPermission);
+
         /// <summary>
         /// Unblocks a user in the specified data operation context.
         /// </summary>

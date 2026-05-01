@@ -75,8 +75,8 @@ namespace Origami.UI.Admin.IntegrationTests
                 Name = "Another test role",
                 NanoId = Guid.NewGuid().ToString().Substring(0, 8),
                 CreateNewBlogs = true,
-                EditBlogs = true,
                 DeleteBlogs = true,
+                EditBlogs = true,
                 PurgeBlogs = true, 
             };
 

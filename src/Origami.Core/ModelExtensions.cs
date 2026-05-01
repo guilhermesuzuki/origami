@@ -777,23 +777,23 @@ namespace Origami.Core
         /// </summary>
         /// <param name="password"></param>
         /// <returns></returns>
-        public static Result IsPasswordStrong(this string password)
+        public static Result IsPasswordStrong(this string password, Text text)
         {
             var result = new Result();
 
             if (password.Has() == false)
             {
-                result.Error = "Password is empty";
+                result.Error = text.Original("Password is empty");
             }
             else
             {
-                if (password.Length < 5) result.Error = "Password too short";
-                if (Regex.IsMatch(password, "[0-9]+") == false) result.Error = "Number was not found in password";
-                if (Regex.IsMatch(password, "[a-zA-Z]+") == false) result.Error = "Character was not found in password";
-                if (Regex.IsMatch(password, @"[!@#$%^&*()_\-+=\[\]{}|\\:;\""<>,.?/~`]") == false) result.Error = "Special character was not found in password";
+                if (password.Length < 5) result.Error = text.Original("Password too short");
+                if (Regex.IsMatch(password, "[0-9]+") == false) result.Error = text.Original("Number was not found in password");
+                if (Regex.IsMatch(password, "[a-zA-Z]+") == false) result.Error = text.Original("Character was not found in password");
+                if (Regex.IsMatch(password, @"[!@#$%^&*()_\-+=\[\]{}|\\:;\""<>,.?/~`]") == false) result.Error = text.Original("Special character was not found in password");
             }
 
-            return result.Ok ? new() { Success = "Password is strong" } : result;
+            return result.Ok ? new() { Success = text.Original("Password is strong") } : result;
         }
 
         /// <summary>
