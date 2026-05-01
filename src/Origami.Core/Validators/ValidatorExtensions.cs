@@ -206,13 +206,13 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("Date of modification must happen after the creation date"));
         }
 
-        public static IRuleBuilderOptions<T, string> Name<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
+        public static IRuleBuilderOptions<T, string> Name<T>(this IRuleBuilder<T, string> ruleBuilder, Text text, int maximumCharactersAllowed = 255)
         {
             return ruleBuilder
                 .NotEmpty()
                 .WithMessage(text.Original("Name is required"))
-                .MaximumLength(255)
-                .WithMessage(text.Original("Name cannot exceed {0} characters", 255));
+                .MaximumLength(maximumCharactersAllowed)
+                .WithMessage(text.Original("Name cannot exceed {0} characters", maximumCharactersAllowed));
         }
 
         public static IRuleBuilderOptions<T, string> NanoId<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
@@ -261,20 +261,11 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("RSS feed must be a valid website address"));
         }
 
-        public static IRuleBuilderOptions<T, string> ShortName<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
+        public static IRuleBuilderOptions<T, string> Slug<T>(this IRuleBuilder<T, string> ruleBuilder, Text text, int maximumCharactersAllowed = 255)
         {
             return ruleBuilder
-                .NotEmpty()
-                .WithMessage(text.Original("Name is required"))
-                .MaximumLength(50)
-                .WithMessage(text.Original("Name cannot exceed {0} characters", 50));
-        }
-
-        public static IRuleBuilderOptions<T, string> Slug<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
-        {
-            return ruleBuilder
-                .MaximumLength(255)
-                .WithMessage(text.Original("Slug cannot exceed {0} characters", 255));
+                .MaximumLength(maximumCharactersAllowed)
+                .WithMessage(text.Original("Slug cannot exceed {0} characters", maximumCharactersAllowed));
         }
 
         public static IRuleBuilderOptions<T, string> Tag<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
