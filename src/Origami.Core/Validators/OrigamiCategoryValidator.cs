@@ -14,7 +14,7 @@ namespace Origami.Core.Validators
             RuleFor(x => x.NanoId).NanoId(text);
             RuleFor(x => x.Name).Name(text, 50);
             RuleFor(x => x.Description).Description(text);
-            RuleFor(x => x.Slug).Slug(text, 50);
+            RuleFor(x => x.Slug).Cascade(CascadeMode.Stop).Slug(text, 50);
             RuleFor(x => x).ParentId(text);
             RuleFor(x => x).LoopsAreNotAllowed(text, dbContextFactory);
             RuleFor(x => x).NameMustBeUniqueByBlog(text, dbContextFactory);

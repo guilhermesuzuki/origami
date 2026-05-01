@@ -264,6 +264,12 @@ namespace Origami.Core.Validators
         public static IRuleBuilderOptions<T, string> Slug<T>(this IRuleBuilder<T, string> ruleBuilder, Text text, int maximumCharactersAllowed = 255)
         {
             return ruleBuilder
+                .NotNull()
+                // TODO: add this to resx files
+                .WithMessage(text.Original("Slug is required"))
+                .NotEmpty()
+                // TODO: add this to resx files
+                .WithMessage(text.Original("Slug is required"))
                 .MaximumLength(maximumCharactersAllowed)
                 .WithMessage(text.Original("Slug cannot exceed {0} characters", maximumCharactersAllowed));
         }
