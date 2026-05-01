@@ -1244,16 +1244,13 @@ namespace Origami.Core
         {
             if (entity is ISlug slugger)
             {
-                if (slugger.Slug.Has() == false)
+                slugger.Slug = entity switch
                 {
-                    slugger.Slug = entity switch
-                    {
-                        ITitle title => title.Title.GetSlug(),
-                        IName name => name.Name.GetSlug(),
-                        ITag tag => tag.Tag.GetSlug(),
-                        _ => string.Empty,
-                    };
-                }
+                    ITitle title => title.Title.GetSlug(),
+                    IName name => name.Name.GetSlug(),
+                    ITag tag => tag.Tag.GetSlug(),
+                    _ => string.Empty,
+                };
             }
 
             return entity;
