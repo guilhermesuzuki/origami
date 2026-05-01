@@ -23,6 +23,7 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Origami.Core;
 using Origami.Core.Data;
+using Origami.Core.Data.Migrations;
 using Origami.Core.Models;
 using Origami.Core.Models.Jwt;
 using Origami.Core.Validators;
@@ -202,6 +203,9 @@ namespace Origami.UI
             builder.Services.AddTransient<IHubContentRepository<HubContentSpecialPage>, HubContentSpecialPageRepository>();
             builder.Services.AddTransient<IHubContentRepository<HubContentQuickNote>, HubContentQuickNoteRepository>();
             builder.Services.AddTransient<IHubContentRepository<HubContentVideo>, HubContentVideoRepository>();
+
+            builder.Services.AddTransient<DbMigration, DbMigration_20260430_171100>();
+            builder.Services.AddTransient<DbMigrationRepository>();
 
             //sets the blog as the primary one
             builder.Services.AddScoped<IUserFacade, UserFacade>(provider =>
@@ -414,6 +418,9 @@ namespace Origami.UI
             if (openTelemetry) app.MapPrometheusScrapingEndpoint();
 
             app.MapRazorComponents<T>().AddInteractiveServerRenderMode();
+
+            var dbMigrationRepository = app.Services.GetRequiredService<DbMigrationRepository>();
+            dbMigrationRepository.Migrate();
 
             return app;
         }

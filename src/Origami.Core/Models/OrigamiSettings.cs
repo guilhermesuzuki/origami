@@ -114,6 +114,8 @@ namespace Origami.Core.Models
         private bool _isCommentsEnabled;
         private bool _keepTestingTheSmtpServerConnectivity = false;
         private string _languageWrittenOn = string.Empty;
+        private DateTime _lastDatabaseMigration = DateTime.MinValue;
+        private bool _maintenanceMode = false;
         private int _maxRemoteFileSize = _defaultMaxRemoteFileSize;
         private string _name = string.Empty;
         private int _numberOfReferrerDays;
@@ -155,9 +157,6 @@ namespace Origami.Core.Models
         private string _trackingScript = string.Empty;
         private bool _trustAuthenticatedUsers;
         private bool _useBlogNameInPageTitles;
-
-        private bool _maintenanceMode = false;
-
         /// <summary>
         ///     Occurs when [changed].
         /// </summary>
@@ -1370,9 +1369,27 @@ namespace Origami.Core.Models
         public Guid Id { get; set; } = Guid.NewGuid();
 
         /// <summary>
+        /// [IMPORTANT] Last database migration date and time.
+        /// </summary>
+        public DateTime LastDatabaseMigration
+        {
+            get => _lastDatabaseMigration;
+            set => this.Set(ref _lastDatabaseMigration, value, Changed);
+        }
+
+        /// <summary>
         /// Logo URL
         /// </summary>
         public string LogoUrl { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Is the website in maintenance mode?
+        /// </summary>
+        public bool MaintenanceMode
+        {
+            get => _maintenanceMode;
+            set => this.Set(ref _maintenanceMode, value, Changed);
+        }
 
         public bool New => false;
 
@@ -1603,14 +1620,5 @@ namespace Origami.Core.Models
         }
 
         #endregion
-
-        /// <summary>
-        /// Is the website in maintenance mode?
-        /// </summary>
-        public bool MaintenanceMode
-        {
-            get => _maintenanceMode;
-            set => this.Set(ref _maintenanceMode, value, Changed);
-        }
     }
 }
