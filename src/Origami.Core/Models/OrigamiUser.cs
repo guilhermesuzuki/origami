@@ -1,5 +1,4 @@
-﻿using NanoidDotNet;
-using OtpNet;
+﻿using OtpNet;
 using QRCoder;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -50,7 +49,7 @@ namespace Origami.Core.Models
 
         public OrigamiUser() : base()
         {
-            
+
         }
 
         public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) => { };

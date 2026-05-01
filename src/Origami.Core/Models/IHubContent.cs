@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Origami.Core.Models
+﻿namespace Origami.Core.Models
 {
     /// <summary>
     /// Hub interface for content entities, which includes categories and tags.
@@ -24,17 +20,17 @@ namespace Origami.Core.Models
         /// Categories associated with the entity
         /// </summary>
         List<OrigamiContentCategory> Categories { get; set; }
-        
+
         /// <summary>
         /// Comments associated with the entity
         /// </summary>
         List<OrigamiContentComment> Comments { get; set; }
-        
+
         /// <summary>
         /// Ratings associated with the entity
         /// </summary>
         List<OrigamiContentRating> Ratings { get; set; }
-        
+
         /// <summary>
         /// Reactions associated with the entity
         /// </summary>

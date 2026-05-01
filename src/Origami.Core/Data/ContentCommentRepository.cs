@@ -2,13 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Origami.Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Origami.Core.Data
 {
-    public class ContentCommentRepository: 
+    public class ContentCommentRepository :
         RepositoryOuterLayer<OrigamiContentComment>,
         IContentCommentRepository
     {
@@ -56,7 +53,7 @@ namespace Origami.Core.Data
         {
             //comments from a post
             var comments = ReadFromCache().Where(x => x.SocialProfileId == entity.Id);
-            
+
             //retrieves the deleted ones or not
             if (deleted == false) comments = comments.Where(x => x.IsDeleted == false);
 
@@ -264,7 +261,8 @@ namespace Origami.Core.Data
             using var db = DbContextFactory.CreateDbContext();
             var query = from view in db.Set<OrigamiContentComment>().AsNoTracking()
                         where view.IsDeleted == false
-                        group view by view.ContentId into g select new { ContentId = g.Key, TotalComments = g.LongCount() };
+                        group view by view.ContentId into g
+                        select new { ContentId = g.Key, TotalComments = g.LongCount() };
             var options = new MemoryCacheEntryOptions() { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(3) };
 
             foreach (var view in query)

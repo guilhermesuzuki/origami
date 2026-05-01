@@ -15,11 +15,11 @@ namespace Origami.Core.Validators
             RuleFor(x => x.NanoId).NanoId(text);
             RuleFor(x => x.Title).Title(text);
             RuleFor(x => x.Description).Description(text);
-            RuleFor(x => x.Slug).Slug(text);
+            RuleFor(x => x.Slug).Cascade(CascadeMode.Stop).Slug(text);
             RuleFor(x => x.Content).Html(text);
             RuleFor(x => x.HeaderImage).HeaderImage(text, webRootPath);
             RuleFor(x => x.LanguageWrittenOn).Language(text);
-            RuleFor(x => x).SlugMustBeUnique(text, dbContextFactory);
+            RuleFor(x => x).SlugMustBeUniqueByBlog(text, dbContextFactory);
         }
     }
 }

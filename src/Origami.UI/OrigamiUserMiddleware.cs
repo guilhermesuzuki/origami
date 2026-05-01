@@ -21,7 +21,7 @@ namespace Origami.UI
 
         public OrigamiUserMiddleware(
             IAppFacade appFacade,
-            IConfiguration configuration, 
+            IConfiguration configuration,
             IOptionsSnapshot<JwtConfiguration> jwtConfiguration,
             IUserRepository userRepository)
         {

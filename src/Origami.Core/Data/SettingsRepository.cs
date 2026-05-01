@@ -64,12 +64,12 @@ public class SettingsRepository :
     public OrigamiSettings GetSettings()
     {
         var key = $"entity-{typeof(OrigamiSettings).FullName}";
-        
+
         if (MemoryCache.TryGetValue(key, out OrigamiSettings? settings) == true && settings != null)
         {
             return settings;
         }
-        
+
         return MemoryCache.Set(key, ExtractSettings(), new MemoryCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1) });
     }
 

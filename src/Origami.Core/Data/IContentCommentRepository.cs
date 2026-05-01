@@ -2,7 +2,7 @@
 
 namespace Origami.Core.Data
 {
-    public interface IContentCommentRepository : 
+    public interface IContentCommentRepository :
         IRepository<OrigamiContentComment>,
         IComments<OrigamiContent, OrigamiContentComment>
     {

@@ -6,6 +6,6 @@ namespace Origami.Core.Data
         IRepository<OrigamiPhysicalPageView>,
         IViews<OrigamiPhysicalPage>
     {
-        long GetViews<T>(T entity) where T: IId;
+        long GetViews<T>(T entity) where T : IId;
     }
 }

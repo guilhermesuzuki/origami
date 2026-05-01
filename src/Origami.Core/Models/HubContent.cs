@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Origami.Core.Models
+﻿namespace Origami.Core.Models
 {
-    public abstract class HubContent<T> : 
+    public abstract class HubContent<T> :
         IHubContent<T>,
         IAuthorId
         where T : OrigamiContent

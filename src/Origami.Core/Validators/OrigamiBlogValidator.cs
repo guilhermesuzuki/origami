@@ -12,7 +12,8 @@ namespace Origami.Core.Validators
             RuleFor(x => x.Id).Id(text);
             RuleFor(x => x.NanoId).NanoId(text);
             RuleFor(x => x.Name).Name(text);
-            RuleFor(x => x.Slug).Slug(text);
+            RuleFor(x => x.Slug).Cascade(CascadeMode.Stop).Slug(text);
+            RuleFor(x => x).NameMustBeUnique(text, dbContextFactory);
             RuleFor(x => x).SlugMustBeUnique(text, dbContextFactory);
         }
     }
