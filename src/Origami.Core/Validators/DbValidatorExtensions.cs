@@ -129,8 +129,7 @@ namespace Origami.Core.Validators
                 .Must(entity =>
                 {
                     using var db = dbContextFactory.CreateDbContext();
-                    var slug = db.Set<T>().AsNoTracking().FirstOrDefault(x => x.Slug == entity.Slug && x.ContentId == entity.ContentId);
-                    return slug == null || slug.Id == entity.Id;
+                    return !db.Set<T>().AsNoTracking().Any(x => x.Slug == entity.Slug && x.ContentId == entity.ContentId && x.Id != entity.Id);
                 })
                 .WithMessage(text.Original("Slug is already in use"));
         }
