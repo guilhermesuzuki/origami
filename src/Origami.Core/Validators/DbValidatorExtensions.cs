@@ -119,6 +119,6 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("Slug is already in use"));
         }
 
-        
+
     }
 }

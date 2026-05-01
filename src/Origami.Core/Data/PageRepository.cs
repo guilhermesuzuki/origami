@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Origami.Core.Models;
 
 namespace Origami.Core.Data
@@ -62,7 +61,7 @@ namespace Origami.Core.Data
 
         private Result<OrigamiPage> _validationForAllOperations(DataOperationContext<OrigamiPage> ctx)
         {
-            Result<OrigamiPage> result = new(ctx.Entity, _validator);
+            Result<OrigamiPage> result = new(ctx.Entity);
             result.Error = Text.Original("Operation not allowed");
             result.Error = Text.Original("Use the HubContentPage repository instead");
             return result;

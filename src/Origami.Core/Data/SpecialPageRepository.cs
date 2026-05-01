@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Origami.Core.Models;
 
 namespace Origami.Core.Data
@@ -53,7 +52,7 @@ namespace Origami.Core.Data
             var hub = new Result();
             var maintenancePages = db.Set<OrigamiSpecialPage>().AsNoTracking()
                 .Where(x => x.IsPublished == false)
-                .Where(x => x.Type== OrigamiSpecialPageTypes.Maintenance.ToString())
+                .Where(x => x.Type == OrigamiSpecialPageTypes.Maintenance.ToString())
                 .ToList();
 
             foreach (var page in maintenancePages)
@@ -111,7 +110,7 @@ namespace Origami.Core.Data
 
         private Result<OrigamiSpecialPage> _validationForAllOperations(DataOperationContext<OrigamiSpecialPage> ctx)
         {
-            Result<OrigamiSpecialPage> result = new(ctx.Entity, _validator);
+            Result<OrigamiSpecialPage> result = new(ctx.Entity);
             result.Error = Text.Original("Operation not allowed");
             result.Error = Text.Original("Use the HubContentSpecialPage repository instead");
             return result;

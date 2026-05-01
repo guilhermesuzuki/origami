@@ -1,7 +1,4 @@
 ﻿using Origami.Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Origami.Core.Data
 {
@@ -11,7 +8,7 @@ namespace Origami.Core.Data
         event EventHandler RefreshUI;
         event EventHandler WelcomeToTheApplication;
 
-        public enum Steps
+        enum Steps
         {
             Step1_ValidateCredentials = 1,
             Step2_MustChangePassword = 2,
@@ -23,14 +20,14 @@ namespace Origami.Core.Data
         string NewPassword1 { get; set; }
         string NewPassword2 { get; set; }
         string Password { get; set; }
-        
+
         bool ShouldDisable2FAEnablement { get; }
         bool ShouldDisable2FAValidation { get; }
         bool ShouldDisableLogin { get; }
         bool ShouldDisablePasswordChange { get; }
 
         Stack<Steps> State { get; }
-        
+
         string TOTPCodeForEnablement { get; set; }
         string TOTPCodeForValidation { get; set; }
         string[] TOTPRecoveryCodes { get; set; }
@@ -53,7 +50,7 @@ namespace Origami.Core.Data
         Task GoBackAsync();
         Task GoNextAsync();
         Task LoginAsync();
-        
+
         void Regenerate2FARecoveryCodes();
         void Regenerate2FASecret();
 

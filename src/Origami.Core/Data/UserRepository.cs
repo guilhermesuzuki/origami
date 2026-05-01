@@ -1,7 +1,5 @@
-﻿using AngleSharp.Text;
-using FluentValidation;
+﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using NanoidDotNet;
 using Origami.Core.Models;
 
@@ -145,7 +143,7 @@ namespace Origami.Core.Data
 
             using var db = DbContextFactory.CreateDbContext();
 
-			var query = from x in db.Set<OrigamiUser>().AsNoTracking().NonDeleted()
+            var query = from x in db.Set<OrigamiUser>().AsNoTracking().NonDeleted()
                         where x.IsDeleted == false
                         where x.IsBlocked == false
                         where x.Username.ToLower() == username
@@ -171,16 +169,16 @@ namespace Origami.Core.Data
 
         public override Result<OrigamiUser> PurgeRelationshipsFromDatabase(DataOperationContext<OrigamiUser> ctx)
         {
-			var hub = new Result<OrigamiUser>(ctx.Entity);
-            
+            var hub = new Result<OrigamiUser>(ctx.Entity);
+
             using (var db = DbContextFactory.CreateDbContext())
             {
-				var contents = db.Contents.AsNoTracking().Where(x => x.AuthorId == ctx.Entity.Id).ToList();
-				var posts = db.Set<OrigamiPost>().AsNoTracking().Where(x => x.AuthorId == ctx.Entity.Id).ToList();
-				var videos = db.Set<OrigamiVideo>().AsNoTracking().Where(x => x.AuthorId == ctx.Entity.Id).ToList();
+                var contents = db.Contents.AsNoTracking().Where(x => x.AuthorId == ctx.Entity.Id).ToList();
+                var posts = db.Set<OrigamiPost>().AsNoTracking().Where(x => x.AuthorId == ctx.Entity.Id).ToList();
+                var videos = db.Set<OrigamiVideo>().AsNoTracking().Where(x => x.AuthorId == ctx.Entity.Id).ToList();
 
                 contents.GetContexts(ctx).Call(_contentRepository.SmartPurge, false).Push(hub);
-				
+
                 var del1 = db.UserRoles.Where(x => x.UserId == ctx.Entity.Id).ExecuteDelete();
                 var del2 = db.UserPasswordResets.Where(x => x.UserId == ctx.Entity.Id).ExecuteDelete();
                 var del3 = db.UserPasswordResets.Where(x => x.AuthorId == ctx.Entity.Id).ExecuteDelete();
@@ -283,7 +281,7 @@ namespace Origami.Core.Data
             {
                 using var db = DbContextFactory.CreateDbContext();
 
-				var user = from x in db.Set<OrigamiUser>().AsNoTracking().NonDeleted()
+                var user = from x in db.Set<OrigamiUser>().AsNoTracking().NonDeleted()
                            where x.IsBlocked == false
                            where x.Id == ctx.Entity.Id
                            select x;
@@ -302,12 +300,12 @@ namespace Origami.Core.Data
                     if (resetEntity != null)
                     {
                         resetEntity.IsDeleted = true;
-						db.Update(resetEntity);
-						db.SaveChanges();
+                        db.Update(resetEntity);
+                        db.SaveChanges();
 
-						userEntity.Password = newPassword1.SHA256Hash();
+                        userEntity.Password = newPassword1.SHA256Hash();
                         this.SmartUpdate(userEntity.GetContext(ctx.User), false).Push(hub);
-                        
+
                         hub.Success = Text.Original("Password has been reset successfully");
                         return hub;
                     }

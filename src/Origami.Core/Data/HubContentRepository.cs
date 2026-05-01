@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Origami.Core.Models;
 
 namespace Origami.Core.Data
@@ -348,10 +347,10 @@ namespace Origami.Core.Data
                 _memoryCache.SaveCache(m1);
                 _memoryCache.SaveCache(m2);
 
-                this.History(db, 
-                    root.Entity, 
-                    nil ? root.Entity.DateCreated : root.Entity.DateModified.GetValueOrDefault(), 
-                    nil ? "Content created" : "Content saved", 
+                this.History(db,
+                    root.Entity,
+                    nil ? root.Entity.DateCreated : root.Entity.DateModified.GetValueOrDefault(),
+                    nil ? "Content created" : "Content saved",
                     userId);
 
                 hub.Success = Text.Original(Text.OperationCompletedSuccessfully);

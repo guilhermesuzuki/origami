@@ -1,5 +1,4 @@
-﻿using NanoidDotNet;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -39,12 +38,12 @@ namespace Origami.Core.Models
         /// </summary>
         public OrigamiBlog() : base()
         {
-            
+
         }
 
-        public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) => 
-        { 
-            
+        public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) =>
+        {
+
         };
 
         public string? AdditionalInfo
@@ -125,7 +124,7 @@ namespace Origami.Core.Models
         }
 
         [StringLength(255)]
-        public string Slug 
+        public string Slug
         {
             get => _slug;
             set => this.Set(ref _slug, value, Changed);

@@ -1,12 +1,9 @@
-﻿using AngleSharp.Dom;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using Microsoft.Extensions.Caching.Memory;
 using MudBlazor;
 using Origami.Core;
 using Origami.Core.Data;
 using Origami.Core.Models;
-using System.Text;
 using System.Transactions;
 
 namespace Origami.UI.Admin
@@ -128,8 +125,8 @@ namespace Origami.UI.Admin
         protected override void CreateEntityBeforeEvent(T2 entity)
         {
             entity.Entity.SetAuthor(UserFacade.User);
-            entity.Entity.BlogId = entity.Entity switch 
-            { 
+            entity.Entity.BlogId = entity.Entity switch
+            {
                 OrigamiSpecialMessage => null,
                 OrigamiSpecialPage => null,
                 _ => GetBlogFromUserFacade().Id,

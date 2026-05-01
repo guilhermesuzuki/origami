@@ -1,11 +1,8 @@
 ﻿using FluentValidation;
-using Microsoft.EntityFrameworkCore;
-using Origami.Core.Data;
 using Origami.Core.Models;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using System.Globalization;
-using System.Text.RegularExpressions;
 
 namespace Origami.Core.Validators
 {
@@ -33,7 +30,7 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("Blog must be null"));
         }
 
-        
+
 
         public static IRuleBuilderOptions<T, string> ContentType<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
         {

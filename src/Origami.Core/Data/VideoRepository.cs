@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Origami.Core.Models;
 
 namespace Origami.Core.Data
@@ -62,7 +61,7 @@ namespace Origami.Core.Data
 
         private Result<OrigamiVideo> _validationForAllOperations(DataOperationContext<OrigamiVideo> ctx)
         {
-            Result<OrigamiVideo> result = new(ctx.Entity, _validator);
+            Result<OrigamiVideo> result = new(ctx.Entity);
             result.Error = Text.Original("Operation not allowed");
             result.Error = Text.Original("Use the HubContentVideo repository instead");
             return result;

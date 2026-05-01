@@ -7,7 +7,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Net;
 using System.Net.Mail;
 using System.Reflection;
 using System.Security.Cryptography;
@@ -1241,7 +1240,7 @@ namespace Origami.Core
         }
 
         public static T SetSlugWhenNecessary<T>(this T entity)
-            where T: IId
+            where T : IId
         {
             if (entity is ISlug slugger)
             {
@@ -1260,8 +1259,8 @@ namespace Origami.Core
             return entity;
         }
 
-        public static T2 SetSlugWhenNecessary<T1, T2>(this T2 root) 
-            where T1 : OrigamiContent 
+        public static T2 SetSlugWhenNecessary<T1, T2>(this T2 root)
+            where T1 : OrigamiContent
             where T2 : IHubContent<T1>
         {
             if (root.Entity.Slug.Has() == false)

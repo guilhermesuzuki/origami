@@ -22,7 +22,7 @@ namespace Origami.Core.Validators
             RuleFor(x => x).TopLevelPageWhenFrontPage(text);
             RuleFor(x => x).ModificationMustHappenAfterCreation(text);
             RuleFor(x => x).InfiniteLoopsAreNotAllowed(text, dbContextFactory);
-            
+
             if (isBlogIdRequired)
             {
                 RuleFor(x => x.BlogId).BlogId(text);

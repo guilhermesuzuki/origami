@@ -1,5 +1,4 @@
-﻿using Google.Cloud.Translation.V2;
-using Origami.LocalizationScanner;
+﻿using Origami.LocalizationScanner;
 using Origami.LocalizationScanner.Scanners;
 using System.Text.Json;
 

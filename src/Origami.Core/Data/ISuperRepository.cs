@@ -66,7 +66,7 @@ namespace Origami.Core.Data
         IVideoRepository Videos { get; }
         IWhatToSeeNextRepository WhatToSeeNext { get; }
         IMyMemoryCache MyMemoryCache { get; }
-        
+
         bool EmptyHome(Guid blogId);
 
         /// <summary>

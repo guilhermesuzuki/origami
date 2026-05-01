@@ -1,7 +1,5 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Configuration;
 using Origami.Core.Models;
 using System.Linq.Dynamic.Core;
 

@@ -2,7 +2,7 @@
 
 namespace Origami.Core.Data
 {
-    public interface IContentRatingRepository : 
+    public interface IContentRatingRepository :
         IRepository<OrigamiContentRating>,
         IRatings<OrigamiContent, OrigamiContentRating>
     {
