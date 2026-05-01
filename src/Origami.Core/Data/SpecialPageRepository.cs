@@ -43,11 +43,6 @@ namespace Origami.Core.Data
         public override string UpdateOtherUsersPermission => nameof(OrigamiRole.EditOtherUsersSpecialPages);
         public override string UpdateOwnPermission => nameof(OrigamiRole.EditOwnSpecialPages);
 
-        public override Result<OrigamiSpecialPage> CreateValidation(DataOperationContext<OrigamiSpecialPage> ctx)
-        {
-            return new(ctx.Entity, _validator);
-        }
-
         public Result EnterMaintenanceMode(DataOperationContext context)
         {
             var permission = this.CheckPermission(context.User.Id, nameof(OrigamiRole.EnterMaintenanceMode));
@@ -94,9 +89,32 @@ namespace Origami.Core.Data
             return hub;
         }
 
+        public override Result<OrigamiSpecialPage> CreateValidation(DataOperationContext<OrigamiSpecialPage> ctx)
+        {
+            return _validationForAllOperations(ctx);
+        }
+
+        public override Result<OrigamiSpecialPage> DeleteValidation(DataOperationContext<OrigamiSpecialPage> ctx)
+        {
+            return _validationForAllOperations(ctx);
+        }
+
+        public override Result<OrigamiSpecialPage> PurgeValidation(DataOperationContext<OrigamiSpecialPage> ctx)
+        {
+            return _validationForAllOperations(ctx);
+        }
+
         public override Result<OrigamiSpecialPage> UpdateValidation(DataOperationContext<OrigamiSpecialPage> ctx)
         {
-            return new(ctx.Entity, _validator);
+            return _validationForAllOperations(ctx);
+        }
+
+        private Result<OrigamiSpecialPage> _validationForAllOperations(DataOperationContext<OrigamiSpecialPage> ctx)
+        {
+            Result<OrigamiSpecialPage> result = new(ctx.Entity, _validator);
+            result.Error = Text.Original("Operation not allowed");
+            result.Error = Text.Original("Use the HubContentSpecialPage repository instead");
+            return result;
         }
     }
 }

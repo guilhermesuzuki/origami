@@ -42,48 +42,30 @@ namespace Origami.Core.Data
 
         public override Result<OrigamiVideo> CreateValidation(DataOperationContext<OrigamiVideo> ctx)
         {
-            return new(ctx.Entity, _validator);
+            return _validationForAllOperations(ctx);
         }
 
-        public override void PurgeRelationshipsFromCache(OrigamiVideo entity)
+        public override Result<OrigamiVideo> DeleteValidation(DataOperationContext<OrigamiVideo> ctx)
         {
-            base.PurgeRelationshipsFromCache(entity);
-
-            //var categories = _videoCategoryRepository.ReadFromCache().Where(x => x.VideoId == entity.Id);
-            //var comments = _videoCommentRepository.ReadFromCache().Where(x => x.VideoId == entity.Id);
-            //var ratings = _videoRatingRepository.ReadFromCache().Where(x => x.VideoId == entity.Id);
-            //var tags = _videoTagRepository.ReadFromCache().Where(x => x.VideoId == entity.Id);
-
-            //categories.Each(_videoCategoryRepository.PurgeCache);
-            //comments.Each(_videoCommentRepository.PurgeCache);
-            //ratings.Each(_videoRatingRepository.PurgeCache);
-            //tags.Each(_videoTagRepository.PurgeCache);
+            return _validationForAllOperations(ctx);
         }
 
-        public override Result<OrigamiVideo> PurgeRelationshipsFromDatabase(DataOperationContext<OrigamiVideo> ctx)
+        public override Result<OrigamiVideo> PurgeValidation(DataOperationContext<OrigamiVideo> ctx)
         {
-            using var db = this.DbContextFactory.CreateDbContext();
-
-            var hub = base.PurgeRelationshipsFromDatabase(ctx);
-
-            //var categories = db.Set<OrigamiVideoCategory>().AsNoTracking().Where(x => x.VideoId == ctx.Entity.Id).WithOnlyIds();
-            //var comments = db.Set<OrigamiVideoComment>().AsNoTracking().Where(x => x.VideoId == ctx.Entity.Id).WithOnlyIds();
-            //var ratings = db.Set<OrigamiVideoRating>().AsNoTracking().Where(x => x.VideoId == ctx.Entity.Id).WithOnlyIds();
-            //var tags = db.Set<OrigamiVideoTag>().AsNoTracking().Where(x => x.VideoId == ctx.Entity.Id).WithOnlyIds();
-
-            //categories.GetContexts(ctx).Call(_videoCategoryRepository.SmartPurge, false).Push(hub);
-            //comments.GetContexts(ctx).Call(_videoCommentRepository.SmartPurge, false).Push(hub);
-            //ratings.GetContexts(ctx).Call(_videoRatingRepository.SmartPurge, false).Push(hub);
-            //tags.GetContexts(ctx).Call(_videoTagRepository.SmartPurge, false).Push(hub);
-
-            //hub.RowsAffected += db.Set<OrigamiVideoView>().AsNoTracking().Where(x => x.VideoId == ctx.Entity.Id).ExecuteDelete();
-
-            return hub;
+            return _validationForAllOperations(ctx);
         }
 
         public override Result<OrigamiVideo> UpdateValidation(DataOperationContext<OrigamiVideo> ctx)
         {
-            return new(ctx.Entity, _validator);
+            return _validationForAllOperations(ctx);
+        }
+
+        private Result<OrigamiVideo> _validationForAllOperations(DataOperationContext<OrigamiVideo> ctx)
+        {
+            Result<OrigamiVideo> result = new(ctx.Entity, _validator);
+            result.Error = Text.Original("Operation not allowed");
+            result.Error = Text.Original("Use the HubContentVideo repository instead");
+            return result;
         }
     }
 }

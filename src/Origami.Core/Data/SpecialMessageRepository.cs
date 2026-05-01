@@ -40,11 +40,6 @@ namespace Origami.Core.Data
         public override string UpdateOtherUsersPermission => nameof(OrigamiRole.EditOtherUsersSpecialMessages);
         public override string UpdateOwnPermission => nameof(OrigamiRole.EditOwnSpecialMessages);
 
-        public override Result<OrigamiSpecialMessage> CreateValidation(DataOperationContext<OrigamiSpecialMessage> ctx)
-        {
-            return new Result<OrigamiSpecialMessage>(ctx.Entity, _validator);
-        }
-
         public IEnumerable<OrigamiSpecialMessage> GetVisibleMessages()
         {
             var now = new DateOnly(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day);
@@ -52,9 +47,32 @@ namespace Origami.Core.Data
             return messages.NonDeleted().Published().Where(x => x.StartDate <= now).Where(x => x.EndDate >= now);
         }
 
+        public override Result<OrigamiSpecialMessage> CreateValidation(DataOperationContext<OrigamiSpecialMessage> ctx)
+        {
+            return _validationForAllOperations(ctx);
+        }
+
+        public override Result<OrigamiSpecialMessage> DeleteValidation(DataOperationContext<OrigamiSpecialMessage> ctx)
+        {
+            return _validationForAllOperations(ctx);
+        }
+
+        public override Result<OrigamiSpecialMessage> PurgeValidation(DataOperationContext<OrigamiSpecialMessage> ctx)
+        {
+            return _validationForAllOperations(ctx);
+        }
+
         public override Result<OrigamiSpecialMessage> UpdateValidation(DataOperationContext<OrigamiSpecialMessage> ctx)
         {
-            return new Result<OrigamiSpecialMessage>(ctx.Entity, _validator);
+            return _validationForAllOperations(ctx);
+        }
+
+        private Result<OrigamiSpecialMessage> _validationForAllOperations(DataOperationContext<OrigamiSpecialMessage> ctx)
+        {
+            Result<OrigamiSpecialMessage> result = new(ctx.Entity, _validator);
+            result.Error = Text.Original("Operation not allowed");
+            result.Error = Text.Original("Use the HubContentSpecialMessage repository instead");
+            return result;
         }
     }
 }
