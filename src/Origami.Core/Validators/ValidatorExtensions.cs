@@ -33,42 +33,7 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("Blog must be null"));
         }
 
-        public static IRuleBuilderOptions<T, List<OrigamiContentCategory>> CategoriesMustBeUnique<T>(this IRuleBuilder<T, List<OrigamiContentCategory>> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory)
-        {
-            return ruleBuilder
-                .Must(categories =>
-                {
-                    if (categories.DistinctBy(x => x.CategoryId).Count() != categories.Count)
-                    {
-                        return false;
-                    }
-
-                    return true;
-                })
-                .WithMessage(text.Original("Categories must be unique"));
-        }
-
-        public static IRuleBuilderOptions<T, Guid> Category<T>(this IRuleBuilder<T, Guid> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory)
-        {
-            return ruleBuilder
-                .Must(categoryId =>
-                {
-                    using var db = dbContextFactory.CreateDbContext();
-                    return db.Set<OrigamiCategory>().AsNoTracking().Id(categoryId) != null;
-                })
-                .WithMessage(text.Original("Category must exist"));
-        }
-
-        public static IRuleBuilderOptions<T, Guid> Content<T>(this IRuleBuilder<T, Guid> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory)
-        {
-            return ruleBuilder
-                .Must(contentId =>
-                {
-                    using var db = dbContextFactory.CreateDbContext();
-                    return db.Set<OrigamiContent>().AsNoTracking().Id(contentId) != null;
-                })
-                .WithMessage(text.Original("Content must exist"));
-        }
+        
 
         public static IRuleBuilderOptions<T, string> ContentType<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
         {
@@ -319,19 +284,6 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("Tag cannot exceed {0} characters", 128));
         }
 
-        public static IRuleBuilderOptions<T, List<OrigamiContentTag>> TagsMustBeUnique<T>(this IRuleBuilder<T, List<OrigamiContentTag>> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory)
-        {
-            return ruleBuilder
-                .Must(tags =>
-                {
-                    if (tags.DistinctBy(x => x.Tag).Count() != tags.Count)
-                    {
-                        return false;
-                    }
-                    return true;
-                })
-                .WithMessage(text.Original("Tags must be unique"));
-        }
         public static IRuleBuilderOptions<T, string> Title<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
         {
             return ruleBuilder

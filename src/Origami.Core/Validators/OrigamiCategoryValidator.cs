@@ -17,6 +17,8 @@ namespace Origami.Core.Validators
             RuleFor(x => x.Slug).Slug(text);
             RuleFor(x => x).ParentId(text);
             RuleFor(x => x).LoopsAreNotAllowed(text, dbContextFactory);
+            RuleFor(x => x).NameMustBeUniqueByBlog(text, dbContextFactory);
+            RuleFor(x => x).SlugMustBeUniqueByBlog(text, dbContextFactory);
         }
     }
 }

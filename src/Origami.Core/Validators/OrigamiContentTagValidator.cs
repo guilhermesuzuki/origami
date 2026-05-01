@@ -12,6 +12,7 @@ namespace Origami.Core.Validators
             RuleFor(x => x.Id).Id(text);
             RuleFor(x => x.Slug).Slug(text);
             RuleFor(x => x.Tag).Tag(text);
+            RuleFor(x => x).SlugMustBeUniqueByContent(text, dbContextFactory);
         }
     }
 }
