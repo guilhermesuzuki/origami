@@ -31,13 +31,7 @@ namespace Origami.Core.Models
 
         public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) =>
         {
-            if (sender is OrigamiContentTag tag)
-            {
-                if (e.PropertyName == nameof(Tag))
-                {
-                    tag.Slug = tag.Tag.GetSlug();
-                }
-            }
+            
         };
 
         public Guid ContentId

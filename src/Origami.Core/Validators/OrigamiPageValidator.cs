@@ -19,7 +19,7 @@ namespace Origami.Core.Validators
             RuleFor(x => x).ParentId(text);
             RuleFor(x => x.HeaderImage).HeaderImage(text, webRootPath);
             RuleFor(x => x.LanguageWrittenOn).Language(text);
-            RuleFor(x => x).LoopsAreNotAllowed(text, dbContextFactory);
+            RuleFor(x => x).InfiniteLoopsAreNotAllowed(text, dbContextFactory);
             RuleFor(x => x).SlugMustBeUniqueByBlog(text, dbContextFactory);
         }
     }

@@ -7,7 +7,7 @@ namespace Origami.Core.Validators
 {
     public static class DbValidatorExtensions
     {
-        public static IRuleBuilderOptions<T, Guid> Category<T>(this IRuleBuilder<T, Guid> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory)
+        public static IRuleBuilderOptions<T, Guid> CategoryMustExist<T>(this IRuleBuilder<T, Guid> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory)
         {
             return ruleBuilder
                 .Must(categoryId =>
@@ -18,7 +18,7 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("Category must exist"));
         }
 
-        public static IRuleBuilderOptions<T, Guid> Content<T>(this IRuleBuilder<T, Guid> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory)
+        public static IRuleBuilderOptions<T, Guid> ContentMustExist<T>(this IRuleBuilder<T, Guid> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory)
         {
             return ruleBuilder
                 .Must(contentId =>
@@ -29,7 +29,18 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("Content must exist"));
         }
 
-        public static bool IsCycleDetected<T>(DbContext db, T? entity, IList<T> list) where T : class, IId, IParentIdNull
+        public static IRuleBuilderOptions<T, T> InfiniteLoopsAreNotAllowed<T>(this IRuleBuilder<T, T> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory) where T : class, IId, IParentIdNull
+        {
+            return ruleBuilder
+                .Must(entity =>
+                {
+                    using var db = dbContextFactory.CreateDbContext();
+                    return IsInfiniteLoopDetected(db, entity, []) == false;
+                })
+                .WithMessage(text.Original("Loop in relationships are not allowed"));
+        }
+
+        public static bool IsInfiniteLoopDetected<T>(DbContext db, T? entity, IList<T> list) where T : class, IId, IParentIdNull
         {
             if (entity != null)
             {
@@ -41,21 +52,10 @@ namespace Origami.Core.Validators
                 if (entity.ParentId != null)
                 {
                     var parent = db.Set<T>().AsNoTracking().Id(entity.ParentId.GetValueOrDefault());
-                    return IsCycleDetected(db, parent, list);
+                    return IsInfiniteLoopDetected(db, parent, list);
                 }
             }
             return false;
-        }
-
-        public static IRuleBuilderOptions<T, T> LoopsAreNotAllowed<T>(this IRuleBuilder<T, T> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory) where T : class, IId, IParentIdNull
-        {
-            return ruleBuilder
-                .Must(entity =>
-                {
-                    using var db = dbContextFactory.CreateDbContext();
-                    return IsCycleDetected(db, entity, []) == false;
-                })
-                .WithMessage(text.Original("Loop in relationships are not allowed"));
         }
 
         public static IRuleBuilderOptions<T, T> NameMustBeUnique<T>(this IRuleBuilder<T, T> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory) where T : class, IId, IName

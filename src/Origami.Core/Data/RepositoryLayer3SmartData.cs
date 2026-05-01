@@ -88,6 +88,7 @@ namespace Origami.Core.Data
             if (validation.Ok == false) return validation;
 
             ctx.Entity.SetDateCreated(DateTime.UtcNow);
+            ctx.Entity.SetSlugWhenNecessary();
 
             return Create(ctx).OnSuccess(() => CreateCache(ctx.Entity));
         }
@@ -262,6 +263,7 @@ namespace Origami.Core.Data
             if (validation.Ok == false) return validation;
 
             ctx.Entity.SetDateModified(DateTime.UtcNow);
+            ctx.Entity.SetSlugWhenNecessary();
 
             return Update(ctx).OnSuccess(() => UpdateCache(ctx.Entity));
         }

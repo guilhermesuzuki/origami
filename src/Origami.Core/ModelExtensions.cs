@@ -1240,6 +1240,44 @@ namespace Origami.Core
             return entity;
         }
 
+        public static T SetSlugWhenNecessary<T>(this T entity)
+            where T: IId
+        {
+            if (entity is ISlug slugger)
+            {
+                if (slugger.Slug.Has() == false)
+                {
+                    slugger.Slug = entity switch
+                    {
+                        ITitle title => title.Title.GetSlug(),
+                        IName name => name.Name.GetSlug(),
+                        ITag tag => tag.Tag.GetSlug(),
+                        _ => string.Empty,
+                    };
+                }
+            }
+
+            return entity;
+        }
+
+        public static T2 SetSlugWhenNecessary<T1, T2>(this T2 root) 
+            where T1 : OrigamiContent 
+            where T2 : IHubContent<T1>
+        {
+            if (root.Entity.Slug.Has() == false)
+            {
+                root.Entity.Slug = root.Entity.Title.GetSlug();
+            }
+
+            foreach (var tag in root.Tags)
+            {
+                if (tag.Slug.Has() == true) continue;
+                tag.Slug = tag.Tag.GetSlug();
+            }
+
+            return root;
+        }
+
         /// <summary>
         /// Generates a SHA256 string from <paramref name="rawData"/>
         /// </summary>

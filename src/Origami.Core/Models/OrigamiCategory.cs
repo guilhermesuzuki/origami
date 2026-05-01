@@ -44,13 +44,7 @@ namespace Origami.Core.Models
 
         public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) =>
         {
-            if (sender is OrigamiCategory category)
-            {
-                if (e.PropertyName == nameof(Name))
-                {
-                    category.Slug = category.Name.GetSlug();
-                }
-            }
+            
         };
 
         public string? AdditionalInfo

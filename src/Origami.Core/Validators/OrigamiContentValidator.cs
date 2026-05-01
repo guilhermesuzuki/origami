@@ -21,7 +21,7 @@ namespace Origami.Core.Validators
             RuleFor(x => x.LanguageWrittenOn).Language(text);
             RuleFor(x => x).TopLevelPageWhenFrontPage(text);
             RuleFor(x => x).ModificationMustHappenAfterCreation(text);
-            RuleFor(x => x).LoopsAreNotAllowed(text, dbContextFactory);
+            RuleFor(x => x).InfiniteLoopsAreNotAllowed(text, dbContextFactory);
             
             if (isBlogIdRequired)
             {
