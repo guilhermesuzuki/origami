@@ -277,6 +277,9 @@ namespace Origami.Core.Validators
         public static IRuleBuilderOptions<T, string> Tag<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
         {
             return ruleBuilder
+                .NotEmpty()
+                // TODO: add this to resx files
+                .WithMessage(text.Original("Tag is required"))
                 .MaximumLength(128)
                 .WithMessage(text.Original("Tag cannot exceed {0} characters", 128));
         }

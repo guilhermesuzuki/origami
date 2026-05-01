@@ -52,16 +52,7 @@ namespace Origami.Core.Data
 
         public override Result<OrigamiPage> CreateValidation(DataOperationContext<OrigamiPage> ctx)
         {
-            var validation = new Result<OrigamiPage>(ctx.Entity, _validator);
-
-            if (this.IsCycleDetected(ctx, []) == true)
-            {
-                validation.Error = $"Cycle detected: you must choose another parent";
-            }
-
-            this.ValidateSlug(ctx).Push(validation);
-
-            return validation;
+            return new(ctx.Entity, _validator);
         }
 
         public Result<OrigamiPage> MarkAsFrontPage(DataOperationContext<OrigamiPage> ctx, bool checkPermission)
@@ -88,7 +79,7 @@ namespace Origami.Core.Data
                 try
                 {
                     using var db = DbContextFactory.CreateDbContext();
-					var hub = new Result<OrigamiPage>(ctx.Entity);
+                    var hub = new Result<OrigamiPage>(ctx.Entity);
                     var row1 = db.Set<OrigamiPage>().Where(x => x.BlogId == ctx.Entity.BlogId).Where(x => x.IsFrontPage).ExecuteUpdate(x => x.SetProperty(y => y.IsFrontPage, false));
                     var row2 = db.Set<OrigamiPage>().Where(x => x.BlogId == ctx.Entity.BlogId).Where(x => x.Id == ctx.Entity.Id).ExecuteUpdate(x => x.SetProperty(y => y.IsFrontPage, true));
 
@@ -140,7 +131,7 @@ namespace Origami.Core.Data
                 if (page.IsFrontPage)
                 {
                     try
-                    {             
+                    {
                         using var db = DbContextFactory.CreateDbContext();
                         var hub = new Result<OrigamiPage>(ctx.Entity);
                         var row = db.Set<OrigamiPage>().Where(x => x.BlogId == ctx.Entity.BlogId).Where(x => x.IsFrontPage).ExecuteUpdate(x => x.SetProperty(y => y.IsFrontPage, false));
@@ -167,16 +158,7 @@ namespace Origami.Core.Data
 
         public override Result<OrigamiPage> UpdateValidation(DataOperationContext<OrigamiPage> ctx)
         {
-            var validation = new Result<OrigamiPage>(ctx.Entity, _validator);
-
-            if (this.IsCycleDetected(ctx, []) == true)
-            {
-                validation.Error = Text.Original("Cycle detected: you must choose another parent");
-            }
-
-            this.ValidateSlug(ctx).Push(validation);
-
-            return validation;
+            return new(ctx.Entity, _validator);
         }
 
 

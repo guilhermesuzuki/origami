@@ -41,9 +41,7 @@ namespace Origami.Core.Data
 
         public override Result<OrigamiPost> CreateValidation(DataOperationContext<OrigamiPost> ctx)
         {
-            var validation = new Result<OrigamiPost>(ctx.Entity, _validator);
-            this.ValidateSlug(ctx).Push(validation);
-            return validation;
+            return new(ctx.Entity, _validator);
         }
 
         public override void PurgeRelationshipsFromCache(OrigamiPost entity)
@@ -82,9 +80,7 @@ namespace Origami.Core.Data
         }
         public override Result<OrigamiPost> UpdateValidation(DataOperationContext<OrigamiPost> ctx)
         {
-            var validation = new Result<OrigamiPost>(ctx.Entity, _validator);
-            this.ValidateSlug(ctx).Push(validation);
-            return validation;
+            return new(ctx.Entity, _validator);
         }
     }
 }
