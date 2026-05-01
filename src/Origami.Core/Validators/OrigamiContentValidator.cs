@@ -22,14 +22,16 @@ namespace Origami.Core.Validators
             RuleFor(x => x).TopLevelPageWhenFrontPage(text);
             RuleFor(x => x).ModificationMustHappenAfterCreation(text);
             RuleFor(x => x).LoopsAreNotAllowed(text, dbContextFactory);
-
+            
             if (isBlogIdRequired)
             {
                 RuleFor(x => x.BlogId).BlogId(text);
+                RuleFor(x => x).SlugMustBeUniqueByBlog(text, dbContextFactory);
             }
             else
             {
                 RuleFor(x => x.BlogId).BlogIdMustBeNull(text);
+                RuleFor(x => x).SlugMustBeUnique(text, dbContextFactory);
             }
         }
     }

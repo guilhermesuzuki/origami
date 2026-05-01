@@ -64,8 +64,8 @@ namespace Origami.Core.Validators
                 .Must(entity =>
                 {
                     using var db = dbContextFactory.CreateDbContext();
-                    var slug = db.Set<T>().AsNoTracking().FirstOrDefault(x => x.Name == entity.Name);
-                    return slug == null || slug.Id == entity.Id;
+                    var exists = db.Set<T>().AsNoTracking().Any(x => x.Name == entity.Name && x.Id != entity.Id);
+                    return !exists;
                 })
                 // TODO: add string to resx files
                 .WithMessage(text.Original("Name is already in use"));
@@ -77,8 +77,8 @@ namespace Origami.Core.Validators
                 .Must(entity =>
                 {
                     using var db = dbContextFactory.CreateDbContext();
-                    var slug = db.Set<T>().AsNoTracking().FirstOrDefault(x => x.Name == entity.Name && x.BlogId == entity.BlogId);
-                    return slug == null || slug.Id == entity.Id;
+                    var exists = db.Set<T>().AsNoTracking().Any(x => x.Name == entity.Name && x.BlogId == entity.BlogId && x.Id != entity.Id);
+                    return !exists;
                 })
                 // TODO: add string to resx files
                 .WithMessage(text.Original("Name is already in use"));
@@ -90,8 +90,8 @@ namespace Origami.Core.Validators
                 .Must(entity =>
                 {
                     using var db = dbContextFactory.CreateDbContext();
-                    var slug = db.Set<T>().AsNoTracking().FirstOrDefault(x => x.Slug == entity.Slug);
-                    return slug == null || slug.Id == entity.Id;
+                    var exists = db.Set<T>().AsNoTracking().Any(x => x.Slug == entity.Slug && x.Id != entity.Id);
+                    return !exists;
                 })
                 .WithMessage(text.Original("Slug is already in use"));
         }
@@ -102,8 +102,8 @@ namespace Origami.Core.Validators
                 .Must(entity =>
                 {
                     using var db = dbContextFactory.CreateDbContext();
-                    var slug = db.Set<T>().AsNoTracking().FirstOrDefault(x => x.Slug == entity.Slug && x.BlogId == entity.BlogId);
-                    return slug == null || slug.Id == entity.Id;
+                    var exists = db.Set<T>().AsNoTracking().Any(x => x.Slug == entity.Slug && x.BlogId == entity.BlogId && x.Id != entity.Id);
+                    return !exists;
                 })
                 .WithMessage(text.Original("Slug is already in use"));
         }
