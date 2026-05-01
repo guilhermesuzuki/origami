@@ -1,5 +1,4 @@
-﻿using NanoidDotNet;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -32,6 +31,8 @@ namespace Origami.Core.Models
         protected Guid? _parentId;
         protected byte[] _version = [];
 
+        protected string _slug = string.Empty;
+
         /// <summary>
         /// Default constructor
         /// </summary>
@@ -40,7 +41,10 @@ namespace Origami.Core.Models
 
         }
 
-        public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) => { };
+        public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) =>
+        {
+
+        };
 
         public string? AdditionalInfo
         {
@@ -116,8 +120,12 @@ namespace Origami.Core.Models
             set => this.Set(ref _parentId, value, Changed);
         }
 
-        [NotMapped]
-        public string Slug => Name.GetSlug();
+        [StringLength(50)]
+        public string Slug
+        {
+            get => _slug;
+            set => this.Set(ref _slug, value, Changed);
+        }
 
         [Timestamp]
         public byte[] Version

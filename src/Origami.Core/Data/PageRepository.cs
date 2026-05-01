@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Origami.Core.Models;
 
 namespace Origami.Core.Data
@@ -40,145 +39,32 @@ namespace Origami.Core.Data
         public override string UpdateOtherUsersPermission => nameof(OrigamiRole.EditOtherUsersPages);
         public override string UpdateOwnPermission => nameof(OrigamiRole.EditOwnPages);
 
-        public virtual Result<OrigamiPage> CanMarkAsFrontPage(DataOperationContext<OrigamiPage> ctx)
-        {
-            return CheckPermission(ctx, MarkAsFrontPagePermission);
-        }
-
-        public virtual Result<OrigamiPage> CanUnmarkAsFrontPage(DataOperationContext<OrigamiPage> ctx)
-        {
-            return CheckPermission(ctx, UnmarkAsFrontPagePermission);
-        }
-
         public override Result<OrigamiPage> CreateValidation(DataOperationContext<OrigamiPage> ctx)
         {
-            var validation = new Result<OrigamiPage>(ctx.Entity, _validator);
-
-            if (this.IsCycleDetected(ctx, []) == true)
-            {
-                validation.Error = $"Cycle detected: you must choose another parent";
-            }
-
-            this.ValidateSlug(ctx).Push(validation);
-
-            return validation;
+            return _validationForAllOperations(ctx);
         }
 
-        public Result<OrigamiPage> MarkAsFrontPage(DataOperationContext<OrigamiPage> ctx, bool checkPermission)
+        public override Result<OrigamiPage> DeleteValidation(DataOperationContext<OrigamiPage> ctx)
         {
-            if (checkPermission)
-            {
-                var permission = CanMarkAsFrontPage(ctx);
-                if (permission.Ok == false) return permission;
-            }
-
-            var page = ReadFromDatabase(ctx.Entity);
-            if (page != null)
-            {
-                if (page.IsFrontPage)
-                {
-                    return new(ctx.Entity) { Error = Text.Original("Page is already front-page") };
-                }
-
-                if (page.ParentId != null)
-                {
-                    return new(ctx.Entity) { Error = Text.Original("Only a top-level page can become front-page") };
-                }
-
-                try
-                {
-                    using var db = DbContextFactory.CreateDbContext();
-					var hub = new Result<OrigamiPage>(ctx.Entity);
-                    var row1 = db.Set<OrigamiPage>().Where(x => x.BlogId == ctx.Entity.BlogId).Where(x => x.IsFrontPage).ExecuteUpdate(x => x.SetProperty(y => y.IsFrontPage, false));
-                    var row2 = db.Set<OrigamiPage>().Where(x => x.BlogId == ctx.Entity.BlogId).Where(x => x.Id == ctx.Entity.Id).ExecuteUpdate(x => x.SetProperty(y => y.IsFrontPage, true));
-
-                    hub.RowsAffected += row2;
-                    hub.RowsAffected += row2;
-
-                    var old = ReadFromCache().Blog(ctx.Entity.BlogId).FirstOrDefault(page => page.IsFrontPage);
-                    var neu = ReadFromCache().Id(ctx.Entity.Id);
-
-                    if (old != null)
-                    {
-                        var update = ReadFromDatabase(old);
-                        this.UpdateCache(update ?? new());
-                    }
-                    if (neu != null)
-                    {
-                        var update = ReadFromDatabase(neu);
-                        this.UpdateCache(update ?? new());
-                    }
-
-                    return hub;
-                }
-                catch (Exception ex)
-                {
-                    return new(ctx.Entity, ex.GetMessage());
-                }
-            }
-            return new(ctx.Entity) { Error = Text.Original("Page cannot be retrieved") };
+            return _validationForAllOperations(ctx);
         }
 
-        public override Result<OrigamiPage> PurgeRelationshipsFromDatabase(DataOperationContext<OrigamiPage> ctx)
+        public override Result<OrigamiPage> PurgeValidation(DataOperationContext<OrigamiPage> ctx)
         {
-            using var db = DbContextFactory.CreateDbContext();
-            //var del = db.Set<OrigamiPageView>().Where(x => x.PageId == ctx.Entity.Id).ExecuteDelete();
-            return new Result<OrigamiPage>(ctx.Entity) { /*RowsAffected = del*/ };
-        }
-
-        public Result<OrigamiPage> UnmarkAsFrontPage(DataOperationContext<OrigamiPage> ctx, bool checkPermission)
-        {
-            if (checkPermission)
-            {
-                var permission = CanUnmarkAsFrontPage(ctx);
-                if (permission.Ok == false) return permission;
-            }
-
-            var page = ReadFromDatabase(ctx.Entity);
-            if (page != null)
-            {
-                if (page.IsFrontPage)
-                {
-                    try
-                    {             
-                        using var db = DbContextFactory.CreateDbContext();
-                        var hub = new Result<OrigamiPage>(ctx.Entity);
-                        var row = db.Set<OrigamiPage>().Where(x => x.BlogId == ctx.Entity.BlogId).Where(x => x.IsFrontPage).ExecuteUpdate(x => x.SetProperty(y => y.IsFrontPage, false));
-                        hub.RowsAffected = row;
-
-                        var old = ReadFromCache().Blog(ctx.Entity.BlogId).FirstOrDefault(page => page.IsFrontPage);
-                        if (old != null)
-                        {
-                            var update = ReadFromDatabase(old);
-                            this.UpdateCache(update ?? new());
-                        }
-
-                        return hub;
-                    }
-                    catch (Exception ex)
-                    {
-                        return new(ctx.Entity, ex.GetMessage());
-                    }
-                }
-                return new(ctx.Entity) { Error = Text.Original("Page is not front-page") };
-            }
-            return new(ctx.Entity) { Error = Text.Original("Page does not exist") };
+            return _validationForAllOperations(ctx);
         }
 
         public override Result<OrigamiPage> UpdateValidation(DataOperationContext<OrigamiPage> ctx)
         {
-            var validation = new Result<OrigamiPage>(ctx.Entity, _validator);
-
-            if (this.IsCycleDetected(ctx, []) == true)
-            {
-                validation.Error = Text.Original("Cycle detected: you must choose another parent");
-            }
-
-            this.ValidateSlug(ctx).Push(validation);
-
-            return validation;
+            return _validationForAllOperations(ctx);
         }
 
-
+        private Result<OrigamiPage> _validationForAllOperations(DataOperationContext<OrigamiPage> ctx)
+        {
+            Result<OrigamiPage> result = new(ctx.Entity);
+            result.Error = Text.Original("Operation not allowed");
+            result.Error = Text.Original("Use the HubContentPage repository instead");
+            return result;
+        }
     }
 }

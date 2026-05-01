@@ -5,6 +5,6 @@
         /// <summary>
         /// Slug for Pages, Posts, etc.
         /// </summary>
-        string Slug { get; }
+        string Slug { get; set; }
     }
 }

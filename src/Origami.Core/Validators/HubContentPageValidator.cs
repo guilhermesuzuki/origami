@@ -2,9 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Origami.Core.Data;
 using Origami.Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Origami.Core.Validators
 {

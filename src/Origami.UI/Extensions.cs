@@ -167,7 +167,7 @@ namespace Origami.UI
             builder.Services.AddTransient<IUserViewRepository, UserViewRepository>();
             builder.Services.AddTransient<IVideoRepository, VideoRepository>();
             builder.Services.AddTransient<IWhatToSeeNextRepository, WhatToSeeNextRepository>();
-            
+
             builder.Services.AddScoped<ILoginRules, LoginRules>();
             builder.Services.AddScoped<IWhatHappensNext, WhatHappensNext>();
 

@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Origami.Core.Models
+﻿namespace Origami.Core.Models
 {
     public class Merge<T>
     {
         public Merge() : base()
         {
-            
+
         }
 
         public Merge(IEnumerable<T> purge, IEnumerable<T> update, IEnumerable<T> create) : this()

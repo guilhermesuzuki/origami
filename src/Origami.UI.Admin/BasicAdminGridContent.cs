@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using MudBlazor;
-using MudBlazor.Charts;
-using NanoidDotNet;
 using Origami.Core;
 using Origami.Core.Data;
 using Origami.Core.Models;

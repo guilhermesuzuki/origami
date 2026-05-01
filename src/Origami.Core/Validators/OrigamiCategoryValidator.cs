@@ -12,11 +12,13 @@ namespace Origami.Core.Validators
             RuleFor(x => x.BlogId).BlogId(text);
             RuleFor(x => x.Id).Id(text);
             RuleFor(x => x.NanoId).NanoId(text);
-            RuleFor(x => x.Name).ShortName(text);
+            RuleFor(x => x.Name).Name(text, 50);
             RuleFor(x => x.Description).Description(text);
-            RuleFor(x => x.Slug).Slug(text);
+            RuleFor(x => x.Slug).Cascade(CascadeMode.Stop).Slug(text, 50);
             RuleFor(x => x).ParentId(text);
-            RuleFor(x => x).LoopsAreNotAllowed(text, dbContextFactory);
+            RuleFor(x => x).InfiniteLoopsAreNotAllowed(text, dbContextFactory);
+            RuleFor(x => x).NameMustBeUniqueByBlog(text, dbContextFactory);
+            RuleFor(x => x).SlugMustBeUniqueByBlog(text, dbContextFactory);
         }
     }
 }

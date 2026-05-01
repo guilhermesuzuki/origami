@@ -1,8 +1,5 @@
-﻿using HtmlAgilityPack;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
+﻿using Microsoft.EntityFrameworkCore;
 using Origami.Core.Models;
-using System.Diagnostics;
 
 namespace Origami.Core.Data
 {
@@ -84,10 +81,11 @@ namespace Origami.Core.Data
                 if (permission is { Ok: false }) return permission;
             }
 
+            ctx.Entity.SetDateCreated(DateTime.UtcNow);
+            ctx.Entity.SetSlugWhenNecessary();
+
             var validation = this.CreateValidation(ctx);
             if (validation.Ok == false) return validation;
-
-            ctx.Entity.SetDateCreated(DateTime.UtcNow);
 
             return Create(ctx).OnSuccess(() => CreateCache(ctx.Entity));
         }
@@ -258,10 +256,11 @@ namespace Origami.Core.Data
                 if (permission is { Ok: false }) return permission;
             }
 
+            ctx.Entity.SetDateModified(DateTime.UtcNow);
+            ctx.Entity.SetSlugWhenNecessary();
+
             var validation = this.UpdateValidation(ctx);
             if (validation.Ok == false) return validation;
-
-            ctx.Entity.SetDateModified(DateTime.UtcNow);
 
             return Update(ctx).OnSuccess(() => UpdateCache(ctx.Entity));
         }

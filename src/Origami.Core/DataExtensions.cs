@@ -8,10 +8,8 @@ using Origami.Core;
 using Origami.Core.Data;
 using Origami.Core.Models;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq.Dynamic.Core;
-using System.Net.WebSockets;
 using System.Reflection;
 
 namespace Origami.Core
@@ -416,7 +414,7 @@ namespace Origami.Core
                     _ => db.Set<T>().AsNoTracking().ToList(),
                 };
             }
-             
+
             return db.Set<T>().AsNoTracking().ToList();
         }
         /// <summary>
