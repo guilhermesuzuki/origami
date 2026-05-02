@@ -68,8 +68,8 @@ namespace Origami.UI.Admin.IntegrationTests
             scope.CreateTestRole(TestRole);
             scope.CreateTestUser(TestUser, TestRole);
 
-            var anotherRole = new OrigamiRole 
-            { 
+            var anotherRole = new OrigamiRole
+            {
                 Id = Guid.NewGuid(),
                 DateCreated = DateTime.UtcNow,
                 Name = "Another test role",
@@ -77,7 +77,7 @@ namespace Origami.UI.Admin.IntegrationTests
                 CreateNewBlogs = true,
                 DeleteBlogs = true,
                 EditBlogs = true,
-                PurgeBlogs = true, 
+                PurgeBlogs = true,
             };
 
             var result = superRepository.Roles.SmartSave(anotherRole.GetContext(TestUser), checkPermission: true);
@@ -211,13 +211,40 @@ namespace Origami.UI.Admin.IntegrationTests
                 DateCreated = DateTime.UtcNow,
                 Name = "Another test role",
                 NanoId = Guid.NewGuid().ToString().Substring(0, 8),
+                CreateNewBlogs = true,
+                DeleteBlogs = true,
+                EditBlogs = true,
+                PurgeBlogs = true,
+                RestoreBlogs = true,
             };
 
             var result = superRepository.Roles.SmartSave(anotherRole.GetContext(TestUser), checkPermission: true);
             result.ShouldNotBeNull();
             result.Ok.ShouldBeTrue();
 
+            using var db = superRepository.DbContextFactory.CreateDbContext();
+            var query = from a in db.RightRoles
+                        join b in db.Rights on a.RightId equals b.Id
+                        where a.RoleId == anotherRole.Id
+                        orderby b.Name
+                        select b;
+
+            var rights = query.ToList();
+            rights.Count.ShouldBe(5);
+            rights[0].ShouldNotBeNull();
+            rights[1].ShouldNotBeNull();
+            rights[2].ShouldNotBeNull();
+            rights[3].ShouldNotBeNull();
+            rights[4].ShouldNotBeNull();
+            rights[0].Name.ShouldBe(nameof(OrigamiRole.CreateNewBlogs));
+            rights[1].Name.ShouldBe(nameof(OrigamiRole.DeleteBlogs));
+            rights[2].Name.ShouldBe(nameof(OrigamiRole.EditBlogs));
+            rights[3].Name.ShouldBe(nameof(OrigamiRole.PurgeBlogs));
+            rights[4].Name.ShouldBe(nameof(OrigamiRole.RestoreBlogs));
+
             anotherRole.Name = "Another updated test role";
+            anotherRole.CreateNewBlogs = false;
+            anotherRole.DeleteBlogs = false;
 
             var resultUpdate = superRepository.Roles.SmartSave(anotherRole.GetContext(TestUser), checkPermission: true);
             resultUpdate.ShouldNotBeNull();
@@ -236,6 +263,21 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheRole.Name.ShouldBe(anotherRole.Name);
             cacheRole.NanoId.ShouldBe(anotherRole.NanoId);
             cacheRole.IsDeleted.ShouldBe(anotherRole.IsDeleted);
+
+            query = from a in db.RightRoles
+                    join b in db.Rights on a.RightId equals b.Id
+                    where a.RoleId == anotherRole.Id
+                    orderby b.Name
+                    select b;
+
+            rights = query.ToList();
+            rights.Count.ShouldBe(3);
+            rights[0].ShouldNotBeNull();
+            rights[1].ShouldNotBeNull();
+            rights[2].ShouldNotBeNull();
+            rights[0].Name.ShouldBe(nameof(OrigamiRole.EditBlogs));
+            rights[1].Name.ShouldBe(nameof(OrigamiRole.PurgeBlogs));
+            rights[2].Name.ShouldBe(nameof(OrigamiRole.RestoreBlogs));
         }
 
         [Fact]
