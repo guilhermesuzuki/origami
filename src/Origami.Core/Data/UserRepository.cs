@@ -10,6 +10,7 @@ namespace Origami.Core.Data
         IUserRepository
     {
         protected readonly IContentRepository _contentRepository;
+        protected readonly IUserBlogRepository _userBlogRepository;
         protected readonly IUserPasswordResetRepository _userPasswordResetRepository;
         protected readonly IUserRoleRepository _userRoleRepository;
         protected readonly IValidator<OrigamiUser> _validator;
@@ -24,6 +25,7 @@ namespace Origami.Core.Data
             IContentRepository contentRepository,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IMyMemoryCache memoryCache,
+            IUserBlogRepository userBlogRepository,
             IUserPasswordResetRepository userPasswordResetRepository,
             IUserRoleRepository userRoleRepository,
             Text text,
@@ -32,6 +34,7 @@ namespace Origami.Core.Data
         {
             _validator = validator;
             _contentRepository = contentRepository;
+            _userBlogRepository = userBlogRepository;
             _userPasswordResetRepository = userPasswordResetRepository;
             _userRoleRepository = userRoleRepository;
         }
@@ -108,7 +111,9 @@ namespace Origami.Core.Data
             ctx.Entity.MustChangePassword = true;
             ctx.Entity.Password = password.SHA256Hash();
 
-            hub.Messages.Add(new() { MessageType = ResultMessage.MessageTypes.Password, Message = password, });
+            // TODO: add this to resx files
+            hub.Info = Text.Original("A password has been created: {0}", password);
+            hub.Password = password;
 
             base.Create(ctx).Push(hub);
 
@@ -182,11 +187,13 @@ namespace Origami.Core.Data
             var resets1 = _userPasswordResetRepository.ReadFromCache().Where(x => x.UserId == entity.Id).ToList();
             var resets2 = _userPasswordResetRepository.ReadFromCache().Where(x => x.AuthorId == entity.Id).ToList();
             var roles = from x in _userRoleRepository.ReadFromCache() where x.UserId == entity.Id select x;
+            var userBlogs = _userBlogRepository.ReadFromCache().Where(x => x.UserId == entity.Id);
 
             contents.Each(this._contentRepository.PurgeCache);
             resets1.Each(this._userPasswordResetRepository.PurgeCache);
             resets2.Each(this._userPasswordResetRepository.PurgeCache);
             roles.Each(this._userRoleRepository.PurgeCache);
+            userBlogs.Each(this._userBlogRepository.PurgeCache);
         }
 
         public override Result<OrigamiUser> PurgeRelationshipsFromDatabase(DataOperationContext<OrigamiUser> ctx)
@@ -196,18 +203,18 @@ namespace Origami.Core.Data
             using (var db = DbContextFactory.CreateDbContext())
             {
                 var contents = db.Contents.AsNoTracking().Where(x => x.AuthorId == ctx.Entity.Id).ToList();
-                var posts = db.Set<OrigamiPost>().AsNoTracking().Where(x => x.AuthorId == ctx.Entity.Id).ToList();
-                var videos = db.Set<OrigamiVideo>().AsNoTracking().Where(x => x.AuthorId == ctx.Entity.Id).ToList();
 
                 contents.GetContexts(ctx).Call(_contentRepository.SmartPurge, false).Push(hub);
 
                 var del1 = db.UserRoles.Where(x => x.UserId == ctx.Entity.Id).ExecuteDelete();
                 var del2 = db.UserPasswordResets.Where(x => x.UserId == ctx.Entity.Id).ExecuteDelete();
                 var del3 = db.UserPasswordResets.Where(x => x.AuthorId == ctx.Entity.Id).ExecuteDelete();
+                var del4 = db.UserBlogs.Where(x => x.UserId == ctx.Entity.Id).ExecuteDelete();
 
                 hub.RowsAffected += del1;
                 hub.RowsAffected += del2;
                 hub.RowsAffected += del3;
+                hub.RowsAffected += del4;
             }
 
             return hub;
