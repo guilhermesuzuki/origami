@@ -124,7 +124,7 @@ namespace Origami.Core
             {
                 codes.Add(NanoidDotNet.Nanoid.Generate(NanoidDotNet.Nanoid.Alphabets.Digits, 6));
             }
-            return codes.Distinct().Take(10).OrderBy(x => x).ToArray();
+            return [.. codes.Distinct().Take(10).OrderBy(x => x)];
         }
 
         public static IEnumerable<T> GetAllChildren<T>(this IEnumerable<T>? source, T entity)
@@ -196,7 +196,7 @@ namespace Origami.Core
         public static IEnumerable<T> GetChildren<T, T2>(this IEnumerable<T> entities, T2 entity)
             where T2 : IParentIdNull, T, IId
         {
-            return entities.Cast<T2>().Where(x => x.ParentId == entity.Id).Cast<T>().ToList();
+            return [.. entities.Cast<T2>().Where(x => x.ParentId == entity.Id).Cast<T>()];
         }
 
         /// <summary>
@@ -410,12 +410,12 @@ namespace Origami.Core
                 var t = Activator.CreateInstance<T>();
                 return t switch
                 {
-                    OrigamiRole => db.GetRolesFromDatabase().Cast<T>().ToList(),
-                    _ => db.Set<T>().AsNoTracking().ToList(),
+                    OrigamiRole => [.. db.GetRolesFromDatabase().Cast<T>()],
+                    _ => [.. db.Set<T>().AsNoTracking()],
                 };
             }
 
-            return db.Set<T>().AsNoTracking().ToList();
+            return [.. db.Set<T>().AsNoTracking()];
         }
         /// <summary>
         /// Tries to retrieve a blog by its slug. Returns null if not found or if the blog is deleted or inactive.
