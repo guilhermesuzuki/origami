@@ -332,7 +332,7 @@ namespace Origami.Core.Data
                     root.Entity.DateModified = DateTime.UtcNow;
                 }
 
-                root.SetSlugWhenNecessary<T1, T2>();
+                root.SetSlug<T1, T2>();
 
                 // validate hub
                 _validator.ValidateAndThrow(root);
