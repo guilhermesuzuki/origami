@@ -138,12 +138,21 @@ namespace Origami.UI.Admin.IntegrationTests
             using var db = superRepository.DbContextFactory.CreateDbContext();
             var blog = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
             blog.ShouldNotBeNull();
+
             blogRepository
                 .SmartDelete(blog.GetContext(TestUser), true)
                 .OnFailure(r => throw new Exception($"Failed to delete test blog: {r.GetMessages()}"));
             var blogAfterDelete = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
             blogAfterDelete.ShouldNotBeNull();
             blogAfterDelete.IsDeleted.ShouldBeTrue();
+
+            var dbBlog = superRepository.Blogs.ReadFromDatabase(blog);
+            dbBlog.ShouldNotBeNull();
+            dbBlog.DateCreated.ShouldBe(blog.DateCreated);
+            dbBlog.Name.ShouldBe(blog.Name);
+            dbBlog.NanoId.ShouldBe(blog.NanoId);
+            dbBlog.IsDeleted.ShouldBe(true);
+            dbBlog.IsDeleted.ShouldBe(blog.IsDeleted);
 
             var cacheBlog = superRepository.MyMemoryCache.Read<OrigamiBlog>().Id(TestBlog.Id)!;
             cacheBlog.ShouldNotBeNull();
@@ -189,6 +198,16 @@ namespace Origami.UI.Admin.IntegrationTests
             blog.Name.ShouldBe(TestBlog.Name);
             blog.DateCreated.ShouldBe(TestBlog.DateCreated);
             blog.NanoId.ShouldBe(TestBlog.NanoId);
+            blog.IsDeleted.ShouldBe(false);
+            blog.IsDeleted.ShouldBe(blog.IsDeleted);
+
+            var cacheBlog = superRepository.MyMemoryCache.Read<OrigamiBlog>().Id(TestBlog.Id)!;
+            cacheBlog.ShouldNotBeNull();
+            cacheBlog.Name.ShouldBe(TestBlog.Name);
+            cacheBlog.DateCreated.ShouldBe(TestBlog.DateCreated);
+            cacheBlog.NanoId.ShouldBe(TestBlog.NanoId);
+            cacheBlog.IsDeleted.ShouldBe(false);
+            cacheBlog.IsDeleted.ShouldBe(blog.IsDeleted);
 
             blogRepository.PurgeCache(blog);
         }
@@ -274,6 +293,7 @@ namespace Origami.UI.Admin.IntegrationTests
             result.Messages[0].MessageType.ShouldBe(ResultMessage.MessageTypes.Error);
             result.Messages[0].Message.ShouldBe("Primary blog cannot be purged");
         }
+
         [Fact]
         public void Purge_WhenEntityIsValid_ShouldPersistRecord()
         {

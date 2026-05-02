@@ -14,9 +14,21 @@ namespace Origami.UI.Admin.IntegrationTests
         public static Guid CategoryIdA = new Guid("1824ed20-0d55-476c-a716-c531667aa8ce");
         public static Guid CategoryIdB = new Guid("27e926c3-fc50-484d-85fb-328ff7f51b82");
         public static Guid CategoryIdC = new Guid("111bd28d-04a9-4e9a-b6c7-436e43aba651");
-        public static Guid UserId = new Guid("d2c9e5b8-1c3a-4f8e-9a1b-2f3e4d5c6a7b");
         public static Guid RoleId = new Guid("e1f2d3c4-b5a6-7d8e-9f0a-1b2c3d4e5f6a");
         public static Guid RoleId1 = new Guid("f1e2d3c4-b5a6-7d8e-9f0a-1b2c3d4e5f6b");
+        public static Guid UserId = new Guid("d2c9e5b8-1c3a-4f8e-9a1b-2f3e4d5c6a7b");
+
+        public OrigamiUser AnotherTestUser = new OrigamiUser
+        {
+            Id = Guid.NewGuid(),
+            DateCreated = DateTime.UtcNow,
+            DisplayName = "Another test user",
+            EmailAddress = "another@testuser.com",
+            FirstName = "Another",
+            LastName = "Test user",
+            Username = "another_test_user",
+            NanoId = Guid.NewGuid().ToString().Substring(0, 8),
+        };
 
         public OrigamiBlog TestBlog = new OrigamiBlog
         {
@@ -91,20 +103,27 @@ namespace Origami.UI.Admin.IntegrationTests
             CreateNewBlogs = true,
             CreateNewCategories = true,
             CreateNewRoles = true,
+            CreateNewUsers = true,
             DeactivateBlogs = true,
             DeleteBlogs = true,
             DeleteCategories = true,
             DeleteRoles = true,
+            DeleteUserSelf = true,
+            DeleteUsersOtherThanSelf = true,
             EditBlogs = true,
             EditCategories = true,
+            EditOtherUsers = true,
+            EditOwnUser = true,
             EditRoles = true,
             MarkBlogAsPrimary = true,
             PurgeBlogs = true,
             PurgeCategories = true,
             PurgeRoles = true,
+            PurgeUsers = true,
             RestoreBlogs = true,
             RestoreCategories = true,
             RestoreRoles = true,
+            RestoreUsers = true,
         };
 
         public OrigamiRole TestRoleNoPermissions = new()
