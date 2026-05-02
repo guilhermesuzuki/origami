@@ -16,7 +16,7 @@ namespace Origami.UI.Admin.IntegrationTests
         }
 
         [Fact]
-        public void Block_WhenEntityIsBlockedAlready_ShouldPersistRecord()
+        public void Block_WhenEntityIsAlreadyBlocked_ShouldPersistRecord()
         {
             using var transaction = new TransactionScope();
             using var scope = _factory.Services.CreateScope();
@@ -411,7 +411,7 @@ namespace Origami.UI.Admin.IntegrationTests
         }
 
         [Fact]
-        public void Unblock_WhenEntityIsUnblockedAlready_ShouldPersistRecord()
+        public void Unblock_WhenEntityIsAlreadyUnblocked_ShouldPersistRecord()
         {
             using var transaction = new TransactionScope();
             using var scope = _factory.Services.CreateScope();
