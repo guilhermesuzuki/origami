@@ -100,6 +100,21 @@ namespace Origami.Core.Data
             return hub;
         }
 
+        public override Result<OrigamiUser> Create(DataOperationContext<OrigamiUser> ctx)
+        {
+            var hub = new Result<OrigamiUser>(ctx.Entity);
+            var password = "_" + Nanoid.Generate(size: 8);
+
+            ctx.Entity.MustChangePassword = true;
+            ctx.Entity.Password = password.SHA256Hash();
+
+            hub.Messages.Add(new() { MessageType = ResultMessage.MessageTypes.Password, Message = password, });
+
+            base.Create(ctx).Push(hub);
+
+            return hub;
+        }
+
         public override Result<OrigamiUser> CreateValidation(DataOperationContext<OrigamiUser> ctx)
         {
             return new(ctx.Entity, _validator);
@@ -346,21 +361,6 @@ namespace Origami.Core.Data
         public override Result<OrigamiUser> UpdateValidation(DataOperationContext<OrigamiUser> ctx)
         {
             return new(ctx.Entity, _validator);
-        }
-
-        public override Result<OrigamiUser> Create(DataOperationContext<OrigamiUser> ctx)
-        {
-            var hub = new Result<OrigamiUser>(ctx.Entity);
-            var password = "_" + Nanoid.Generate(size: 8);
-
-            ctx.Entity.MustChangePassword = true;
-            ctx.Entity.Password = password.SHA256Hash();
-
-            hub.Messages.Add(new() { MessageType = ResultMessage.MessageTypes.Password, Message = password, });
-
-            base.Create(ctx).Push(hub);
-
-            return hub;
         }
     }
 }
