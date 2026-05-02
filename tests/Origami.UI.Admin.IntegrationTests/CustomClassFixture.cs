@@ -28,6 +28,8 @@ namespace Origami.UI.Admin.IntegrationTests
             LastName = "Test user",
             Username = "another_test_user",
             NanoId = Guid.NewGuid().ToString().Substring(0, 8),
+            IsBlocked = false,
+            IsDeleted = false,
         };
 
         public OrigamiBlog TestBlog = new OrigamiBlog
@@ -100,6 +102,8 @@ namespace Origami.UI.Admin.IntegrationTests
             Name = "Test role",
             NanoId = RoleId.ToString().Substring(0, 8),
             ActivateBlogs = true,
+            BlockUserSelf = true,
+            BlockUsersOtherThanSelf = true,
             CreateNewBlogs = true,
             CreateNewCategories = true,
             CreateNewRoles = true,
@@ -124,6 +128,7 @@ namespace Origami.UI.Admin.IntegrationTests
             RestoreCategories = true,
             RestoreRoles = true,
             RestoreUsers = true,
+            UnblockUsers = true,
         };
 
         public OrigamiRole TestRoleNoPermissions = new()

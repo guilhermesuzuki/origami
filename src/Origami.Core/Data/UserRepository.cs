@@ -53,6 +53,12 @@ namespace Origami.Core.Data
                 if (permission.Ok == false) return permission;
             }
 
+            var fresh = this.ReadFromDatabase(ctx.Entity);
+            if (fresh is { IsBlocked: true })
+            {
+                return new() { Error = Text.Original("User is already blocked") };
+            }
+
             ctx.Entity.IsBlocked = true;
             ctx.Entity.DateBlocked = DateTime.UtcNow;
 
@@ -324,6 +330,12 @@ namespace Origami.Core.Data
             {
                 var permission = CheckPermission(ctx, UnblockUsersPermission);
                 if (permission.Ok == false) return permission;
+            }
+
+            var fresh = this.ReadFromDatabase(ctx.Entity);
+            if (fresh is { IsBlocked: false })
+            {
+                return new() { Error = Text.Original("User is already unblocked") };
             }
 
             ctx.Entity.IsBlocked = false;
