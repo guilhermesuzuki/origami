@@ -1,11 +1,12 @@
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Origami.Core;
 using Origami.UI;
+using Origami.UI.FrontEnd.Components;
 using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var app = builder.FoldTheOrigami<Origami.UI.FrontEnd.Components.App>(
+var app = builder.FoldTheOrigami<App>(
     args,
     admin: false,
     inject: () =>

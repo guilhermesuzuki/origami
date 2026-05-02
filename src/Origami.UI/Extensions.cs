@@ -38,38 +38,36 @@ namespace Origami.UI
 {
     public static class Extensions
     {
-        /// <summary>
-        /// Registers CRUD-related services for the specified entity and repository types.
-        /// </summary>
-        /// <remarks>This method registers the specified repository type as the implementation for various
-        /// CRUD-related interfaces, including <see cref="_ICrudCache{TEntity}"/>, <see cref="_ICreateCache{TEntity}"/>,
-        /// <see cref="_IReadCache{TEntity}"/>, <see cref="_IUpdateCache{TEntity}"/>, <see
-        /// cref="_IDeleteCache{TEntity}"/>, and <see cref="_ISaveCache{TEntity}"/>. Use this method to configure
-        /// dependency injection for CRUD operations in your application.</remarks>
-        /// <typeparam name="TEntity">The type of the entity. Must implement <see cref="IId"/>.</typeparam>
-        /// <typeparam name="TRepository">The type of the repository. Must implement <see cref="_ICrudCache{TEntity}"/>.</typeparam>
-        /// <param name="services">The <see cref="IServiceCollection"/> to which the services will be added.</param>
-        /// <returns>The updated <see cref="IServiceCollection"/> instance.</returns>
-        public static IServiceCollection AddCrud<TEntity, TRepository>(this IServiceCollection services)
-            where TEntity : IId
-            where TRepository : class, IRepository<TEntity>
-        {
-            services.AddTransient<IRepository<TEntity>, TRepository>();
-            services.AddTransient<ICreateCache<TEntity>, TRepository>();
-            services.AddTransient<IReadCache<TEntity>, TRepository>();
-            services.AddTransient<IUpdateCache<TEntity>, TRepository>();
-            services.AddTransient<IDeleteCache<TEntity>, TRepository>();
-            services.AddTransient<ISearch<TEntity>, TRepository>();
-
-            return services;
-        }
-
         public static void AddOrigami(this WebApplicationBuilder builder, string[] args, bool admin = false)
         {
-            var files = Path.GetFullPath($"..{Path.DirectorySeparatorChar}Origami.Files{Path.DirectorySeparatorChar}");
+            if (builder.Environment.IsEnvironment("Testing") == false)
+            {
+                /* For non-testing environments, the dbsettings.json file is located in the Origami.Files directory */
+                var files = Path.GetFullPath($"..{Path.DirectorySeparatorChar}Origami.Files{Path.DirectorySeparatorChar}");
 
-            builder.Configuration.AddJsonFile(Path.Combine(files, "dbsettings.json"), false, reloadOnChange: true);
-            builder.Configuration.AddJsonFile(Path.Combine(files, $"dbsettings.{builder.Environment.EnvironmentName}.json"), true, reloadOnChange: true);
+                builder.Configuration.AddJsonFile(Path.Combine(files, "dbsettings.json"), false, reloadOnChange: true);
+                builder.Configuration.AddJsonFile(Path.Combine(files, $"dbsettings.{builder.Environment.EnvironmentName}.json"), true, reloadOnChange: true);
+            }
+            else
+            {
+                /* For testing environment, the dbsettings.json file is located in the current directory */
+                builder.Configuration.AddJsonFile(Path.GetFullPath("dbsettings.json"), false, reloadOnChange: true);
+            }
+
+            //origami connection string
+            var origami = builder.Configuration.GetOrigamiConnectionString();
+
+            builder.Services.AddDbContextFactory<OrigamiDbContext>(options =>
+            {
+                options.EnableSensitiveDataLogging();
+                options.UseSqlServer(origami);
+            });
+
+            builder.Services.AddDbContextFactory<OrigamiIdentityDbContext>(options =>
+            {
+                options.EnableSensitiveDataLogging();
+                options.UseSqlServer(origami);
+            });
 
             // Add services to the container.
             builder.Services.AddRazorPages();
@@ -98,21 +96,6 @@ namespace Origami.UI
 
             builder.Services.AddControllersWithViews();
             builder.Services.AddServerSideBlazor().AddHubOptions(options => { options.MaximumReceiveMessageSize = 16 * 1024 * 1024; });
-
-            //origami connection string
-            var origami = builder.Configuration.GetOrigamiConnectionString();
-
-            builder.Services.AddDbContextFactory<OrigamiDbContext>(options =>
-            {
-                options.EnableSensitiveDataLogging();
-                options.UseSqlServer(origami);
-            });
-
-            builder.Services.AddDbContextFactory<OrigamiIdentityDbContext>(options =>
-            {
-                options.EnableSensitiveDataLogging();
-                options.UseSqlServer(origami);
-            });
 
             builder.Services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<OrigamiIdentityDbContext>();
 
@@ -176,25 +159,25 @@ namespace Origami.UI
             builder.Services.AddKeyedSingleton<IIpLocationRepository, IpWhoIsRepository>(IpWhoIsRepository.Host);
             builder.Services.AddSingleton<IIpLocationRepository, IpLocationRepository>();
 
-            builder.Services.AddCrud<OrigamiBlog, BlogRepository>();
-            builder.Services.AddCrud<OrigamiCategory, CategoryRepository>();
-            builder.Services.AddCrud<OrigamiContent, ContentRepository>();
-            builder.Services.AddCrud<OrigamiContentCategory, ContentCategoryRepository>();
-            builder.Services.AddCrud<OrigamiContentComment, ContentCommentRepository>();
-            builder.Services.AddCrud<OrigamiContentCommentReaction, ContentCommentReactionRepository>();
-            builder.Services.AddCrud<OrigamiContentHistory, ContentHistoryRepository>();
-            builder.Services.AddCrud<OrigamiContentRating, ContentRatingRepository>();
-            builder.Services.AddCrud<OrigamiContentReaction, ContentReactionRepository>();
-            builder.Services.AddCrud<OrigamiContentTag, ContentTagRepository>();
-            builder.Services.AddCrud<OrigamiFile, FileManagerRepository>();
-            builder.Services.AddCrud<OrigamiPage, PageRepository>();
-            builder.Services.AddCrud<OrigamiPost, PostRepository>();
-            builder.Services.AddCrud<OrigamiRole, RoleRepository>();
-            builder.Services.AddCrud<OrigamiSettings, SettingsRepository>();
-            builder.Services.AddCrud<OrigamiSocialProfile, SocialProfileRepository>();
-            builder.Services.AddCrud<OrigamiUser, UserRepository>();
-            builder.Services.AddCrud<OrigamiUserTrash, UserTrashRepository>();
-            builder.Services.AddCrud<OrigamiVideo, VideoRepository>();
+            builder.Services.AddRepository<OrigamiBlog, BlogRepository>();
+            builder.Services.AddRepository<OrigamiCategory, CategoryRepository>();
+            builder.Services.AddRepository<OrigamiContent, ContentRepository>();
+            builder.Services.AddRepository<OrigamiContentCategory, ContentCategoryRepository>();
+            builder.Services.AddRepository<OrigamiContentComment, ContentCommentRepository>();
+            builder.Services.AddRepository<OrigamiContentCommentReaction, ContentCommentReactionRepository>();
+            builder.Services.AddRepository<OrigamiContentHistory, ContentHistoryRepository>();
+            builder.Services.AddRepository<OrigamiContentRating, ContentRatingRepository>();
+            builder.Services.AddRepository<OrigamiContentReaction, ContentReactionRepository>();
+            builder.Services.AddRepository<OrigamiContentTag, ContentTagRepository>();
+            builder.Services.AddRepository<OrigamiFile, FileManagerRepository>();
+            builder.Services.AddRepository<OrigamiPage, PageRepository>();
+            builder.Services.AddRepository<OrigamiPost, PostRepository>();
+            builder.Services.AddRepository<OrigamiRole, RoleRepository>();
+            builder.Services.AddRepository<OrigamiSettings, SettingsRepository>();
+            builder.Services.AddRepository<OrigamiSocialProfile, SocialProfileRepository>();
+            builder.Services.AddRepository<OrigamiUser, UserRepository>();
+            builder.Services.AddRepository<OrigamiUserTrash, UserTrashRepository>();
+            builder.Services.AddRepository<OrigamiVideo, VideoRepository>();
 
             builder.Services.AddTransient<IHubContentRepository<HubContentPage>, HubContentPageRepository>();
             builder.Services.AddTransient<IHubContentRepository<HubContentPost>, HubContentPostRepository>();
@@ -302,6 +285,23 @@ namespace Origami.UI
             builder.Configuration.AddCommandLine(args);
         }
 
+        /// <summary>
+        /// Registers a repository for an entity, with the corresponding interface and search interface
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <typeparam name="TRepository"></typeparam>
+        /// <param name="services"></param>
+        /// <returns></returns>
+        public static IServiceCollection AddRepository<TEntity, TRepository>(this IServiceCollection services)
+            where TEntity : IId
+            where TRepository : class, IRepository<TEntity>
+        {
+            services.AddTransient<IRepository<TEntity>, TRepository>();
+            services.AddTransient<ISearch<TEntity>, TRepository>();
+
+            return services;
+        }
+
         public static string Error(this IEnumerable<IdentityError> errors)
         {
             if (errors.Count() > 0)
@@ -343,11 +343,7 @@ namespace Origami.UI
             return string.Empty;
         }
 
-        public static WebApplication FoldTheOrigami<T>(
-            this WebApplicationBuilder builder,
-            string[] args,
-            bool admin = false,
-            Action? inject = null)
+        public static WebApplication FoldTheOrigami<T>(this WebApplicationBuilder builder, string[] args, bool admin = false, Action? inject = null)
         {
             //first thing in the morning
             builder.AddOrigami(args, admin: admin);
@@ -576,7 +572,7 @@ namespace Origami.UI
 
             if (admin == false)
             {
-                // RSS feed endpoint
+                // RSS feed endpoint (minimal API)
                 app.MapGet("/blogs/{slug}/rss.xml", async (string slug, HttpContext context, IRssRepository rss) =>
                 {
                     var oi = context.Request.Scheme + "://" + context.Request.Host.Value;

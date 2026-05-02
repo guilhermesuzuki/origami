@@ -53,6 +53,13 @@ namespace Origami.Core.Data
                 if (permission.Ok == false) return permission;
             }
 
+            var fresh = this.ReadFromDatabase(ctx.Entity);
+            if (fresh is { IsBlocked: true })
+            {
+                // TODO: add this to resx files
+                return new() { Error = Text.Original("User is already blocked") };
+            }
+
             ctx.Entity.IsBlocked = true;
             ctx.Entity.DateBlocked = DateTime.UtcNow;
 
@@ -80,7 +87,7 @@ namespace Origami.Core.Data
             if (newPassword1 != newPassword2) return new() { Error = Text.Original("New passwords do NOT match, they differ from each other") };
             if (oldPassword == newPassword1) return new() { Error = Text.Original("You did NOT change passwords, current and new are the same") };
 
-            var hub = new Result<OrigamiUser>(user).Pull(newPassword1.IsPasswordStrong());
+            var hub = new Result<OrigamiUser>(user).Pull(newPassword1.IsPasswordStrong(Text));
             if (hub.Ok == false) return hub;
 
             // sets the new password
@@ -95,8 +102,7 @@ namespace Origami.Core.Data
 
         public override Result<OrigamiUser> CreateValidation(DataOperationContext<OrigamiUser> ctx)
         {
-            var validation = new Result<OrigamiUser>(ctx.Entity, _validator);
-            return validation;
+            return new(ctx.Entity, _validator);
         }
 
         public Result<string> ForgotOwnPassword(DataOperationContext<OrigamiUser> ctx, bool checkPermission)
@@ -106,10 +112,11 @@ namespace Origami.Core.Data
                 var permission = this.CheckPermission(ctx.User.Id, nameof(OrigamiRole.ResetOwnPassword));
                 if (permission.Ok == false)
                 {
-                    var hub = new Result<string>();
-
-                    hub.Error = Text.Original("You don't have permission to reset your own password");
-                    hub.Simple = Text.Original("Please, talk to a system administrator");
+                    var hub = new Result<string>
+                    {
+                        Error = Text.Original("You don't have permission to reset your own password"),
+                        Simple = Text.Original("Please, talk to a system administrator")
+                    };
 
                     return hub;
                 }
@@ -268,7 +275,7 @@ namespace Origami.Core.Data
                 if (permission.Ok == false) return permission;
             }
 
-            var hub = newPassword1.IsPasswordStrong();
+            var hub = newPassword1.IsPasswordStrong(Text);
             if (hub.Ok)
             {
                 if (newPassword1 != newPassword2)
@@ -326,15 +333,22 @@ namespace Origami.Core.Data
                 if (permission.Ok == false) return permission;
             }
 
+            var fresh = this.ReadFromDatabase(ctx.Entity);
+            if (fresh is { IsBlocked: false })
+            {
+                // TODO: add this to resx files
+                return new() { Error = Text.Original("User is already unblocked") };
+            }
+
             ctx.Entity.IsBlocked = false;
             ctx.Entity.DateUnblocked = DateTime.UtcNow;
 
             return this.SmartUpdate(ctx, false);
         }
+
         public override Result<OrigamiUser> UpdateValidation(DataOperationContext<OrigamiUser> ctx)
         {
-            var validation = new Result<OrigamiUser>(ctx.Entity, _validator);
-            return validation;
+            return new(ctx.Entity, _validator);
         }
     }
 }

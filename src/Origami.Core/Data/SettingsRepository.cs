@@ -58,7 +58,7 @@ public class SettingsRepository :
 
     public override Result<OrigamiSettings> CreateValidation(DataOperationContext<OrigamiSettings> ctx)
     {
-        return new Result<OrigamiSettings>(ctx.Entity, _validator);
+        return new(ctx.Entity, _validator);
     }
 
     public OrigamiSettings GetSettings()
@@ -108,7 +108,7 @@ public class SettingsRepository :
 
     public override Result<OrigamiSettings> UpdateValidation(DataOperationContext<OrigamiSettings> ctx)
     {
-        return new Result<OrigamiSettings>(ctx.Entity, _validator);
+        return new(ctx.Entity, _validator);
     }
 
     protected OrigamiSettings ExtractSettings()

@@ -777,23 +777,23 @@ namespace Origami.Core
         /// </summary>
         /// <param name="password"></param>
         /// <returns></returns>
-        public static Result IsPasswordStrong(this string password)
+        public static Result IsPasswordStrong(this string password, Text text)
         {
             var result = new Result();
 
             if (password.Has() == false)
             {
-                result.Error = "Password is empty";
+                result.Error = text.Original("Password is empty");
             }
             else
             {
-                if (password.Length < 5) result.Error = "Password too short";
-                if (Regex.IsMatch(password, "[0-9]+") == false) result.Error = "Number was not found in password";
-                if (Regex.IsMatch(password, "[a-zA-Z]+") == false) result.Error = "Character was not found in password";
-                if (Regex.IsMatch(password, @"[!@#$%^&*()_\-+=\[\]{}|\\:;\""<>,.?/~`]") == false) result.Error = "Special character was not found in password";
+                if (password.Length < 5) result.Error = text.Original("Password too short");
+                if (Regex.IsMatch(password, "[0-9]+") == false) result.Error = text.Original("Number was not found in password");
+                if (Regex.IsMatch(password, "[a-zA-Z]+") == false) result.Error = text.Original("Character was not found in password");
+                if (Regex.IsMatch(password, @"[!@#$%^&*()_\-+=\[\]{}|\\:;\""<>,.?/~`]") == false) result.Error = text.Original("Special character was not found in password");
             }
 
-            return result.Ok ? new() { Success = "Password is strong" } : result;
+            return result.Ok ? new() { Success = text.Original("Password is strong") } : result;
         }
 
         /// <summary>
@@ -1239,38 +1239,31 @@ namespace Origami.Core
             return entity;
         }
 
-        public static T SetSlugWhenNecessary<T>(this T entity)
+        public static T SetSlug<T>(this T entity)
             where T : IId
         {
             if (entity is ISlug slugger)
             {
-                if (slugger.Slug.Has() == false)
+                slugger.Slug = entity switch
                 {
-                    slugger.Slug = entity switch
-                    {
-                        ITitle title => title.Title.GetSlug(),
-                        IName name => name.Name.GetSlug(),
-                        ITag tag => tag.Tag.GetSlug(),
-                        _ => string.Empty,
-                    };
-                }
+                    ITitle title => title.Title.GetSlug(),
+                    IName name => name.Name.GetSlug(),
+                    ITag tag => tag.Tag.GetSlug(),
+                    _ => string.Empty,
+                };
             }
 
             return entity;
         }
 
-        public static T2 SetSlugWhenNecessary<T1, T2>(this T2 root)
+        public static T2 SetSlug<T1, T2>(this T2 root)
             where T1 : OrigamiContent
             where T2 : IHubContent<T1>
         {
-            if (root.Entity.Slug.Has() == false)
-            {
-                root.Entity.Slug = root.Entity.Title.GetSlug();
-            }
+            root.Entity.Slug = root.Entity.Title.GetSlug();
 
             foreach (var tag in root.Tags)
             {
-                if (tag.Slug.Has() == true) continue;
                 tag.Slug = tag.Tag.GetSlug();
             }
 
@@ -1418,13 +1411,12 @@ namespace Origami.Core
         {
             return Uri.UnescapeDataString(value ?? string.Empty);
         }
+
         public static T Version<T>(this T entity, T version)
         {
-            var version1 = entity as IVersion;
-            var version2 = version as IVersion;
-
-            if (version1 != null) version1.Version = version2!.Version;
-
+            var to = entity as IVersion;
+            var from = version as IVersion;
+            if (to != null) to.Version = from!.Version;
             return entity;
         }
 
@@ -1460,6 +1452,14 @@ namespace Origami.Core
             if (depth >= 8) return string.Empty;
             if (exception == null) return string.Empty;
             return string.Concat(" • ", exception.Message, exception.InnerException.M(depth + 1));
+        }
+
+        public static void GenerateTimestamp(this IId entity)
+        {
+            if (entity is IVersion version)
+            {
+                version.Version = BitConverter.GetBytes(DateTime.UtcNow.Ticks);
+            }
         }
     }
 }

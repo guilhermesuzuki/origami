@@ -148,6 +148,11 @@ namespace Origami.Core.Models
             };
         }
 
+        public string GetMessages()
+        {
+            return string.Join(Environment.NewLine, Messages.Select(x => x.Message));
+        }
+
         /// <summary>
         /// Executes the <paramref name="onFail"/> action in case of success.
         /// </summary>
@@ -327,13 +332,24 @@ namespace Origami.Core.Models
         }
 
         /// <summary>
-        /// Executes the <paramref name="onFail"/> action in case of success.
+        /// Executes the <paramref name="onFail"/> action in case of failure.
         /// </summary>
         /// <param name="onFail"></param>
         /// <returns></returns>
         public override Result<T> OnFailure(Action onFail)
         {
             if (Ok == false) onFail();
+            return this;
+        }
+
+        /// <summary>
+        /// Executes the <paramref name="onFail"/> action in case of failure.
+        /// </summary>
+        /// <param name="onFail"></param>
+        /// <returns></returns>
+        public Result<T> OnFailure(Action<Result<T>> onFail)
+        {
+            if (Ok == false) onFail(this);
             return this;
         }
 
