@@ -288,7 +288,7 @@ namespace Origami.Core
                 match.Each(x => x.SetValue(role, true));
             }
 
-            return roles.ToList();
+            return roles;
         }
 
         /// <summary>
