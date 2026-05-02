@@ -16,6 +16,118 @@ namespace Origami.UI.Admin.IntegrationTests
         }
 
         [Fact]
+        public void Block_WhenEntityIsBlockedAlready_ShouldPersistRecord()
+        {
+            using var transaction = new TransactionScope();
+            using var scope = _factory.Services.CreateScope();
+            var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
+
+            scope.CreateTestRole(TestRole);
+            scope.CreateTestUser(TestUser, TestRole);
+
+            var result = superRepository.Users.SmartSave(AnotherTestUser.GetContext(TestUser), checkPermission: true);
+            result.ShouldNotBeNull();
+            result.Ok.ShouldBeTrue();
+
+            var dbUser = superRepository.Users.ReadFromDatabase(AnotherTestUser);
+            dbUser.ShouldNotBeNull();
+            dbUser.DateCreated.ShouldBe(AnotherTestUser.DateCreated);
+            dbUser.DisplayName.ShouldBe(AnotherTestUser.DisplayName);
+            dbUser.FirstName.ShouldBe(AnotherTestUser.FirstName);
+            dbUser.LastName.ShouldBe(AnotherTestUser.LastName);
+            dbUser.Username.ShouldBe(AnotherTestUser.Username);
+            dbUser.NanoId.ShouldBe(AnotherTestUser.NanoId);
+            dbUser.IsDeleted.ShouldBe(false);
+            dbUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
+            dbUser.IsBlocked.ShouldBe(false);
+            dbUser.IsBlocked.ShouldBe(AnotherTestUser.IsBlocked);
+
+            var cacheUser = superRepository.Users.ReadFromCache().Id(AnotherTestUser.Id);
+            cacheUser.ShouldNotBeNull();
+            cacheUser.DateCreated.ShouldBe(AnotherTestUser.DateCreated);
+            cacheUser.DisplayName.ShouldBe(AnotherTestUser.DisplayName);
+            cacheUser.FirstName.ShouldBe(AnotherTestUser.FirstName);
+            cacheUser.LastName.ShouldBe(AnotherTestUser.LastName);
+            cacheUser.Username.ShouldBe(AnotherTestUser.Username);
+            cacheUser.NanoId.ShouldBe(AnotherTestUser.NanoId);
+            cacheUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
+            cacheUser.IsDeleted.ShouldBe(false);
+            cacheUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
+            cacheUser.IsBlocked.ShouldBe(false);
+            cacheUser.IsBlocked.ShouldBe(AnotherTestUser.IsBlocked);
+
+            var resultBlock = superRepository.Users.Block(AnotherTestUser.GetContext(TestUser), checkPermission: true);
+            resultBlock.ShouldNotBeNull();
+            resultBlock.Ok.ShouldBeTrue();
+
+            dbUser = superRepository.Users.ReadFromDatabase(AnotherTestUser);
+            dbUser.ShouldNotBeNull();
+            dbUser.DateCreated.ShouldBe(AnotherTestUser.DateCreated);
+            dbUser.DisplayName.ShouldBe(AnotherTestUser.DisplayName);
+            dbUser.FirstName.ShouldBe(AnotherTestUser.FirstName);
+            dbUser.LastName.ShouldBe(AnotherTestUser.LastName);
+            dbUser.Username.ShouldBe(AnotherTestUser.Username);
+            dbUser.NanoId.ShouldBe(AnotherTestUser.NanoId);
+            dbUser.IsDeleted.ShouldBe(false);
+            dbUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
+            dbUser.IsBlocked.ShouldBe(true);
+            dbUser.IsBlocked.ShouldBe(AnotherTestUser.IsBlocked);
+            dbUser.DateBlocked.ShouldNotBeNull();
+
+            cacheUser = superRepository.Users.ReadFromCache().Id(AnotherTestUser.Id);
+            cacheUser.ShouldNotBeNull();
+            cacheUser.DateCreated.ShouldBe(AnotherTestUser.DateCreated);
+            cacheUser.DisplayName.ShouldBe(AnotherTestUser.DisplayName);
+            cacheUser.FirstName.ShouldBe(AnotherTestUser.FirstName);
+            cacheUser.LastName.ShouldBe(AnotherTestUser.LastName);
+            cacheUser.Username.ShouldBe(AnotherTestUser.Username);
+            cacheUser.NanoId.ShouldBe(AnotherTestUser.NanoId);
+            cacheUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
+            cacheUser.IsDeleted.ShouldBe(false);
+            cacheUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
+            cacheUser.IsBlocked.ShouldBe(true);
+            cacheUser.IsBlocked.ShouldBe(AnotherTestUser.IsBlocked);
+            cacheUser.DateBlocked.ShouldNotBeNull();
+
+            var resultBlockAgain = superRepository.Users.Block(AnotherTestUser.GetContext(TestUser), checkPermission: true);
+            resultBlockAgain.ShouldNotBeNull();
+            resultBlockAgain.Ok.ShouldBeFalse();
+            resultBlockAgain.Messages.ShouldNotBeNull();
+            resultBlockAgain.Messages.Count.ShouldBe(1);
+            resultBlockAgain.Messages[0].MessageType.ShouldBe(ResultMessage.MessageTypes.Error);
+            resultBlockAgain.Messages[0].Message.ShouldBe("User is already blocked");
+
+            dbUser = superRepository.Users.ReadFromDatabase(AnotherTestUser);
+            dbUser.ShouldNotBeNull();
+            dbUser.DateCreated.ShouldBe(AnotherTestUser.DateCreated);
+            dbUser.DisplayName.ShouldBe(AnotherTestUser.DisplayName);
+            dbUser.FirstName.ShouldBe(AnotherTestUser.FirstName);
+            dbUser.LastName.ShouldBe(AnotherTestUser.LastName);
+            dbUser.Username.ShouldBe(AnotherTestUser.Username);
+            dbUser.NanoId.ShouldBe(AnotherTestUser.NanoId);
+            dbUser.IsDeleted.ShouldBe(false);
+            dbUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
+            dbUser.IsBlocked.ShouldBe(true);
+            dbUser.IsBlocked.ShouldBe(AnotherTestUser.IsBlocked);
+            dbUser.DateBlocked.ShouldNotBeNull();
+
+            cacheUser = superRepository.Users.ReadFromCache().Id(AnotherTestUser.Id);
+            cacheUser.ShouldNotBeNull();
+            cacheUser.DateCreated.ShouldBe(AnotherTestUser.DateCreated);
+            cacheUser.DisplayName.ShouldBe(AnotherTestUser.DisplayName);
+            cacheUser.FirstName.ShouldBe(AnotherTestUser.FirstName);
+            cacheUser.LastName.ShouldBe(AnotherTestUser.LastName);
+            cacheUser.Username.ShouldBe(AnotherTestUser.Username);
+            cacheUser.NanoId.ShouldBe(AnotherTestUser.NanoId);
+            cacheUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
+            cacheUser.IsDeleted.ShouldBe(false);
+            cacheUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
+            cacheUser.IsBlocked.ShouldBe(true);
+            cacheUser.IsBlocked.ShouldBe(AnotherTestUser.IsBlocked);
+            cacheUser.DateBlocked.ShouldNotBeNull();
+        }
+
+        [Fact]
         public void Block_WhenEntityIsValid_ShouldPersistRecord()
         {
             using var transaction = new TransactionScope();
@@ -191,7 +303,7 @@ namespace Origami.UI.Admin.IntegrationTests
         }
 
         [Fact]
-        public void Unblock_WhenEntityIsValid_ShouldPersistRecord()
+        public void Unblock_WhenEntityIsBlocked_ShouldPersistRecord()
         {
             using var transaction = new TransactionScope();
             using var scope = _factory.Services.CreateScope();
@@ -298,6 +410,84 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheUser.DateUnblocked.ShouldNotBeNull();
         }
 
+        [Fact]
+        public void Unblock_WhenEntityIsUnblockedAlready_ShouldPersistRecord()
+        {
+            using var transaction = new TransactionScope();
+            using var scope = _factory.Services.CreateScope();
+            var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
+
+            scope.CreateTestRole(TestRole);
+            scope.CreateTestUser(TestUser, TestRole);
+
+            var result = superRepository.Users.SmartSave(AnotherTestUser.GetContext(TestUser), checkPermission: true);
+            result.ShouldNotBeNull();
+            result.Ok.ShouldBeTrue();
+
+            var dbUser = superRepository.Users.ReadFromDatabase(AnotherTestUser);
+            dbUser.ShouldNotBeNull();
+            dbUser.DateCreated.ShouldBe(AnotherTestUser.DateCreated);
+            dbUser.DisplayName.ShouldBe(AnotherTestUser.DisplayName);
+            dbUser.FirstName.ShouldBe(AnotherTestUser.FirstName);
+            dbUser.LastName.ShouldBe(AnotherTestUser.LastName);
+            dbUser.Username.ShouldBe(AnotherTestUser.Username);
+            dbUser.NanoId.ShouldBe(AnotherTestUser.NanoId);
+            dbUser.IsDeleted.ShouldBe(false);
+            dbUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
+            dbUser.IsBlocked.ShouldBe(false);
+            dbUser.IsBlocked.ShouldBe(AnotherTestUser.IsBlocked);
+
+            var cacheUser = superRepository.Users.ReadFromCache().Id(AnotherTestUser.Id);
+            cacheUser.ShouldNotBeNull();
+            cacheUser.DateCreated.ShouldBe(AnotherTestUser.DateCreated);
+            cacheUser.DisplayName.ShouldBe(AnotherTestUser.DisplayName);
+            cacheUser.FirstName.ShouldBe(AnotherTestUser.FirstName);
+            cacheUser.LastName.ShouldBe(AnotherTestUser.LastName);
+            cacheUser.Username.ShouldBe(AnotherTestUser.Username);
+            cacheUser.NanoId.ShouldBe(AnotherTestUser.NanoId);
+            cacheUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
+            cacheUser.IsDeleted.ShouldBe(false);
+            cacheUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
+            cacheUser.IsBlocked.ShouldBe(false);
+            cacheUser.IsBlocked.ShouldBe(AnotherTestUser.IsBlocked);
+
+            var resultUnblock = superRepository.Users.Unblock(AnotherTestUser.GetContext(TestUser), checkPermission: true);
+            resultUnblock.ShouldNotBeNull();
+            resultUnblock.Ok.ShouldBeFalse();
+            resultUnblock.Messages.ShouldNotBeNull();
+            resultUnblock.Messages.Count.ShouldBe(1);
+            resultUnblock.Messages[0].MessageType.ShouldBe(ResultMessage.MessageTypes.Error);
+            resultUnblock.Messages[0].Message.ShouldBe("User is already unblocked");
+
+            dbUser = superRepository.Users.ReadFromDatabase(AnotherTestUser);
+            dbUser.ShouldNotBeNull();
+            dbUser.DateCreated.ShouldBe(AnotherTestUser.DateCreated);
+            dbUser.DisplayName.ShouldBe(AnotherTestUser.DisplayName);
+            dbUser.FirstName.ShouldBe(AnotherTestUser.FirstName);
+            dbUser.LastName.ShouldBe(AnotherTestUser.LastName);
+            dbUser.Username.ShouldBe(AnotherTestUser.Username);
+            dbUser.NanoId.ShouldBe(AnotherTestUser.NanoId);
+            dbUser.IsDeleted.ShouldBe(false);
+            dbUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
+            dbUser.IsBlocked.ShouldBe(false);
+            dbUser.IsBlocked.ShouldBe(AnotherTestUser.IsBlocked);
+            dbUser.DateUnblocked.ShouldBeNull();
+
+            cacheUser = superRepository.Users.ReadFromCache().Id(AnotherTestUser.Id);
+            cacheUser.ShouldNotBeNull();
+            cacheUser.DateCreated.ShouldBe(AnotherTestUser.DateCreated);
+            cacheUser.DisplayName.ShouldBe(AnotherTestUser.DisplayName);
+            cacheUser.FirstName.ShouldBe(AnotherTestUser.FirstName);
+            cacheUser.LastName.ShouldBe(AnotherTestUser.LastName);
+            cacheUser.Username.ShouldBe(AnotherTestUser.Username);
+            cacheUser.NanoId.ShouldBe(AnotherTestUser.NanoId);
+            cacheUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
+            cacheUser.IsDeleted.ShouldBe(false);
+            cacheUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
+            cacheUser.IsBlocked.ShouldBe(false);
+            cacheUser.IsBlocked.ShouldBe(AnotherTestUser.IsBlocked);
+            cacheUser.DateUnblocked.ShouldBeNull();
+        }
         [Fact]
         public void Update_WhenEntityIsValid_ShouldPersistRecord()
         {

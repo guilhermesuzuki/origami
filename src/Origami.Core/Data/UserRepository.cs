@@ -56,6 +56,7 @@ namespace Origami.Core.Data
             var fresh = this.ReadFromDatabase(ctx.Entity);
             if (fresh is { IsBlocked: true })
             {
+                // TODO: add this to resx files
                 return new() { Error = Text.Original("User is already blocked") };
             }
 
@@ -101,8 +102,7 @@ namespace Origami.Core.Data
 
         public override Result<OrigamiUser> CreateValidation(DataOperationContext<OrigamiUser> ctx)
         {
-            var validation = new Result<OrigamiUser>(ctx.Entity, _validator);
-            return validation;
+            return new(ctx.Entity, _validator);
         }
 
         public Result<string> ForgotOwnPassword(DataOperationContext<OrigamiUser> ctx, bool checkPermission)
@@ -112,10 +112,11 @@ namespace Origami.Core.Data
                 var permission = this.CheckPermission(ctx.User.Id, nameof(OrigamiRole.ResetOwnPassword));
                 if (permission.Ok == false)
                 {
-                    var hub = new Result<string>();
-
-                    hub.Error = Text.Original("You don't have permission to reset your own password");
-                    hub.Simple = Text.Original("Please, talk to a system administrator");
+                    var hub = new Result<string>
+                    {
+                        Error = Text.Original("You don't have permission to reset your own password"),
+                        Simple = Text.Original("Please, talk to a system administrator")
+                    };
 
                     return hub;
                 }
@@ -335,6 +336,7 @@ namespace Origami.Core.Data
             var fresh = this.ReadFromDatabase(ctx.Entity);
             if (fresh is { IsBlocked: false })
             {
+                // TODO: add this to resx files
                 return new() { Error = Text.Original("User is already unblocked") };
             }
 
@@ -343,10 +345,10 @@ namespace Origami.Core.Data
 
             return this.SmartUpdate(ctx, false);
         }
+
         public override Result<OrigamiUser> UpdateValidation(DataOperationContext<OrigamiUser> ctx)
         {
-            var validation = new Result<OrigamiUser>(ctx.Entity, _validator);
-            return validation;
+            return new(ctx.Entity, _validator);
         }
     }
 }
