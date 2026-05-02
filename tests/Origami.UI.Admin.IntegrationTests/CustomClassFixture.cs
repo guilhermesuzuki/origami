@@ -5,7 +5,7 @@ using Origami.Core.Models;
 
 namespace Origami.UI.Admin.IntegrationTests
 {
-    public class CustomClassFixture : IClassFixture<CustomWebApplicationFactory>
+    public class CustomClassFixture : IClassFixture<CustomWebApplicationFactory>, IDisposable
     {
         public static Guid BlogId = new Guid("b6af1155-5c2a-4fb5-ae64-fd1f1f19b1de");
         public static Guid BlogId1 = new Guid("405bac29-0d05-49a2-b368-d811553e6e6f");
@@ -38,6 +38,8 @@ namespace Origami.UI.Admin.IntegrationTests
             Name = "Test blog",
             DateCreated = DateTime.UtcNow,
             NanoId = BlogId.ToString().Substring(0, 8),
+            IsActive = false,
+            IsDeleted = false,
         };
 
         public OrigamiBlog TestBlogWithBigName = new OrigamiBlog
@@ -157,6 +159,12 @@ namespace Origami.UI.Admin.IntegrationTests
         public CustomClassFixture(CustomWebApplicationFactory factory) : base()
         {
             _factory = factory;
+        }
+
+        public void Dispose()
+        {
+            using var scope = _factory.Services.CreateScope();
+            scope.ServiceProvider.GetRequiredService<IMyMemoryCache>()!.Clear();
         }
     }
 }

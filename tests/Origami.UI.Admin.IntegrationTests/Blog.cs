@@ -35,6 +35,7 @@ namespace Origami.UI.Admin.IntegrationTests
             blog.Name.ShouldBe(TestBlog.Name);
             blog.DateCreated.ShouldBe(TestBlog.DateCreated);
             blog.NanoId.ShouldBe(TestBlog.NanoId);
+            blog.IsActive.ShouldBe(false);
             blog.IsActive.ShouldBe(TestBlog.IsActive);
 
             blogRepository
@@ -45,7 +46,13 @@ namespace Origami.UI.Admin.IntegrationTests
             activatedBlog.ShouldNotBeNull();
             activatedBlog.IsActive.ShouldBeTrue();
 
-            blogRepository.PurgeCache(TestBlog);
+            var cacheBlog = superRepository.MyMemoryCache.Read<OrigamiBlog>().Id(TestBlog.Id);
+            cacheBlog.ShouldNotBeNull();
+            cacheBlog.Name.ShouldBe(TestBlog.Name);
+            cacheBlog.DateCreated.ShouldBe(TestBlog.DateCreated);
+            cacheBlog.NanoId.ShouldBe(TestBlog.NanoId);
+            cacheBlog.IsActive.ShouldBe(true);
+            cacheBlog.IsActive.ShouldBe(TestBlog.IsActive);
         }
 
         [Fact]

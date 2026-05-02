@@ -7,6 +7,11 @@ namespace Origami.Core.Data
 {
     public class MyMemoryCache(IMemoryCache memoryCache, IDbContextFactory<OrigamiDbContext> dbContextFactory) : IMyMemoryCache
     {
+        /// <summary>
+        /// Identifier for the cache instance, useful for debugging and tracking purposes. It is initialized with a new GUID to ensure uniqueness across different instances of the cache. This allows developers to easily identify and differentiate between multiple cache instances when analyzing logs or debugging issues related to caching behavior.
+        /// </summary>
+        public Guid Id { get; set; } = Guid.NewGuid();
+
         public IEnumerable<object> Keys
         {
             get
