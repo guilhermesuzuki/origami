@@ -122,7 +122,7 @@ namespace Origami.Core.Data
                 }
             }
 
-            var password = Nanoid.Generate(size: 8);
+            var password = "_" + Nanoid.Generate(size: 8);
 
             using var db = DbContextFactory.CreateDbContext();
             var row = db.Users.Where(x => x.Id == ctx.Entity.Id).ExecuteUpdate(
@@ -208,12 +208,9 @@ namespace Origami.Core.Data
 
                 if (permission.Ok == false)
                 {
-                    var hub = new Result();
-
-                    hub.Error = Text.Original("You don't have permission to reset 2FA");
-                    hub.Simple = Text.Original("Please, talk to a system administrator");
-
-                    return hub;
+                    permission.Error = Text.Original("You don't have permission to reset 2FA");
+                    permission.Simple = Text.Original("Please, talk to a system administrator");
+                    return permission;
                 }
             }
 
@@ -349,6 +346,21 @@ namespace Origami.Core.Data
         public override Result<OrigamiUser> UpdateValidation(DataOperationContext<OrigamiUser> ctx)
         {
             return new(ctx.Entity, _validator);
+        }
+
+        public override Result<OrigamiUser> Create(DataOperationContext<OrigamiUser> ctx)
+        {
+            var hub = new Result<OrigamiUser>(ctx.Entity);
+            var password = "_" + Nanoid.Generate(size: 8);
+
+            ctx.Entity.MustChangePassword = true;
+            ctx.Entity.Password = password.SHA256Hash();
+
+            hub.Messages.Add(new() { MessageType = ResultMessage.MessageTypes.Password, Message = password, });
+
+            base.Create(ctx).Push(hub);
+
+            return hub;
         }
     }
 }
