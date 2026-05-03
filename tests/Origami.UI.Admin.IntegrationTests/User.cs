@@ -1089,6 +1089,80 @@ namespace Origami.UI.Admin.IntegrationTests
         }
 
         [Fact]
+        public void ResetPassword_WhenUserIsNotLoggedIn_ShouldPersistRecord()
+        {
+            using var transaction = new TransactionScope();
+            using var scope = _factory.Services.CreateScope();
+            var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
+
+            scope.CreateTestRole(TestRole);
+            scope.CreateTestUser(TestUser, TestRole);
+
+            var result = superRepository.Users.SmartSave(AnotherTestUser.GetContext(TestUser), checkPermission: true);
+            result.ShouldNotBeNull();
+            result.Ok.ShouldBeTrue();
+
+            var dbUser = superRepository.Users.ReadFromDatabase(AnotherTestUser);
+            dbUser.ShouldNotBeNull();
+            dbUser.DateCreated.ShouldBe(AnotherTestUser.DateCreated);
+            dbUser.DisplayName.ShouldBe(AnotherTestUser.DisplayName);
+            dbUser.FirstName.ShouldBe(AnotherTestUser.FirstName);
+            dbUser.LastName.ShouldBe(AnotherTestUser.LastName);
+            dbUser.Username.ShouldBe(AnotherTestUser.Username);
+            dbUser.NanoId.ShouldBe(AnotherTestUser.NanoId);
+            dbUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
+            dbUser.TOTPSecret.ShouldBe(AnotherTestUser.TOTPSecret);
+            dbUser.TOTPRecoveryCodes.ShouldBe(AnotherTestUser.TOTPRecoveryCodes);
+
+            var cacheUser = superRepository.Users.ReadFromCache().Id(AnotherTestUser.Id);
+            cacheUser.ShouldNotBeNull();
+            cacheUser.DateCreated.ShouldBe(AnotherTestUser.DateCreated);
+            cacheUser.DisplayName.ShouldBe(AnotherTestUser.DisplayName);
+            cacheUser.FirstName.ShouldBe(AnotherTestUser.FirstName);
+            cacheUser.LastName.ShouldBe(AnotherTestUser.LastName);
+            cacheUser.Username.ShouldBe(AnotherTestUser.Username);
+            cacheUser.NanoId.ShouldBe(AnotherTestUser.NanoId);
+            cacheUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
+            cacheUser.TOTPSecret.ShouldBe(AnotherTestUser.TOTPSecret);
+            cacheUser.TOTPRecoveryCodes.ShouldBe(AnotherTestUser.TOTPRecoveryCodes);
+
+            cacheUser.Version.ShouldBe(dbUser.Version);
+            cacheUser.Version.ShouldBe(AnotherTestUser.Version);
+
+            var resultReset = superRepository.Users.ResetPassword(AnotherTestUser.GetContext(TestUser), checkPermission: true);
+            resultReset.ShouldNotBeNull();
+            resultReset.Ok.ShouldBeTrue();
+            resultReset.Entity.ShouldNotBeNullOrEmpty();
+
+            dbUser = superRepository.Users.ReadFromDatabase(AnotherTestUser);
+            dbUser.ShouldNotBeNull();
+            dbUser.DateCreated.ShouldBe(AnotherTestUser.DateCreated);
+            dbUser.DisplayName.ShouldBe(AnotherTestUser.DisplayName);
+            dbUser.FirstName.ShouldBe(AnotherTestUser.FirstName);
+            dbUser.LastName.ShouldBe(AnotherTestUser.LastName);
+            dbUser.Username.ShouldBe(AnotherTestUser.Username);
+            dbUser.NanoId.ShouldBe(AnotherTestUser.NanoId);
+            dbUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
+
+            cacheUser = superRepository.Users.ReadFromCache().Id(AnotherTestUser.Id);
+            cacheUser.ShouldNotBeNull();
+            cacheUser.DateCreated.ShouldBe(AnotherTestUser.DateCreated);
+            cacheUser.DisplayName.ShouldBe(AnotherTestUser.DisplayName);
+            cacheUser.FirstName.ShouldBe(AnotherTestUser.FirstName);
+            cacheUser.LastName.ShouldBe(AnotherTestUser.LastName);
+            cacheUser.Username.ShouldBe(AnotherTestUser.Username);
+            cacheUser.NanoId.ShouldBe(AnotherTestUser.NanoId);
+            cacheUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
+            cacheUser.TOTPSecret.ShouldBeEmpty();
+            cacheUser.TOTPRecoveryCodes.ShouldBeEmpty();
+
+            using var db = superRepository.DbContextFactory.CreateDbContext();
+            var dbPasswordResets = db.UserPasswordResets.AsNoTracking().Where(x => x.UserId == AnotherTestUser.Id).ToList();
+            dbPasswordResets.Count.ShouldBe(1);
+            dbPasswordResets[0].Key.ShouldBe(resultReset.Entity);
+        }
+
+        [Fact]
         public void Unblock_WhenEntityIsAlreadyUnblocked_ShouldPersistRecord()
         {
             using var transaction = new TransactionScope();
