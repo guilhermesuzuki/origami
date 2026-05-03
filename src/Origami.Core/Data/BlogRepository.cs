@@ -182,6 +182,12 @@ namespace Origami.Core.Data
             //sets the IsPrimary property to true for the current blog
             ctx.Entity.IsPrimary = true;
 
+            //fresh from the oven
+            var fresh = this.ReadFromDatabase(ctx.Entity);
+
+            //pulls the latest version of the blog entity from the database to ensure the cache is updated with the correct version
+            ctx.Entity.Version(fresh);
+
             //refreshes the cache
             RefreshCache();
 
