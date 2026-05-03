@@ -288,6 +288,8 @@ namespace Origami.Core.Data
             db.Add(reset);
             var row = db.SaveChanges();
 
+            _userPasswordResetRepository.CreateCache(reset);
+
             return new(reset.Key)
             {
                 RowsAffected = row,
@@ -342,6 +344,8 @@ namespace Origami.Core.Data
                         reset.IsDeleted = true;
                         db.Update(reset);
                         db.SaveChanges();
+
+                        _userPasswordResetRepository.UpdateCache(reset);
 
                         ctx.Entity.Password = newPassword1.SHA256Hash();
                         this.SmartUpdate(ctx, false).Push(hub);
