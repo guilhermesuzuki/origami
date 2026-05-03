@@ -108,7 +108,7 @@ namespace Origami.Core.Data
         public override Result<OrigamiUser> Create(DataOperationContext<OrigamiUser> ctx)
         {
             var hub = new Result<OrigamiUser>(ctx.Entity);
-            var password = "_" + Nanoid.Generate(size: 8);
+            var password = "@" + Nanoid.Generate(size: 8) + "#";
 
             ctx.Entity.MustChangePassword = true;
             ctx.Entity.Password = password.SHA256Hash();
