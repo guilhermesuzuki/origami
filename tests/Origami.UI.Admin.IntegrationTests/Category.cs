@@ -54,7 +54,8 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheCategory.NanoId.ShouldBe(TestCategory.NanoId);
             cacheCategory.IsDeleted.ShouldBe(true);
 
-            categoryRepository.PurgeCache(TestCategory);
+            cacheCategory.Version.ShouldBe(categoryAfterDelete.Version);
+            cacheCategory.Version.ShouldBe(category.Version);
         }
 
         [Fact]
