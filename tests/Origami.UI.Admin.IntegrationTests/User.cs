@@ -126,6 +126,9 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheUser.IsBlocked.ShouldBe(true);
             cacheUser.IsBlocked.ShouldBe(AnotherTestUser.IsBlocked);
             cacheUser.DateBlocked.ShouldNotBeNull();
+
+            cacheUser.Version.ShouldBe(dbUser.Version);
+            cacheUser.Version.ShouldBe(AnotherTestUser.Version);
         }
 
         [Fact]
@@ -201,6 +204,9 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheUser.IsBlocked.ShouldBe(true);
             cacheUser.IsBlocked.ShouldBe(AnotherTestUser.IsBlocked);
             cacheUser.DateBlocked.ShouldNotBeNull();
+
+            cacheUser.Version.ShouldBe(dbUser.Version);
+            cacheUser.Version.ShouldBe(AnotherTestUser.Version);
         }
 
         [Fact]
@@ -247,7 +253,11 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheUser.NanoId.ShouldBe(AnotherTestUser.NanoId);
             cacheUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
 
-            var newPassword = "@" + Nanoid.Generate(size: 8) + "#";
+            var newPassword = "@" 
+                + Nanoid.Generate(alphabet: Nanoid.Alphabets.Letters, size: 4) 
+                + Nanoid.Generate(alphabet: Nanoid.Alphabets.Digits, size: 4) 
+                + "#";
+
             var resultNewPassword = superRepository.Users.ChangePassword(AnotherTestUser.GetContext(TestUser), password, newPassword, newPassword);
             resultNewPassword.ShouldNotBeNull();
             resultNewPassword.Ok.ShouldBeTrue();
@@ -277,6 +287,9 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
             cacheUser.MustChangePassword.ShouldBeFalse();
             cacheUser.MustChangePassword.ShouldBe(AnotherTestUser.MustChangePassword);
+
+            cacheUser.Version.ShouldBe(dbUser.Version);
+            cacheUser.Version.ShouldBe(AnotherTestUser.Version);
         }
 
         [Fact]
@@ -361,6 +374,9 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
             cacheUser.MustChangePassword.ShouldBeTrue();
             cacheUser.MustChangePassword.ShouldBe(AnotherTestUser.MustChangePassword);
+
+            cacheUser.Version.ShouldBe(dbUser.Version);
+            cacheUser.Version.ShouldBe(AnotherTestUser.Version);
         }
 
         [Fact]
@@ -441,6 +457,9 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
             cacheUser.MustChangePassword.ShouldBeTrue();
             cacheUser.MustChangePassword.ShouldBe(AnotherTestUser.MustChangePassword);
+
+            cacheUser.Version.ShouldBe(dbUser.Version);
+            cacheUser.Version.ShouldBe(AnotherTestUser.Version);
         }
 
         [Fact]
@@ -525,6 +544,9 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
             cacheUser.MustChangePassword.ShouldBeTrue();
             cacheUser.MustChangePassword.ShouldBe(AnotherTestUser.MustChangePassword);
+
+            cacheUser.Version.ShouldBe(dbUser.Version);
+            cacheUser.Version.ShouldBe(AnotherTestUser.Version);
         }
 
         [Fact]
@@ -571,7 +593,11 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheUser.NanoId.ShouldBe(AnotherTestUser.NanoId);
             cacheUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
 
-            var newPassword = "@" + Nanoid.Generate(size: 8) + "#";
+            var newPassword = "@"
+                + Nanoid.Generate(alphabet: Nanoid.Alphabets.Letters, size: 4)
+                + Nanoid.Generate(alphabet: Nanoid.Alphabets.Digits, size: 4)
+                + "#";
+
             var resultNewPassword = superRepository.Users.ChangePassword(AnotherTestUser.GetContext(TestUser), password, newPassword + "1", newPassword + "2");
             resultNewPassword.ShouldNotBeNull();
             resultNewPassword.Ok.ShouldBeFalse();
@@ -605,6 +631,9 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
             cacheUser.MustChangePassword.ShouldBeTrue();
             cacheUser.MustChangePassword.ShouldBe(AnotherTestUser.MustChangePassword);
+
+            cacheUser.Version.ShouldBe(dbUser.Version);
+            cacheUser.Version.ShouldBe(AnotherTestUser.Version);
         }
 
         [Fact]
@@ -685,6 +714,9 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
             cacheUser.MustChangePassword.ShouldBeTrue();
             cacheUser.MustChangePassword.ShouldBe(AnotherTestUser.MustChangePassword);
+
+            cacheUser.Version.ShouldBe(dbUser.Version);
+            cacheUser.Version.ShouldBe(AnotherTestUser.Version);
         }
 
         [Fact]
@@ -731,7 +763,11 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheUser.NanoId.ShouldBe(AnotherTestUser.NanoId);
             cacheUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
 
-            var newPassword = "@" + Nanoid.Generate(size: 8) + "#";
+            var newPassword = "@"
+                + Nanoid.Generate(alphabet: Nanoid.Alphabets.Letters, size: 4)
+                + Nanoid.Generate(alphabet: Nanoid.Alphabets.Digits, size: 4)
+                + "#";
+
             var resultNewPassword = superRepository.Users.ChangePassword(AnotherTestUser.GetContext(TestUser), "wrong-password", newPassword, newPassword);
             resultNewPassword.ShouldNotBeNull();
             resultNewPassword.Ok.ShouldBeFalse();
@@ -765,6 +801,9 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
             cacheUser.MustChangePassword.ShouldBeTrue();
             cacheUser.MustChangePassword.ShouldBe(AnotherTestUser.MustChangePassword);
+
+            cacheUser.Version.ShouldBe(dbUser.Version);
+            cacheUser.Version.ShouldBe(AnotherTestUser.Version);
         }
 
         [Fact]
@@ -805,6 +844,9 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheUser.Username.ShouldBe(AnotherTestUser.Username);
             cacheUser.NanoId.ShouldBe(AnotherTestUser.NanoId);
             cacheUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
+
+            cacheUser.Version.ShouldBe(dbUser.Version);
+            cacheUser.Version.ShouldBe(AnotherTestUser.Version);
         }
 
         [Fact]
@@ -851,6 +893,9 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheUser.NanoId.ShouldBe(AnotherTestUser.NanoId);
             cacheUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
 
+            cacheUser.Version.ShouldBe(dbUser.Version);
+            cacheUser.Version.ShouldBe(AnotherTestUser.Version);
+
             var resultNewPassword = superRepository.Users.ForgotOwnPassword(AnotherTestUser.GetContext(TestUser), true);
             var newPassword = resultNewPassword.Entity!;
             resultNewPassword.ShouldNotBeNull();
@@ -881,6 +926,9 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
             cacheUser.MustChangePassword.ShouldBeTrue();
             cacheUser.MustChangePassword.ShouldBe(AnotherTestUser.MustChangePassword);
+
+            cacheUser.Version.ShouldBe(dbUser.Version);
+            cacheUser.Version.ShouldBe(AnotherTestUser.Version);
         }
         [Fact]
         public void Insert_WhenEntityIsValid_ShouldPersistRecord()
@@ -925,6 +973,9 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheUser.Username.ShouldBe(AnotherTestUser.Username);
             cacheUser.NanoId.ShouldBe(AnotherTestUser.NanoId);
             cacheUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
+
+            cacheUser.Version.ShouldBe(dbUser.Version);
+            cacheUser.Version.ShouldBe(AnotherTestUser.Version);
         }
 
         [Fact]
@@ -993,6 +1044,9 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheUser.IsBlocked.ShouldBe(false);
             cacheUser.IsBlocked.ShouldBe(AnotherTestUser.IsBlocked);
 
+            cacheUser.Version.ShouldBe(dbUser.Version);
+            cacheUser.Version.ShouldBe(AnotherTestUser.Version);
+
             var resultUnblock = superRepository.Users.Unblock(AnotherTestUser.GetContext(TestUser), checkPermission: true);
             resultUnblock.ShouldNotBeNull();
             resultUnblock.Ok.ShouldBeFalse();
@@ -1029,6 +1083,9 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheUser.IsBlocked.ShouldBe(false);
             cacheUser.IsBlocked.ShouldBe(AnotherTestUser.IsBlocked);
             cacheUser.DateUnblocked.ShouldBeNull();
+
+            cacheUser.Version.ShouldBe(dbUser.Version);
+            cacheUser.Version.ShouldBe(AnotherTestUser.Version);
         }
 
         [Fact]
@@ -1072,6 +1129,9 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheUser.IsBlocked.ShouldBe(false);
             cacheUser.IsBlocked.ShouldBe(AnotherTestUser.IsBlocked);
 
+            cacheUser.Version.ShouldBe(dbUser.Version);
+            cacheUser.Version.ShouldBe(AnotherTestUser.Version);
+
             var resultBlock = superRepository.Users.Block(AnotherTestUser.GetContext(TestUser), checkPermission: true);
             resultBlock.ShouldNotBeNull();
             resultBlock.Ok.ShouldBeTrue();
@@ -1105,6 +1165,9 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheUser.IsBlocked.ShouldBe(AnotherTestUser.IsBlocked);
             cacheUser.DateBlocked.ShouldNotBeNull();
 
+            cacheUser.Version.ShouldBe(dbUser.Version);
+            cacheUser.Version.ShouldBe(AnotherTestUser.Version);
+
             var resultUnblock = superRepository.Users.Unblock(AnotherTestUser.GetContext(TestUser), checkPermission: true);
             resultUnblock.ShouldNotBeNull();
             resultUnblock.Ok.ShouldBeTrue();
@@ -1137,6 +1200,9 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheUser.IsBlocked.ShouldBe(false);
             cacheUser.IsBlocked.ShouldBe(AnotherTestUser.IsBlocked);
             cacheUser.DateUnblocked.ShouldNotBeNull();
+
+            cacheUser.Version.ShouldBe(dbUser.Version);
+            cacheUser.Version.ShouldBe(AnotherTestUser.Version);
         }
         [Fact]
         public void Update_WhenEntityIsValid_ShouldPersistRecord()
@@ -1172,6 +1238,9 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheUser.NanoId.ShouldBe(AnotherTestUser.NanoId);
             cacheUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
 
+            cacheUser.Version.ShouldBe(dbUser.Version);
+            cacheUser.Version.ShouldBe(AnotherTestUser.Version);
+
             var updateUser = AnotherTestUser.Clone();
             updateUser.DisplayName = "Updated display name";
 
@@ -1198,6 +1267,9 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheUser.Username.ShouldBe(updateUser.Username);
             cacheUser.NanoId.ShouldBe(updateUser.NanoId);
             cacheUser.IsDeleted.ShouldBe(updateUser.IsDeleted);
+
+            cacheUser.Version.ShouldBe(dbUser.Version);
+            cacheUser.Version.ShouldBe(updateUser.Version);
         }
     }
 }
