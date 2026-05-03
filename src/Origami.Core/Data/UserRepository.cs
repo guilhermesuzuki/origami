@@ -81,24 +81,26 @@ namespace Origami.Core.Data
             // this is necessary because of ReadFromDatabase
             var hash = oldPassword.SHA256Hash();
 
-            var user = db.Set<OrigamiUser>().AsNoTracking()
+            var fresh = db.Set<OrigamiUser>().AsNoTracking()
                 .Where(x => x.Username.ToLower() == ctx.Entity.Username.ToLower())
                 .Where(x => x.Password == hash)
                 .FirstOrDefault();
 
-            if (user == null) return new() { Error = Text.Original("Username and current password do NOT exist in the database") };
+            if (fresh == null) return new() { Error = Text.Original("Username and current password do NOT exist in the database") };
             if (newPassword1 != newPassword2) return new() { Error = Text.Original("New passwords do NOT match, they differ from each other") };
             if (oldPassword == newPassword1) return new() { Error = Text.Original("You did NOT change passwords, current and new are the same") };
 
-            var hub = new Result<OrigamiUser>(user).Pull(newPassword1.IsPasswordStrong(Text));
+            var hub = new Result<OrigamiUser>(ctx.Entity).Pull(newPassword1.IsPasswordStrong(Text));
             if (hub.Ok == false) return hub;
 
             // sets the new password
-            user.MustChangePassword = false;
-            user.Password = newPassword1.SHA256Hash();
+            ctx.Entity.MustChangePassword = false;
+            ctx.Entity.Password = newPassword1.SHA256Hash();
 
-            var userContext = new DataOperationContext<OrigamiUser>(ctx.User, ctx.DateTime, user);
-            if (hub.Ok == true) base.SmartUpdate(userContext, false).Push(hub);
+            if (hub.Ok == true)
+            {
+                base.SmartUpdate(ctx, false).Push(hub);
+            }
 
             return hub;
         }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using NanoidDotNet;
 using Origami.Core;
 using Origami.Core.Data;
 using Origami.Core.Models;
@@ -200,6 +201,82 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheUser.IsBlocked.ShouldBe(true);
             cacheUser.IsBlocked.ShouldBe(AnotherTestUser.IsBlocked);
             cacheUser.DateBlocked.ShouldNotBeNull();
+        }
+
+        [Fact]
+        public void ChangePassword_WhenEverythingIsOkay_ShouldPersistRecord()
+        {
+            using var transaction = new TransactionScope();
+            using var scope = _factory.Services.CreateScope();
+            var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
+
+            scope.CreateTestRole(TestRole);
+            scope.CreateTestUser(TestUser, TestRole);
+
+            var result = superRepository.Users.SmartSave(AnotherTestUser.GetContext(TestUser), checkPermission: true);
+            result.ShouldNotBeNull();
+            result.Ok.ShouldBeTrue();
+            result.Messages.Count.ShouldBe(2);
+            result.Messages[0].MessageType.ShouldBe(ResultMessage.MessageTypes.Info);
+            result.Messages[1].MessageType.ShouldBe(ResultMessage.MessageTypes.Password);
+
+            var password = result.Messages[1].Message;
+
+            var userPassword = superRepository.Users.LookupUserInDatabase(AnotherTestUser.Username, password);
+            userPassword.ShouldNotBeNull();
+            userPassword.Username.ShouldBe(AnotherTestUser.Username);
+            userPassword.Password.ShouldBe(password.SHA256Hash());
+
+            var dbUser = superRepository.Users.ReadFromDatabase(AnotherTestUser);
+            dbUser.ShouldNotBeNull();
+            dbUser.DateCreated.ShouldBe(AnotherTestUser.DateCreated);
+            dbUser.DisplayName.ShouldBe(AnotherTestUser.DisplayName);
+            dbUser.FirstName.ShouldBe(AnotherTestUser.FirstName);
+            dbUser.LastName.ShouldBe(AnotherTestUser.LastName);
+            dbUser.Username.ShouldBe(AnotherTestUser.Username);
+            dbUser.NanoId.ShouldBe(AnotherTestUser.NanoId);
+            dbUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
+
+            var cacheUser = superRepository.Users.ReadFromCache().Id(AnotherTestUser.Id);
+            cacheUser.ShouldNotBeNull();
+            cacheUser.DateCreated.ShouldBe(AnotherTestUser.DateCreated);
+            cacheUser.DisplayName.ShouldBe(AnotherTestUser.DisplayName);
+            cacheUser.FirstName.ShouldBe(AnotherTestUser.FirstName);
+            cacheUser.LastName.ShouldBe(AnotherTestUser.LastName);
+            cacheUser.Username.ShouldBe(AnotherTestUser.Username);
+            cacheUser.NanoId.ShouldBe(AnotherTestUser.NanoId);
+            cacheUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
+
+            var newPassword = "@" + Nanoid.Generate(size: 8) + "#";
+            var resultNewPassword = superRepository.Users.ChangePassword(AnotherTestUser.GetContext(TestUser), password, newPassword, newPassword);
+            resultNewPassword.ShouldNotBeNull();
+            resultNewPassword.Ok.ShouldBeTrue();
+
+            dbUser = superRepository.Users.ReadFromDatabase(AnotherTestUser);
+            dbUser.ShouldNotBeNull();
+            dbUser.Password.ShouldBe(newPassword.SHA256Hash());
+            dbUser.DateCreated.ShouldBe(AnotherTestUser.DateCreated);
+            dbUser.DisplayName.ShouldBe(AnotherTestUser.DisplayName);
+            dbUser.FirstName.ShouldBe(AnotherTestUser.FirstName);
+            dbUser.LastName.ShouldBe(AnotherTestUser.LastName);
+            dbUser.Username.ShouldBe(AnotherTestUser.Username);
+            dbUser.NanoId.ShouldBe(AnotherTestUser.NanoId);
+            dbUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
+            dbUser.MustChangePassword.ShouldBeFalse();
+            dbUser.MustChangePassword.ShouldBe(AnotherTestUser.MustChangePassword);
+
+            cacheUser = superRepository.Users.ReadFromCache().Id(AnotherTestUser.Id);
+            cacheUser.ShouldNotBeNull();
+            cacheUser.Password.ShouldBe(newPassword.SHA256Hash());
+            cacheUser.DateCreated.ShouldBe(AnotherTestUser.DateCreated);
+            cacheUser.DisplayName.ShouldBe(AnotherTestUser.DisplayName);
+            cacheUser.FirstName.ShouldBe(AnotherTestUser.FirstName);
+            cacheUser.LastName.ShouldBe(AnotherTestUser.LastName);
+            cacheUser.Username.ShouldBe(AnotherTestUser.Username);
+            cacheUser.NanoId.ShouldBe(AnotherTestUser.NanoId);
+            cacheUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
+            cacheUser.MustChangePassword.ShouldBeFalse();
+            cacheUser.MustChangePassword.ShouldBe(AnotherTestUser.MustChangePassword);
         }
 
         [Fact]
