@@ -53,6 +53,9 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheBlog.NanoId.ShouldBe(TestBlog.NanoId);
             cacheBlog.IsActive.ShouldBe(true);
             cacheBlog.IsActive.ShouldBe(TestBlog.IsActive);
+
+            cacheBlog.Version.ShouldBe(TestBlog.Version);
+            cacheBlog.Version.ShouldBe(activatedBlog.Version);
         }
 
         [Fact]
@@ -96,7 +99,16 @@ namespace Origami.UI.Admin.IntegrationTests
             deactivatedBlog.ShouldNotBeNull();
             deactivatedBlog.IsActive.ShouldBeFalse();
 
-            blogRepository.PurgeCache(TestBlog);
+            var cacheBlog = superRepository.MyMemoryCache.Read<OrigamiBlog>().Id(TestBlog.Id);
+            cacheBlog.ShouldNotBeNull();
+            cacheBlog.Name.ShouldBe(TestBlog.Name);
+            cacheBlog.DateCreated.ShouldBe(TestBlog.DateCreated);
+            cacheBlog.NanoId.ShouldBe(TestBlog.NanoId);
+            cacheBlog.IsActive.ShouldBe(false);
+            cacheBlog.IsActive.ShouldBe(TestBlog.IsActive);
+
+            cacheBlog.Version.ShouldBe(TestBlog.Version);
+            cacheBlog.Version.ShouldBe(deactivatedBlog.Version);
         }
 
         [Fact]
@@ -149,9 +161,6 @@ namespace Origami.UI.Admin.IntegrationTests
             blogRepository
                 .SmartDelete(blog.GetContext(TestUser), true)
                 .OnFailure(r => throw new Exception($"Failed to delete test blog: {r.GetMessages()}"));
-            var blogAfterDelete = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
-            blogAfterDelete.ShouldNotBeNull();
-            blogAfterDelete.IsDeleted.ShouldBeTrue();
 
             var dbBlog = superRepository.Blogs.ReadFromDatabase(blog);
             dbBlog.ShouldNotBeNull();
@@ -168,8 +177,8 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheBlog.NanoId.ShouldBe(TestBlog.NanoId);
             cacheBlog.IsDeleted.ShouldBe(true);
 
-            // Cleanup cache
-            blogRepository.PurgeCache(cacheBlog);
+            cacheBlog.Version.ShouldBe(blog.Version);
+            cacheBlog.Version.ShouldBe(dbBlog.Version);
         }
 
         [Fact]

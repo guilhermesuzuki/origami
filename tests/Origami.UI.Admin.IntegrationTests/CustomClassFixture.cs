@@ -126,6 +126,8 @@ namespace Origami.UI.Admin.IntegrationTests
             PurgeCategories = true,
             PurgeRoles = true,
             PurgeUsers = true,
+            ResetOwnPassword = true,
+            ResetOtherUsersPasswords = true,
             RestoreBlogs = true,
             RestoreCategories = true,
             RestoreRoles = true,

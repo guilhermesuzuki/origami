@@ -139,12 +139,11 @@ namespace Origami.Core.Data
                         Error = Text.Original("You don't have permission to reset your own password"),
                         Simple = Text.Original("Please, talk to a system administrator")
                     };
-
                     return hub;
                 }
             }
 
-            var password = "_" + Nanoid.Generate(size: 8);
+            var password = "@" + Nanoid.Generate(size: 8) + "#";
 
             using var db = DbContextFactory.CreateDbContext();
             var row = db.Users.Where(x => x.Id == ctx.Entity.Id).ExecuteUpdate(
@@ -161,6 +160,14 @@ namespace Origami.Core.Data
                     Error = Text.Original("Failed to reset password for user")
                 };
             }
+
+            var fresh = this.ReadFromDatabase(ctx.Entity);
+
+            ctx.Entity.MustChangePassword = true;
+            ctx.Entity.Password = password.SHA256Hash();
+            ctx.Entity.Version(fresh);
+
+            this.UpdateCache(ctx.Entity);
 
             return new(password) { RowsAffected = row };
         }
