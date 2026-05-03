@@ -1219,7 +1219,7 @@ namespace Origami.UI.Admin.IntegrationTests
         }
 
         [Fact]
-        public void ResetPassword_WhenUserPossessesKeyButPasswordsAreWeak_ShouldPersistRecord()
+        public void ResetPassword_WhenUserPossessesKeyButPasswordsAreWeak_ShouldFail()
         {
             using var transaction = new TransactionScope();
             using var scope = _factory.Services.CreateScope();
@@ -1358,7 +1358,7 @@ namespace Origami.UI.Admin.IntegrationTests
         }
 
         [Fact]
-        public void ResetPassword_WhenUserPossessesKeyButPasswordsDiffer_ShouldPersistRecord()
+        public void ResetPassword_WhenUserPossessesKeyButPasswordsDiffer_ShouldFail()
         {
             using var transaction = new TransactionScope();
             using var scope = _factory.Services.CreateScope();
@@ -1498,7 +1498,7 @@ namespace Origami.UI.Admin.IntegrationTests
         }
 
         [Fact]
-        public void ResetPassword_WhenUserPossessesTheWrongKey_ShouldPersistRecord()
+        public void ResetPassword_WhenUserPossessesTheWrongKey_ShouldFail()
         {
             using var transaction = new TransactionScope();
             using var scope = _factory.Services.CreateScope();
