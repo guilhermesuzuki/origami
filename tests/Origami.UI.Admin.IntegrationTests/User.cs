@@ -255,10 +255,11 @@ namespace Origami.UI.Admin.IntegrationTests
             var result = superRepository.Users.SmartSave(AnotherTestUser.GetContext(TestUser), checkPermission: true);
             result.ShouldNotBeNull();
             result.Ok.ShouldBeTrue();
-            result.Messages.Count.ShouldBe(1);
-            result.Messages[0].MessageType.ShouldBe(ResultMessage.MessageTypes.Password);
+            result.Messages.Count.ShouldBe(2);
+            result.Messages[0].MessageType.ShouldBe(ResultMessage.MessageTypes.Info);
+            result.Messages[1].MessageType.ShouldBe(ResultMessage.MessageTypes.Password);
 
-            var password = result.Messages[0].Message;
+            var password = result.Messages[1].Message;
 
             var userPassword = superRepository.Users.LookupUserInDatabase(AnotherTestUser.Username, password);
             userPassword.ShouldNotBeNull();
