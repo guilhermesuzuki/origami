@@ -248,9 +248,9 @@ namespace Origami.Core.Data
             var fresh = this.ReadFromDatabase(ctx.Entity);
             if (fresh != null)
             {
-                fresh.TOTPSecret = string.Empty;
-                fresh.TOTPRecoveryCodes = string.Empty;
-                return this.SmartUpdate(fresh.GetContext(ctx.User), false);
+                ctx.Entity.TOTPSecret = string.Empty;
+                ctx.Entity.TOTPRecoveryCodes = string.Empty;
+                return this.SmartUpdate(ctx.Entity.GetContext(ctx.User), false);
             }
 
             return new() { Error = Text.Original("Failed to reset 2FA for user") };

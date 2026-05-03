@@ -1004,6 +1004,91 @@ namespace Origami.UI.Admin.IntegrationTests
         }
 
         [Fact]
+        public void Reset2FA_WhenEntityIsValid_ShouldPersistRecord()
+        {
+            using var transaction = new TransactionScope();
+            using var scope = _factory.Services.CreateScope();
+            var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
+
+            scope.CreateTestRole(TestRole);
+            scope.CreateTestUser(TestUser, TestRole);
+
+            AnotherTestUser.GenerateRandomTOTPSecret();
+
+            var codes = new List<string>();
+
+            for (int i = 0; i < 5; i++)
+            {
+                var code = Nanoid.Generate(alphabet: Nanoid.Alphabets.LettersAndDigits, size: 6);
+                codes.Add(code.SHA256Hash());
+            }
+
+            AnotherTestUser.TOTPRecoveryCodes = string.Join(',', codes);
+
+            var result = superRepository.Users.SmartSave(AnotherTestUser.GetContext(TestUser), checkPermission: true);
+            result.ShouldNotBeNull();
+            result.Ok.ShouldBeTrue();
+
+            var dbUser = superRepository.Users.ReadFromDatabase(AnotherTestUser);
+            dbUser.ShouldNotBeNull();
+            dbUser.DateCreated.ShouldBe(AnotherTestUser.DateCreated);
+            dbUser.DisplayName.ShouldBe(AnotherTestUser.DisplayName);
+            dbUser.FirstName.ShouldBe(AnotherTestUser.FirstName);
+            dbUser.LastName.ShouldBe(AnotherTestUser.LastName);
+            dbUser.Username.ShouldBe(AnotherTestUser.Username);
+            dbUser.NanoId.ShouldBe(AnotherTestUser.NanoId);
+            dbUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
+            dbUser.TOTPSecret.ShouldBe(AnotherTestUser.TOTPSecret);
+            dbUser.TOTPRecoveryCodes.ShouldBe(AnotherTestUser.TOTPRecoveryCodes);
+
+            var cacheUser = superRepository.Users.ReadFromCache().Id(AnotherTestUser.Id);
+            cacheUser.ShouldNotBeNull();
+            cacheUser.DateCreated.ShouldBe(AnotherTestUser.DateCreated);
+            cacheUser.DisplayName.ShouldBe(AnotherTestUser.DisplayName);
+            cacheUser.FirstName.ShouldBe(AnotherTestUser.FirstName);
+            cacheUser.LastName.ShouldBe(AnotherTestUser.LastName);
+            cacheUser.Username.ShouldBe(AnotherTestUser.Username);
+            cacheUser.NanoId.ShouldBe(AnotherTestUser.NanoId);
+            cacheUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
+            cacheUser.TOTPSecret.ShouldBe(AnotherTestUser.TOTPSecret);
+            cacheUser.TOTPRecoveryCodes.ShouldBe(AnotherTestUser.TOTPRecoveryCodes);
+
+            cacheUser.Version.ShouldBe(dbUser.Version);
+            cacheUser.Version.ShouldBe(AnotherTestUser.Version);
+
+            var resultReset = superRepository.Users.Reset2FA(AnotherTestUser.GetContext(TestUser), checkPermission: true);
+            resultReset.ShouldNotBeNull();
+            resultReset.Ok.ShouldBeTrue();
+
+            dbUser = superRepository.Users.ReadFromDatabase(AnotherTestUser);
+            dbUser.ShouldNotBeNull();
+            dbUser.DateCreated.ShouldBe(AnotherTestUser.DateCreated);
+            dbUser.DisplayName.ShouldBe(AnotherTestUser.DisplayName);
+            dbUser.FirstName.ShouldBe(AnotherTestUser.FirstName);
+            dbUser.LastName.ShouldBe(AnotherTestUser.LastName);
+            dbUser.Username.ShouldBe(AnotherTestUser.Username);
+            dbUser.NanoId.ShouldBe(AnotherTestUser.NanoId);
+            dbUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
+            dbUser.TOTPSecret.ShouldBeEmpty();
+            dbUser.TOTPRecoveryCodes.ShouldBeEmpty();
+
+            cacheUser = superRepository.Users.ReadFromCache().Id(AnotherTestUser.Id);
+            cacheUser.ShouldNotBeNull();
+            cacheUser.DateCreated.ShouldBe(AnotherTestUser.DateCreated);
+            cacheUser.DisplayName.ShouldBe(AnotherTestUser.DisplayName);
+            cacheUser.FirstName.ShouldBe(AnotherTestUser.FirstName);
+            cacheUser.LastName.ShouldBe(AnotherTestUser.LastName);
+            cacheUser.Username.ShouldBe(AnotherTestUser.Username);
+            cacheUser.NanoId.ShouldBe(AnotherTestUser.NanoId);
+            cacheUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
+            cacheUser.TOTPSecret.ShouldBeEmpty();
+            cacheUser.TOTPRecoveryCodes.ShouldBeEmpty();
+
+            cacheUser.Version.ShouldBe(dbUser.Version);
+            cacheUser.Version.ShouldBe(AnotherTestUser.Version);
+        }
+
+        [Fact]
         public void Unblock_WhenEntityIsAlreadyUnblocked_ShouldPersistRecord()
         {
             using var transaction = new TransactionScope();
@@ -1204,6 +1289,7 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheUser.Version.ShouldBe(dbUser.Version);
             cacheUser.Version.ShouldBe(AnotherTestUser.Version);
         }
+
         [Fact]
         public void Update_WhenEntityIsValid_ShouldPersistRecord()
         {
