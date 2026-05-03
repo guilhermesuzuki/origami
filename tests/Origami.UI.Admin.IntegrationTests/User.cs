@@ -1160,6 +1160,7 @@ namespace Origami.UI.Admin.IntegrationTests
             var dbPasswordResets = db.UserPasswordResets.AsNoTracking().Where(x => x.UserId == AnotherTestUser.Id).ToList();
             dbPasswordResets.Count.ShouldBe(1);
             dbPasswordResets[0].Key.ShouldBe(resultReset.Entity);
+            dbPasswordResets[0].IsDeleted.ShouldBeFalse();
         }
 
         [Fact]

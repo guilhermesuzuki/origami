@@ -297,6 +297,12 @@ namespace Origami.Core.Data
 
         public Result ResetPassword(DataOperationContext<OrigamiUser> ctx, string key, string newPassword1, string newPassword2, bool checkPermission)
         {
+            if (ctx.Entity.Id != ctx.User.Id)
+            {
+                // TODO: add this to resx files
+                return new() { Error = Text.Original("You can only reset your own password") };
+            }
+
             if (checkPermission)
             {
                 var permission = this.CheckPermission(ctx.User.Id, nameof(OrigamiRole.ResetOwnPassword));
@@ -316,34 +322,36 @@ namespace Origami.Core.Data
             {
                 using var db = DbContextFactory.CreateDbContext();
 
-                var user = from x in db.Set<OrigamiUser>().AsNoTracking().NonDeleted()
-                           where x.IsBlocked == false
-                           where x.Id == ctx.Entity.Id
-                           select x;
+                var users = from x in db.Set<OrigamiUser>().AsNoTracking().NonDeleted()
+                            where x.IsBlocked == false
+                            where x.Id == ctx.Entity.Id
+                            select x;
 
-                var userEntity = user.FirstOrDefault();
-
-                if (userEntity != null)
+                var user = users.FirstOrDefault();
+                if (user != null)
                 {
-                    var reset = from x in db.UserPasswordResets.AsNoTracking()
-                                where x.Key == key
-                                where x.UserId == ctx.Entity.Id
-                                where x.IsDeleted == false
-                                select x;
+                    var resets = from x in db.UserPasswordResets.AsNoTracking()
+                                 where x.Key == key
+                                 where x.UserId == ctx.Entity.Id
+                                 where x.IsDeleted == false
+                                 select x;
 
-                    var resetEntity = reset.FirstOrDefault();
-                    if (resetEntity != null)
+                    var reset = resets.FirstOrDefault();
+                    if (reset != null)
                     {
-                        resetEntity.IsDeleted = true;
-                        db.Update(resetEntity);
+                        reset.IsDeleted = true;
+                        db.Update(reset);
                         db.SaveChanges();
 
-                        userEntity.Password = newPassword1.SHA256Hash();
-                        this.SmartUpdate(userEntity.GetContext(ctx.User), false).Push(hub);
+                        ctx.Entity.Password = newPassword1.SHA256Hash();
+                        this.SmartUpdate(ctx, false).Push(hub);
 
                         hub.Success = Text.Original("Password has been reset successfully");
                         return hub;
                     }
+
+                    // TODO: add this to resx files
+                    hub.Error = Text.Original("Password reset key is invalid or has already been used");
                 }
             }
 
