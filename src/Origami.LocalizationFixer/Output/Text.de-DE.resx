@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <!-- 
     Microsoft ResX Schema 
@@ -361,7 +361,7 @@
     <value>Basierend auf dem Titel</value>
   </data>
   <data name="Basic" xml:space="preserve">
-    <value>Einfach</value>
+    <value>Grundlegend</value>
   </data>
   <data name="Be careful when choosing a username, you won't be able to change it later" xml:space="preserve">
     <value>Sei vorsichtig bei der Wahl eines Benutzernamens, du kannst ihn später nicht mehr ändern</value>
@@ -1021,7 +1021,7 @@
     <value>Dateimanager</value>
   </data>
   <data name="Filler" xml:space="preserve">
-    <value>Füller</value>
+    <value>Platzhalter</value>
   </data>
   <data name="Filter" xml:space="preserve">
     <value>Filter</value>
@@ -1066,7 +1066,7 @@
     <value>Benutzer zum Moderator machen</value>
   </data>
   <data name="Header" xml:space="preserve">
-    <value>Kopfbereich</value>
+    <value>Kopfzeile</value>
   </data>
   <data name="Header image must be valid" xml:space="preserve">
     <value>Kopfbereichsbild muss gültig sein</value>
@@ -1081,7 +1081,7 @@
     <value>So löschst du deine Daten</value>
   </data>
   <data name="Id" xml:space="preserve">
-    <value>Id</value>
+    <value>ID</value>
   </data>
   <data name="Id is required" xml:space="preserve">
     <value>ID ist erforderlich</value>
@@ -1252,7 +1252,7 @@
     <value>Microsoft</value>
   </data>
   <data name="Misc" xml:space="preserve">
-    <value>Verschiedenes</value>
+    <value>Sonstiges</value>
   </data>
   <data name="Moderate comments" xml:space="preserve">
     <value>Kommentare moderieren</value>
@@ -1390,7 +1390,7 @@
     <value>Nur Videodateien</value>
   </data>
   <data name="Oops" xml:space="preserve">
-    <value>Hoppla</value>
+    <value>Ups</value>
   </data>
   <data name="Oops, this key is not valid or it was already used to reset your password" xml:space="preserve">
     <value>Hoppla, dieser Schlüssel ist ungültig oder wurde bereits zum Zurücksetzen deines Passworts verwendet</value>
@@ -1504,7 +1504,7 @@
     <value>Bitte versuche es später erneut</value>
   </data>
   <data name="Post" xml:space="preserve">
-    <value>Beitrag</value>
+    <value>Veröffentlichung</value>
   </data>
   <data name="postRating.Rating" xml:space="preserve">
     <value>postRating.Rating</value>
@@ -1513,7 +1513,7 @@
     <value>postReaction.Reaction</value>
   </data>
   <data name="Posts" xml:space="preserve">
-    <value>Beiträge</value>
+    <value>Veröffentlichungen</value>
   </data>
   <data name="Posts comments" xml:space="preserve">
     <value>Beitragskommentare</value>
@@ -2074,7 +2074,7 @@
     <value>Noch ein Entwurf?</value>
   </data>
   <data name="Stop" xml:space="preserve">
-    <value>Stopp</value>
+    <value>Stoppen</value>
   </data>
   <data name="Stops the timer" xml:space="preserve">
     <value>Stoppt den Timer</value>

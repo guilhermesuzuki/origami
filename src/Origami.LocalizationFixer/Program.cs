@@ -6,6 +6,15 @@ class Program
     static void Main(string[] args)
     {
         FixTheTranslations(new CultureInfo("de-DE"));
+        FixTheTranslations(new CultureInfo("es-ES"));
+        FixTheTranslations(new CultureInfo("fr-CA"));
+        FixTheTranslations(new CultureInfo("fr-FR"));
+        FixTheTranslations(new CultureInfo("hi-IN"));
+        FixTheTranslations(new CultureInfo("it-IT"));
+        FixTheTranslations(new CultureInfo("ja-JP"));
+        FixTheTranslations(new CultureInfo("ko-KR"));
+        FixTheTranslations(new CultureInfo("pt-PT"));
+        FixTheTranslations(new CultureInfo("zh-HANS"));
     }
 
     static void FixTheTranslations(CultureInfo culture)
