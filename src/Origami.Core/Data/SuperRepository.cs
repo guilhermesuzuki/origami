@@ -367,52 +367,22 @@ namespace Origami.Core.Data
             return GetNanoIds().FirstOrDefault(x => x.NanoId == text);
         }
 
-        public bool IsParentDeleted(OrigamiCategory category)
+        public bool IsParentDeleted<T>(T entity) where T : class, IId, IParentIdNull, IDeleted
         {
-            if (category.ParentId.HasValue)
+            if (entity.ParentId.HasValue)
             {
-                var parent = Categories.ReadFromCache().Id(category.ParentId.Value);
+                var parent = MyMemoryCache.Read<T>().Id(entity.ParentId.Value);
                 if (parent != null)
                 {
                     if (parent.IsDeleted)
                     {
                         return true;
                     }
-                    return this.IsParentDeleted(parent);
+                    return this.IsParentDeleted<T>(parent);
                 }
             }
             return false;
         }
-
-        public bool IsParentDeleted(OrigamiContent page)
-        {
-            if (page.ParentId.HasValue)
-            {
-                var parent = Contents.ReadFromCache().Id(page.ParentId.Value);
-                if (parent != null)
-                {
-                    if (parent.IsDeleted)
-                    {
-                        return true;
-                    }
-                    return this.IsParentDeleted(parent);
-                }
-            }
-            return false;
-        }
-
-        public bool IsParentDeleted(OrigamiContentComment comment)
-        {
-            if (comment.ParentId.HasValue)
-            {
-                var parent = ContentComments.ReadFromCache().Id(comment.ParentId.Value);
-                if (parent != null && parent.IsDeleted) return true;
-                if (parent != null) return this.IsParentDeleted(parent);
-            }
-            return false;
-        }
-
-
 
         /// <summary>
         /// Refreshes the caches and updates the counts for all repositories managed by the specified <see

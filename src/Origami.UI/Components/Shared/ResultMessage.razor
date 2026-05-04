@@ -26,12 +26,28 @@
                 {
                     <i class="fa-solid fa-message"></i>
                 }
+                else if (this.Entity.MessageType == Core.Models.ResultMessage.MessageTypes.Password)
+                {
+                    <i class="fa-solid fa-key"></i>
+                }
             </li>
-            <li class="x-small">@Entity.Message</li>
+            <li class="x-small @_fwBoldClass">@Entity.Message</li>
         </ul>
     </div>
 }
 
 @code {
     [Parameter] public Core.Models.ResultMessage? Entity { get; set; }
+
+    private string? _fwBoldClass
+    {
+        get
+        {
+            return Entity?.MessageType switch
+            {
+                Core.Models.ResultMessage.MessageTypes.Password => "fw-bold",
+                _ => null,
+            };
+        }
+    }
 }

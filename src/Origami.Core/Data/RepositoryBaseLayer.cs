@@ -24,10 +24,19 @@ namespace Origami.Core.Data
 
         public virtual void CreateCache(T entity)
         {
+            var clone = entity.Clone();
             lock (OrigamiConstants.SyncRoot)
             {
                 var value = MemoryCache.GetList<T>(KeyForCaching);
-                if (value != null) value.Add(entity); else value = [entity];
+                if (value != null)
+                {
+                    value.RemoveAll(x => x.Id == entity.Id);
+                    value.Add(clone);
+                }
+                else
+                {
+                    value = [clone];
+                }
                 MemoryCache.Set(KeyForCaching, value);
             }
         }
@@ -47,15 +56,16 @@ namespace Origami.Core.Data
 
         public virtual void UpdateCache(T entity)
         {
+            var clone = entity.Clone();
             lock (OrigamiConstants.SyncRoot)
             {
                 var value = MemoryCache.GetList<T>(KeyForCaching);
                 if (value != null)
                 {
                     value.RemoveAll(x => x.Id == entity.Id);
-                    value.Add(entity);
+                    value.Add(clone);
                 }
-                else value = [entity];
+                else value = [clone];
                 MemoryCache.Set(KeyForCaching, value);
             }
         }

@@ -82,7 +82,7 @@ namespace Origami.Core.Data
             }
 
             ctx.Entity.SetDateCreated(DateTime.UtcNow);
-            ctx.Entity.SetSlugWhenNecessary();
+            ctx.Entity.SetSlug();
 
             var validation = this.CreateValidation(ctx);
             if (validation.Ok == false) return validation;
@@ -257,7 +257,7 @@ namespace Origami.Core.Data
             }
 
             ctx.Entity.SetDateModified(DateTime.UtcNow);
-            ctx.Entity.SetSlugWhenNecessary();
+            ctx.Entity.SetSlug();
 
             var validation = this.UpdateValidation(ctx);
             if (validation.Ok == false) return validation;

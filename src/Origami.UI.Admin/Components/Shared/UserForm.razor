@@ -487,18 +487,6 @@
     [Parameter] public EventCallback<OrigamiUser> OnUserBlocked { get; set; }
     [Parameter] public EventCallback<OrigamiUser> OnUserUnblocked { get; set; }
 
-    protected override bool DisableTheSaveButton
-    {
-        get
-        {
-            if (this.Entity.Username.Has() == false) return true;
-            if (this.Entity.DisplayName.Has() == false) return true;
-            if (this.Entity.EmailAddress.Has() == false) return true;
-            if (this.Entity.EmailAddress.Email() == false) return true;
-            return false;
-        }
-    }
-
     protected bool IsBlogSelected(OrigamiBlog blog)
     {
         return this.UserBlogs.Any(x => x.BlogId == blog.Id);

@@ -54,7 +54,7 @@ namespace Origami.Core.Models
         }
 
         [StringLength(16)]
-        public string Key { get; }
+        public string Key { get; set; }
 
         public Guid UserId
         {

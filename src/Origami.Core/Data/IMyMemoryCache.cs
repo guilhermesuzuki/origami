@@ -1,8 +1,11 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
+using Origami.Core.Models;
 
 namespace Origami.Core.Data
 {
-    public interface IMyMemoryCache : IMemoryCache
+    public interface IMyMemoryCache : 
+        IId,
+        IMemoryCache
     {
         /// <summary>
         /// Cache keys
