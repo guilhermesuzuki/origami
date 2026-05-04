@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -59,46 +59,46 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -117,15 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="_comments.Count" xml:space="preserve">
-    <value>_comments.Count</value>
-  </data>
-  <data name="_directories.Count()" xml:space="preserve">
-    <value>_directories.Count()</value>
-  </data>
-  <data name="_resetPassword" xml:space="preserve">
-    <value>_resetPassword</value>
-  </data>
   <data name="({0} files max)" xml:space="preserve">
     <value>（{0} 文件最大）</value>
   </data>
@@ -241,7 +232,7 @@
     <value>当前正在运行恢复过程。在该过程完成之前，某些操作将被禁用。</value>
   </data>
   <data name="Accessed" xml:space="preserve">
-    <value>Acessado</value>
+    <value>已访问</value>
   </data>
   <data name="Activate blog" xml:space="preserve">
     <value>激活博客</value>
@@ -250,7 +241,7 @@
     <value>激活博客</value>
   </data>
   <data name="Active" xml:space="preserve">
-    <value>Ativo</value>
+    <value>活跃</value>
   </data>
   <data name="Add comment" xml:space="preserve">
     <value>添加评论</value>
@@ -259,10 +250,10 @@
     <value>添加文件夹</value>
   </data>
   <data name="Admin" xml:space="preserve">
-    <value>Administrador</value>
+    <value>管理员</value>
   </data>
   <data name="All" xml:space="preserve">
-    <value>Todos</value>
+    <value>全部</value>
   </data>
   <data name="All comments" xml:space="preserve">
     <value>所有评论</value>
@@ -292,10 +283,10 @@
     <value>然后单击“确定”关闭此弹出窗口</value>
   </data>
   <data name="Anonymous" xml:space="preserve">
-    <value>Anônimo</value>
+    <value>匿名</value>
   </data>
   <data name="Answering" xml:space="preserve">
-    <value>Respondendo</value>
+    <value>回复中</value>
   </data>
   <data name="Anyway, click here to go back to the Website" xml:space="preserve">
     <value>无论如何，请点击此处返回网站</value>
@@ -313,7 +304,7 @@
     <value>应用秘密</value>
   </data>
   <data name="Approved" xml:space="preserve">
-    <value>Aprovado</value>
+    <value>已批准</value>
   </data>
   <data name="Approved comments" xml:space="preserve">
     <value>批准的评论</value>
@@ -328,13 +319,13 @@
     <value>你确定吗？您将无法恢复这些物品。</value>
   </data>
   <data name="Author" xml:space="preserve">
-    <value>Autor</value>
+    <value>作者</value>
   </data>
   <data name="Author is required" xml:space="preserve">
     <value>作者必填</value>
   </data>
   <data name="Backup" xml:space="preserve">
-    <value>Backup</value>
+    <value>备份</value>
   </data>
   <data name="Backup and restore" xml:space="preserve">
     <value>备份和恢复</value>
@@ -349,7 +340,7 @@
     <value>备份系统</value>
   </data>
   <data name="Backups" xml:space="preserve">
-    <value>Cópias de segurança</value>
+    <value>备份</value>
   </data>
   <data name="BACPAC file created successfully" xml:space="preserve">
     <value>BACPAC 文件创建成功</value>
@@ -361,7 +352,7 @@
     <value>根据标题</value>
   </data>
   <data name="Basic" xml:space="preserve">
-    <value>Básico</value>
+    <value>基本</value>
   </data>
   <data name="Be careful when choosing a username, you won't be able to change it later" xml:space="preserve">
     <value>选择用户名时要小心，以后将无法更改</value>
@@ -382,10 +373,10 @@
     <value>阻止除自己以外的用户</value>
   </data>
   <data name="Blocked" xml:space="preserve">
-    <value>Bloqueado</value>
+    <value>已封锁</value>
   </data>
   <data name="Blog" xml:space="preserve">
-    <value>Blogue</value>
+    <value>博客</value>
   </data>
   <data name="Blog could not be found" xml:space="preserve">
     <value>找不到博客</value>
@@ -403,7 +394,7 @@
     <value>博客必须为空</value>
   </data>
   <data name="Blogs" xml:space="preserve">
-    <value>Blogues</value>
+    <value>博客</value>
   </data>
   <data name="Blogs found in the search" xml:space="preserve">
     <value>搜索中找到的博客</value>
@@ -418,7 +409,7 @@
     <value>浏览器• URL</value>
   </data>
   <data name="Browsers" xml:space="preserve">
-    <value>Navegadores</value>
+    <value>浏览器</value>
   </data>
   <data name="But login first" xml:space="preserve">
     <value>不过要先登录</value>
@@ -460,10 +451,10 @@
     <value>回调路径</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Cancelar</value>
+    <value>取消</value>
   </data>
   <data name="Categories" xml:space="preserve">
-    <value>Categorias</value>
+    <value>分类</value>
   </data>
   <data name="Categories found in the search" xml:space="preserve">
     <value>搜索中找到的类别</value>
@@ -472,7 +463,7 @@
     <value>类别必须是唯一的</value>
   </data>
   <data name="Category" xml:space="preserve">
-    <value>Categoria</value>
+    <value>分类</value>
   </data>
   <data name="Category must exist" xml:space="preserve">
     <value>类别必须存在</value>
@@ -490,7 +481,7 @@
     <value>选择背景风格</value>
   </data>
   <data name="Clear" xml:space="preserve">
-    <value>Claro</value>
+    <value>清除</value>
   </data>
   <data name="Clear cache" xml:space="preserve">
     <value>清除缓存</value>
@@ -529,7 +520,7 @@
     <value>客户秘密</value>
   </data>
   <data name="Close" xml:space="preserve">
-    <value>Fechar</value>
+    <value>关闭</value>
   </data>
   <data name="Close menu" xml:space="preserve">
     <value>关闭菜单</value>
@@ -541,7 +532,7 @@
     <value>关闭窗口</value>
   </data>
   <data name="Comment" xml:space="preserve">
-    <value>Comentário</value>
+    <value>评论</value>
   </data>
   <data name="Comment reactions on posts" xml:space="preserve">
     <value>对帖子的评论反应</value>
@@ -555,11 +546,8 @@
   <data name="Commented on post:" xml:space="preserve">
     <value>对帖子的评论：</value>
   </data>
-  <data name="commentReaction.Reaction" xml:space="preserve">
-    <value>commentReaction.Reaction</value>
-  </data>
   <data name="Comments" xml:space="preserve">
-    <value>Comentários</value>
+    <value>评论</value>
   </data>
   <data name="Comments [including deleted]" xml:space="preserve">
     <value>评论[包括已删除]</value>
@@ -577,13 +565,13 @@
     <value>确认密码</value>
   </data>
   <data name="Congratulations" xml:space="preserve">
-    <value>Parabéns</value>
+    <value>恭喜</value>
   </data>
   <data name="Contact an administrator to solve this issue" xml:space="preserve">
     <value>联系管理员解决此问题</value>
   </data>
   <data name="Content" xml:space="preserve">
-    <value>Conteúdo</value>
+    <value>内容</value>
   </data>
   <data name="Content must be a valid HTML" xml:space="preserve">
     <value>内容必须是有效的 HTML</value>
@@ -591,20 +579,11 @@
   <data name="Content must exist" xml:space="preserve">
     <value>内容必须存在</value>
   </data>
-  <data name="context.Item.Description" xml:space="preserve">
-    <value>context.Item.Description</value>
-  </data>
-  <data name="context.Item.GetEmail()" xml:space="preserve">
-    <value>context.Item.GetEmail()</value>
-  </data>
-  <data name="context.Item.TypeName" xml:space="preserve">
-    <value>context.Item.TypeName</value>
-  </data>
   <data name="Cookie policy" xml:space="preserve">
     <value>Cookie 政策</value>
   </data>
   <data name="count" xml:space="preserve">
-    <value>contar</value>
+    <value>数量</value>
   </data>
   <data name="Create blogs" xml:space="preserve">
     <value>创建博客</value>
@@ -640,7 +619,7 @@
     <value>创建蛞蝓</value>
   </data>
   <data name="Created" xml:space="preserve">
-    <value>Criado</value>
+    <value>已创建</value>
   </data>
   <data name="Current month" xml:space="preserve">
     <value>本月</value>
@@ -652,16 +631,16 @@
     <value>本年度</value>
   </data>
   <data name="Custom" xml:space="preserve">
-    <value>Personalizado</value>
+    <value>自定义</value>
   </data>
   <data name="Cycle detected: you must choose another parent" xml:space="preserve">
     <value>检测到循环：您必须选择另一个父母</value>
   </data>
   <data name="Danger" xml:space="preserve">
-    <value>Perigo</value>
+    <value>危险</value>
   </data>
   <data name="Dashboard" xml:space="preserve">
-    <value>Painel</value>
+    <value>仪表板</value>
   </data>
   <data name="Dashboard analytics" xml:space="preserve">
     <value>仪表板分析</value>
@@ -670,7 +649,7 @@
     <value>数据库恢复成功。</value>
   </data>
   <data name="Date" xml:space="preserve">
-    <value>Data</value>
+    <value>日期</value>
   </data>
   <data name="Date of modification must happen after the creation date" xml:space="preserve">
     <value>修改日期必须晚于创建日期</value>
@@ -757,13 +736,13 @@
     <value>删除除自己以外的用户</value>
   </data>
   <data name="Deleted" xml:space="preserve">
-    <value>Excluído</value>
+    <value>已删除</value>
   </data>
   <data name="Deleted comments" xml:space="preserve">
     <value>已删除评论</value>
   </data>
   <data name="Deleted?" xml:space="preserve">
-    <value>Excluído?</value>
+    <value>确认删除？</value>
   </data>
   <data name="Deleting {0} item(s)" xml:space="preserve">
     <value>删除 {0} 项目</value>
@@ -775,7 +754,7 @@
     <value>从首页降级</value>
   </data>
   <data name="Description" xml:space="preserve">
-    <value>Descrição</value>
+    <value>描述</value>
   </data>
   <data name="Description cannot exceed {0} characters" xml:space="preserve">
     <value>描述不能超过 {0} 个字符</value>
@@ -805,13 +784,13 @@
     <value>不要与其他人分享该链接</value>
   </data>
   <data name="Done" xml:space="preserve">
-    <value>Feito</value>
+    <value>完成</value>
   </data>
   <data name="Download" xml:space="preserve">
-    <value>Download</value>
+    <value>下载</value>
   </data>
   <data name="Draft" xml:space="preserve">
-    <value>Rascunho</value>
+    <value>草稿</value>
   </data>
   <data name="Draft pages" xml:space="preserve">
     <value>草稿页</value>
@@ -829,7 +808,7 @@
     <value>草稿视频</value>
   </data>
   <data name="Drafts" xml:space="preserve">
-    <value>Rascunhos</value>
+    <value>草稿</value>
   </data>
   <data name="E-mail" xml:space="preserve">
     <value>电子邮件</value>
@@ -913,7 +892,7 @@
     <value>端点（URL）</value>
   </data>
   <data name="Enter" xml:space="preserve">
-    <value>Digitar</value>
+    <value>输入</value>
   </data>
   <data name="Enter incognito" xml:space="preserve">
     <value>隐身进入</value>
@@ -927,68 +906,17 @@
   <data name="Entity header cannot be updated" xml:space="preserve">
     <value>实体标头无法更新</value>
   </data>
-  <data name="Entity.EnableSsl.YesNo()" xml:space="preserve">
-    <value>Entity.EnableSsl.YesNo()</value>
-  </data>
-  <data name="Entity.Entity.IsCommentEnabled.YesNo()" xml:space="preserve">
-    <value>Entity.Entity.IsCommentEnabled.YesNo()</value>
-  </data>
-  <data name="Entity.Entity.IsDraft.YesNo()" xml:space="preserve">
-    <value>Entity.Entity.IsDraft.YesNo()</value>
-  </data>
-  <data name="Entity.GetTOTPRecoveryCodes().Any().YesNo()" xml:space="preserve">
-    <value>Entity.GetTOTPRecoveryCodes().Any().YesNo()</value>
-  </data>
-  <data name="Entity.IsActive.YesNo()" xml:space="preserve">
-    <value>Entity.IsActive.YesNo()</value>
-  </data>
-  <data name="Entity.IsApproved.YesNo()" xml:space="preserve">
-    <value>Entity.IsApproved.YesNo()</value>
-  </data>
-  <data name="Entity.IsCommentEnabled.YesNo()" xml:space="preserve">
-    <value>Entity.IsCommentEnabled.YesNo()</value>
-  </data>
-  <data name="Entity.IsDeleted.YesNo()" xml:space="preserve">
-    <value>Entity.IsDeleted.YesNo()</value>
-  </data>
-  <data name="Entity.IsPrimary.YesNo()" xml:space="preserve">
-    <value>Entity.IsPrimary.YesNo()</value>
-  </data>
-  <data name="Entity.IsSpam.YesNo()" xml:space="preserve">
-    <value>Entity.IsSpam.YesNo()</value>
-  </data>
-  <data name="Entity.KeepTestingTheSmtpServerConnectivity.YesNo()" xml:space="preserve">
-    <value>Entity.KeepTestingTheSmtpServerConnectivity.YesNo()</value>
-  </data>
-  <data name="Entity.OpenTelemetry.Enabled.YesNo()" xml:space="preserve">
-    <value>Entity.OpenTelemetry.Enabled.YesNo()</value>
-  </data>
-  <data name="Entity.SocialNetwork.Facebook.Enabled.YesNo()" xml:space="preserve">
-    <value>Entity.SocialNetwork.Facebook.Enabled.YesNo()</value>
-  </data>
-  <data name="Entity.SocialNetwork.GitHub.Enabled.YesNo()" xml:space="preserve">
-    <value>Entity.SocialNetwork.GitHub.Enabled.YesNo()</value>
-  </data>
-  <data name="Entity.SocialNetwork.Google.Enabled.YesNo()" xml:space="preserve">
-    <value>Entity.SocialNetwork.Google.Enabled.YesNo()</value>
-  </data>
-  <data name="Entity.SocialNetwork.Microsoft.Enabled.YesNo()" xml:space="preserve">
-    <value>Entity.SocialNetwork.Microsoft.Enabled.YesNo()</value>
-  </data>
-  <data name="Entity.TOTPSecret.Has().YesNo()" xml:space="preserve">
-    <value>Entity.TOTPSecret.Has().YesNo()</value>
-  </data>
   <data name="Error" xml:space="preserve">
-    <value>Erro</value>
+    <value>错误</value>
   </data>
   <data name="Error parsing the JSON file" xml:space="preserve">
     <value>解析 JSON 文件时出错</value>
   </data>
   <data name="Everything" xml:space="preserve">
-    <value>Tudo</value>
+    <value>全部</value>
   </data>
   <data name="Extension" xml:space="preserve">
-    <value>Extensão</value>
+    <value>扩展</value>
   </data>
   <data name="Facebook" xml:space="preserve">
     <value>Facebook</value>
@@ -1009,10 +937,10 @@
     <value>无法为用户重置密码</value>
   </data>
   <data name="Feeds" xml:space="preserve">
-    <value>Feeds</value>
+    <value>订阅</value>
   </data>
   <data name="field" xml:space="preserve">
-    <value>campo</value>
+    <value>字段</value>
   </data>
   <data name="File is too large" xml:space="preserve">
     <value>文件太大</value>
@@ -1021,10 +949,10 @@
     <value>文件管理器</value>
   </data>
   <data name="Filler" xml:space="preserve">
-    <value>Preenchimento</value>
+    <value>填充</value>
   </data>
   <data name="Filter" xml:space="preserve">
-    <value>Filtro</value>
+    <value>筛选</value>
   </data>
   <data name="First name" xml:space="preserve">
     <value>名</value>
@@ -1042,7 +970,7 @@
     <value>首页</value>
   </data>
   <data name="General" xml:space="preserve">
-    <value>Em geral</value>
+    <value>常规</value>
   </data>
   <data name="GitHub" xml:space="preserve">
     <value>GitHub</value>
@@ -1066,7 +994,7 @@
     <value>向用户授予主持人</value>
   </data>
   <data name="Header" xml:space="preserve">
-    <value>Cabeçalho</value>
+    <value>头部</value>
   </data>
   <data name="Header image must be valid" xml:space="preserve">
     <value>标题图片必须有效</value>
@@ -1075,13 +1003,13 @@
     <value>这是您的 {0} 验证码</value>
   </data>
   <data name="History" xml:space="preserve">
-    <value>História</value>
+    <value>历史</value>
   </data>
   <data name="How to delete your data" xml:space="preserve">
     <value>如何删除您的数据</value>
   </data>
   <data name="Id" xml:space="preserve">
-    <value>Id</value>
+    <value>ID</value>
   </data>
   <data name="Id is required" xml:space="preserve">
     <value>身份证号为必填项</value>
@@ -1102,7 +1030,7 @@
     <value>隐身模式</value>
   </data>
   <data name="Info" xml:space="preserve">
-    <value>Informações</value>
+    <value>信息</value>
   </data>
   <data name="Instagram" xml:space="preserve">
     <value>Instagram</value>
@@ -1126,19 +1054,19 @@
     <value>将这些恢复代码保存在安全的地方</value>
   </data>
   <data name="Key" xml:space="preserve">
-    <value>Chave</value>
+    <value>键</value>
   </data>
   <data name="Keywords" xml:space="preserve">
-    <value>Palavras-chave</value>
+    <value>关键词</value>
   </data>
   <data name="Language" xml:space="preserve">
-    <value>Linguagem</value>
+    <value>语言</value>
   </data>
   <data name="Language must be valid" xml:space="preserve">
     <value>语言必须有效</value>
   </data>
   <data name="Large" xml:space="preserve">
-    <value>Grande</value>
+    <value>大</value>
   </data>
   <data name="Last 180 days" xml:space="preserve">
     <value>过去 180 天</value>
@@ -1174,7 +1102,7 @@
     <value>最新消息</value>
   </data>
   <data name="Leave" xml:space="preserve">
-    <value>Sair</value>
+    <value>离开</value>
   </data>
   <data name="Leave incognito" xml:space="preserve">
     <value>隐身离开</value>
@@ -1183,7 +1111,7 @@
     <value>离开维护模式</value>
   </data>
   <data name="link" xml:space="preserve">
-    <value>link</value>
+    <value>链接</value>
   </data>
   <data name="LinkedIn" xml:space="preserve">
     <value>LinkedIn</value>
@@ -1198,7 +1126,7 @@
     <value>退出</value>
   </data>
   <data name="Login" xml:space="preserve">
-    <value>Conecte-se</value>
+    <value>登录</value>
   </data>
   <data name="Login to quick reply" xml:space="preserve">
     <value>登录后可快速回复</value>
@@ -1210,19 +1138,19 @@
     <value>登录以做出反应</value>
   </data>
   <data name="Logo" xml:space="preserve">
-    <value>Logotipo</value>
+    <value>标志</value>
   </data>
   <data name="Logo • Avatar" xml:space="preserve">
     <value>标志•头像</value>
   </data>
   <data name="Logout" xml:space="preserve">
-    <value>Sair</value>
+    <value>登出</value>
   </data>
   <data name="Loop in relationships are not allowed" xml:space="preserve">
     <value>不允许出现关系循环</value>
   </data>
   <data name="Maintenance" xml:space="preserve">
-    <value>Manutenção</value>
+    <value>维护</value>
   </data>
   <data name="Make primary" xml:space="preserve">
     <value>设为主要</value>
@@ -1246,13 +1174,13 @@
     <value>也许稍后</value>
   </data>
   <data name="Medium" xml:space="preserve">
-    <value>Médio</value>
+    <value>中</value>
   </data>
   <data name="Microsoft" xml:space="preserve">
     <value>Microsoft</value>
   </data>
   <data name="Misc" xml:space="preserve">
-    <value>Diversos</value>
+    <value>其他</value>
   </data>
   <data name="Moderate comments" xml:space="preserve">
     <value>适度评论</value>
@@ -1261,10 +1189,10 @@
     <value>主持者</value>
   </data>
   <data name="Moderator" xml:space="preserve">
-    <value>Moderador</value>
+    <value>版主</value>
   </data>
   <data name="Modified" xml:space="preserve">
-    <value>Modificado</value>
+    <value>已修改</value>
   </data>
   <data name="Most popular" xml:space="preserve">
     <value>最受欢迎</value>
@@ -1279,7 +1207,7 @@
     <value>在列表中向上移动</value>
   </data>
   <data name="Name" xml:space="preserve">
-    <value>Nome</value>
+    <value>名称</value>
   </data>
   <data name="Name (website)" xml:space="preserve">
     <value>名称（网站）</value>
@@ -1300,7 +1228,7 @@
     <value>需要 Nano ID</value>
   </data>
   <data name="New" xml:space="preserve">
-    <value>Novo</value>
+    <value>新建</value>
   </data>
   <data name="New folder" xml:space="preserve">
     <value>新建文件夹</value>
@@ -1315,7 +1243,7 @@
     <value>新密码不匹配，彼此不同</value>
   </data>
   <data name="No" xml:space="preserve">
-    <value>Não</value>
+    <value>否</value>
   </data>
   <data name="No categories whatsoever" xml:space="preserve">
     <value>没有任何类别</value>
@@ -1357,13 +1285,13 @@
     <value>没有任何视频</value>
   </data>
   <data name="None" xml:space="preserve">
-    <value>Nenhum</value>
+    <value>无</value>
   </data>
   <data name="Not specified" xml:space="preserve">
     <value>未指定</value>
   </data>
   <data name="Note" xml:space="preserve">
-    <value>Observação</value>
+    <value>备注</value>
   </data>
   <data name="Note cannot exceed {0} characters" xml:space="preserve">
     <value>注意不能超过{0}字符</value>
@@ -1390,7 +1318,7 @@
     <value>仅视频文件</value>
   </data>
   <data name="Oops" xml:space="preserve">
-    <value>Ops</value>
+    <value>哎呀</value>
   </data>
   <data name="Oops, this key is not valid or it was already used to reset your password" xml:space="preserve">
     <value>糟糕，此密钥无效或已用于重置您的密码</value>
@@ -1408,7 +1336,7 @@
     <value>Origami</value>
   </data>
   <data name="Original" xml:space="preserve">
-    <value>Original</value>
+    <value>原始</value>
   </data>
   <data name="Original name" xml:space="preserve">
     <value>原名</value>
@@ -1420,7 +1348,7 @@
     <value>P</value>
   </data>
   <data name="Page" xml:space="preserve">
-    <value>Página</value>
+    <value>页面</value>
   </data>
   <data name="Page cannot be retrieved" xml:space="preserve">
     <value>页面无法检索</value>
@@ -1438,19 +1366,19 @@
     <value>找不到页面</value>
   </data>
   <data name="Pages" xml:space="preserve">
-    <value>Páginas</value>
+    <value>页面</value>
   </data>
   <data name="Pages found in the search" xml:space="preserve">
     <value>搜索中找到的页面</value>
   </data>
   <data name="Parent" xml:space="preserve">
-    <value>Pai</value>
+    <value>父级</value>
   </data>
   <data name="Parent category" xml:space="preserve">
     <value>父类</value>
   </data>
   <data name="Password" xml:space="preserve">
-    <value>Senha</value>
+    <value>密码</value>
   </data>
   <data name="Password has been reset successfully" xml:space="preserve">
     <value>密码已重置成功</value>
@@ -1468,7 +1396,7 @@
     <value>将您的 HTML iframe 粘贴到此处以嵌入，例如 YouTube 等</value>
   </data>
   <data name="Path" xml:space="preserve">
-    <value>Caminho</value>
+    <value>路径</value>
   </data>
   <data name="People online" xml:space="preserve">
     <value>在线人数</value>
@@ -1486,7 +1414,7 @@
     <value>发表评论</value>
   </data>
   <data name="Pinned" xml:space="preserve">
-    <value>Fixado</value>
+    <value>置顶</value>
   </data>
   <data name="Pinned by" xml:space="preserve">
     <value>固定者</value>
@@ -1495,7 +1423,7 @@
     <value>在这里发表您的评论</value>
   </data>
   <data name="Platforms" xml:space="preserve">
-    <value>Plataformas</value>
+    <value>平台</value>
   </data>
   <data name="Please, talk to a system administrator" xml:space="preserve">
     <value>请与系统管理员联系</value>
@@ -1504,7 +1432,7 @@
     <value>请稍后重试</value>
   </data>
   <data name="Post" xml:space="preserve">
-    <value>Publicar</value>
+    <value>发布</value>
   </data>
   <data name="postRating.Rating" xml:space="preserve">
     <value>postRating.Rating</value>
@@ -1513,7 +1441,7 @@
     <value>postReaction.Reaction</value>
   </data>
   <data name="Posts" xml:space="preserve">
-    <value>Postagens</value>
+    <value>发布</value>
   </data>
   <data name="Posts comments" xml:space="preserve">
     <value>帖子评论</value>
@@ -1525,7 +1453,7 @@
     <value>帖子、视频</value>
   </data>
   <data name="Primary" xml:space="preserve">
-    <value>Primário</value>
+    <value>主要</value>
   </data>
   <data name="Primary blog cannot be deactivated" xml:space="preserve">
     <value>主博客无法停用</value>
@@ -1537,7 +1465,7 @@
     <value>隐私政策</value>
   </data>
   <data name="Profile" xml:space="preserve">
-    <value>Perfil</value>
+    <value>个人资料</value>
   </data>
   <data name="Profile data was wiped out" xml:space="preserve">
     <value>个人资料数据已被清除</value>
@@ -1549,7 +1477,7 @@
     <value>未找到个人资料</value>
   </data>
   <data name="Progress" xml:space="preserve">
-    <value>Progresso</value>
+    <value>进度</value>
   </data>
   <data name="Promote to front-page" xml:space="preserve">
     <value>提升至首页</value>
@@ -1609,7 +1537,7 @@
     <value>发布视频</value>
   </data>
   <data name="Published" xml:space="preserve">
-    <value>Publicado</value>
+    <value>已发布</value>
   </data>
   <data name="Published pages" xml:space="preserve">
     <value>已发布的页面</value>
@@ -1625,9 +1553,6 @@
   </data>
   <data name="Published videos" xml:space="preserve">
     <value>已发布的视频</value>
-  </data>
-  <data name="published.GetType().Name" xml:space="preserve">
-    <value>published.GetType().Name</value>
   </data>
   <data name="Purge blogs" xml:space="preserve">
     <value>清除博客</value>
@@ -1687,7 +1612,7 @@
     <value>额定为 {0}：</value>
   </data>
   <data name="Rating" xml:space="preserve">
-    <value>Avaliação</value>
+    <value>评分</value>
   </data>
   <data name="Rating 1 is not accounted for in the final rating" xml:space="preserve">
     <value>评级 1 不计入最终评级</value>
@@ -1702,7 +1627,7 @@
     <value>rating.Rating</value>
   </data>
   <data name="Ratings" xml:space="preserve">
-    <value>Avaliações</value>
+    <value>评分</value>
   </data>
   <data name="Ratings on posts" xml:space="preserve">
     <value>对帖子的评分</value>
@@ -1719,11 +1644,8 @@
   <data name="Reaction needs one author" xml:space="preserve">
     <value>反应需要一位作者</value>
   </data>
-  <data name="reaction.Reaction" xml:space="preserve">
-    <value>reaction.Reaction</value>
-  </data>
   <data name="Reactions" xml:space="preserve">
-    <value>Reações</value>
+    <value>反应</value>
   </data>
   <data name="Refresh your browser" xml:space="preserve">
     <value>刷新您的浏览器</value>
@@ -1750,7 +1672,7 @@
     <value>发售日期</value>
   </data>
   <data name="Reload" xml:space="preserve">
-    <value>Recarregar</value>
+    <value>重新加载</value>
   </data>
   <data name="Remove picture" xml:space="preserve">
     <value>删除图片</value>
@@ -1758,11 +1680,8 @@
   <data name="Repeat new password" xml:space="preserve">
     <value>重复新密码</value>
   </data>
-  <data name="replies.Count()" xml:space="preserve">
-    <value>replies.Count()</value>
-  </data>
   <data name="Reply" xml:space="preserve">
-    <value>Responder</value>
+    <value>回复</value>
   </data>
   <data name="Reply comment" xml:space="preserve">
     <value>回复评论</value>
@@ -1777,7 +1696,7 @@
     <value>要求删除信息</value>
   </data>
   <data name="Reset" xml:space="preserve">
-    <value>Reiniciar</value>
+    <value>重置</value>
   </data>
   <data name="Reset 2FA" xml:space="preserve">
     <value>重置2FA</value>
@@ -1798,7 +1717,7 @@
     <value>重置密码</value>
   </data>
   <data name="Restore" xml:space="preserve">
-    <value>Restaurar</value>
+    <value>恢复</value>
   </data>
   <data name="Restore blogs" xml:space="preserve">
     <value>恢复博客</value>
@@ -1858,10 +1777,10 @@
     <value>撤销社交档案中的版主角色</value>
   </data>
   <data name="Role" xml:space="preserve">
-    <value>Papel</value>
+    <value>角色</value>
   </data>
   <data name="Roles" xml:space="preserve">
-    <value>Funções</value>
+    <value>角色</value>
   </data>
   <data name="Roles are up-to-date" xml:space="preserve">
     <value>角色已更新</value>
@@ -1891,7 +1810,7 @@
     <value>RSS feed 必须是有效的网站地址</value>
   </data>
   <data name="Save" xml:space="preserve">
-    <value>Salvar</value>
+    <value>保存</value>
   </data>
   <data name="Save and publish" xml:space="preserve">
     <value>保存并发布</value>
@@ -1909,7 +1828,7 @@
     <value>使用您的身份验证器应用程序扫描此二维码</value>
   </data>
   <data name="Search" xml:space="preserve">
-    <value>Procurar</value>
+    <value>搜索</value>
   </data>
   <data name="See browser dev tools for details" xml:space="preserve">
     <value>有关详细信息，请参阅浏览器开发工具</value>
@@ -1966,19 +1885,19 @@
     <value>发送验证码</value>
   </data>
   <data name="Settings" xml:space="preserve">
-    <value>Configurações</value>
+    <value>设置</value>
   </data>
   <data name="settings.Name" xml:space="preserve">
     <value>settings.Name</value>
   </data>
   <data name="Size" xml:space="preserve">
-    <value>Tamanho</value>
+    <value>大小</value>
   </data>
   <data name="Slow" xml:space="preserve">
-    <value>Lento</value>
+    <value>慢</value>
   </data>
   <data name="Slug" xml:space="preserve">
-    <value>Lesma</value>
+    <value>Slug</value>
   </data>
   <data name="Slug cannot exceed {0} characters" xml:space="preserve">
     <value>Slug 不能超过 {0} 个字符</value>
@@ -1987,7 +1906,7 @@
     <value>Slug 已在使用中</value>
   </data>
   <data name="Small" xml:space="preserve">
-    <value>Pequeno</value>
+    <value>小</value>
   </data>
   <data name="SMTP password" xml:space="preserve">
     <value>SMTP密码</value>
@@ -2013,29 +1932,11 @@
   <data name="Social profiles found in the search" xml:space="preserve">
     <value>搜索中找到的社交资料</value>
   </data>
-  <data name="socialProfileDelete.PostCommentReactions" xml:space="preserve">
-    <value>socialProfileDelete.PostCommentReactions</value>
-  </data>
-  <data name="socialProfileDelete.PostComments" xml:space="preserve">
-    <value>socialProfileDelete.PostComments</value>
-  </data>
-  <data name="socialProfileDelete.PostRatings" xml:space="preserve">
-    <value>socialProfileDelete.PostRatings</value>
-  </data>
-  <data name="socialProfileDelete.VideoCommentReactions" xml:space="preserve">
-    <value>socialProfileDelete.VideoCommentReactions</value>
-  </data>
-  <data name="socialProfileDelete.VideoComments" xml:space="preserve">
-    <value>socialProfileDelete.VideoComments</value>
-  </data>
-  <data name="socialProfileDelete.VideoRatings" xml:space="preserve">
-    <value>socialProfileDelete.VideoRatings</value>
-  </data>
   <data name="Source and destination images share the same location" xml:space="preserve">
     <value>源图像和目标图像共享同一位置</value>
   </data>
   <data name="Spam" xml:space="preserve">
-    <value>Spam</value>
+    <value>垃圾信息</value>
   </data>
   <data name="Spam comments" xml:space="preserve">
     <value>垃圾评论</value>
@@ -2065,46 +1966,46 @@
     <value>开始日期不能晚于结束日期</value>
   </data>
   <data name="Stats" xml:space="preserve">
-    <value>Estatísticas</value>
+    <value>统计</value>
   </data>
   <data name="Status" xml:space="preserve">
-    <value>Status</value>
+    <value>状态</value>
   </data>
   <data name="Still a draft?" xml:space="preserve">
     <value>还是草稿？</value>
   </data>
   <data name="Stop" xml:space="preserve">
-    <value>Parar</value>
+    <value>停止</value>
   </data>
   <data name="Stops the timer" xml:space="preserve">
     <value>停止计时器</value>
   </data>
   <data name="Subscribe" xml:space="preserve">
-    <value>Inscrever-se</value>
+    <value>订阅</value>
   </data>
   <data name="Subscribe to the website" xml:space="preserve">
     <value>订阅网站</value>
   </data>
   <data name="Subscriber" xml:space="preserve">
-    <value>Assinante</value>
+    <value>订阅者</value>
   </data>
   <data name="Subscriber(s)" xml:space="preserve">
     <value>订户</value>
   </data>
   <data name="Success" xml:space="preserve">
-    <value>Sucesso</value>
+    <value>成功</value>
   </data>
   <data name="System role" xml:space="preserve">
     <value>系统角色</value>
   </data>
   <data name="Tag" xml:space="preserve">
-    <value>Marcação</value>
+    <value>标签</value>
   </data>
   <data name="Tag cannot exceed {0} characters" xml:space="preserve">
     <value>标签不能超过 {0} 个字符</value>
   </data>
   <data name="Tags" xml:space="preserve">
-    <value>Etiquetas</value>
+    <value>标签</value>
   </data>
   <data name="Tags found in the search" xml:space="preserve">
     <value>搜索中找到的标签</value>
@@ -2127,24 +2028,6 @@
   <data name="Test connection" xml:space="preserve">
     <value>测试连接</value>
   </data>
-  <data name="Text.OperationCompletedSuccessfully" xml:space="preserve">
-    <value>Text.OperationCompletedSuccessfully</value>
-  </data>
-  <data name="Text.SomethingWentWrongPleaseTryAgain" xml:space="preserve">
-    <value>Text.SomethingWentWrongPleaseTryAgain</value>
-  </data>
-  <data name="Text.Styles.Original" xml:space="preserve">
-    <value>Text.Styles.Original</value>
-  </data>
-  <data name="Text.Styles.Uppercase" xml:space="preserve">
-    <value>Text.Styles.Uppercase</value>
-  </data>
-  <data name="Text.YouDontHavePermissionForThisFeature" xml:space="preserve">
-    <value>Text.YouDontHavePermissionForThisFeature</value>
-  </data>
-  <data name="Text.YouMadeTooManyCommentsIn5Minutes" xml:space="preserve">
-    <value>Text.YouMadeTooManyCommentsIn5Minutes</value>
-  </data>
   <data name="The author marked this as draft" xml:space="preserve">
     <value>作者将此标记为草稿</value>
   </data>
@@ -2163,38 +2046,17 @@
   <data name="this is a front-page" xml:space="preserve">
     <value>这是首页</value>
   </data>
-  <data name="this._files.Count()" xml:space="preserve">
-    <value>this._files.Count()</value>
-  </data>
-  <data name="this.Entity.GetEmail()" xml:space="preserve">
-    <value>this.Entity.GetEmail()</value>
-  </data>
-  <data name="this.FileLimitInBytes.SizeInBytes()" xml:space="preserve">
-    <value>this.FileLimitInBytes.SizeInBytes()</value>
-  </data>
-  <data name="this.PublishedPosts" xml:space="preserve">
-    <value>this.PublishedPosts</value>
-  </data>
-  <data name="this.PublishedVideos" xml:space="preserve">
-    <value>this.PublishedVideos</value>
-  </data>
-  <data name="this.Super.GetContents(context.Item, this.UserFacade.BlogId).OfType&lt;OrigamiPost&gt;().Published().Count()" xml:space="preserve">
-    <value>this.Super.GetContents(context.Item, this.UserFacade.BlogID).OfType&lt;OrigamiPost&gt;().Published().Count()</value>
-  </data>
-  <data name="this.Super.GetContents(context.Item, this.UserFacade.BlogId).OfType&lt;OrigamiVideo&gt;().Published().Count()" xml:space="preserve">
-    <value>this.Super.GetContents(context.Item, this.UserFacade.BlogID).OfType&lt;OrigamiVideo&gt;().Published().Count()</value>
-  </data>
   <data name="Thumbnail" xml:space="preserve">
-    <value>Miniatura</value>
+    <value>缩略图</value>
   </data>
   <data name="Time period" xml:space="preserve">
     <value>时间段</value>
   </data>
   <data name="Timezone" xml:space="preserve">
-    <value>Fuso horário</value>
+    <value>时区</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>Título</value>
+    <value>标题</value>
   </data>
   <data name="Title cannot exceed 255 characters" xml:space="preserve">
     <value>标题不能超过 255 个字符</value>
@@ -2206,7 +2068,7 @@
     <value>要提升到首页，该页面必须是顶级</value>
   </data>
   <data name="Trash" xml:space="preserve">
-    <value>Lixo</value>
+    <value>垃圾桶</value>
   </data>
   <data name="Try again to solve this issue" xml:space="preserve">
     <value>再次尝试解决此问题</value>
@@ -2257,7 +2119,7 @@
     <value>解锁用户</value>
   </data>
   <data name="Undo" xml:space="preserve">
-    <value>Desfazer</value>
+    <value>撤销</value>
   </data>
   <data name="Undo changes" xml:space="preserve">
     <value>撤消更改</value>
@@ -2329,7 +2191,7 @@
     <value>取消订阅用户</value>
   </data>
   <data name="Upload" xml:space="preserve">
-    <value>Carregar</value>
+    <value>上传</value>
   </data>
   <data name="Upload files" xml:space="preserve">
     <value>上传文件</value>
@@ -2344,7 +2206,7 @@
     <value>上传文件</value>
   </data>
   <data name="User" xml:space="preserve">
-    <value>Usuário</value>
+    <value>用户</value>
   </data>
   <data name="User actions" xml:space="preserve">
     <value>用户操作</value>
@@ -2362,7 +2224,7 @@
     <value>用户垃圾</value>
   </data>
   <data name="Username" xml:space="preserve">
-    <value>Nome de usuário</value>
+    <value>用户名</value>
   </data>
   <data name="Username (read-only)" xml:space="preserve">
     <value>用户名（只读）</value>
@@ -2377,7 +2239,7 @@
     <value>用户名是必需的</value>
   </data>
   <data name="Users" xml:space="preserve">
-    <value>Usuários</value>
+    <value>用户</value>
   </data>
   <data name="Validate code and finish subscribing" xml:space="preserve">
     <value>验证代码并完成订阅</value>
@@ -2389,19 +2251,19 @@
     <value>验证 TOTP 代码并继续</value>
   </data>
   <data name="Value" xml:space="preserve">
-    <value>Valor</value>
+    <value>值</value>
   </data>
   <data name="Version" xml:space="preserve">
-    <value>Versão</value>
+    <value>版本</value>
   </data>
   <data name="Video" xml:space="preserve">
-    <value>Vídeo</value>
+    <value>视频</value>
   </data>
   <data name="Video cannot be updated" xml:space="preserve">
     <value>视频无法更新</value>
   </data>
   <data name="Videos" xml:space="preserve">
-    <value>Vídeos</value>
+    <value>视频</value>
   </data>
   <data name="Videos comments" xml:space="preserve">
     <value>视频评论</value>
@@ -2461,7 +2323,7 @@
     <value>观看视频</value>
   </data>
   <data name="Warning" xml:space="preserve">
-    <value>Aviso</value>
+    <value>警告</value>
   </data>
   <data name="We need a valid e-mail to subscribe" xml:space="preserve">
     <value>我们需要一个有效的电子邮件来订阅</value>
@@ -2470,7 +2332,7 @@
     <value>我们使用 cookie 和类似技术来增强您的浏览体验、分析网站流量、个性化内容并提供有针对性的广告</value>
   </data>
   <data name="Website" xml:space="preserve">
-    <value>Site</value>
+    <value>网站</value>
   </data>
   <data name="What to see next" xml:space="preserve">
     <value>接下来看什么</value>
@@ -2485,7 +2347,7 @@
     <value>清除用户数据</value>
   </data>
   <data name="Yes" xml:space="preserve">
-    <value>Sim</value>
+    <value>是</value>
   </data>
   <data name="Yes, since" xml:space="preserve">
     <value>是的，自从</value>
@@ -2584,7 +2446,7 @@
     <value>ZIP 文件创建成功。</value>
   </data>
   <data name="Type" xml:space="preserve">
-    <value>Tipo</value>
+    <value>类型</value>
   </data>
   <data name="Yay! Everything went smoothly" xml:space="preserve">
     <value>耶！一切都很顺利</value>

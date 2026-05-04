@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -60,45 +60,45 @@
             : and then encoded with base64 encoding.
     -->
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -241,7 +241,7 @@
     <value>Un processus de restauration est actuellement en cours. Certaines actions sont désactivées jusqu'à ce que le processus soit terminé.</value>
   </data>
   <data name="Accessed" xml:space="preserve">
-    <value>Acessado</value>
+    <value>Accédé</value>
   </data>
   <data name="Activate blog" xml:space="preserve">
     <value>Activer le blog</value>
@@ -250,7 +250,7 @@
     <value>Activer les blogs</value>
   </data>
   <data name="Active" xml:space="preserve">
-    <value>Ativo</value>
+    <value>Actif</value>
   </data>
   <data name="Add comment" xml:space="preserve">
     <value>Ajouter un commentaire</value>
@@ -259,10 +259,10 @@
     <value>Ajouter un dossier</value>
   </data>
   <data name="Admin" xml:space="preserve">
-    <value>Administrador</value>
+    <value>Administrateur</value>
   </data>
   <data name="All" xml:space="preserve">
-    <value>Todos</value>
+    <value>Tous</value>
   </data>
   <data name="All comments" xml:space="preserve">
     <value>Tous les commentaires</value>
@@ -292,10 +292,10 @@
     <value>Et cliquez sur OK pour fermer cette fenêtre pop-up</value>
   </data>
   <data name="Anonymous" xml:space="preserve">
-    <value>Anônimo</value>
+    <value>Anonyme</value>
   </data>
   <data name="Answering" xml:space="preserve">
-    <value>Respondendo</value>
+    <value>En cours de réponse</value>
   </data>
   <data name="Anyway, click here to go back to the Website" xml:space="preserve">
     <value>Quoi qu'il en soit, cliquez ici pour revenir au site Web</value>
@@ -313,7 +313,7 @@
     <value>Secret de l'application</value>
   </data>
   <data name="Approved" xml:space="preserve">
-    <value>Aprovado</value>
+    <value>Approuvé</value>
   </data>
   <data name="Approved comments" xml:space="preserve">
     <value>Commentaires approuvés</value>
@@ -328,13 +328,13 @@
     <value>Es-tu sûr? Vous ne pourrez PAS récupérer ces éléments.</value>
   </data>
   <data name="Author" xml:space="preserve">
-    <value>Autor</value>
+    <value>Auteur</value>
   </data>
   <data name="Author is required" xml:space="preserve">
     <value>L'auteur est requis</value>
   </data>
   <data name="Backup" xml:space="preserve">
-    <value>Backup</value>
+    <value>Sauvegarde</value>
   </data>
   <data name="Backup and restore" xml:space="preserve">
     <value>Sauvegarde et restauration</value>
@@ -349,7 +349,7 @@
     <value>Système de sauvegarde</value>
   </data>
   <data name="Backups" xml:space="preserve">
-    <value>Cópias de segurança</value>
+    <value>Sauvegardes</value>
   </data>
   <data name="BACPAC file created successfully" xml:space="preserve">
     <value>Fichier BACPAC créé avec succès</value>
@@ -361,7 +361,7 @@
     <value>Basé sur le titre</value>
   </data>
   <data name="Basic" xml:space="preserve">
-    <value>Básico</value>
+    <value>De base</value>
   </data>
   <data name="Be careful when choosing a username, you won't be able to change it later" xml:space="preserve">
     <value>Soyez prudent lorsque vous choisissez un nom d'utilisateur, vous ne pourrez pas le modifier par la suite</value>
@@ -382,10 +382,10 @@
     <value>Bloquer les utilisateurs autres que soi</value>
   </data>
   <data name="Blocked" xml:space="preserve">
-    <value>Bloqueado</value>
+    <value>Bloqué</value>
   </data>
   <data name="Blog" xml:space="preserve">
-    <value>Blogue</value>
+    <value>Blog</value>
   </data>
   <data name="Blog could not be found" xml:space="preserve">
     <value>Le blog est introuvable</value>
@@ -403,7 +403,7 @@
     <value>Le blog doit être nul</value>
   </data>
   <data name="Blogs" xml:space="preserve">
-    <value>Blogues</value>
+    <value>Blogs</value>
   </data>
   <data name="Blogs found in the search" xml:space="preserve">
     <value>Blogs trouvés lors de la recherche</value>
@@ -418,7 +418,7 @@
     <value>Navigateur • URL</value>
   </data>
   <data name="Browsers" xml:space="preserve">
-    <value>Navegadores</value>
+    <value>Navigateurs</value>
   </data>
   <data name="But login first" xml:space="preserve">
     <value>Mais connectez-vous d'abord</value>
@@ -460,10 +460,10 @@
     <value>Chemin de rappel</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Cancelar</value>
+    <value>Annuler</value>
   </data>
   <data name="Categories" xml:space="preserve">
-    <value>Categorias</value>
+    <value>Catégories</value>
   </data>
   <data name="Categories found in the search" xml:space="preserve">
     <value>Catégories trouvées dans la recherche</value>
@@ -472,7 +472,7 @@
     <value>Les catégories doivent être uniques</value>
   </data>
   <data name="Category" xml:space="preserve">
-    <value>Categoria</value>
+    <value>Catégorie</value>
   </data>
   <data name="Category must exist" xml:space="preserve">
     <value>La catégorie doit exister</value>
@@ -490,7 +490,7 @@
     <value>Choisissez le style d'arrière-plan</value>
   </data>
   <data name="Clear" xml:space="preserve">
-    <value>Claro</value>
+    <value>Effacer</value>
   </data>
   <data name="Clear cache" xml:space="preserve">
     <value>Vider le cache</value>
@@ -529,7 +529,7 @@
     <value>Secret client</value>
   </data>
   <data name="Close" xml:space="preserve">
-    <value>Fechar</value>
+    <value>Fermer</value>
   </data>
   <data name="Close menu" xml:space="preserve">
     <value>Fermer le menu</value>
@@ -541,7 +541,7 @@
     <value>Ferme la fenêtre</value>
   </data>
   <data name="Comment" xml:space="preserve">
-    <value>Comentário</value>
+    <value>Commentaire</value>
   </data>
   <data name="Comment reactions on posts" xml:space="preserve">
     <value>Commentez les réactions sur les publications</value>
@@ -559,7 +559,7 @@
     <value>commentReaction.Reaction</value>
   </data>
   <data name="Comments" xml:space="preserve">
-    <value>Comentários</value>
+    <value>Commentaires</value>
   </data>
   <data name="Comments [including deleted]" xml:space="preserve">
     <value>Commentaires [y compris supprimés]</value>
@@ -577,13 +577,13 @@
     <value>Confirmez le mot de passe</value>
   </data>
   <data name="Congratulations" xml:space="preserve">
-    <value>Parabéns</value>
+    <value>Félicitations</value>
   </data>
   <data name="Contact an administrator to solve this issue" xml:space="preserve">
     <value>Contactez un administrateur pour résoudre ce problème</value>
   </data>
   <data name="Content" xml:space="preserve">
-    <value>Conteúdo</value>
+    <value>Contenu</value>
   </data>
   <data name="Content must be a valid HTML" xml:space="preserve">
     <value>Le contenu doit être un HTML valide</value>
@@ -604,7 +604,7 @@
     <value>Politique de cookies</value>
   </data>
   <data name="count" xml:space="preserve">
-    <value>contar</value>
+    <value>Nombre</value>
   </data>
   <data name="Create blogs" xml:space="preserve">
     <value>Créer des blogs</value>
@@ -640,7 +640,7 @@
     <value>Créer une limace</value>
   </data>
   <data name="Created" xml:space="preserve">
-    <value>Criado</value>
+    <value>Créé</value>
   </data>
   <data name="Current month" xml:space="preserve">
     <value>Mois en cours</value>
@@ -652,16 +652,16 @@
     <value>Année en cours</value>
   </data>
   <data name="Custom" xml:space="preserve">
-    <value>Personalizado</value>
+    <value>Personnalisé</value>
   </data>
   <data name="Cycle detected: you must choose another parent" xml:space="preserve">
     <value>Cycle détecté : vous devez choisir un autre parent</value>
   </data>
   <data name="Danger" xml:space="preserve">
-    <value>Perigo</value>
+    <value>Danger</value>
   </data>
   <data name="Dashboard" xml:space="preserve">
-    <value>Painel</value>
+    <value>Tableau de bord</value>
   </data>
   <data name="Dashboard analytics" xml:space="preserve">
     <value>Analyse du tableau de bord</value>
@@ -670,7 +670,7 @@
     <value>Base de données restaurée avec succès.</value>
   </data>
   <data name="Date" xml:space="preserve">
-    <value>Data</value>
+    <value>Date</value>
   </data>
   <data name="Date of modification must happen after the creation date" xml:space="preserve">
     <value>La date de modification doit intervenir après la date de création</value>
@@ -757,13 +757,13 @@
     <value>Supprimer des utilisateurs autres que soi</value>
   </data>
   <data name="Deleted" xml:space="preserve">
-    <value>Excluído</value>
+    <value>Supprimé</value>
   </data>
   <data name="Deleted comments" xml:space="preserve">
     <value>Commentaires supprimés</value>
   </data>
   <data name="Deleted?" xml:space="preserve">
-    <value>Excluído?</value>
+    <value>Supprimé ?</value>
   </data>
   <data name="Deleting {0} item(s)" xml:space="preserve">
     <value>Suppression d'un ou plusieurs éléments {0}</value>
@@ -775,7 +775,7 @@
     <value>Rétrograder de la première page</value>
   </data>
   <data name="Description" xml:space="preserve">
-    <value>Descrição</value>
+    <value>Description</value>
   </data>
   <data name="Description cannot exceed {0} characters" xml:space="preserve">
     <value>La description ne peut pas dépasser les caractères {0}</value>
@@ -805,13 +805,13 @@
     <value>Ne partagez ce lien avec personne d'autre</value>
   </data>
   <data name="Done" xml:space="preserve">
-    <value>Feito</value>
+    <value>Terminé</value>
   </data>
   <data name="Download" xml:space="preserve">
-    <value>Download</value>
+    <value>Télécharger</value>
   </data>
   <data name="Draft" xml:space="preserve">
-    <value>Rascunho</value>
+    <value>Brouillon</value>
   </data>
   <data name="Draft pages" xml:space="preserve">
     <value>Brouillons de pages</value>
@@ -829,7 +829,7 @@
     <value>Brouillons de vidéos</value>
   </data>
   <data name="Drafts" xml:space="preserve">
-    <value>Rascunhos</value>
+    <value>Brouillons</value>
   </data>
   <data name="E-mail" xml:space="preserve">
     <value>E-mail</value>
@@ -913,7 +913,7 @@
     <value>Point de terminaison (URL)</value>
   </data>
   <data name="Enter" xml:space="preserve">
-    <value>Digitar</value>
+    <value>Entrer</value>
   </data>
   <data name="Enter incognito" xml:space="preserve">
     <value>Entrez en mode navigation privée</value>
@@ -979,16 +979,16 @@
     <value>Entity.TOTPSecret.Has().YesNo()</value>
   </data>
   <data name="Error" xml:space="preserve">
-    <value>Erro</value>
+    <value>Erreur</value>
   </data>
   <data name="Error parsing the JSON file" xml:space="preserve">
     <value>Erreur lors de l'analyse du fichier JSON</value>
   </data>
   <data name="Everything" xml:space="preserve">
-    <value>Tudo</value>
+    <value>Tout</value>
   </data>
   <data name="Extension" xml:space="preserve">
-    <value>Extensão</value>
+    <value>Extension</value>
   </data>
   <data name="Facebook" xml:space="preserve">
     <value>Facebook</value>
@@ -1009,10 +1009,10 @@
     <value>Échec de la réinitialisation du mot de passe de l'utilisateur</value>
   </data>
   <data name="Feeds" xml:space="preserve">
-    <value>Feeds</value>
+    <value>Flux</value>
   </data>
   <data name="field" xml:space="preserve">
-    <value>campo</value>
+    <value>Champ</value>
   </data>
   <data name="File is too large" xml:space="preserve">
     <value>Le fichier est trop volumineux</value>
@@ -1021,10 +1021,10 @@
     <value>Gestionnaire de fichiers</value>
   </data>
   <data name="Filler" xml:space="preserve">
-    <value>Preenchimento</value>
+    <value>Remplissage</value>
   </data>
   <data name="Filter" xml:space="preserve">
-    <value>Filtro</value>
+    <value>Filtre</value>
   </data>
   <data name="First name" xml:space="preserve">
     <value>Prénom</value>
@@ -1042,7 +1042,7 @@
     <value>Première page</value>
   </data>
   <data name="General" xml:space="preserve">
-    <value>Em geral</value>
+    <value>Général</value>
   </data>
   <data name="GitHub" xml:space="preserve">
     <value>GitHub</value>
@@ -1066,7 +1066,7 @@
     <value>Accorder le modérateur à l'utilisateur</value>
   </data>
   <data name="Header" xml:space="preserve">
-    <value>Cabeçalho</value>
+    <value>En-tête</value>
   </data>
   <data name="Header image must be valid" xml:space="preserve">
     <value>L'image d'en-tête doit être valide</value>
@@ -1075,13 +1075,13 @@
     <value>Voici votre code de vérification pour {0}</value>
   </data>
   <data name="History" xml:space="preserve">
-    <value>História</value>
+    <value>Historique</value>
   </data>
   <data name="How to delete your data" xml:space="preserve">
     <value>Comment supprimer vos données</value>
   </data>
   <data name="Id" xml:space="preserve">
-    <value>Id</value>
+    <value>ID</value>
   </data>
   <data name="Id is required" xml:space="preserve">
     <value>Une pièce d'identité est requise</value>
@@ -1102,7 +1102,7 @@
     <value>Mode navigation privée</value>
   </data>
   <data name="Info" xml:space="preserve">
-    <value>Informações</value>
+    <value>Infos</value>
   </data>
   <data name="Instagram" xml:space="preserve">
     <value>Instagram</value>
@@ -1126,19 +1126,19 @@
     <value>Conservez ces codes de récupération dans un endroit sûr</value>
   </data>
   <data name="Key" xml:space="preserve">
-    <value>Chave</value>
+    <value>Clé</value>
   </data>
   <data name="Keywords" xml:space="preserve">
-    <value>Palavras-chave</value>
+    <value>Mots-clés</value>
   </data>
   <data name="Language" xml:space="preserve">
-    <value>Linguagem</value>
+    <value>Langue</value>
   </data>
   <data name="Language must be valid" xml:space="preserve">
     <value>La langue doit être valide</value>
   </data>
   <data name="Large" xml:space="preserve">
-    <value>Grande</value>
+    <value>Grand</value>
   </data>
   <data name="Last 180 days" xml:space="preserve">
     <value>180 derniers jours</value>
@@ -1174,7 +1174,7 @@
     <value>Dernières nouvelles</value>
   </data>
   <data name="Leave" xml:space="preserve">
-    <value>Sair</value>
+    <value>Quitter</value>
   </data>
   <data name="Leave incognito" xml:space="preserve">
     <value>Quitter la navigation privée</value>
@@ -1183,7 +1183,7 @@
     <value>Quitter le mode maintenance</value>
   </data>
   <data name="link" xml:space="preserve">
-    <value>link</value>
+    <value>Lien</value>
   </data>
   <data name="LinkedIn" xml:space="preserve">
     <value>LinkedIn</value>
@@ -1198,7 +1198,7 @@
     <value>Se déconnecter</value>
   </data>
   <data name="Login" xml:space="preserve">
-    <value>Conecte-se</value>
+    <value>Se connecter</value>
   </data>
   <data name="Login to quick reply" xml:space="preserve">
     <value>Connectez-vous pour répondre rapidement</value>
@@ -1210,19 +1210,19 @@
     <value>Connectez-vous pour réagir</value>
   </data>
   <data name="Logo" xml:space="preserve">
-    <value>Logotipo</value>
+    <value>Logo</value>
   </data>
   <data name="Logo • Avatar" xml:space="preserve">
     <value>Logo • Avatar</value>
   </data>
   <data name="Logout" xml:space="preserve">
-    <value>Sair</value>
+    <value>Se déconnecter</value>
   </data>
   <data name="Loop in relationships are not allowed" xml:space="preserve">
     <value>Les relations en boucle ne sont pas autorisées</value>
   </data>
   <data name="Maintenance" xml:space="preserve">
-    <value>Manutenção</value>
+    <value>Maintenance</value>
   </data>
   <data name="Make primary" xml:space="preserve">
     <value>Rendre primaire</value>
@@ -1246,13 +1246,13 @@
     <value>Peut-être plus tard</value>
   </data>
   <data name="Medium" xml:space="preserve">
-    <value>Médio</value>
+    <value>Moyen</value>
   </data>
   <data name="Microsoft" xml:space="preserve">
     <value>Microsoft</value>
   </data>
   <data name="Misc" xml:space="preserve">
-    <value>Diversos</value>
+    <value>Divers</value>
   </data>
   <data name="Moderate comments" xml:space="preserve">
     <value>Commentaires modérés</value>
@@ -1261,10 +1261,10 @@
     <value>Modéré par</value>
   </data>
   <data name="Moderator" xml:space="preserve">
-    <value>Moderador</value>
+    <value>Modérateur</value>
   </data>
   <data name="Modified" xml:space="preserve">
-    <value>Modificado</value>
+    <value>Modifié</value>
   </data>
   <data name="Most popular" xml:space="preserve">
     <value>Le plus populaire</value>
@@ -1279,7 +1279,7 @@
     <value>Se déplace vers le haut dans la liste</value>
   </data>
   <data name="Name" xml:space="preserve">
-    <value>Nome</value>
+    <value>Nom</value>
   </data>
   <data name="Name (website)" xml:space="preserve">
     <value>Nom (site Web)</value>
@@ -1300,7 +1300,7 @@
     <value>Un nano-identifiant est requis</value>
   </data>
   <data name="New" xml:space="preserve">
-    <value>Novo</value>
+    <value>Nouveau</value>
   </data>
   <data name="New folder" xml:space="preserve">
     <value>Nouveau dossier</value>
@@ -1315,7 +1315,7 @@
     <value>Les nouveaux mots de passe ne correspondent PAS, ils diffèrent les uns des autres</value>
   </data>
   <data name="No" xml:space="preserve">
-    <value>Não</value>
+    <value>Non</value>
   </data>
   <data name="No categories whatsoever" xml:space="preserve">
     <value>Aucune catégorie du tout</value>
@@ -1357,13 +1357,13 @@
     <value>Aucune vidéo du tout</value>
   </data>
   <data name="None" xml:space="preserve">
-    <value>Nenhum</value>
+    <value>Aucun</value>
   </data>
   <data name="Not specified" xml:space="preserve">
     <value>Non spécifié</value>
   </data>
   <data name="Note" xml:space="preserve">
-    <value>Observação</value>
+    <value>Note</value>
   </data>
   <data name="Note cannot exceed {0} characters" xml:space="preserve">
     <value>La note ne peut pas dépasser les caractères {0}</value>
@@ -1390,7 +1390,7 @@
     <value>Uniquement les fichiers vidéo</value>
   </data>
   <data name="Oops" xml:space="preserve">
-    <value>Ops</value>
+    <value>Oups</value>
   </data>
   <data name="Oops, this key is not valid or it was already used to reset your password" xml:space="preserve">
     <value>Oups, cette clé n'est pas valide ou elle a déjà été utilisée pour réinitialiser votre mot de passe</value>
@@ -1420,7 +1420,7 @@
     <value>P</value>
   </data>
   <data name="Page" xml:space="preserve">
-    <value>Página</value>
+    <value>Page</value>
   </data>
   <data name="Page cannot be retrieved" xml:space="preserve">
     <value>La page ne peut pas être récupérée</value>
@@ -1438,19 +1438,19 @@
     <value>Page introuvable</value>
   </data>
   <data name="Pages" xml:space="preserve">
-    <value>Páginas</value>
+    <value>Pages</value>
   </data>
   <data name="Pages found in the search" xml:space="preserve">
     <value>Pages trouvées dans la recherche</value>
   </data>
   <data name="Parent" xml:space="preserve">
-    <value>Pai</value>
+    <value>Parent</value>
   </data>
   <data name="Parent category" xml:space="preserve">
     <value>Catégorie parente</value>
   </data>
   <data name="Password" xml:space="preserve">
-    <value>Senha</value>
+    <value>Mot de passe</value>
   </data>
   <data name="Password has been reset successfully" xml:space="preserve">
     <value>Le mot de passe a été réinitialisé avec succès</value>
@@ -1468,7 +1468,7 @@
     <value>Collez votre iframe HTML ici pour l'intégrer, comme YouTube, etc.</value>
   </data>
   <data name="Path" xml:space="preserve">
-    <value>Caminho</value>
+    <value>Chemin</value>
   </data>
   <data name="People online" xml:space="preserve">
     <value>Personnes en ligne</value>
@@ -1486,7 +1486,7 @@
     <value>Épingler le commentaire</value>
   </data>
   <data name="Pinned" xml:space="preserve">
-    <value>Fixado</value>
+    <value>Épinglé</value>
   </data>
   <data name="Pinned by" xml:space="preserve">
     <value>Épinglé par</value>
@@ -1495,7 +1495,7 @@
     <value>Placez votre commentaire ici</value>
   </data>
   <data name="Platforms" xml:space="preserve">
-    <value>Plataformas</value>
+    <value>Plateformes</value>
   </data>
   <data name="Please, talk to a system administrator" xml:space="preserve">
     <value>S'il vous plaît, parlez à un administrateur système</value>
@@ -1504,7 +1504,7 @@
     <value>S'il vous plaît, réessayez plus tard</value>
   </data>
   <data name="Post" xml:space="preserve">
-    <value>Publicar</value>
+    <value>Publication</value>
   </data>
   <data name="postRating.Rating" xml:space="preserve">
     <value>postRating.Rating</value>
@@ -1513,7 +1513,7 @@
     <value>postReaction.Reaction</value>
   </data>
   <data name="Posts" xml:space="preserve">
-    <value>Postagens</value>
+    <value>Publications</value>
   </data>
   <data name="Posts comments" xml:space="preserve">
     <value>Publie des commentaires</value>
@@ -1525,7 +1525,7 @@
     <value>Articles, vidéos</value>
   </data>
   <data name="Primary" xml:space="preserve">
-    <value>Primário</value>
+    <value>Principal</value>
   </data>
   <data name="Primary blog cannot be deactivated" xml:space="preserve">
     <value>Le blog principal ne peut pas être désactivé</value>
@@ -1537,7 +1537,7 @@
     <value>Politique de confidentialité</value>
   </data>
   <data name="Profile" xml:space="preserve">
-    <value>Perfil</value>
+    <value>Profil</value>
   </data>
   <data name="Profile data was wiped out" xml:space="preserve">
     <value>Les données de profil ont été effacées</value>
@@ -1549,7 +1549,7 @@
     <value>Profil introuvable</value>
   </data>
   <data name="Progress" xml:space="preserve">
-    <value>Progresso</value>
+    <value>Progression</value>
   </data>
   <data name="Promote to front-page" xml:space="preserve">
     <value>Promouvoir en première page</value>
@@ -1609,7 +1609,7 @@
     <value>Publier des vidéos</value>
   </data>
   <data name="Published" xml:space="preserve">
-    <value>Publicado</value>
+    <value>Publié</value>
   </data>
   <data name="Published pages" xml:space="preserve">
     <value>Pages publiées</value>
@@ -1687,7 +1687,7 @@
     <value>Noté {0} sur :</value>
   </data>
   <data name="Rating" xml:space="preserve">
-    <value>Avaliação</value>
+    <value>Évaluation</value>
   </data>
   <data name="Rating 1 is not accounted for in the final rating" xml:space="preserve">
     <value>La note 1 n'est pas prise en compte dans la note finale</value>
@@ -1702,7 +1702,7 @@
     <value>rating.Rating</value>
   </data>
   <data name="Ratings" xml:space="preserve">
-    <value>Avaliações</value>
+    <value>Évaluations</value>
   </data>
   <data name="Ratings on posts" xml:space="preserve">
     <value>Notes sur les publications</value>
@@ -1723,7 +1723,7 @@
     <value>reaction.Reaction</value>
   </data>
   <data name="Reactions" xml:space="preserve">
-    <value>Reações</value>
+    <value>Réactions</value>
   </data>
   <data name="Refresh your browser" xml:space="preserve">
     <value>Actualisez votre navigateur</value>
@@ -1750,7 +1750,7 @@
     <value>Date de sortie</value>
   </data>
   <data name="Reload" xml:space="preserve">
-    <value>Recarregar</value>
+    <value>Recharger</value>
   </data>
   <data name="Remove picture" xml:space="preserve">
     <value>Supprimer l'image</value>
@@ -1762,7 +1762,7 @@
     <value>replies.Count()</value>
   </data>
   <data name="Reply" xml:space="preserve">
-    <value>Responder</value>
+    <value>Répondre</value>
   </data>
   <data name="Reply comment" xml:space="preserve">
     <value>Répondre au commentaire</value>
@@ -1777,7 +1777,7 @@
     <value>Effacement des demandes d’informations</value>
   </data>
   <data name="Reset" xml:space="preserve">
-    <value>Reiniciar</value>
+    <value>Réinitialiser</value>
   </data>
   <data name="Reset 2FA" xml:space="preserve">
     <value>Réinitialiser 2FA</value>
@@ -1798,7 +1798,7 @@
     <value>Réinitialiser le mot de passe</value>
   </data>
   <data name="Restore" xml:space="preserve">
-    <value>Restaurar</value>
+    <value>Restaurer</value>
   </data>
   <data name="Restore blogs" xml:space="preserve">
     <value>Restaurer des blogs</value>
@@ -1858,10 +1858,10 @@
     <value>Révoquer les rôles de modérateur des profils sociaux</value>
   </data>
   <data name="Role" xml:space="preserve">
-    <value>Papel</value>
+    <value>Rôle</value>
   </data>
   <data name="Roles" xml:space="preserve">
-    <value>Funções</value>
+    <value>Rôles</value>
   </data>
   <data name="Roles are up-to-date" xml:space="preserve">
     <value>Les rôles sont à jour</value>
@@ -1891,7 +1891,7 @@
     <value>Le flux RSS doit être une adresse de site Web valide</value>
   </data>
   <data name="Save" xml:space="preserve">
-    <value>Salvar</value>
+    <value>Enregistrer</value>
   </data>
   <data name="Save and publish" xml:space="preserve">
     <value>Enregistrer et publier</value>
@@ -1909,7 +1909,7 @@
     <value>Scannez ce code QR avec votre application d'authentification</value>
   </data>
   <data name="Search" xml:space="preserve">
-    <value>Procurar</value>
+    <value>Rechercher</value>
   </data>
   <data name="See browser dev tools for details" xml:space="preserve">
     <value>Voir les outils de développement du navigateur pour plus de détails</value>
@@ -1966,19 +1966,19 @@
     <value>Envoyer le code de vérification</value>
   </data>
   <data name="Settings" xml:space="preserve">
-    <value>Configurações</value>
+    <value>Paramètres</value>
   </data>
   <data name="settings.Name" xml:space="preserve">
     <value>settings.Name</value>
   </data>
   <data name="Size" xml:space="preserve">
-    <value>Tamanho</value>
+    <value>Taille</value>
   </data>
   <data name="Slow" xml:space="preserve">
-    <value>Lento</value>
+    <value>Lent</value>
   </data>
   <data name="Slug" xml:space="preserve">
-    <value>Lesma</value>
+    <value>Slug</value>
   </data>
   <data name="Slug cannot exceed {0} characters" xml:space="preserve">
     <value>Slug ne peut pas dépasser les caractères {0}</value>
@@ -1987,7 +1987,7 @@
     <value>Slug est déjà utilisé</value>
   </data>
   <data name="Small" xml:space="preserve">
-    <value>Pequeno</value>
+    <value>Petit</value>
   </data>
   <data name="SMTP password" xml:space="preserve">
     <value>Mot de passe SMTP</value>
@@ -2065,46 +2065,46 @@
     <value>La date de début ne peut pas être postérieure à la date de fin</value>
   </data>
   <data name="Stats" xml:space="preserve">
-    <value>Estatísticas</value>
+    <value>Statistiques</value>
   </data>
   <data name="Status" xml:space="preserve">
-    <value>Status</value>
+    <value>Statut</value>
   </data>
   <data name="Still a draft?" xml:space="preserve">
     <value>Encore une ébauche ?</value>
   </data>
   <data name="Stop" xml:space="preserve">
-    <value>Parar</value>
+    <value>Arrêter</value>
   </data>
   <data name="Stops the timer" xml:space="preserve">
     <value>Arrête le chronomètre</value>
   </data>
   <data name="Subscribe" xml:space="preserve">
-    <value>Inscrever-se</value>
+    <value>S’abonner</value>
   </data>
   <data name="Subscribe to the website" xml:space="preserve">
     <value>Abonnez-vous au site</value>
   </data>
   <data name="Subscriber" xml:space="preserve">
-    <value>Assinante</value>
+    <value>Abonné</value>
   </data>
   <data name="Subscriber(s)" xml:space="preserve">
     <value>Abonné(s)</value>
   </data>
   <data name="Success" xml:space="preserve">
-    <value>Sucesso</value>
+    <value>Succès</value>
   </data>
   <data name="System role" xml:space="preserve">
     <value>Rôle système</value>
   </data>
   <data name="Tag" xml:space="preserve">
-    <value>Marcação</value>
+    <value>Étiquette</value>
   </data>
   <data name="Tag cannot exceed {0} characters" xml:space="preserve">
     <value>La balise ne peut pas dépasser les caractères {0}</value>
   </data>
   <data name="Tags" xml:space="preserve">
-    <value>Etiquetas</value>
+    <value>Étiquettes</value>
   </data>
   <data name="Tags found in the search" xml:space="preserve">
     <value>Tags trouvés dans la recherche</value>
@@ -2185,16 +2185,16 @@
     <value>this.Super.GetContents(context.Item, this.UserFacade.BlogID).OfType&lt;OrigamiVideo&gt;().Published().Count()</value>
   </data>
   <data name="Thumbnail" xml:space="preserve">
-    <value>Miniatura</value>
+    <value>Miniature</value>
   </data>
   <data name="Time period" xml:space="preserve">
     <value>Période</value>
   </data>
   <data name="Timezone" xml:space="preserve">
-    <value>Fuso horário</value>
+    <value>Fuseau horaire</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>Título</value>
+    <value>Titre</value>
   </data>
   <data name="Title cannot exceed 255 characters" xml:space="preserve">
     <value>Le titre ne peut pas dépasser 255 caractères</value>
@@ -2206,7 +2206,7 @@
     <value>Pour être promu en première page, cette page doit être de premier niveau</value>
   </data>
   <data name="Trash" xml:space="preserve">
-    <value>Lixo</value>
+    <value>Corbeille</value>
   </data>
   <data name="Try again to solve this issue" xml:space="preserve">
     <value>Réessayez pour résoudre ce problème</value>
@@ -2257,7 +2257,7 @@
     <value>Débloquer les utilisateurs</value>
   </data>
   <data name="Undo" xml:space="preserve">
-    <value>Desfazer</value>
+    <value>Annuler</value>
   </data>
   <data name="Undo changes" xml:space="preserve">
     <value>Annuler les modifications</value>
@@ -2329,7 +2329,7 @@
     <value>Désinscrire l'utilisateur</value>
   </data>
   <data name="Upload" xml:space="preserve">
-    <value>Carregar</value>
+    <value>Téléverser</value>
   </data>
   <data name="Upload files" xml:space="preserve">
     <value>Télécharger des fichiers</value>
@@ -2344,7 +2344,7 @@
     <value>Télécharger un fichier</value>
   </data>
   <data name="User" xml:space="preserve">
-    <value>Usuário</value>
+    <value>Utilisateur</value>
   </data>
   <data name="User actions" xml:space="preserve">
     <value>Actions de l'utilisateur</value>
@@ -2362,7 +2362,7 @@
     <value>Les utilisateurs suppriment</value>
   </data>
   <data name="Username" xml:space="preserve">
-    <value>Nome de usuário</value>
+    <value>Nom d’utilisateur</value>
   </data>
   <data name="Username (read-only)" xml:space="preserve">
     <value>Nom d'utilisateur (lecture seule)</value>
@@ -2377,7 +2377,7 @@
     <value>Le nom d'utilisateur est requis</value>
   </data>
   <data name="Users" xml:space="preserve">
-    <value>Usuários</value>
+    <value>Utilisateurs</value>
   </data>
   <data name="Validate code and finish subscribing" xml:space="preserve">
     <value>Validez le code et terminez votre inscription</value>
@@ -2389,19 +2389,19 @@
     <value>Validez le code TOTP et continuez</value>
   </data>
   <data name="Value" xml:space="preserve">
-    <value>Valor</value>
+    <value>Valeur</value>
   </data>
   <data name="Version" xml:space="preserve">
-    <value>Versão</value>
+    <value>Version</value>
   </data>
   <data name="Video" xml:space="preserve">
-    <value>Vídeo</value>
+    <value>Vidéo</value>
   </data>
   <data name="Video cannot be updated" xml:space="preserve">
     <value>La vidéo ne peut pas être mise à jour</value>
   </data>
   <data name="Videos" xml:space="preserve">
-    <value>Vídeos</value>
+    <value>Vidéos</value>
   </data>
   <data name="Videos comments" xml:space="preserve">
     <value>Commentaires sur les vidéos</value>
@@ -2461,7 +2461,7 @@
     <value>Voir les vidéos</value>
   </data>
   <data name="Warning" xml:space="preserve">
-    <value>Aviso</value>
+    <value>Avertissement</value>
   </data>
   <data name="We need a valid e-mail to subscribe" xml:space="preserve">
     <value>Nous avons besoin d'un e-mail valide pour vous abonner</value>
@@ -2470,7 +2470,7 @@
     <value>Nous utilisons des cookies et des technologies similaires pour améliorer votre expérience de navigation, analyser le trafic du site, personnaliser le contenu et diffuser des publicités ciblées.</value>
   </data>
   <data name="Website" xml:space="preserve">
-    <value>Site</value>
+    <value>Site web</value>
   </data>
   <data name="What to see next" xml:space="preserve">
     <value>Que voir ensuite</value>
@@ -2485,7 +2485,7 @@
     <value>Effacer les données utilisateur</value>
   </data>
   <data name="Yes" xml:space="preserve">
-    <value>Sim</value>
+    <value>Oui</value>
   </data>
   <data name="Yes, since" xml:space="preserve">
     <value>Oui, depuis</value>
@@ -2584,7 +2584,7 @@
     <value>Fichier ZIP créé avec succès.</value>
   </data>
   <data name="Type" xml:space="preserve">
-    <value>Tipo</value>
+    <value>Type</value>
   </data>
   <data name="Yay! Everything went smoothly" xml:space="preserve">
     <value>Ouais! Tout s'est bien passé</value>

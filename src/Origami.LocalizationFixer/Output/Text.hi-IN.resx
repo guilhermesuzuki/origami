@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -60,45 +60,45 @@
             : and then encoded with base64 encoding.
     -->
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -241,7 +241,7 @@
     <value>एक पुनर्स्थापना प्रक्रिया वर्तमान में चल रही है. प्रक्रिया पूरी होने तक कुछ क्रियाएँ अक्षम हैं।</value>
   </data>
   <data name="Accessed" xml:space="preserve">
-    <value>Acessado</value>
+    <value>एक्सेस किया गया</value>
   </data>
   <data name="Activate blog" xml:space="preserve">
     <value>ब्लॉग सक्रिय करें</value>
@@ -250,7 +250,7 @@
     <value>ब्लॉग सक्रिय करें</value>
   </data>
   <data name="Active" xml:space="preserve">
-    <value>Ativo</value>
+    <value>सक्रिय</value>
   </data>
   <data name="Add comment" xml:space="preserve">
     <value>टिप्पणी जोड़ना</value>
@@ -259,10 +259,10 @@
     <value>फ़ोल्डर जोड़ें</value>
   </data>
   <data name="Admin" xml:space="preserve">
-    <value>Administrador</value>
+    <value>प्रशासक</value>
   </data>
   <data name="All" xml:space="preserve">
-    <value>Todos</value>
+    <value>सभी</value>
   </data>
   <data name="All comments" xml:space="preserve">
     <value>सभी टिप्पणियाँ</value>
@@ -292,10 +292,10 @@
     <value>और इस पॉप-अप विंडो को बंद करने के लिए ओके पर क्लिक करें</value>
   </data>
   <data name="Anonymous" xml:space="preserve">
-    <value>Anônimo</value>
+    <value>गुमनाम</value>
   </data>
   <data name="Answering" xml:space="preserve">
-    <value>Respondendo</value>
+    <value>उत्तर दे रहा है</value>
   </data>
   <data name="Anyway, click here to go back to the Website" xml:space="preserve">
     <value>वैसे भी, वेबसाइट पर वापस जाने के लिए यहां क्लिक करें</value>
@@ -313,7 +313,7 @@
     <value>ऐप रहस्य</value>
   </data>
   <data name="Approved" xml:space="preserve">
-    <value>Aprovado</value>
+    <value>स्वीकृत</value>
   </data>
   <data name="Approved comments" xml:space="preserve">
     <value>स्वीकृत टिप्पणियाँ</value>
@@ -328,13 +328,13 @@
     <value>क्या आपको यकीन है? आप इन वस्तुओं को पुनर्प्राप्त नहीं कर पाएंगे.</value>
   </data>
   <data name="Author" xml:space="preserve">
-    <value>Autor</value>
+    <value>लेखक</value>
   </data>
   <data name="Author is required" xml:space="preserve">
     <value>लेखक आवश्यक है</value>
   </data>
   <data name="Backup" xml:space="preserve">
-    <value>Backup</value>
+    <value>बैकअप</value>
   </data>
   <data name="Backup and restore" xml:space="preserve">
     <value>बैकअप और पुनर्स्थापना</value>
@@ -349,7 +349,7 @@
     <value>बैकअप प्रणाली</value>
   </data>
   <data name="Backups" xml:space="preserve">
-    <value>Cópias de segurança</value>
+    <value>बैकअप</value>
   </data>
   <data name="BACPAC file created successfully" xml:space="preserve">
     <value>BACPAC फ़ाइल सफलतापूर्वक बनाई गई</value>
@@ -361,7 +361,7 @@
     <value>शीर्षक के आधार पर</value>
   </data>
   <data name="Basic" xml:space="preserve">
-    <value>Básico</value>
+    <value>मूल</value>
   </data>
   <data name="Be careful when choosing a username, you won't be able to change it later" xml:space="preserve">
     <value>उपयोगकर्ता नाम चुनते समय सावधान रहें, आप इसे बाद में नहीं बदल पाएंगे</value>
@@ -382,10 +382,10 @@
     <value>स्वयं के अलावा अन्य उपयोगकर्ताओं को ब्लॉक करें</value>
   </data>
   <data name="Blocked" xml:space="preserve">
-    <value>Bloqueado</value>
+    <value>अवरुद्ध</value>
   </data>
   <data name="Blog" xml:space="preserve">
-    <value>Blogue</value>
+    <value>ब्लॉग</value>
   </data>
   <data name="Blog could not be found" xml:space="preserve">
     <value>ब्लॉग नहीं मिल सका</value>
@@ -403,7 +403,7 @@
     <value>ब्लॉग शून्य होना चाहिए</value>
   </data>
   <data name="Blogs" xml:space="preserve">
-    <value>Blogues</value>
+    <value>ब्लॉग</value>
   </data>
   <data name="Blogs found in the search" xml:space="preserve">
     <value>खोज में ब्लॉग मिले</value>
@@ -418,7 +418,7 @@
     <value>ब्राउज़र • यूआरएल</value>
   </data>
   <data name="Browsers" xml:space="preserve">
-    <value>Navegadores</value>
+    <value>ब्राउज़र</value>
   </data>
   <data name="But login first" xml:space="preserve">
     <value>लेकिन पहले लॉगिन करें</value>
@@ -460,10 +460,10 @@
     <value>कॉलबैक पथ</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Cancelar</value>
+    <value>रद्द करें</value>
   </data>
   <data name="Categories" xml:space="preserve">
-    <value>Categorias</value>
+    <value>श्रेणियाँ</value>
   </data>
   <data name="Categories found in the search" xml:space="preserve">
     <value>खोज में श्रेणियाँ मिलीं</value>
@@ -472,7 +472,7 @@
     <value>श्रेणियाँ अद्वितीय होनी चाहिए</value>
   </data>
   <data name="Category" xml:space="preserve">
-    <value>Categoria</value>
+    <value>श्रेणी</value>
   </data>
   <data name="Category must exist" xml:space="preserve">
     <value>श्रेणी मौजूद होनी चाहिए</value>
@@ -490,7 +490,7 @@
     <value>पृष्ठभूमि शैली चुनें</value>
   </data>
   <data name="Clear" xml:space="preserve">
-    <value>Claro</value>
+    <value>साफ़ करें</value>
   </data>
   <data name="Clear cache" xml:space="preserve">
     <value>कैश को साफ़ करें</value>
@@ -529,7 +529,7 @@
     <value>ग्राहक रहस्य</value>
   </data>
   <data name="Close" xml:space="preserve">
-    <value>Fechar</value>
+    <value>बंद करें</value>
   </data>
   <data name="Close menu" xml:space="preserve">
     <value>मेनू बंद करें</value>
@@ -541,7 +541,7 @@
     <value>विंडो बंद कर देता है</value>
   </data>
   <data name="Comment" xml:space="preserve">
-    <value>Comentário</value>
+    <value>टिप्पणी</value>
   </data>
   <data name="Comment reactions on posts" xml:space="preserve">
     <value>पोस्ट पर प्रतिक्रियाएँ टिप्पणी करें</value>
@@ -559,7 +559,7 @@
     <value>commentReaction.Reaction</value>
   </data>
   <data name="Comments" xml:space="preserve">
-    <value>Comentários</value>
+    <value>टिप्पणियाँ</value>
   </data>
   <data name="Comments [including deleted]" xml:space="preserve">
     <value>टिप्पणियाँ [हटाए गए सहित]</value>
@@ -577,13 +577,13 @@
     <value>पासवर्ड की पुष्टि कीजिये</value>
   </data>
   <data name="Congratulations" xml:space="preserve">
-    <value>Parabéns</value>
+    <value>बधाई हो</value>
   </data>
   <data name="Contact an administrator to solve this issue" xml:space="preserve">
     <value>इस समस्या को हल करने के लिए किसी व्यवस्थापक से संपर्क करें</value>
   </data>
   <data name="Content" xml:space="preserve">
-    <value>Conteúdo</value>
+    <value>सामग्री</value>
   </data>
   <data name="Content must be a valid HTML" xml:space="preserve">
     <value>सामग्री एक वैध HTML होनी चाहिए</value>
@@ -604,7 +604,7 @@
     <value>कूकी नीति</value>
   </data>
   <data name="count" xml:space="preserve">
-    <value>contar</value>
+    <value>संख्या</value>
   </data>
   <data name="Create blogs" xml:space="preserve">
     <value>ब्लॉग बनाएं</value>
@@ -640,7 +640,7 @@
     <value>स्लग बनाएँ</value>
   </data>
   <data name="Created" xml:space="preserve">
-    <value>Criado</value>
+    <value>बनाया गया</value>
   </data>
   <data name="Current month" xml:space="preserve">
     <value>अभी चल रहा माह</value>
@@ -652,16 +652,16 @@
     <value>चालू वर्ष</value>
   </data>
   <data name="Custom" xml:space="preserve">
-    <value>Personalizado</value>
+    <value>अनुकूलित</value>
   </data>
   <data name="Cycle detected: you must choose another parent" xml:space="preserve">
     <value>चक्र का पता चला: आपको किसी अन्य अभिभावक को चुनना होगा</value>
   </data>
   <data name="Danger" xml:space="preserve">
-    <value>Perigo</value>
+    <value>खतरा</value>
   </data>
   <data name="Dashboard" xml:space="preserve">
-    <value>Painel</value>
+    <value>डैशबोर्ड</value>
   </data>
   <data name="Dashboard analytics" xml:space="preserve">
     <value>डैशबोर्ड विश्लेषण</value>
@@ -670,7 +670,7 @@
     <value>डेटाबेस सफलतापूर्वक पुनर्स्थापित किया गया.</value>
   </data>
   <data name="Date" xml:space="preserve">
-    <value>Data</value>
+    <value>दिनांक</value>
   </data>
   <data name="Date of modification must happen after the creation date" xml:space="preserve">
     <value>संशोधन की तिथि निर्माण तिथि के बाद होनी चाहिए</value>
@@ -757,13 +757,13 @@
     <value>स्वयं के अलावा अन्य उपयोगकर्ताओं को हटाएं</value>
   </data>
   <data name="Deleted" xml:space="preserve">
-    <value>Excluído</value>
+    <value>हटाया गया</value>
   </data>
   <data name="Deleted comments" xml:space="preserve">
     <value>टिप्पणियाँ हटा दी गईं</value>
   </data>
   <data name="Deleted?" xml:space="preserve">
-    <value>Excluído?</value>
+    <value>हटाया गया?</value>
   </data>
   <data name="Deleting {0} item(s)" xml:space="preserve">
     <value>{0} आइटम हटाना</value>
@@ -775,7 +775,7 @@
     <value>प्रथम पृष्ठ से पदावनत किया जा रहा है</value>
   </data>
   <data name="Description" xml:space="preserve">
-    <value>Descrição</value>
+    <value>विवरण</value>
   </data>
   <data name="Description cannot exceed {0} characters" xml:space="preserve">
     <value>विवरण {0} वर्णों से अधिक नहीं हो सकता</value>
@@ -805,13 +805,13 @@
     <value>उस लिंक को किसी और के साथ साझा न करें</value>
   </data>
   <data name="Done" xml:space="preserve">
-    <value>Feito</value>
+    <value>पूर्ण</value>
   </data>
   <data name="Download" xml:space="preserve">
-    <value>Download</value>
+    <value>डाउनलोड</value>
   </data>
   <data name="Draft" xml:space="preserve">
-    <value>Rascunho</value>
+    <value>ड्राफ्ट</value>
   </data>
   <data name="Draft pages" xml:space="preserve">
     <value>ड्राफ्ट पेज</value>
@@ -829,7 +829,7 @@
     <value>ड्राफ्ट वीडियो</value>
   </data>
   <data name="Drafts" xml:space="preserve">
-    <value>Rascunhos</value>
+    <value>ड्राफ्ट</value>
   </data>
   <data name="E-mail" xml:space="preserve">
     <value>ई-मेल</value>
@@ -913,7 +913,7 @@
     <value>समापन बिंदु (यूआरएल)</value>
   </data>
   <data name="Enter" xml:space="preserve">
-    <value>Digitar</value>
+    <value>दर्ज करें</value>
   </data>
   <data name="Enter incognito" xml:space="preserve">
     <value>गुप्त दर्ज करें</value>
@@ -979,16 +979,16 @@
     <value>Entity.TOTPSecret.Has().YesNo()</value>
   </data>
   <data name="Error" xml:space="preserve">
-    <value>Erro</value>
+    <value>त्रुटि</value>
   </data>
   <data name="Error parsing the JSON file" xml:space="preserve">
     <value>JSON फ़ाइल को पार्स करने में त्रुटि</value>
   </data>
   <data name="Everything" xml:space="preserve">
-    <value>Tudo</value>
+    <value>सब कुछ</value>
   </data>
   <data name="Extension" xml:space="preserve">
-    <value>Extensão</value>
+    <value>एक्सटेंशन</value>
   </data>
   <data name="Facebook" xml:space="preserve">
     <value>Facebook</value>
@@ -1009,10 +1009,10 @@
     <value>उपयोगकर्ता के लिए पासवर्ड रीसेट करने में विफल</value>
   </data>
   <data name="Feeds" xml:space="preserve">
-    <value>Feeds</value>
+    <value>फ़ीड्स</value>
   </data>
   <data name="field" xml:space="preserve">
-    <value>campo</value>
+    <value>फ़ील्ड</value>
   </data>
   <data name="File is too large" xml:space="preserve">
     <value>फ़ाइल बहुत बड़ी है</value>
@@ -1021,10 +1021,10 @@
     <value>फ़ाइल मैनेजर</value>
   </data>
   <data name="Filler" xml:space="preserve">
-    <value>Preenchimento</value>
+    <value>भराव</value>
   </data>
   <data name="Filter" xml:space="preserve">
-    <value>Filtro</value>
+    <value>फ़िल्टर</value>
   </data>
   <data name="First name" xml:space="preserve">
     <value>पहला नाम</value>
@@ -1042,7 +1042,7 @@
     <value>मुखपृष्ठ</value>
   </data>
   <data name="General" xml:space="preserve">
-    <value>Em geral</value>
+    <value>सामान्य</value>
   </data>
   <data name="GitHub" xml:space="preserve">
     <value>GitHub</value>
@@ -1066,7 +1066,7 @@
     <value>उपयोगकर्ता को मॉडरेटर प्रदान करें</value>
   </data>
   <data name="Header" xml:space="preserve">
-    <value>Cabeçalho</value>
+    <value>हेडर</value>
   </data>
   <data name="Header image must be valid" xml:space="preserve">
     <value>हेडर छवि मान्य होनी चाहिए</value>
@@ -1075,13 +1075,13 @@
     <value>यहां {0} के लिए आपका सत्यापन कोड है</value>
   </data>
   <data name="History" xml:space="preserve">
-    <value>História</value>
+    <value>इतिहास</value>
   </data>
   <data name="How to delete your data" xml:space="preserve">
     <value>अपना डेटा कैसे डिलीट करें</value>
   </data>
   <data name="Id" xml:space="preserve">
-    <value>Id</value>
+    <value>आईडी</value>
   </data>
   <data name="Id is required" xml:space="preserve">
     <value>आईडी आवश्यक है</value>
@@ -1102,7 +1102,7 @@
     <value>गुप्त मोड</value>
   </data>
   <data name="Info" xml:space="preserve">
-    <value>Informações</value>
+    <value>जानकारी</value>
   </data>
   <data name="Instagram" xml:space="preserve">
     <value>Instagram</value>
@@ -1114,7 +1114,7 @@
     <value>अमान्य आईडी (हटाई गई, निष्क्रिय ब्लॉग आईडी हो सकती हैं)</value>
   </data>
   <data name="Ip" xml:space="preserve">
-    <value>IP</value>
+    <value>आईपी</value>
   </data>
   <data name="item(s)" xml:space="preserve">
     <value>सामान)</value>
@@ -1126,19 +1126,19 @@
     <value>इन पुनर्प्राप्ति कोड को कहीं सुरक्षित रखें</value>
   </data>
   <data name="Key" xml:space="preserve">
-    <value>Chave</value>
+    <value>कुंजी</value>
   </data>
   <data name="Keywords" xml:space="preserve">
-    <value>Palavras-chave</value>
+    <value>कीवर्ड</value>
   </data>
   <data name="Language" xml:space="preserve">
-    <value>Linguagem</value>
+    <value>भाषा</value>
   </data>
   <data name="Language must be valid" xml:space="preserve">
     <value>भाषा मान्य होनी चाहिए</value>
   </data>
   <data name="Large" xml:space="preserve">
-    <value>Grande</value>
+    <value>बड़ा</value>
   </data>
   <data name="Last 180 days" xml:space="preserve">
     <value>पिछले 180 दिन</value>
@@ -1174,7 +1174,7 @@
     <value>ताजा खबर</value>
   </data>
   <data name="Leave" xml:space="preserve">
-    <value>Sair</value>
+    <value>छोड़ें</value>
   </data>
   <data name="Leave incognito" xml:space="preserve">
     <value>गुप्त छोड़ो</value>
@@ -1183,7 +1183,7 @@
     <value>रखरखाव मोड छोड़ें</value>
   </data>
   <data name="link" xml:space="preserve">
-    <value>link</value>
+    <value>लिंक</value>
   </data>
   <data name="LinkedIn" xml:space="preserve">
     <value>LinkedIn</value>
@@ -1198,7 +1198,7 @@
     <value>लॉग आउट</value>
   </data>
   <data name="Login" xml:space="preserve">
-    <value>Conecte-se</value>
+    <value>लॉगिन</value>
   </data>
   <data name="Login to quick reply" xml:space="preserve">
     <value>त्वरित उत्तर के लिए लॉगिन करें</value>
@@ -1210,19 +1210,19 @@
     <value>प्रतिक्रिया देने के लिए लॉगिन करें</value>
   </data>
   <data name="Logo" xml:space="preserve">
-    <value>Logotipo</value>
+    <value>लोगो</value>
   </data>
   <data name="Logo • Avatar" xml:space="preserve">
     <value>लोगो • अवतार</value>
   </data>
   <data name="Logout" xml:space="preserve">
-    <value>Sair</value>
+    <value>लॉगआउट</value>
   </data>
   <data name="Loop in relationships are not allowed" xml:space="preserve">
     <value>रिश्तों में लूप की अनुमति नहीं है</value>
   </data>
   <data name="Maintenance" xml:space="preserve">
-    <value>Manutenção</value>
+    <value>रखरखाव</value>
   </data>
   <data name="Make primary" xml:space="preserve">
     <value>प्राथमिक बनाना</value>
@@ -1246,13 +1246,13 @@
     <value>शायद बाद में</value>
   </data>
   <data name="Medium" xml:space="preserve">
-    <value>Médio</value>
+    <value>मध्यम</value>
   </data>
   <data name="Microsoft" xml:space="preserve">
     <value>Microsoft</value>
   </data>
   <data name="Misc" xml:space="preserve">
-    <value>Diversos</value>
+    <value>विविध</value>
   </data>
   <data name="Moderate comments" xml:space="preserve">
     <value>मध्यम टिप्पणियाँ</value>
@@ -1261,10 +1261,10 @@
     <value>द्वारा संचालित किया गया</value>
   </data>
   <data name="Moderator" xml:space="preserve">
-    <value>Moderador</value>
+    <value>मॉडरेटर</value>
   </data>
   <data name="Modified" xml:space="preserve">
-    <value>Modificado</value>
+    <value>संशोधित</value>
   </data>
   <data name="Most popular" xml:space="preserve">
     <value>सबसे लोकप्रिय</value>
@@ -1279,7 +1279,7 @@
     <value>सूची में ऊपर चला जाता है</value>
   </data>
   <data name="Name" xml:space="preserve">
-    <value>Nome</value>
+    <value>नाम</value>
   </data>
   <data name="Name (website)" xml:space="preserve">
     <value>नाम (वेबसाइट)</value>
@@ -1300,7 +1300,7 @@
     <value>नैनो आईडी आवश्यक है</value>
   </data>
   <data name="New" xml:space="preserve">
-    <value>Novo</value>
+    <value>नया</value>
   </data>
   <data name="New folder" xml:space="preserve">
     <value>नया फ़ोल्डर</value>
@@ -1315,7 +1315,7 @@
     <value>नए पासवर्ड मेल नहीं खाते, वे एक-दूसरे से भिन्न होते हैं</value>
   </data>
   <data name="No" xml:space="preserve">
-    <value>Não</value>
+    <value>नहीं</value>
   </data>
   <data name="No categories whatsoever" xml:space="preserve">
     <value>कोई भी श्रेणी नहीं</value>
@@ -1357,13 +1357,13 @@
     <value>कोई भी वीडियो नहीं</value>
   </data>
   <data name="None" xml:space="preserve">
-    <value>Nenhum</value>
+    <value>कोई नहीं</value>
   </data>
   <data name="Not specified" xml:space="preserve">
     <value>निर्दिष्ट नहीं है</value>
   </data>
   <data name="Note" xml:space="preserve">
-    <value>Observação</value>
+    <value>नोट</value>
   </data>
   <data name="Note cannot exceed {0} characters" xml:space="preserve">
     <value>नोट {0} वर्णों से अधिक नहीं हो सकता</value>
@@ -1390,7 +1390,7 @@
     <value>केवल वीडियो फ़ाइलें</value>
   </data>
   <data name="Oops" xml:space="preserve">
-    <value>Ops</value>
+    <value>ओह</value>
   </data>
   <data name="Oops, this key is not valid or it was already used to reset your password" xml:space="preserve">
     <value>ओह, यह कुंजी मान्य नहीं है या इसका उपयोग पहले से ही आपका पासवर्ड रीसेट करने के लिए किया गया था</value>
@@ -1408,7 +1408,7 @@
     <value>Origami</value>
   </data>
   <data name="Original" xml:space="preserve">
-    <value>Original</value>
+    <value>मूल</value>
   </data>
   <data name="Original name" xml:space="preserve">
     <value>मूल नाम</value>
@@ -1420,7 +1420,7 @@
     <value>P</value>
   </data>
   <data name="Page" xml:space="preserve">
-    <value>Página</value>
+    <value>पेज</value>
   </data>
   <data name="Page cannot be retrieved" xml:space="preserve">
     <value>पृष्ठ पुनर्प्राप्त नहीं किया जा सकता</value>
@@ -1438,19 +1438,19 @@
     <value>पृष्ठ नहीं मिला</value>
   </data>
   <data name="Pages" xml:space="preserve">
-    <value>Páginas</value>
+    <value>पेज</value>
   </data>
   <data name="Pages found in the search" xml:space="preserve">
     <value>खोज में पन्ने मिले</value>
   </data>
   <data name="Parent" xml:space="preserve">
-    <value>Pai</value>
+    <value>पैरेंट</value>
   </data>
   <data name="Parent category" xml:space="preserve">
     <value>जनक श्रेणी</value>
   </data>
   <data name="Password" xml:space="preserve">
-    <value>Senha</value>
+    <value>पासवर्ड</value>
   </data>
   <data name="Password has been reset successfully" xml:space="preserve">
     <value>पासवर्ड सफलतापूर्वक रीसेट कर दिया गया है</value>
@@ -1468,7 +1468,7 @@
     <value>एम्बेड करने के लिए अपना HTML iframe यहां पेस्ट करें, जैसे YouTube इत्यादि</value>
   </data>
   <data name="Path" xml:space="preserve">
-    <value>Caminho</value>
+    <value>पथ</value>
   </data>
   <data name="People online" xml:space="preserve">
     <value>लोग ऑनलाइन</value>
@@ -1486,7 +1486,7 @@
     <value>टिप्पणी पिन करें</value>
   </data>
   <data name="Pinned" xml:space="preserve">
-    <value>Fixado</value>
+    <value>पिन किया गया</value>
   </data>
   <data name="Pinned by" xml:space="preserve">
     <value>द्वारा पिन किया गया</value>
@@ -1495,7 +1495,7 @@
     <value>अपनी टिप्पणी यहां दें</value>
   </data>
   <data name="Platforms" xml:space="preserve">
-    <value>Plataformas</value>
+    <value>प्लेटफ़ॉर्म</value>
   </data>
   <data name="Please, talk to a system administrator" xml:space="preserve">
     <value>कृपया, किसी सिस्टम प्रशासक से बात करें</value>
@@ -1504,7 +1504,7 @@
     <value>कृपया बाद में पुन: प्रयास करें</value>
   </data>
   <data name="Post" xml:space="preserve">
-    <value>Publicar</value>
+    <value>प्रकाशन</value>
   </data>
   <data name="postRating.Rating" xml:space="preserve">
     <value>postRating.Rating</value>
@@ -1513,7 +1513,7 @@
     <value>postReaction.Reaction</value>
   </data>
   <data name="Posts" xml:space="preserve">
-    <value>Postagens</value>
+    <value>प्रकाशन</value>
   </data>
   <data name="Posts comments" xml:space="preserve">
     <value>टिप्पणियाँ पोस्ट करता है</value>
@@ -1525,7 +1525,7 @@
     <value>पोस्ट, वीडियो</value>
   </data>
   <data name="Primary" xml:space="preserve">
-    <value>Primário</value>
+    <value>प्राथमिक</value>
   </data>
   <data name="Primary blog cannot be deactivated" xml:space="preserve">
     <value>प्राथमिक ब्लॉग को निष्क्रिय नहीं किया जा सकता</value>
@@ -1537,7 +1537,7 @@
     <value>गोपनीयता नीति</value>
   </data>
   <data name="Profile" xml:space="preserve">
-    <value>Perfil</value>
+    <value>प्रोफ़ाइल</value>
   </data>
   <data name="Profile data was wiped out" xml:space="preserve">
     <value>प्रोफ़ाइल डेटा मिटा दिया गया था</value>
@@ -1549,7 +1549,7 @@
     <value>प्रोफ़ाइल नहीं मिला</value>
   </data>
   <data name="Progress" xml:space="preserve">
-    <value>Progresso</value>
+    <value>प्रगति</value>
   </data>
   <data name="Promote to front-page" xml:space="preserve">
     <value>प्रथम पृष्ठ पर प्रचार करें</value>
@@ -1609,7 +1609,7 @@
     <value>वीडियो प्रकाशित करें</value>
   </data>
   <data name="Published" xml:space="preserve">
-    <value>Publicado</value>
+    <value>प्रकाशित</value>
   </data>
   <data name="Published pages" xml:space="preserve">
     <value>प्रकाशित पन्ने</value>
@@ -1687,7 +1687,7 @@
     <value>इस पर {0} रेटेड:</value>
   </data>
   <data name="Rating" xml:space="preserve">
-    <value>Avaliação</value>
+    <value>रेटिंग</value>
   </data>
   <data name="Rating 1 is not accounted for in the final rating" xml:space="preserve">
     <value>रेटिंग 1 को अंतिम रेटिंग में शामिल नहीं किया गया है</value>
@@ -1702,7 +1702,7 @@
     <value>rating.Rating</value>
   </data>
   <data name="Ratings" xml:space="preserve">
-    <value>Avaliações</value>
+    <value>रेटिंग्स</value>
   </data>
   <data name="Ratings on posts" xml:space="preserve">
     <value>पोस्ट पर रेटिंग</value>
@@ -1723,7 +1723,7 @@
     <value>reaction.Reaction</value>
   </data>
   <data name="Reactions" xml:space="preserve">
-    <value>Reações</value>
+    <value>प्रतिक्रियाएँ</value>
   </data>
   <data name="Refresh your browser" xml:space="preserve">
     <value>अपने ब्राउज़र को ताज़ा करें</value>
@@ -1750,7 +1750,7 @@
     <value>रिलीज़ की तारीख</value>
   </data>
   <data name="Reload" xml:space="preserve">
-    <value>Recarregar</value>
+    <value>पुनः लोड करें</value>
   </data>
   <data name="Remove picture" xml:space="preserve">
     <value>चित्र हटाएँ</value>
@@ -1762,7 +1762,7 @@
     <value>replies.Count()</value>
   </data>
   <data name="Reply" xml:space="preserve">
-    <value>Responder</value>
+    <value>उत्तर दें</value>
   </data>
   <data name="Reply comment" xml:space="preserve">
     <value>उत्तर टिप्पणी करें</value>
@@ -1777,7 +1777,7 @@
     <value>जानकारी के लिए अनुरोध मिटा दिए गए</value>
   </data>
   <data name="Reset" xml:space="preserve">
-    <value>Reiniciar</value>
+    <value>रीसेट</value>
   </data>
   <data name="Reset 2FA" xml:space="preserve">
     <value>2FA रीसेट करें</value>
@@ -1798,7 +1798,7 @@
     <value>पासवर्ड रीसेट</value>
   </data>
   <data name="Restore" xml:space="preserve">
-    <value>Restaurar</value>
+    <value>पुनर्स्थापित करें</value>
   </data>
   <data name="Restore blogs" xml:space="preserve">
     <value>ब्लॉग पुनर्स्थापित करें</value>
@@ -1858,10 +1858,10 @@
     <value>सामाजिक प्रोफ़ाइल से मॉडरेटर की भूमिकाएँ निरस्त करें</value>
   </data>
   <data name="Role" xml:space="preserve">
-    <value>Papel</value>
+    <value>भूमिका</value>
   </data>
   <data name="Roles" xml:space="preserve">
-    <value>Funções</value>
+    <value>भूमिकाएँ</value>
   </data>
   <data name="Roles are up-to-date" xml:space="preserve">
     <value>भूमिकाएँ अद्यतन हैं</value>
@@ -1891,7 +1891,7 @@
     <value>RSS फ़ीड एक वैध वेबसाइट पता होना चाहिए</value>
   </data>
   <data name="Save" xml:space="preserve">
-    <value>Salvar</value>
+    <value>सहेजें</value>
   </data>
   <data name="Save and publish" xml:space="preserve">
     <value>सहेजें और प्रकाशित करें</value>
@@ -1909,7 +1909,7 @@
     <value>इस QR कोड को अपने ऑथेंटिकेटर ऐप से स्कैन करें</value>
   </data>
   <data name="Search" xml:space="preserve">
-    <value>Procurar</value>
+    <value>खोजें</value>
   </data>
   <data name="See browser dev tools for details" xml:space="preserve">
     <value>विवरण के लिए ब्राउज़र डेव टूल देखें</value>
@@ -1966,19 +1966,19 @@
     <value>सत्यापन कोड भेजें</value>
   </data>
   <data name="Settings" xml:space="preserve">
-    <value>Configurações</value>
+    <value>सेटिंग्स</value>
   </data>
   <data name="settings.Name" xml:space="preserve">
     <value>settings.Name</value>
   </data>
   <data name="Size" xml:space="preserve">
-    <value>Tamanho</value>
+    <value>आकार</value>
   </data>
   <data name="Slow" xml:space="preserve">
-    <value>Lento</value>
+    <value>धीमा</value>
   </data>
   <data name="Slug" xml:space="preserve">
-    <value>Lesma</value>
+    <value>स्लग</value>
   </data>
   <data name="Slug cannot exceed {0} characters" xml:space="preserve">
     <value>स्लग {0} वर्णों से अधिक नहीं हो सकता</value>
@@ -1987,7 +1987,7 @@
     <value>स्लग पहले से ही उपयोग में है</value>
   </data>
   <data name="Small" xml:space="preserve">
-    <value>Pequeno</value>
+    <value>छोटा</value>
   </data>
   <data name="SMTP password" xml:space="preserve">
     <value>एसएमटीपी पासवर्ड</value>
@@ -2035,7 +2035,7 @@
     <value>स्रोत और गंतव्य छवियां समान स्थान साझा करती हैं</value>
   </data>
   <data name="Spam" xml:space="preserve">
-    <value>Spam</value>
+    <value>स्पैम</value>
   </data>
   <data name="Spam comments" xml:space="preserve">
     <value>स्पैम टिप्पणियाँ</value>
@@ -2065,46 +2065,46 @@
     <value>प्रारंभ तिथि समाप्ति तिथि से बाद की नहीं हो सकती</value>
   </data>
   <data name="Stats" xml:space="preserve">
-    <value>Estatísticas</value>
+    <value>आँकड़े</value>
   </data>
   <data name="Status" xml:space="preserve">
-    <value>Status</value>
+    <value>स्थिति</value>
   </data>
   <data name="Still a draft?" xml:space="preserve">
     <value>अभी भी एक मसौदा?</value>
   </data>
   <data name="Stop" xml:space="preserve">
-    <value>Parar</value>
+    <value>रोकें</value>
   </data>
   <data name="Stops the timer" xml:space="preserve">
     <value>टाइमर बंद कर देता है</value>
   </data>
   <data name="Subscribe" xml:space="preserve">
-    <value>Inscrever-se</value>
+    <value>सदस्यता लें</value>
   </data>
   <data name="Subscribe to the website" xml:space="preserve">
     <value>वेबसाइट की सदस्यता लें</value>
   </data>
   <data name="Subscriber" xml:space="preserve">
-    <value>Assinante</value>
+    <value>सदस्य</value>
   </data>
   <data name="Subscriber(s)" xml:space="preserve">
     <value>सब्सक्राइबर</value>
   </data>
   <data name="Success" xml:space="preserve">
-    <value>Sucesso</value>
+    <value>सफलता</value>
   </data>
   <data name="System role" xml:space="preserve">
     <value>सिस्टम भूमिका</value>
   </data>
   <data name="Tag" xml:space="preserve">
-    <value>Marcação</value>
+    <value>टैग</value>
   </data>
   <data name="Tag cannot exceed {0} characters" xml:space="preserve">
     <value>टैग {0} वर्णों से अधिक नहीं हो सकता</value>
   </data>
   <data name="Tags" xml:space="preserve">
-    <value>Etiquetas</value>
+    <value>टैग्स</value>
   </data>
   <data name="Tags found in the search" xml:space="preserve">
     <value>सर्च में टैग मिले</value>
@@ -2185,16 +2185,16 @@
     <value>this.Super.GetContents(context.Item, this.UserFacade.BlogID).OfType&lt;OrigamiVideo&gt;().Published().Count()</value>
   </data>
   <data name="Thumbnail" xml:space="preserve">
-    <value>Miniatura</value>
+    <value>थंबनेल</value>
   </data>
   <data name="Time period" xml:space="preserve">
     <value>समय सीमा</value>
   </data>
   <data name="Timezone" xml:space="preserve">
-    <value>Fuso horário</value>
+    <value>समय क्षेत्र</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>Título</value>
+    <value>शीर्षक</value>
   </data>
   <data name="Title cannot exceed 255 characters" xml:space="preserve">
     <value>शीर्षक 255 अक्षरों से अधिक नहीं हो सकता</value>
@@ -2206,7 +2206,7 @@
     <value>फ्रंट-पेज पर प्रचार करने के लिए, वह पेज शीर्ष-स्तरीय होना चाहिए</value>
   </data>
   <data name="Trash" xml:space="preserve">
-    <value>Lixo</value>
+    <value>कचरा</value>
   </data>
   <data name="Try again to solve this issue" xml:space="preserve">
     <value>इस समस्या को हल करने के लिए पुनः प्रयास करें</value>
@@ -2257,7 +2257,7 @@
     <value>उपयोगकर्ताओं को अनब्लॉक करें</value>
   </data>
   <data name="Undo" xml:space="preserve">
-    <value>Desfazer</value>
+    <value>पूर्ववत करें</value>
   </data>
   <data name="Undo changes" xml:space="preserve">
     <value>परिवर्तन पूर्ववत करें</value>
@@ -2329,7 +2329,7 @@
     <value>उपयोगकर्ता की सदस्यता समाप्त करें</value>
   </data>
   <data name="Upload" xml:space="preserve">
-    <value>Carregar</value>
+    <value>अपलोड</value>
   </data>
   <data name="Upload files" xml:space="preserve">
     <value>फाइलें अपलोड करें</value>
@@ -2344,7 +2344,7 @@
     <value>फ़ाइल अपलोड हो रही है</value>
   </data>
   <data name="User" xml:space="preserve">
-    <value>Usuário</value>
+    <value>उपयोगकर्ता</value>
   </data>
   <data name="User actions" xml:space="preserve">
     <value>उपयोगकर्ता क्रियाएं</value>
@@ -2362,7 +2362,7 @@
     <value>उपयोगकर्ता कचरा</value>
   </data>
   <data name="Username" xml:space="preserve">
-    <value>Nome de usuário</value>
+    <value>उपयोगकर्ता नाम</value>
   </data>
   <data name="Username (read-only)" xml:space="preserve">
     <value>उपयोगकर्ता नाम (केवल पढ़ने के लिए)</value>
@@ -2377,7 +2377,7 @@
     <value>उपयोगकर्ता नाम आवश्यक है</value>
   </data>
   <data name="Users" xml:space="preserve">
-    <value>Usuários</value>
+    <value>उपयोगकर्ता</value>
   </data>
   <data name="Validate code and finish subscribing" xml:space="preserve">
     <value>कोड सत्यापित करें और सदस्यता समाप्त करें</value>
@@ -2389,19 +2389,19 @@
     <value>TOTP कोड सत्यापित करें और आगे बढ़ें</value>
   </data>
   <data name="Value" xml:space="preserve">
-    <value>Valor</value>
+    <value>मान</value>
   </data>
   <data name="Version" xml:space="preserve">
-    <value>Versão</value>
+    <value>संस्करण</value>
   </data>
   <data name="Video" xml:space="preserve">
-    <value>Vídeo</value>
+    <value>वीडियो</value>
   </data>
   <data name="Video cannot be updated" xml:space="preserve">
     <value>वीडियो अपडेट नहीं किया जा सकता</value>
   </data>
   <data name="Videos" xml:space="preserve">
-    <value>Vídeos</value>
+    <value>वीडियो</value>
   </data>
   <data name="Videos comments" xml:space="preserve">
     <value>वीडियो टिप्पणियाँ</value>
@@ -2461,7 +2461,7 @@
     <value>वीडियो देखें</value>
   </data>
   <data name="Warning" xml:space="preserve">
-    <value>Aviso</value>
+    <value>चेतावनी</value>
   </data>
   <data name="We need a valid e-mail to subscribe" xml:space="preserve">
     <value>सदस्यता लेने के लिए हमें एक वैध ई-मेल की आवश्यकता है</value>
@@ -2470,7 +2470,7 @@
     <value>हम आपके ब्राउज़िंग अनुभव को बेहतर बनाने, साइट ट्रैफ़िक का विश्लेषण करने, सामग्री को वैयक्तिकृत करने और लक्षित विज्ञापन पेश करने के लिए कुकीज़ और समान तकनीकों का उपयोग करते हैं</value>
   </data>
   <data name="Website" xml:space="preserve">
-    <value>Site</value>
+    <value>वेबसाइट</value>
   </data>
   <data name="What to see next" xml:space="preserve">
     <value>आगे क्या देखना है</value>
@@ -2485,7 +2485,7 @@
     <value>उपयोगकर्ता डेटा मिटा दें</value>
   </data>
   <data name="Yes" xml:space="preserve">
-    <value>Sim</value>
+    <value>हाँ</value>
   </data>
   <data name="Yes, since" xml:space="preserve">
     <value>हाँ, तब से</value>
@@ -2584,7 +2584,7 @@
     <value>ज़िप फ़ाइल सफलतापूर्वक बनाई गई.</value>
   </data>
   <data name="Type" xml:space="preserve">
-    <value>Tipo</value>
+    <value>प्रकार</value>
   </data>
   <data name="Yay! Everything went smoothly" xml:space="preserve">
     <value>वाह! सब कुछ सुचारू रूप से चला गया</value>

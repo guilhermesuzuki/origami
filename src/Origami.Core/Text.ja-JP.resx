@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -59,46 +59,46 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -117,15 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="_comments.Count" xml:space="preserve">
-    <value>_comments.Count</value>
-  </data>
-  <data name="_directories.Count()" xml:space="preserve">
-    <value>_directories.Count()</value>
-  </data>
-  <data name="_resetPassword" xml:space="preserve">
-    <value>_resetPassword</value>
-  </data>
   <data name="({0} files max)" xml:space="preserve">
     <value>(最大 {0} ファイル)</value>
   </data>
@@ -241,7 +232,7 @@
     <value>復元プロセスが現在実行中です。一部のアクションは、プロセスが完了するまで無効になります。</value>
   </data>
   <data name="Accessed" xml:space="preserve">
-    <value>Acessado</value>
+    <value>アクセス済み</value>
   </data>
   <data name="Activate blog" xml:space="preserve">
     <value>ブログをアクティブにする</value>
@@ -250,7 +241,7 @@
     <value>ブログをアクティブにする</value>
   </data>
   <data name="Active" xml:space="preserve">
-    <value>Ativo</value>
+    <value>アクティブ</value>
   </data>
   <data name="Add comment" xml:space="preserve">
     <value>コメントを追加</value>
@@ -259,10 +250,10 @@
     <value>フォルダーの追加</value>
   </data>
   <data name="Admin" xml:space="preserve">
-    <value>Administrador</value>
+    <value>管理者</value>
   </data>
   <data name="All" xml:space="preserve">
-    <value>Todos</value>
+    <value>すべて</value>
   </data>
   <data name="All comments" xml:space="preserve">
     <value>すべてのコメント</value>
@@ -292,10 +283,10 @@
     <value>そして「OK」をクリックしてこのポップアップウィンドウを閉じます</value>
   </data>
   <data name="Anonymous" xml:space="preserve">
-    <value>Anônimo</value>
+    <value>匿名</value>
   </data>
   <data name="Answering" xml:space="preserve">
-    <value>Respondendo</value>
+    <value>応答中</value>
   </data>
   <data name="Anyway, click here to go back to the Website" xml:space="preserve">
     <value>とにかく、ここをクリックしてウェブサイトに戻ってください</value>
@@ -313,7 +304,7 @@
     <value>アプリの秘密</value>
   </data>
   <data name="Approved" xml:space="preserve">
-    <value>Aprovado</value>
+    <value>承認済み</value>
   </data>
   <data name="Approved comments" xml:space="preserve">
     <value>承認されたコメント</value>
@@ -328,13 +319,13 @@
     <value>本気ですか？これらのアイテムを回復することはできません。</value>
   </data>
   <data name="Author" xml:space="preserve">
-    <value>Autor</value>
+    <value>作成者</value>
   </data>
   <data name="Author is required" xml:space="preserve">
     <value>著者は必須です</value>
   </data>
   <data name="Backup" xml:space="preserve">
-    <value>Backup</value>
+    <value>バックアップ</value>
   </data>
   <data name="Backup and restore" xml:space="preserve">
     <value>バックアップと復元</value>
@@ -349,7 +340,7 @@
     <value>バックアップ体制</value>
   </data>
   <data name="Backups" xml:space="preserve">
-    <value>Cópias de segurança</value>
+    <value>バックアップ</value>
   </data>
   <data name="BACPAC file created successfully" xml:space="preserve">
     <value>BACPAC ファイルが正常に作成されました</value>
@@ -361,7 +352,7 @@
     <value>タイトルに基づいて</value>
   </data>
   <data name="Basic" xml:space="preserve">
-    <value>Básico</value>
+    <value>基本</value>
   </data>
   <data name="Be careful when choosing a username, you won't be able to change it later" xml:space="preserve">
     <value>ユーザー名を選択するときは注意してください。後で変更することはできません</value>
@@ -382,10 +373,10 @@
     <value>自分以外のユーザーをブロックする</value>
   </data>
   <data name="Blocked" xml:space="preserve">
-    <value>Bloqueado</value>
+    <value>ブロック済み</value>
   </data>
   <data name="Blog" xml:space="preserve">
-    <value>Blogue</value>
+    <value>ブログ</value>
   </data>
   <data name="Blog could not be found" xml:space="preserve">
     <value>ブログが見つかりませんでした</value>
@@ -403,7 +394,7 @@
     <value>ブログは null でなければなりません</value>
   </data>
   <data name="Blogs" xml:space="preserve">
-    <value>Blogues</value>
+    <value>ブログ</value>
   </data>
   <data name="Blogs found in the search" xml:space="preserve">
     <value>検索で見つかったブログ</value>
@@ -418,7 +409,7 @@
     <value>ブラウザ・URL</value>
   </data>
   <data name="Browsers" xml:space="preserve">
-    <value>Navegadores</value>
+    <value>ブラウザ</value>
   </data>
   <data name="But login first" xml:space="preserve">
     <value>ただし、まずログインしてください</value>
@@ -460,10 +451,10 @@
     <value>コールバックパス</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Cancelar</value>
+    <value>キャンセル</value>
   </data>
   <data name="Categories" xml:space="preserve">
-    <value>Categorias</value>
+    <value>カテゴリ</value>
   </data>
   <data name="Categories found in the search" xml:space="preserve">
     <value>検索で見つかったカテゴリ</value>
@@ -472,7 +463,7 @@
     <value>カテゴリは一意である必要があります</value>
   </data>
   <data name="Category" xml:space="preserve">
-    <value>Categoria</value>
+    <value>カテゴリ</value>
   </data>
   <data name="Category must exist" xml:space="preserve">
     <value>カテゴリが存在する必要があります</value>
@@ -490,7 +481,7 @@
     <value>背景のスタイルを選択してください</value>
   </data>
   <data name="Clear" xml:space="preserve">
-    <value>Claro</value>
+    <value>クリア</value>
   </data>
   <data name="Clear cache" xml:space="preserve">
     <value>キャッシュをクリアする</value>
@@ -529,7 +520,7 @@
     <value>クライアントシークレット</value>
   </data>
   <data name="Close" xml:space="preserve">
-    <value>Fechar</value>
+    <value>閉じる</value>
   </data>
   <data name="Close menu" xml:space="preserve">
     <value>メニューを閉じる</value>
@@ -541,7 +532,7 @@
     <value>ウィンドウを閉じます</value>
   </data>
   <data name="Comment" xml:space="preserve">
-    <value>Comentário</value>
+    <value>コメント</value>
   </data>
   <data name="Comment reactions on posts" xml:space="preserve">
     <value>投稿に対するコメントの反応</value>
@@ -555,11 +546,8 @@
   <data name="Commented on post:" xml:space="preserve">
     <value>投稿にコメントしました:</value>
   </data>
-  <data name="commentReaction.Reaction" xml:space="preserve">
-    <value>commentReaction.Reaction</value>
-  </data>
   <data name="Comments" xml:space="preserve">
-    <value>Comentários</value>
+    <value>コメント</value>
   </data>
   <data name="Comments [including deleted]" xml:space="preserve">
     <value>コメント[削除済み含む]</value>
@@ -577,13 +565,13 @@
     <value>パスワードを認証する</value>
   </data>
   <data name="Congratulations" xml:space="preserve">
-    <value>Parabéns</value>
+    <value>おめでとうございます</value>
   </data>
   <data name="Contact an administrator to solve this issue" xml:space="preserve">
     <value>この問題を解決するには管理者に連絡してください</value>
   </data>
   <data name="Content" xml:space="preserve">
-    <value>Conteúdo</value>
+    <value>コンテンツ</value>
   </data>
   <data name="Content must be a valid HTML" xml:space="preserve">
     <value>コンテンツは有効な HTML である必要があります</value>
@@ -591,20 +579,11 @@
   <data name="Content must exist" xml:space="preserve">
     <value>コンテンツが存在する必要があります</value>
   </data>
-  <data name="context.Item.Description" xml:space="preserve">
-    <value>context.Item.Description</value>
-  </data>
-  <data name="context.Item.GetEmail()" xml:space="preserve">
-    <value>context.Item.GetEmail()</value>
-  </data>
-  <data name="context.Item.TypeName" xml:space="preserve">
-    <value>context.Item.TypeName</value>
-  </data>
   <data name="Cookie policy" xml:space="preserve">
     <value>クッキーポリシー</value>
   </data>
   <data name="count" xml:space="preserve">
-    <value>contar</value>
+    <value>数</value>
   </data>
   <data name="Create blogs" xml:space="preserve">
     <value>ブログを作成する</value>
@@ -640,7 +619,7 @@
     <value>スラグの作成</value>
   </data>
   <data name="Created" xml:space="preserve">
-    <value>Criado</value>
+    <value>作成済み</value>
   </data>
   <data name="Current month" xml:space="preserve">
     <value>当月</value>
@@ -652,16 +631,16 @@
     <value>今年</value>
   </data>
   <data name="Custom" xml:space="preserve">
-    <value>Personalizado</value>
+    <value>カスタム</value>
   </data>
   <data name="Cycle detected: you must choose another parent" xml:space="preserve">
     <value>サイクルが検出されました: 別の親を選択する必要があります</value>
   </data>
   <data name="Danger" xml:space="preserve">
-    <value>Perigo</value>
+    <value>危険</value>
   </data>
   <data name="Dashboard" xml:space="preserve">
-    <value>Painel</value>
+    <value>ダッシュボード</value>
   </data>
   <data name="Dashboard analytics" xml:space="preserve">
     <value>ダッシュボード分析</value>
@@ -670,7 +649,7 @@
     <value>データベースは正常に復元されました。</value>
   </data>
   <data name="Date" xml:space="preserve">
-    <value>Data</value>
+    <value>日付</value>
   </data>
   <data name="Date of modification must happen after the creation date" xml:space="preserve">
     <value>変更日は作成日以降である必要があります</value>
@@ -757,13 +736,13 @@
     <value>自分以外のユーザーを削除する</value>
   </data>
   <data name="Deleted" xml:space="preserve">
-    <value>Excluído</value>
+    <value>削除済み</value>
   </data>
   <data name="Deleted comments" xml:space="preserve">
     <value>削除されたコメント</value>
   </data>
   <data name="Deleted?" xml:space="preserve">
-    <value>Excluído?</value>
+    <value>削除しますか？</value>
   </data>
   <data name="Deleting {0} item(s)" xml:space="preserve">
     <value>{0} アイテムを削除しています</value>
@@ -775,7 +754,7 @@
     <value>フロントページからの降格</value>
   </data>
   <data name="Description" xml:space="preserve">
-    <value>Descrição</value>
+    <value>説明</value>
   </data>
   <data name="Description cannot exceed {0} characters" xml:space="preserve">
     <value>説明は {0} 文字を超えることはできません</value>
@@ -805,13 +784,13 @@
     <value>そのリンクを他の人と共有しないでください</value>
   </data>
   <data name="Done" xml:space="preserve">
-    <value>Feito</value>
+    <value>完了</value>
   </data>
   <data name="Download" xml:space="preserve">
-    <value>Download</value>
+    <value>ダウンロード</value>
   </data>
   <data name="Draft" xml:space="preserve">
-    <value>Rascunho</value>
+    <value>下書き</value>
   </data>
   <data name="Draft pages" xml:space="preserve">
     <value>ドラフトページ</value>
@@ -829,7 +808,7 @@
     <value>ビデオのドラフト</value>
   </data>
   <data name="Drafts" xml:space="preserve">
-    <value>Rascunhos</value>
+    <value>下書き</value>
   </data>
   <data name="E-mail" xml:space="preserve">
     <value>電子メール</value>
@@ -913,7 +892,7 @@
     <value>エンドポイント (URL)</value>
   </data>
   <data name="Enter" xml:space="preserve">
-    <value>Digitar</value>
+    <value>入力</value>
   </data>
   <data name="Enter incognito" xml:space="preserve">
     <value>シークレットモードで入力する</value>
@@ -927,68 +906,17 @@
   <data name="Entity header cannot be updated" xml:space="preserve">
     <value>エンティティヘッダーを更新できません</value>
   </data>
-  <data name="Entity.EnableSsl.YesNo()" xml:space="preserve">
-    <value>Entity.EnableSsl.YesNo()</value>
-  </data>
-  <data name="Entity.Entity.IsCommentEnabled.YesNo()" xml:space="preserve">
-    <value>Entity.Entity.IsCommentEnabled.YesNo()</value>
-  </data>
-  <data name="Entity.Entity.IsDraft.YesNo()" xml:space="preserve">
-    <value>Entity.Entity.IsDraft.YesNo()</value>
-  </data>
-  <data name="Entity.GetTOTPRecoveryCodes().Any().YesNo()" xml:space="preserve">
-    <value>Entity.GetTOTPRecoveryCodes().Any().YesNo()</value>
-  </data>
-  <data name="Entity.IsActive.YesNo()" xml:space="preserve">
-    <value>Entity.IsActive.YesNo()</value>
-  </data>
-  <data name="Entity.IsApproved.YesNo()" xml:space="preserve">
-    <value>Entity.IsApproved.YesNo()</value>
-  </data>
-  <data name="Entity.IsCommentEnabled.YesNo()" xml:space="preserve">
-    <value>Entity.IsCommentEnabled.YesNo()</value>
-  </data>
-  <data name="Entity.IsDeleted.YesNo()" xml:space="preserve">
-    <value>Entity.IsDeleted.YesNo()</value>
-  </data>
-  <data name="Entity.IsPrimary.YesNo()" xml:space="preserve">
-    <value>Entity.IsPrimary.YesNo()</value>
-  </data>
-  <data name="Entity.IsSpam.YesNo()" xml:space="preserve">
-    <value>Entity.IsSpam.YesNo()</value>
-  </data>
-  <data name="Entity.KeepTestingTheSmtpServerConnectivity.YesNo()" xml:space="preserve">
-    <value>Entity.KeepTestingTheSmtpServerConnectivity.YesNo()</value>
-  </data>
-  <data name="Entity.OpenTelemetry.Enabled.YesNo()" xml:space="preserve">
-    <value>Entity.OpenTelemetry.Enabled.YesNo()</value>
-  </data>
-  <data name="Entity.SocialNetwork.Facebook.Enabled.YesNo()" xml:space="preserve">
-    <value>Entity.SocialNetwork.Facebook.Enabled.YesNo()</value>
-  </data>
-  <data name="Entity.SocialNetwork.GitHub.Enabled.YesNo()" xml:space="preserve">
-    <value>Entity.SocialNetwork.GitHub.Enabled.YesNo()</value>
-  </data>
-  <data name="Entity.SocialNetwork.Google.Enabled.YesNo()" xml:space="preserve">
-    <value>Entity.SocialNetwork.Google.Enabled.YesNo()</value>
-  </data>
-  <data name="Entity.SocialNetwork.Microsoft.Enabled.YesNo()" xml:space="preserve">
-    <value>Entity.SocialNetwork.Microsoft.Enabled.YesNo()</value>
-  </data>
-  <data name="Entity.TOTPSecret.Has().YesNo()" xml:space="preserve">
-    <value>Entity.TOTPSecret.Has().YesNo()</value>
-  </data>
   <data name="Error" xml:space="preserve">
-    <value>Erro</value>
+    <value>エラー</value>
   </data>
   <data name="Error parsing the JSON file" xml:space="preserve">
     <value>JSON ファイルの解析エラー</value>
   </data>
   <data name="Everything" xml:space="preserve">
-    <value>Tudo</value>
+    <value>すべて</value>
   </data>
   <data name="Extension" xml:space="preserve">
-    <value>Extensão</value>
+    <value>拡張機能</value>
   </data>
   <data name="Facebook" xml:space="preserve">
     <value>Facebook</value>
@@ -1009,10 +937,10 @@
     <value>ユーザーのパスワードをリセットできませんでした</value>
   </data>
   <data name="Feeds" xml:space="preserve">
-    <value>Feeds</value>
+    <value>フィード</value>
   </data>
   <data name="field" xml:space="preserve">
-    <value>campo</value>
+    <value>フィールド</value>
   </data>
   <data name="File is too large" xml:space="preserve">
     <value>ファイルが大きすぎます</value>
@@ -1021,10 +949,10 @@
     <value>ファイルマネージャー</value>
   </data>
   <data name="Filler" xml:space="preserve">
-    <value>Preenchimento</value>
+    <value>フィラー</value>
   </data>
   <data name="Filter" xml:space="preserve">
-    <value>Filtro</value>
+    <value>フィルター</value>
   </data>
   <data name="First name" xml:space="preserve">
     <value>ファーストネーム</value>
@@ -1042,7 +970,7 @@
     <value>表紙</value>
   </data>
   <data name="General" xml:space="preserve">
-    <value>Em geral</value>
+    <value>一般</value>
   </data>
   <data name="GitHub" xml:space="preserve">
     <value>GitHub</value>
@@ -1066,7 +994,7 @@
     <value>ユーザーにモデレータを付与する</value>
   </data>
   <data name="Header" xml:space="preserve">
-    <value>Cabeçalho</value>
+    <value>ヘッダー</value>
   </data>
   <data name="Header image must be valid" xml:space="preserve">
     <value>ヘッダー画像は有効である必要があります</value>
@@ -1075,13 +1003,13 @@
     <value>{0} の確認コードは次のとおりです</value>
   </data>
   <data name="History" xml:space="preserve">
-    <value>História</value>
+    <value>履歴</value>
   </data>
   <data name="How to delete your data" xml:space="preserve">
     <value>データを削除する方法</value>
   </data>
   <data name="Id" xml:space="preserve">
-    <value>Id</value>
+    <value>ID</value>
   </data>
   <data name="Id is required" xml:space="preserve">
     <value>IDは必須です</value>
@@ -1102,7 +1030,7 @@
     <value>シークレットモード</value>
   </data>
   <data name="Info" xml:space="preserve">
-    <value>Informações</value>
+    <value>情報</value>
   </data>
   <data name="Instagram" xml:space="preserve">
     <value>Instagram</value>
@@ -1126,19 +1054,19 @@
     <value>これらのリカバリ コードを安全な場所に保管してください</value>
   </data>
   <data name="Key" xml:space="preserve">
-    <value>Chave</value>
+    <value>キー</value>
   </data>
   <data name="Keywords" xml:space="preserve">
-    <value>Palavras-chave</value>
+    <value>キーワード</value>
   </data>
   <data name="Language" xml:space="preserve">
-    <value>Linguagem</value>
+    <value>言語</value>
   </data>
   <data name="Language must be valid" xml:space="preserve">
     <value>言語は有効である必要があります</value>
   </data>
   <data name="Large" xml:space="preserve">
-    <value>Grande</value>
+    <value>大</value>
   </data>
   <data name="Last 180 days" xml:space="preserve">
     <value>過去 180 日間</value>
@@ -1174,7 +1102,7 @@
     <value>最新ニュース</value>
   </data>
   <data name="Leave" xml:space="preserve">
-    <value>Sair</value>
+    <value>離れる</value>
   </data>
   <data name="Leave incognito" xml:space="preserve">
     <value>シークレットモードから離れる</value>
@@ -1183,7 +1111,7 @@
     <value>メンテナンスモードを終了する</value>
   </data>
   <data name="link" xml:space="preserve">
-    <value>link</value>
+    <value>リンク</value>
   </data>
   <data name="LinkedIn" xml:space="preserve">
     <value>LinkedIn</value>
@@ -1198,7 +1126,7 @@
     <value>ログアウト</value>
   </data>
   <data name="Login" xml:space="preserve">
-    <value>Conecte-se</value>
+    <value>ログイン</value>
   </data>
   <data name="Login to quick reply" xml:space="preserve">
     <value>クイック返信するにはログインしてください</value>
@@ -1210,19 +1138,19 @@
     <value>ログインして反応してください</value>
   </data>
   <data name="Logo" xml:space="preserve">
-    <value>Logotipo</value>
+    <value>ロゴ</value>
   </data>
   <data name="Logo • Avatar" xml:space="preserve">
     <value>ロゴ・アバター</value>
   </data>
   <data name="Logout" xml:space="preserve">
-    <value>Sair</value>
+    <value>ログアウト</value>
   </data>
   <data name="Loop in relationships are not allowed" xml:space="preserve">
     <value>関係のループは許可されません</value>
   </data>
   <data name="Maintenance" xml:space="preserve">
-    <value>Manutenção</value>
+    <value>メンテナンス</value>
   </data>
   <data name="Make primary" xml:space="preserve">
     <value>プライマリにする</value>
@@ -1246,13 +1174,13 @@
     <value>たぶん後で</value>
   </data>
   <data name="Medium" xml:space="preserve">
-    <value>Médio</value>
+    <value>中</value>
   </data>
   <data name="Microsoft" xml:space="preserve">
     <value>Microsoft</value>
   </data>
   <data name="Misc" xml:space="preserve">
-    <value>Diversos</value>
+    <value>その他</value>
   </data>
   <data name="Moderate comments" xml:space="preserve">
     <value>モデレーターのコメント</value>
@@ -1261,10 +1189,10 @@
     <value>司会者</value>
   </data>
   <data name="Moderator" xml:space="preserve">
-    <value>Moderador</value>
+    <value>モデレーター</value>
   </data>
   <data name="Modified" xml:space="preserve">
-    <value>Modificado</value>
+    <value>更新済み</value>
   </data>
   <data name="Most popular" xml:space="preserve">
     <value>最も人気のある</value>
@@ -1279,7 +1207,7 @@
     <value>リスト内で上に移動します</value>
   </data>
   <data name="Name" xml:space="preserve">
-    <value>Nome</value>
+    <value>名前</value>
   </data>
   <data name="Name (website)" xml:space="preserve">
     <value>名前（ウェブサイト）</value>
@@ -1300,7 +1228,7 @@
     <value>Nano ID が必要です</value>
   </data>
   <data name="New" xml:space="preserve">
-    <value>Novo</value>
+    <value>新規</value>
   </data>
   <data name="New folder" xml:space="preserve">
     <value>新しいフォルダー</value>
@@ -1315,7 +1243,7 @@
     <value>新しいパスワードが一致しません、互いに異なります</value>
   </data>
   <data name="No" xml:space="preserve">
-    <value>Não</value>
+    <value>いいえ</value>
   </data>
   <data name="No categories whatsoever" xml:space="preserve">
     <value>カテゴリは何もありません</value>
@@ -1357,13 +1285,13 @@
     <value>動画は一切ありません</value>
   </data>
   <data name="None" xml:space="preserve">
-    <value>Nenhum</value>
+    <value>なし</value>
   </data>
   <data name="Not specified" xml:space="preserve">
     <value>指定されていない</value>
   </data>
   <data name="Note" xml:space="preserve">
-    <value>Observação</value>
+    <value>メモ</value>
   </data>
   <data name="Note cannot exceed {0} characters" xml:space="preserve">
     <value>注は {0} 文字を超えることはできません</value>
@@ -1390,7 +1318,7 @@
     <value>動画ファイルのみ</value>
   </data>
   <data name="Oops" xml:space="preserve">
-    <value>Ops</value>
+    <value>おっと</value>
   </data>
   <data name="Oops, this key is not valid or it was already used to reset your password" xml:space="preserve">
     <value>このキーは無効であるか、パスワードのリセットにすでに使用されています</value>
@@ -1408,7 +1336,7 @@
     <value>Origami</value>
   </data>
   <data name="Original" xml:space="preserve">
-    <value>Original</value>
+    <value>元</value>
   </data>
   <data name="Original name" xml:space="preserve">
     <value>元の名前</value>
@@ -1420,7 +1348,7 @@
     <value>P</value>
   </data>
   <data name="Page" xml:space="preserve">
-    <value>Página</value>
+    <value>ページ</value>
   </data>
   <data name="Page cannot be retrieved" xml:space="preserve">
     <value>ページを取得できません</value>
@@ -1438,19 +1366,19 @@
     <value>ページが見つかりません</value>
   </data>
   <data name="Pages" xml:space="preserve">
-    <value>Páginas</value>
+    <value>ページ</value>
   </data>
   <data name="Pages found in the search" xml:space="preserve">
     <value>検索で見つかったページ</value>
   </data>
   <data name="Parent" xml:space="preserve">
-    <value>Pai</value>
+    <value>親</value>
   </data>
   <data name="Parent category" xml:space="preserve">
     <value>親カテゴリ</value>
   </data>
   <data name="Password" xml:space="preserve">
-    <value>Senha</value>
+    <value>パスワード</value>
   </data>
   <data name="Password has been reset successfully" xml:space="preserve">
     <value>パスワードが正常にリセットされました</value>
@@ -1468,7 +1396,7 @@
     <value>ここに HTML iframe を貼り付けて、YouTube などに埋め込みます</value>
   </data>
   <data name="Path" xml:space="preserve">
-    <value>Caminho</value>
+    <value>パス</value>
   </data>
   <data name="People online" xml:space="preserve">
     <value>オンラインの人々</value>
@@ -1486,7 +1414,7 @@
     <value>ピンコメント</value>
   </data>
   <data name="Pinned" xml:space="preserve">
-    <value>Fixado</value>
+    <value>固定</value>
   </data>
   <data name="Pinned by" xml:space="preserve">
     <value>固定者</value>
@@ -1495,7 +1423,7 @@
     <value>ここにコメントを入れてください</value>
   </data>
   <data name="Platforms" xml:space="preserve">
-    <value>Plataformas</value>
+    <value>プラットフォーム</value>
   </data>
   <data name="Please, talk to a system administrator" xml:space="preserve">
     <value>システム管理者に相談してください</value>
@@ -1504,7 +1432,7 @@
     <value>後でもう一度お試しください</value>
   </data>
   <data name="Post" xml:space="preserve">
-    <value>Publicar</value>
+    <value>公開</value>
   </data>
   <data name="postRating.Rating" xml:space="preserve">
     <value>postRating.Rating</value>
@@ -1513,7 +1441,7 @@
     <value>postReaction.Reaction</value>
   </data>
   <data name="Posts" xml:space="preserve">
-    <value>Postagens</value>
+    <value>公開</value>
   </data>
   <data name="Posts comments" xml:space="preserve">
     <value>コメントを投稿する</value>
@@ -1525,7 +1453,7 @@
     <value>投稿、ビデオ</value>
   </data>
   <data name="Primary" xml:space="preserve">
-    <value>Primário</value>
+    <value>メイン</value>
   </data>
   <data name="Primary blog cannot be deactivated" xml:space="preserve">
     <value>プライマリブログは非アクティブ化できません</value>
@@ -1537,7 +1465,7 @@
     <value>プライバシーポリシー</value>
   </data>
   <data name="Profile" xml:space="preserve">
-    <value>Perfil</value>
+    <value>プロフィール</value>
   </data>
   <data name="Profile data was wiped out" xml:space="preserve">
     <value>プロフィールデータが消去されました</value>
@@ -1549,7 +1477,7 @@
     <value>プロファイルが見つかりません</value>
   </data>
   <data name="Progress" xml:space="preserve">
-    <value>Progresso</value>
+    <value>進行状況</value>
   </data>
   <data name="Promote to front-page" xml:space="preserve">
     <value>トップページに昇格する</value>
@@ -1609,7 +1537,7 @@
     <value>ビデオを公開する</value>
   </data>
   <data name="Published" xml:space="preserve">
-    <value>Publicado</value>
+    <value>公開済み</value>
   </data>
   <data name="Published pages" xml:space="preserve">
     <value>公開されたページ</value>
@@ -1625,9 +1553,6 @@
   </data>
   <data name="Published videos" xml:space="preserve">
     <value>公開されたビデオ</value>
-  </data>
-  <data name="published.GetType().Name" xml:space="preserve">
-    <value>published.GetType().Name</value>
   </data>
   <data name="Purge blogs" xml:space="preserve">
     <value>ブログをパージする</value>
@@ -1687,7 +1612,7 @@
     <value>{0} の評価:</value>
   </data>
   <data name="Rating" xml:space="preserve">
-    <value>Avaliação</value>
+    <value>評価</value>
   </data>
   <data name="Rating 1 is not accounted for in the final rating" xml:space="preserve">
     <value>評価 1 は最終評価には考慮されません</value>
@@ -1702,7 +1627,7 @@
     <value>rating.Rating</value>
   </data>
   <data name="Ratings" xml:space="preserve">
-    <value>Avaliações</value>
+    <value>評価</value>
   </data>
   <data name="Ratings on posts" xml:space="preserve">
     <value>投稿の評価</value>
@@ -1719,11 +1644,8 @@
   <data name="Reaction needs one author" xml:space="preserve">
     <value>リアクションには 1 人の著者が必要です</value>
   </data>
-  <data name="reaction.Reaction" xml:space="preserve">
-    <value>reaction.Reaction</value>
-  </data>
   <data name="Reactions" xml:space="preserve">
-    <value>Reações</value>
+    <value>リアクション</value>
   </data>
   <data name="Refresh your browser" xml:space="preserve">
     <value>ブラウザを更新してください</value>
@@ -1750,7 +1672,7 @@
     <value>発売日</value>
   </data>
   <data name="Reload" xml:space="preserve">
-    <value>Recarregar</value>
+    <value>再読み込み</value>
   </data>
   <data name="Remove picture" xml:space="preserve">
     <value>画像を削除する</value>
@@ -1758,11 +1680,8 @@
   <data name="Repeat new password" xml:space="preserve">
     <value>新しいパスワードを繰り返します</value>
   </data>
-  <data name="replies.Count()" xml:space="preserve">
-    <value>replies.Count()</value>
-  </data>
   <data name="Reply" xml:space="preserve">
-    <value>Responder</value>
+    <value>返信</value>
   </data>
   <data name="Reply comment" xml:space="preserve">
     <value>コメント返信</value>
@@ -1777,7 +1696,7 @@
     <value>情報消去の要求</value>
   </data>
   <data name="Reset" xml:space="preserve">
-    <value>Reiniciar</value>
+    <value>リセット</value>
   </data>
   <data name="Reset 2FA" xml:space="preserve">
     <value>2FA をリセット</value>
@@ -1798,7 +1717,7 @@
     <value>パスワードをリセットする</value>
   </data>
   <data name="Restore" xml:space="preserve">
-    <value>Restaurar</value>
+    <value>復元</value>
   </data>
   <data name="Restore blogs" xml:space="preserve">
     <value>ブログを復元する</value>
@@ -1858,10 +1777,10 @@
     <value>ソーシャルプロフィールからモデレーターの役割を取り消す</value>
   </data>
   <data name="Role" xml:space="preserve">
-    <value>Papel</value>
+    <value>ロール</value>
   </data>
   <data name="Roles" xml:space="preserve">
-    <value>Funções</value>
+    <value>ロール</value>
   </data>
   <data name="Roles are up-to-date" xml:space="preserve">
     <value>役割は最新です</value>
@@ -1891,7 +1810,7 @@
     <value>RSS フィードは有効な Web サイトのアドレスである必要があります</value>
   </data>
   <data name="Save" xml:space="preserve">
-    <value>Salvar</value>
+    <value>保存</value>
   </data>
   <data name="Save and publish" xml:space="preserve">
     <value>保存して公開する</value>
@@ -1909,7 +1828,7 @@
     <value>認証アプリでこの QR コードをスキャンします</value>
   </data>
   <data name="Search" xml:space="preserve">
-    <value>Procurar</value>
+    <value>検索</value>
   </data>
   <data name="See browser dev tools for details" xml:space="preserve">
     <value>詳細については、ブラウザ開発ツールを参照してください。</value>
@@ -1966,19 +1885,19 @@
     <value>確認コードを送信する</value>
   </data>
   <data name="Settings" xml:space="preserve">
-    <value>Configurações</value>
+    <value>設定</value>
   </data>
   <data name="settings.Name" xml:space="preserve">
     <value>settings.Name</value>
   </data>
   <data name="Size" xml:space="preserve">
-    <value>Tamanho</value>
+    <value>サイズ</value>
   </data>
   <data name="Slow" xml:space="preserve">
-    <value>Lento</value>
+    <value>低速</value>
   </data>
   <data name="Slug" xml:space="preserve">
-    <value>Lesma</value>
+    <value>スラッグ</value>
   </data>
   <data name="Slug cannot exceed {0} characters" xml:space="preserve">
     <value>スラグは {0} 文字を超えることはできません</value>
@@ -1987,7 +1906,7 @@
     <value>スラッグはすでに使用されています</value>
   </data>
   <data name="Small" xml:space="preserve">
-    <value>Pequeno</value>
+    <value>小</value>
   </data>
   <data name="SMTP password" xml:space="preserve">
     <value>SMTPパスワード</value>
@@ -2013,29 +1932,11 @@
   <data name="Social profiles found in the search" xml:space="preserve">
     <value>検索で見つかったソーシャル プロフィール</value>
   </data>
-  <data name="socialProfileDelete.PostCommentReactions" xml:space="preserve">
-    <value>socialProfileDelete.PostCommentReactions</value>
-  </data>
-  <data name="socialProfileDelete.PostComments" xml:space="preserve">
-    <value>socialProfileDelete.PostComments</value>
-  </data>
-  <data name="socialProfileDelete.PostRatings" xml:space="preserve">
-    <value>socialProfileDelete.PostRatings</value>
-  </data>
-  <data name="socialProfileDelete.VideoCommentReactions" xml:space="preserve">
-    <value>socialProfileDelete.VideoCommentReactions</value>
-  </data>
-  <data name="socialProfileDelete.VideoComments" xml:space="preserve">
-    <value>socialProfileDelete.VideoComments</value>
-  </data>
-  <data name="socialProfileDelete.VideoRatings" xml:space="preserve">
-    <value>socialProfileDelete.VideoRatings</value>
-  </data>
   <data name="Source and destination images share the same location" xml:space="preserve">
     <value>ソース画像と宛先画像が同じ場所を共有する</value>
   </data>
   <data name="Spam" xml:space="preserve">
-    <value>Spam</value>
+    <value>スパム</value>
   </data>
   <data name="Spam comments" xml:space="preserve">
     <value>スパムコメント</value>
@@ -2065,46 +1966,46 @@
     <value>開始日を終了日より後にすることはできません</value>
   </data>
   <data name="Stats" xml:space="preserve">
-    <value>Estatísticas</value>
+    <value>統計</value>
   </data>
   <data name="Status" xml:space="preserve">
-    <value>Status</value>
+    <value>状態</value>
   </data>
   <data name="Still a draft?" xml:space="preserve">
     <value>まだドラフトですか?</value>
   </data>
   <data name="Stop" xml:space="preserve">
-    <value>Parar</value>
+    <value>停止</value>
   </data>
   <data name="Stops the timer" xml:space="preserve">
     <value>タイマーを停止します</value>
   </data>
   <data name="Subscribe" xml:space="preserve">
-    <value>Inscrever-se</value>
+    <value>登録</value>
   </data>
   <data name="Subscribe to the website" xml:space="preserve">
     <value>ウェブサイトを購読する</value>
   </data>
   <data name="Subscriber" xml:space="preserve">
-    <value>Assinante</value>
+    <value>登録者</value>
   </data>
   <data name="Subscriber(s)" xml:space="preserve">
     <value>購読者</value>
   </data>
   <data name="Success" xml:space="preserve">
-    <value>Sucesso</value>
+    <value>成功</value>
   </data>
   <data name="System role" xml:space="preserve">
     <value>システムの役割</value>
   </data>
   <data name="Tag" xml:space="preserve">
-    <value>Marcação</value>
+    <value>タグ</value>
   </data>
   <data name="Tag cannot exceed {0} characters" xml:space="preserve">
     <value>タグは {0} 文字を超えることはできません</value>
   </data>
   <data name="Tags" xml:space="preserve">
-    <value>Etiquetas</value>
+    <value>タグ</value>
   </data>
   <data name="Tags found in the search" xml:space="preserve">
     <value>検索で見つかったタグ</value>
@@ -2127,24 +2028,6 @@
   <data name="Test connection" xml:space="preserve">
     <value>テスト接続</value>
   </data>
-  <data name="Text.OperationCompletedSuccessfully" xml:space="preserve">
-    <value>Text.OperationCompletedSuccessfully</value>
-  </data>
-  <data name="Text.SomethingWentWrongPleaseTryAgain" xml:space="preserve">
-    <value>Text.SomethingWentWrongPleaseTryAgain</value>
-  </data>
-  <data name="Text.Styles.Original" xml:space="preserve">
-    <value>Text.Styles.Original</value>
-  </data>
-  <data name="Text.Styles.Uppercase" xml:space="preserve">
-    <value>Text.Styles.Uppercase</value>
-  </data>
-  <data name="Text.YouDontHavePermissionForThisFeature" xml:space="preserve">
-    <value>Text.YouDontHavePermissionForThisFeature</value>
-  </data>
-  <data name="Text.YouMadeTooManyCommentsIn5Minutes" xml:space="preserve">
-    <value>Text.YouMadeTooManyCommentsIn5Minutes</value>
-  </data>
   <data name="The author marked this as draft" xml:space="preserve">
     <value>作成者はこれを下書きとしてマークしました</value>
   </data>
@@ -2163,38 +2046,17 @@
   <data name="this is a front-page" xml:space="preserve">
     <value>これはトップページです</value>
   </data>
-  <data name="this._files.Count()" xml:space="preserve">
-    <value>this._files.Count()</value>
-  </data>
-  <data name="this.Entity.GetEmail()" xml:space="preserve">
-    <value>this.Entity.GetEmail()</value>
-  </data>
-  <data name="this.FileLimitInBytes.SizeInBytes()" xml:space="preserve">
-    <value>this.FileLimitInBytes.SizeInBytes()</value>
-  </data>
-  <data name="this.PublishedPosts" xml:space="preserve">
-    <value>this.PublishedPosts</value>
-  </data>
-  <data name="this.PublishedVideos" xml:space="preserve">
-    <value>this.PublishedVideos</value>
-  </data>
-  <data name="this.Super.GetContents(context.Item, this.UserFacade.BlogId).OfType&lt;OrigamiPost&gt;().Published().Count()" xml:space="preserve">
-    <value>this.Super.GetContents(context.Item, this.UserFacade.BlogID).OfType&lt;OrigamiPost&gt;().Published().Count()</value>
-  </data>
-  <data name="this.Super.GetContents(context.Item, this.UserFacade.BlogId).OfType&lt;OrigamiVideo&gt;().Published().Count()" xml:space="preserve">
-    <value>this.Super.GetContents(context.Item, this.UserFacade.BlogID).OfType&lt;OrigamiVideo&gt;().Published().Count()</value>
-  </data>
   <data name="Thumbnail" xml:space="preserve">
-    <value>Miniatura</value>
+    <value>サムネイル</value>
   </data>
   <data name="Time period" xml:space="preserve">
     <value>期間</value>
   </data>
   <data name="Timezone" xml:space="preserve">
-    <value>Fuso horário</value>
+    <value>タイムゾーン</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>Título</value>
+    <value>タイトル</value>
   </data>
   <data name="Title cannot exceed 255 characters" xml:space="preserve">
     <value>タイトルは 255 文字を超えることはできません</value>
@@ -2206,7 +2068,7 @@
     <value>フロントページに昇格するには、そのページがトップレベルである必要があります</value>
   </data>
   <data name="Trash" xml:space="preserve">
-    <value>Lixo</value>
+    <value>ゴミ箱</value>
   </data>
   <data name="Try again to solve this issue" xml:space="preserve">
     <value>この問題を解決するためにもう一度試してください</value>
@@ -2257,7 +2119,7 @@
     <value>ユーザーのブロックを解除する</value>
   </data>
   <data name="Undo" xml:space="preserve">
-    <value>Desfazer</value>
+    <value>元に戻す</value>
   </data>
   <data name="Undo changes" xml:space="preserve">
     <value>変更を元に戻す</value>
@@ -2329,7 +2191,7 @@
     <value>ユーザーの購読を解除する</value>
   </data>
   <data name="Upload" xml:space="preserve">
-    <value>Carregar</value>
+    <value>アップロード</value>
   </data>
   <data name="Upload files" xml:space="preserve">
     <value>ファイルをアップロードする</value>
@@ -2344,7 +2206,7 @@
     <value>ファイルのアップロード</value>
   </data>
   <data name="User" xml:space="preserve">
-    <value>Usuário</value>
+    <value>ユーザー</value>
   </data>
   <data name="User actions" xml:space="preserve">
     <value>ユーザーのアクション</value>
@@ -2362,7 +2224,7 @@
     <value>ユーザーのゴミ箱</value>
   </data>
   <data name="Username" xml:space="preserve">
-    <value>Nome de usuário</value>
+    <value>ユーザー名</value>
   </data>
   <data name="Username (read-only)" xml:space="preserve">
     <value>ユーザー名 (読み取り専用)</value>
@@ -2377,7 +2239,7 @@
     <value>ユーザー名は必須です</value>
   </data>
   <data name="Users" xml:space="preserve">
-    <value>Usuários</value>
+    <value>ユーザー</value>
   </data>
   <data name="Validate code and finish subscribing" xml:space="preserve">
     <value>コードを検証して購読を完了する</value>
@@ -2389,19 +2251,19 @@
     <value>TOTP コードを検証して続行します</value>
   </data>
   <data name="Value" xml:space="preserve">
-    <value>Valor</value>
+    <value>値</value>
   </data>
   <data name="Version" xml:space="preserve">
-    <value>Versão</value>
+    <value>バージョン</value>
   </data>
   <data name="Video" xml:space="preserve">
-    <value>Vídeo</value>
+    <value>動画</value>
   </data>
   <data name="Video cannot be updated" xml:space="preserve">
     <value>ビデオを更新できません</value>
   </data>
   <data name="Videos" xml:space="preserve">
-    <value>Vídeos</value>
+    <value>動画</value>
   </data>
   <data name="Videos comments" xml:space="preserve">
     <value>動画のコメント</value>
@@ -2461,7 +2323,7 @@
     <value>ビデオを見る</value>
   </data>
   <data name="Warning" xml:space="preserve">
-    <value>Aviso</value>
+    <value>警告</value>
   </data>
   <data name="We need a valid e-mail to subscribe" xml:space="preserve">
     <value>購読するには有効な電子メールが必要です</value>
@@ -2470,7 +2332,7 @@
     <value>当社は、お客様のブラウジング エクスペリエンスを向上させ、サイトのトラフィックを分析し、コンテンツをパーソナライズし、ターゲットを絞った広告を提供するために、Cookie および同様のテクノロジーを使用します。</value>
   </data>
   <data name="Website" xml:space="preserve">
-    <value>Site</value>
+    <value>ウェブサイト</value>
   </data>
   <data name="What to see next" xml:space="preserve">
     <value>次に見るべきもの</value>
@@ -2485,7 +2347,7 @@
     <value>ユーザーデータを消去する</value>
   </data>
   <data name="Yes" xml:space="preserve">
-    <value>Sim</value>
+    <value>はい</value>
   </data>
   <data name="Yes, since" xml:space="preserve">
     <value>はい、それ以来</value>
@@ -2584,7 +2446,7 @@
     <value>ZIPファイルが正常に作成されました。</value>
   </data>
   <data name="Type" xml:space="preserve">
-    <value>Tipo</value>
+    <value>タイプ</value>
   </data>
   <data name="Yay! Everything went smoothly" xml:space="preserve">
     <value>わーい！すべてがスムーズに進みました</value>
