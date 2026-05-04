@@ -59,7 +59,7 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
@@ -117,2329 +117,2485 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="_comments.Count" xml:space="preserve">
+    <value>_comments.Count</value>
+  </data>
+  <data name="_directories.Count()" xml:space="preserve">
+    <value>_directories.Count()</value>
+  </data>
+  <data name="_resetPassword" xml:space="preserve">
+    <value>_resetPassword</value>
+  </data>
   <data name="({0} files max)" xml:space="preserve">
-    <value>(최대 {0} 파일)</value>
+    <value>(File massimi {0})</value>
   </data>
   <data name="[At the time]" xml:space="preserve">
-    <value>[당시]</value>
+    <value>[Al momento]</value>
   </data>
   <data name="{0} comment(s)" xml:space="preserve">
-    <value>{0} 댓글</value>
+    <value>{0} commento/i</value>
   </data>
   <data name="{0} directories" xml:space="preserve">
-    <value>{0} 디렉토리</value>
+    <value>Directory {0}</value>
   </data>
   <data name="{0} directory" xml:space="preserve">
-    <value>{0} 디렉토리</value>
+    <value>Rubrica {0}</value>
   </data>
   <data name="{0} does NOT exist" xml:space="preserve">
-    <value>{0}가 존재하지 않습니다</value>
+    <value>{0} NON ESISTE</value>
   </data>
   <data name="{0} file" xml:space="preserve">
-    <value>{0} 파일</value>
+    <value>{0}</value>
   </data>
   <data name="{0} files" xml:space="preserve">
-    <value>{0} 파일</value>
+    <value>File {0}</value>
   </data>
   <data name="{0} is already published" xml:space="preserve">
-    <value>{0}는 이미 게시되었습니다.</value>
+    <value>{0} è già stato pubblicato</value>
   </data>
   <data name="{0} is already unpublished" xml:space="preserve">
-    <value>{0}는 이미 게시 취소되었습니다.</value>
+    <value>{0} non è più pubblicato</value>
   </data>
   <data name="{0} max." xml:space="preserve">
-    <value>최대 {0}</value>
+    <value>{0}max.</value>
   </data>
   <data name="{0} people rated this content" xml:space="preserve">
-    <value>{0} 사람들이 이 콘텐츠를 평가했습니다.</value>
+    <value>{0} persone hanno valutato questo contenuto</value>
   </data>
   <data name="{0} person rated this content" xml:space="preserve">
-    <value>{0} 사람이 이 콘텐츠를 평가했습니다.</value>
+    <value>{0} persona ha valutato questo contenuto</value>
   </data>
   <data name="{0} post comment(s)" xml:space="preserve">
-    <value>{0} 게시물 댓글</value>
+    <value>{0} commento/i sul post</value>
   </data>
   <data name="{0} post rating(s)" xml:space="preserve">
-    <value>{0} 게시물 평가</value>
+    <value>Recensione/i {0} nel post</value>
   </data>
   <data name="{0} post reaction(s)" xml:space="preserve">
-    <value>{0} 사후 반응</value>
+    <value>{0} reazione/i sul post</value>
   </data>
   <data name="{0} post(s)" xml:space="preserve">
-    <value>{0} 게시물</value>
+    <value>Messaggio/i {0}</value>
   </data>
   <data name="{0} replies" xml:space="preserve">
-    <value>{0} 답글</value>
+    <value>{0} risponde</value>
   </data>
   <data name="{0} reply" xml:space="preserve">
-    <value>{0} 답장</value>
+    <value>Risposta {0}</value>
   </data>
   <data name="{0} video comment(s)" xml:space="preserve">
-    <value>{0} 동영상 댓글</value>
+    <value>{0} commento/i video</value>
   </data>
   <data name="{0} video rating(s)" xml:space="preserve">
-    <value>{0} 비디오 등급</value>
+    <value>{0} recensione video</value>
   </data>
   <data name="{0} video reaction(s)" xml:space="preserve">
-    <value>{0} 비디오 반응</value>
+    <value>Reazioni video {0}</value>
   </data>
   <data name="{0} video(s)" xml:space="preserve">
-    <value>{0} 동영상</value>
+    <value>{0} video(i)</value>
   </data>
   <data name="{0}: Invalid domain format." xml:space="preserve">
-    <value>{0}: 도메인 형식이 잘못되었습니다.</value>
+    <value>{0}: formato di dominio non valido.</value>
   </data>
   <data name="{0}: URL must be a valid website address" xml:space="preserve">
-    <value>{0}: URL은 유효한 웹사이트 주소여야 합니다.</value>
+    <value>{0}: l'URL deve essere un indirizzo di sito Web valido</value>
   </data>
   <data name="{0}GB max." xml:space="preserve">
-    <value>최대 {0}GB</value>
+    <value>{0}GBmax.</value>
   </data>
   <data name="{0}KB max." xml:space="preserve">
-    <value>최대 {0}KB</value>
+    <value>{0}KBmax.</value>
   </data>
   <data name="{0}MB max." xml:space="preserve">
-    <value>최대 {0}MB</value>
+    <value>{0}MBmax.</value>
   </data>
   <data name="*** [Test] Subscribe to the website ***" xml:space="preserve">
-    <value>*** [테스트] 웹사이트 구독 ***</value>
+    <value>*** [Test] Iscriviti sul sito ***</value>
   </data>
   <data name="1. tell us your e-mail" xml:space="preserve">
-    <value>1. 이메일을 알려주세요</value>
+    <value>1. comunicaci la tua email</value>
   </data>
   <data name="2. validate e-mail (check your spam folder)" xml:space="preserve">
-    <value>2. 이메일 유효성 검사(스팸 폴더 확인)</value>
+    <value>2. convalida l'e-mail (controlla la cartella spam)</value>
   </data>
   <data name="2FA code" xml:space="preserve">
-    <value>2FA 코드</value>
+    <value>Codice 2FA</value>
   </data>
   <data name="2FA recovery codes?" xml:space="preserve">
-    <value>2FA 복구 코드?</value>
+    <value>Codici di ripristino 2FA?</value>
   </data>
   <data name="2FA secret?" xml:space="preserve">
-    <value>2FA 비밀?</value>
+    <value>Segreto 2FA?</value>
   </data>
   <data name="2FA setup" xml:space="preserve">
-    <value>2FA 설정</value>
+    <value>Configurazione 2FA</value>
   </data>
   <data name="A backup or restore process is already running. Please try again later." xml:space="preserve">
-    <value>백업 또는 복원 프로세스가 이미 실행 중입니다. 나중에 다시 시도해 주세요.</value>
+    <value>Un processo di backup o ripristino è già in esecuzione. Per favore riprova più tardi.</value>
   </data>
   <data name="A backup process is currently running. Some actions are disabled until the process is complete." xml:space="preserve">
-    <value>현재 백업 프로세스가 실행 중입니다. 프로세스가 완료될 때까지 일부 작업이 비활성화됩니다.</value>
+    <value>È in esecuzione un processo di backup. Alcune azioni sono disabilitate fino al completamento del processo.</value>
   </data>
   <data name="A restore process is currently running. Some actions are disabled until the process is complete." xml:space="preserve">
-    <value>현재 복원 프로세스가 실행 중입니다. 프로세스가 완료될 때까지 일부 작업이 비활성화됩니다.</value>
+    <value>È in esecuzione un processo di ripristino. Alcune azioni sono disabilitate fino al completamento del processo.</value>
   </data>
   <data name="Accessed" xml:space="preserve">
-    <value>접근됨</value>
+    <value>Accesso effettuato</value>
   </data>
   <data name="Activate blog" xml:space="preserve">
-    <value>블로그 활성화</value>
+    <value>Attiva il blog</value>
   </data>
   <data name="Activate blogs" xml:space="preserve">
-    <value>블로그 활성화</value>
+    <value>Abilita i blog</value>
   </data>
   <data name="Active" xml:space="preserve">
-    <value>활성</value>
+    <value>Attivo</value>
   </data>
   <data name="Add comment" xml:space="preserve">
-    <value>댓글 추가</value>
+    <value>Aggiungi commento</value>
   </data>
   <data name="Add folder" xml:space="preserve">
-    <value>폴더 추가</value>
+    <value>Aggiungi cartella</value>
   </data>
   <data name="Admin" xml:space="preserve">
-    <value>관리자</value>
+    <value>Amministratore</value>
   </data>
   <data name="All" xml:space="preserve">
-    <value>전체</value>
+    <value>Tutti</value>
   </data>
   <data name="All comments" xml:space="preserve">
-    <value>모든 댓글</value>
+    <value>Tutti i commenti</value>
   </data>
   <data name="All location providers failed" xml:space="preserve">
-    <value>모든 위치 제공자 실패</value>
+    <value>Tutti i provider di posizione hanno fallito</value>
   </data>
   <data name="Alphabetical sorting" xml:space="preserve">
-    <value>알파벳순 정렬</value>
+    <value>Ordinamento alfabetico</value>
   </data>
   <data name="Alphabetical sorting inverted" xml:space="preserve">
-    <value>알파벳순 정렬 반전</value>
+    <value>Ordinamento alfabetico invertito</value>
   </data>
   <data name="Also in" xml:space="preserve">
-    <value>또한</value>
+    <value>Anche dentro</value>
   </data>
   <data name="An entity cannot be its own parent" xml:space="preserve">
-    <value>엔터티는 자신의 상위가 될 수 없습니다.</value>
+    <value>Un'entità non può essere titolare del controllo di se stessa</value>
   </data>
   <data name="An error has occurred" xml:space="preserve">
-    <value>오류가 발생했습니다.</value>
+    <value>Si è verificato un errore</value>
   </data>
   <data name="An unhandled exception has occurred" xml:space="preserve">
-    <value>처리되지 않은 예외가 발생했습니다.</value>
+    <value>Si è verificata un'eccezione non gestita</value>
   </data>
   <data name="And click OK to close this pop-up window" xml:space="preserve">
-    <value>그리고 확인을 눌러 이 팝업 창을 닫으세요.</value>
+    <value>E fai clic su OK per chiudere questa finestra pop-up</value>
   </data>
   <data name="Anonymous" xml:space="preserve">
-    <value>익명</value>
+    <value>Anonimo</value>
   </data>
   <data name="Answering" xml:space="preserve">
-    <value>응답 중</value>
+    <value>Rispondendo</value>
   </data>
   <data name="Anyway, click here to go back to the Website" xml:space="preserve">
-    <value>어쨌든, 웹사이트로 돌아가려면 여기를 클릭하세요</value>
+    <value>In ogni caso, clicca qui per tornare al sito</value>
   </data>
   <data name="Api key" xml:space="preserve">
-    <value>API 키</value>
+    <value>Chiave API</value>
   </data>
   <data name="App id" xml:space="preserve">
-    <value>앱 ID</value>
+    <value>ID dell'applicazione</value>
   </data>
   <data name="App name" xml:space="preserve">
-    <value>앱 이름</value>
+    <value>Nome dell'applicazione</value>
   </data>
   <data name="App secret" xml:space="preserve">
-    <value>앱 비밀</value>
+    <value>Segreto dell'applicazione</value>
   </data>
   <data name="Approved" xml:space="preserve">
-    <value>승인됨</value>
+    <value>Approvato</value>
   </data>
   <data name="Approved comments" xml:space="preserve">
-    <value>승인된 댓글</value>
+    <value>Commenti approvati</value>
   </data>
   <data name="Are comments enabled?" xml:space="preserve">
-    <value>댓글이 활성화되어 있나요?</value>
+    <value>I commenti sono abilitati?</value>
   </data>
   <data name="Are you sure?" xml:space="preserve">
-    <value>확실합니까?</value>
+    <value>E' sicuro?</value>
   </data>
   <data name="Are you sure? You will NOT be able to recover these items." xml:space="preserve">
-    <value>확실합니까? 이러한 항목은 복구할 수 없습니다.</value>
+    <value>E' sicuro? NON sarai in grado di recuperare questi elementi.</value>
   </data>
   <data name="Author" xml:space="preserve">
-    <value>작성자</value>
+    <value>Autore</value>
   </data>
   <data name="Author is required" xml:space="preserve">
-    <value>작성자는 필수입니다.</value>
+    <value>L'autore è obbligatorio</value>
   </data>
   <data name="Backup" xml:space="preserve">
-    <value>백업</value>
+    <value>Backup</value>
   </data>
   <data name="Backup and restore" xml:space="preserve">
-    <value>백업 및 복원</value>
+    <value>Backup e ripristino</value>
   </data>
   <data name="Backup file not found" xml:space="preserve">
-    <value>백업 파일을 찾을 수 없습니다</value>
+    <value>File di backup non trovato</value>
   </data>
   <data name="Backup files and database" xml:space="preserve">
-    <value>백업 파일 및 데이터베이스</value>
+    <value>Backup di file e database</value>
   </data>
   <data name="Backup system" xml:space="preserve">
-    <value>백업 시스템</value>
+    <value>Sistema di backup</value>
   </data>
   <data name="Backups" xml:space="preserve">
-    <value>백업</value>
+    <value>Backup</value>
   </data>
   <data name="BACPAC file created successfully" xml:space="preserve">
-    <value>BACPAC 파일이 성공적으로 생성되었습니다.</value>
+    <value>File BACPAC creato correttamente</value>
   </data>
   <data name="Base64 image" xml:space="preserve">
-    <value>Base64 이미지</value>
+    <value>Immagine Base64</value>
   </data>
   <data name="Based on title" xml:space="preserve">
-    <value>제목 기준</value>
+    <value>In base al titolo</value>
   </data>
   <data name="Basic" xml:space="preserve">
-    <value>기본</value>
+    <value>Base</value>
   </data>
   <data name="Be careful when choosing a username, you won't be able to change it later" xml:space="preserve">
-    <value>사용자 이름을 선택할 때 주의하세요. 나중에 변경할 수 없습니다.</value>
+    <value>Fai attenzione quando scegli un nome utente, non potrai cambiarlo in seguito</value>
   </data>
   <data name="Be the first to comment" xml:space="preserve">
-    <value>가장 먼저 댓글을 남겨보세요</value>
+    <value>Sii il primo a commentare</value>
   </data>
   <data name="Block social profiles" xml:space="preserve">
-    <value>소셜 프로필 차단</value>
+    <value>Blocca i profili social</value>
   </data>
   <data name="Block user" xml:space="preserve">
-    <value>사용자 차단</value>
+    <value>Blocca utente</value>
   </data>
   <data name="Block user self" xml:space="preserve">
-    <value>사용자 본인 차단</value>
+    <value>Blocca l'utente stesso</value>
   </data>
   <data name="Block users other than self" xml:space="preserve">
-    <value>본인 이외의 사용자 차단</value>
+    <value>Blocca utenti diversi da te</value>
   </data>
   <data name="Blocked" xml:space="preserve">
-    <value>차단됨</value>
+    <value>Bloccato</value>
   </data>
   <data name="Blog" xml:space="preserve">
-    <value>블로그</value>
+    <value>Blog</value>
   </data>
   <data name="Blog could not be found" xml:space="preserve">
-    <value>블로그를 찾을 수 없습니다</value>
+    <value>Impossibile trovare il blog</value>
   </data>
   <data name="Blog is already activated" xml:space="preserve">
-    <value>블로그가 이미 활성화되었습니다.</value>
+    <value>Il blog è ora attivato</value>
   </data>
   <data name="Blog is already deactivated" xml:space="preserve">
-    <value>블로그가 이미 비활성화되었습니다.</value>
+    <value>Il blog è ora disattivato</value>
   </data>
   <data name="Blog is required" xml:space="preserve">
-    <value>블로그는 필수 항목입니다.</value>
+    <value>Il blogging è obbligatorio</value>
   </data>
   <data name="Blog must be null" xml:space="preserve">
-    <value>블로그는 null이어야 합니다.</value>
+    <value>Il blog deve essere nullo</value>
   </data>
   <data name="Blogs" xml:space="preserve">
-    <value>블로그</value>
+    <value>Blog</value>
   </data>
   <data name="Blogs found in the search" xml:space="preserve">
-    <value>검색으로 찾은 블로그</value>
+    <value>Blog trovati nella ricerca</value>
   </data>
   <data name="Blogs this user has access to" xml:space="preserve">
-    <value>이 사용자가 액세스할 수 있는 블로그</value>
+    <value>Blog a cui questo utente ha accesso</value>
   </data>
   <data name="Blogs, specials..." xml:space="preserve">
-    <value>블로그, 특집...</value>
+    <value>Blog, promozioni...</value>
   </data>
   <data name="Browser • Url" xml:space="preserve">
-    <value>브라우저 • URL</value>
+    <value>Browser • URL</value>
   </data>
   <data name="Browsers" xml:space="preserve">
-    <value>브라우저</value>
+    <value>Browser</value>
   </data>
   <data name="But login first" xml:space="preserve">
-    <value>하지만 먼저 로그인하세요</value>
+    <value>Ma prima accedi</value>
   </data>
   <data name="By continuing to use our site, you consent to our use of cookies" xml:space="preserve">
-    <value>당사 사이트를 계속 사용하면 당사의 쿠키 사용에 동의하는 것입니다.</value>
+    <value>Continuando a utilizzare il nostro sito Web, accetti l'utilizzo dei cookie</value>
   </data>
   <data name="By language, most recent" xml:space="preserve">
-    <value>언어별, 최신</value>
+    <value>Per lingua, il più recente</value>
   </data>
   <data name="By language, note" xml:space="preserve">
-    <value>언어별로 참고하세요</value>
+    <value>Per lingua, si prega di notare</value>
   </data>
   <data name="By language, title" xml:space="preserve">
-    <value>언어별, 제목별</value>
+    <value>Per lingua, titolo</value>
   </data>
   <data name="By most recent" xml:space="preserve">
-    <value>가장 최근 순</value>
+    <value>Dal più recente</value>
   </data>
   <data name="By note" xml:space="preserve">
-    <value>메모로</value>
+    <value>Per nota</value>
   </data>
   <data name="By note desc." xml:space="preserve">
-    <value>메모 설명으로</value>
+    <value>Per nota desc.</value>
   </data>
   <data name="By oldest" xml:space="preserve">
-    <value>가장 오래된 순</value>
+    <value>Comunque vecchio</value>
   </data>
   <data name="By title" xml:space="preserve">
-    <value>제목별</value>
+    <value>Per titolo</value>
   </data>
   <data name="By title desc." xml:space="preserve">
-    <value>제목 설명별</value>
+    <value>Per titolo desc.</value>
   </data>
   <data name="Cache explorer" xml:space="preserve">
-    <value>캐시 탐색기</value>
+    <value>Esploratore di cache</value>
   </data>
   <data name="Callback path" xml:space="preserve">
-    <value>콜백 경로</value>
+    <value>Percorso di richiamata</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>취소</value>
+    <value>Annulla</value>
   </data>
   <data name="Categories" xml:space="preserve">
-    <value>카테고리</value>
+    <value>Categorie</value>
   </data>
   <data name="Categories found in the search" xml:space="preserve">
-    <value>검색에서 찾은 카테고리</value>
+    <value>Categorie trovate nella ricerca</value>
   </data>
   <data name="Categories must be unique" xml:space="preserve">
-    <value>카테고리는 고유해야 합니다.</value>
+    <value>Le categorie devono essere univoche</value>
   </data>
   <data name="Category" xml:space="preserve">
-    <value>카테고리</value>
+    <value>Categoria</value>
   </data>
   <data name="Category must exist" xml:space="preserve">
-    <value>카테고리가 존재해야 합니다.</value>
+    <value>La categoria deve esistere</value>
   </data>
   <data name="Change password" xml:space="preserve">
-    <value>비밀번호 변경</value>
+    <value>Cambiare la password</value>
   </data>
   <data name="Child categories" xml:space="preserve">
-    <value>어린이 카테고리</value>
+    <value>Categorie secondarie</value>
   </data>
   <data name="Children will be purged too" xml:space="preserve">
-    <value>아이들도 제거될 것이다</value>
+    <value>Anche i bambini verranno epurati</value>
   </data>
   <data name="Choose the background style" xml:space="preserve">
-    <value>배경 스타일을 선택하세요</value>
+    <value>Scegli lo stile dello sfondo</value>
   </data>
   <data name="Clear" xml:space="preserve">
-    <value>지우기</value>
+    <value>Cancella</value>
   </data>
   <data name="Clear cache" xml:space="preserve">
-    <value>캐시 지우기</value>
+    <value>Cancella cache</value>
   </data>
   <data name="Clear header" xml:space="preserve">
-    <value>헤더 지우기</value>
+    <value>Intestazione chiara</value>
   </data>
   <data name="Clear icon" xml:space="preserve">
-    <value>아이콘 지우기</value>
+    <value>Icona Cancella</value>
   </data>
   <data name="Clear image" xml:space="preserve">
-    <value>선명한 이미지</value>
+    <value>Immagine chiara</value>
   </data>
   <data name="Clear picture" xml:space="preserve">
-    <value>선명한 사진</value>
+    <value>Immagine chiara</value>
   </data>
   <data name="Clear selection" xml:space="preserve">
-    <value>선택 취소</value>
+    <value>Cancella selezione</value>
   </data>
   <data name="Clear video" xml:space="preserve">
-    <value>선명한 영상</value>
+    <value>Video chiaro</value>
   </data>
   <data name="Click here to change it" xml:space="preserve">
-    <value>변경하려면 여기를 클릭하세요.</value>
+    <value>Fare clic qui per modificarlo</value>
   </data>
   <data name="Click here to read our cookie policy" xml:space="preserve">
-    <value>쿠키 정책을 읽으려면 여기를 클릭하세요</value>
+    <value>Clicca qui per leggere la nostra cookie policy</value>
   </data>
   <data name="Click here to reset password" xml:space="preserve">
-    <value>비밀번호를 재설정하려면 여기를 클릭하세요</value>
+    <value>Fare clic qui per reimpostare la password</value>
   </data>
   <data name="Client id" xml:space="preserve">
-    <value>클라이언트 ID</value>
+    <value>ID cliente</value>
   </data>
   <data name="Client secret" xml:space="preserve">
-    <value>클라이언트 비밀번호</value>
+    <value>Segreto del cliente</value>
   </data>
   <data name="Close" xml:space="preserve">
-    <value>닫기</value>
+    <value>Chiudi</value>
   </data>
   <data name="Close menu" xml:space="preserve">
-    <value>메뉴 닫기</value>
+    <value>Chiudi menù</value>
   </data>
   <data name="Close window" xml:space="preserve">
-    <value>창 닫기</value>
+    <value>Chiudi la finestra</value>
   </data>
   <data name="Closes the window" xml:space="preserve">
-    <value>창을 닫습니다</value>
+    <value>Chiudi la finestra</value>
   </data>
   <data name="Comment" xml:space="preserve">
-    <value>댓글</value>
+    <value>Commento</value>
   </data>
   <data name="Comment reactions on posts" xml:space="preserve">
-    <value>게시물에 대한 댓글 반응</value>
+    <value>Reazioni ai commenti sui post</value>
   </data>
   <data name="Comment reactions on videos" xml:space="preserve">
-    <value>동영상에 대한 댓글 반응</value>
+    <value>Reazioni ai commenti sui video</value>
   </data>
   <data name="Comment section" xml:space="preserve">
-    <value>댓글 섹션</value>
+    <value>Sezione commenti</value>
   </data>
   <data name="Commented on post:" xml:space="preserve">
-    <value>게시물에 댓글을 달았습니다:</value>
+    <value>Commento al post:</value>
+  </data>
+  <data name="commentReaction.Reaction" xml:space="preserve">
+    <value>commentReaction.Reaction</value>
   </data>
   <data name="Comments" xml:space="preserve">
-    <value>댓글</value>
+    <value>Commenti</value>
   </data>
   <data name="Comments [including deleted]" xml:space="preserve">
-    <value>댓글[삭제된 내용 포함]</value>
+    <value>Commenti [anche cancellati]</value>
   </data>
   <data name="Comments found In the search" xml:space="preserve">
-    <value>검색에서 찾은 댓글</value>
+    <value>Commenti trovati nella ricerca</value>
   </data>
   <data name="Comments on posts" xml:space="preserve">
-    <value>게시물에 대한 댓글</value>
+    <value>Commenti ai post</value>
   </data>
   <data name="Comments on videos" xml:space="preserve">
-    <value>동영상에 대한 댓글</value>
+    <value>Commenti ai video</value>
   </data>
   <data name="Confirm password" xml:space="preserve">
-    <value>비밀번호 확인</value>
+    <value>Conferma la tua password</value>
   </data>
   <data name="Congratulations" xml:space="preserve">
-    <value>축하합니다</value>
+    <value>Congratulazioni</value>
   </data>
   <data name="Contact an administrator to solve this issue" xml:space="preserve">
-    <value>이 문제를 해결하려면 관리자에게 문의하세요.</value>
+    <value>Contatta un amministratore per risolvere questo problema</value>
   </data>
   <data name="Content" xml:space="preserve">
-    <value>콘텐츠</value>
+    <value>Contenuto</value>
   </data>
   <data name="Content must be a valid HTML" xml:space="preserve">
-    <value>콘텐츠는 유효한 HTML이어야 합니다.</value>
+    <value>Il contenuto deve essere HTML valido</value>
   </data>
   <data name="Content must exist" xml:space="preserve">
-    <value>콘텐츠가 존재해야 합니다.</value>
+    <value>Il contenuto deve esistere</value>
+  </data>
+  <data name="context.Item.Description" xml:space="preserve">
+    <value>context.Item.Description</value>
+  </data>
+  <data name="context.Item.GetEmail()" xml:space="preserve">
+    <value>context.Item.GetEmail()</value>
+  </data>
+  <data name="context.Item.TypeName" xml:space="preserve">
+    <value>context.Item.TypeName</value>
   </data>
   <data name="Cookie policy" xml:space="preserve">
-    <value>쿠키 정책</value>
+    <value>Politica sui cookie</value>
   </data>
   <data name="count" xml:space="preserve">
-    <value>수</value>
+    <value>Conteggio</value>
   </data>
   <data name="Create blogs" xml:space="preserve">
-    <value>블로그 만들기</value>
+    <value>Crea blog</value>
   </data>
   <data name="Create categories" xml:space="preserve">
-    <value>카테고리 생성</value>
+    <value>Crea categorie</value>
   </data>
   <data name="Create new messages" xml:space="preserve">
-    <value>새 메시지 만들기</value>
+    <value>Crea nuovi messaggi</value>
   </data>
   <data name="Create new pages" xml:space="preserve">
-    <value>새 페이지 만들기</value>
+    <value>Crea nuove pagine</value>
   </data>
   <data name="Create new posts" xml:space="preserve">
-    <value>새 게시물 만들기</value>
+    <value>Crea nuovi post</value>
   </data>
   <data name="Create new quick notes" xml:space="preserve">
-    <value>새로운 빠른 노트 만들기</value>
+    <value>Crea nuove note rapide</value>
   </data>
   <data name="Create new roles" xml:space="preserve">
-    <value>새 역할 만들기</value>
+    <value>Crea nuovi ruoli</value>
   </data>
   <data name="Create new special pages" xml:space="preserve">
-    <value>새로운 특별 페이지 만들기</value>
+    <value>Crea nuove pagine speciali</value>
   </data>
   <data name="Create new users" xml:space="preserve">
-    <value>새 사용자 만들기</value>
+    <value>Crea nuovi utenti</value>
   </data>
   <data name="Create new videos" xml:space="preserve">
-    <value>새 동영상 만들기</value>
+    <value>Crea nuovi video</value>
   </data>
   <data name="Create slug" xml:space="preserve">
-    <value>슬러그 생성</value>
+    <value>Crea lumaca</value>
   </data>
   <data name="Created" xml:space="preserve">
-    <value>생성됨</value>
+    <value>Creato</value>
   </data>
   <data name="Current month" xml:space="preserve">
-    <value>이번 달</value>
+    <value>Mese corrente</value>
   </data>
   <data name="Current password" xml:space="preserve">
-    <value>현재 비밀번호</value>
+    <value>Password attuale</value>
   </data>
   <data name="Current year" xml:space="preserve">
-    <value>올해</value>
+    <value>Anno in corso</value>
   </data>
   <data name="Custom" xml:space="preserve">
-    <value>사용자 지정</value>
+    <value>Personalizzato</value>
   </data>
   <data name="Cycle detected: you must choose another parent" xml:space="preserve">
-    <value>주기가 감지되었습니다. 다른 상위 항목을 선택해야 합니다.</value>
+    <value>Ciclo rilevato: devi scegliere un altro genitore</value>
   </data>
   <data name="Danger" xml:space="preserve">
-    <value>위험</value>
+    <value>Pericolo</value>
   </data>
   <data name="Dashboard" xml:space="preserve">
-    <value>대시보드</value>
+    <value>Dashboard</value>
   </data>
   <data name="Dashboard analytics" xml:space="preserve">
-    <value>대시보드 분석</value>
+    <value>Analisi del dashboard</value>
   </data>
   <data name="Database restored successfully." xml:space="preserve">
-    <value>데이터베이스가 성공적으로 복원되었습니다.</value>
+    <value>Database ripristinato con successo.</value>
   </data>
   <data name="Date" xml:space="preserve">
-    <value>날짜</value>
+    <value>Data</value>
   </data>
   <data name="Date of modification must happen after the creation date" xml:space="preserve">
-    <value>수정 날짜는 생성 날짜 이후여야 합니다.</value>
+    <value>La data di modifica deve essere successiva alla data di creazione</value>
   </data>
   <data name="Date published" xml:space="preserve">
-    <value>게시된 날짜</value>
+    <value>Data di pubblicazione</value>
   </data>
   <data name="Date released" xml:space="preserve">
-    <value>출시일</value>
+    <value>Data di rilascio</value>
   </data>
   <data name="Db settings file updated successfully" xml:space="preserve">
-    <value>Db 설정 파일이 성공적으로 업데이트되었습니다.</value>
+    <value>File delle impostazioni del database aggiornato correttamente</value>
   </data>
   <data name="Deactivate blog" xml:space="preserve">
-    <value>블로그 비활성화</value>
+    <value>Disabilita blog</value>
   </data>
   <data name="Deactivate blogs" xml:space="preserve">
-    <value>블로그 비활성화</value>
+    <value>Disattiva i blog</value>
   </data>
   <data name="Default sorting" xml:space="preserve">
-    <value>기본 정렬</value>
+    <value>Classificazione standard</value>
   </data>
   <data name="Delete blogs" xml:space="preserve">
-    <value>블로그 삭제</value>
+    <value>Elimina blog</value>
   </data>
   <data name="Delete categories" xml:space="preserve">
-    <value>카테고리 삭제</value>
+    <value>Elimina categorie</value>
   </data>
   <data name="Delete comment" xml:space="preserve">
-    <value>댓글 삭제</value>
+    <value>Elimina commento</value>
   </data>
   <data name="Delete other users messages" xml:space="preserve">
-    <value>다른 사용자의 메시지 삭제</value>
+    <value>Elimina i messaggi di altri utenti</value>
   </data>
   <data name="Delete other users pages" xml:space="preserve">
-    <value>다른 사용자 페이지 삭제</value>
+    <value>Elimina le pagine di altri utenti</value>
   </data>
   <data name="Delete other users posts" xml:space="preserve">
-    <value>다른 사용자 게시물 삭제</value>
+    <value>Elimina i post di altri utenti</value>
   </data>
   <data name="Delete other users quick notes" xml:space="preserve">
-    <value>다른 사용자의 빠른 메모 삭제</value>
+    <value>Elimina note rapide da altri utenti</value>
   </data>
   <data name="Delete other users special pages" xml:space="preserve">
-    <value>다른 사용자 특별 페이지 삭제</value>
+    <value>Elimina le pagine speciali di altri utenti</value>
   </data>
   <data name="Delete other users videos" xml:space="preserve">
-    <value>다른 사용자의 동영상 삭제</value>
+    <value>Elimina video di altri utenti</value>
   </data>
   <data name="Delete own messages" xml:space="preserve">
-    <value>자신의 메시지 삭제</value>
+    <value>Elimina i tuoi messaggi</value>
   </data>
   <data name="Delete own pages" xml:space="preserve">
-    <value>자신의 페이지 삭제</value>
+    <value>Elimina le pagine di proprietà</value>
   </data>
   <data name="Delete own posts" xml:space="preserve">
-    <value>자신의 게시물 삭제</value>
+    <value>Elimina i propri post</value>
   </data>
   <data name="Delete own quick notes" xml:space="preserve">
-    <value>자신의 빠른 메모 삭제</value>
+    <value>Elimina le tue note rapide</value>
   </data>
   <data name="Delete own special pages" xml:space="preserve">
-    <value>자신의 특별 페이지 삭제</value>
+    <value>Elimina le tue pagine speciali</value>
   </data>
   <data name="Delete own videos" xml:space="preserve">
-    <value>자신의 동영상 삭제</value>
+    <value>Elimina i tuoi video</value>
   </data>
   <data name="Delete roles" xml:space="preserve">
-    <value>역할 삭제</value>
+    <value>Elimina ruoli</value>
   </data>
   <data name="Delete selected item(s)" xml:space="preserve">
-    <value>선택한 항목 삭제</value>
+    <value>Elimina gli elementi selezionati</value>
   </data>
   <data name="Delete Subtitle" xml:space="preserve">
-    <value>자막 삭제</value>
+    <value>Elimina didascalia</value>
   </data>
   <data name="Delete tags" xml:space="preserve">
-    <value>태그 삭제</value>
+    <value>Elimina tag</value>
   </data>
   <data name="Delete user self" xml:space="preserve">
-    <value>사용자 본인 삭제</value>
+    <value>Elimina il tuo utente</value>
   </data>
   <data name="Delete users other than self" xml:space="preserve">
-    <value>본인 이외의 사용자 삭제</value>
+    <value>Elimina utenti diversi da te</value>
   </data>
   <data name="Deleted" xml:space="preserve">
-    <value>삭제됨</value>
+    <value>Eliminato</value>
   </data>
   <data name="Deleted comments" xml:space="preserve">
-    <value>삭제된 댓글</value>
+    <value>Commenti cancellati</value>
   </data>
   <data name="Deleted?" xml:space="preserve">
-    <value>삭제하시겠습니까?</value>
+    <value>Eliminato?</value>
   </data>
   <data name="Deleting {0} item(s)" xml:space="preserve">
-    <value>{0} 항목 삭제 중</value>
+    <value>Eliminazione di elementi {0}</value>
   </data>
   <data name="Demote from front-page" xml:space="preserve">
-    <value>첫 페이지에서 강등</value>
+    <value>Retrocede dalla prima pagina</value>
   </data>
   <data name="Demoting from front-page" xml:space="preserve">
-    <value>첫 페이지에서 강등</value>
+    <value>Retrocessione dalla prima pagina</value>
   </data>
   <data name="Description" xml:space="preserve">
-    <value>설명</value>
+    <value>Descrizione</value>
   </data>
   <data name="Description cannot exceed {0} characters" xml:space="preserve">
-    <value>설명은 {0}자를 초과할 수 없습니다.</value>
+    <value>La descrizione non può superare i caratteri {0}</value>
   </data>
   <data name="Description of the website (for meta tags)" xml:space="preserve">
-    <value>웹사이트 설명(메타태그용)</value>
+    <value>Descrizione del sito (per meta tag)</value>
   </data>
   <data name="Direct replies" xml:space="preserve">
-    <value>직접 답장</value>
+    <value>Risposte dirette</value>
   </data>
   <data name="Display name" xml:space="preserve">
-    <value>표시 이름</value>
+    <value>Nome da visualizzare</value>
   </data>
   <data name="Display name cannot exceed {0} characters" xml:space="preserve">
-    <value>표시 이름은 {0}자를 초과할 수 없습니다.</value>
+    <value>Il nome visualizzato non può superare i caratteri {0}</value>
   </data>
   <data name="Display name is required" xml:space="preserve">
-    <value>표시 이름은 필수 항목입니다.</value>
+    <value>Il nome visualizzato è obbligatorio</value>
   </data>
   <data name="Do NOT share this code with anybody" xml:space="preserve">
-    <value>이 코드를 누구와도 공유하지 마세요</value>
+    <value>NON condividere questo codice con nessuno</value>
   </data>
   <data name="Don't share that link" xml:space="preserve">
-    <value>해당 링크를 공유하지 마세요</value>
+    <value>Non condividere questo collegamento</value>
   </data>
   <data name="Don't share that link with anybody else" xml:space="preserve">
-    <value>해당 링크를 다른 사람과 공유하지 마세요.</value>
+    <value>Non condividere questo collegamento con nessun altro</value>
   </data>
   <data name="Done" xml:space="preserve">
-    <value>완료</value>
+    <value>Fatto</value>
   </data>
   <data name="Download" xml:space="preserve">
-    <value>다운로드</value>
+    <value>Scarica</value>
   </data>
   <data name="Draft" xml:space="preserve">
-    <value>초안</value>
+    <value>Bozza</value>
   </data>
   <data name="Draft pages" xml:space="preserve">
-    <value>초안 페이지</value>
+    <value>Bozze di pagina</value>
   </data>
   <data name="Draft posts" xml:space="preserve">
-    <value>임시 게시물</value>
+    <value>Bozze di post</value>
   </data>
   <data name="Draft special messages" xml:space="preserve">
-    <value>특별 메시지 초안 작성</value>
+    <value>Bozze di messaggi speciali</value>
   </data>
   <data name="Draft special pages" xml:space="preserve">
-    <value>초안 특별 페이지</value>
+    <value>Bozza di pagine speciali</value>
   </data>
   <data name="Draft videos" xml:space="preserve">
-    <value>초안 동영상</value>
+    <value>Bozze video</value>
   </data>
   <data name="Drafts" xml:space="preserve">
-    <value>초안</value>
+    <value>Bozze</value>
   </data>
   <data name="E-mail" xml:space="preserve">
-    <value>이메일</value>
+    <value>E-mail</value>
   </data>
   <data name="Edit blogs" xml:space="preserve">
-    <value>블로그 편집</value>
+    <value>Modifica blog</value>
   </data>
   <data name="Edit categories" xml:space="preserve">
-    <value>카테고리 편집</value>
+    <value>Modifica categorie</value>
   </data>
   <data name="Edit comment" xml:space="preserve">
-    <value>댓글 수정</value>
+    <value>Modifica commento</value>
   </data>
   <data name="Edit other users" xml:space="preserve">
-    <value>다른 사용자 편집</value>
+    <value>Modifica altri utenti</value>
   </data>
   <data name="Edit other users messages" xml:space="preserve">
-    <value>다른 사용자 메시지 편집</value>
+    <value>Modifica i messaggi di altri utenti</value>
   </data>
   <data name="Edit other users pages" xml:space="preserve">
-    <value>다른 사용자 페이지 편집</value>
+    <value>Modifica le pagine di altri utenti</value>
   </data>
   <data name="Edit other users posts" xml:space="preserve">
-    <value>다른 사용자 게시물 편집</value>
+    <value>Modifica i post di altri utenti</value>
   </data>
   <data name="Edit other users quick notes" xml:space="preserve">
-    <value>다른 사용자의 빠른 메모 편집</value>
+    <value>Modifica note rapide di altri utenti</value>
   </data>
   <data name="Edit other users special pages" xml:space="preserve">
-    <value>다른 사용자 특별 페이지 편집</value>
+    <value>Modifica le pagine speciali di altri utenti</value>
   </data>
   <data name="Edit other users videos" xml:space="preserve">
-    <value>다른 사용자의 동영상 편집</value>
+    <value>Modifica video di altri utenti</value>
   </data>
   <data name="Edit own messages" xml:space="preserve">
-    <value>자신의 메시지 편집</value>
+    <value>Modifica i tuoi messaggi</value>
   </data>
   <data name="Edit own pages" xml:space="preserve">
-    <value>자신의 페이지 편집</value>
+    <value>Modifica le tue pagine</value>
   </data>
   <data name="Edit own posts" xml:space="preserve">
-    <value>자신의 게시물 편집</value>
+    <value>Modifica i tuoi post</value>
   </data>
   <data name="Edit own quick notes" xml:space="preserve">
-    <value>나만의 빠른 메모 편집</value>
+    <value>Modifica le tue note rapide</value>
   </data>
   <data name="Edit own special pages" xml:space="preserve">
-    <value>나만의 특별 페이지 편집</value>
+    <value>Modifica le tue pagine speciali</value>
   </data>
   <data name="Edit own user" xml:space="preserve">
-    <value>자신의 사용자 편집</value>
+    <value>Modifica il tuo utente</value>
   </data>
   <data name="Edit own videos" xml:space="preserve">
-    <value>자신의 비디오 편집</value>
+    <value>Modifica i tuoi video</value>
   </data>
   <data name="Edit roles" xml:space="preserve">
-    <value>역할 편집</value>
+    <value>Modifica ruoli</value>
   </data>
   <data name="Edit tags" xml:space="preserve">
-    <value>태그 편집</value>
+    <value>Modifica tag</value>
   </data>
   <data name="Email address cannot exceed {0} characters" xml:space="preserve">
-    <value>이메일 주소는 {0}자를 초과할 수 없습니다.</value>
+    <value>L'indirizzo e-mail non può superare i caratteri {0}</value>
   </data>
   <data name="Email address is required" xml:space="preserve">
-    <value>이메일 주소가 필요합니다</value>
+    <value>L'indirizzo e-mail è obbligatorio</value>
   </data>
   <data name="Email settings are fine" xml:space="preserve">
-    <value>이메일 설정은 괜찮습니다</value>
+    <value>Le impostazioni della posta elettronica sono corrette</value>
   </data>
   <data name="Enable" xml:space="preserve">
-    <value>활성화</value>
+    <value>Habilitar</value>
   </data>
   <data name="Enable SSL" xml:space="preserve">
-    <value>SSL 활성화</value>
+    <value>Abilita SSL</value>
   </data>
   <data name="End date" xml:space="preserve">
-    <value>종료일</value>
+    <value>Data di fine</value>
   </data>
   <data name="Endpoint (URL)" xml:space="preserve">
-    <value>엔드포인트(URL)</value>
+    <value>Punto finale (URL)</value>
   </data>
   <data name="Enter" xml:space="preserve">
-    <value>입력</value>
+    <value>Inserisci</value>
   </data>
   <data name="Enter incognito" xml:space="preserve">
-    <value>시크릿 모드를 입력하세요</value>
+    <value>Accedi alla modalità di navigazione in incognito</value>
   </data>
   <data name="Enter maintenance mode" xml:space="preserve">
-    <value>유지 관리 모드로 전환</value>
+    <value>Entra in modalità manutenzione</value>
   </data>
   <data name="Enter the TOTP code here" xml:space="preserve">
-    <value>여기에 TOTP 코드를 입력하세요</value>
+    <value>Inserisci qui il codice TOTP</value>
   </data>
   <data name="Entity header cannot be updated" xml:space="preserve">
-    <value>항목 헤더를 업데이트할 수 없습니다.</value>
+    <value>L'intestazione dell'entità non può essere aggiornata</value>
+  </data>
+  <data name="Entity.EnableSsl.YesNo()" xml:space="preserve">
+    <value>Entity.EnableSsl.YesNo()</value>
+  </data>
+  <data name="Entity.Entity.IsCommentEnabled.YesNo()" xml:space="preserve">
+    <value>Entity.Entity.IsCommentEnabled.YesNo()</value>
+  </data>
+  <data name="Entity.Entity.IsDraft.YesNo()" xml:space="preserve">
+    <value>Entity.Entity.IsDraft.YesNo()</value>
+  </data>
+  <data name="Entity.GetTOTPRecoveryCodes().Any().YesNo()" xml:space="preserve">
+    <value>Entity.GetTOTPRecoveryCodes().Any().YesNo()</value>
+  </data>
+  <data name="Entity.IsActive.YesNo()" xml:space="preserve">
+    <value>Entity.IsActive.YesNo()</value>
+  </data>
+  <data name="Entity.IsApproved.YesNo()" xml:space="preserve">
+    <value>Entity.IsApproved.YesNo()</value>
+  </data>
+  <data name="Entity.IsCommentEnabled.YesNo()" xml:space="preserve">
+    <value>Entity.IsCommentEnabled.YesNo()</value>
+  </data>
+  <data name="Entity.IsDeleted.YesNo()" xml:space="preserve">
+    <value>Entity.IsDeleted.YesNo()</value>
+  </data>
+  <data name="Entity.IsPrimary.YesNo()" xml:space="preserve">
+    <value>Entity.IsPrimary.YesNo()</value>
+  </data>
+  <data name="Entity.IsSpam.YesNo()" xml:space="preserve">
+    <value>Entity.IsSpam.YesNo()</value>
+  </data>
+  <data name="Entity.KeepTestingTheSmtpServerConnectivity.YesNo()" xml:space="preserve">
+    <value>Entity.KeepTestingTheSmtpServerConnectivity.YesNo()</value>
+  </data>
+  <data name="Entity.OpenTelemetry.Enabled.YesNo()" xml:space="preserve">
+    <value>Entity.OpenTelemetry.Enabled.YesNo()</value>
+  </data>
+  <data name="Entity.SocialNetwork.Facebook.Enabled.YesNo()" xml:space="preserve">
+    <value>Entity.SocialNetwork.Facebook.Enabled.YesNo()</value>
+  </data>
+  <data name="Entity.SocialNetwork.GitHub.Enabled.YesNo()" xml:space="preserve">
+    <value>Entity.SocialNetwork.GitHub.Enabled.YesNo()</value>
+  </data>
+  <data name="Entity.SocialNetwork.Google.Enabled.YesNo()" xml:space="preserve">
+    <value>Entity.SocialNetwork.Google.Enabled.YesNo()</value>
+  </data>
+  <data name="Entity.SocialNetwork.Microsoft.Enabled.YesNo()" xml:space="preserve">
+    <value>Entity.SocialNetwork.Microsoft.Enabled.YesNo()</value>
+  </data>
+  <data name="Entity.TOTPSecret.Has().YesNo()" xml:space="preserve">
+    <value>Entity.TOTPSecret.Has().YesNo()</value>
   </data>
   <data name="Error" xml:space="preserve">
-    <value>오류</value>
+    <value>Errore</value>
   </data>
   <data name="Error parsing the JSON file" xml:space="preserve">
-    <value>JSON 파일을 구문 분석하는 중에 오류가 발생했습니다.</value>
+    <value>Errore durante l'analisi del file JSON</value>
   </data>
   <data name="Everything" xml:space="preserve">
-    <value>전체</value>
+    <value>Tutto</value>
   </data>
   <data name="Extension" xml:space="preserve">
-    <value>확장 기능</value>
+    <value>Estensione</value>
   </data>
   <data name="Facebook" xml:space="preserve">
     <value>Facebook</value>
   </data>
   <data name="Failed to authenticate you" xml:space="preserve">
-    <value>인증하지 못했습니다.</value>
+    <value>Impossibile autenticarti</value>
   </data>
   <data name="Failed to connect to email server with default settings" xml:space="preserve">
-    <value>기본 설정으로 이메일 서버에 연결하지 못했습니다.</value>
+    <value>Impossibile connettersi al server di posta elettronica con le impostazioni predefinite</value>
   </data>
   <data name="Failed to reset 2FA for user" xml:space="preserve">
-    <value>사용자의 2FA를 재설정하지 못했습니다.</value>
+    <value>Impossibile reimpostare 2FA per l'utente</value>
   </data>
   <data name="Failed to reset password" xml:space="preserve">
-    <value>비밀번호를 재설정하지 못했습니다.</value>
+    <value>Impossibile reimpostare la password</value>
   </data>
   <data name="Failed to reset password for user" xml:space="preserve">
-    <value>사용자의 비밀번호를 재설정하지 못했습니다.</value>
+    <value>Impossibile reimpostare la password dell'utente</value>
   </data>
   <data name="Feeds" xml:space="preserve">
-    <value>피드</value>
+    <value>Feed</value>
   </data>
   <data name="field" xml:space="preserve">
-    <value>필드</value>
+    <value>Campo</value>
   </data>
   <data name="File is too large" xml:space="preserve">
-    <value>파일이 너무 큽니다.</value>
+    <value>Il file è troppo grande</value>
   </data>
   <data name="File manager" xml:space="preserve">
-    <value>파일 관리자</value>
+    <value>Gestore dei file</value>
   </data>
   <data name="Filler" xml:space="preserve">
-    <value>채움</value>
+    <value>Riempimento</value>
   </data>
   <data name="Filter" xml:space="preserve">
-    <value>필터</value>
+    <value>Filtro</value>
   </data>
   <data name="First name" xml:space="preserve">
-    <value>이름</value>
+    <value>Nome di battesimo</value>
   </data>
   <data name="First name cannot exceed {0} characters" xml:space="preserve">
-    <value>이름은 {0}자를 초과할 수 없습니다.</value>
+    <value>Il nome non può superare i caratteri {0}</value>
   </data>
   <data name="First name is required" xml:space="preserve">
-    <value>이름은 필수 항목입니다.</value>
+    <value>Il nome è obbligatorio</value>
   </data>
   <data name="Forgot password" xml:space="preserve">
-    <value>비밀번호를 잊으셨나요?</value>
+    <value>Hai dimenticato la password</value>
   </data>
   <data name="Front-page" xml:space="preserve">
-    <value>첫 페이지</value>
+    <value>Prima pagina</value>
   </data>
   <data name="General" xml:space="preserve">
-    <value>일반</value>
+    <value>Generale</value>
   </data>
   <data name="GitHub" xml:space="preserve">
     <value>GitHub</value>
   </data>
   <data name="Go back" xml:space="preserve">
-    <value>돌아가기</value>
+    <value>Volte</value>
   </data>
   <data name="Go to blog" xml:space="preserve">
-    <value>블로그로 이동</value>
+    <value>Vai al blog</value>
   </data>
   <data name="Go to Profile" xml:space="preserve">
-    <value>프로필로 이동</value>
+    <value>Vai al profilo</value>
   </data>
   <data name="Go to top" xml:space="preserve">
-    <value>맨 위로 이동</value>
+    <value>Vai in alto</value>
   </data>
   <data name="Google" xml:space="preserve">
     <value>Google</value>
   </data>
   <data name="Grant moderator to user" xml:space="preserve">
-    <value>사용자에게 중재자 부여</value>
+    <value>Concedi moderatore all'utente</value>
   </data>
   <data name="Header" xml:space="preserve">
-    <value>헤더</value>
+    <value>Intestazione</value>
   </data>
   <data name="Header image must be valid" xml:space="preserve">
-    <value>헤더 이미지가 유효해야 합니다.</value>
+    <value>L'immagine dell'intestazione deve essere valida</value>
   </data>
   <data name="Here's your verification code for {0}" xml:space="preserve">
-    <value>{0}의 인증 코드는 다음과 같습니다.</value>
+    <value>Ecco il tuo codice di verifica per {0}</value>
   </data>
   <data name="History" xml:space="preserve">
-    <value>기록</value>
+    <value>Cronologia</value>
   </data>
   <data name="How to delete your data" xml:space="preserve">
-    <value>데이터를 삭제하는 방법</value>
+    <value>Come eliminare i tuoi dati</value>
   </data>
   <data name="Id" xml:space="preserve">
     <value>ID</value>
   </data>
   <data name="Id is required" xml:space="preserve">
-    <value>신분증이 필요합니다</value>
+    <value>Il documento d'identità è obbligatorio</value>
   </data>
   <data name="If you changed open telemetry settings, you have to restart both admin and front-end to take effect" xml:space="preserve">
-    <value>개방형 원격 측정 설정을 변경한 경우 관리자와 프런트 엔드를 모두 다시 시작해야 적용됩니다.</value>
+    <value>Se hai modificato le impostazioni di telemetria aperte, dovrai riavviare l'amministratore e il front-end affinché abbiano effetto</value>
   </data>
   <data name="If you changed social network settings, you have to restart front-end to take effect" xml:space="preserve">
-    <value>소셜 네트워크 설정을 변경한 경우 프런트엔드를 다시 시작해야 적용됩니다.</value>
+    <value>Se hai modificato le impostazioni del social network, dovrai riavviare il front-end affinché abbiano effetto</value>
   </data>
   <data name="If you did not request this, please ignore this email" xml:space="preserve">
-    <value>요청하지 않으셨다면 이 이메일을 무시하세요.</value>
+    <value>Se non hai richiesto ciò, ignora questa email</value>
   </data>
   <data name="Iframe must be valid" xml:space="preserve">
-    <value>Iframe이 유효해야 합니다.</value>
+    <value>L'iframe deve essere valido</value>
   </data>
   <data name="Incognito Mode" xml:space="preserve">
-    <value>시크릿 모드</value>
+    <value>Modalità di navigazione in incognito</value>
   </data>
   <data name="Info" xml:space="preserve">
-    <value>정보</value>
+    <value>Info</value>
   </data>
   <data name="Instagram" xml:space="preserve">
     <value>Instagram</value>
   </data>
   <data name="Interactions (Last 50)" xml:space="preserve">
-    <value>상호작용(최근 50개)</value>
+    <value>Interazioni (ultime 50)</value>
   </data>
   <data name="Invalid ids (may contain deleted, inactive blog ids)" xml:space="preserve">
-    <value>잘못된 ID(삭제된 비활성 블로그 ID가 포함될 수 있음)</value>
+    <value>ID non validi (potrebbero contenere ID blog inattivi ed eliminati)</value>
   </data>
   <data name="Ip" xml:space="preserve">
     <value>IP</value>
   </data>
   <data name="item(s)" xml:space="preserve">
-    <value>품목</value>
+    <value>elementi)</value>
   </data>
   <data name="Keep testing SMTP server connectivity in the background?" xml:space="preserve">
-    <value>백그라운드에서 SMTP 서버 연결을 계속 테스트하시겠습니까?</value>
+    <value>Continuare a testare la connettività del server SMTP in background?</value>
   </data>
   <data name="Keep these recovery codes somewhere safe" xml:space="preserve">
-    <value>복구 코드를 안전한 곳에 보관하세요</value>
+    <value>Conserva questi codici di ripristino in un posto sicuro</value>
   </data>
   <data name="Key" xml:space="preserve">
-    <value>키</value>
+    <value>Chiave</value>
   </data>
   <data name="Keywords" xml:space="preserve">
-    <value>키워드</value>
+    <value>Parole chiave</value>
   </data>
   <data name="Language" xml:space="preserve">
-    <value>언어</value>
+    <value>Lingua</value>
   </data>
   <data name="Language must be valid" xml:space="preserve">
-    <value>언어가 유효해야 합니다.</value>
+    <value>La lingua deve essere valida</value>
   </data>
   <data name="Large" xml:space="preserve">
-    <value>큼</value>
+    <value>Grande</value>
   </data>
   <data name="Last 180 days" xml:space="preserve">
-    <value>지난 180일</value>
+    <value>Ultimi 180 giorni</value>
   </data>
   <data name="Last 24 hours" xml:space="preserve">
-    <value>지난 24시간</value>
+    <value>Ultime 24 ore</value>
   </data>
   <data name="Last 30 days" xml:space="preserve">
-    <value>지난 30일</value>
+    <value>Ultimi 30 giorni</value>
   </data>
   <data name="Last 365 days" xml:space="preserve">
-    <value>지난 365일</value>
+    <value>Ultimi 365 giorni</value>
   </data>
   <data name="Last 7 days" xml:space="preserve">
-    <value>지난 7일</value>
+    <value>Ultimi 7 giorni</value>
   </data>
   <data name="Last 90 days" xml:space="preserve">
-    <value>지난 90일</value>
+    <value>Ultimi 90 giorni</value>
   </data>
   <data name="Last name" xml:space="preserve">
-    <value>성</value>
+    <value>Sobrenome</value>
   </data>
   <data name="Last name cannot exceed {0} characters" xml:space="preserve">
-    <value>성은 {0}자를 초과할 수 없습니다.</value>
+    <value>Il cognome non può superare i caratteri {0}</value>
   </data>
   <data name="Last name is required" xml:space="preserve">
-    <value>성은 필수 항목입니다.</value>
+    <value>Il cognome è obbligatorio</value>
   </data>
   <data name="Latest comments" xml:space="preserve">
-    <value>최신 댓글</value>
+    <value>Ultimi commenti</value>
   </data>
   <data name="Latest news" xml:space="preserve">
-    <value>최신 뉴스</value>
+    <value>Ultime notizie</value>
   </data>
   <data name="Leave" xml:space="preserve">
-    <value>나가기</value>
+    <value>Esci</value>
   </data>
   <data name="Leave incognito" xml:space="preserve">
-    <value>시크릿 모드 종료</value>
+    <value>Lascia l'anonimo</value>
   </data>
   <data name="Leave maintenance mode" xml:space="preserve">
-    <value>유지 관리 모드 종료</value>
+    <value>Uscire dalla modalità di manutenzione</value>
   </data>
   <data name="link" xml:space="preserve">
-    <value>링크</value>
+    <value>Link</value>
   </data>
   <data name="LinkedIn" xml:space="preserve">
     <value>LinkedIn</value>
   </data>
   <data name="List of blogs in the front-end" xml:space="preserve">
-    <value>프런트엔드의 블로그 목록</value>
+    <value>Elenco dei blog sul front-end</value>
   </data>
   <data name="Local path" xml:space="preserve">
-    <value>로컬 경로</value>
+    <value>Percorso locale</value>
   </data>
   <data name="Log out" xml:space="preserve">
-    <value>로그아웃</value>
+    <value>Sair</value>
   </data>
   <data name="Login" xml:space="preserve">
-    <value>로그인</value>
+    <value>Accedi</value>
   </data>
   <data name="Login to quick reply" xml:space="preserve">
-    <value>빠른 답장을 위해 로그인하세요</value>
+    <value>Accedi per rispondere rapidamente</value>
   </data>
   <data name="Login to rate this" xml:space="preserve">
-    <value>평가하려면 로그인하세요.</value>
+    <value>Accedi per valutare questo</value>
   </data>
   <data name="Login to react" xml:space="preserve">
-    <value>반응하려면 로그인하세요</value>
+    <value>Accedi per reagire</value>
   </data>
   <data name="Logo" xml:space="preserve">
-    <value>로고</value>
+    <value>Logo</value>
   </data>
   <data name="Logo • Avatar" xml:space="preserve">
-    <value>로고 • 아바타</value>
+    <value>Marchio • Avatar</value>
   </data>
   <data name="Logout" xml:space="preserve">
-    <value>로그아웃</value>
+    <value>Disconnetti</value>
   </data>
   <data name="Loop in relationships are not allowed" xml:space="preserve">
-    <value>루프인 관계는 허용되지 않습니다.</value>
+    <value>Non sono consentiti cicli nelle relazioni</value>
   </data>
   <data name="Maintenance" xml:space="preserve">
-    <value>유지보수</value>
+    <value>Manutenzione</value>
   </data>
   <data name="Make primary" xml:space="preserve">
-    <value>기본으로 만들기</value>
+    <value>Rendi primario</value>
   </data>
   <data name="Manage extensions" xml:space="preserve">
-    <value>확장 관리</value>
+    <value>Gestisci estensioni</value>
   </data>
   <data name="Manage files" xml:space="preserve">
-    <value>파일 관리</value>
+    <value>Gestisci file</value>
   </data>
   <data name="Manage packages" xml:space="preserve">
-    <value>패키지 관리</value>
+    <value>Gestisci i pacchetti</value>
   </data>
   <data name="Manage themes" xml:space="preserve">
-    <value>테마 관리</value>
+    <value>Gestisci temi</value>
   </data>
   <data name="Manage widgets" xml:space="preserve">
-    <value>위젯 관리</value>
+    <value>Gestisci i widget</value>
   </data>
   <data name="Maybe later" xml:space="preserve">
-    <value>어쩌면 나중에</value>
+    <value>Forse più tardi</value>
   </data>
   <data name="Medium" xml:space="preserve">
-    <value>중간</value>
+    <value>Medio</value>
   </data>
   <data name="Microsoft" xml:space="preserve">
     <value>Microsoft</value>
   </data>
   <data name="Misc" xml:space="preserve">
-    <value>기타</value>
+    <value>Varie</value>
   </data>
   <data name="Moderate comments" xml:space="preserve">
-    <value>댓글 검토</value>
+    <value>Commenti moderati</value>
   </data>
   <data name="Moderated by" xml:space="preserve">
-    <value>중재자:</value>
+    <value>Moderato da</value>
   </data>
   <data name="Moderator" xml:space="preserve">
-    <value>관리자</value>
+    <value>Moderatore</value>
   </data>
   <data name="Modified" xml:space="preserve">
-    <value>수정됨</value>
+    <value>Modificato</value>
   </data>
   <data name="Most popular" xml:space="preserve">
-    <value>가장 인기있는</value>
+    <value>Il più popolare</value>
   </data>
   <data name="Most recent" xml:space="preserve">
-    <value>가장 최근</value>
+    <value>Più recente</value>
   </data>
   <data name="Moves down in the list" xml:space="preserve">
-    <value>목록에서 아래로 이동합니다.</value>
+    <value>Scorri l'elenco</value>
   </data>
   <data name="Moves up in the list" xml:space="preserve">
-    <value>목록에서 위로 이동합니다.</value>
+    <value>Sposta in alto l'elenco</value>
   </data>
   <data name="Name" xml:space="preserve">
-    <value>이름</value>
+    <value>Nome</value>
   </data>
   <data name="Name (website)" xml:space="preserve">
-    <value>이름(웹사이트)</value>
+    <value>Nome (sito web)</value>
   </data>
   <data name="Name cannot exceed {0} characters" xml:space="preserve">
-    <value>이름은 {0}자를 초과할 수 없습니다.</value>
+    <value>Il nome non può superare i caratteri {0}</value>
   </data>
   <data name="Name is required" xml:space="preserve">
-    <value>이름은 필수입니다</value>
+    <value>Il nome è obbligatorio</value>
   </data>
   <data name="Nano Id" xml:space="preserve">
-    <value>나노아이디</value>
+    <value>Nanoidentificazione</value>
   </data>
   <data name="Nano Id cannot exceed {0} characters" xml:space="preserve">
-    <value>Nano ID는 {0}자를 초과할 수 없습니다.</value>
+    <value>Il Nano ID non può superare i caratteri {0}</value>
   </data>
   <data name="Nano Id is required" xml:space="preserve">
-    <value>나노 ID가 필요합니다</value>
+    <value>Il NanoID è obbligatorio</value>
   </data>
   <data name="New" xml:space="preserve">
-    <value>새로 만들기</value>
+    <value>Nuovo</value>
   </data>
   <data name="New folder" xml:space="preserve">
-    <value>새 폴더</value>
+    <value>Nuova cartella</value>
   </data>
   <data name="New name" xml:space="preserve">
-    <value>새 이름</value>
+    <value>Nuovo nome</value>
   </data>
   <data name="New password" xml:space="preserve">
-    <value>새 비밀번호</value>
+    <value>Nuova parola d'ordine</value>
   </data>
   <data name="New passwords do NOT match, they differ from each other" xml:space="preserve">
-    <value>새 비밀번호가 일치하지 않으며 서로 다릅니다.</value>
+    <value>Le nuove password NON corrispondono, differiscono l'una dall'altra</value>
   </data>
   <data name="No" xml:space="preserve">
-    <value>아니요</value>
+    <value>No</value>
   </data>
   <data name="No categories whatsoever" xml:space="preserve">
-    <value>카테고리가 전혀 없습니다.</value>
+    <value>Nessuna categoria</value>
   </data>
   <data name="No content" xml:space="preserve">
-    <value>콘텐츠 없음</value>
+    <value>Nessun contenuto</value>
   </data>
   <data name="No content for now" xml:space="preserve">
-    <value>지금은 콘텐츠가 없습니다.</value>
+    <value>Nessun contenuto per ora</value>
   </data>
   <data name="No entities were selected" xml:space="preserve">
-    <value>선택한 항목이 없습니다.</value>
+    <value>Nessuna entità è stata selezionata</value>
   </data>
   <data name="No entries were found" xml:space="preserve">
-    <value>항목을 찾을 수 없습니다</value>
+    <value>Non è stata trovata alcuna voce</value>
   </data>
   <data name="No header information available" xml:space="preserve">
-    <value>사용 가능한 헤더 정보가 없습니다.</value>
+    <value>Nessuna informazione di intestazione disponibile</value>
   </data>
   <data name="No pages whatsoever" xml:space="preserve">
-    <value>페이지가 전혀 없습니다.</value>
+    <value>Nessuna pagina</value>
   </data>
   <data name="No posts whatsoever" xml:space="preserve">
-    <value>게시물이 없습니다.</value>
+    <value>Nessun post</value>
   </data>
   <data name="No subtitle file" xml:space="preserve">
-    <value>자막 파일 없음</value>
+    <value>Nessun file di sottotitoli</value>
   </data>
   <data name="No tags whatsoever" xml:space="preserve">
-    <value>태그가 전혀 없습니다.</value>
+    <value>Senza alcun tag</value>
   </data>
   <data name="No text from this content" xml:space="preserve">
-    <value>이 콘텐츠에는 텍스트가 없습니다.</value>
+    <value>Nessun testo di questo contenuto</value>
   </data>
   <data name="No text from this page" xml:space="preserve">
-    <value>이 페이지에는 텍스트가 없습니다.</value>
+    <value>Nessun testo in questa pagina</value>
   </data>
   <data name="No videos whatsoever" xml:space="preserve">
-    <value>동영상 없음</value>
+    <value>Nessun video</value>
   </data>
   <data name="None" xml:space="preserve">
-    <value>없음</value>
+    <value>Nessuno</value>
   </data>
   <data name="Not specified" xml:space="preserve">
-    <value>지정되지 않음</value>
+    <value>Non specificato</value>
   </data>
   <data name="Note" xml:space="preserve">
-    <value>메모</value>
+    <value>Nota</value>
   </data>
   <data name="Note cannot exceed {0} characters" xml:space="preserve">
-    <value>메모는 {0}자를 초과할 수 없습니다.</value>
+    <value>La nota non può superare i caratteri {0}</value>
   </data>
   <data name="Note is required" xml:space="preserve">
-    <value>메모는 필수입니다</value>
+    <value>La nota è obbligatoria</value>
   </data>
   <data name="Nothing to see here" xml:space="preserve">
-    <value>여기에는 볼 것이 없습니다.</value>
+    <value>Niente da vedere qui</value>
   </data>
   <data name="Ok" xml:space="preserve">
     <value>OK</value>
   </data>
   <data name="Only a top-level page can become front-page" xml:space="preserve">
-    <value>최상위 페이지만 첫 페이지가 될 수 있습니다.</value>
+    <value>Solo una pagina di livello superiore può diventare la prima pagina</value>
   </data>
   <data name="Only image files" xml:space="preserve">
-    <value>이미지 파일만</value>
+    <value>Solo file di immagine</value>
   </data>
   <data name="Only top-level pages can be promoted to front page" xml:space="preserve">
-    <value>최상위 페이지만 첫 페이지로 승격될 수 있습니다.</value>
+    <value>Solo le pagine di livello superiore possono essere promosse alla home page</value>
   </data>
   <data name="Only video files" xml:space="preserve">
-    <value>비디오 파일만</value>
+    <value>Solo file video</value>
   </data>
   <data name="Oops" xml:space="preserve">
-    <value>이런</value>
+    <value>Ops</value>
   </data>
   <data name="Oops, this key is not valid or it was already used to reset your password" xml:space="preserve">
-    <value>죄송합니다. 이 키는 유효하지 않거나 이미 비밀번호를 재설정하는 데 사용되었습니다.</value>
+    <value>Spiacenti, questa chiave non è valida o è già stata utilizzata per reimpostare la password</value>
   </data>
   <data name="Open telemetry" xml:space="preserve">
-    <value>개방형 원격 측정</value>
+    <value>Apri la telemetria</value>
   </data>
   <data name="Or click here to reset password" xml:space="preserve">
-    <value>또는 여기를 클릭하여 비밀번호를 재설정하세요.</value>
+    <value>Oppure clicca qui per reimpostare la password</value>
   </data>
   <data name="Or paste this URI" xml:space="preserve">
-    <value>또는 이 URI를 붙여넣으세요.</value>
+    <value>Oppure incolla questo URI</value>
   </data>
   <data name="Origami" xml:space="preserve">
     <value>Origami</value>
   </data>
   <data name="Original" xml:space="preserve">
-    <value>원본</value>
+    <value>Originale</value>
   </data>
   <data name="Original name" xml:space="preserve">
-    <value>원래 이름</value>
+    <value>Nome originale</value>
   </data>
   <data name="Other trashes" xml:space="preserve">
-    <value>기타 쓰레기</value>
+    <value>Altra spazzatura</value>
   </data>
   <data name="P" xml:space="preserve">
     <value>P</value>
   </data>
   <data name="Page" xml:space="preserve">
-    <value>페이지</value>
+    <value>Pagina</value>
   </data>
   <data name="Page cannot be retrieved" xml:space="preserve">
-    <value>페이지를 검색할 수 없습니다.</value>
+    <value>La pagina non può essere recuperata</value>
   </data>
   <data name="Page does not exist" xml:space="preserve">
-    <value>페이지가 존재하지 않습니다</value>
+    <value>La pagina non esiste</value>
   </data>
   <data name="Page is already front-page" xml:space="preserve">
-    <value>페이지가 이미 첫 페이지입니다.</value>
+    <value>La pagina è già nella prima pagina</value>
   </data>
   <data name="Page is not front-page" xml:space="preserve">
-    <value>페이지가 첫 페이지가 아닙니다.</value>
+    <value>La pagina non è la prima pagina</value>
   </data>
   <data name="Page not found" xml:space="preserve">
-    <value>페이지를 찾을 수 없습니다</value>
+    <value>Pagina non trovata</value>
   </data>
   <data name="Pages" xml:space="preserve">
-    <value>페이지</value>
+    <value>Pagine</value>
   </data>
   <data name="Pages found in the search" xml:space="preserve">
-    <value>검색에서 찾은 페이지</value>
+    <value>Pagine trovate nella ricerca</value>
   </data>
   <data name="Parent" xml:space="preserve">
-    <value>상위</value>
+    <value>Padre</value>
   </data>
   <data name="Parent category" xml:space="preserve">
-    <value>상위 카테고리</value>
+    <value>Categoria genitore</value>
   </data>
   <data name="Password" xml:space="preserve">
-    <value>비밀번호</value>
+    <value>Password</value>
   </data>
   <data name="Password has been reset successfully" xml:space="preserve">
-    <value>비밀번호가 재설정되었습니다.</value>
+    <value>La password è stata reimpostata con successo</value>
   </data>
   <data name="Password reset" xml:space="preserve">
-    <value>비밀번호 재설정</value>
+    <value>Reimpostazione della password</value>
   </data>
   <data name="Password reset history" xml:space="preserve">
-    <value>비밀번호 재설정 내역</value>
+    <value>Cronologia di reimpostazione della password</value>
   </data>
   <data name="Password reset link has been created, please check your email for further instructions" xml:space="preserve">
-    <value>비밀번호 재설정 링크가 생성되었습니다. 자세한 지침은 이메일을 확인하세요.</value>
+    <value>Il collegamento per la reimpostazione della password è stato creato. Controlla la tua email per ulteriori istruzioni</value>
   </data>
   <data name="Paste your HTML iframe here to embed, like YouTube and so on" xml:space="preserve">
-    <value>YouTube 등을 삽입하려면 여기에 HTML iframe을 붙여넣으세요.</value>
+    <value>Incolla qui il tuo iframe HTML da incorporare, come YouTube e così via</value>
   </data>
   <data name="Path" xml:space="preserve">
-    <value>경로</value>
+    <value>Percorso</value>
   </data>
   <data name="People online" xml:space="preserve">
-    <value>온라인에 있는 사람들</value>
+    <value>Persone in linea</value>
   </data>
   <data name="Pick from file manager" xml:space="preserve">
-    <value>파일 관리자에서 선택</value>
+    <value>Scegli dal file manager</value>
   </data>
   <data name="Pick your categories" xml:space="preserve">
-    <value>카테고리를 선택하세요</value>
+    <value>Scegli le tue categorie</value>
   </data>
   <data name="Pick your tags" xml:space="preserve">
-    <value>태그를 선택하세요</value>
+    <value>Scegli i tuoi tag</value>
   </data>
   <data name="Pin comment" xml:space="preserve">
-    <value>댓글 고정</value>
+    <value>Aggiungi commento</value>
   </data>
   <data name="Pinned" xml:space="preserve">
-    <value>고정됨</value>
+    <value>Fissato</value>
   </data>
   <data name="Pinned by" xml:space="preserve">
-    <value>고정한 사람</value>
+    <value>Appuntato da</value>
   </data>
   <data name="Place your comment here" xml:space="preserve">
-    <value>여기에 의견을 남겨주세요</value>
+    <value>Inserisci il tuo commento qui</value>
   </data>
   <data name="Platforms" xml:space="preserve">
-    <value>플랫폼</value>
+    <value>Piattaforme</value>
   </data>
   <data name="Please, talk to a system administrator" xml:space="preserve">
-    <value>시스템 관리자에게 문의하세요.</value>
+    <value>Rivolgiti a un amministratore di sistema</value>
   </data>
   <data name="Please, try again later" xml:space="preserve">
-    <value>나중에 다시 시도해 주세요.</value>
+    <value>Per favore riprova più tardi</value>
   </data>
   <data name="Post" xml:space="preserve">
-    <value>게시물</value>
+    <value>Pubblicazione</value>
+  </data>
+  <data name="postRating.Rating" xml:space="preserve">
+    <value>postRating.Rating</value>
+  </data>
+  <data name="postReaction.Reaction" xml:space="preserve">
+    <value>postReaction.Reaction</value>
   </data>
   <data name="Posts" xml:space="preserve">
-    <value>게시물</value>
+    <value>Pubblicazioni</value>
   </data>
   <data name="Posts comments" xml:space="preserve">
-    <value>게시물 댓글</value>
+    <value>Pubblica commenti</value>
   </data>
   <data name="Posts found in the search" xml:space="preserve">
-    <value>검색해서 찾은 게시물</value>
+    <value>Post trovati nella ricerca</value>
   </data>
   <data name="Posts, videos" xml:space="preserve">
-    <value>게시물, 동영상</value>
+    <value>Post, video</value>
   </data>
   <data name="Primary" xml:space="preserve">
-    <value>기본</value>
+    <value>Primario</value>
   </data>
   <data name="Primary blog cannot be deactivated" xml:space="preserve">
-    <value>기본 블로그는 비활성화할 수 없습니다.</value>
+    <value>Il blog principale non può essere disabilitato</value>
   </data>
   <data name="Primary blog cannot be deleted" xml:space="preserve">
-    <value>기본 블로그는 삭제할 수 없습니다.</value>
+    <value>Il blog principale non può essere eliminato</value>
   </data>
   <data name="Privacy policy" xml:space="preserve">
-    <value>개인 정보 보호 정책</value>
+    <value>politica sulla riservatezza</value>
   </data>
   <data name="Profile" xml:space="preserve">
-    <value>프로필</value>
+    <value>Profilo</value>
   </data>
   <data name="Profile data was wiped out" xml:space="preserve">
-    <value>프로필 데이터가 삭제되었습니다</value>
+    <value>I dati del profilo sono stati eliminati</value>
   </data>
   <data name="Profile Information" xml:space="preserve">
-    <value>프로필 정보</value>
+    <value>Informazioni sul profilo</value>
   </data>
   <data name="Profile Not Found" xml:space="preserve">
-    <value>프로필을 찾을 수 없음</value>
+    <value>Profilo non trovato</value>
   </data>
   <data name="Progress" xml:space="preserve">
-    <value>진행 상황</value>
+    <value>Avanzamento</value>
   </data>
   <data name="Promote to front-page" xml:space="preserve">
-    <value>첫 페이지로 홍보</value>
+    <value>Promuovi in ​​prima pagina</value>
   </data>
   <data name="Promoting to front-page" xml:space="preserve">
-    <value>첫 페이지로 홍보</value>
+    <value>Promozione in prima pagina</value>
   </data>
   <data name="Publish {0} item(s)" xml:space="preserve">
-    <value>{0} 항목 게시</value>
+    <value>Pubblica elemento/i {0}</value>
   </data>
   <data name="Publish message(s)" xml:space="preserve">
-    <value>메시지 게시</value>
+    <value>Pubblica messaggi</value>
   </data>
   <data name="Publish other quick notes" xml:space="preserve">
-    <value>다른 빠른 노트 게시</value>
+    <value>Pubblica altre note veloci</value>
   </data>
   <data name="Publish other users messages" xml:space="preserve">
-    <value>다른 사용자 메시지 게시</value>
+    <value>Pubblica messaggi di altri utenti</value>
   </data>
   <data name="Publish other users pages" xml:space="preserve">
-    <value>다른 사용자 페이지 게시</value>
+    <value>Pubblica le pagine di altri utenti</value>
   </data>
   <data name="Publish other users posts" xml:space="preserve">
-    <value>다른 사용자 게시물 게시</value>
+    <value>Pubblica post di altri utenti</value>
   </data>
   <data name="Publish other users special pages" xml:space="preserve">
-    <value>다른 사용자 특별 페이지 게시</value>
+    <value>Pubblica pagine speciali di altri utenti</value>
   </data>
   <data name="Publish other users videos" xml:space="preserve">
-    <value>다른 사용자 비디오 게시</value>
+    <value>Pubblica video di altri utenti</value>
   </data>
   <data name="Publish own messages" xml:space="preserve">
-    <value>자신의 메시지 게시</value>
+    <value>Pubblica i tuoi messaggi</value>
   </data>
   <data name="Publish own pages" xml:space="preserve">
-    <value>자신의 페이지 게시</value>
+    <value>Pubblica le tue pagine</value>
   </data>
   <data name="Publish own posts" xml:space="preserve">
-    <value>자신의 게시물 게시</value>
+    <value>Pubblica i tuoi post</value>
   </data>
   <data name="Publish own quick notes" xml:space="preserve">
-    <value>나만의 빠른 노트 게시</value>
+    <value>Pubblica le tue note veloci</value>
   </data>
   <data name="Publish own special pages" xml:space="preserve">
-    <value>나만의 특별한 페이지를 게시하세요</value>
+    <value>Pubblica le tue pagine speciali</value>
   </data>
   <data name="Publish own videos" xml:space="preserve">
-    <value>자신의 비디오 게시</value>
+    <value>Pubblica i tuoi video</value>
   </data>
   <data name="Publish page(s)" xml:space="preserve">
-    <value>게시 페이지</value>
+    <value>Pubblica pagine</value>
   </data>
   <data name="Publish post(s)" xml:space="preserve">
-    <value>게시물 게시</value>
+    <value>Pubblica post</value>
   </data>
   <data name="Publish video(s)" xml:space="preserve">
-    <value>비디오 게시</value>
+    <value>Pubblica video(i)</value>
   </data>
   <data name="Published" xml:space="preserve">
-    <value>게시됨</value>
+    <value>Pubblicato</value>
   </data>
   <data name="Published pages" xml:space="preserve">
-    <value>게시된 페이지</value>
+    <value>Pagine pubblicate</value>
   </data>
   <data name="Published posts" xml:space="preserve">
-    <value>게시된 게시물</value>
+    <value>Post pubblicati</value>
   </data>
   <data name="Published special messages" xml:space="preserve">
-    <value>공개된 특별 메시지</value>
+    <value>Messaggi speciali pubblicati</value>
   </data>
   <data name="Published special pages" xml:space="preserve">
-    <value>공개된 특별 페이지</value>
+    <value>Pubblicate pagine speciali</value>
   </data>
   <data name="Published videos" xml:space="preserve">
-    <value>게시된 동영상</value>
+    <value>Video pubblicati</value>
+  </data>
+  <data name="published.GetType().Name" xml:space="preserve">
+    <value>published.GetType().Name</value>
   </data>
   <data name="Purge blogs" xml:space="preserve">
-    <value>블로그 퍼지</value>
+    <value>Blog chiari</value>
   </data>
   <data name="Purge categories" xml:space="preserve">
-    <value>카테고리 삭제</value>
+    <value>Elimina categorie</value>
   </data>
   <data name="Purge comments" xml:space="preserve">
-    <value>댓글 삭제</value>
+    <value>Commenti chiari</value>
   </data>
   <data name="Purge instead" xml:space="preserve">
-    <value>대신 삭제</value>
+    <value>Invece, elimina</value>
   </data>
   <data name="Purge pages" xml:space="preserve">
-    <value>페이지 제거</value>
+    <value>Pagine chiare</value>
   </data>
   <data name="Purge posts" xml:space="preserve">
-    <value>게시물 삭제</value>
+    <value>Messaggi chiari</value>
   </data>
   <data name="Purge quick notes" xml:space="preserve">
-    <value>빠른 메모 제거</value>
+    <value>Cancella note rapide</value>
   </data>
   <data name="Purge roles" xml:space="preserve">
-    <value>역할 제거</value>
+    <value>Elimina ruoli</value>
   </data>
   <data name="Purge special messages" xml:space="preserve">
-    <value>특별 메시지 삭제</value>
+    <value>Cancella messaggi speciali</value>
   </data>
   <data name="Purge special pages" xml:space="preserve">
-    <value>특수 페이지 제거</value>
+    <value>Cancella pagine speciali</value>
   </data>
   <data name="Purge tags" xml:space="preserve">
-    <value>태그 제거</value>
+    <value>Cancella tag</value>
   </data>
   <data name="Purge users" xml:space="preserve">
-    <value>사용자 제거</value>
+    <value>Cancella utenti</value>
   </data>
   <data name="Purge videos" xml:space="preserve">
-    <value>비디오 퍼지</value>
+    <value>Video chiari</value>
   </data>
   <data name="Purging {0} Item(s)" xml:space="preserve">
-    <value>{0} 항목 제거 중</value>
+    <value>Eliminare gli elementi {0}</value>
   </data>
   <data name="Quick note" xml:space="preserve">
-    <value>빠른 메모</value>
+    <value>Nota veloce</value>
   </data>
   <data name="Quick notes" xml:space="preserve">
-    <value>빠른 메모</value>
+    <value>Note veloci</value>
   </data>
   <data name="Quick notes found in the search" xml:space="preserve">
-    <value>검색으로 찾은 빠른 메모</value>
+    <value>Note rapide trovate nella ricerca</value>
   </data>
   <data name="Quick reply" xml:space="preserve">
-    <value>빠른 답변</value>
+    <value>Risposta rapida</value>
   </data>
   <data name="Rated {0} on:" xml:space="preserve">
-    <value>{0} 등급:</value>
+    <value>Recensito {0} in:</value>
   </data>
   <data name="Rating" xml:space="preserve">
-    <value>평점</value>
+    <value>Valutazione</value>
   </data>
   <data name="Rating 1 is not accounted for in the final rating" xml:space="preserve">
-    <value>1등급은 최종등급에 반영되지 않습니다.</value>
+    <value>La classifica 1 non viene conteggiata nella classifica finale</value>
   </data>
   <data name="Rating must be less than or equal to 5" xml:space="preserve">
-    <value>평점은 5보다 작거나 같아야 합니다.</value>
+    <value>Il punteggio deve essere inferiore o uguale a 5</value>
+  </data>
+  <data name="rating!.Rating" xml:space="preserve">
+    <value>valutazione!. Valutazione</value>
+  </data>
+  <data name="rating.Rating" xml:space="preserve">
+    <value>rating.Rating</value>
   </data>
   <data name="Ratings" xml:space="preserve">
-    <value>평점</value>
+    <value>Valutazioni</value>
   </data>
   <data name="Ratings on posts" xml:space="preserve">
-    <value>게시물 평가</value>
+    <value>Recensioni sui post</value>
   </data>
   <data name="Ratings on videos" xml:space="preserve">
-    <value>동영상 평가</value>
+    <value>Recensioni video</value>
   </data>
   <data name="Reacted {0} on:" xml:space="preserve">
-    <value>{0}에 반응함:</value>
+    <value>Ha reagito {0} in:</value>
   </data>
   <data name="Reacted {0} to:" xml:space="preserve">
-    <value>{0}에 반응하여:</value>
+    <value>{0} ha reagito a:</value>
   </data>
   <data name="Reaction needs one author" xml:space="preserve">
-    <value>반응에는 한 명의 작성자가 필요합니다</value>
+    <value>La reazione ha bisogno di un autore</value>
+  </data>
+  <data name="reaction.Reaction" xml:space="preserve">
+    <value>reaction.Reaction</value>
   </data>
   <data name="Reactions" xml:space="preserve">
-    <value>반응</value>
+    <value>Reazioni</value>
   </data>
   <data name="Refresh your browser" xml:space="preserve">
-    <value>브라우저 새로 고침</value>
+    <value>Aggiorna il tuo browser</value>
   </data>
   <data name="Regenerate nano-ids" xml:space="preserve">
-    <value>나노 ID 재생성</value>
+    <value>Rigenera i nano-idi</value>
   </data>
   <data name="Regenerate recovery codes" xml:space="preserve">
-    <value>복구 코드 재생성</value>
+    <value>Rigenerare i codici di ripristino</value>
   </data>
   <data name="Regenerate secret" xml:space="preserve">
-    <value>비밀 재생성</value>
+    <value>Rigenera il segreto</value>
   </data>
   <data name="Related content" xml:space="preserve">
-    <value>관련 내용</value>
+    <value>Contenuti correlati</value>
   </data>
   <data name="Related pages" xml:space="preserve">
-    <value>관련 페이지</value>
+    <value>Pagine correlate</value>
   </data>
   <data name="Related special pages" xml:space="preserve">
-    <value>관련 특집 페이지</value>
+    <value>Pagine speciali correlate</value>
   </data>
   <data name="Release date" xml:space="preserve">
-    <value>출시일</value>
+    <value>Data di rilascio</value>
   </data>
   <data name="Reload" xml:space="preserve">
-    <value>새로고침</value>
+    <value>Ricarica</value>
   </data>
   <data name="Remove picture" xml:space="preserve">
-    <value>사진 삭제</value>
+    <value>Rimuovi l'immagine</value>
   </data>
   <data name="Repeat new password" xml:space="preserve">
-    <value>새 비밀번호를 반복하세요</value>
+    <value>Ripeti la nuova password</value>
+  </data>
+  <data name="replies.Count()" xml:space="preserve">
+    <value>replies.Count()</value>
   </data>
   <data name="Reply" xml:space="preserve">
-    <value>답글</value>
+    <value>Rispondi</value>
   </data>
   <data name="Reply comment" xml:space="preserve">
-    <value>댓글 답장</value>
+    <value>Rispondi al commento</value>
   </data>
   <data name="Request date" xml:space="preserve">
-    <value>요청 날짜</value>
+    <value>Data della richiesta</value>
   </data>
   <data name="Requested by" xml:space="preserve">
-    <value>요청자</value>
+    <value>Richiesto da</value>
   </data>
   <data name="Requests for information wipe-out" xml:space="preserve">
-    <value>정보 삭제 요청</value>
+    <value>Richieste di informazioni cancellate</value>
   </data>
   <data name="Reset" xml:space="preserve">
-    <value>초기화</value>
+    <value>Reimposta</value>
   </data>
   <data name="Reset 2FA" xml:space="preserve">
-    <value>2FA 재설정</value>
+    <value>Reimposta 2FA</value>
   </data>
   <data name="Reset other users 2FA" xml:space="preserve">
-    <value>다른 사용자 2FA 재설정</value>
+    <value>Reimposta la 2FA degli altri utenti</value>
   </data>
   <data name="Reset other users passwords" xml:space="preserve">
-    <value>다른 사용자 비밀번호 재설정</value>
+    <value>Reimposta le password degli altri utenti</value>
   </data>
   <data name="Reset own 2FA" xml:space="preserve">
-    <value>자신의 2FA 재설정</value>
+    <value>Reimposta il tuo 2FA</value>
   </data>
   <data name="Reset own password" xml:space="preserve">
-    <value>자신의 비밀번호 재설정</value>
+    <value>Reimposta la tua password</value>
   </data>
   <data name="Reset password" xml:space="preserve">
-    <value>비밀번호 재설정</value>
+    <value>Reimposta la password</value>
   </data>
   <data name="Restore" xml:space="preserve">
-    <value>복원</value>
+    <value>Ripristina</value>
   </data>
   <data name="Restore blogs" xml:space="preserve">
-    <value>블로그 복원</value>
+    <value>Ripristina i blog</value>
   </data>
   <data name="Restore categories" xml:space="preserve">
-    <value>카테고리 복원</value>
+    <value>Ripristina le categorie</value>
   </data>
   <data name="Restore comments" xml:space="preserve">
-    <value>댓글 복원</value>
+    <value>Ripristina i commenti</value>
   </data>
   <data name="Restore files and database from a backup in the list below" xml:space="preserve">
-    <value>아래 목록의 백업에서 파일 및 데이터베이스 복원</value>
+    <value>Ripristina file e database da un backup nell'elenco seguente</value>
   </data>
   <data name="Restore files and database from a zip file" xml:space="preserve">
-    <value>zip 파일에서 파일 및 데이터베이스 복원</value>
+    <value>Ripristina file e database da un file zip</value>
   </data>
   <data name="Restore from a zip file" xml:space="preserve">
-    <value>zip 파일에서 복원</value>
+    <value>Ripristina da un file zip</value>
   </data>
   <data name="Restore from list" xml:space="preserve">
-    <value>목록에서 복원</value>
+    <value>Ripristina dall'elenco</value>
   </data>
   <data name="Restore pages" xml:space="preserve">
-    <value>페이지 복원</value>
+    <value>Ripristina pagine</value>
   </data>
   <data name="Restore posts" xml:space="preserve">
-    <value>게시물 복원</value>
+    <value>Ripristina i post</value>
   </data>
   <data name="Restore quick notes" xml:space="preserve">
-    <value>빠른 메모 복원</value>
+    <value>Ripristina note rapide</value>
   </data>
   <data name="Restore roles" xml:space="preserve">
-    <value>역할 복원</value>
+    <value>Ripristinare le funzioni</value>
   </data>
   <data name="Restore special messages" xml:space="preserve">
-    <value>특별한 메시지를 복원하세요</value>
+    <value>Ripristina messaggi speciali</value>
   </data>
   <data name="Restore special pages" xml:space="preserve">
-    <value>특수 페이지 복원</value>
+    <value>Ripristina pagine speciali</value>
   </data>
   <data name="Restore system" xml:space="preserve">
-    <value>시스템 복원</value>
+    <value>Ripristinare il sistema</value>
   </data>
   <data name="Restore users" xml:space="preserve">
-    <value>사용자 복원</value>
+    <value>Ripristina gli utenti</value>
   </data>
   <data name="Restore videos" xml:space="preserve">
-    <value>비디오 복원</value>
+    <value>Ripristina video</value>
   </data>
   <data name="Restoring {0} item(s)" xml:space="preserve">
-    <value>{0} 항목 복원 중</value>
+    <value>Ripristino degli elementi {0}</value>
   </data>
   <data name="Revoke moderator from user" xml:space="preserve">
-    <value>사용자로부터 중재자 취소</value>
+    <value>Revoca moderatore utente</value>
   </data>
   <data name="Revoke moderator roles from social profiles" xml:space="preserve">
-    <value>소셜 프로필에서 중재자 역할 취소</value>
+    <value>Revoca i ruoli di moderatore del profilo social</value>
   </data>
   <data name="Role" xml:space="preserve">
-    <value>역할</value>
+    <value>Ruolo</value>
   </data>
   <data name="Roles" xml:space="preserve">
-    <value>역할</value>
+    <value>Ruoli</value>
   </data>
   <data name="Roles are up-to-date" xml:space="preserve">
-    <value>역할이 최신 상태입니다.</value>
+    <value>Le funzioni sono aggiornate</value>
   </data>
   <data name="Roles have been created" xml:space="preserve">
-    <value>역할이 생성되었습니다.</value>
+    <value>Sono state create le funzioni</value>
   </data>
   <data name="RSS feed" xml:space="preserve">
-    <value>RSS 피드</value>
+    <value>Alimentazione RSS</value>
   </data>
   <data name="RSS feed #1" xml:space="preserve">
-    <value>RSS 피드 #1</value>
+    <value>Feed RSS n. 1</value>
   </data>
   <data name="RSS feed #2" xml:space="preserve">
-    <value>RSS 피드 #2</value>
+    <value>Feed RSS n.2</value>
   </data>
   <data name="RSS feed #3" xml:space="preserve">
-    <value>RSS 피드 #3</value>
+    <value>Feed RSS n. 3</value>
   </data>
   <data name="RSS feed #4" xml:space="preserve">
-    <value>RSS 피드 #4</value>
+    <value>Feed RSS n. 4</value>
   </data>
   <data name="RSS feed #5" xml:space="preserve">
-    <value>RSS 피드 #5</value>
+    <value>Feed RSS n.5</value>
   </data>
   <data name="RSS feed must be a valid website address" xml:space="preserve">
-    <value>RSS 피드는 유효한 웹사이트 주소여야 합니다.</value>
+    <value>Il feed RSS deve essere un indirizzo di sito Web valido</value>
   </data>
   <data name="Save" xml:space="preserve">
-    <value>저장</value>
+    <value>Salva</value>
   </data>
   <data name="Save and publish" xml:space="preserve">
-    <value>저장 및 게시</value>
+    <value>Salva e pubblica</value>
   </data>
   <data name="Save changes" xml:space="preserve">
-    <value>변경사항 저장</value>
+    <value>Salva modifiche</value>
   </data>
   <data name="Save password" xml:space="preserve">
-    <value>비밀번호 저장</value>
+    <value>Salva password</value>
   </data>
   <data name="Save reply" xml:space="preserve">
-    <value>답글 저장</value>
+    <value>Salva risposta</value>
   </data>
   <data name="Scan this QR code with your authenticator app" xml:space="preserve">
-    <value>인증 앱으로 이 QR 코드를 스캔하세요.</value>
+    <value>Scansiona questo codice QR con la tua app di autenticazione</value>
   </data>
   <data name="Search" xml:space="preserve">
-    <value>검색</value>
+    <value>Cerca</value>
   </data>
   <data name="See browser dev tools for details" xml:space="preserve">
-    <value>자세한 내용은 브라우저 개발 도구를 참조하세요.</value>
+    <value>Consulta gli strumenti di sviluppo del browser per i dettagli</value>
   </data>
   <data name="See more comments" xml:space="preserve">
-    <value>더 많은 댓글 보기</value>
+    <value>Vedi più commenti</value>
   </data>
   <data name="See more contents" xml:space="preserve">
-    <value>더 많은 콘텐츠 보기</value>
+    <value>Visualizza più contenuti</value>
   </data>
   <data name="See more notes" xml:space="preserve">
-    <value>더 많은 메모 보기</value>
+    <value>Vedi altre note</value>
   </data>
   <data name="See more pages" xml:space="preserve">
-    <value>더 많은 페이지 보기</value>
+    <value>Vedi più pagine</value>
   </data>
   <data name="See more posts" xml:space="preserve">
-    <value>더 많은 게시물 보기</value>
+    <value>Visualizza più post</value>
   </data>
   <data name="See more ratings" xml:space="preserve">
-    <value>더 많은 평가 보기</value>
+    <value>Vedi più recensioni</value>
   </data>
   <data name="See more videos" xml:space="preserve">
-    <value>더 많은 동영상 보기</value>
+    <value>Guarda altri video</value>
   </data>
   <data name="Select a comment" xml:space="preserve">
-    <value>댓글을 선택하세요</value>
+    <value>Seleziona un commento</value>
   </data>
   <data name="Select a file" xml:space="preserve">
-    <value>파일 선택</value>
+    <value>Seleziona un file</value>
   </data>
   <data name="Select a profile" xml:space="preserve">
-    <value>프로필을 선택하세요</value>
+    <value>Seleziona un profilo</value>
   </data>
   <data name="Select a tag" xml:space="preserve">
-    <value>태그를 선택하세요</value>
+    <value>Seleziona un'etichetta</value>
   </data>
   <data name="Select all" xml:space="preserve">
-    <value>모두 선택</value>
+    <value>Seleziona tutto</value>
   </data>
   <data name="Select parent category" xml:space="preserve">
-    <value>상위 카테고리 선택</value>
+    <value>Seleziona la categoria principale</value>
   </data>
   <data name="Select parent page" xml:space="preserve">
-    <value>상위 페이지 선택</value>
+    <value>Seleziona la pagina principale</value>
   </data>
   <data name="Select trash" xml:space="preserve">
-    <value>휴지통 선택</value>
+    <value>Seleziona il cestino</value>
+  </data>
+  <data name="SelectedEntities.Count" xml:space="preserve">
+    <value>SelectedEntities.Count</value>
   </data>
   <data name="Send verification code" xml:space="preserve">
-    <value>인증코드 보내기</value>
+    <value>Invia codice di verifica</value>
   </data>
   <data name="Settings" xml:space="preserve">
-    <value>설정</value>
+    <value>Impostazioni</value>
+  </data>
+  <data name="settings.Name" xml:space="preserve">
+    <value>settings.Name</value>
   </data>
   <data name="Size" xml:space="preserve">
-    <value>크기</value>
+    <value>Dimensione</value>
   </data>
   <data name="Slow" xml:space="preserve">
-    <value>느림</value>
+    <value>Lento</value>
   </data>
   <data name="Slug" xml:space="preserve">
-    <value>슬러그</value>
+    <value>Slug</value>
   </data>
   <data name="Slug cannot exceed {0} characters" xml:space="preserve">
-    <value>슬러그는 {0}자를 초과할 수 없습니다.</value>
+    <value>Lo slug non può superare i caratteri {0}</value>
   </data>
   <data name="Slug is already in use" xml:space="preserve">
-    <value>슬러그가 이미 사용 중입니다.</value>
+    <value>Slug è già in uso</value>
   </data>
   <data name="Small" xml:space="preserve">
-    <value>작음</value>
+    <value>Piccolo</value>
   </data>
   <data name="SMTP password" xml:space="preserve">
-    <value>SMTP 비밀번호</value>
+    <value>Password SMTP</value>
   </data>
   <data name="SMTP server" xml:space="preserve">
-    <value>SMTP 서버</value>
+    <value>ServerSMTP</value>
   </data>
   <data name="SMTP server port" xml:space="preserve">
-    <value>SMTP 서버 포트</value>
+    <value>Porta del server SMTP</value>
   </data>
   <data name="SMTP username" xml:space="preserve">
-    <value>SMTP 사용자 이름</value>
+    <value>Nome utente SMTP</value>
   </data>
   <data name="Social network logins" xml:space="preserve">
-    <value>소셜 네트워크 로그인</value>
+    <value>Accessi ai social media</value>
   </data>
   <data name="Social profile is not a subscriber" xml:space="preserve">
-    <value>소셜 프로필은 구독자가 아닙니다.</value>
+    <value>Il profilo social non è un abbonato</value>
   </data>
   <data name="Social profiles" xml:space="preserve">
-    <value>소셜 프로필</value>
+    <value>Profili sociali</value>
   </data>
   <data name="Social profiles found in the search" xml:space="preserve">
-    <value>검색에서 찾은 소셜 프로필</value>
+    <value>Profili social trovati nella ricerca</value>
+  </data>
+  <data name="socialProfileDelete.PostCommentReactions" xml:space="preserve">
+    <value>socialProfileDelete.PostCommentReactions</value>
+  </data>
+  <data name="socialProfileDelete.PostComments" xml:space="preserve">
+    <value>socialProfileDelete.PostComments</value>
+  </data>
+  <data name="socialProfileDelete.PostRatings" xml:space="preserve">
+    <value>socialProfileDelete.PostRatings</value>
+  </data>
+  <data name="socialProfileDelete.VideoCommentReactions" xml:space="preserve">
+    <value>socialProfileDelete.VideoCommentReactions</value>
+  </data>
+  <data name="socialProfileDelete.VideoComments" xml:space="preserve">
+    <value>socialProfileDelete.VideoComments</value>
+  </data>
+  <data name="socialProfileDelete.VideoRatings" xml:space="preserve">
+    <value>socialProfileDelete.VideoRatings</value>
   </data>
   <data name="Source and destination images share the same location" xml:space="preserve">
-    <value>소스 및 대상 이미지가 동일한 위치를 공유합니다.</value>
+    <value>Le immagini di origine e di destinazione condividono la stessa posizione</value>
   </data>
   <data name="Spam" xml:space="preserve">
-    <value>스팸</value>
+    <value>Spam</value>
   </data>
   <data name="Spam comments" xml:space="preserve">
-    <value>스팸댓글</value>
+    <value>Commenti spam</value>
   </data>
   <data name="Special message" xml:space="preserve">
-    <value>특별한 메시지</value>
+    <value>Messaggio speciale</value>
   </data>
   <data name="Special messages" xml:space="preserve">
-    <value>특별한 메시지</value>
+    <value>Messaggi speciali</value>
   </data>
   <data name="Special messages found in the search" xml:space="preserve">
-    <value>검색에서 찾은 특별한 메시지</value>
+    <value>Messaggi speciali trovati nella ricerca</value>
   </data>
   <data name="Special page" xml:space="preserve">
-    <value>특설 페이지</value>
+    <value>Pagina speciale</value>
   </data>
   <data name="Special pages" xml:space="preserve">
-    <value>특별 페이지</value>
+    <value>Pagine speciali</value>
   </data>
   <data name="Special pages found in the search" xml:space="preserve">
-    <value>검색에서 찾은 특별한 페이지</value>
+    <value>Pagine speciali trovate nella ricerca</value>
   </data>
   <data name="Start date" xml:space="preserve">
-    <value>시작일</value>
+    <value>Data di inizio</value>
   </data>
   <data name="Start date cannot be later than end date" xml:space="preserve">
-    <value>시작일은 종료일보다 이후일 수 없습니다.</value>
+    <value>La data di inizio non può essere successiva alla data di fine</value>
   </data>
   <data name="Stats" xml:space="preserve">
-    <value>통계</value>
+    <value>Statistiche</value>
   </data>
   <data name="Status" xml:space="preserve">
-    <value>상태</value>
+    <value>Stato</value>
   </data>
   <data name="Still a draft?" xml:space="preserve">
-    <value>아직 초안인가요?</value>
+    <value>E' ancora una bozza?</value>
   </data>
   <data name="Stop" xml:space="preserve">
-    <value>중지</value>
+    <value>Ferma</value>
   </data>
   <data name="Stops the timer" xml:space="preserve">
-    <value>타이머를 중지합니다</value>
+    <value>Per il cronometro</value>
   </data>
   <data name="Subscribe" xml:space="preserve">
-    <value>구독</value>
+    <value>Iscriviti</value>
   </data>
   <data name="Subscribe to the website" xml:space="preserve">
-    <value>웹사이트를 구독하세요</value>
+    <value>Registrati sul sito web</value>
   </data>
   <data name="Subscriber" xml:space="preserve">
-    <value>구독자</value>
+    <value>Iscritto</value>
   </data>
   <data name="Subscriber(s)" xml:space="preserve">
-    <value>구독자</value>
+    <value>Abbonato(i)</value>
   </data>
   <data name="Success" xml:space="preserve">
-    <value>성공</value>
+    <value>Successo</value>
   </data>
   <data name="System role" xml:space="preserve">
-    <value>시스템 역할</value>
+    <value>Funzione del sistema</value>
   </data>
   <data name="Tag" xml:space="preserve">
-    <value>태그</value>
+    <value>Tag</value>
   </data>
   <data name="Tag cannot exceed {0} characters" xml:space="preserve">
-    <value>태그는 {0}자를 초과할 수 없습니다.</value>
+    <value>Il tag non può superare i caratteri {0}</value>
   </data>
   <data name="Tags" xml:space="preserve">
-    <value>태그</value>
+    <value>Tag</value>
   </data>
   <data name="Tags found in the search" xml:space="preserve">
-    <value>검색에서 찾은 태그</value>
+    <value>Tag trovati nella ricerca</value>
   </data>
   <data name="Tags must be unique" xml:space="preserve">
-    <value>태그는 고유해야 합니다.</value>
+    <value>I tag devono essere univoci</value>
   </data>
   <data name="Talk to an administrator, if this is not correct" xml:space="preserve">
-    <value>정확하지 않은 경우 관리자에게 문의하세요.</value>
+    <value>Parla con un amministratore se questo non è corretto</value>
   </data>
   <data name="Tenant id" xml:space="preserve">
-    <value>테넌트 ID</value>
+    <value>ID inquilino</value>
   </data>
   <data name="Terms and conditions" xml:space="preserve">
-    <value>이용약관</value>
+    <value>Termini e Condizioni</value>
   </data>
   <data name="Terms of service" xml:space="preserve">
-    <value>서비스 약관</value>
+    <value>Termini di servizio</value>
   </data>
   <data name="Test connection" xml:space="preserve">
-    <value>테스트 연결</value>
+    <value>Testare la connessione</value>
+  </data>
+  <data name="Text.OperationCompletedSuccessfully" xml:space="preserve">
+    <value>Text.OperationCompletedSuccessfully</value>
+  </data>
+  <data name="Text.SomethingWentWrongPleaseTryAgain" xml:space="preserve">
+    <value>Text.SomethingWentWrongPleaseTryAgain</value>
+  </data>
+  <data name="Text.Styles.Original" xml:space="preserve">
+    <value>Text.Styles.Original</value>
+  </data>
+  <data name="Text.Styles.Uppercase" xml:space="preserve">
+    <value>Text.Styles.Uppercase</value>
+  </data>
+  <data name="Text.YouDontHavePermissionForThisFeature" xml:space="preserve">
+    <value>Text.YouDontHavePermissionForThisFeature</value>
+  </data>
+  <data name="Text.YouMadeTooManyCommentsIn5Minutes" xml:space="preserve">
+    <value>Text.YouMadeTooManyCommentsIn5Minutes</value>
   </data>
   <data name="The author marked this as draft" xml:space="preserve">
-    <value>작성자가 이것을 초안으로 표시했습니다.</value>
+    <value>L'autore ha contrassegnato questo come bozza</value>
   </data>
   <data name="The entity you are trying to access does not exist" xml:space="preserve">
-    <value>액세스하려는 엔터티가 존재하지 않습니다.</value>
+    <value>L'entità a cui stai tentando di accedere non esiste</value>
   </data>
   <data name="This application may no longer respond until reloaded" xml:space="preserve">
-    <value>이 애플리케이션은 다시 로드될 때까지 더 이상 응답하지 않을 수 있습니다.</value>
+    <value>Questa applicazione potrebbe non rispondere più finché non viene ricaricata</value>
   </data>
   <data name="This code is for the subscription process in the website" xml:space="preserve">
-    <value>이 코드는 웹사이트의 구독 절차를 위한 것입니다.</value>
+    <value>Questo codice è per il processo di registrazione al sito web</value>
   </data>
   <data name="This has already been restored." xml:space="preserve">
-    <value>이는 이미 복원되었습니다.</value>
+    <value>Questo ora è stato ripristinato.</value>
   </data>
   <data name="this is a front-page" xml:space="preserve">
-    <value>이건 일면이야</value>
+    <value>questa è una prima pagina</value>
+  </data>
+  <data name="this._files.Count()" xml:space="preserve">
+    <value>this._files.Count()</value>
+  </data>
+  <data name="this.Entity.GetEmail()" xml:space="preserve">
+    <value>this.Entity.GetEmail()</value>
+  </data>
+  <data name="this.FileLimitInBytes.SizeInBytes()" xml:space="preserve">
+    <value>this.FileLimitInBytes.SizeInBytes()</value>
+  </data>
+  <data name="this.PublishedPosts" xml:space="preserve">
+    <value>this.PublishedPosts</value>
+  </data>
+  <data name="this.PublishedVideos" xml:space="preserve">
+    <value>this.PublishedVideos</value>
+  </data>
+  <data name="this.Super.GetContents(context.Item, this.UserFacade.BlogId).OfType&lt;OrigamiPost&gt;().Published().Count()" xml:space="preserve">
+    <value>this.Super.GetContents(context.Item, this.UserFacade.BlogID).OfType&lt;OrigamiPost&gt;().Published().Count()</value>
+  </data>
+  <data name="this.Super.GetContents(context.Item, this.UserFacade.BlogId).OfType&lt;OrigamiVideo&gt;().Published().Count()" xml:space="preserve">
+    <value>this.Super.GetContents(context.Item, this.UserFacade.BlogID).OfType&lt;OrigamiVideo&gt;().Published().Count()</value>
   </data>
   <data name="Thumbnail" xml:space="preserve">
-    <value>썸네일</value>
+    <value>Miniatura</value>
   </data>
   <data name="Time period" xml:space="preserve">
-    <value>기간</value>
+    <value>Periodo di tempo</value>
   </data>
   <data name="Timezone" xml:space="preserve">
-    <value>시간대</value>
+    <value>Fuso orario</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>제목</value>
+    <value>Titolo</value>
   </data>
   <data name="Title cannot exceed 255 characters" xml:space="preserve">
-    <value>제목은 255자를 초과할 수 없습니다.</value>
+    <value>Il titolo non può superare i 255 caratteri</value>
   </data>
   <data name="Title is required" xml:space="preserve">
-    <value>제목은 필수 항목입니다.</value>
+    <value>Il titolo è obbligatorio</value>
   </data>
   <data name="To promote to front-page, that page must be top-level" xml:space="preserve">
-    <value>첫 페이지로 승격하려면 해당 페이지가 최상위 페이지여야 합니다.</value>
+    <value>Per promuovere la prima pagina, quella pagina deve essere di primo livello</value>
   </data>
   <data name="Trash" xml:space="preserve">
-    <value>휴지통</value>
+    <value>Cestino</value>
   </data>
   <data name="Try again to solve this issue" xml:space="preserve">
-    <value>이 문제를 해결하려면 다시 시도하세요.</value>
+    <value>Riprova a risolvere il problema</value>
   </data>
   <data name="Turn social profiles into moderators" xml:space="preserve">
-    <value>소셜 프로필을 중재자로 전환</value>
+    <value>Trasforma i profili social in moderatori</value>
   </data>
   <data name="Type Here" xml:space="preserve">
-    <value>여기에 입력하세요</value>
+    <value>Scrivi qui</value>
   </data>
   <data name="Type in here to search" xml:space="preserve">
-    <value>검색하려면 여기에 입력하세요.</value>
+    <value>Digita qui per cercare</value>
   </data>
   <data name="Type is required for special messages" xml:space="preserve">
-    <value>특수 메시지에는 유형이 필요합니다.</value>
+    <value>Il tipo è obbligatorio per i messaggi speciali</value>
   </data>
   <data name="Type is required for special pages" xml:space="preserve">
-    <value>특수 페이지에는 유형이 필요합니다.</value>
+    <value>Il tipo è obbligatorio per le pagine speciali</value>
   </data>
   <data name="Type must be a valid special message type" xml:space="preserve">
-    <value>유형은 유효한 특수 메시지 유형이어야 합니다.</value>
+    <value>Il tipo deve essere un tipo di messaggio speciale valido</value>
   </data>
   <data name="Type must be a valid special page type" xml:space="preserve">
-    <value>유형은 유효한 특수 페이지 유형이어야 합니다.</value>
+    <value>Il tipo deve essere un tipo di pagina speciale valido</value>
   </data>
   <data name="Type your note here" xml:space="preserve">
-    <value>여기에 메모를 입력하세요.</value>
+    <value>Inserisci qui la tua nota</value>
   </data>
   <data name="Unable to restore" xml:space="preserve">
-    <value>복원할 수 없습니다.</value>
+    <value>Impossibile ripristinare</value>
   </data>
   <data name="Unable to restore trash" xml:space="preserve">
-    <value>휴지통을 복원할 수 없습니다.</value>
+    <value>Impossibile ripristinare il cestino</value>
   </data>
   <data name="Unable to retrieve IP location" xml:space="preserve">
-    <value>IP 위치를 검색할 수 없습니다.</value>
+    <value>Impossibile recuperare la posizione IP</value>
   </data>
   <data name="Unapproved comments" xml:space="preserve">
-    <value>승인되지 않은 댓글</value>
+    <value>Commenti non approvati</value>
   </data>
   <data name="Unblock social profiles" xml:space="preserve">
-    <value>소셜 프로필 차단 해제</value>
+    <value>Sblocca i profili social</value>
   </data>
   <data name="Unblock user" xml:space="preserve">
-    <value>사용자 차단 해제</value>
+    <value>Sblocca utente</value>
   </data>
   <data name="Unblock users" xml:space="preserve">
-    <value>사용자 차단 해제</value>
+    <value>Sblocca gli utenti</value>
   </data>
   <data name="Undo" xml:space="preserve">
-    <value>실행 취소</value>
+    <value>Annulla</value>
   </data>
   <data name="Undo changes" xml:space="preserve">
-    <value>변경사항 취소</value>
+    <value>Annulla le modifiche</value>
   </data>
   <data name="Unpin comment" xml:space="preserve">
-    <value>댓글 고정 해제</value>
+    <value>Rilascia commento</value>
   </data>
   <data name="Unpublish {0} item(s)" xml:space="preserve">
-    <value>{0} 항목 게시 취소</value>
+    <value>Annulla la pubblicazione degli elementi {0}</value>
   </data>
   <data name="Unpublish message(s)" xml:space="preserve">
-    <value>메시지 게시 취소</value>
+    <value>Annulla la pubblicazione dei messaggi</value>
   </data>
   <data name="Unpublish other users messages" xml:space="preserve">
-    <value>다른 사용자 메시지 게시 취소</value>
+    <value>Annulla la pubblicazione dei messaggi di altri utenti</value>
   </data>
   <data name="Unpublish other users pages" xml:space="preserve">
-    <value>다른 사용자 페이지 게시 취소</value>
+    <value>Annulla la pubblicazione delle pagine di altri utenti</value>
   </data>
   <data name="Unpublish other users posts" xml:space="preserve">
-    <value>다른 사용자 게시물 게시 취소</value>
+    <value>Annulla la pubblicazione dei post di altri utenti</value>
   </data>
   <data name="Unpublish other users quick notes" xml:space="preserve">
-    <value>다른 사용자의 빠른 노트 게시 취소</value>
+    <value>Annulla la pubblicazione delle note rapide di altri utenti</value>
   </data>
   <data name="Unpublish other users special pages" xml:space="preserve">
-    <value>다른 사용자 특별 페이지 게시 취소</value>
+    <value>Annulla la pubblicazione delle pagine speciali di altri utenti</value>
   </data>
   <data name="Unpublish other users videos" xml:space="preserve">
-    <value>다른 사용자의 동영상 게시 취소</value>
+    <value>Annulla la pubblicazione dei video di altri utenti</value>
   </data>
   <data name="Unpublish own messages" xml:space="preserve">
-    <value>자신의 메시지 게시 취소</value>
+    <value>Annulla la pubblicazione dei tuoi messaggi</value>
   </data>
   <data name="Unpublish own pages" xml:space="preserve">
-    <value>자신의 페이지 게시 취소</value>
+    <value>Annulla la pubblicazione delle tue pagine</value>
   </data>
   <data name="Unpublish own posts" xml:space="preserve">
-    <value>자신의 게시물 게시 취소</value>
+    <value>Annulla la pubblicazione dei tuoi post</value>
   </data>
   <data name="Unpublish own quick notes" xml:space="preserve">
-    <value>자신의 빠른 노트 게시 취소</value>
+    <value>Annulla la pubblicazione delle tue note rapide</value>
   </data>
   <data name="Unpublish own special pages" xml:space="preserve">
-    <value>자신의 특별 페이지 게시 취소</value>
+    <value>Annulla la pubblicazione delle tue pagine speciali</value>
   </data>
   <data name="Unpublish own videos" xml:space="preserve">
-    <value>자신의 동영상 게시 취소</value>
+    <value>Annulla la pubblicazione dei tuoi video</value>
   </data>
   <data name="Unpublish page(s)" xml:space="preserve">
-    <value>페이지 게시 취소</value>
+    <value>Annulla pubblicazione delle pagine</value>
   </data>
   <data name="Unpublish post(s)" xml:space="preserve">
-    <value>게시물 게시 취소</value>
+    <value>Annulla pubblicazione post(i)</value>
   </data>
   <data name="Unpublish video(s)" xml:space="preserve">
-    <value>동영상 게시 취소</value>
+    <value>Annulla la pubblicazione dei video</value>
   </data>
   <data name="Unselect all" xml:space="preserve">
-    <value>모두 선택 해제</value>
+    <value>Deseleziona tutto</value>
   </data>
   <data name="Unsubscribe from the website" xml:space="preserve">
-    <value>웹사이트 구독 취소</value>
+    <value>Annulla l'iscrizione al sito web</value>
   </data>
   <data name="Unsubscribe social profiles" xml:space="preserve">
-    <value>소셜 프로필 구독 취소</value>
+    <value>Cancellarsi dai profili social</value>
   </data>
   <data name="Unsubscribe user" xml:space="preserve">
-    <value>사용자 구독 취소</value>
+    <value>Annulla l'iscrizione dell'utente</value>
   </data>
   <data name="Upload" xml:space="preserve">
-    <value>업로드</value>
+    <value>Carica</value>
   </data>
   <data name="Upload files" xml:space="preserve">
-    <value>파일 업로드</value>
+    <value>Carica file</value>
   </data>
   <data name="Upload picture" xml:space="preserve">
-    <value>사진 업로드</value>
+    <value>Carica immagine</value>
   </data>
   <data name="Upload subtitle" xml:space="preserve">
-    <value>자막 업로드</value>
+    <value>Carica sottotitoli</value>
   </data>
   <data name="Uploading a file" xml:space="preserve">
-    <value>파일 업로드</value>
+    <value>Caricamento di un file</value>
   </data>
   <data name="User" xml:space="preserve">
-    <value>사용자</value>
+    <value>Utente</value>
   </data>
   <data name="User actions" xml:space="preserve">
-    <value>사용자 작업</value>
+    <value>Azioni dell'utente</value>
   </data>
   <data name="User Activity" xml:space="preserve">
-    <value>사용자 활동</value>
+    <value>Attività dell'utente</value>
   </data>
   <data name="User came from" xml:space="preserve">
-    <value>사용자의 출처</value>
+    <value>L'utente proviene da</value>
   </data>
   <data name="User did not share an e-mail address" xml:space="preserve">
-    <value>사용자가 이메일 주소를 공유하지 않았습니다.</value>
+    <value>L'utente non ha condiviso un indirizzo email</value>
   </data>
   <data name="User trashes" xml:space="preserve">
-    <value>사용자 휴지통</value>
+    <value>Cestino dell'utente</value>
   </data>
   <data name="Username" xml:space="preserve">
-    <value>사용자 이름</value>
+    <value>Nome utente</value>
   </data>
   <data name="Username (read-only)" xml:space="preserve">
-    <value>사용자 이름(읽기 전용)</value>
+    <value>Nome utente (sola lettura)</value>
   </data>
   <data name="Username and current password do NOT exist in the database" xml:space="preserve">
-    <value>사용자 이름과 현재 비밀번호가 데이터베이스에 존재하지 않습니다.</value>
+    <value>Il nome utente e la password attuali NON esistono nel database</value>
   </data>
   <data name="Username cannot exceed {0} characters" xml:space="preserve">
-    <value>사용자 이름은 {0}자를 초과할 수 없습니다.</value>
+    <value>Il nome utente non può superare i caratteri {0}</value>
   </data>
   <data name="Username is required" xml:space="preserve">
-    <value>사용자 이름이 필요합니다</value>
+    <value>Il nome utente è obbligatorio</value>
   </data>
   <data name="Users" xml:space="preserve">
-    <value>사용자</value>
+    <value>Utenti</value>
   </data>
   <data name="Validate code and finish subscribing" xml:space="preserve">
-    <value>코드 확인 및 구독 완료</value>
+    <value>Convalida il codice e completa la firma</value>
   </data>
   <data name="Validate the 2FA code and login" xml:space="preserve">
-    <value>2FA 코드를 확인하고 로그인하세요.</value>
+    <value>Convalida il codice 2FA e accedi</value>
   </data>
   <data name="Validate the TOTP code and proceed" xml:space="preserve">
-    <value>TOTP 코드를 검증하고 진행하세요</value>
+    <value>Convalida il codice TOTP e procedi</value>
   </data>
   <data name="Value" xml:space="preserve">
-    <value>값</value>
+    <value>Valore</value>
   </data>
   <data name="Version" xml:space="preserve">
-    <value>버전</value>
+    <value>Versione</value>
   </data>
   <data name="Video" xml:space="preserve">
-    <value>동영상</value>
+    <value>Video</value>
   </data>
   <data name="Video cannot be updated" xml:space="preserve">
-    <value>동영상을 업데이트할 수 없습니다.</value>
+    <value>Il video non può essere aggiornato</value>
   </data>
   <data name="Videos" xml:space="preserve">
-    <value>동영상</value>
+    <value>Video</value>
   </data>
   <data name="Videos comments" xml:space="preserve">
-    <value>비디오 댓글</value>
+    <value>Commenti video</value>
   </data>
   <data name="Videos found in the search" xml:space="preserve">
-    <value>검색으로 찾은 동영상</value>
+    <value>Video trovati nella ricerca</value>
   </data>
   <data name="View backup and restore system" xml:space="preserve">
-    <value>백업 및 복원 시스템 보기</value>
+    <value>Visualizza il backup e il ripristino del sistema</value>
   </data>
   <data name="View blogs" xml:space="preserve">
-    <value>블로그 보기</value>
+    <value>Visualizza i blog</value>
   </data>
   <data name="View categories" xml:space="preserve">
-    <value>카테고리 보기</value>
+    <value>Visualizza le categorie</value>
   </data>
   <data name="View comments" xml:space="preserve">
-    <value>댓글 보기</value>
+    <value>Vedi i commenti</value>
   </data>
   <data name="View dashboard" xml:space="preserve">
-    <value>대시보드 보기</value>
+    <value>Visualizza dashboard</value>
   </data>
   <data name="View messages" xml:space="preserve">
-    <value>메시지 보기</value>
+    <value>Visualizza i messaggi</value>
   </data>
   <data name="View pages" xml:space="preserve">
-    <value>페이지 보기</value>
+    <value>Visualizza pagine</value>
   </data>
   <data name="View posts" xml:space="preserve">
-    <value>게시물 보기</value>
+    <value>Visualizza i post</value>
   </data>
   <data name="View quick notes" xml:space="preserve">
-    <value>빠른 노트 보기</value>
+    <value>Visualizza note rapide</value>
   </data>
   <data name="View roles" xml:space="preserve">
-    <value>역할 보기</value>
+    <value>Visualizza le funzioni</value>
   </data>
   <data name="View settings" xml:space="preserve">
-    <value>설정 보기</value>
+    <value>Visualizza le impostazioni</value>
   </data>
   <data name="View social profiles" xml:space="preserve">
-    <value>소셜 프로필 보기</value>
+    <value>Visualizza i profili social</value>
   </data>
   <data name="View special pages" xml:space="preserve">
-    <value>특별 페이지 보기</value>
+    <value>Vedi pagine speciali</value>
   </data>
   <data name="View tags" xml:space="preserve">
-    <value>태그 보기</value>
+    <value>Visualizza tag</value>
   </data>
   <data name="View trashes" xml:space="preserve">
-    <value>휴지통 보기</value>
+    <value>Visualizza i contenitori per il riciclaggio</value>
   </data>
   <data name="View users" xml:space="preserve">
-    <value>사용자 보기</value>
+    <value>Visualizza utenti</value>
   </data>
   <data name="View videos" xml:space="preserve">
-    <value>동영상 보기</value>
+    <value>Guarda i video</value>
   </data>
   <data name="Warning" xml:space="preserve">
-    <value>경고</value>
+    <value>Avviso</value>
   </data>
   <data name="We need a valid e-mail to subscribe" xml:space="preserve">
-    <value>구독하려면 유효한 이메일이 필요합니다</value>
+    <value>Abbiamo bisogno di una email valida per registrarci</value>
   </data>
   <data name="We use cookies and similar technologies to enhance your browsing experience, analyze site traffic, personalize content, and serve targeted advertisements" xml:space="preserve">
-    <value>당사는 귀하의 검색 경험을 향상시키고, 사이트 트래픽을 분석하고, 콘텐츠를 개인화하고, 타겟 광고를 제공하기 위해 쿠키 및 유사한 기술을 사용합니다.</value>
+    <value>Utilizziamo cookie e tecnologie simili per migliorare la tua esperienza di navigazione, analizzare il traffico del sito, personalizzare i contenuti e pubblicare annunci mirati</value>
   </data>
   <data name="Website" xml:space="preserve">
-    <value>웹사이트</value>
+    <value>Sito web</value>
   </data>
   <data name="What to see next" xml:space="preserve">
-    <value>다음에 무엇을 볼 것인가</value>
+    <value>Cosa vedere dopo</value>
   </data>
   <data name="Wipe all data from the website" xml:space="preserve">
-    <value>웹사이트의 모든 데이터를 삭제하세요.</value>
+    <value>Cancella tutti i dati del sito web</value>
   </data>
   <data name="Wipe data out from social profiles" xml:space="preserve">
-    <value>소셜 프로필에서 데이터 삭제</value>
+    <value>Cancella dati dai profili social</value>
   </data>
   <data name="Wipe out user data" xml:space="preserve">
-    <value>사용자 데이터 삭제</value>
+    <value>Cancella dati utente</value>
   </data>
   <data name="Yes" xml:space="preserve">
-    <value>예</value>
+    <value>Sì</value>
   </data>
   <data name="Yes, since" xml:space="preserve">
-    <value>응, 그 이후로</value>
+    <value>Sì, da allora</value>
   </data>
   <data name="You already reacted with this emoji" xml:space="preserve">
-    <value>이미 이 이모티콘으로 반응했습니다.</value>
+    <value>Hai già reagito con questa emoji</value>
   </data>
   <data name="You are adding a new {0}" xml:space="preserve">
-    <value>새로운 {0}를 추가하고 있습니다.</value>
+    <value>Stai aggiungendo un nuovo {0}</value>
   </data>
   <data name="You are seeing this page, because &lt;b&gt;you denied access to your information from the Social Network&lt;/b&gt;" xml:space="preserve">
-    <value>&lt;b&gt;당신이 소셜 네트워크&lt;/b&gt;에서 귀하의 정보에 대한 접근을 거부했기 때문에 이 페이지가 표시됩니다.</value>
+    <value>Stai visualizzando questa pagina perché &lt;b&gt; ti ha negato l'accesso alle informazioni del tuo social network&lt;/b&gt;</value>
   </data>
   <data name="You are seeing this page, because &lt;b&gt;your access token is invalid/expired&lt;/b&gt;" xml:space="preserve">
-    <value>&lt;b&gt;액세스 토큰이 유효하지 않거나 만료되었기 때문에 이 페이지가 표시됩니다.&lt;/b&gt;</value>
+    <value>Stai visualizzando questa pagina perché &lt;b&gt;il tuo token di accesso non è valido/scaduto&lt;/b&gt;</value>
   </data>
   <data name="You are seeing this page, because &lt;b&gt;your user has been blocked&lt;/b&gt;" xml:space="preserve">
-    <value>&lt;b&gt;귀하의 사용자가 차단되었기 때문에 이 페이지가 표시됩니다&lt;/b&gt;</value>
+    <value>Stai visualizzando questa pagina perché &lt;b&gt;il tuo utente è stato bloccato&lt;/b&gt;</value>
   </data>
   <data name="You are viewing a deleted {0}" xml:space="preserve">
-    <value>삭제된 {0}를 보고 계십니다.</value>
+    <value>Stai visualizzando uno {0} eliminato</value>
   </data>
   <data name="You are viewing an existing {0}" xml:space="preserve">
-    <value>기존 {0}를 보고 있습니다.</value>
+    <value>Stai visualizzando uno {0} esistente</value>
   </data>
   <data name="You are viewing an existing trash" xml:space="preserve">
-    <value>기존 휴지통을 보고 계십니다.</value>
+    <value>Stai visualizzando un cestino esistente</value>
   </data>
   <data name="You asked for a password reset and here's the link to paste in your browser" xml:space="preserve">
-    <value>비밀번호 재설정을 요청하셨습니다. 브라우저에 붙여넣을 수 있는 링크는 다음과 같습니다.</value>
+    <value>Hai richiesto la reimpostazione della password ed ecco il collegamento da incollare nel tuo browser</value>
   </data>
   <data name="You asked for a password reset and here's the link to paste in your browser: {0}" xml:space="preserve">
-    <value>비밀번호 재설정을 요청하셨으며 브라우저에 붙여넣을 수 있는 링크는 다음과 같습니다: {0}</value>
+    <value>Hai richiesto la reimpostazione della password ed ecco il collegamento da incollare nel tuo browser: {0}</value>
   </data>
   <data name="You can change your display name at any time though" xml:space="preserve">
-    <value>표시 이름은 언제든지 변경할 수 있습니다.</value>
+    <value>Puoi modificare il nome visualizzato in qualsiasi momento</value>
   </data>
   <data name="You can't modify a system role" xml:space="preserve">
-    <value>시스템 역할은 수정할 수 없습니다.</value>
+    <value>Non è possibile modificare una funzione di sistema</value>
   </data>
   <data name="You cannot edit this comment" xml:space="preserve">
-    <value>이 댓글은 편집할 수 없습니다.</value>
+    <value>Non puoi modificare questo commento</value>
   </data>
   <data name="You did NOT change passwords, current and new are the same" xml:space="preserve">
-    <value>비밀번호를 변경하지 않았습니다. 현재 비밀번호와 새 비밀번호가 동일합니다.</value>
+    <value>NON hai cambiato la tua password, quella attuale e quella nuova sono le stesse</value>
   </data>
   <data name="You don't have access to any blogs" xml:space="preserve">
-    <value>액세스할 수 있는 블로그가 없습니다.</value>
+    <value>Non hai accesso ad alcun blog</value>
   </data>
   <data name="You don't have access to this feature" xml:space="preserve">
-    <value>이 기능에 액세스할 수 없습니다.</value>
+    <value>Non hai accesso a questa funzionalità</value>
   </data>
   <data name="You don't have permission to reset 2FA" xml:space="preserve">
-    <value>2FA를 재설정할 권한이 없습니다.</value>
+    <value>Non sei autorizzato a reimpostare 2FA</value>
   </data>
   <data name="You don't have permission to reset password" xml:space="preserve">
-    <value>비밀번호를 재설정할 권한이 없습니다.</value>
+    <value>Non hai l'autorizzazione per reimpostare la password</value>
   </data>
   <data name="You don't have permission to reset your own password" xml:space="preserve">
-    <value>자신의 비밀번호를 재설정할 권한이 없습니다.</value>
+    <value>Non ti è consentito reimpostare la tua password</value>
   </data>
   <data name="You must change your password" xml:space="preserve">
-    <value>비밀번호를 변경해야 합니다.</value>
+    <value>È necessario modificare la password</value>
   </data>
   <data name="You must enable two-factor authentication" xml:space="preserve">
-    <value>이중 인증을 활성화해야 합니다</value>
+    <value>È necessario abilitare l'autenticazione a due fattori</value>
   </data>
   <data name="You need to allow access to it when prompted to solve this issue" xml:space="preserve">
-    <value>이 문제를 해결하라는 메시지가 표시되면 액세스를 허용해야 합니다.</value>
+    <value>È necessario consentire l'accesso quando richiesto per risolvere il problema</value>
   </data>
   <data name="You need to pick a video" xml:space="preserve">
-    <value>동영상을 선택해야 합니다.</value>
+    <value>Devi scegliere un video</value>
   </data>
   <data name="You need to pick an image" xml:space="preserve">
-    <value>이미지를 선택해야 합니다.</value>
+    <value>Devi scegliere un'immagine</value>
   </data>
   <data name="You need to select one page" xml:space="preserve">
-    <value>한 페이지를 선택해야 합니다.</value>
+    <value>È necessario selezionare una pagina</value>
   </data>
   <data name="You rated this post: {0} star(s)" xml:space="preserve">
-    <value>귀하는 이 게시물을 평가했습니다: {0} 별표</value>
+    <value>Hai valutato questo post: {0} stella/e</value>
   </data>
   <data name="You subscribed to this website" xml:space="preserve">
-    <value>이 웹사이트를 구독하셨습니다.</value>
+    <value>Ti sei registrato su questo sito</value>
   </data>
   <data name="You switched to a different blog" xml:space="preserve">
-    <value>다른 블로그로 전환했습니다</value>
+    <value>Ti sei spostato su un blog diverso</value>
   </data>
   <data name="Your comments" xml:space="preserve">
-    <value>귀하의 의견</value>
+    <value>I tuoi commenti</value>
   </data>
   <data name="Your temporary password: {0}" xml:space="preserve">
-    <value>임시 비밀번호: {0}</value>
+    <value>La tua password temporanea: {0}</value>
   </data>
   <data name="ZIP file created successfully." xml:space="preserve">
-    <value>ZIP 파일이 성공적으로 생성되었습니다.</value>
+    <value>File ZIP creato correttamente.</value>
   </data>
   <data name="Type" xml:space="preserve">
-    <value>유형</value>
+    <value>Tipo</value>
   </data>
   <data name="Yay! Everything went smoothly" xml:space="preserve">
-    <value>이야! 모든 것이 순조롭게 진행되었습니다.</value>
+    <value>SÌ! Tutto è andato bene</value>
   </data>
   <data name="Ah heck, something went wrong, try again" xml:space="preserve">
-    <value>아 이런, 문제가 발생했습니다. 다시 시도해 주세요.</value>
+    <value>Ah merda, qualcosa è andato storto, riprova</value>
   </data>
   <data name="You don't have permission for this feature" xml:space="preserve">
-    <value>이 기능에 대한 권한이 없습니다.</value>
+    <value>Non hai l'autorizzazione per questa funzionalità</value>
   </data>
   <data name="Calm down, you made too many comments in 5 minutes" xml:space="preserve">
-    <value>진정하세요. 5분 동안 댓글을 너무 많이 달았네요.</value>
+    <value>Calmati, hai fatto molti commenti in 5 minuti</value>
   </data>
 </root>
