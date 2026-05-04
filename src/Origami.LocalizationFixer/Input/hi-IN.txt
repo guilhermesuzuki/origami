@@ -77,8 +77,8 @@ Password: पासवर्ड
 Path: पथ
 Pinned: पिन किया गया
 Platforms: प्लेटफ़ॉर्म
-Publication: प्रकाशन
-Publications: प्रकाशन
+Post: प्रकाशन
+Posts: प्रकाशन
 Primary: प्राथमिक
 Profile: प्रोफ़ाइल
 Progress: प्रगति

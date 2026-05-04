@@ -77,8 +77,8 @@ Password: Passwort
 Path: Pfad
 Pinned: Angeheftet
 Platforms: Plattformen
-Publication: Veröffentlichung
-Publications: Veröffentlichungen
+Post: Veröffentlichung
+Posts: Veröffentlichungen
 Primary: Primär
 Profile: Profil
 Progress: Fortschritt

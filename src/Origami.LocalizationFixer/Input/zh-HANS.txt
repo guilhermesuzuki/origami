@@ -77,8 +77,8 @@ Password: 密码
 Path: 路径
 Pinned: 置顶
 Platforms: 平台
-Publication: 发布
-Publications: 发布
+Post: 发布
+Posts: 发布
 Primary: 主要
 Profile: 个人资料
 Progress: 进度

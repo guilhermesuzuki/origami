@@ -77,8 +77,8 @@ Password: Mot de passe
 Path: Chemin
 Pinned: Épinglé
 Platforms: Plateformes
-Publication: Publication
-Publications: Publications
+Post: Publication
+Posts: Publications
 Primary: Principal
 Profile: Profil
 Progress: Progression

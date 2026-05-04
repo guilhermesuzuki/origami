@@ -77,8 +77,8 @@ Password: Palavra-passe
 Path: Caminho
 Pinned: Afixado
 Platforms: Plataformas
-Publication: Publicação
-Publications: Publicações
+Post: Publicação
+Posts: Publicações
 Primary: Primário
 Profile: Perfil
 Progress: Progresso

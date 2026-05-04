@@ -77,8 +77,8 @@ Password: Password
 Path: Percorso
 Pinned: Fissato
 Platforms: Piattaforme
-Publication: Pubblicazione
-Publications: Pubblicazioni
+Post: Pubblicazione
+Posts: Pubblicazioni
 Primary: Primario
 Profile: Profilo
 Progress: Avanzamento

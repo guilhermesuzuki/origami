@@ -77,8 +77,8 @@ Password: 비밀번호
 Path: 경로
 Pinned: 고정됨
 Platforms: 플랫폼
-Publication: 게시물
-Publications: 게시물
+Post: 게시물
+Posts: 게시물
 Primary: 기본
 Profile: 프로필
 Progress: 진행 상황

@@ -77,8 +77,8 @@ Password: パスワード
 Path: パス
 Pinned: 固定
 Platforms: プラットフォーム
-Publication: 公開
-Publications: 公開
+Post: 公開
+Posts: 公開
 Primary: メイン
 Profile: プロフィール
 Progress: 進行状況

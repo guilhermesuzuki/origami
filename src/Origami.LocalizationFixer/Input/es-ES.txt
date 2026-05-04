@@ -77,8 +77,8 @@ Password: Contraseña
 Path: Ruta
 Pinned: Fijado
 Platforms: Plataformas
-Publication: Publicación
-Publications: Publicaciones
+Post: Publicación
+Posts: Publicaciones
 Primary: Primario
 Profile: Perfil
 Progress: Progreso
