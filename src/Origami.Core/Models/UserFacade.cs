@@ -88,7 +88,7 @@ namespace Origami.Core.Models
 
         public bool ShowCookieConsent
         {
-            get => _showCookieConsent; 
+            get => _showCookieConsent;
             set => this.Set(ref _showCookieConsent, value, Changed);
         }
 

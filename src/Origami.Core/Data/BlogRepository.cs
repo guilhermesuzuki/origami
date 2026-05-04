@@ -1,7 +1,5 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Configuration;
 using Origami.Core.Models;
 using System.Linq.Dynamic.Core;
 
@@ -70,9 +68,7 @@ namespace Origami.Core.Data
 
         public override Result<OrigamiBlog> CreateValidation(DataOperationContext<OrigamiBlog> ctx)
         {
-            var validation = new Result<OrigamiBlog>(ctx.Entity, _validator);
-            this.ValidateSlug(ctx).Push(validation);
-            return validation;
+            return new(ctx.Entity, _validator);
         }
 
         public Result<OrigamiBlog> Deactivate(DataOperationContext<OrigamiBlog> ctx, bool checkPermission)
@@ -228,9 +224,7 @@ namespace Origami.Core.Data
 
         public override Result<OrigamiBlog> UpdateValidation(DataOperationContext<OrigamiBlog> ctx)
         {
-            var validation = new Result<OrigamiBlog>(ctx.Entity, _validator);
-            this.ValidateSlug(ctx).Push(validation);
-            return validation;
+            return new(ctx.Entity, _validator);
         }
 
         public override Result<OrigamiBlog> Purge(DataOperationContext<OrigamiBlog> ctx)

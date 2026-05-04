@@ -1,11 +1,13 @@
 ﻿using FluentValidation;
+using Microsoft.EntityFrameworkCore;
+using Origami.Core.Data;
 using Origami.Core.Models;
 
 namespace Origami.Core.Validators
 {
     public class OrigamiVideoValidator : AbstractValidator<OrigamiVideo>
     {
-        public OrigamiVideoValidator(Text text, IWebRootPath webRootPath) : base()
+        public OrigamiVideoValidator(Text text, IWebRootPath webRootPath, IDbContextFactory<OrigamiDbContext> dbContextFactory) : base()
         {
             RuleFor(x => x.AuthorId).AuthorId(text);
             RuleFor(x => x.BlogId).BlogId(text);
@@ -13,11 +15,12 @@ namespace Origami.Core.Validators
             RuleFor(x => x.NanoId).NanoId(text);
             RuleFor(x => x.Title).Title(text);
             RuleFor(x => x.Description).Description(text);
-            RuleFor(x => x.Slug).Slug(text);
+            RuleFor(x => x.Slug).Cascade(CascadeMode.Stop).Slug(text);
             RuleFor(x => x.Content).Html(text);
             RuleFor(x => x.HeaderImage).HeaderImage(text, webRootPath);
             RuleFor(x => x.LanguageWrittenOn).Language(text);
             RuleFor(x => x.EmbedIFrame).IFrame(text);
+            RuleFor(x => x).SlugMustBeUniqueByBlog(text, dbContextFactory);
         }
     }
 }

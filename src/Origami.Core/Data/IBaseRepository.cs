@@ -2,8 +2,8 @@
 
 namespace Origami.Core.Data
 {
-    public interface IBaseRepository<T>: 
-        IReadFromCache<T> 
+    public interface IBaseRepository<T> :
+        IReadFromCache<T>
         where T : IId
     {
         Text Text { get; }

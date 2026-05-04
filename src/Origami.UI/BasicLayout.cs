@@ -8,7 +8,6 @@ using Origami.Core;
 using Origami.Core.Data;
 using Origami.Core.Models;
 using System.Security.Claims;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Origami.UI
 {
