@@ -1,0 +1,2601 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="_comments.Count" xml:space="preserve">
+    <value>_comments.Count</value>
+  </data>
+  <data name="_directories.Count()" xml:space="preserve">
+    <value>_directories.Count()</value>
+  </data>
+  <data name="_resetPassword" xml:space="preserve">
+    <value>_resetPassword</value>
+  </data>
+  <data name="({0} files max)" xml:space="preserve">
+    <value>({0} फ़ाइलें अधिकतम)</value>
+  </data>
+  <data name="[At the time]" xml:space="preserve">
+    <value>[उन दिनों]</value>
+  </data>
+  <data name="{0} comment(s)" xml:space="preserve">
+    <value>{0} टिप्पणी</value>
+  </data>
+  <data name="{0} directories" xml:space="preserve">
+    <value>{0} निर्देशिकाएँ</value>
+  </data>
+  <data name="{0} directory" xml:space="preserve">
+    <value>{0} निर्देशिका</value>
+  </data>
+  <data name="{0} does NOT exist" xml:space="preserve">
+    <value>{0} मौजूद नहीं है</value>
+  </data>
+  <data name="{0} file" xml:space="preserve">
+    <value>{0} फ़ाइल</value>
+  </data>
+  <data name="{0} files" xml:space="preserve">
+    <value>{0} फ़ाइलें</value>
+  </data>
+  <data name="{0} is already published" xml:space="preserve">
+    <value>{0} पहले ही प्रकाशित हो चुका है</value>
+  </data>
+  <data name="{0} is already unpublished" xml:space="preserve">
+    <value>{0} पहले से ही अप्रकाशित है</value>
+  </data>
+  <data name="{0} max." xml:space="preserve">
+    <value>{0} अधिकतम।</value>
+  </data>
+  <data name="{0} people rated this content" xml:space="preserve">
+    <value>{0} लोगों ने इस सामग्री को रेट किया</value>
+  </data>
+  <data name="{0} person rated this content" xml:space="preserve">
+    <value>{0} व्यक्ति ने इस सामग्री का मूल्यांकन किया</value>
+  </data>
+  <data name="{0} post comment(s)" xml:space="preserve">
+    <value>{0} टिप्पणी पोस्ट करें</value>
+  </data>
+  <data name="{0} post rating(s)" xml:space="preserve">
+    <value>{0} पोस्ट रेटिंग</value>
+  </data>
+  <data name="{0} post reaction(s)" xml:space="preserve">
+    <value>{0} पोस्ट प्रतिक्रिया(ओं)</value>
+  </data>
+  <data name="{0} post(s)" xml:space="preserve">
+    <value>{0} पोस्ट</value>
+  </data>
+  <data name="{0} replies" xml:space="preserve">
+    <value>{0} उत्तर देता है</value>
+  </data>
+  <data name="{0} reply" xml:space="preserve">
+    <value>{0} उत्तर</value>
+  </data>
+  <data name="{0} video comment(s)" xml:space="preserve">
+    <value>{0} वीडियो टिप्पणी</value>
+  </data>
+  <data name="{0} video rating(s)" xml:space="preserve">
+    <value>{0} वीडियो रेटिंग</value>
+  </data>
+  <data name="{0} video reaction(s)" xml:space="preserve">
+    <value>{0} वीडियो प्रतिक्रियाएँ</value>
+  </data>
+  <data name="{0} video(s)" xml:space="preserve">
+    <value>{0} वीडियो</value>
+  </data>
+  <data name="{0}: Invalid domain format." xml:space="preserve">
+    <value>{0}: अमान्य डोमेन प्रारूप.</value>
+  </data>
+  <data name="{0}: URL must be a valid website address" xml:space="preserve">
+    <value>{0}: URL एक वैध वेबसाइट पता होना चाहिए</value>
+  </data>
+  <data name="{0}GB max." xml:space="preserve">
+    <value>{0}GB अधिकतम।</value>
+  </data>
+  <data name="{0}KB max." xml:space="preserve">
+    <value>{0}KB अधिकतम।</value>
+  </data>
+  <data name="{0}MB max." xml:space="preserve">
+    <value>{0}MB अधिकतम।</value>
+  </data>
+  <data name="*** [Test] Subscribe to the website ***" xml:space="preserve">
+    <value>*** [परीक्षण] वेबसाइट की सदस्यता लें ***</value>
+  </data>
+  <data name="1. tell us your e-mail" xml:space="preserve">
+    <value>1. हमें अपना ई-मेल बताएं</value>
+  </data>
+  <data name="2. validate e-mail (check your spam folder)" xml:space="preserve">
+    <value>2. ई-मेल सत्यापित करें (अपना स्पैम फ़ोल्डर जांचें)</value>
+  </data>
+  <data name="2FA code" xml:space="preserve">
+    <value>2FA कोड</value>
+  </data>
+  <data name="2FA recovery codes?" xml:space="preserve">
+    <value>2FA पुनर्प्राप्ति कोड?</value>
+  </data>
+  <data name="2FA secret?" xml:space="preserve">
+    <value>2एफए रहस्य?</value>
+  </data>
+  <data name="2FA setup" xml:space="preserve">
+    <value>2FA सेटअप</value>
+  </data>
+  <data name="A backup or restore process is already running. Please try again later." xml:space="preserve">
+    <value>बैकअप या पुनर्स्थापना प्रक्रिया पहले से ही चल रही है। कृपया बाद में पुन: प्रयास करें।</value>
+  </data>
+  <data name="A backup process is currently running. Some actions are disabled until the process is complete." xml:space="preserve">
+    <value>वर्तमान में एक बैकअप प्रक्रिया चल रही है. प्रक्रिया पूरी होने तक कुछ क्रियाएँ अक्षम हैं।</value>
+  </data>
+  <data name="A restore process is currently running. Some actions are disabled until the process is complete." xml:space="preserve">
+    <value>एक पुनर्स्थापना प्रक्रिया वर्तमान में चल रही है. प्रक्रिया पूरी होने तक कुछ क्रियाएँ अक्षम हैं।</value>
+  </data>
+  <data name="Accessed" xml:space="preserve">
+    <value>Acessado</value>
+  </data>
+  <data name="Activate blog" xml:space="preserve">
+    <value>ब्लॉग सक्रिय करें</value>
+  </data>
+  <data name="Activate blogs" xml:space="preserve">
+    <value>ब्लॉग सक्रिय करें</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>Ativo</value>
+  </data>
+  <data name="Add comment" xml:space="preserve">
+    <value>टिप्पणी जोड़ना</value>
+  </data>
+  <data name="Add folder" xml:space="preserve">
+    <value>फ़ोल्डर जोड़ें</value>
+  </data>
+  <data name="Admin" xml:space="preserve">
+    <value>Administrador</value>
+  </data>
+  <data name="All" xml:space="preserve">
+    <value>Todos</value>
+  </data>
+  <data name="All comments" xml:space="preserve">
+    <value>सभी टिप्पणियाँ</value>
+  </data>
+  <data name="All location providers failed" xml:space="preserve">
+    <value>सभी स्थान प्रदाता विफल रहे</value>
+  </data>
+  <data name="Alphabetical sorting" xml:space="preserve">
+    <value>वर्णानुक्रमिक छँटाई</value>
+  </data>
+  <data name="Alphabetical sorting inverted" xml:space="preserve">
+    <value>वर्णमाला क्रम में उलटा</value>
+  </data>
+  <data name="Also in" xml:space="preserve">
+    <value>में भी</value>
+  </data>
+  <data name="An entity cannot be its own parent" xml:space="preserve">
+    <value>कोई इकाई अपनी स्वयं की अभिभावक नहीं हो सकती</value>
+  </data>
+  <data name="An error has occurred" xml:space="preserve">
+    <value>एक गलती हुई है</value>
+  </data>
+  <data name="An unhandled exception has occurred" xml:space="preserve">
+    <value>एक हैंडल न किया गया अपवाद उत्पन्न हुआ है</value>
+  </data>
+  <data name="And click OK to close this pop-up window" xml:space="preserve">
+    <value>और इस पॉप-अप विंडो को बंद करने के लिए ओके पर क्लिक करें</value>
+  </data>
+  <data name="Anonymous" xml:space="preserve">
+    <value>Anônimo</value>
+  </data>
+  <data name="Answering" xml:space="preserve">
+    <value>Respondendo</value>
+  </data>
+  <data name="Anyway, click here to go back to the Website" xml:space="preserve">
+    <value>वैसे भी, वेबसाइट पर वापस जाने के लिए यहां क्लिक करें</value>
+  </data>
+  <data name="Api key" xml:space="preserve">
+    <value>एपीआई कुंजी</value>
+  </data>
+  <data name="App id" xml:space="preserve">
+    <value>ऐप आईडी</value>
+  </data>
+  <data name="App name" xml:space="preserve">
+    <value>ऐप का नाम</value>
+  </data>
+  <data name="App secret" xml:space="preserve">
+    <value>ऐप रहस्य</value>
+  </data>
+  <data name="Approved" xml:space="preserve">
+    <value>Aprovado</value>
+  </data>
+  <data name="Approved comments" xml:space="preserve">
+    <value>स्वीकृत टिप्पणियाँ</value>
+  </data>
+  <data name="Are comments enabled?" xml:space="preserve">
+    <value>क्या टिप्पणियाँ सक्षम हैं?</value>
+  </data>
+  <data name="Are you sure?" xml:space="preserve">
+    <value>क्या आपको यकीन है?</value>
+  </data>
+  <data name="Are you sure? You will NOT be able to recover these items." xml:space="preserve">
+    <value>क्या आपको यकीन है? आप इन वस्तुओं को पुनर्प्राप्त नहीं कर पाएंगे.</value>
+  </data>
+  <data name="Author" xml:space="preserve">
+    <value>Autor</value>
+  </data>
+  <data name="Author is required" xml:space="preserve">
+    <value>लेखक आवश्यक है</value>
+  </data>
+  <data name="Backup" xml:space="preserve">
+    <value>Backup</value>
+  </data>
+  <data name="Backup and restore" xml:space="preserve">
+    <value>बैकअप और पुनर्स्थापना</value>
+  </data>
+  <data name="Backup file not found" xml:space="preserve">
+    <value>बैकअप फ़ाइल नहीं मिली</value>
+  </data>
+  <data name="Backup files and database" xml:space="preserve">
+    <value>बैकअप फ़ाइलें और डेटाबेस</value>
+  </data>
+  <data name="Backup system" xml:space="preserve">
+    <value>बैकअप प्रणाली</value>
+  </data>
+  <data name="Backups" xml:space="preserve">
+    <value>Cópias de segurança</value>
+  </data>
+  <data name="BACPAC file created successfully" xml:space="preserve">
+    <value>BACPAC फ़ाइल सफलतापूर्वक बनाई गई</value>
+  </data>
+  <data name="Base64 image" xml:space="preserve">
+    <value>बेस64 छवि</value>
+  </data>
+  <data name="Based on title" xml:space="preserve">
+    <value>शीर्षक के आधार पर</value>
+  </data>
+  <data name="Basic" xml:space="preserve">
+    <value>Básico</value>
+  </data>
+  <data name="Be careful when choosing a username, you won't be able to change it later" xml:space="preserve">
+    <value>उपयोगकर्ता नाम चुनते समय सावधान रहें, आप इसे बाद में नहीं बदल पाएंगे</value>
+  </data>
+  <data name="Be the first to comment" xml:space="preserve">
+    <value>टिप्पणी करने वाले पहले बनो</value>
+  </data>
+  <data name="Block social profiles" xml:space="preserve">
+    <value>सामाजिक प्रोफ़ाइल ब्लॉक करें</value>
+  </data>
+  <data name="Block user" xml:space="preserve">
+    <value>खंड उपयोगकर्ता</value>
+  </data>
+  <data name="Block user self" xml:space="preserve">
+    <value>उपयोगकर्ता को स्वयं ब्लॉक करें</value>
+  </data>
+  <data name="Block users other than self" xml:space="preserve">
+    <value>स्वयं के अलावा अन्य उपयोगकर्ताओं को ब्लॉक करें</value>
+  </data>
+  <data name="Blocked" xml:space="preserve">
+    <value>Bloqueado</value>
+  </data>
+  <data name="Blog" xml:space="preserve">
+    <value>Blogue</value>
+  </data>
+  <data name="Blog could not be found" xml:space="preserve">
+    <value>ब्लॉग नहीं मिल सका</value>
+  </data>
+  <data name="Blog is already activated" xml:space="preserve">
+    <value>ब्लॉग पहले से ही सक्रिय है</value>
+  </data>
+  <data name="Blog is already deactivated" xml:space="preserve">
+    <value>ब्लॉग पहले से ही निष्क्रिय है</value>
+  </data>
+  <data name="Blog is required" xml:space="preserve">
+    <value>ब्लॉग आवश्यक है</value>
+  </data>
+  <data name="Blog must be null" xml:space="preserve">
+    <value>ब्लॉग शून्य होना चाहिए</value>
+  </data>
+  <data name="Blogs" xml:space="preserve">
+    <value>Blogues</value>
+  </data>
+  <data name="Blogs found in the search" xml:space="preserve">
+    <value>खोज में ब्लॉग मिले</value>
+  </data>
+  <data name="Blogs this user has access to" xml:space="preserve">
+    <value>वे ब्लॉग जिन तक इस उपयोगकर्ता की पहुंच है</value>
+  </data>
+  <data name="Blogs, specials..." xml:space="preserve">
+    <value>ब्लॉग, विशेष...</value>
+  </data>
+  <data name="Browser • Url" xml:space="preserve">
+    <value>ब्राउज़र • यूआरएल</value>
+  </data>
+  <data name="Browsers" xml:space="preserve">
+    <value>Navegadores</value>
+  </data>
+  <data name="But login first" xml:space="preserve">
+    <value>लेकिन पहले लॉगिन करें</value>
+  </data>
+  <data name="By continuing to use our site, you consent to our use of cookies" xml:space="preserve">
+    <value>हमारी साइट का उपयोग जारी रखकर, आप कुकीज़ के हमारे उपयोग के लिए सहमति देते हैं</value>
+  </data>
+  <data name="By language, most recent" xml:space="preserve">
+    <value>भाषा के अनुसार, सबसे ताज़ा</value>
+  </data>
+  <data name="By language, note" xml:space="preserve">
+    <value>भाषा के अनुसार, ध्यान दें</value>
+  </data>
+  <data name="By language, title" xml:space="preserve">
+    <value>भाषा, शीर्षक से</value>
+  </data>
+  <data name="By most recent" xml:space="preserve">
+    <value>सबसे हाल तक</value>
+  </data>
+  <data name="By note" xml:space="preserve">
+    <value>नोट द्वारा</value>
+  </data>
+  <data name="By note desc." xml:space="preserve">
+    <value>नोट विवरण द्वारा.</value>
+  </data>
+  <data name="By oldest" xml:space="preserve">
+    <value>सबसे पुराने द्वारा</value>
+  </data>
+  <data name="By title" xml:space="preserve">
+    <value>शीर्षक से</value>
+  </data>
+  <data name="By title desc." xml:space="preserve">
+    <value>शीर्षक विवरण द्वारा.</value>
+  </data>
+  <data name="Cache explorer" xml:space="preserve">
+    <value>कैश एक्सप्लोरर</value>
+  </data>
+  <data name="Callback path" xml:space="preserve">
+    <value>कॉलबैक पथ</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="Categories" xml:space="preserve">
+    <value>Categorias</value>
+  </data>
+  <data name="Categories found in the search" xml:space="preserve">
+    <value>खोज में श्रेणियाँ मिलीं</value>
+  </data>
+  <data name="Categories must be unique" xml:space="preserve">
+    <value>श्रेणियाँ अद्वितीय होनी चाहिए</value>
+  </data>
+  <data name="Category" xml:space="preserve">
+    <value>Categoria</value>
+  </data>
+  <data name="Category must exist" xml:space="preserve">
+    <value>श्रेणी मौजूद होनी चाहिए</value>
+  </data>
+  <data name="Change password" xml:space="preserve">
+    <value>पासवर्ड बदलें</value>
+  </data>
+  <data name="Child categories" xml:space="preserve">
+    <value>बाल श्रेणियाँ</value>
+  </data>
+  <data name="Children will be purged too" xml:space="preserve">
+    <value>बच्चों को भी शुद्ध किया जाएगा</value>
+  </data>
+  <data name="Choose the background style" xml:space="preserve">
+    <value>पृष्ठभूमि शैली चुनें</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Claro</value>
+  </data>
+  <data name="Clear cache" xml:space="preserve">
+    <value>कैश को साफ़ करें</value>
+  </data>
+  <data name="Clear header" xml:space="preserve">
+    <value>हेडर साफ़ करें</value>
+  </data>
+  <data name="Clear icon" xml:space="preserve">
+    <value>आइकन साफ़ करें</value>
+  </data>
+  <data name="Clear image" xml:space="preserve">
+    <value>चित्र हटाएं</value>
+  </data>
+  <data name="Clear picture" xml:space="preserve">
+    <value>साफ़ तस्वीर</value>
+  </data>
+  <data name="Clear selection" xml:space="preserve">
+    <value>स्पष्ट चयन</value>
+  </data>
+  <data name="Clear video" xml:space="preserve">
+    <value>साफ़ वीडियो</value>
+  </data>
+  <data name="Click here to change it" xml:space="preserve">
+    <value>इसे बदलने के लिए यहां क्लिक करें</value>
+  </data>
+  <data name="Click here to read our cookie policy" xml:space="preserve">
+    <value>हमारी कुकी नीति पढ़ने के लिए यहां क्लिक करें</value>
+  </data>
+  <data name="Click here to reset password" xml:space="preserve">
+    <value>पासवर्ड रीसेट करने के लिए यहां क्लिक करें</value>
+  </data>
+  <data name="Client id" xml:space="preserve">
+    <value>ग्राहक आईडी</value>
+  </data>
+  <data name="Client secret" xml:space="preserve">
+    <value>ग्राहक रहस्य</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Fechar</value>
+  </data>
+  <data name="Close menu" xml:space="preserve">
+    <value>मेनू बंद करें</value>
+  </data>
+  <data name="Close window" xml:space="preserve">
+    <value>विंडो बंद</value>
+  </data>
+  <data name="Closes the window" xml:space="preserve">
+    <value>विंडो बंद कर देता है</value>
+  </data>
+  <data name="Comment" xml:space="preserve">
+    <value>Comentário</value>
+  </data>
+  <data name="Comment reactions on posts" xml:space="preserve">
+    <value>पोस्ट पर प्रतिक्रियाएँ टिप्पणी करें</value>
+  </data>
+  <data name="Comment reactions on videos" xml:space="preserve">
+    <value>वीडियो पर प्रतिक्रियाएँ टिप्पणी करें</value>
+  </data>
+  <data name="Comment section" xml:space="preserve">
+    <value>टिप्पणी अनुभाग</value>
+  </data>
+  <data name="Commented on post:" xml:space="preserve">
+    <value>पोस्ट पर टिप्पणी की गई:</value>
+  </data>
+  <data name="commentReaction.Reaction" xml:space="preserve">
+    <value>commentReaction.Reaction</value>
+  </data>
+  <data name="Comments" xml:space="preserve">
+    <value>Comentários</value>
+  </data>
+  <data name="Comments [including deleted]" xml:space="preserve">
+    <value>टिप्पणियाँ [हटाए गए सहित]</value>
+  </data>
+  <data name="Comments found In the search" xml:space="preserve">
+    <value>खोज में टिप्पणियाँ मिलीं</value>
+  </data>
+  <data name="Comments on posts" xml:space="preserve">
+    <value>पोस्ट पर टिप्पणियाँ</value>
+  </data>
+  <data name="Comments on videos" xml:space="preserve">
+    <value>वीडियो पर टिप्पणियाँ</value>
+  </data>
+  <data name="Confirm password" xml:space="preserve">
+    <value>पासवर्ड की पुष्टि कीजिये</value>
+  </data>
+  <data name="Congratulations" xml:space="preserve">
+    <value>Parabéns</value>
+  </data>
+  <data name="Contact an administrator to solve this issue" xml:space="preserve">
+    <value>इस समस्या को हल करने के लिए किसी व्यवस्थापक से संपर्क करें</value>
+  </data>
+  <data name="Content" xml:space="preserve">
+    <value>Conteúdo</value>
+  </data>
+  <data name="Content must be a valid HTML" xml:space="preserve">
+    <value>सामग्री एक वैध HTML होनी चाहिए</value>
+  </data>
+  <data name="Content must exist" xml:space="preserve">
+    <value>सामग्री मौजूद होनी चाहिए</value>
+  </data>
+  <data name="context.Item.Description" xml:space="preserve">
+    <value>context.Item.Description</value>
+  </data>
+  <data name="context.Item.GetEmail()" xml:space="preserve">
+    <value>context.Item.GetEmail()</value>
+  </data>
+  <data name="context.Item.TypeName" xml:space="preserve">
+    <value>context.Item.TypeName</value>
+  </data>
+  <data name="Cookie policy" xml:space="preserve">
+    <value>कूकी नीति</value>
+  </data>
+  <data name="count" xml:space="preserve">
+    <value>contar</value>
+  </data>
+  <data name="Create blogs" xml:space="preserve">
+    <value>ब्लॉग बनाएं</value>
+  </data>
+  <data name="Create categories" xml:space="preserve">
+    <value>श्रेणियां बनाएं</value>
+  </data>
+  <data name="Create new messages" xml:space="preserve">
+    <value>नए संदेश बनाएं</value>
+  </data>
+  <data name="Create new pages" xml:space="preserve">
+    <value>नए पेज बनाएं</value>
+  </data>
+  <data name="Create new posts" xml:space="preserve">
+    <value>नई पोस्ट बनाएं</value>
+  </data>
+  <data name="Create new quick notes" xml:space="preserve">
+    <value>नए त्वरित नोट्स बनाएं</value>
+  </data>
+  <data name="Create new roles" xml:space="preserve">
+    <value>नई भूमिकाएँ बनाएँ</value>
+  </data>
+  <data name="Create new special pages" xml:space="preserve">
+    <value>नए विशेष पेज बनाएं</value>
+  </data>
+  <data name="Create new users" xml:space="preserve">
+    <value>नए उपयोगकर्ता बनाएं</value>
+  </data>
+  <data name="Create new videos" xml:space="preserve">
+    <value>नए वीडियो बनाएं</value>
+  </data>
+  <data name="Create slug" xml:space="preserve">
+    <value>स्लग बनाएँ</value>
+  </data>
+  <data name="Created" xml:space="preserve">
+    <value>Criado</value>
+  </data>
+  <data name="Current month" xml:space="preserve">
+    <value>अभी चल रहा माह</value>
+  </data>
+  <data name="Current password" xml:space="preserve">
+    <value>वर्तमान पासवर्ड</value>
+  </data>
+  <data name="Current year" xml:space="preserve">
+    <value>चालू वर्ष</value>
+  </data>
+  <data name="Custom" xml:space="preserve">
+    <value>Personalizado</value>
+  </data>
+  <data name="Cycle detected: you must choose another parent" xml:space="preserve">
+    <value>चक्र का पता चला: आपको किसी अन्य अभिभावक को चुनना होगा</value>
+  </data>
+  <data name="Danger" xml:space="preserve">
+    <value>Perigo</value>
+  </data>
+  <data name="Dashboard" xml:space="preserve">
+    <value>Painel</value>
+  </data>
+  <data name="Dashboard analytics" xml:space="preserve">
+    <value>डैशबोर्ड विश्लेषण</value>
+  </data>
+  <data name="Database restored successfully." xml:space="preserve">
+    <value>डेटाबेस सफलतापूर्वक पुनर्स्थापित किया गया.</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Data</value>
+  </data>
+  <data name="Date of modification must happen after the creation date" xml:space="preserve">
+    <value>संशोधन की तिथि निर्माण तिथि के बाद होनी चाहिए</value>
+  </data>
+  <data name="Date published" xml:space="preserve">
+    <value>दिनांक प्रकाशित</value>
+  </data>
+  <data name="Date released" xml:space="preserve">
+    <value>दिनांक जारी</value>
+  </data>
+  <data name="Db settings file updated successfully" xml:space="preserve">
+    <value>डीबी सेटिंग्स फ़ाइल सफलतापूर्वक अपडेट की गई</value>
+  </data>
+  <data name="Deactivate blog" xml:space="preserve">
+    <value>ब्लॉग निष्क्रिय करें</value>
+  </data>
+  <data name="Deactivate blogs" xml:space="preserve">
+    <value>ब्लॉग निष्क्रिय करें</value>
+  </data>
+  <data name="Default sorting" xml:space="preserve">
+    <value>डिफ़ॉल्ट छँटाई</value>
+  </data>
+  <data name="Delete blogs" xml:space="preserve">
+    <value>ब्लॉग हटाएँ</value>
+  </data>
+  <data name="Delete categories" xml:space="preserve">
+    <value>श्रेणियाँ हटाएँ</value>
+  </data>
+  <data name="Delete comment" xml:space="preserve">
+    <value>टिप्पणी हटाएँ</value>
+  </data>
+  <data name="Delete other users messages" xml:space="preserve">
+    <value>अन्य उपयोगकर्ताओं के संदेश हटाएँ</value>
+  </data>
+  <data name="Delete other users pages" xml:space="preserve">
+    <value>अन्य उपयोगकर्ता पेज हटाएं</value>
+  </data>
+  <data name="Delete other users posts" xml:space="preserve">
+    <value>अन्य उपयोगकर्ताओं के पोस्ट हटाएं</value>
+  </data>
+  <data name="Delete other users quick notes" xml:space="preserve">
+    <value>अन्य उपयोगकर्ताओं के त्वरित नोट्स हटाएँ</value>
+  </data>
+  <data name="Delete other users special pages" xml:space="preserve">
+    <value>अन्य उपयोगकर्ताओं के विशेष पेज हटाएं</value>
+  </data>
+  <data name="Delete other users videos" xml:space="preserve">
+    <value>अन्य उपयोगकर्ताओं के वीडियो हटाएं</value>
+  </data>
+  <data name="Delete own messages" xml:space="preserve">
+    <value>स्वयं के संदेश हटाएँ</value>
+  </data>
+  <data name="Delete own pages" xml:space="preserve">
+    <value>स्वयं के पृष्ठ हटाएँ</value>
+  </data>
+  <data name="Delete own posts" xml:space="preserve">
+    <value>स्वयं के पोस्ट हटाएँ</value>
+  </data>
+  <data name="Delete own quick notes" xml:space="preserve">
+    <value>स्वयं के त्वरित नोट्स हटाएँ</value>
+  </data>
+  <data name="Delete own special pages" xml:space="preserve">
+    <value>अपने विशेष पेज हटाएं</value>
+  </data>
+  <data name="Delete own videos" xml:space="preserve">
+    <value>स्वयं के वीडियो हटाएं</value>
+  </data>
+  <data name="Delete roles" xml:space="preserve">
+    <value>भूमिकाएँ हटाएँ</value>
+  </data>
+  <data name="Delete selected item(s)" xml:space="preserve">
+    <value>चयनित आइटम हटाएं</value>
+  </data>
+  <data name="Delete Subtitle" xml:space="preserve">
+    <value>उपशीर्षक हटाएँ</value>
+  </data>
+  <data name="Delete tags" xml:space="preserve">
+    <value>टैग हटाएँ</value>
+  </data>
+  <data name="Delete user self" xml:space="preserve">
+    <value>उपयोगकर्ता स्वयं को हटाएँ</value>
+  </data>
+  <data name="Delete users other than self" xml:space="preserve">
+    <value>स्वयं के अलावा अन्य उपयोगकर्ताओं को हटाएं</value>
+  </data>
+  <data name="Deleted" xml:space="preserve">
+    <value>Excluído</value>
+  </data>
+  <data name="Deleted comments" xml:space="preserve">
+    <value>टिप्पणियाँ हटा दी गईं</value>
+  </data>
+  <data name="Deleted?" xml:space="preserve">
+    <value>Excluído?</value>
+  </data>
+  <data name="Deleting {0} item(s)" xml:space="preserve">
+    <value>{0} आइटम हटाना</value>
+  </data>
+  <data name="Demote from front-page" xml:space="preserve">
+    <value>मुख पृष्ठ से हटाएँ</value>
+  </data>
+  <data name="Demoting from front-page" xml:space="preserve">
+    <value>प्रथम पृष्ठ से पदावनत किया जा रहा है</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Descrição</value>
+  </data>
+  <data name="Description cannot exceed {0} characters" xml:space="preserve">
+    <value>विवरण {0} वर्णों से अधिक नहीं हो सकता</value>
+  </data>
+  <data name="Description of the website (for meta tags)" xml:space="preserve">
+    <value>वेबसाइट का विवरण (मेटा टैग के लिए)</value>
+  </data>
+  <data name="Direct replies" xml:space="preserve">
+    <value>सीधे उत्तर</value>
+  </data>
+  <data name="Display name" xml:space="preserve">
+    <value>प्रदर्शित होने वाला नाम</value>
+  </data>
+  <data name="Display name cannot exceed {0} characters" xml:space="preserve">
+    <value>प्रदर्शन नाम {0} वर्णों से अधिक नहीं हो सकता</value>
+  </data>
+  <data name="Display name is required" xml:space="preserve">
+    <value>प्रदर्शन नाम आवश्यक है</value>
+  </data>
+  <data name="Do NOT share this code with anybody" xml:space="preserve">
+    <value>इस कोड को किसी के साथ साझा न करें</value>
+  </data>
+  <data name="Don't share that link" xml:space="preserve">
+    <value>उस लिंक को शेयर न करें</value>
+  </data>
+  <data name="Don't share that link with anybody else" xml:space="preserve">
+    <value>उस लिंक को किसी और के साथ साझा न करें</value>
+  </data>
+  <data name="Done" xml:space="preserve">
+    <value>Feito</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Download</value>
+  </data>
+  <data name="Draft" xml:space="preserve">
+    <value>Rascunho</value>
+  </data>
+  <data name="Draft pages" xml:space="preserve">
+    <value>ड्राफ्ट पेज</value>
+  </data>
+  <data name="Draft posts" xml:space="preserve">
+    <value>ड्राफ्ट पोस्ट</value>
+  </data>
+  <data name="Draft special messages" xml:space="preserve">
+    <value>विशेष संदेश ड्राफ़्ट करें</value>
+  </data>
+  <data name="Draft special pages" xml:space="preserve">
+    <value>विशेष पेज ड्राफ़्ट करें</value>
+  </data>
+  <data name="Draft videos" xml:space="preserve">
+    <value>ड्राफ्ट वीडियो</value>
+  </data>
+  <data name="Drafts" xml:space="preserve">
+    <value>Rascunhos</value>
+  </data>
+  <data name="E-mail" xml:space="preserve">
+    <value>ई-मेल</value>
+  </data>
+  <data name="Edit blogs" xml:space="preserve">
+    <value>ब्लॉग संपादित करें</value>
+  </data>
+  <data name="Edit categories" xml:space="preserve">
+    <value>श्रेणियां संपादित करें</value>
+  </data>
+  <data name="Edit comment" xml:space="preserve">
+    <value>टिप्पणी संपादित करें</value>
+  </data>
+  <data name="Edit other users" xml:space="preserve">
+    <value>अन्य उपयोगकर्ताओं को संपादित करें</value>
+  </data>
+  <data name="Edit other users messages" xml:space="preserve">
+    <value>अन्य उपयोगकर्ताओं के संदेश संपादित करें</value>
+  </data>
+  <data name="Edit other users pages" xml:space="preserve">
+    <value>अन्य उपयोगकर्ता पेज संपादित करें</value>
+  </data>
+  <data name="Edit other users posts" xml:space="preserve">
+    <value>अन्य उपयोगकर्ताओं की पोस्ट संपादित करें</value>
+  </data>
+  <data name="Edit other users quick notes" xml:space="preserve">
+    <value>अन्य उपयोगकर्ताओं के त्वरित नोट्स संपादित करें</value>
+  </data>
+  <data name="Edit other users special pages" xml:space="preserve">
+    <value>अन्य उपयोगकर्ताओं के विशेष पेज संपादित करें</value>
+  </data>
+  <data name="Edit other users videos" xml:space="preserve">
+    <value>अन्य उपयोगकर्ताओं के वीडियो संपादित करें</value>
+  </data>
+  <data name="Edit own messages" xml:space="preserve">
+    <value>स्वयं के संदेश संपादित करें</value>
+  </data>
+  <data name="Edit own pages" xml:space="preserve">
+    <value>स्वयं के पृष्ठ संपादित करें</value>
+  </data>
+  <data name="Edit own posts" xml:space="preserve">
+    <value>स्वयं के पोस्ट संपादित करें</value>
+  </data>
+  <data name="Edit own quick notes" xml:space="preserve">
+    <value>स्वयं के त्वरित नोट्स संपादित करें</value>
+  </data>
+  <data name="Edit own special pages" xml:space="preserve">
+    <value>स्वयं के विशेष पृष्ठ संपादित करें</value>
+  </data>
+  <data name="Edit own user" xml:space="preserve">
+    <value>स्वयं का उपयोगकर्ता संपादित करें</value>
+  </data>
+  <data name="Edit own videos" xml:space="preserve">
+    <value>स्वयं के वीडियो संपादित करें</value>
+  </data>
+  <data name="Edit roles" xml:space="preserve">
+    <value>भूमिकाएँ संपादित करें</value>
+  </data>
+  <data name="Edit tags" xml:space="preserve">
+    <value>जोड़ संपादित करें</value>
+  </data>
+  <data name="Email address cannot exceed {0} characters" xml:space="preserve">
+    <value>ईमेल पता {0} वर्णों से अधिक नहीं हो सकता</value>
+  </data>
+  <data name="Email address is required" xml:space="preserve">
+    <value>ईमेल पते की ज़रुरत है</value>
+  </data>
+  <data name="Email settings are fine" xml:space="preserve">
+    <value>ईमेल सेटिंग ठीक हैं</value>
+  </data>
+  <data name="Enable" xml:space="preserve">
+    <value>Habilitar</value>
+  </data>
+  <data name="Enable SSL" xml:space="preserve">
+    <value>एसएसएल सक्षम करें</value>
+  </data>
+  <data name="End date" xml:space="preserve">
+    <value>अंतिम तिथि</value>
+  </data>
+  <data name="Endpoint (URL)" xml:space="preserve">
+    <value>समापन बिंदु (यूआरएल)</value>
+  </data>
+  <data name="Enter" xml:space="preserve">
+    <value>Digitar</value>
+  </data>
+  <data name="Enter incognito" xml:space="preserve">
+    <value>गुप्त दर्ज करें</value>
+  </data>
+  <data name="Enter maintenance mode" xml:space="preserve">
+    <value>रखरखाव मोड दर्ज करें</value>
+  </data>
+  <data name="Enter the TOTP code here" xml:space="preserve">
+    <value>यहां TOTP कोड दर्ज करें</value>
+  </data>
+  <data name="Entity header cannot be updated" xml:space="preserve">
+    <value>निकाय शीर्षलेख अद्यतन नहीं किया जा सकता</value>
+  </data>
+  <data name="Entity.EnableSsl.YesNo()" xml:space="preserve">
+    <value>Entity.EnableSsl.YesNo()</value>
+  </data>
+  <data name="Entity.Entity.IsCommentEnabled.YesNo()" xml:space="preserve">
+    <value>Entity.Entity.IsCommentEnabled.YesNo()</value>
+  </data>
+  <data name="Entity.Entity.IsDraft.YesNo()" xml:space="preserve">
+    <value>Entity.Entity.IsDraft.YesNo()</value>
+  </data>
+  <data name="Entity.GetTOTPRecoveryCodes().Any().YesNo()" xml:space="preserve">
+    <value>Entity.GetTOTPRecoveryCodes().Any().YesNo()</value>
+  </data>
+  <data name="Entity.IsActive.YesNo()" xml:space="preserve">
+    <value>Entity.IsActive.YesNo()</value>
+  </data>
+  <data name="Entity.IsApproved.YesNo()" xml:space="preserve">
+    <value>Entity.IsApproved.YesNo()</value>
+  </data>
+  <data name="Entity.IsCommentEnabled.YesNo()" xml:space="preserve">
+    <value>Entity.IsCommentEnabled.YesNo()</value>
+  </data>
+  <data name="Entity.IsDeleted.YesNo()" xml:space="preserve">
+    <value>Entity.IsDeleted.YesNo()</value>
+  </data>
+  <data name="Entity.IsPrimary.YesNo()" xml:space="preserve">
+    <value>Entity.IsPrimary.YesNo()</value>
+  </data>
+  <data name="Entity.IsSpam.YesNo()" xml:space="preserve">
+    <value>Entity.IsSpam.YesNo()</value>
+  </data>
+  <data name="Entity.KeepTestingTheSmtpServerConnectivity.YesNo()" xml:space="preserve">
+    <value>Entity.KeepTestingTheSmtpServerConnectivity.YesNo()</value>
+  </data>
+  <data name="Entity.OpenTelemetry.Enabled.YesNo()" xml:space="preserve">
+    <value>Entity.OpenTelemetry.Enabled.YesNo()</value>
+  </data>
+  <data name="Entity.SocialNetwork.Facebook.Enabled.YesNo()" xml:space="preserve">
+    <value>Entity.SocialNetwork.Facebook.Enabled.YesNo()</value>
+  </data>
+  <data name="Entity.SocialNetwork.GitHub.Enabled.YesNo()" xml:space="preserve">
+    <value>Entity.SocialNetwork.GitHub.Enabled.YesNo()</value>
+  </data>
+  <data name="Entity.SocialNetwork.Google.Enabled.YesNo()" xml:space="preserve">
+    <value>Entity.SocialNetwork.Google.Enabled.YesNo()</value>
+  </data>
+  <data name="Entity.SocialNetwork.Microsoft.Enabled.YesNo()" xml:space="preserve">
+    <value>Entity.SocialNetwork.Microsoft.Enabled.YesNo()</value>
+  </data>
+  <data name="Entity.TOTPSecret.Has().YesNo()" xml:space="preserve">
+    <value>Entity.TOTPSecret.Has().YesNo()</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Erro</value>
+  </data>
+  <data name="Error parsing the JSON file" xml:space="preserve">
+    <value>JSON फ़ाइल को पार्स करने में त्रुटि</value>
+  </data>
+  <data name="Everything" xml:space="preserve">
+    <value>Tudo</value>
+  </data>
+  <data name="Extension" xml:space="preserve">
+    <value>Extensão</value>
+  </data>
+  <data name="Facebook" xml:space="preserve">
+    <value>Facebook</value>
+  </data>
+  <data name="Failed to authenticate you" xml:space="preserve">
+    <value>आपको प्रमाणित करने में विफल</value>
+  </data>
+  <data name="Failed to connect to email server with default settings" xml:space="preserve">
+    <value>डिफ़ॉल्ट सेटिंग्स के साथ ईमेल सर्वर से कनेक्ट करने में विफल</value>
+  </data>
+  <data name="Failed to reset 2FA for user" xml:space="preserve">
+    <value>उपयोगकर्ता के लिए 2FA रीसेट करने में विफल</value>
+  </data>
+  <data name="Failed to reset password" xml:space="preserve">
+    <value>पासवर्ड रीसेट करने में विफल</value>
+  </data>
+  <data name="Failed to reset password for user" xml:space="preserve">
+    <value>उपयोगकर्ता के लिए पासवर्ड रीसेट करने में विफल</value>
+  </data>
+  <data name="Feeds" xml:space="preserve">
+    <value>Feeds</value>
+  </data>
+  <data name="field" xml:space="preserve">
+    <value>campo</value>
+  </data>
+  <data name="File is too large" xml:space="preserve">
+    <value>फ़ाइल बहुत बड़ी है</value>
+  </data>
+  <data name="File manager" xml:space="preserve">
+    <value>फ़ाइल मैनेजर</value>
+  </data>
+  <data name="Filler" xml:space="preserve">
+    <value>Preenchimento</value>
+  </data>
+  <data name="Filter" xml:space="preserve">
+    <value>Filtro</value>
+  </data>
+  <data name="First name" xml:space="preserve">
+    <value>पहला नाम</value>
+  </data>
+  <data name="First name cannot exceed {0} characters" xml:space="preserve">
+    <value>प्रथम नाम {0} वर्णों से अधिक नहीं हो सकता</value>
+  </data>
+  <data name="First name is required" xml:space="preserve">
+    <value>पहला नाम आवश्यक है</value>
+  </data>
+  <data name="Forgot password" xml:space="preserve">
+    <value>पासवर्ड भूल गए</value>
+  </data>
+  <data name="Front-page" xml:space="preserve">
+    <value>मुखपृष्ठ</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>Em geral</value>
+  </data>
+  <data name="GitHub" xml:space="preserve">
+    <value>GitHub</value>
+  </data>
+  <data name="Go back" xml:space="preserve">
+    <value>वापस जाओ</value>
+  </data>
+  <data name="Go to blog" xml:space="preserve">
+    <value>ब्लॉग पर जाएँ</value>
+  </data>
+  <data name="Go to Profile" xml:space="preserve">
+    <value>प्रोफ़ाइल पर जाएँ</value>
+  </data>
+  <data name="Go to top" xml:space="preserve">
+    <value>शीर्ष पर जाएँ</value>
+  </data>
+  <data name="Google" xml:space="preserve">
+    <value>Google</value>
+  </data>
+  <data name="Grant moderator to user" xml:space="preserve">
+    <value>उपयोगकर्ता को मॉडरेटर प्रदान करें</value>
+  </data>
+  <data name="Header" xml:space="preserve">
+    <value>Cabeçalho</value>
+  </data>
+  <data name="Header image must be valid" xml:space="preserve">
+    <value>हेडर छवि मान्य होनी चाहिए</value>
+  </data>
+  <data name="Here's your verification code for {0}" xml:space="preserve">
+    <value>यहां {0} के लिए आपका सत्यापन कोड है</value>
+  </data>
+  <data name="History" xml:space="preserve">
+    <value>História</value>
+  </data>
+  <data name="How to delete your data" xml:space="preserve">
+    <value>अपना डेटा कैसे डिलीट करें</value>
+  </data>
+  <data name="Id" xml:space="preserve">
+    <value>Id</value>
+  </data>
+  <data name="Id is required" xml:space="preserve">
+    <value>आईडी आवश्यक है</value>
+  </data>
+  <data name="If you changed open telemetry settings, you have to restart both admin and front-end to take effect" xml:space="preserve">
+    <value>यदि आपने ओपन टेलीमेट्री सेटिंग्स बदल दी हैं, तो आपको प्रभावी होने के लिए एडमिन और फ्रंट-एंड दोनों को पुनरारंभ करना होगा</value>
+  </data>
+  <data name="If you changed social network settings, you have to restart front-end to take effect" xml:space="preserve">
+    <value>यदि आपने सोशल नेटवर्क सेटिंग्स बदल दी हैं, तो आपको प्रभावी होने के लिए फ्रंट-एंड को पुनरारंभ करना होगा</value>
+  </data>
+  <data name="If you did not request this, please ignore this email" xml:space="preserve">
+    <value>यदि आपने इसका अनुरोध नहीं किया है, तो कृपया इस ईमेल को अनदेखा करें</value>
+  </data>
+  <data name="Iframe must be valid" xml:space="preserve">
+    <value>आईफ्रेम वैध होना चाहिए</value>
+  </data>
+  <data name="Incognito Mode" xml:space="preserve">
+    <value>गुप्त मोड</value>
+  </data>
+  <data name="Info" xml:space="preserve">
+    <value>Informações</value>
+  </data>
+  <data name="Instagram" xml:space="preserve">
+    <value>Instagram</value>
+  </data>
+  <data name="Interactions (Last 50)" xml:space="preserve">
+    <value>इंटरैक्शन (अंतिम 50)</value>
+  </data>
+  <data name="Invalid ids (may contain deleted, inactive blog ids)" xml:space="preserve">
+    <value>अमान्य आईडी (हटाई गई, निष्क्रिय ब्लॉग आईडी हो सकती हैं)</value>
+  </data>
+  <data name="Ip" xml:space="preserve">
+    <value>IP</value>
+  </data>
+  <data name="item(s)" xml:space="preserve">
+    <value>सामान)</value>
+  </data>
+  <data name="Keep testing SMTP server connectivity in the background?" xml:space="preserve">
+    <value>पृष्ठभूमि में SMTP सर्वर कनेक्टिविटी का परीक्षण करते रहें?</value>
+  </data>
+  <data name="Keep these recovery codes somewhere safe" xml:space="preserve">
+    <value>इन पुनर्प्राप्ति कोड को कहीं सुरक्षित रखें</value>
+  </data>
+  <data name="Key" xml:space="preserve">
+    <value>Chave</value>
+  </data>
+  <data name="Keywords" xml:space="preserve">
+    <value>Palavras-chave</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Linguagem</value>
+  </data>
+  <data name="Language must be valid" xml:space="preserve">
+    <value>भाषा मान्य होनी चाहिए</value>
+  </data>
+  <data name="Large" xml:space="preserve">
+    <value>Grande</value>
+  </data>
+  <data name="Last 180 days" xml:space="preserve">
+    <value>पिछले 180 दिन</value>
+  </data>
+  <data name="Last 24 hours" xml:space="preserve">
+    <value>पिछले 24 घंटे</value>
+  </data>
+  <data name="Last 30 days" xml:space="preserve">
+    <value>पिछले 30 दिन</value>
+  </data>
+  <data name="Last 365 days" xml:space="preserve">
+    <value>पिछले 365 दिन</value>
+  </data>
+  <data name="Last 7 days" xml:space="preserve">
+    <value>पिछले 7 दिन</value>
+  </data>
+  <data name="Last 90 days" xml:space="preserve">
+    <value>पिछले 90 दिन</value>
+  </data>
+  <data name="Last name" xml:space="preserve">
+    <value>उपनाम</value>
+  </data>
+  <data name="Last name cannot exceed {0} characters" xml:space="preserve">
+    <value>अंतिम नाम {0} वर्णों से अधिक नहीं हो सकता</value>
+  </data>
+  <data name="Last name is required" xml:space="preserve">
+    <value>अंतिम नाम आवश्यक है</value>
+  </data>
+  <data name="Latest comments" xml:space="preserve">
+    <value>नवीनतम टिप्पणियां</value>
+  </data>
+  <data name="Latest news" xml:space="preserve">
+    <value>ताजा खबर</value>
+  </data>
+  <data name="Leave" xml:space="preserve">
+    <value>Sair</value>
+  </data>
+  <data name="Leave incognito" xml:space="preserve">
+    <value>गुप्त छोड़ो</value>
+  </data>
+  <data name="Leave maintenance mode" xml:space="preserve">
+    <value>रखरखाव मोड छोड़ें</value>
+  </data>
+  <data name="link" xml:space="preserve">
+    <value>link</value>
+  </data>
+  <data name="LinkedIn" xml:space="preserve">
+    <value>LinkedIn</value>
+  </data>
+  <data name="List of blogs in the front-end" xml:space="preserve">
+    <value>फ्रंट-एंड में ब्लॉगों की सूची</value>
+  </data>
+  <data name="Local path" xml:space="preserve">
+    <value>स्थानीय पथ</value>
+  </data>
+  <data name="Log out" xml:space="preserve">
+    <value>लॉग आउट</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Conecte-se</value>
+  </data>
+  <data name="Login to quick reply" xml:space="preserve">
+    <value>त्वरित उत्तर के लिए लॉगिन करें</value>
+  </data>
+  <data name="Login to rate this" xml:space="preserve">
+    <value>इसे रेट करने के लिए लॉगिन करें</value>
+  </data>
+  <data name="Login to react" xml:space="preserve">
+    <value>प्रतिक्रिया देने के लिए लॉगिन करें</value>
+  </data>
+  <data name="Logo" xml:space="preserve">
+    <value>Logotipo</value>
+  </data>
+  <data name="Logo • Avatar" xml:space="preserve">
+    <value>लोगो • अवतार</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Sair</value>
+  </data>
+  <data name="Loop in relationships are not allowed" xml:space="preserve">
+    <value>रिश्तों में लूप की अनुमति नहीं है</value>
+  </data>
+  <data name="Maintenance" xml:space="preserve">
+    <value>Manutenção</value>
+  </data>
+  <data name="Make primary" xml:space="preserve">
+    <value>प्राथमिक बनाना</value>
+  </data>
+  <data name="Manage extensions" xml:space="preserve">
+    <value>एक्सटेंशन प्रबंधित करें</value>
+  </data>
+  <data name="Manage files" xml:space="preserve">
+    <value>फ़ाइलें प्रबंधित करें</value>
+  </data>
+  <data name="Manage packages" xml:space="preserve">
+    <value>पैकेज प्रबंधित करें</value>
+  </data>
+  <data name="Manage themes" xml:space="preserve">
+    <value>थीम प्रबंधित करें</value>
+  </data>
+  <data name="Manage widgets" xml:space="preserve">
+    <value>विजेट प्रबंधित करें</value>
+  </data>
+  <data name="Maybe later" xml:space="preserve">
+    <value>शायद बाद में</value>
+  </data>
+  <data name="Medium" xml:space="preserve">
+    <value>Médio</value>
+  </data>
+  <data name="Microsoft" xml:space="preserve">
+    <value>Microsoft</value>
+  </data>
+  <data name="Misc" xml:space="preserve">
+    <value>Diversos</value>
+  </data>
+  <data name="Moderate comments" xml:space="preserve">
+    <value>मध्यम टिप्पणियाँ</value>
+  </data>
+  <data name="Moderated by" xml:space="preserve">
+    <value>द्वारा संचालित किया गया</value>
+  </data>
+  <data name="Moderator" xml:space="preserve">
+    <value>Moderador</value>
+  </data>
+  <data name="Modified" xml:space="preserve">
+    <value>Modificado</value>
+  </data>
+  <data name="Most popular" xml:space="preserve">
+    <value>सबसे लोकप्रिय</value>
+  </data>
+  <data name="Most recent" xml:space="preserve">
+    <value>सबसे हाल का</value>
+  </data>
+  <data name="Moves down in the list" xml:space="preserve">
+    <value>सूची में नीचे चला जाता है</value>
+  </data>
+  <data name="Moves up in the list" xml:space="preserve">
+    <value>सूची में ऊपर चला जाता है</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="Name (website)" xml:space="preserve">
+    <value>नाम (वेबसाइट)</value>
+  </data>
+  <data name="Name cannot exceed {0} characters" xml:space="preserve">
+    <value>नाम {0} वर्णों से अधिक नहीं हो सकता</value>
+  </data>
+  <data name="Name is required" xml:space="preserve">
+    <value>नाम आवश्यक है</value>
+  </data>
+  <data name="Nano Id" xml:space="preserve">
+    <value>नैनो आईडी</value>
+  </data>
+  <data name="Nano Id cannot exceed {0} characters" xml:space="preserve">
+    <value>नैनो आईडी {0} वर्णों से अधिक नहीं हो सकती</value>
+  </data>
+  <data name="Nano Id is required" xml:space="preserve">
+    <value>नैनो आईडी आवश्यक है</value>
+  </data>
+  <data name="New" xml:space="preserve">
+    <value>Novo</value>
+  </data>
+  <data name="New folder" xml:space="preserve">
+    <value>नया फ़ोल्डर</value>
+  </data>
+  <data name="New name" xml:space="preserve">
+    <value>नया नाम</value>
+  </data>
+  <data name="New password" xml:space="preserve">
+    <value>नया पासवर्ड</value>
+  </data>
+  <data name="New passwords do NOT match, they differ from each other" xml:space="preserve">
+    <value>नए पासवर्ड मेल नहीं खाते, वे एक-दूसरे से भिन्न होते हैं</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>Não</value>
+  </data>
+  <data name="No categories whatsoever" xml:space="preserve">
+    <value>कोई भी श्रेणी नहीं</value>
+  </data>
+  <data name="No content" xml:space="preserve">
+    <value>कोई सामग्री नहीं</value>
+  </data>
+  <data name="No content for now" xml:space="preserve">
+    <value>अभी के लिए कोई सामग्री नहीं</value>
+  </data>
+  <data name="No entities were selected" xml:space="preserve">
+    <value>कोई इकाई नहीं चुनी गई</value>
+  </data>
+  <data name="No entries were found" xml:space="preserve">
+    <value>कोई प्रविष्टियाँ नहीं मिलीं</value>
+  </data>
+  <data name="No header information available" xml:space="preserve">
+    <value>कोई हेडर जानकारी उपलब्ध नहीं है</value>
+  </data>
+  <data name="No pages whatsoever" xml:space="preserve">
+    <value>कोई भी पेज नहीं</value>
+  </data>
+  <data name="No posts whatsoever" xml:space="preserve">
+    <value>कोई भी पोस्ट नहीं</value>
+  </data>
+  <data name="No subtitle file" xml:space="preserve">
+    <value>कोई उपशीर्षक फ़ाइल नहीं</value>
+  </data>
+  <data name="No tags whatsoever" xml:space="preserve">
+    <value>कोई भी टैग नहीं</value>
+  </data>
+  <data name="No text from this content" xml:space="preserve">
+    <value>इस सामग्री से कोई पाठ नहीं</value>
+  </data>
+  <data name="No text from this page" xml:space="preserve">
+    <value>इस पृष्ठ से कोई पाठ नहीं</value>
+  </data>
+  <data name="No videos whatsoever" xml:space="preserve">
+    <value>कोई भी वीडियो नहीं</value>
+  </data>
+  <data name="None" xml:space="preserve">
+    <value>Nenhum</value>
+  </data>
+  <data name="Not specified" xml:space="preserve">
+    <value>निर्दिष्ट नहीं है</value>
+  </data>
+  <data name="Note" xml:space="preserve">
+    <value>Observação</value>
+  </data>
+  <data name="Note cannot exceed {0} characters" xml:space="preserve">
+    <value>नोट {0} वर्णों से अधिक नहीं हो सकता</value>
+  </data>
+  <data name="Note is required" xml:space="preserve">
+    <value>नोट आवश्यक है</value>
+  </data>
+  <data name="Nothing to see here" xml:space="preserve">
+    <value>यहाँ देखने के लिए कुछ नहीं है</value>
+  </data>
+  <data name="Ok" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Only a top-level page can become front-page" xml:space="preserve">
+    <value>केवल शीर्ष-स्तरीय पेज ही फ्रंट-पेज बन सकता है</value>
+  </data>
+  <data name="Only image files" xml:space="preserve">
+    <value>केवल छवि फ़ाइलें</value>
+  </data>
+  <data name="Only top-level pages can be promoted to front page" xml:space="preserve">
+    <value>केवल शीर्ष-स्तरीय पेजों को ही फ्रंट पेज पर प्रमोट किया जा सकता है</value>
+  </data>
+  <data name="Only video files" xml:space="preserve">
+    <value>केवल वीडियो फ़ाइलें</value>
+  </data>
+  <data name="Oops" xml:space="preserve">
+    <value>Ops</value>
+  </data>
+  <data name="Oops, this key is not valid or it was already used to reset your password" xml:space="preserve">
+    <value>ओह, यह कुंजी मान्य नहीं है या इसका उपयोग पहले से ही आपका पासवर्ड रीसेट करने के लिए किया गया था</value>
+  </data>
+  <data name="Open telemetry" xml:space="preserve">
+    <value>टेलीमेट्री खोलें</value>
+  </data>
+  <data name="Or click here to reset password" xml:space="preserve">
+    <value>या पासवर्ड रीसेट करने के लिए यहां क्लिक करें</value>
+  </data>
+  <data name="Or paste this URI" xml:space="preserve">
+    <value>या इस यूआरआई को पेस्ट करें</value>
+  </data>
+  <data name="Origami" xml:space="preserve">
+    <value>Origami</value>
+  </data>
+  <data name="Original" xml:space="preserve">
+    <value>Original</value>
+  </data>
+  <data name="Original name" xml:space="preserve">
+    <value>मूल नाम</value>
+  </data>
+  <data name="Other trashes" xml:space="preserve">
+    <value>अन्य कचरा</value>
+  </data>
+  <data name="P" xml:space="preserve">
+    <value>P</value>
+  </data>
+  <data name="Page" xml:space="preserve">
+    <value>Página</value>
+  </data>
+  <data name="Page cannot be retrieved" xml:space="preserve">
+    <value>पृष्ठ पुनर्प्राप्त नहीं किया जा सकता</value>
+  </data>
+  <data name="Page does not exist" xml:space="preserve">
+    <value>पेज मौजूद नहीं है</value>
+  </data>
+  <data name="Page is already front-page" xml:space="preserve">
+    <value>पेज पहले से ही फ्रंट पेज है</value>
+  </data>
+  <data name="Page is not front-page" xml:space="preserve">
+    <value>पेज फ्रंट पेज नहीं है</value>
+  </data>
+  <data name="Page not found" xml:space="preserve">
+    <value>पृष्ठ नहीं मिला</value>
+  </data>
+  <data name="Pages" xml:space="preserve">
+    <value>Páginas</value>
+  </data>
+  <data name="Pages found in the search" xml:space="preserve">
+    <value>खोज में पन्ने मिले</value>
+  </data>
+  <data name="Parent" xml:space="preserve">
+    <value>Pai</value>
+  </data>
+  <data name="Parent category" xml:space="preserve">
+    <value>जनक श्रेणी</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Senha</value>
+  </data>
+  <data name="Password has been reset successfully" xml:space="preserve">
+    <value>पासवर्ड सफलतापूर्वक रीसेट कर दिया गया है</value>
+  </data>
+  <data name="Password reset" xml:space="preserve">
+    <value>पासवर्ड रीसेट</value>
+  </data>
+  <data name="Password reset history" xml:space="preserve">
+    <value>पासवर्ड रीसेट इतिहास</value>
+  </data>
+  <data name="Password reset link has been created, please check your email for further instructions" xml:space="preserve">
+    <value>पासवर्ड रीसेट लिंक बना दिया गया है, कृपया आगे के निर्देशों के लिए अपना ईमेल जांचें</value>
+  </data>
+  <data name="Paste your HTML iframe here to embed, like YouTube and so on" xml:space="preserve">
+    <value>एम्बेड करने के लिए अपना HTML iframe यहां पेस्ट करें, जैसे YouTube इत्यादि</value>
+  </data>
+  <data name="Path" xml:space="preserve">
+    <value>Caminho</value>
+  </data>
+  <data name="People online" xml:space="preserve">
+    <value>लोग ऑनलाइन</value>
+  </data>
+  <data name="Pick from file manager" xml:space="preserve">
+    <value>फ़ाइल प्रबंधक से चुनें</value>
+  </data>
+  <data name="Pick your categories" xml:space="preserve">
+    <value>अपनी श्रेणियां चुनें</value>
+  </data>
+  <data name="Pick your tags" xml:space="preserve">
+    <value>अपने टैग चुनें</value>
+  </data>
+  <data name="Pin comment" xml:space="preserve">
+    <value>टिप्पणी पिन करें</value>
+  </data>
+  <data name="Pinned" xml:space="preserve">
+    <value>Fixado</value>
+  </data>
+  <data name="Pinned by" xml:space="preserve">
+    <value>द्वारा पिन किया गया</value>
+  </data>
+  <data name="Place your comment here" xml:space="preserve">
+    <value>अपनी टिप्पणी यहां दें</value>
+  </data>
+  <data name="Platforms" xml:space="preserve">
+    <value>Plataformas</value>
+  </data>
+  <data name="Please, talk to a system administrator" xml:space="preserve">
+    <value>कृपया, किसी सिस्टम प्रशासक से बात करें</value>
+  </data>
+  <data name="Please, try again later" xml:space="preserve">
+    <value>कृपया बाद में पुन: प्रयास करें</value>
+  </data>
+  <data name="Post" xml:space="preserve">
+    <value>Publicar</value>
+  </data>
+  <data name="postRating.Rating" xml:space="preserve">
+    <value>postRating.Rating</value>
+  </data>
+  <data name="postReaction.Reaction" xml:space="preserve">
+    <value>postReaction.Reaction</value>
+  </data>
+  <data name="Posts" xml:space="preserve">
+    <value>Postagens</value>
+  </data>
+  <data name="Posts comments" xml:space="preserve">
+    <value>टिप्पणियाँ पोस्ट करता है</value>
+  </data>
+  <data name="Posts found in the search" xml:space="preserve">
+    <value>सर्च में पोस्ट मिलीं</value>
+  </data>
+  <data name="Posts, videos" xml:space="preserve">
+    <value>पोस्ट, वीडियो</value>
+  </data>
+  <data name="Primary" xml:space="preserve">
+    <value>Primário</value>
+  </data>
+  <data name="Primary blog cannot be deactivated" xml:space="preserve">
+    <value>प्राथमिक ब्लॉग को निष्क्रिय नहीं किया जा सकता</value>
+  </data>
+  <data name="Primary blog cannot be deleted" xml:space="preserve">
+    <value>प्राथमिक ब्लॉग को हटाया नहीं जा सकता</value>
+  </data>
+  <data name="Privacy policy" xml:space="preserve">
+    <value>गोपनीयता नीति</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>Perfil</value>
+  </data>
+  <data name="Profile data was wiped out" xml:space="preserve">
+    <value>प्रोफ़ाइल डेटा मिटा दिया गया था</value>
+  </data>
+  <data name="Profile Information" xml:space="preserve">
+    <value>प्रोफाइल की जानकारी</value>
+  </data>
+  <data name="Profile Not Found" xml:space="preserve">
+    <value>प्रोफ़ाइल नहीं मिला</value>
+  </data>
+  <data name="Progress" xml:space="preserve">
+    <value>Progresso</value>
+  </data>
+  <data name="Promote to front-page" xml:space="preserve">
+    <value>प्रथम पृष्ठ पर प्रचार करें</value>
+  </data>
+  <data name="Promoting to front-page" xml:space="preserve">
+    <value>फ्रंट-पेज पर प्रचार</value>
+  </data>
+  <data name="Publish {0} item(s)" xml:space="preserve">
+    <value>{0} आइटम प्रकाशित करें</value>
+  </data>
+  <data name="Publish message(s)" xml:space="preserve">
+    <value>संदेश प्रकाशित करें</value>
+  </data>
+  <data name="Publish other quick notes" xml:space="preserve">
+    <value>अन्य त्वरित नोट्स प्रकाशित करें</value>
+  </data>
+  <data name="Publish other users messages" xml:space="preserve">
+    <value>अन्य उपयोगकर्ताओं के संदेश प्रकाशित करें</value>
+  </data>
+  <data name="Publish other users pages" xml:space="preserve">
+    <value>अन्य उपयोगकर्ता पेज प्रकाशित करें</value>
+  </data>
+  <data name="Publish other users posts" xml:space="preserve">
+    <value>अन्य उपयोगकर्ताओं के पोस्ट प्रकाशित करें</value>
+  </data>
+  <data name="Publish other users special pages" xml:space="preserve">
+    <value>अन्य उपयोगकर्ताओं के विशेष पृष्ठ प्रकाशित करें</value>
+  </data>
+  <data name="Publish other users videos" xml:space="preserve">
+    <value>अन्य उपयोगकर्ताओं के वीडियो प्रकाशित करें</value>
+  </data>
+  <data name="Publish own messages" xml:space="preserve">
+    <value>स्वयं के संदेश प्रकाशित करें</value>
+  </data>
+  <data name="Publish own pages" xml:space="preserve">
+    <value>स्वयं के पेज प्रकाशित करें</value>
+  </data>
+  <data name="Publish own posts" xml:space="preserve">
+    <value>स्वयं के पोस्ट प्रकाशित करें</value>
+  </data>
+  <data name="Publish own quick notes" xml:space="preserve">
+    <value>स्वयं के त्वरित नोट्स प्रकाशित करें</value>
+  </data>
+  <data name="Publish own special pages" xml:space="preserve">
+    <value>स्वयं के विशेष पृष्ठ प्रकाशित करें</value>
+  </data>
+  <data name="Publish own videos" xml:space="preserve">
+    <value>स्वयं के वीडियो प्रकाशित करें</value>
+  </data>
+  <data name="Publish page(s)" xml:space="preserve">
+    <value>पेज प्रकाशित करें</value>
+  </data>
+  <data name="Publish post(s)" xml:space="preserve">
+    <value>पोस्ट प्रकाशित करें</value>
+  </data>
+  <data name="Publish video(s)" xml:space="preserve">
+    <value>वीडियो प्रकाशित करें</value>
+  </data>
+  <data name="Published" xml:space="preserve">
+    <value>Publicado</value>
+  </data>
+  <data name="Published pages" xml:space="preserve">
+    <value>प्रकाशित पन्ने</value>
+  </data>
+  <data name="Published posts" xml:space="preserve">
+    <value>प्रकाशित पोस्ट</value>
+  </data>
+  <data name="Published special messages" xml:space="preserve">
+    <value>विशेष संदेश प्रकाशित किये</value>
+  </data>
+  <data name="Published special pages" xml:space="preserve">
+    <value>विशेष पृष्ठ प्रकाशित किये</value>
+  </data>
+  <data name="Published videos" xml:space="preserve">
+    <value>प्रकाशित वीडियो</value>
+  </data>
+  <data name="published.GetType().Name" xml:space="preserve">
+    <value>published.GetType().Name</value>
+  </data>
+  <data name="Purge blogs" xml:space="preserve">
+    <value>ब्लॉगों को शुद्ध करें</value>
+  </data>
+  <data name="Purge categories" xml:space="preserve">
+    <value>श्रेणियों को शुद्ध करें</value>
+  </data>
+  <data name="Purge comments" xml:space="preserve">
+    <value>टिप्पणियाँ शुद्ध करें</value>
+  </data>
+  <data name="Purge instead" xml:space="preserve">
+    <value>इसके बजाय शुद्ध करें</value>
+  </data>
+  <data name="Purge pages" xml:space="preserve">
+    <value>पन्ने साफ़ करें</value>
+  </data>
+  <data name="Purge posts" xml:space="preserve">
+    <value>पोस्टों को शुद्ध करें</value>
+  </data>
+  <data name="Purge quick notes" xml:space="preserve">
+    <value>त्वरित नोट्स शुद्ध करें</value>
+  </data>
+  <data name="Purge roles" xml:space="preserve">
+    <value>भूमिकाएँ साफ़ करें</value>
+  </data>
+  <data name="Purge special messages" xml:space="preserve">
+    <value>विशेष संदेश मिटाएँ</value>
+  </data>
+  <data name="Purge special pages" xml:space="preserve">
+    <value>विशेष पेजों को शुद्ध करें</value>
+  </data>
+  <data name="Purge tags" xml:space="preserve">
+    <value>टैग शुद्ध करें</value>
+  </data>
+  <data name="Purge users" xml:space="preserve">
+    <value>उपयोगकर्ताओं को शुद्ध करें</value>
+  </data>
+  <data name="Purge videos" xml:space="preserve">
+    <value>वीडियो शुद्ध करें</value>
+  </data>
+  <data name="Purging {0} Item(s)" xml:space="preserve">
+    <value>{0} आइटम को शुद्ध करना</value>
+  </data>
+  <data name="Quick note" xml:space="preserve">
+    <value>त्वरित नोट</value>
+  </data>
+  <data name="Quick notes" xml:space="preserve">
+    <value>त्वरित नोट्स</value>
+  </data>
+  <data name="Quick notes found in the search" xml:space="preserve">
+    <value>खोज में त्वरित नोट्स मिले</value>
+  </data>
+  <data name="Quick reply" xml:space="preserve">
+    <value>त्वरित जवाब</value>
+  </data>
+  <data name="Rated {0} on:" xml:space="preserve">
+    <value>इस पर {0} रेटेड:</value>
+  </data>
+  <data name="Rating" xml:space="preserve">
+    <value>Avaliação</value>
+  </data>
+  <data name="Rating 1 is not accounted for in the final rating" xml:space="preserve">
+    <value>रेटिंग 1 को अंतिम रेटिंग में शामिल नहीं किया गया है</value>
+  </data>
+  <data name="Rating must be less than or equal to 5" xml:space="preserve">
+    <value>रेटिंग 5 से कम या उसके बराबर होनी चाहिए</value>
+  </data>
+  <data name="rating!.Rating" xml:space="preserve">
+    <value>रेटिंग!.रेटिंग</value>
+  </data>
+  <data name="rating.Rating" xml:space="preserve">
+    <value>rating.Rating</value>
+  </data>
+  <data name="Ratings" xml:space="preserve">
+    <value>Avaliações</value>
+  </data>
+  <data name="Ratings on posts" xml:space="preserve">
+    <value>पोस्ट पर रेटिंग</value>
+  </data>
+  <data name="Ratings on videos" xml:space="preserve">
+    <value>वीडियो पर रेटिंग</value>
+  </data>
+  <data name="Reacted {0} on:" xml:space="preserve">
+    <value>इस पर {0} पर प्रतिक्रिया व्यक्त की गई:</value>
+  </data>
+  <data name="Reacted {0} to:" xml:space="preserve">
+    <value>{0} पर प्रतिक्रिया व्यक्त की:</value>
+  </data>
+  <data name="Reaction needs one author" xml:space="preserve">
+    <value>प्रतिक्रिया के लिए एक लेखक की आवश्यकता होती है</value>
+  </data>
+  <data name="reaction.Reaction" xml:space="preserve">
+    <value>reaction.Reaction</value>
+  </data>
+  <data name="Reactions" xml:space="preserve">
+    <value>Reações</value>
+  </data>
+  <data name="Refresh your browser" xml:space="preserve">
+    <value>अपने ब्राउज़र को ताज़ा करें</value>
+  </data>
+  <data name="Regenerate nano-ids" xml:space="preserve">
+    <value>नैनो-आईडी पुन: उत्पन्न करें</value>
+  </data>
+  <data name="Regenerate recovery codes" xml:space="preserve">
+    <value>पुनर्प्राप्ति कोड पुन: उत्पन्न करें</value>
+  </data>
+  <data name="Regenerate secret" xml:space="preserve">
+    <value>रहस्य पुनर्जीवित करें</value>
+  </data>
+  <data name="Related content" xml:space="preserve">
+    <value>संबंधित सामग्री</value>
+  </data>
+  <data name="Related pages" xml:space="preserve">
+    <value>संबंधित पृष्ठ</value>
+  </data>
+  <data name="Related special pages" xml:space="preserve">
+    <value>संबंधित विशेष पृष्ठ</value>
+  </data>
+  <data name="Release date" xml:space="preserve">
+    <value>रिलीज़ की तारीख</value>
+  </data>
+  <data name="Reload" xml:space="preserve">
+    <value>Recarregar</value>
+  </data>
+  <data name="Remove picture" xml:space="preserve">
+    <value>चित्र हटाएँ</value>
+  </data>
+  <data name="Repeat new password" xml:space="preserve">
+    <value>नया पासवर्ड दोहराएँ</value>
+  </data>
+  <data name="replies.Count()" xml:space="preserve">
+    <value>replies.Count()</value>
+  </data>
+  <data name="Reply" xml:space="preserve">
+    <value>Responder</value>
+  </data>
+  <data name="Reply comment" xml:space="preserve">
+    <value>उत्तर टिप्पणी करें</value>
+  </data>
+  <data name="Request date" xml:space="preserve">
+    <value>अनुरोध की तिथि</value>
+  </data>
+  <data name="Requested by" xml:space="preserve">
+    <value>द्वारा अनुरोध किया गया</value>
+  </data>
+  <data name="Requests for information wipe-out" xml:space="preserve">
+    <value>जानकारी के लिए अनुरोध मिटा दिए गए</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Reiniciar</value>
+  </data>
+  <data name="Reset 2FA" xml:space="preserve">
+    <value>2FA रीसेट करें</value>
+  </data>
+  <data name="Reset other users 2FA" xml:space="preserve">
+    <value>अन्य उपयोगकर्ताओं को 2FA रीसेट करें</value>
+  </data>
+  <data name="Reset other users passwords" xml:space="preserve">
+    <value>अन्य उपयोगकर्ताओं के पासवर्ड रीसेट करें</value>
+  </data>
+  <data name="Reset own 2FA" xml:space="preserve">
+    <value>अपना 2FA रीसेट करें</value>
+  </data>
+  <data name="Reset own password" xml:space="preserve">
+    <value>अपना पासवर्ड रीसेट करें</value>
+  </data>
+  <data name="Reset password" xml:space="preserve">
+    <value>पासवर्ड रीसेट</value>
+  </data>
+  <data name="Restore" xml:space="preserve">
+    <value>Restaurar</value>
+  </data>
+  <data name="Restore blogs" xml:space="preserve">
+    <value>ब्लॉग पुनर्स्थापित करें</value>
+  </data>
+  <data name="Restore categories" xml:space="preserve">
+    <value>श्रेणियाँ पुनर्स्थापित करें</value>
+  </data>
+  <data name="Restore comments" xml:space="preserve">
+    <value>टिप्पणियाँ पुनर्स्थापित करें</value>
+  </data>
+  <data name="Restore files and database from a backup in the list below" xml:space="preserve">
+    <value>नीचे दी गई सूची में बैकअप से फ़ाइलें और डेटाबेस पुनर्स्थापित करें</value>
+  </data>
+  <data name="Restore files and database from a zip file" xml:space="preserve">
+    <value>ज़िप फ़ाइल से फ़ाइलें और डेटाबेस पुनर्स्थापित करें</value>
+  </data>
+  <data name="Restore from a zip file" xml:space="preserve">
+    <value>ज़िप फ़ाइल से पुनर्स्थापित करें</value>
+  </data>
+  <data name="Restore from list" xml:space="preserve">
+    <value>सूची से पुनर्स्थापित करें</value>
+  </data>
+  <data name="Restore pages" xml:space="preserve">
+    <value>पेज पुनर्स्थापित करें</value>
+  </data>
+  <data name="Restore posts" xml:space="preserve">
+    <value>पोस्ट पुनर्स्थापित करें</value>
+  </data>
+  <data name="Restore quick notes" xml:space="preserve">
+    <value>त्वरित नोट्स पुनर्स्थापित करें</value>
+  </data>
+  <data name="Restore roles" xml:space="preserve">
+    <value>भूमिकाएँ पुनर्स्थापित करें</value>
+  </data>
+  <data name="Restore special messages" xml:space="preserve">
+    <value>विशेष संदेश पुनर्स्थापित करें</value>
+  </data>
+  <data name="Restore special pages" xml:space="preserve">
+    <value>विशेष पृष्ठ पुनर्स्थापित करें</value>
+  </data>
+  <data name="Restore system" xml:space="preserve">
+    <value>सिस्टम पुनर्स्थापित करें</value>
+  </data>
+  <data name="Restore users" xml:space="preserve">
+    <value>उपयोगकर्ताओं को पुनर्स्थापित करें</value>
+  </data>
+  <data name="Restore videos" xml:space="preserve">
+    <value>वीडियो पुनर्स्थापित करें</value>
+  </data>
+  <data name="Restoring {0} item(s)" xml:space="preserve">
+    <value>{0} आइटम को पुनर्स्थापित करना</value>
+  </data>
+  <data name="Revoke moderator from user" xml:space="preserve">
+    <value>उपयोगकर्ता से मॉडरेटर को निरस्त करें</value>
+  </data>
+  <data name="Revoke moderator roles from social profiles" xml:space="preserve">
+    <value>सामाजिक प्रोफ़ाइल से मॉडरेटर की भूमिकाएँ निरस्त करें</value>
+  </data>
+  <data name="Role" xml:space="preserve">
+    <value>Papel</value>
+  </data>
+  <data name="Roles" xml:space="preserve">
+    <value>Funções</value>
+  </data>
+  <data name="Roles are up-to-date" xml:space="preserve">
+    <value>भूमिकाएँ अद्यतन हैं</value>
+  </data>
+  <data name="Roles have been created" xml:space="preserve">
+    <value>भूमिकाएँ बनाई गई हैं</value>
+  </data>
+  <data name="RSS feed" xml:space="preserve">
+    <value>आरएसएस फीड</value>
+  </data>
+  <data name="RSS feed #1" xml:space="preserve">
+    <value>आरएसएस फ़ीड #1</value>
+  </data>
+  <data name="RSS feed #2" xml:space="preserve">
+    <value>आरएसएस फ़ीड #2</value>
+  </data>
+  <data name="RSS feed #3" xml:space="preserve">
+    <value>आरएसएस फ़ीड #3</value>
+  </data>
+  <data name="RSS feed #4" xml:space="preserve">
+    <value>आरएसएस फ़ीड #4</value>
+  </data>
+  <data name="RSS feed #5" xml:space="preserve">
+    <value>आरएसएस फ़ीड #5</value>
+  </data>
+  <data name="RSS feed must be a valid website address" xml:space="preserve">
+    <value>RSS फ़ीड एक वैध वेबसाइट पता होना चाहिए</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Salvar</value>
+  </data>
+  <data name="Save and publish" xml:space="preserve">
+    <value>सहेजें और प्रकाशित करें</value>
+  </data>
+  <data name="Save changes" xml:space="preserve">
+    <value>परिवर्तनों को सुरक्षित करें</value>
+  </data>
+  <data name="Save password" xml:space="preserve">
+    <value>पासवर्ड को बचाओ</value>
+  </data>
+  <data name="Save reply" xml:space="preserve">
+    <value>उत्तर सहेजें</value>
+  </data>
+  <data name="Scan this QR code with your authenticator app" xml:space="preserve">
+    <value>इस QR कोड को अपने ऑथेंटिकेटर ऐप से स्कैन करें</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Procurar</value>
+  </data>
+  <data name="See browser dev tools for details" xml:space="preserve">
+    <value>विवरण के लिए ब्राउज़र डेव टूल देखें</value>
+  </data>
+  <data name="See more comments" xml:space="preserve">
+    <value>अधिक टिप्पणियाँ देखें</value>
+  </data>
+  <data name="See more contents" xml:space="preserve">
+    <value>अधिक सामग्री देखें</value>
+  </data>
+  <data name="See more notes" xml:space="preserve">
+    <value>अधिक नोट्स देखें</value>
+  </data>
+  <data name="See more pages" xml:space="preserve">
+    <value>और पेज देखें</value>
+  </data>
+  <data name="See more posts" xml:space="preserve">
+    <value>और पोस्ट देखें</value>
+  </data>
+  <data name="See more ratings" xml:space="preserve">
+    <value>अधिक रेटिंग देखें</value>
+  </data>
+  <data name="See more videos" xml:space="preserve">
+    <value>और वीडियो देखें</value>
+  </data>
+  <data name="Select a comment" xml:space="preserve">
+    <value>एक टिप्पणी चुनें</value>
+  </data>
+  <data name="Select a file" xml:space="preserve">
+    <value>किसी फाइल का चयन करें</value>
+  </data>
+  <data name="Select a profile" xml:space="preserve">
+    <value>एक प्रोफ़ाइल चुनें</value>
+  </data>
+  <data name="Select a tag" xml:space="preserve">
+    <value>एक टैग चुनें</value>
+  </data>
+  <data name="Select all" xml:space="preserve">
+    <value>सबका चयन करें</value>
+  </data>
+  <data name="Select parent category" xml:space="preserve">
+    <value>मूल श्रेणी का चयन करें</value>
+  </data>
+  <data name="Select parent page" xml:space="preserve">
+    <value>मूल पृष्ठ चुनें</value>
+  </data>
+  <data name="Select trash" xml:space="preserve">
+    <value>कचरा चुनें</value>
+  </data>
+  <data name="SelectedEntities.Count" xml:space="preserve">
+    <value>SelectedEntities.Count</value>
+  </data>
+  <data name="Send verification code" xml:space="preserve">
+    <value>सत्यापन कोड भेजें</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Configurações</value>
+  </data>
+  <data name="settings.Name" xml:space="preserve">
+    <value>settings.Name</value>
+  </data>
+  <data name="Size" xml:space="preserve">
+    <value>Tamanho</value>
+  </data>
+  <data name="Slow" xml:space="preserve">
+    <value>Lento</value>
+  </data>
+  <data name="Slug" xml:space="preserve">
+    <value>Lesma</value>
+  </data>
+  <data name="Slug cannot exceed {0} characters" xml:space="preserve">
+    <value>स्लग {0} वर्णों से अधिक नहीं हो सकता</value>
+  </data>
+  <data name="Slug is already in use" xml:space="preserve">
+    <value>स्लग पहले से ही उपयोग में है</value>
+  </data>
+  <data name="Small" xml:space="preserve">
+    <value>Pequeno</value>
+  </data>
+  <data name="SMTP password" xml:space="preserve">
+    <value>एसएमटीपी पासवर्ड</value>
+  </data>
+  <data name="SMTP server" xml:space="preserve">
+    <value>एसएमटीपी सर्वर</value>
+  </data>
+  <data name="SMTP server port" xml:space="preserve">
+    <value>एसएमटीपी सर्वर पोर्ट</value>
+  </data>
+  <data name="SMTP username" xml:space="preserve">
+    <value>एसएमटीपी उपयोगकर्ता नाम</value>
+  </data>
+  <data name="Social network logins" xml:space="preserve">
+    <value>सोशल नेटवर्क लॉगिन</value>
+  </data>
+  <data name="Social profile is not a subscriber" xml:space="preserve">
+    <value>सामाजिक प्रोफ़ाइल ग्राहक नहीं है</value>
+  </data>
+  <data name="Social profiles" xml:space="preserve">
+    <value>सामाजिक रूपरेखाएं</value>
+  </data>
+  <data name="Social profiles found in the search" xml:space="preserve">
+    <value>खोज में सामाजिक प्रोफ़ाइल मिलीं</value>
+  </data>
+  <data name="socialProfileDelete.PostCommentReactions" xml:space="preserve">
+    <value>socialProfileDelete.PostCommentReactions</value>
+  </data>
+  <data name="socialProfileDelete.PostComments" xml:space="preserve">
+    <value>socialProfileDelete.PostComments</value>
+  </data>
+  <data name="socialProfileDelete.PostRatings" xml:space="preserve">
+    <value>socialProfileDelete.PostRatings</value>
+  </data>
+  <data name="socialProfileDelete.VideoCommentReactions" xml:space="preserve">
+    <value>socialProfileDelete.VideoCommentReactions</value>
+  </data>
+  <data name="socialProfileDelete.VideoComments" xml:space="preserve">
+    <value>socialProfileDelete.VideoComments</value>
+  </data>
+  <data name="socialProfileDelete.VideoRatings" xml:space="preserve">
+    <value>socialProfileDelete.VideoRatings</value>
+  </data>
+  <data name="Source and destination images share the same location" xml:space="preserve">
+    <value>स्रोत और गंतव्य छवियां समान स्थान साझा करती हैं</value>
+  </data>
+  <data name="Spam" xml:space="preserve">
+    <value>Spam</value>
+  </data>
+  <data name="Spam comments" xml:space="preserve">
+    <value>स्पैम टिप्पणियाँ</value>
+  </data>
+  <data name="Special message" xml:space="preserve">
+    <value>विशेष संदेश</value>
+  </data>
+  <data name="Special messages" xml:space="preserve">
+    <value>विशेष संदेश</value>
+  </data>
+  <data name="Special messages found in the search" xml:space="preserve">
+    <value>सर्च में मिले खास मैसेज</value>
+  </data>
+  <data name="Special page" xml:space="preserve">
+    <value>विशेष पृष्ठ</value>
+  </data>
+  <data name="Special pages" xml:space="preserve">
+    <value>विशेष पृष्ठ</value>
+  </data>
+  <data name="Special pages found in the search" xml:space="preserve">
+    <value>सर्च में खास पेज मिले</value>
+  </data>
+  <data name="Start date" xml:space="preserve">
+    <value>आरंभ करने की तिथि</value>
+  </data>
+  <data name="Start date cannot be later than end date" xml:space="preserve">
+    <value>प्रारंभ तिथि समाप्ति तिथि से बाद की नहीं हो सकती</value>
+  </data>
+  <data name="Stats" xml:space="preserve">
+    <value>Estatísticas</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Still a draft?" xml:space="preserve">
+    <value>अभी भी एक मसौदा?</value>
+  </data>
+  <data name="Stop" xml:space="preserve">
+    <value>Parar</value>
+  </data>
+  <data name="Stops the timer" xml:space="preserve">
+    <value>टाइमर बंद कर देता है</value>
+  </data>
+  <data name="Subscribe" xml:space="preserve">
+    <value>Inscrever-se</value>
+  </data>
+  <data name="Subscribe to the website" xml:space="preserve">
+    <value>वेबसाइट की सदस्यता लें</value>
+  </data>
+  <data name="Subscriber" xml:space="preserve">
+    <value>Assinante</value>
+  </data>
+  <data name="Subscriber(s)" xml:space="preserve">
+    <value>सब्सक्राइबर</value>
+  </data>
+  <data name="Success" xml:space="preserve">
+    <value>Sucesso</value>
+  </data>
+  <data name="System role" xml:space="preserve">
+    <value>सिस्टम भूमिका</value>
+  </data>
+  <data name="Tag" xml:space="preserve">
+    <value>Marcação</value>
+  </data>
+  <data name="Tag cannot exceed {0} characters" xml:space="preserve">
+    <value>टैग {0} वर्णों से अधिक नहीं हो सकता</value>
+  </data>
+  <data name="Tags" xml:space="preserve">
+    <value>Etiquetas</value>
+  </data>
+  <data name="Tags found in the search" xml:space="preserve">
+    <value>सर्च में टैग मिले</value>
+  </data>
+  <data name="Tags must be unique" xml:space="preserve">
+    <value>टैग अद्वितीय होने चाहिए</value>
+  </data>
+  <data name="Talk to an administrator, if this is not correct" xml:space="preserve">
+    <value>यदि यह सही नहीं है तो किसी प्रशासक से बात करें</value>
+  </data>
+  <data name="Tenant id" xml:space="preserve">
+    <value>किरायेदार आईडी</value>
+  </data>
+  <data name="Terms and conditions" xml:space="preserve">
+    <value>नियम और शर्तें</value>
+  </data>
+  <data name="Terms of service" xml:space="preserve">
+    <value>सेवा की शर्तें</value>
+  </data>
+  <data name="Test connection" xml:space="preserve">
+    <value>कनेक्शन का परीक्षण करें</value>
+  </data>
+  <data name="Text.OperationCompletedSuccessfully" xml:space="preserve">
+    <value>Text.OperationCompletedSuccessfully</value>
+  </data>
+  <data name="Text.SomethingWentWrongPleaseTryAgain" xml:space="preserve">
+    <value>Text.SomethingWentWrongPleaseTryAgain</value>
+  </data>
+  <data name="Text.Styles.Original" xml:space="preserve">
+    <value>Text.Styles.Original</value>
+  </data>
+  <data name="Text.Styles.Uppercase" xml:space="preserve">
+    <value>Text.Styles.Uppercase</value>
+  </data>
+  <data name="Text.YouDontHavePermissionForThisFeature" xml:space="preserve">
+    <value>Text.YouDontHavePermissionForThisFeature</value>
+  </data>
+  <data name="Text.YouMadeTooManyCommentsIn5Minutes" xml:space="preserve">
+    <value>Text.YouMadeTooManyCommentsIn5Minutes</value>
+  </data>
+  <data name="The author marked this as draft" xml:space="preserve">
+    <value>लेखक ने इसे ड्राफ्ट के रूप में चिह्नित किया है</value>
+  </data>
+  <data name="The entity you are trying to access does not exist" xml:space="preserve">
+    <value>आप जिस इकाई तक पहुंचने का प्रयास कर रहे हैं वह मौजूद नहीं है</value>
+  </data>
+  <data name="This application may no longer respond until reloaded" xml:space="preserve">
+    <value>यह एप्लिकेशन पुनः लोड होने तक प्रतिक्रिया नहीं दे सकता है</value>
+  </data>
+  <data name="This code is for the subscription process in the website" xml:space="preserve">
+    <value>यह कोड वेबसाइट में सदस्यता प्रक्रिया के लिए है</value>
+  </data>
+  <data name="This has already been restored." xml:space="preserve">
+    <value>इसे पहले ही बहाल किया जा चुका है.</value>
+  </data>
+  <data name="this is a front-page" xml:space="preserve">
+    <value>यह मुखपृष्ठ है</value>
+  </data>
+  <data name="this._files.Count()" xml:space="preserve">
+    <value>this._files.Count()</value>
+  </data>
+  <data name="this.Entity.GetEmail()" xml:space="preserve">
+    <value>this.Entity.GetEmail()</value>
+  </data>
+  <data name="this.FileLimitInBytes.SizeInBytes()" xml:space="preserve">
+    <value>this.FileLimitInBytes.SizeInBytes()</value>
+  </data>
+  <data name="this.PublishedPosts" xml:space="preserve">
+    <value>this.PublishedPosts</value>
+  </data>
+  <data name="this.PublishedVideos" xml:space="preserve">
+    <value>this.PublishedVideos</value>
+  </data>
+  <data name="this.Super.GetContents(context.Item, this.UserFacade.BlogId).OfType&lt;OrigamiPost&gt;().Published().Count()" xml:space="preserve">
+    <value>this.Super.GetContents(context.Item, this.UserFacade.BlogID).OfType&lt;OrigamiPost&gt;().Published().Count()</value>
+  </data>
+  <data name="this.Super.GetContents(context.Item, this.UserFacade.BlogId).OfType&lt;OrigamiVideo&gt;().Published().Count()" xml:space="preserve">
+    <value>this.Super.GetContents(context.Item, this.UserFacade.BlogID).OfType&lt;OrigamiVideo&gt;().Published().Count()</value>
+  </data>
+  <data name="Thumbnail" xml:space="preserve">
+    <value>Miniatura</value>
+  </data>
+  <data name="Time period" xml:space="preserve">
+    <value>समय सीमा</value>
+  </data>
+  <data name="Timezone" xml:space="preserve">
+    <value>Fuso horário</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Título</value>
+  </data>
+  <data name="Title cannot exceed 255 characters" xml:space="preserve">
+    <value>शीर्षक 255 अक्षरों से अधिक नहीं हो सकता</value>
+  </data>
+  <data name="Title is required" xml:space="preserve">
+    <value>शीर्षक आवश्यक है</value>
+  </data>
+  <data name="To promote to front-page, that page must be top-level" xml:space="preserve">
+    <value>फ्रंट-पेज पर प्रचार करने के लिए, वह पेज शीर्ष-स्तरीय होना चाहिए</value>
+  </data>
+  <data name="Trash" xml:space="preserve">
+    <value>Lixo</value>
+  </data>
+  <data name="Try again to solve this issue" xml:space="preserve">
+    <value>इस समस्या को हल करने के लिए पुनः प्रयास करें</value>
+  </data>
+  <data name="Turn social profiles into moderators" xml:space="preserve">
+    <value>सोशल प्रोफाइल को मॉडरेटर में बदलें</value>
+  </data>
+  <data name="Type Here" xml:space="preserve">
+    <value>यहाँ टाइप करें</value>
+  </data>
+  <data name="Type in here to search" xml:space="preserve">
+    <value>खोजने के लिए यहां टाइप करें</value>
+  </data>
+  <data name="Type is required for special messages" xml:space="preserve">
+    <value>विशेष संदेशों के लिए प्रकार आवश्यक है</value>
+  </data>
+  <data name="Type is required for special pages" xml:space="preserve">
+    <value>विशेष पृष्ठों के लिए प्रकार आवश्यक है</value>
+  </data>
+  <data name="Type must be a valid special message type" xml:space="preserve">
+    <value>प्रकार एक मान्य विशेष संदेश प्रकार होना चाहिए</value>
+  </data>
+  <data name="Type must be a valid special page type" xml:space="preserve">
+    <value>प्रकार एक वैध विशेष पृष्ठ प्रकार होना चाहिए</value>
+  </data>
+  <data name="Type your note here" xml:space="preserve">
+    <value>अपना नोट यहां टाइप करें</value>
+  </data>
+  <data name="Unable to restore" xml:space="preserve">
+    <value>पुनर्स्थापित करने में असमर्थ</value>
+  </data>
+  <data name="Unable to restore trash" xml:space="preserve">
+    <value>कचरा पुनर्स्थापित करने में असमर्थ</value>
+  </data>
+  <data name="Unable to retrieve IP location" xml:space="preserve">
+    <value>आईपी ​​स्थान पुनः प्राप्त करने में असमर्थ</value>
+  </data>
+  <data name="Unapproved comments" xml:space="preserve">
+    <value>अस्वीकृत टिप्पणियाँ</value>
+  </data>
+  <data name="Unblock social profiles" xml:space="preserve">
+    <value>सामाजिक प्रोफ़ाइल अनब्लॉक करें</value>
+  </data>
+  <data name="Unblock user" xml:space="preserve">
+    <value>उपयोगकर्ता को अनब्लॉक करें</value>
+  </data>
+  <data name="Unblock users" xml:space="preserve">
+    <value>उपयोगकर्ताओं को अनब्लॉक करें</value>
+  </data>
+  <data name="Undo" xml:space="preserve">
+    <value>Desfazer</value>
+  </data>
+  <data name="Undo changes" xml:space="preserve">
+    <value>परिवर्तन पूर्ववत करें</value>
+  </data>
+  <data name="Unpin comment" xml:space="preserve">
+    <value>टिप्पणी अनपिन करें</value>
+  </data>
+  <data name="Unpublish {0} item(s)" xml:space="preserve">
+    <value>{0} आइटम अप्रकाशित करें</value>
+  </data>
+  <data name="Unpublish message(s)" xml:space="preserve">
+    <value>संदेश अप्रकाशित करें</value>
+  </data>
+  <data name="Unpublish other users messages" xml:space="preserve">
+    <value>अन्य उपयोगकर्ताओं के संदेशों को अप्रकाशित करें</value>
+  </data>
+  <data name="Unpublish other users pages" xml:space="preserve">
+    <value>अन्य उपयोगकर्ताओं के पेज अप्रकाशित करें</value>
+  </data>
+  <data name="Unpublish other users posts" xml:space="preserve">
+    <value>अन्य उपयोगकर्ताओं की पोस्ट अप्रकाशित करें</value>
+  </data>
+  <data name="Unpublish other users quick notes" xml:space="preserve">
+    <value>अन्य उपयोगकर्ताओं के त्वरित नोट्स अप्रकाशित करें</value>
+  </data>
+  <data name="Unpublish other users special pages" xml:space="preserve">
+    <value>अन्य उपयोगकर्ताओं के विशेष पेज अप्रकाशित करें</value>
+  </data>
+  <data name="Unpublish other users videos" xml:space="preserve">
+    <value>अन्य उपयोगकर्ताओं के वीडियो अप्रकाशित करें</value>
+  </data>
+  <data name="Unpublish own messages" xml:space="preserve">
+    <value>स्वयं के संदेश अप्रकाशित करें</value>
+  </data>
+  <data name="Unpublish own pages" xml:space="preserve">
+    <value>स्वयं के पृष्ठ अप्रकाशित करें</value>
+  </data>
+  <data name="Unpublish own posts" xml:space="preserve">
+    <value>स्वयं के पोस्ट अप्रकाशित करें</value>
+  </data>
+  <data name="Unpublish own quick notes" xml:space="preserve">
+    <value>अपने त्वरित नोट्स अप्रकाशित करें</value>
+  </data>
+  <data name="Unpublish own special pages" xml:space="preserve">
+    <value>स्वयं के विशेष पृष्ठ अप्रकाशित करें</value>
+  </data>
+  <data name="Unpublish own videos" xml:space="preserve">
+    <value>स्वयं के वीडियो अप्रकाशित करें</value>
+  </data>
+  <data name="Unpublish page(s)" xml:space="preserve">
+    <value>पेज अप्रकाशित करें</value>
+  </data>
+  <data name="Unpublish post(s)" xml:space="preserve">
+    <value>पोस्ट अप्रकाशित करें</value>
+  </data>
+  <data name="Unpublish video(s)" xml:space="preserve">
+    <value>वीडियो अप्रकाशित करें</value>
+  </data>
+  <data name="Unselect all" xml:space="preserve">
+    <value>सभी को अचयनित करें</value>
+  </data>
+  <data name="Unsubscribe from the website" xml:space="preserve">
+    <value>वेबसाइट से सदस्यता समाप्त करें</value>
+  </data>
+  <data name="Unsubscribe social profiles" xml:space="preserve">
+    <value>सामाजिक प्रोफ़ाइल की सदस्यता समाप्त करें</value>
+  </data>
+  <data name="Unsubscribe user" xml:space="preserve">
+    <value>उपयोगकर्ता की सदस्यता समाप्त करें</value>
+  </data>
+  <data name="Upload" xml:space="preserve">
+    <value>Carregar</value>
+  </data>
+  <data name="Upload files" xml:space="preserve">
+    <value>फाइलें अपलोड करें</value>
+  </data>
+  <data name="Upload picture" xml:space="preserve">
+    <value>चित्र अपलोड करें</value>
+  </data>
+  <data name="Upload subtitle" xml:space="preserve">
+    <value>उपशीर्षक अपलोड करें</value>
+  </data>
+  <data name="Uploading a file" xml:space="preserve">
+    <value>फ़ाइल अपलोड हो रही है</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>Usuário</value>
+  </data>
+  <data name="User actions" xml:space="preserve">
+    <value>उपयोगकर्ता क्रियाएं</value>
+  </data>
+  <data name="User Activity" xml:space="preserve">
+    <value>उपयोगकर्ता गतिविधि</value>
+  </data>
+  <data name="User came from" xml:space="preserve">
+    <value>उपयोगकर्ता कहां से आया</value>
+  </data>
+  <data name="User did not share an e-mail address" xml:space="preserve">
+    <value>उपयोगकर्ता ने कोई ई-मेल पता साझा नहीं किया</value>
+  </data>
+  <data name="User trashes" xml:space="preserve">
+    <value>उपयोगकर्ता कचरा</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Nome de usuário</value>
+  </data>
+  <data name="Username (read-only)" xml:space="preserve">
+    <value>उपयोगकर्ता नाम (केवल पढ़ने के लिए)</value>
+  </data>
+  <data name="Username and current password do NOT exist in the database" xml:space="preserve">
+    <value>उपयोगकर्ता नाम और वर्तमान पासवर्ड डेटाबेस में मौजूद नहीं है</value>
+  </data>
+  <data name="Username cannot exceed {0} characters" xml:space="preserve">
+    <value>उपयोगकर्ता नाम {0} वर्णों से अधिक नहीं हो सकता</value>
+  </data>
+  <data name="Username is required" xml:space="preserve">
+    <value>उपयोगकर्ता नाम आवश्यक है</value>
+  </data>
+  <data name="Users" xml:space="preserve">
+    <value>Usuários</value>
+  </data>
+  <data name="Validate code and finish subscribing" xml:space="preserve">
+    <value>कोड सत्यापित करें और सदस्यता समाप्त करें</value>
+  </data>
+  <data name="Validate the 2FA code and login" xml:space="preserve">
+    <value>2FA कोड सत्यापित करें और लॉगिन करें</value>
+  </data>
+  <data name="Validate the TOTP code and proceed" xml:space="preserve">
+    <value>TOTP कोड सत्यापित करें और आगे बढ़ें</value>
+  </data>
+  <data name="Value" xml:space="preserve">
+    <value>Valor</value>
+  </data>
+  <data name="Version" xml:space="preserve">
+    <value>Versão</value>
+  </data>
+  <data name="Video" xml:space="preserve">
+    <value>Vídeo</value>
+  </data>
+  <data name="Video cannot be updated" xml:space="preserve">
+    <value>वीडियो अपडेट नहीं किया जा सकता</value>
+  </data>
+  <data name="Videos" xml:space="preserve">
+    <value>Vídeos</value>
+  </data>
+  <data name="Videos comments" xml:space="preserve">
+    <value>वीडियो टिप्पणियाँ</value>
+  </data>
+  <data name="Videos found in the search" xml:space="preserve">
+    <value>सर्च में वीडियो मिले</value>
+  </data>
+  <data name="View backup and restore system" xml:space="preserve">
+    <value>बैकअप देखें और सिस्टम पुनर्स्थापित करें</value>
+  </data>
+  <data name="View blogs" xml:space="preserve">
+    <value>ब्लॉग देखें</value>
+  </data>
+  <data name="View categories" xml:space="preserve">
+    <value>श्रेणियां देखें</value>
+  </data>
+  <data name="View comments" xml:space="preserve">
+    <value>टिप्पणियाँ देखें</value>
+  </data>
+  <data name="View dashboard" xml:space="preserve">
+    <value>डैशबोर्ड देखें</value>
+  </data>
+  <data name="View messages" xml:space="preserve">
+    <value>संदेश देखें</value>
+  </data>
+  <data name="View pages" xml:space="preserve">
+    <value>पेज देखें</value>
+  </data>
+  <data name="View posts" xml:space="preserve">
+    <value>पोस्ट देखें</value>
+  </data>
+  <data name="View quick notes" xml:space="preserve">
+    <value>त्वरित नोट्स देखें</value>
+  </data>
+  <data name="View roles" xml:space="preserve">
+    <value>भूमिकाएँ देखें</value>
+  </data>
+  <data name="View settings" xml:space="preserve">
+    <value>सेटिंग्स देखें</value>
+  </data>
+  <data name="View social profiles" xml:space="preserve">
+    <value>सामाजिक प्रोफ़ाइल देखें</value>
+  </data>
+  <data name="View special pages" xml:space="preserve">
+    <value>विशेष पृष्ठ देखें</value>
+  </data>
+  <data name="View tags" xml:space="preserve">
+    <value>टैग देखें</value>
+  </data>
+  <data name="View trashes" xml:space="preserve">
+    <value>कूड़ा-करकट देखें</value>
+  </data>
+  <data name="View users" xml:space="preserve">
+    <value>उपयोगकर्ताओं को देखें</value>
+  </data>
+  <data name="View videos" xml:space="preserve">
+    <value>वीडियो देखें</value>
+  </data>
+  <data name="Warning" xml:space="preserve">
+    <value>Aviso</value>
+  </data>
+  <data name="We need a valid e-mail to subscribe" xml:space="preserve">
+    <value>सदस्यता लेने के लिए हमें एक वैध ई-मेल की आवश्यकता है</value>
+  </data>
+  <data name="We use cookies and similar technologies to enhance your browsing experience, analyze site traffic, personalize content, and serve targeted advertisements" xml:space="preserve">
+    <value>हम आपके ब्राउज़िंग अनुभव को बेहतर बनाने, साइट ट्रैफ़िक का विश्लेषण करने, सामग्री को वैयक्तिकृत करने और लक्षित विज्ञापन पेश करने के लिए कुकीज़ और समान तकनीकों का उपयोग करते हैं</value>
+  </data>
+  <data name="Website" xml:space="preserve">
+    <value>Site</value>
+  </data>
+  <data name="What to see next" xml:space="preserve">
+    <value>आगे क्या देखना है</value>
+  </data>
+  <data name="Wipe all data from the website" xml:space="preserve">
+    <value>वेबसाइट से सारा डेटा मिटा दें</value>
+  </data>
+  <data name="Wipe data out from social profiles" xml:space="preserve">
+    <value>सामाजिक प्रोफ़ाइल से डेटा मिटा दें</value>
+  </data>
+  <data name="Wipe out user data" xml:space="preserve">
+    <value>उपयोगकर्ता डेटा मिटा दें</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Sim</value>
+  </data>
+  <data name="Yes, since" xml:space="preserve">
+    <value>हाँ, तब से</value>
+  </data>
+  <data name="You already reacted with this emoji" xml:space="preserve">
+    <value>आप पहले ही इस इमोजी के साथ प्रतिक्रिया दे चुके हैं</value>
+  </data>
+  <data name="You are adding a new {0}" xml:space="preserve">
+    <value>आप एक नया {0} जोड़ रहे हैं</value>
+  </data>
+  <data name="You are seeing this page, because &lt;b&gt;you denied access to your information from the Social Network&lt;/b&gt;" xml:space="preserve">
+    <value>आप यह पेज इसलिए देख रहे हैं, क्योंकि &lt;b&gt;आपने सोशल नेटवर्क से अपनी जानकारी तक पहुंच से इनकार कर दिया है&lt;/b&gt;</value>
+  </data>
+  <data name="You are seeing this page, because &lt;b&gt;your access token is invalid/expired&lt;/b&gt;" xml:space="preserve">
+    <value>आप यह पृष्ठ इसलिए देख रहे हैं, क्योंकि &lt;b&gt;आपका एक्सेस टोकन अमान्य/समाप्त हो गया है&lt;/b&gt;</value>
+  </data>
+  <data name="You are seeing this page, because &lt;b&gt;your user has been blocked&lt;/b&gt;" xml:space="preserve">
+    <value>आप यह पेज इसलिए देख रहे हैं, क्योंकि &lt;b&gt;आपका उपयोगकर्ता ब्लॉक कर दिया गया है&lt;/b&gt;</value>
+  </data>
+  <data name="You are viewing a deleted {0}" xml:space="preserve">
+    <value>आप हटाए गए {0} को देख रहे हैं</value>
+  </data>
+  <data name="You are viewing an existing {0}" xml:space="preserve">
+    <value>आप मौजूदा {0} देख रहे हैं</value>
+  </data>
+  <data name="You are viewing an existing trash" xml:space="preserve">
+    <value>आप मौजूदा कचरा देख रहे हैं</value>
+  </data>
+  <data name="You asked for a password reset and here's the link to paste in your browser" xml:space="preserve">
+    <value>आपने पासवर्ड रीसेट करने के लिए कहा है और आपके ब्राउज़र में पेस्ट करने के लिए लिंक यहां दिया गया है</value>
+  </data>
+  <data name="You asked for a password reset and here's the link to paste in your browser: {0}" xml:space="preserve">
+    <value>आपने पासवर्ड रीसेट करने के लिए कहा है और आपके ब्राउज़र में पेस्ट करने के लिए यह लिंक है: {0}</value>
+  </data>
+  <data name="You can change your display name at any time though" xml:space="preserve">
+    <value>हालाँकि आप अपना प्रदर्शन नाम किसी भी समय बदल सकते हैं</value>
+  </data>
+  <data name="You can't modify a system role" xml:space="preserve">
+    <value>आप सिस्टम भूमिका को संशोधित नहीं कर सकते</value>
+  </data>
+  <data name="You cannot edit this comment" xml:space="preserve">
+    <value>आप इस टिप्पणी को संपादित नहीं कर सकते</value>
+  </data>
+  <data name="You did NOT change passwords, current and new are the same" xml:space="preserve">
+    <value>आपने पासवर्ड नहीं बदला, वर्तमान और नए पासवर्ड समान हैं</value>
+  </data>
+  <data name="You don't have access to any blogs" xml:space="preserve">
+    <value>आपके पास किसी भी ब्लॉग तक पहुंच नहीं है</value>
+  </data>
+  <data name="You don't have access to this feature" xml:space="preserve">
+    <value>आपके पास इस सुविधा तक पहुंच नहीं है</value>
+  </data>
+  <data name="You don't have permission to reset 2FA" xml:space="preserve">
+    <value>आपके पास 2FA रीसेट करने की अनुमति नहीं है</value>
+  </data>
+  <data name="You don't have permission to reset password" xml:space="preserve">
+    <value>आपके पास पासवर्ड रीसेट करने की अनुमति नहीं है</value>
+  </data>
+  <data name="You don't have permission to reset your own password" xml:space="preserve">
+    <value>आपको अपना पासवर्ड रीसेट करने की अनुमति नहीं है</value>
+  </data>
+  <data name="You must change your password" xml:space="preserve">
+    <value>आपको अपना पासवर्ड बदलना होगा</value>
+  </data>
+  <data name="You must enable two-factor authentication" xml:space="preserve">
+    <value>आपको दो-कारक प्रमाणीकरण सक्षम करना होगा</value>
+  </data>
+  <data name="You need to allow access to it when prompted to solve this issue" xml:space="preserve">
+    <value>इस समस्या को हल करने के लिए संकेत दिए जाने पर आपको इस तक पहुंच की अनुमति देनी होगी</value>
+  </data>
+  <data name="You need to pick a video" xml:space="preserve">
+    <value>आपको एक वीडियो चुनना होगा</value>
+  </data>
+  <data name="You need to pick an image" xml:space="preserve">
+    <value>आपको एक छवि चुननी होगी</value>
+  </data>
+  <data name="You need to select one page" xml:space="preserve">
+    <value>आपको एक पेज चुनना होगा</value>
+  </data>
+  <data name="You rated this post: {0} star(s)" xml:space="preserve">
+    <value>आपने इस पोस्ट को रेटिंग दी है: {0} स्टार</value>
+  </data>
+  <data name="You subscribed to this website" xml:space="preserve">
+    <value>आपने इस वेबसाइट की सदस्यता ले ली है</value>
+  </data>
+  <data name="You switched to a different blog" xml:space="preserve">
+    <value>आपने किसी भिन्न ब्लॉग पर स्विच कर लिया है</value>
+  </data>
+  <data name="Your comments" xml:space="preserve">
+    <value>आपकी टिप्पणियां</value>
+  </data>
+  <data name="Your temporary password: {0}" xml:space="preserve">
+    <value>आपका अस्थायी पासवर्ड: {0}</value>
+  </data>
+  <data name="ZIP file created successfully." xml:space="preserve">
+    <value>ज़िप फ़ाइल सफलतापूर्वक बनाई गई.</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Tipo</value>
+  </data>
+  <data name="Yay! Everything went smoothly" xml:space="preserve">
+    <value>वाह! सब कुछ सुचारू रूप से चला गया</value>
+  </data>
+  <data name="Ah heck, something went wrong, try again" xml:space="preserve">
+    <value>अरे, कुछ गलत हो गया, पुनः प्रयास करें</value>
+  </data>
+  <data name="You don't have permission for this feature" xml:space="preserve">
+    <value>आपके पास इस सुविधा के लिए अनुमति नहीं है</value>
+  </data>
+  <data name="Calm down, you made too many comments in 5 minutes" xml:space="preserve">
+    <value>शांत हो जाइए, आपने 5 मिनट में बहुत सारी टिप्पणियाँ कीं</value>
+  </data>
+</root>

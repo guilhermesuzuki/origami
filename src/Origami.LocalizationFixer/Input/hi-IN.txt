@@ -1,0 +1,127 @@
+Accessed: एक्सेस किया गया
+Active: सक्रिय
+Admin: प्रशासक
+All: सभी
+Anonymous: गुमनाम
+Answering: उत्तर दे रहा है
+Approved: स्वीकृत
+Author: लेखक
+Backup: बैकअप
+Backups: बैकअप
+Basic: मूल
+Blocked: अवरुद्ध
+Blog: ब्लॉग
+Blogs: ब्लॉग
+Browsers: ब्राउज़र
+Cancel: रद्द करें
+Categories: श्रेणियाँ
+Category: श्रेणी
+Clear: साफ़ करें
+Close: बंद करें
+Comment: टिप्पणी
+Comments: टिप्पणियाँ
+Congratulations: बधाई हो
+Content: सामग्री
+count: संख्या
+Created: बनाया गया
+Custom: अनुकूलित
+Danger: खतरा
+Dashboard: डैशबोर्ड
+Date: दिनांक
+Deleted: हटाया गया
+Deleted?: हटाया गया?
+Description: विवरण
+Done: पूर्ण
+Download: डाउनलोड
+Draft: ड्राफ्ट
+Drafts: ड्राफ्ट
+Enter: दर्ज करें
+Error: त्रुटि
+Everything: सब कुछ
+Extension: एक्सटेंशन
+Feeds: फ़ीड्स
+field: फ़ील्ड
+Filler: भराव
+Filter: फ़िल्टर
+General: सामान्य
+Header: हेडर
+History: इतिहास
+Id: आईडी
+Info: जानकारी
+Ip: आईपी
+Key: कुंजी
+Keywords: कीवर्ड
+Language: भाषा
+Large: बड़ा
+Leave: छोड़ें
+link: लिंक
+Login: लॉगिन
+Logo: लोगो
+Logout: लॉगआउट
+Maintenance: रखरखाव
+Medium: मध्यम
+Misc: विविध
+Moderator: मॉडरेटर
+Modified: संशोधित
+Name: नाम
+New: नया
+No: नहीं
+None: कोई नहीं
+Note: नोट
+Oops: ओह
+Original: मूल
+Page: पेज
+Pages: पेज
+Parent: पैरेंट
+Password: पासवर्ड
+Path: पथ
+Pinned: पिन किया गया
+Platforms: प्लेटफ़ॉर्म
+Publication: प्रकाशन
+Publications: प्रकाशन
+Primary: प्राथमिक
+Profile: प्रोफ़ाइल
+Progress: प्रगति
+Published: प्रकाशित
+Rating: रेटिंग
+Ratings: रेटिंग्स
+Reactions: प्रतिक्रियाएँ
+Reload: पुनः लोड करें
+Reply: उत्तर दें
+Reset: रीसेट
+Restore: पुनर्स्थापित करें
+Role: भूमिका
+Roles: भूमिकाएँ
+Save: सहेजें
+Search: खोजें
+Settings: सेटिंग्स
+Size: आकार
+Slow: धीमा
+Slug: स्लग
+Small: छोटा
+Spam: स्पैम
+Stats: आँकड़े
+Status: स्थिति
+Stop: रोकें
+Subscribe: सदस्यता लें
+Subscriber: सदस्य
+Success: सफलता
+Tag: टैग
+Tags: टैग्स
+Thumbnail: थंबनेल
+Timezone: समय क्षेत्र
+Title: शीर्षक
+Trash: कचरा
+Type: प्रकार
+Undo: पूर्ववत करें
+Upload: अपलोड
+User: उपयोगकर्ता
+Username: उपयोगकर्ता नाम
+Users: उपयोगकर्ता
+Value: मान
+Version: संस्करण
+Video: वीडियो
+Videos: वीडियो
+Warning: चेतावनी
+Website: वेबसाइट
+Yes: हाँ
