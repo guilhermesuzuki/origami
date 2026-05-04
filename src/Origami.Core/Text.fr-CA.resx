@@ -880,7 +880,7 @@
     <value>Les paramètres de messagerie sont corrects</value>
   </data>
   <data name="Enable" xml:space="preserve">
-    <value>Habilitar</value>
+    <value>Activer</value>
   </data>
   <data name="Enable SSL" xml:space="preserve">
     <value>Activer SSL</value>

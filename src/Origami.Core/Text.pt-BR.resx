@@ -880,10 +880,10 @@
     <value>As configurações de e-mail estão corretas</value>
   </data>
   <data name="Enable" xml:space="preserve">
-    <value>Habilitar</value>
+    <value>Ativar</value>
   </data>
   <data name="Enable SSL" xml:space="preserve">
-    <value>Habilitar SSL</value>
+    <value>Ativar SSL</value>
   </data>
   <data name="End date" xml:space="preserve">
     <value>Data de término</value>

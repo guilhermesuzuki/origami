@@ -880,7 +880,7 @@
     <value>이메일 설정은 괜찮습니다</value>
   </data>
   <data name="Enable" xml:space="preserve">
-    <value>Habilitar</value>
+    <value>활성화</value>
   </data>
   <data name="Enable SSL" xml:space="preserve">
     <value>SSL 활성화</value>

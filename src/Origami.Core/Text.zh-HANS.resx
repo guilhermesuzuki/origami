@@ -880,7 +880,7 @@
     <value>邮箱设置没问题</value>
   </data>
   <data name="Enable" xml:space="preserve">
-    <value>Habilitar</value>
+    <value>启用</value>
   </data>
   <data name="Enable SSL" xml:space="preserve">
     <value>启用 SSL</value>

@@ -880,7 +880,7 @@
     <value>メール設定は大丈夫です</value>
   </data>
   <data name="Enable" xml:space="preserve">
-    <value>Habilitar</value>
+    <value>有効にする</value>
   </data>
   <data name="Enable SSL" xml:space="preserve">
     <value>SSLを有効にする</value>
