@@ -53,6 +53,9 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheBlog.NanoId.ShouldBe(TestBlog.NanoId);
             cacheBlog.IsActive.ShouldBe(true);
             cacheBlog.IsActive.ShouldBe(TestBlog.IsActive);
+
+            cacheBlog.Version.ShouldBe(TestBlog.Version);
+            cacheBlog.Version.ShouldBe(activatedBlog.Version);
         }
 
         [Fact]
@@ -96,7 +99,16 @@ namespace Origami.UI.Admin.IntegrationTests
             deactivatedBlog.ShouldNotBeNull();
             deactivatedBlog.IsActive.ShouldBeFalse();
 
-            blogRepository.PurgeCache(TestBlog);
+            var cacheBlog = superRepository.MyMemoryCache.Read<OrigamiBlog>().Id(TestBlog.Id);
+            cacheBlog.ShouldNotBeNull();
+            cacheBlog.Name.ShouldBe(TestBlog.Name);
+            cacheBlog.DateCreated.ShouldBe(TestBlog.DateCreated);
+            cacheBlog.NanoId.ShouldBe(TestBlog.NanoId);
+            cacheBlog.IsActive.ShouldBe(false);
+            cacheBlog.IsActive.ShouldBe(TestBlog.IsActive);
+
+            cacheBlog.Version.ShouldBe(TestBlog.Version);
+            cacheBlog.Version.ShouldBe(deactivatedBlog.Version);
         }
 
         [Fact]
@@ -149,9 +161,6 @@ namespace Origami.UI.Admin.IntegrationTests
             blogRepository
                 .SmartDelete(blog.GetContext(TestUser), true)
                 .OnFailure(r => throw new Exception($"Failed to delete test blog: {r.GetMessages()}"));
-            var blogAfterDelete = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
-            blogAfterDelete.ShouldNotBeNull();
-            blogAfterDelete.IsDeleted.ShouldBeTrue();
 
             var dbBlog = superRepository.Blogs.ReadFromDatabase(blog);
             dbBlog.ShouldNotBeNull();
@@ -168,8 +177,8 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheBlog.NanoId.ShouldBe(TestBlog.NanoId);
             cacheBlog.IsDeleted.ShouldBe(true);
 
-            // Cleanup cache
-            blogRepository.PurgeCache(cacheBlog);
+            cacheBlog.Version.ShouldBe(blog.Version);
+            cacheBlog.Version.ShouldBe(dbBlog.Version);
         }
 
         [Fact]
@@ -216,7 +225,8 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheBlog.IsDeleted.ShouldBe(false);
             cacheBlog.IsDeleted.ShouldBe(blog.IsDeleted);
 
-            blogRepository.PurgeCache(blog);
+            cacheBlog.Version.ShouldBe(TestBlog.Version);
+            cacheBlog.Version.ShouldBe(blog.Version);
         }
 
         [Fact]
@@ -370,6 +380,8 @@ namespace Origami.UI.Admin.IntegrationTests
             var blogAfterRestore = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
             blogAfterRestore.ShouldNotBeNull();
             blogAfterRestore.IsDeleted.ShouldBeFalse();
+
+            blogAfterRestore.Version.ShouldBe(blogAfterDelete.Version);
         }
 
         [Fact]
@@ -407,6 +419,12 @@ namespace Origami.UI.Admin.IntegrationTests
 
             oldPrimary.Id.ShouldBe(primary.Id);
             newPrimary.Id.ShouldBe(dbBlog.Id);
+
+            newPrimary.Version.ShouldBe(TestBlog.Version);
+
+            var cacheBlog = superRepository.MyMemoryCache.Read<OrigamiBlog>().Id(TestBlog.Id);
+            cacheBlog.ShouldNotBeNull();
+            cacheBlog.Version.ShouldBe(TestBlog.Version);
         }
 
         [Fact]
@@ -445,7 +463,10 @@ namespace Origami.UI.Admin.IntegrationTests
             blogAfterUpdate.Name.ShouldBe("Updated Blog Name");
             blogAfterUpdate.DateModified.ShouldNotBeNull();
 
-            blogRepository.PurgeCache(TestBlog);
+            var cacheBlog = superRepository.MyMemoryCache.Read<OrigamiBlog>().Id(TestBlog.Id);
+            cacheBlog.ShouldNotBeNull();
+            cacheBlog.Version.ShouldBe(blog.Version);
+            cacheBlog.Version.ShouldBe(blogAfterUpdate.Version);
         }
 
         [Fact]
@@ -490,6 +511,11 @@ namespace Origami.UI.Admin.IntegrationTests
             dbBlogAfterUpdate.ShouldNotBeNull();
             dbBlogAfterUpdate.Name.ShouldBe(TestBlog.Name);
             dbBlogAfterUpdate.DateModified.ShouldBeNull();
+
+            var cacheBlog = superRepository.MyMemoryCache.Read<OrigamiBlog>().Id(TestBlog.Id);
+            cacheBlog.ShouldNotBeNull();
+            cacheBlog.Version.ShouldBe(blog.Version);
+            cacheBlog.Version.ShouldBe(dbBlogAfterUpdate.Version);
         }
     }
 }

@@ -797,6 +797,16 @@ namespace Origami.Core
         }
 
         /// <summary>
+        /// Is the input a valid URL?
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static bool IsValidUrl(this string? input)
+        {
+            return Uri.TryCreate(input, UriKind.Absolute, out var uri) && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps);
+        }
+
+        /// <summary>
         /// Generates a cache key for the specified type.
         /// </summary>
         /// <param name="type">The type for which to generate the cache key. Cannot be <see langword="null"/>.</param>

@@ -54,7 +54,8 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheCategory.NanoId.ShouldBe(TestCategory.NanoId);
             cacheCategory.IsDeleted.ShouldBe(true);
 
-            categoryRepository.PurgeCache(TestCategory);
+            cacheCategory.Version.ShouldBe(categoryAfterDelete.Version);
+            cacheCategory.Version.ShouldBe(category.Version);
         }
 
         [Fact]
@@ -82,7 +83,7 @@ namespace Origami.UI.Admin.IntegrationTests
                 result.Entity.ShouldNotBeNull();
                 result.Messages.ShouldNotBeNull();
                 result.Messages.Count.ShouldBe(0);
-                var category = db.Categories.Id(result.Entity.Id)!;
+                var category = db.Categories.AsNoTracking().Id(result.Entity.Id)!;
                 var memCategory = results.IndexOf(result) switch
                 {
                     0 => TestCategoryA,
@@ -104,11 +105,10 @@ namespace Origami.UI.Admin.IntegrationTests
                 cacheCategory.DateCreated.ShouldBe(memCategory.DateCreated);
                 cacheCategory.NanoId.ShouldBe(memCategory.NanoId);
                 cacheCategory.IsDeleted.ShouldBe(memCategory.IsDeleted);
-            }
 
-            categoryRepository.PurgeCache(TestCategoryA);
-            categoryRepository.PurgeCache(TestCategoryB);
-            categoryRepository.PurgeCache(TestCategoryC);
+                cacheCategory.Version.ShouldBe(memCategory.Version);
+                cacheCategory.Version.ShouldBe(category.Version);
+            }
         }
 
         [Fact]
@@ -177,10 +177,6 @@ namespace Origami.UI.Admin.IntegrationTests
             var cacheAfterLoop = superRepository.MyMemoryCache.Read<OrigamiCategory>().Id(TestCategoryA.Id);
             cacheAfterLoop.ShouldNotBeNull();
             cacheAfterLoop.ParentId.ShouldBeNull();
-
-            categoryRepository.PurgeCache(TestCategoryA);
-            categoryRepository.PurgeCache(TestCategoryB);
-            categoryRepository.PurgeCache(TestCategoryC);
         }
 
         [Fact]
@@ -208,7 +204,8 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheCategory.NanoId.ShouldBe(TestCategory.NanoId);
             cacheCategory.IsDeleted.ShouldBe(false);
 
-            scope.ServiceProvider.GetRequiredService<ICategoryRepository>().PurgeCache(TestCategory);
+            cacheCategory.Version.ShouldBe(TestCategory.Version);
+            cacheCategory.Version.ShouldBe(category.Version);
         }
 
         [Fact]
@@ -330,6 +327,9 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheCategory.DateCreated.ShouldBe(TestCategory.DateCreated);
             cacheCategory.NanoId.ShouldBe(TestCategory.NanoId);
             cacheCategory.IsDeleted.ShouldBeFalse();
+
+            cacheCategory.Version.ShouldBe(categoryAfterDelete.Version);
+            cacheCategory.Version.ShouldBe(categoryAfterRestore.Version);
         }
 
         [Fact]
@@ -365,7 +365,8 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheCategory.ShouldNotBeNull();
             cacheCategory.Name.ShouldBe("Updated category name");
 
-            categoryRepository.PurgeCache(TestCategory);
+            cacheCategory.Version.ShouldBe(categoryAfterUpdate.Version);
+            cacheCategory.Version.ShouldBe(category.Version);
         }
 
         [Fact]
@@ -408,7 +409,8 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheCategory.ShouldNotBeNull();
             cacheCategory.Name.ShouldBe("Test category");
 
-            categoryRepository.PurgeCache(TestCategory);
+            cacheCategory.Version.ShouldBe(categoryAfterUpdate.Version);
+            cacheCategory.Version.ShouldBe(category.Version);
         }
     }
 }

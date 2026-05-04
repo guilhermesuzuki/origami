@@ -48,6 +48,7 @@ namespace Origami.UI.Admin.IntegrationTests
             dbRole.DateCreated.ShouldBe(anotherRole.DateCreated);
             dbRole.Name.ShouldBe(anotherRole.Name);
             dbRole.NanoId.ShouldBe(anotherRole.NanoId);
+            dbRole.IsDeleted.ShouldBeTrue();
             dbRole.IsDeleted.ShouldBe(anotherRole.IsDeleted);
 
             var cacheRole = superRepository.Roles.ReadFromCache().Id(anotherRole.Id);
@@ -55,7 +56,11 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheRole.DateCreated.ShouldBe(anotherRole.DateCreated);
             cacheRole.Name.ShouldBe(anotherRole.Name);
             cacheRole.NanoId.ShouldBe(anotherRole.NanoId);
+            cacheRole.IsDeleted.ShouldBeTrue();
             cacheRole.IsDeleted.ShouldBe(anotherRole.IsDeleted);
+
+            cacheRole.Version.ShouldBe(anotherRole.Version);
+            cacheRole.Version.ShouldBe(dbRole.Version);
         }
 
         [Fact]
@@ -97,6 +102,9 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheRole.Name.ShouldBe(anotherRole.Name);
             cacheRole.NanoId.ShouldBe(anotherRole.NanoId);
             cacheRole.IsDeleted.ShouldBe(anotherRole.IsDeleted);
+
+            cacheRole.Version.ShouldBe(anotherRole.Version);
+            cacheRole.Version.ShouldBe(dbRole.Version);
 
             using var db = superRepository.DbContextFactory.CreateDbContext();
             var query = from a in db.RightRoles
@@ -264,6 +272,9 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheRole.NanoId.ShouldBe(anotherRole.NanoId);
             cacheRole.IsDeleted.ShouldBe(anotherRole.IsDeleted);
 
+            cacheRole.Version.ShouldBe(anotherRole.Version);
+            cacheRole.Version.ShouldBe(dbRole.Version);
+
             query = from a in db.RightRoles
                     join b in db.Rights on a.RightId equals b.Id
                     where a.RoleId == anotherRole.Id
@@ -326,6 +337,9 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheRole.Name.ShouldBe(anotherRole.Name);
             cacheRole.NanoId.ShouldBe(anotherRole.NanoId);
             cacheRole.IsDeleted.ShouldBe(anotherRole.IsDeleted);
+
+            cacheRole.Version.ShouldBe(anotherRole.Version);
+            cacheRole.Version.ShouldBe(dbRole.Version);
         }
     }
 }

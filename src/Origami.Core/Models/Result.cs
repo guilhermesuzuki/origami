@@ -95,6 +95,13 @@ namespace Origami.Core.Models
         }
 
         /// <summary>
+        /// Creates a password message
+        /// </summary>
+        public virtual string? Password
+        {
+            set => AddMessage(ResultMessage.MessageTypes.Password, value);
+        }
+        /// <summary>
         /// Rows affected
         /// </summary>
         public int RowsAffected
