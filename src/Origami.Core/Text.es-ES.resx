@@ -1399,7 +1399,7 @@
     <value>Ruta</value>
   </data>
   <data name="People online" xml:space="preserve">
-    <value>personas en linea</value>
+    <value>Personas en linea</value>
   </data>
   <data name="Pick from file manager" xml:space="preserve">
     <value>Elegir del administrador de archivos</value>
@@ -1417,7 +1417,7 @@
     <value>Fijado</value>
   </data>
   <data name="Pinned by" xml:space="preserve">
-    <value>fijado por</value>
+    <value>Fijado por</value>
   </data>
   <data name="Place your comment here" xml:space="preserve">
     <value>Deja tu comentario aquí</value>
@@ -1433,12 +1433,6 @@
   </data>
   <data name="Post" xml:space="preserve">
     <value>Publicación</value>
-  </data>
-  <data name="postRating.Rating" xml:space="preserve">
-    <value>postRating.Rating</value>
-  </data>
-  <data name="postReaction.Reaction" xml:space="preserve">
-    <value>postReaction.Reaction</value>
   </data>
   <data name="Posts" xml:space="preserve">
     <value>Publicaciones</value>
@@ -1619,12 +1613,6 @@
   </data>
   <data name="Rating must be less than or equal to 5" xml:space="preserve">
     <value>La calificación debe ser menor o igual a 5.</value>
-  </data>
-  <data name="rating!.Rating" xml:space="preserve">
-    <value>calificación!.Calificación</value>
-  </data>
-  <data name="rating.Rating" xml:space="preserve">
-    <value>rating.Rating</value>
   </data>
   <data name="Ratings" xml:space="preserve">
     <value>Valoraciones</value>
@@ -1878,17 +1866,11 @@
   <data name="Select trash" xml:space="preserve">
     <value>Seleccionar papelera</value>
   </data>
-  <data name="SelectedEntities.Count" xml:space="preserve">
-    <value>SelectedEntities.Count</value>
-  </data>
   <data name="Send verification code" xml:space="preserve">
     <value>Enviar código de verificación</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Configuración</value>
-  </data>
-  <data name="settings.Name" xml:space="preserve">
-    <value>settings.Name</value>
   </data>
   <data name="Size" xml:space="preserve">
     <value>Tamaño</value>
@@ -1990,7 +1972,7 @@
     <value>Suscriptor</value>
   </data>
   <data name="Subscriber(s)" xml:space="preserve">
-    <value>Suscriptores)</value>
+    <value>Suscriptor(es)</value>
   </data>
   <data name="Success" xml:space="preserve">
     <value>Éxito</value>

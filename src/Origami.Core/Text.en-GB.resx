@@ -283,10 +283,10 @@
     <value>And click OK to close this pop-up window</value>
   </data>
   <data name="Anonymous" xml:space="preserve">
-    <value>Anônimo</value>
+    <value>Anonymous</value>
   </data>
   <data name="Answering" xml:space="preserve">
-    <value>Respondendo</value>
+    <value>Answering</value>
   </data>
   <data name="Anyway, click here to go back to the Website" xml:space="preserve">
     <value>Anyway, click here to go back to the Website</value>
@@ -304,7 +304,7 @@
     <value>App secret</value>
   </data>
   <data name="Approved" xml:space="preserve">
-    <value>Aprovado</value>
+    <value>Approved</value>
   </data>
   <data name="Approved comments" xml:space="preserve">
     <value>Approved comments</value>
@@ -319,7 +319,7 @@
     <value>Are you sure? You will NOT be able to recover these items.</value>
   </data>
   <data name="Author" xml:space="preserve">
-    <value>Autor</value>
+    <value>Author</value>
   </data>
   <data name="Author is required" xml:space="preserve">
     <value>Author is required</value>
@@ -352,7 +352,7 @@
     <value>Based on title</value>
   </data>
   <data name="Basic" xml:space="preserve">
-    <value>Básico</value>
+    <value>Basic</value>
   </data>
   <data name="Be careful when choosing a username, you won't be able to change it later" xml:space="preserve">
     <value>Be careful when choosing a username, you won't be able to change it later</value>
@@ -376,7 +376,7 @@
     <value>Bloqueado</value>
   </data>
   <data name="Blog" xml:space="preserve">
-    <value>Blogue</value>
+    <value>Blog</value>
   </data>
   <data name="Blog could not be found" xml:space="preserve">
     <value>Blog could not be found</value>
@@ -394,7 +394,7 @@
     <value>Blog must be null</value>
   </data>
   <data name="Blogs" xml:space="preserve">
-    <value>Blogues</value>
+    <value>Blogs</value>
   </data>
   <data name="Blogs found in the search" xml:space="preserve">
     <value>Blogs found in the search</value>
@@ -409,7 +409,7 @@
     <value>Browser • Url</value>
   </data>
   <data name="Browsers" xml:space="preserve">
-    <value>Navegadores</value>
+    <value>Browsers</value>
   </data>
   <data name="But login first" xml:space="preserve">
     <value>But login first</value>
@@ -454,7 +454,7 @@
     <value>Cancelar</value>
   </data>
   <data name="Categories" xml:space="preserve">
-    <value>Categorias</value>
+    <value>Categories</value>
   </data>
   <data name="Categories found in the search" xml:space="preserve">
     <value>Categories found in the search</value>
@@ -463,7 +463,7 @@
     <value>Categories must be unique</value>
   </data>
   <data name="Category" xml:space="preserve">
-    <value>Categoria</value>
+    <value>Category</value>
   </data>
   <data name="Category must exist" xml:space="preserve">
     <value>Category must exist</value>
@@ -520,7 +520,7 @@
     <value>Client secret</value>
   </data>
   <data name="Close" xml:space="preserve">
-    <value>Fechar</value>
+    <value>Close</value>
   </data>
   <data name="Close menu" xml:space="preserve">
     <value>Close menu</value>
@@ -532,7 +532,7 @@
     <value>Closes the window</value>
   </data>
   <data name="Comment" xml:space="preserve">
-    <value>Comentário</value>
+    <value>Comment</value>
   </data>
   <data name="Comment reactions on posts" xml:space="preserve">
     <value>Comment reactions on posts</value>
@@ -547,7 +547,7 @@
     <value>Commented on post:</value>
   </data>
   <data name="Comments" xml:space="preserve">
-    <value>Comentários</value>
+    <value>Comments</value>
   </data>
   <data name="Comments [including deleted]" xml:space="preserve">
     <value>Comments [including deleted]</value>
@@ -565,13 +565,13 @@
     <value>Confirm password</value>
   </data>
   <data name="Congratulations" xml:space="preserve">
-    <value>Parabéns</value>
+    <value>Congratulations</value>
   </data>
   <data name="Contact an administrator to solve this issue" xml:space="preserve">
     <value>Contact an administrator to solve this issue</value>
   </data>
   <data name="Content" xml:space="preserve">
-    <value>Conteúdo</value>
+    <value>Content</value>
   </data>
   <data name="Content must be a valid HTML" xml:space="preserve">
     <value>Content must be a valid HTML</value>
@@ -583,7 +583,7 @@
     <value>Cookie policy</value>
   </data>
   <data name="count" xml:space="preserve">
-    <value>contar</value>
+    <value>count</value>
   </data>
   <data name="Create blogs" xml:space="preserve">
     <value>Create blogs</value>
@@ -619,7 +619,7 @@
     <value>Create slug</value>
   </data>
   <data name="Created" xml:space="preserve">
-    <value>Criado</value>
+    <value>Created</value>
   </data>
   <data name="Current month" xml:space="preserve">
     <value>Current month</value>
@@ -640,7 +640,7 @@
     <value>Perigo</value>
   </data>
   <data name="Dashboard" xml:space="preserve">
-    <value>Painel</value>
+    <value>Dashboard</value>
   </data>
   <data name="Dashboard analytics" xml:space="preserve">
     <value>Dashboard analytics</value>
@@ -649,7 +649,7 @@
     <value>Database restored successfully.</value>
   </data>
   <data name="Date" xml:space="preserve">
-    <value>Data</value>
+    <value>Date</value>
   </data>
   <data name="Date of modification must happen after the creation date" xml:space="preserve">
     <value>Date of modification must happen after the creation date</value>
@@ -736,13 +736,13 @@
     <value>Delete users other than self</value>
   </data>
   <data name="Deleted" xml:space="preserve">
-    <value>Excluído</value>
+    <value>Deleted</value>
   </data>
   <data name="Deleted comments" xml:space="preserve">
     <value>Deleted comments</value>
   </data>
   <data name="Deleted?" xml:space="preserve">
-    <value>Excluído?</value>
+    <value>Deleted?</value>
   </data>
   <data name="Deleting {0} item(s)" xml:space="preserve">
     <value>Deleting {0} item(s)</value>
@@ -754,7 +754,7 @@
     <value>Demoting from front-page</value>
   </data>
   <data name="Description" xml:space="preserve">
-    <value>Descrição</value>
+    <value>Description</value>
   </data>
   <data name="Description cannot exceed {0} characters" xml:space="preserve">
     <value>Description cannot exceed {0} characters</value>
@@ -784,13 +784,13 @@
     <value>Don't share that link with anybody else</value>
   </data>
   <data name="Done" xml:space="preserve">
-    <value>Feito</value>
+    <value>Done</value>
   </data>
   <data name="Download" xml:space="preserve">
     <value>Download</value>
   </data>
   <data name="Draft" xml:space="preserve">
-    <value>Rascunho</value>
+    <value>Draft</value>
   </data>
   <data name="Draft pages" xml:space="preserve">
     <value>Draft pages</value>
@@ -808,7 +808,7 @@
     <value>Draft videos</value>
   </data>
   <data name="Drafts" xml:space="preserve">
-    <value>Rascunhos</value>
+    <value>Drafts</value>
   </data>
   <data name="E-mail" xml:space="preserve">
     <value>E-mail</value>
@@ -880,7 +880,7 @@
     <value>Email settings are fine</value>
   </data>
   <data name="Enable" xml:space="preserve">
-    <value>Habilitar</value>
+    <value>Enable</value>
   </data>
   <data name="Enable SSL" xml:space="preserve">
     <value>Enable SSL</value>
@@ -907,16 +907,16 @@
     <value>Entity header cannot be updated</value>
   </data>
   <data name="Error" xml:space="preserve">
-    <value>Erro</value>
+    <value>Error</value>
   </data>
   <data name="Error parsing the JSON file" xml:space="preserve">
     <value>Error parsing the JSON file</value>
   </data>
   <data name="Everything" xml:space="preserve">
-    <value>Tudo</value>
+    <value>Everything</value>
   </data>
   <data name="Extension" xml:space="preserve">
-    <value>Extensão</value>
+    <value>Extension</value>
   </data>
   <data name="Facebook" xml:space="preserve">
     <value>Facebook</value>
@@ -940,7 +940,7 @@
     <value>Feeds</value>
   </data>
   <data name="field" xml:space="preserve">
-    <value>campo</value>
+    <value>field</value>
   </data>
   <data name="File is too large" xml:space="preserve">
     <value>File is too large</value>
@@ -1003,7 +1003,7 @@
     <value>Here's your verification code for {0}</value>
   </data>
   <data name="History" xml:space="preserve">
-    <value>História</value>
+    <value>History</value>
   </data>
   <data name="How to delete your data" xml:space="preserve">
     <value>How to delete your data</value>
@@ -1030,7 +1030,7 @@
     <value>Incognito Mode</value>
   </data>
   <data name="Info" xml:space="preserve">
-    <value>Informações</value>
+    <value>Info</value>
   </data>
   <data name="Instagram" xml:space="preserve">
     <value>Instagram</value>
@@ -1054,19 +1054,19 @@
     <value>Keep these recovery codes somewhere safe</value>
   </data>
   <data name="Key" xml:space="preserve">
-    <value>Chave</value>
+    <value>Key</value>
   </data>
   <data name="Keywords" xml:space="preserve">
-    <value>Palavras-chave</value>
+    <value>Keywords</value>
   </data>
   <data name="Language" xml:space="preserve">
-    <value>Linguagem</value>
+    <value>Language</value>
   </data>
   <data name="Language must be valid" xml:space="preserve">
     <value>Language must be valid</value>
   </data>
   <data name="Large" xml:space="preserve">
-    <value>Grande</value>
+    <value>Large</value>
   </data>
   <data name="Last 180 days" xml:space="preserve">
     <value>Last 180 days</value>
@@ -1102,7 +1102,7 @@
     <value>Latest news</value>
   </data>
   <data name="Leave" xml:space="preserve">
-    <value>Sair</value>
+    <value>Leave</value>
   </data>
   <data name="Leave incognito" xml:space="preserve">
     <value>Leave incognito</value>
@@ -1126,7 +1126,7 @@
     <value>Log out</value>
   </data>
   <data name="Login" xml:space="preserve">
-    <value>Conecte-se</value>
+    <value>Login</value>
   </data>
   <data name="Login to quick reply" xml:space="preserve">
     <value>Login to quick reply</value>
@@ -1138,19 +1138,19 @@
     <value>Login to react</value>
   </data>
   <data name="Logo" xml:space="preserve">
-    <value>Logotipo</value>
+    <value>Logo</value>
   </data>
   <data name="Logo • Avatar" xml:space="preserve">
     <value>Logo • Avatar</value>
   </data>
   <data name="Logout" xml:space="preserve">
-    <value>Sair</value>
+    <value>Logout</value>
   </data>
   <data name="Loop in relationships are not allowed" xml:space="preserve">
     <value>Loop in relationships are not allowed</value>
   </data>
   <data name="Maintenance" xml:space="preserve">
-    <value>Manutenção</value>
+    <value>Maintenance</value>
   </data>
   <data name="Make primary" xml:space="preserve">
     <value>Make primary</value>
@@ -1174,13 +1174,13 @@
     <value>Maybe later</value>
   </data>
   <data name="Medium" xml:space="preserve">
-    <value>Médio</value>
+    <value>Medium</value>
   </data>
   <data name="Microsoft" xml:space="preserve">
     <value>Microsoft</value>
   </data>
   <data name="Misc" xml:space="preserve">
-    <value>Diversos</value>
+    <value>Misc</value>
   </data>
   <data name="Moderate comments" xml:space="preserve">
     <value>Moderate comments</value>
@@ -1192,7 +1192,7 @@
     <value>Moderador</value>
   </data>
   <data name="Modified" xml:space="preserve">
-    <value>Modificado</value>
+    <value>Modified</value>
   </data>
   <data name="Most popular" xml:space="preserve">
     <value>Most popular</value>
@@ -1207,7 +1207,7 @@
     <value>Moves up in the list</value>
   </data>
   <data name="Name" xml:space="preserve">
-    <value>Nome</value>
+    <value>Name</value>
   </data>
   <data name="Name (website)" xml:space="preserve">
     <value>Name (website)</value>
@@ -1228,7 +1228,7 @@
     <value>Nano Id is required</value>
   </data>
   <data name="New" xml:space="preserve">
-    <value>Novo</value>
+    <value>New</value>
   </data>
   <data name="New folder" xml:space="preserve">
     <value>New folder</value>
@@ -1243,7 +1243,7 @@
     <value>New passwords do NOT match, they differ from each other</value>
   </data>
   <data name="No" xml:space="preserve">
-    <value>Não</value>
+    <value>No</value>
   </data>
   <data name="No categories whatsoever" xml:space="preserve">
     <value>No categories whatsoever</value>
@@ -1285,13 +1285,13 @@
     <value>No videos whatsoever</value>
   </data>
   <data name="None" xml:space="preserve">
-    <value>Nenhum</value>
+    <value>None</value>
   </data>
   <data name="Not specified" xml:space="preserve">
     <value>Not specified</value>
   </data>
   <data name="Note" xml:space="preserve">
-    <value>Observação</value>
+    <value>Note</value>
   </data>
   <data name="Note cannot exceed {0} characters" xml:space="preserve">
     <value>Note cannot exceed {0} characters</value>
@@ -1303,7 +1303,7 @@
     <value>Nothing to see here</value>
   </data>
   <data name="Ok" xml:space="preserve">
-    <value>OK</value>
+    <value>Ok</value>
   </data>
   <data name="Only a top-level page can become front-page" xml:space="preserve">
     <value>Only a top-level page can become front-page</value>
@@ -1318,7 +1318,7 @@
     <value>Only video files</value>
   </data>
   <data name="Oops" xml:space="preserve">
-    <value>Ops</value>
+    <value>Oops</value>
   </data>
   <data name="Oops, this key is not valid or it was already used to reset your password" xml:space="preserve">
     <value>Oops, this key is not valid or it was already used to reset your password</value>
@@ -1348,7 +1348,7 @@
     <value>P</value>
   </data>
   <data name="Page" xml:space="preserve">
-    <value>Página</value>
+    <value>Page</value>
   </data>
   <data name="Page cannot be retrieved" xml:space="preserve">
     <value>Page cannot be retrieved</value>
@@ -1366,19 +1366,19 @@
     <value>Page not found</value>
   </data>
   <data name="Pages" xml:space="preserve">
-    <value>Páginas</value>
+    <value>Pages</value>
   </data>
   <data name="Pages found in the search" xml:space="preserve">
     <value>Pages found in the search</value>
   </data>
   <data name="Parent" xml:space="preserve">
-    <value>Pai</value>
+    <value>Parent</value>
   </data>
   <data name="Parent category" xml:space="preserve">
     <value>Parent category</value>
   </data>
   <data name="Password" xml:space="preserve">
-    <value>Senha</value>
+    <value>Password</value>
   </data>
   <data name="Password has been reset successfully" xml:space="preserve">
     <value>Password has been reset successfully</value>
@@ -1396,7 +1396,7 @@
     <value>Paste your HTML iframe here to embed, like YouTube and so on</value>
   </data>
   <data name="Path" xml:space="preserve">
-    <value>Caminho</value>
+    <value>Path</value>
   </data>
   <data name="People online" xml:space="preserve">
     <value>People online</value>
@@ -1414,7 +1414,7 @@
     <value>Pin comment</value>
   </data>
   <data name="Pinned" xml:space="preserve">
-    <value>Fixado</value>
+    <value>Pinned</value>
   </data>
   <data name="Pinned by" xml:space="preserve">
     <value>Pinned by</value>
@@ -1423,7 +1423,7 @@
     <value>Place your comment here</value>
   </data>
   <data name="Platforms" xml:space="preserve">
-    <value>Plataformas</value>
+    <value>Platforms</value>
   </data>
   <data name="Please, talk to a system administrator" xml:space="preserve">
     <value>Please, talk to a system administrator</value>
@@ -1432,16 +1432,10 @@
     <value>Please, try again later</value>
   </data>
   <data name="Post" xml:space="preserve">
-    <value>Publicar</value>
-  </data>
-  <data name="postRating.Rating" xml:space="preserve">
-    <value>postRating.Rating</value>
-  </data>
-  <data name="postReaction.Reaction" xml:space="preserve">
-    <value>postReaction.Reaction</value>
+    <value>Post</value>
   </data>
   <data name="Posts" xml:space="preserve">
-    <value>Postagens</value>
+    <value>Posts</value>
   </data>
   <data name="Posts comments" xml:space="preserve">
     <value>Posts comments</value>
@@ -1453,7 +1447,7 @@
     <value>Posts, videos</value>
   </data>
   <data name="Primary" xml:space="preserve">
-    <value>Primário</value>
+    <value>Primary</value>
   </data>
   <data name="Primary blog cannot be deactivated" xml:space="preserve">
     <value>Primary blog cannot be deactivated</value>
@@ -1465,7 +1459,7 @@
     <value>Privacy policy</value>
   </data>
   <data name="Profile" xml:space="preserve">
-    <value>Perfil</value>
+    <value>Profile</value>
   </data>
   <data name="Profile data was wiped out" xml:space="preserve">
     <value>Profile data was wiped out</value>
@@ -1477,7 +1471,7 @@
     <value>Profile Not Found</value>
   </data>
   <data name="Progress" xml:space="preserve">
-    <value>Progresso</value>
+    <value>Progress</value>
   </data>
   <data name="Promote to front-page" xml:space="preserve">
     <value>Promote to front-page</value>
@@ -1537,7 +1531,7 @@
     <value>Publish video(s)</value>
   </data>
   <data name="Published" xml:space="preserve">
-    <value>Publicado</value>
+    <value>Published</value>
   </data>
   <data name="Published pages" xml:space="preserve">
     <value>Published pages</value>
@@ -1612,7 +1606,7 @@
     <value>Rated {0} on:</value>
   </data>
   <data name="Rating" xml:space="preserve">
-    <value>Avaliação</value>
+    <value>Rating</value>
   </data>
   <data name="Rating 1 is not accounted for in the final rating" xml:space="preserve">
     <value>Rating 1 is not accounted for in the final rating</value>
@@ -1620,14 +1614,8 @@
   <data name="Rating must be less than or equal to 5" xml:space="preserve">
     <value>Rating must be less than or equal to 5</value>
   </data>
-  <data name="rating!.Rating" xml:space="preserve">
-    <value>rating!.Rating</value>
-  </data>
-  <data name="rating.Rating" xml:space="preserve">
-    <value>rating.Rating</value>
-  </data>
   <data name="Ratings" xml:space="preserve">
-    <value>Avaliações</value>
+    <value>Ratings</value>
   </data>
   <data name="Ratings on posts" xml:space="preserve">
     <value>Ratings on posts</value>
@@ -1645,7 +1633,7 @@
     <value>Reaction needs one author</value>
   </data>
   <data name="Reactions" xml:space="preserve">
-    <value>Reações</value>
+    <value>Reactions</value>
   </data>
   <data name="Refresh your browser" xml:space="preserve">
     <value>Refresh your browser</value>
@@ -1672,7 +1660,7 @@
     <value>Release date</value>
   </data>
   <data name="Reload" xml:space="preserve">
-    <value>Recarregar</value>
+    <value>Reload</value>
   </data>
   <data name="Remove picture" xml:space="preserve">
     <value>Remove picture</value>
@@ -1681,7 +1669,7 @@
     <value>Repeat new password</value>
   </data>
   <data name="Reply" xml:space="preserve">
-    <value>Responder</value>
+    <value>Reply</value>
   </data>
   <data name="Reply comment" xml:space="preserve">
     <value>Reply comment</value>
@@ -1696,7 +1684,7 @@
     <value>Requests for information wipe-out</value>
   </data>
   <data name="Reset" xml:space="preserve">
-    <value>Reiniciar</value>
+    <value>Reset</value>
   </data>
   <data name="Reset 2FA" xml:space="preserve">
     <value>Reset 2FA</value>
@@ -1717,7 +1705,7 @@
     <value>Reset password</value>
   </data>
   <data name="Restore" xml:space="preserve">
-    <value>Restaurar</value>
+    <value>Restore</value>
   </data>
   <data name="Restore blogs" xml:space="preserve">
     <value>Restore blogs</value>
@@ -1777,10 +1765,10 @@
     <value>Revoke moderator roles from social profiles</value>
   </data>
   <data name="Role" xml:space="preserve">
-    <value>Papel</value>
+    <value>Role</value>
   </data>
   <data name="Roles" xml:space="preserve">
-    <value>Funções</value>
+    <value>Roles</value>
   </data>
   <data name="Roles are up-to-date" xml:space="preserve">
     <value>Roles are up-to-date</value>
@@ -1810,7 +1798,7 @@
     <value>RSS feed must be a valid website address</value>
   </data>
   <data name="Save" xml:space="preserve">
-    <value>Salvar</value>
+    <value>Save</value>
   </data>
   <data name="Save and publish" xml:space="preserve">
     <value>Save and publish</value>
@@ -1828,7 +1816,7 @@
     <value>Scan this QR code with your authenticator app</value>
   </data>
   <data name="Search" xml:space="preserve">
-    <value>Procurar</value>
+    <value>Search</value>
   </data>
   <data name="See browser dev tools for details" xml:space="preserve">
     <value>See browser dev tools for details</value>
@@ -1878,26 +1866,20 @@
   <data name="Select trash" xml:space="preserve">
     <value>Select trash</value>
   </data>
-  <data name="SelectedEntities.Count" xml:space="preserve">
-    <value>SelectedEntities.Count</value>
-  </data>
   <data name="Send verification code" xml:space="preserve">
     <value>Send verification code</value>
   </data>
   <data name="Settings" xml:space="preserve">
-    <value>Configurações</value>
-  </data>
-  <data name="settings.Name" xml:space="preserve">
-    <value>settings.Name</value>
+    <value>Settings</value>
   </data>
   <data name="Size" xml:space="preserve">
-    <value>Tamanho</value>
+    <value>Size</value>
   </data>
   <data name="Slow" xml:space="preserve">
-    <value>Lento</value>
+    <value>Slow</value>
   </data>
   <data name="Slug" xml:space="preserve">
-    <value>Lesma</value>
+    <value>Slug</value>
   </data>
   <data name="Slug cannot exceed {0} characters" xml:space="preserve">
     <value>Slug cannot exceed {0} characters</value>
@@ -1906,7 +1888,7 @@
     <value>Slug is already in use</value>
   </data>
   <data name="Small" xml:space="preserve">
-    <value>Pequeno</value>
+    <value>Small</value>
   </data>
   <data name="SMTP password" xml:space="preserve">
     <value>SMTP password</value>
@@ -1966,7 +1948,7 @@
     <value>Start date cannot be later than end date</value>
   </data>
   <data name="Stats" xml:space="preserve">
-    <value>Estatísticas</value>
+    <value>Stats</value>
   </data>
   <data name="Status" xml:space="preserve">
     <value>Status</value>
@@ -1975,37 +1957,37 @@
     <value>Still a draft?</value>
   </data>
   <data name="Stop" xml:space="preserve">
-    <value>Parar</value>
+    <value>Stop</value>
   </data>
   <data name="Stops the timer" xml:space="preserve">
     <value>Stops the timer</value>
   </data>
   <data name="Subscribe" xml:space="preserve">
-    <value>Inscrever-se</value>
+    <value>Subscribe</value>
   </data>
   <data name="Subscribe to the website" xml:space="preserve">
     <value>Subscribe to the website</value>
   </data>
   <data name="Subscriber" xml:space="preserve">
-    <value>Assinante</value>
+    <value>Subscriber</value>
   </data>
   <data name="Subscriber(s)" xml:space="preserve">
     <value>Subscriber(s)</value>
   </data>
   <data name="Success" xml:space="preserve">
-    <value>Sucesso</value>
+    <value>Success</value>
   </data>
   <data name="System role" xml:space="preserve">
     <value>System role</value>
   </data>
   <data name="Tag" xml:space="preserve">
-    <value>Marcação</value>
+    <value>Tag</value>
   </data>
   <data name="Tag cannot exceed {0} characters" xml:space="preserve">
     <value>Tag cannot exceed {0} characters</value>
   </data>
   <data name="Tags" xml:space="preserve">
-    <value>Etiquetas</value>
+    <value>Tags</value>
   </data>
   <data name="Tags found in the search" xml:space="preserve">
     <value>Tags found in the search</value>
@@ -2047,7 +2029,7 @@
     <value>this is a front-page</value>
   </data>
   <data name="Thumbnail" xml:space="preserve">
-    <value>Miniatura</value>
+    <value>Thumbnail</value>
   </data>
   <data name="Time period" xml:space="preserve">
     <value>Time period</value>
@@ -2056,7 +2038,7 @@
     <value>Fuso horário</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>Título</value>
+    <value>Title</value>
   </data>
   <data name="Title cannot exceed 255 characters" xml:space="preserve">
     <value>Title cannot exceed 255 characters</value>
@@ -2068,7 +2050,7 @@
     <value>To promote to front-page, that page must be top-level</value>
   </data>
   <data name="Trash" xml:space="preserve">
-    <value>Lixo</value>
+    <value>Trash</value>
   </data>
   <data name="Try again to solve this issue" xml:space="preserve">
     <value>Try again to solve this issue</value>
@@ -2119,7 +2101,7 @@
     <value>Unblock users</value>
   </data>
   <data name="Undo" xml:space="preserve">
-    <value>Desfazer</value>
+    <value>Undo</value>
   </data>
   <data name="Undo changes" xml:space="preserve">
     <value>Undo changes</value>
@@ -2191,7 +2173,7 @@
     <value>Unsubscribe user</value>
   </data>
   <data name="Upload" xml:space="preserve">
-    <value>Carregar</value>
+    <value>Upload</value>
   </data>
   <data name="Upload files" xml:space="preserve">
     <value>Upload files</value>
@@ -2206,7 +2188,7 @@
     <value>Uploading a file</value>
   </data>
   <data name="User" xml:space="preserve">
-    <value>Usuário</value>
+    <value>User</value>
   </data>
   <data name="User actions" xml:space="preserve">
     <value>User actions</value>
@@ -2224,7 +2206,7 @@
     <value>User trashes</value>
   </data>
   <data name="Username" xml:space="preserve">
-    <value>Nome de usuário</value>
+    <value>Username</value>
   </data>
   <data name="Username (read-only)" xml:space="preserve">
     <value>Username (read-only)</value>
@@ -2239,7 +2221,7 @@
     <value>Username is required</value>
   </data>
   <data name="Users" xml:space="preserve">
-    <value>Usuários</value>
+    <value>Users</value>
   </data>
   <data name="Validate code and finish subscribing" xml:space="preserve">
     <value>Validate code and finish subscribing</value>
@@ -2251,19 +2233,19 @@
     <value>Validate the TOTP code and proceed</value>
   </data>
   <data name="Value" xml:space="preserve">
-    <value>Valor</value>
+    <value>Value</value>
   </data>
   <data name="Version" xml:space="preserve">
-    <value>Versão</value>
+    <value>Version</value>
   </data>
   <data name="Video" xml:space="preserve">
-    <value>Vídeo</value>
+    <value>Video</value>
   </data>
   <data name="Video cannot be updated" xml:space="preserve">
     <value>Video cannot be updated</value>
   </data>
   <data name="Videos" xml:space="preserve">
-    <value>Vídeos</value>
+    <value>Videos</value>
   </data>
   <data name="Videos comments" xml:space="preserve">
     <value>Videos comments</value>
@@ -2323,7 +2305,7 @@
     <value>View videos</value>
   </data>
   <data name="Warning" xml:space="preserve">
-    <value>Aviso</value>
+    <value>Warning</value>
   </data>
   <data name="We need a valid e-mail to subscribe" xml:space="preserve">
     <value>We need a valid e-mail to subscribe</value>
@@ -2332,7 +2314,7 @@
     <value>We use cookies and similar technologies to enhance your browsing experience, analyse site traffic, personalise content, and serve targeted advertisements</value>
   </data>
   <data name="Website" xml:space="preserve">
-    <value>Site</value>
+    <value>Website</value>
   </data>
   <data name="What to see next" xml:space="preserve">
     <value>What to see next</value>
@@ -2347,7 +2329,7 @@
     <value>Wipe out user data</value>
   </data>
   <data name="Yes" xml:space="preserve">
-    <value>Sim</value>
+    <value>Yes</value>
   </data>
   <data name="Yes, since" xml:space="preserve">
     <value>Yes, since</value>
@@ -2446,7 +2428,7 @@
     <value>ZIP file created successfully.</value>
   </data>
   <data name="Type" xml:space="preserve">
-    <value>Tipo</value>
+    <value>Type</value>
   </data>
   <data name="Yay! Everything went smoothly" xml:space="preserve">
     <value>Yay! Everything went smoothly</value>

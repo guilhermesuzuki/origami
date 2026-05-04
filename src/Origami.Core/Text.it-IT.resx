@@ -1434,12 +1434,6 @@
   <data name="Post" xml:space="preserve">
     <value>Pubblicazione</value>
   </data>
-  <data name="postRating.Rating" xml:space="preserve">
-    <value>postRating.Rating</value>
-  </data>
-  <data name="postReaction.Reaction" xml:space="preserve">
-    <value>postReaction.Reaction</value>
-  </data>
   <data name="Posts" xml:space="preserve">
     <value>Pubblicazioni</value>
   </data>
@@ -1619,12 +1613,6 @@
   </data>
   <data name="Rating must be less than or equal to 5" xml:space="preserve">
     <value>Il punteggio deve essere inferiore o uguale a 5</value>
-  </data>
-  <data name="rating!.Rating" xml:space="preserve">
-    <value>valutazione!. Valutazione</value>
-  </data>
-  <data name="rating.Rating" xml:space="preserve">
-    <value>rating.Rating</value>
   </data>
   <data name="Ratings" xml:space="preserve">
     <value>Valutazioni</value>
@@ -1878,17 +1866,11 @@
   <data name="Select trash" xml:space="preserve">
     <value>Seleziona il cestino</value>
   </data>
-  <data name="SelectedEntities.Count" xml:space="preserve">
-    <value>SelectedEntities.Count</value>
-  </data>
   <data name="Send verification code" xml:space="preserve">
     <value>Invia codice di verifica</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Impostazioni</value>
-  </data>
-  <data name="settings.Name" xml:space="preserve">
-    <value>settings.Name</value>
   </data>
   <data name="Size" xml:space="preserve">
     <value>Dimensione</value>
