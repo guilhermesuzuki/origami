@@ -108,7 +108,11 @@ namespace Origami.Core.Data
         public override Result<OrigamiUser> Create(DataOperationContext<OrigamiUser> ctx)
         {
             var hub = new Result<OrigamiUser>(ctx.Entity);
-            var password = "@" + Nanoid.Generate(size: 8) + "#";
+
+            var password = "@"
+                + Nanoid.Generate(alphabet: Nanoid.Alphabets.Letters, size: 4)
+                + Nanoid.Generate(alphabet: Nanoid.Alphabets.Digits, size: 4)
+                + "#";
 
             ctx.Entity.MustChangePassword = true;
             ctx.Entity.Password = password.SHA256Hash();
@@ -143,7 +147,10 @@ namespace Origami.Core.Data
                 }
             }
 
-            var password = "@" + Nanoid.Generate(size: 8) + "#";
+            var password = "@" 
+                + Nanoid.Generate(alphabet: Nanoid.Alphabets.Letters, size: 4)
+                + Nanoid.Generate(alphabet: Nanoid.Alphabets.Digits, size: 4)
+                + "#";
 
             using var db = DbContextFactory.CreateDbContext();
             var row = db.Users.Where(x => x.Id == ctx.Entity.Id).ExecuteUpdate(
@@ -250,7 +257,7 @@ namespace Origami.Core.Data
             {
                 ctx.Entity.TOTPSecret = string.Empty;
                 ctx.Entity.TOTPRecoveryCodes = string.Empty;
-                return this.SmartUpdate(ctx.Entity.GetContext(ctx.User), false);
+                return this.SmartUpdate(ctx, false);
             }
 
             return new() { Error = Text.Original("Failed to reset 2FA for user") };
