@@ -206,12 +206,12 @@ namespace Origami.Core.Data
 
                 //private scope
                 {
-                    var fresh = db.Set<T1>().AsNoTracking().Id(root.Entity.Id);
-                    if (fresh == null)
+                    var fresh = from a in db.Set<T1>().AsNoTracking() where a.Id == root.Entity.Id select a.IsPublished;
+                    if (fresh.Any() == false)
                     {
                         return new(root) { Error = Text.Original("Content must exist"), };
                     }
-                    if (fresh is { IsPublished: true })
+                    if (fresh.Any(f => f == true))
                     {
                         // TODO: add this to resx files
                         return new(root) { Error = Text.Original("Content is already published"), };
@@ -235,6 +235,7 @@ namespace Origami.Core.Data
                 this.History(db, root.Entity, DateTime.UtcNow, "Content published", userId);
 
                 root.Entity.IsPublished = entity.IsPublished;
+                root.Entity.DatePublished = entity.DatePublished;
                 root.Entity.Version(entity);
 
                 // returns success
@@ -317,12 +318,12 @@ namespace Origami.Core.Data
 
                 //private scope
                 {
-                    var fresh = db.Set<T1>().AsNoTracking().Id(root.Entity.Id);
-                    if (fresh == null)
+                    var fresh = from a in db.Set<T1>().AsNoTracking() where a.Id == root.Entity.Id select a.IsDeleted;
+                    if (fresh.Any() == false)
                     {
                         return new(root) { Error = Text.Original("Content must exist"), };
                     }
-                    if (fresh is { IsDeleted: false })
+                    if (fresh.Any(f => f == false))
                     {
                         // TODO: add this to resx files
                         return new(root) { Error = Text.Original("Content is already restored"), };
@@ -422,12 +423,12 @@ namespace Origami.Core.Data
 
                 //private scope
                 {
-                    var fresh = db.Set<T1>().AsNoTracking().Id(root.Entity.Id);
-                    if (fresh == null)
+                    var fresh = from a in db.Set<T1>().AsNoTracking() where a.Id == root.Entity.Id select a.IsPublished;
+                    if (fresh.Any() == false)
                     {
                         return new(root) { Error = Text.Original("Content must exist"), };
                     }
-                    if (fresh is { IsPublished: false })
+                    if (fresh.Any(f => f == false))
                     {
                         // TODO: add this to resx files
                         return new(root) { Error = Text.Original("Content is already unpublished"), };

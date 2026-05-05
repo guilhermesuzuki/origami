@@ -339,7 +339,7 @@ namespace Origami.UI.Admin.IntegrationTests
             dbEntity.Title.ShouldBe(t2.Entity.Title);
             dbEntity.IsDeleted.ShouldBeFalse();
             dbEntity.IsDeleted.ShouldBe(t2.Entity.IsDeleted);
-            dbEntity.IsPublished.ShouldBeTrue();
+            dbEntity.IsPublished.ShouldBeFalse();
             dbEntity.IsPublished.ShouldBe(t2.Entity.IsPublished);
             dbEntity.Version.ShouldBe(t2.Entity.Version);
 
@@ -353,7 +353,7 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheHubContent.Entity.IsDeleted.ShouldBe(t2.Entity.IsDeleted);
             cacheHubContent.Categories.Count.ShouldBe(t2.Categories.Count);
             cacheHubContent.Tags.Count.ShouldBe(t2.Tags.Count);
-            cacheHubContent.Entity.IsPublished.ShouldBeTrue();
+            cacheHubContent.Entity.IsPublished.ShouldBeFalse();
             cacheHubContent.Entity.IsPublished.ShouldBe(t2.Entity.IsPublished);
             cacheHubContent.Entity.Version.ShouldBe(t2.Entity.Version);
 
