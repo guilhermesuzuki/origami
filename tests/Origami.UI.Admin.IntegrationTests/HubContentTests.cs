@@ -103,6 +103,10 @@ namespace Origami.UI.Admin.IntegrationTests
                 dbTags[0].Slug.ShouldBe(t2.Tags[0].Slug);
                 dbTags[0].Version.ShouldBe(t2.Tags[0].Version);
             }
+
+            var dbHubHistories = db.Set<OrigamiContentHistory>().AsNoTracking().Where(x => x.ContentId == t2.Entity.Id).ToList();
+            dbHubHistories.Count.ShouldBe(1);
+            dbHubHistories[0].Description.ShouldBe("Content created");
         }
 
         [Fact]
@@ -191,6 +195,10 @@ namespace Origami.UI.Admin.IntegrationTests
                 dbTags[0].Version.ShouldBe(t2.Tags[0].Version);
             }
 
+            var dbHubHistories = db.Set<OrigamiContentHistory>().AsNoTracking().Where(x => x.ContentId == t2.Entity.Id).ToList();
+            dbHubHistories.Count.ShouldBe(1);
+            dbHubHistories[0].Description.ShouldBe("Content created");
+
             t2.Entity.Content = "<p>Updated test content</p>";
             t2.Entity.Description = "Updated test Description";
             t2.Entity.LanguageWrittenOn = "en-US";
@@ -268,6 +276,11 @@ namespace Origami.UI.Admin.IntegrationTests
                 dbTags[1].Slug.ShouldBe(t2.Tags[1].Slug);
                 dbTags[1].Version.ShouldBe(t2.Tags[1].Version);
             }
+
+            dbHubHistories = db.Set<OrigamiContentHistory>().AsNoTracking().Where(x => x.ContentId == t2.Entity.Id).OrderBy(x => x.DateCreated).ToList();
+            dbHubHistories.Count.ShouldBe(2);
+            dbHubHistories[0].Description.ShouldBe("Content created");
+            dbHubHistories[1].Description.ShouldBe("Content saved");
         }
     }
 }
