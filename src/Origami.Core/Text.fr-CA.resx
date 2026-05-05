@@ -1378,7 +1378,7 @@
     <value>Catégorie parente</value>
   </data>
   <data name="Password" xml:space="preserve">
-    <value>Senha</value>
+    <value>Mot de passe</value>
   </data>
   <data name="Password has been reset successfully" xml:space="preserve">
     <value>Le mot de passe a été réinitialisé avec succès</value>
@@ -1396,7 +1396,7 @@
     <value>Collez votre iframe HTML ici pour l'intégrer, comme YouTube, etc.</value>
   </data>
   <data name="Path" xml:space="preserve">
-    <value>Caminho</value>
+    <value>Chemin</value>
   </data>
   <data name="People online" xml:space="preserve">
     <value>Personnes en ligne</value>
