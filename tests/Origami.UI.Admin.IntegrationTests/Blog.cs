@@ -142,6 +142,7 @@ namespace Origami.UI.Admin.IntegrationTests
 
             var cacheBlog = superRepository.MyMemoryCache.Read<OrigamiBlog>().Id(primary.Id);
             cacheBlog.ShouldNotBeNull();
+            cacheBlog.Version.ShouldBe(primary.Version);
         }
 
         [Fact]
@@ -328,15 +329,49 @@ namespace Origami.UI.Admin.IntegrationTests
 
             using var db = blogRepository.DbContextFactory.CreateDbContext();
             var blog = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
+
             blog.ShouldNotBeNull();
+            blog.Name.ShouldBe(TestBlog.Name);
+            blog.DateCreated.ShouldBe(TestBlog.DateCreated);
+            blog.NanoId.ShouldBe(TestBlog.NanoId);
+            blog.IsDeleted.ShouldBe(false);
+            blog.IsDeleted.ShouldBe(blog.IsDeleted);
+
+            var cacheBlog = superRepository.MyMemoryCache.Read<OrigamiBlog>().Id(TestBlog.Id)!;
+            cacheBlog.ShouldNotBeNull();
+            cacheBlog.Name.ShouldBe(TestBlog.Name);
+            cacheBlog.DateCreated.ShouldBe(TestBlog.DateCreated);
+            cacheBlog.NanoId.ShouldBe(TestBlog.NanoId);
+            cacheBlog.IsDeleted.ShouldBe(false);
+            cacheBlog.IsDeleted.ShouldBe(blog.IsDeleted);
+
+            cacheBlog.Version.ShouldBe(TestBlog.Version);
+            cacheBlog.Version.ShouldBe(blog.Version);
 
             blogRepository
                 .SmartDelete(blog.GetContext(TestUser), true)
                 .OnFailure(r => throw new Exception($"Failed to delete test blog: {r.GetMessages()}"));
 
             var blogAfterDelete = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
+
             blogAfterDelete.ShouldNotBeNull();
             blogAfterDelete.IsDeleted.ShouldBeTrue();
+            blogAfterDelete.Name.ShouldBe(TestBlog.Name);
+            blogAfterDelete.DateCreated.ShouldBe(TestBlog.DateCreated);
+            blogAfterDelete.NanoId.ShouldBe(TestBlog.NanoId);
+            blogAfterDelete.IsDeleted.ShouldBe(true);
+            blogAfterDelete.IsDeleted.ShouldBe(blogAfterDelete.IsDeleted);
+
+            cacheBlog = superRepository.MyMemoryCache.Read<OrigamiBlog>().Id(TestBlog.Id)!;
+            cacheBlog.ShouldNotBeNull();
+            cacheBlog.Name.ShouldBe(TestBlog.Name);
+            cacheBlog.DateCreated.ShouldBe(TestBlog.DateCreated);
+            cacheBlog.NanoId.ShouldBe(TestBlog.NanoId);
+            cacheBlog.IsDeleted.ShouldBe(true);
+            cacheBlog.IsDeleted.ShouldBe(blog.IsDeleted);
+
+            cacheBlog.Version.ShouldBe(blog.Version);
+            cacheBlog.Version.ShouldBe(blogAfterDelete.Version);
 
             blogRepository
                 .SmartPurge(blogAfterDelete.GetContext(TestUser), true)
@@ -344,6 +379,9 @@ namespace Origami.UI.Admin.IntegrationTests
 
             var blogAfterPurge = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
             blogAfterPurge.ShouldBeNull();
+
+            cacheBlog = superRepository.MyMemoryCache.Read<OrigamiBlog>().Id(TestBlog.Id)!;
+            cacheBlog.ShouldBeNull();
         }
 
         [Fact]
@@ -363,15 +401,49 @@ namespace Origami.UI.Admin.IntegrationTests
 
             using var db = blogRepository.DbContextFactory.CreateDbContext();
             var blog = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
+
             blog.ShouldNotBeNull();
+            blog.Name.ShouldBe(TestBlog.Name);
+            blog.DateCreated.ShouldBe(TestBlog.DateCreated);
+            blog.NanoId.ShouldBe(TestBlog.NanoId);
+            blog.IsDeleted.ShouldBe(false);
+            blog.IsDeleted.ShouldBe(blog.IsDeleted);
+
+            var cacheBlog = superRepository.MyMemoryCache.Read<OrigamiBlog>().Id(TestBlog.Id)!;
+            cacheBlog.ShouldNotBeNull();
+            cacheBlog.Name.ShouldBe(TestBlog.Name);
+            cacheBlog.DateCreated.ShouldBe(TestBlog.DateCreated);
+            cacheBlog.NanoId.ShouldBe(TestBlog.NanoId);
+            cacheBlog.IsDeleted.ShouldBe(false);
+            cacheBlog.IsDeleted.ShouldBe(blog.IsDeleted);
+
+            cacheBlog.Version.ShouldBe(TestBlog.Version);
+            cacheBlog.Version.ShouldBe(blog.Version);
 
             blogRepository
                 .SmartDelete(blog.GetContext(TestUser), true)
                 .OnFailure(r => throw new Exception($"Failed to delete test blog: {r.GetMessages()}"));
 
             var blogAfterDelete = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
+
             blogAfterDelete.ShouldNotBeNull();
             blogAfterDelete.IsDeleted.ShouldBeTrue();
+            blogAfterDelete.Name.ShouldBe(TestBlog.Name);
+            blogAfterDelete.DateCreated.ShouldBe(TestBlog.DateCreated);
+            blogAfterDelete.NanoId.ShouldBe(TestBlog.NanoId);
+            blogAfterDelete.IsDeleted.ShouldBe(true);
+            blogAfterDelete.IsDeleted.ShouldBe(blogAfterDelete.IsDeleted);
+
+            cacheBlog = superRepository.MyMemoryCache.Read<OrigamiBlog>().Id(TestBlog.Id)!;
+            cacheBlog.ShouldNotBeNull();
+            cacheBlog.Name.ShouldBe(TestBlog.Name);
+            cacheBlog.DateCreated.ShouldBe(TestBlog.DateCreated);
+            cacheBlog.NanoId.ShouldBe(TestBlog.NanoId);
+            cacheBlog.IsDeleted.ShouldBe(true);
+            cacheBlog.IsDeleted.ShouldBe(blog.IsDeleted);
+
+            cacheBlog.Version.ShouldBe(blog.Version);
+            cacheBlog.Version.ShouldBe(blogAfterDelete.Version);
 
             blogRepository
                 .SmartRestore(blogAfterDelete.GetContext(TestUser), true)
@@ -381,6 +453,23 @@ namespace Origami.UI.Admin.IntegrationTests
             blogAfterRestore.ShouldNotBeNull();
             blogAfterRestore.IsDeleted.ShouldBeFalse();
 
+            blogAfterRestore.ShouldNotBeNull();
+            blogAfterRestore.IsDeleted.ShouldBeFalse();
+            blogAfterRestore.Name.ShouldBe(TestBlog.Name);
+            blogAfterRestore.DateCreated.ShouldBe(TestBlog.DateCreated);
+            blogAfterRestore.NanoId.ShouldBe(TestBlog.NanoId);
+            blogAfterRestore.IsDeleted.ShouldBe(false);
+            blogAfterRestore.IsDeleted.ShouldBe(blogAfterDelete.IsDeleted);
+
+            cacheBlog = superRepository.MyMemoryCache.Read<OrigamiBlog>().Id(TestBlog.Id)!;
+            cacheBlog.ShouldNotBeNull();
+            cacheBlog.Name.ShouldBe(TestBlog.Name);
+            cacheBlog.DateCreated.ShouldBe(TestBlog.DateCreated);
+            cacheBlog.NanoId.ShouldBe(TestBlog.NanoId);
+            cacheBlog.IsDeleted.ShouldBe(false);
+            cacheBlog.IsDeleted.ShouldBe(blogAfterRestore.IsDeleted);
+
+            cacheBlog.Version.ShouldBe(blogAfterRestore.Version);
             blogAfterRestore.Version.ShouldBe(blogAfterDelete.Version);
         }
 
