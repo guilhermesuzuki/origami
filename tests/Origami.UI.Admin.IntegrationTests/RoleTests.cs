@@ -12,7 +12,7 @@ namespace Origami.UI.Admin.IntegrationTests
 {
     public class RoleTests : CustomClassFixture
     {
-        public RoleTests(CustomWebApplicationFactory factory) : base(factory)
+        public RoleTests() : base()
         {
 
         }
@@ -20,8 +20,9 @@ namespace Origami.UI.Admin.IntegrationTests
         [Fact]
         public void Delete_WhenEntityIsValid_ShouldPersistRecord()
         {
+            using var factory = new CustomWebApplicationFactory();
             using var transaction = new TransactionScope();
-            using var scope = _factory.Services.CreateScope();
+            using var scope = factory.Services.CreateScope();
             var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
             scope.CreateTestRole(TestRole);
@@ -66,8 +67,9 @@ namespace Origami.UI.Admin.IntegrationTests
         [Fact]
         public void Insert_WhenEntityIsValid_ShouldPersistRecord()
         {
+            using var factory = new CustomWebApplicationFactory();
             using var transaction = new TransactionScope();
-            using var scope = _factory.Services.CreateScope();
+            using var scope = factory.Services.CreateScope();
             var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
             scope.CreateTestRole(TestRole);
@@ -128,8 +130,9 @@ namespace Origami.UI.Admin.IntegrationTests
         [Fact]
         public void Insert_WhenNameIsTooLarge_ShouldFail()
         {
+            using var factory = new CustomWebApplicationFactory();
             using var transaction = new TransactionScope();
-            using var scope = _factory.Services.CreateScope();
+            using var scope = factory.Services.CreateScope();
             var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
             scope.CreateTestRole(TestRole);
@@ -162,8 +165,9 @@ namespace Origami.UI.Admin.IntegrationTests
         [Fact]
         public void Purge_WhenEntityIsValid_ShouldPersistRecord()
         {
+            using var factory = new CustomWebApplicationFactory();
             using var transaction = new TransactionScope();
-            using var scope = _factory.Services.CreateScope();
+            using var scope = factory.Services.CreateScope();
             var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
             scope.CreateTestRole(TestRole);
@@ -206,8 +210,9 @@ namespace Origami.UI.Admin.IntegrationTests
         [Fact]
         public void Update_WhenEntityIsValid_ShouldPersistRecord()
         {
+            using var factory = new CustomWebApplicationFactory();
             using var transaction = new TransactionScope();
-            using var scope = _factory.Services.CreateScope();
+            using var scope = factory.Services.CreateScope();
             var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
             scope.CreateTestRole(TestRole);
@@ -294,8 +299,9 @@ namespace Origami.UI.Admin.IntegrationTests
         [Fact]
         public void Update_WhenNameIsTooLarge_ShouldFail()
         {
+            using var factory = new CustomWebApplicationFactory();
             using var transaction = new TransactionScope();
-            using var scope = _factory.Services.CreateScope();
+            using var scope = factory.Services.CreateScope();
             var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
             scope.CreateTestRole(TestRole);

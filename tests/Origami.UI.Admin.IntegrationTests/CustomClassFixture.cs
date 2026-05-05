@@ -3,6 +3,8 @@ using Origami.Core;
 using Origami.Core.Data;
 using Origami.Core.Models;
 
+[assembly: CollectionBehavior(DisableTestParallelization = true)]
+
 namespace Origami.UI.Admin.IntegrationTests
 {
     public class CustomClassFixture : IClassFixture<CustomWebApplicationFactory>, IDisposable
@@ -125,7 +127,19 @@ namespace Origami.UI.Admin.IntegrationTests
             EditBlogs = true,
             EditCategories = true,
             EditOtherUsers = true,
+            EditOtherUsersPages = true,
+            EditOtherUsersPosts = true,
+            EditOtherUsersQuickNotes = true,
+            EditOtherUsersRoles = true,
+            EditOtherUsersSpecialMessages = true,
+            EditOtherUsersSpecialPages = true,
+            EditOwnPages = true,
+            EditOwnPosts = true,
+            EditOwnQuickNotes = true,
+            EditOwnSpecialMessages = true,
+            EditOwnSpecialPages = true,
             EditOwnUser = true,
+            EditOwnVideos = true,
             EditRoles = true,
             MarkBlogAsPrimary = true,
             PurgeBlogs = true,
@@ -164,17 +178,14 @@ namespace Origami.UI.Admin.IntegrationTests
             Username = "testuser",
         };
 
-        protected readonly CustomWebApplicationFactory _factory;
-
-        public CustomClassFixture(CustomWebApplicationFactory factory) : base()
+        public CustomClassFixture() : base()
         {
-            _factory = factory;
+            
         }
 
         public void Dispose()
         {
-            using var scope = _factory.Services.CreateScope();
-            scope.ServiceProvider.GetRequiredService<IMyMemoryCache>()!.Clear();
+            
         }
     }
 }
