@@ -75,6 +75,9 @@ namespace Origami.Core.Data
 
                 this.History(db, root.Entity, DateTime.UtcNow, "Content deleted", userId);
 
+                root.Entity.IsDeleted = entity!.IsDeleted;
+                root.Entity.Version(entity!);
+
                 // returns success
                 return new(root) { Success = Text.Original(Text.OperationCompletedSuccessfully), };
             }
