@@ -120,9 +120,17 @@ namespace Origami.Core.Data
         {
             var result = new T2();
 
-            result.Entity = this.GetEntity(rootId) ?? Activator.CreateInstance<T1>();
-            result.Parent = this.GetParent(result.Entity);
+            var entity = this.GetEntity(rootId);
+            if (entity != null)
+            {
+                result.Entity = entity;
+            }
+            else
+            {
+                result.Entity.Id = Guid.Empty;
+            }
 
+            result.Parent = this.GetParent(result.Entity);
             result.Children.AddRange(this.GetChildren(result.Entity));
             result.Categories.AddRange(this.GetEntities<OrigamiContentCategory>(rootId));
             result.Comments.AddRange(this.GetEntities<OrigamiContentComment>(rootId));

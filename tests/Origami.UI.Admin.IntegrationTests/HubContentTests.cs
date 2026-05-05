@@ -455,6 +455,7 @@ namespace Origami.UI.Admin.IntegrationTests
             dbHubHistories.ShouldBeEmpty();
 
             cacheHubContent = hubRepository.Get(t2);
+            cacheHubContent.Entity.Id.ShouldBe(Guid.Empty);
             cacheHubContent.Entity.Id.ShouldNotBe(t2.Entity.Id);
             cacheHubContent.Parent.ShouldBeNull();
             cacheHubContent.Children.ShouldBeEmpty();
