@@ -285,7 +285,7 @@ namespace Origami.Core.Models
 
         public AdditionalInfo.ForUsers Set(Action<AdditionalInfo.ForUsers> action)
         {
-            AdditionalInfo = AdditionalInfo.From(action);
+            AdditionalInfo = AdditionalInfo.UpdateAdditionalInfoWith(action);
             return AdditionalInfo.To<AdditionalInfo.ForUsers>();
         }
     }

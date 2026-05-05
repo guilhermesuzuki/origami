@@ -122,7 +122,7 @@ namespace Origami.Core
         }
 
         /// <summary>
-        /// TODO: comment this
+        /// Filters the <paramref name="entities"/>, retrieving only the <paramref name="entities"/> with the specified <paramref name="blog"/> identifier
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="entities"></param>
@@ -187,42 +187,12 @@ namespace Origami.Core
         }
 
         /// <summary>
-        /// TODO: comment this
+        /// Marks the specified <paramref name="entity"/> as deleted based on the <paramref name="delete"/> entity.
         /// </summary>
-        /// <param name="cipherText"></param>
-        /// <param name="key"></param>
-        /// <param name="iv"></param>
-        /// <returns></returns>
-        public static Guid? Decrypt(this string cipherText, string key, string iv)
-        {
-            try
-            {
-                using var aes = Aes.Create();
-
-                aes.Key = Encoding.UTF8.GetBytes(key);
-                aes.IV = Encoding.UTF8.GetBytes(iv);
-
-                using var decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
-                using var ms = new MemoryStream(Convert.FromBase64String(cipherText));
-                using var cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read);
-                using var sr = new StreamReader(cs);
-                var json = sr.ReadToEnd();
-
-                return JsonSerializer.Deserialize<Guid>(json);
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// TODO: comment this
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="entity"></param>
-        /// <param name="delete"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">The type of the entity.</typeparam>
+        /// <param name="entity">The entity to mark as deleted.</param>
+        /// <param name="delete">The entity containing the deletion information.</param>
+        /// <returns>The updated entity with the deletion status applied.</returns>
         public static T Deleted<T>(this T entity, T delete)
         {
             var del1 = entity as IDeleted;
@@ -326,32 +296,6 @@ namespace Origami.Core
         }
 
         /// <summary>
-        /// TODO: comment this
-        /// </summary>
-        /// <param name="plainText"></param>
-        /// <param name="key"></param>
-        /// <param name="iv"></param>
-        /// <returns></returns>
-        public static string Encrypt(this string plainText, string key, string iv)
-        {
-            using var aes = Aes.Create();
-
-            aes.Key = Encoding.UTF8.GetBytes(key);
-            aes.IV = Encoding.UTF8.GetBytes(iv);
-
-            using var encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
-            using var ms = new MemoryStream();
-            using var cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write);
-            using var sw = new StreamWriter(cs);
-
-            sw.Write(plainText);
-            sw.Flush();
-            cs.FlushFinalBlock();
-
-            return Convert.ToBase64String(ms.ToArray());
-        }
-
-        /// <summary>
         /// Extracts 5 errors and put it in a single error message
         /// </summary>
         /// <param name="messages"></param>
@@ -381,13 +325,13 @@ namespace Origami.Core
         }
 
         /// <summary>
-        /// Converts the <paramref name="entity"/> back into an XML in string form
-        /// TODO: rename this method, it's really bad
+        /// Converts the <paramref name="additionalInfo"/> back into an XML in string form after applying the specified <paramref name="action"/>.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="entity"></param>
+        /// <param name="additionalInfo"></param>
+        /// <param name="action"></param>
         /// <returns></returns>
-        public static string From<T>(this string? additionalInfo, Action<T> action)
+        public static string UpdateAdditionalInfoWith<T>(this string? additionalInfo, Action<T> action)
             where T : AdditionalInfo
         {
             //converts the additional info into entity

@@ -79,7 +79,7 @@ namespace Origami.Core.Models
 
         public AdditionalInfo.ForContents Set(Action<AdditionalInfo.ForContents> action)
         {
-            AdditionalInfo = AdditionalInfo.From(action);
+            AdditionalInfo = AdditionalInfo.UpdateAdditionalInfoWith(action);
             return AdditionalInfo.To<AdditionalInfo.ForContents>();
         }
     }

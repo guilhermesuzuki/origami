@@ -141,7 +141,7 @@ namespace Origami.Core.Models
 
         public AdditionalInfo.ForCategories Set(Action<AdditionalInfo.ForCategories> action)
         {
-            AdditionalInfo = AdditionalInfo.From(action);
+            AdditionalInfo = AdditionalInfo.UpdateAdditionalInfoWith(action);
             return AdditionalInfo.To<AdditionalInfo.ForCategories>();
         }
     }
