@@ -452,6 +452,7 @@ namespace Origami.Core.Data
                 this.History(db, root.Entity, DateTime.UtcNow, "Content unpublished", userId);
 
                 root.Entity.IsPublished = entity.IsPublished;
+                root.Entity.DatePublished = entity.DatePublished;
                 root.Entity.Version(entity);
 
                 // returns success
