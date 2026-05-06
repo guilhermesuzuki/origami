@@ -410,6 +410,8 @@ namespace Origami.UI.Admin.IntegrationTests
             dbEntity.IsDeleted.ShouldBe(t2.Entity.IsDeleted);
             dbEntity.IsPublished.ShouldBeTrue();
             dbEntity.IsPublished.ShouldBe(t2.Entity.IsPublished);
+            dbEntity.DatePublished.HasValue.ShouldBeTrue();
+            dbEntity.DatePublished.Value.ShouldBeGreaterThanOrEqualTo(dbEntity.DateCreated);
             dbEntity.Version.ShouldBe(t2.Entity.Version);
 
             cacheHubContent = hubRepository.Get(t2);
@@ -424,6 +426,8 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheHubContent.Tags.Count.ShouldBe(t2.Tags.Count);
             cacheHubContent.Entity.IsPublished.ShouldBeTrue();
             cacheHubContent.Entity.IsPublished.ShouldBe(t2.Entity.IsPublished);
+            cacheHubContent.Entity.DatePublished.HasValue.ShouldBeTrue();
+            cacheHubContent.Entity.DatePublished.Value.ShouldBeGreaterThanOrEqualTo(cacheHubContent.Entity.DateCreated);
             cacheHubContent.Entity.Version.ShouldBe(t2.Entity.Version);
         }
 
@@ -987,6 +991,8 @@ namespace Origami.UI.Admin.IntegrationTests
             dbEntity.IsDeleted.ShouldBe(t2.Entity.IsDeleted);
             dbEntity.IsPublished.ShouldBeTrue();
             dbEntity.IsPublished.ShouldBe(t2.Entity.IsPublished);
+            dbEntity.DatePublished.HasValue.ShouldBeTrue();
+            dbEntity.DatePublished.Value.ShouldBeGreaterThanOrEqualTo(dbEntity.DateCreated);
             dbEntity.Version.ShouldBe(t2.Entity.Version);
 
             cacheHubContent = hubRepository.Get(t2);
@@ -1001,6 +1007,8 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheHubContent.Tags.Count.ShouldBe(t2.Tags.Count);
             cacheHubContent.Entity.IsPublished.ShouldBeTrue();
             cacheHubContent.Entity.IsPublished.ShouldBe(t2.Entity.IsPublished);
+            cacheHubContent.Entity.DatePublished.HasValue.ShouldBeTrue();
+            cacheHubContent.Entity.DatePublished.Value.ShouldBeGreaterThanOrEqualTo(cacheHubContent.Entity.DateCreated);
             cacheHubContent.Entity.Version.ShouldBe(t2.Entity.Version);
 
             hub = hubRepository.Unpublish(t2, TestUser);
@@ -1019,6 +1027,7 @@ namespace Origami.UI.Admin.IntegrationTests
             dbEntity.IsDeleted.ShouldBe(t2.Entity.IsDeleted);
             dbEntity.IsPublished.ShouldBeFalse();
             dbEntity.IsPublished.ShouldBe(t2.Entity.IsPublished);
+            dbEntity.DatePublished.HasValue.ShouldBeFalse();
             dbEntity.Version.ShouldBe(t2.Entity.Version);
 
             cacheHubContent = hubRepository.Get(t2);
@@ -1033,6 +1042,7 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheHubContent.Tags.Count.ShouldBe(t2.Tags.Count);
             cacheHubContent.Entity.IsPublished.ShouldBeFalse();
             cacheHubContent.Entity.IsPublished.ShouldBe(t2.Entity.IsPublished);
+            cacheHubContent.Entity.DatePublished.HasValue.ShouldBeFalse();
             cacheHubContent.Entity.Version.ShouldBe(t2.Entity.Version);
         }
 
