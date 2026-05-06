@@ -9,9 +9,9 @@ using System.Transactions;
 
 namespace Origami.UI.Admin.IntegrationTests
 {
-    public class User : CustomClassFixture
+    public class UserTests : CustomClassFixture
     {
-        public User(CustomWebApplicationFactory factory) : base(factory)
+        public UserTests() : base()
         {
 
         }
@@ -19,8 +19,9 @@ namespace Origami.UI.Admin.IntegrationTests
         [Fact]
         public void Block_WhenEntityIsAlreadyBlocked_ShouldPersistRecord()
         {
+            using var factory = new CustomWebApplicationFactory();
             using var transaction = new TransactionScope();
-            using var scope = _factory.Services.CreateScope();
+            using var scope = factory.Services.CreateScope();
             var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
             scope.CreateTestRole(TestRole);
@@ -134,8 +135,9 @@ namespace Origami.UI.Admin.IntegrationTests
         [Fact]
         public void Block_WhenEntityIsValid_ShouldPersistRecord()
         {
+            using var factory = new CustomWebApplicationFactory();
             using var transaction = new TransactionScope();
-            using var scope = _factory.Services.CreateScope();
+            using var scope = factory.Services.CreateScope();
             var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
             scope.CreateTestRole(TestRole);
@@ -212,8 +214,9 @@ namespace Origami.UI.Admin.IntegrationTests
         [Fact]
         public void ChangePassword_WhenEverythingIsOkay_ShouldPersistRecord()
         {
+            using var factory = new CustomWebApplicationFactory();
             using var transaction = new TransactionScope();
-            using var scope = _factory.Services.CreateScope();
+            using var scope = factory.Services.CreateScope();
             var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
             scope.CreateTestRole(TestRole);
@@ -295,8 +298,9 @@ namespace Origami.UI.Admin.IntegrationTests
         [Fact]
         public void ChangePassword_WhenNewPasswordIs1234_ShouldFail()
         {
+            using var factory = new CustomWebApplicationFactory();
             using var transaction = new TransactionScope();
-            using var scope = _factory.Services.CreateScope();
+            using var scope = factory.Services.CreateScope();
             var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
             scope.CreateTestRole(TestRole);
@@ -382,8 +386,9 @@ namespace Origami.UI.Admin.IntegrationTests
         [Fact]
         public void ChangePassword_WhenNewPasswordIsEmpty_ShouldFail()
         {
+            using var factory = new CustomWebApplicationFactory();
             using var transaction = new TransactionScope();
-            using var scope = _factory.Services.CreateScope();
+            using var scope = factory.Services.CreateScope();
             var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
             scope.CreateTestRole(TestRole);
@@ -465,8 +470,9 @@ namespace Origami.UI.Admin.IntegrationTests
         [Fact]
         public void ChangePassword_WhenNewPasswordIsWeak_ShouldFail()
         {
+            using var factory = new CustomWebApplicationFactory();
             using var transaction = new TransactionScope();
-            using var scope = _factory.Services.CreateScope();
+            using var scope = factory.Services.CreateScope();
             var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
             scope.CreateTestRole(TestRole);
@@ -552,8 +558,9 @@ namespace Origami.UI.Admin.IntegrationTests
         [Fact]
         public void ChangePassword_WhenNewPasswordsDifferFromEachOther_ShouldFail()
         {
+            using var factory = new CustomWebApplicationFactory();
             using var transaction = new TransactionScope();
-            using var scope = _factory.Services.CreateScope();
+            using var scope = factory.Services.CreateScope();
             var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
             scope.CreateTestRole(TestRole);
@@ -639,8 +646,9 @@ namespace Origami.UI.Admin.IntegrationTests
         [Fact]
         public void ChangePassword_WhenNewPasswordsEqualOldPassword_ShouldFail()
         {
+            using var factory = new CustomWebApplicationFactory();
             using var transaction = new TransactionScope();
-            using var scope = _factory.Services.CreateScope();
+            using var scope = factory.Services.CreateScope();
             var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
             scope.CreateTestRole(TestRole);
@@ -722,8 +730,9 @@ namespace Origami.UI.Admin.IntegrationTests
         [Fact]
         public void ChangePassword_WhenOldPasswordIsWrong_ShouldFail()
         {
+            using var factory = new CustomWebApplicationFactory();
             using var transaction = new TransactionScope();
-            using var scope = _factory.Services.CreateScope();
+            using var scope = factory.Services.CreateScope();
             var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
             scope.CreateTestRole(TestRole);
@@ -809,8 +818,9 @@ namespace Origami.UI.Admin.IntegrationTests
         [Fact]
         public void Delete_WhenEntityIsValid_ShouldPersistRecord()
         {
+            using var factory = new CustomWebApplicationFactory();
             using var transaction = new TransactionScope();
-            using var scope = _factory.Services.CreateScope();
+            using var scope = factory.Services.CreateScope();
             var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
             scope.CreateTestRole(TestRole);
@@ -852,8 +862,9 @@ namespace Origami.UI.Admin.IntegrationTests
         [Fact]
         public void ForgotOwnPassword_WhenEverythingIsOkay_ShouldPersistRecord()
         {
+            using var factory = new CustomWebApplicationFactory();
             using var transaction = new TransactionScope();
-            using var scope = _factory.Services.CreateScope();
+            using var scope = factory.Services.CreateScope();
             var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
             scope.CreateTestRole(TestRole);
@@ -933,8 +944,9 @@ namespace Origami.UI.Admin.IntegrationTests
         [Fact]
         public void Insert_WhenEntityIsValid_ShouldPersistRecord()
         {
+            using var factory = new CustomWebApplicationFactory();
             using var transaction = new TransactionScope();
-            using var scope = _factory.Services.CreateScope();
+            using var scope = factory.Services.CreateScope();
             var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
             scope.CreateTestRole(TestRole);
@@ -981,8 +993,9 @@ namespace Origami.UI.Admin.IntegrationTests
         [Fact]
         public void Purge_WhenEntityIsValid_ShouldPersistRecord()
         {
+            using var factory = new CustomWebApplicationFactory();
             using var transaction = new TransactionScope();
-            using var scope = _factory.Services.CreateScope();
+            using var scope = factory.Services.CreateScope();
             var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
             scope.CreateTestRole(TestRole);
@@ -1006,8 +1019,9 @@ namespace Origami.UI.Admin.IntegrationTests
         [Fact]
         public void Reset2FA_WhenEntityIsValid_ShouldPersistRecord()
         {
+            using var factory = new CustomWebApplicationFactory();
             using var transaction = new TransactionScope();
-            using var scope = _factory.Services.CreateScope();
+            using var scope = factory.Services.CreateScope();
             var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
             scope.CreateTestRole(TestRole);
@@ -1091,8 +1105,9 @@ namespace Origami.UI.Admin.IntegrationTests
         [Fact]
         public void ResetPassword_WhenUserPossessesKey_ShouldPersistRecord()
         {
+            using var factory = new CustomWebApplicationFactory();
             using var transaction = new TransactionScope();
-            using var scope = _factory.Services.CreateScope();
+            using var scope = factory.Services.CreateScope();
             var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
             scope.CreateTestRole(TestRole);
@@ -1221,8 +1236,9 @@ namespace Origami.UI.Admin.IntegrationTests
         [Fact]
         public void ResetPassword_WhenUserPossessesKeyButPasswordsAreWeak_ShouldFail()
         {
+            using var factory = new CustomWebApplicationFactory();
             using var transaction = new TransactionScope();
-            using var scope = _factory.Services.CreateScope();
+            using var scope = factory.Services.CreateScope();
             var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
             scope.CreateTestRole(TestRole);
@@ -1360,8 +1376,9 @@ namespace Origami.UI.Admin.IntegrationTests
         [Fact]
         public void ResetPassword_WhenUserPossessesKeyButPasswordsDiffer_ShouldFail()
         {
+            using var factory = new CustomWebApplicationFactory();
             using var transaction = new TransactionScope();
-            using var scope = _factory.Services.CreateScope();
+            using var scope = factory.Services.CreateScope();
             var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
             scope.CreateTestRole(TestRole);
@@ -1500,8 +1517,9 @@ namespace Origami.UI.Admin.IntegrationTests
         [Fact]
         public void ResetPassword_WhenUserPossessesTheWrongKey_ShouldFail()
         {
+            using var factory = new CustomWebApplicationFactory();
             using var transaction = new TransactionScope();
-            using var scope = _factory.Services.CreateScope();
+            using var scope = factory.Services.CreateScope();
             var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
             scope.CreateTestRole(TestRole);
@@ -1640,8 +1658,9 @@ namespace Origami.UI.Admin.IntegrationTests
         [Fact]
         public void ResetPassword_WhenUserIsNotLoggedIn_ShouldPersistRecord()
         {
+            using var factory = new CustomWebApplicationFactory();
             using var transaction = new TransactionScope();
-            using var scope = _factory.Services.CreateScope();
+            using var scope = factory.Services.CreateScope();
             var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
             scope.CreateTestRole(TestRole);
@@ -1714,8 +1733,9 @@ namespace Origami.UI.Admin.IntegrationTests
         [Fact]
         public void Unblock_WhenEntityIsAlreadyUnblocked_ShouldPersistRecord()
         {
+            using var factory = new CustomWebApplicationFactory();
             using var transaction = new TransactionScope();
-            using var scope = _factory.Services.CreateScope();
+            using var scope = factory.Services.CreateScope();
             var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
             scope.CreateTestRole(TestRole);
@@ -1799,8 +1819,9 @@ namespace Origami.UI.Admin.IntegrationTests
         [Fact]
         public void Unblock_WhenEntityIsBlocked_ShouldPersistRecord()
         {
+            using var factory = new CustomWebApplicationFactory();
             using var transaction = new TransactionScope();
-            using var scope = _factory.Services.CreateScope();
+            using var scope = factory.Services.CreateScope();
             var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
             scope.CreateTestRole(TestRole);
@@ -1916,8 +1937,9 @@ namespace Origami.UI.Admin.IntegrationTests
         [Fact]
         public void Update_WhenEntityIsValid_ShouldPersistRecord()
         {
+            using var factory = new CustomWebApplicationFactory();
             using var transaction = new TransactionScope();
-            using var scope = _factory.Services.CreateScope();
+            using var scope = factory.Services.CreateScope();
             var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
             scope.CreateTestRole(TestRole);

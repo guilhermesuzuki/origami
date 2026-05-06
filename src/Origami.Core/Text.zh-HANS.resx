@@ -2442,4 +2442,28 @@
   <data name="Calm down, you made too many comments in 5 minutes" xml:space="preserve">
     <value>冷静点，你5分钟内评论太多了</value>
   </data>
+  <data name="Content created" xml:space="preserve">
+    <value>内容已创建</value>
+  </data>
+  <data name="Content deleted" xml:space="preserve">
+    <value>内容已删除</value>
+  </data>
+  <data name="Content restored" xml:space="preserve">
+    <value>内容已恢复</value>
+  </data>
+  <data name="Content saved" xml:space="preserve">
+    <value>内容已保存</value>
+  </data>
+  <data name="Content is already unpublished" xml:space="preserve">
+    <value>内容已是未发布状态</value>
+  </data>
+  <data name="Content is already restored" xml:space="preserve">
+    <value>内容已恢复</value>
+  </data>
+  <data name="Content is already published" xml:space="preserve">
+    <value>内容已发布</value>
+  </data>
+  <data name="Content is already deleted" xml:space="preserve">
+    <value>内容已删除</value>
+  </data>
 </root>

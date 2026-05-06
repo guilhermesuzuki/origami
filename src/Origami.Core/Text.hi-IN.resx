@@ -2442,4 +2442,28 @@
   <data name="Calm down, you made too many comments in 5 minutes" xml:space="preserve">
     <value>शांत हो जाइए, आपने 5 मिनट में बहुत सारी टिप्पणियाँ कीं</value>
   </data>
+  <data name="Content created" xml:space="preserve">
+    <value>सामग्री बनाई गई</value>
+  </data>
+  <data name="Content deleted" xml:space="preserve">
+    <value>सामग्री हटाई गई</value>
+  </data>
+  <data name="Content restored" xml:space="preserve">
+    <value>सामग्री पुनर्स्थापित की गई</value>
+  </data>
+  <data name="Content saved" xml:space="preserve">
+    <value>सामग्री सहेजी गई</value>
+  </data>
+  <data name="Content is already unpublished" xml:space="preserve">
+    <value>सामग्री पहले से ही अप्रकाशित है</value>
+  </data>
+  <data name="Content is already restored" xml:space="preserve">
+    <value>सामग्री पहले से ही पुनर्स्थापित है</value>
+  </data>
+  <data name="Content is already published" xml:space="preserve">
+    <value>सामग्री पहले से ही प्रकाशित है</value>
+  </data>
+  <data name="Content is already deleted" xml:space="preserve">
+    <value>सामग्री पहले से ही हटाई गई है</value>
+  </data>
 </root>
