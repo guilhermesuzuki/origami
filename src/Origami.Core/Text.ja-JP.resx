@@ -2442,4 +2442,16 @@
   <data name="Calm down, you made too many comments in 5 minutes" xml:space="preserve">
     <value>落ち着いて、5分間でコメントしすぎました</value>
   </data>
+  <data name="Content created" xml:space="preserve">
+    <value>コンテンツを作成しました</value>
+  </data>
+  <data name="Content deleted" xml:space="preserve">
+    <value>コンテンツを削除しました</value>
+  </data>
+  <data name="Content restored" xml:space="preserve">
+    <value>コンテンツを復元しました</value>
+  </data>
+  <data name="Content saved" xml:space="preserve">
+    <value>コンテンツを保存しました</value>
+  </data>
 </root>

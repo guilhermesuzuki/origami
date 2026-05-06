@@ -2442,4 +2442,16 @@
   <data name="Calm down, you made too many comments in 5 minutes" xml:space="preserve">
     <value>진정하세요. 5분 동안 댓글을 너무 많이 달았네요.</value>
   </data>
+  <data name="Content created" xml:space="preserve">
+    <value>콘텐츠가 생성되었습니다</value>
+  </data>
+  <data name="Content deleted" xml:space="preserve">
+    <value>콘텐츠가 삭제되었습니다</value>
+  </data>
+  <data name="Content restored" xml:space="preserve">
+    <value>콘텐츠가 복원되었습니다</value>
+  </data>
+  <data name="Content saved" xml:space="preserve">
+    <value>콘텐츠가 저장되었습니다</value>
+  </data>
 </root>
