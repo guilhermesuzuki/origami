@@ -10,6 +10,7 @@ namespace Origami.Core.Validators
         public OrigamiContentCategoryValidator(Text text, IWebRootPath webRootPath, IDbContextFactory<OrigamiDbContext> dbContextFactory) : base()
         {
             RuleFor(x => x.Id).Id(text);
+            RuleFor(x => x.ContentId).ContentMustExist(text, dbContextFactory);
             RuleFor(x => x.CategoryId).CategoryMustExist(text, dbContextFactory);
         }
     }
