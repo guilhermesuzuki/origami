@@ -2463,4 +2463,7 @@
   <data name="Content is already published" xml:space="preserve">
     <value>Le contenu est déjà publié</value>
   </data>
+  <data name="Content is already deleted" xml:space="preserve">
+    <value>Le contenu est déjà supprimé</value>
+  </data>
 </root>

@@ -2463,4 +2463,7 @@
   <data name="Content is already published" xml:space="preserve">
     <value>सामग्री पहले से ही प्रकाशित है</value>
   </data>
+  <data name="Content is already deleted" xml:space="preserve">
+    <value>सामग्री पहले से ही हटाई गई है</value>
+  </data>
 </root>

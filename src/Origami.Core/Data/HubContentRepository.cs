@@ -64,19 +64,33 @@ namespace Origami.Core.Data
                 // check permissions
                 if (UserHasPermission(db, userId.Id, permission) == false) return new(root) { Info = permission, Error = Text.Original(Text.YouDontHavePermissionForThisFeature), };
 
+                //private scope
+                {
+                    var fresh = (from a in db.Set<T1>().AsNoTracking() where a.Id == root.Entity.Id select a.IsDeleted).ToList();
+                    if (fresh.Any() == false)
+                    {
+                        return new(root) { Error = Text.Original("Content must exist"), };
+                    }
+                    if (fresh.Any(f => f == true))
+                    {
+                        // TODO: add this to resx files
+                        return new(root) { Error = Text.Original("Content is already deleted"), };
+                    }
+                }
+
                 // marks as deleted
                 db.Set<T1>().AsNoTracking().Where(x => x.Id == root.Entity.Id).ExecuteUpdate(s => s.SetProperty(x => x.IsDeleted, true));
 
                 // needs to hit the database for the entity
-                var entity = db.Set<T1>().AsNoTracking().Id(root.Entity.Id);
+                var entity = db.Set<T1>().AsNoTracking().Id(root.Entity.Id)!;
 
                 // needs to update cache
                 _memoryCache.Save(entity as OrigamiContent);
 
                 this.History(db, root.Entity, DateTime.UtcNow, "Content deleted", userId);
 
-                root.Entity.IsDeleted = entity!.IsDeleted;
-                root.Entity.Version(entity!);
+                root.Entity.IsDeleted = entity.IsDeleted;
+                root.Entity.Version(entity);
 
                 // returns success
                 return new(root) { Success = Text.Original(Text.OperationCompletedSuccessfully), };
