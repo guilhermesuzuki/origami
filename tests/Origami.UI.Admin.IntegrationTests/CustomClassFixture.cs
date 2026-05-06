@@ -3,6 +3,8 @@ using Origami.Core;
 using Origami.Core.Data;
 using Origami.Core.Models;
 
+[assembly: CollectionBehavior(DisableTestParallelization = true)]
+
 namespace Origami.UI.Admin.IntegrationTests
 {
     public class CustomClassFixture : IClassFixture<CustomWebApplicationFactory>, IDisposable
@@ -108,32 +110,89 @@ namespace Origami.UI.Admin.IntegrationTests
             BlockUsersOtherThanSelf = true,
             CreateNewBlogs = true,
             CreateNewCategories = true,
+            CreateNewPages = true,
+            CreateNewPosts = true,
+            CreateNewQuickNotes = true,
             CreateNewRoles = true,
+            CreateNewSpecialMessages = true,
+            CreateNewSpecialPages = true,
             CreateNewUsers = true,
+            CreateNewVideos = true,
             DeactivateBlogs = true,
             DeleteBlogs = true,
             DeleteCategories = true,
             DeleteRoles = true,
             DeleteUserSelf = true,
             DeleteUsersOtherThanSelf = true,
+            DeleteOtherUsersPages = true,
+            DeleteOtherUsersPosts = true,
+            DeleteOtherUsersQuickNotes = true,
+            DeleteOtherUsersSpecialMessages = true,
+            DeleteOtherUsersSpecialPages = true,
+            DeleteOtherUsersVideos = true,
+            DeleteOwnPages = true,
+            DeleteOwnPosts = true,
+            DeleteOwnQuickNotes = true,
+            DeleteOwnSpecialMessages = true,
+            DeleteOwnSpecialPages = true,
+            DeleteOwnVideos = true,
             EditBlogs = true,
             EditCategories = true,
             EditOtherUsers = true,
+            EditOtherUsersPages = true,
+            EditOtherUsersPosts = true,
+            EditOtherUsersQuickNotes = true,
+            EditOtherUsersRoles = true,
+            EditOtherUsersSpecialMessages = true,
+            EditOtherUsersSpecialPages = true,
+            EditOwnPages = true,
+            EditOwnPosts = true,
+            EditOwnQuickNotes = true,
+            EditOwnSpecialMessages = true,
+            EditOwnSpecialPages = true,
             EditOwnUser = true,
+            EditOwnVideos = true,
             EditRoles = true,
             MarkBlogAsPrimary = true,
+            PublishOwnPages = true,
+            PublishOwnPosts = true,
+            PublishOwnQuickNotes = true,
+            PublishOwnSpecialMessages = true,
+            PublishOwnSpecialPages = true,
+            PublishOwnVideos = true,
+            PublishOtherUsersPages = true,
+            PublishOtherUsersPosts = true,
+            PublishOtherUsersQuickNotes = true,
+            PublishOtherUsersSpecialMessages = true,
+            PublishOtherUsersSpecialPages = true,
+            PublishOtherUsersVideos = true,
             PurgeBlogs = true,
             PurgeCategories = true,
             PurgeRoles = true,
             PurgeUsers = true,
+            PurgePages = true,
+            PurgePosts = true,
+            PurgeQuickNotes = true,
+            PurgeSpecialMessages = true,
+            PurgeSpecialPages = true,
+            PurgeTags = true,
+            PurgeVideos = true,
             ResetOtherUsers2FA = true,
             ResetOtherUsersPasswords = true,
             ResetOwn2FA = true,
             ResetOwnPassword = true,
             RestoreBlogs = true,
             RestoreCategories = true,
+            RestoreComments = true,
+            RestorePages = true,
+            RestorePosts = true,
+            RestoreQuickNotes = true, 
             RestoreRoles = true,
+            RestoreSpecialMessages = true,
+            RestoreSpecialPages = true,
+            RestoreSystem = true,
             RestoreUsers = true,
+            RestoreVideos = true,
             UnblockUsers = true,
         };
 
@@ -158,17 +217,14 @@ namespace Origami.UI.Admin.IntegrationTests
             Username = "testuser",
         };
 
-        protected readonly CustomWebApplicationFactory _factory;
-
-        public CustomClassFixture(CustomWebApplicationFactory factory) : base()
+        public CustomClassFixture() : base()
         {
-            _factory = factory;
+            
         }
 
         public void Dispose()
         {
-            using var scope = _factory.Services.CreateScope();
-            scope.ServiceProvider.GetRequiredService<IMyMemoryCache>()!.Clear();
+            
         }
     }
 }

@@ -2442,4 +2442,34 @@
   <data name="Calm down, you made too many comments in 5 minutes" xml:space="preserve">
     <value>Calmati, hai fatto molti commenti in 5 minuti</value>
   </data>
+  <data name="Content created" xml:space="preserve">
+    <value>Contenuto creato</value>
+  </data>
+  <data name="Content deleted" xml:space="preserve">
+    <value>Contenuto eliminato</value>
+  </data>
+  <data name="Content restored" xml:space="preserve">
+    <value>Contenuto ripristinato</value>
+  </data>
+  <data name="Content saved" xml:space="preserve">
+    <value>Contenuto salvato</value>
+  </data>
+  <data name="Content is already unpublished" xml:space="preserve">
+    <value>Il contenuto è già non pubblicato</value>
+  </data>
+  <data name="Content is already restored" xml:space="preserve">
+    <value>Il contenuto è già ripristinato</value>
+  </data>
+  <data name="Content is already published" xml:space="preserve">
+    <value>Il contenuto è già pubblicato</value>
+  </data>
+  <data name="Content is already deleted" xml:space="preserve">
+    <value>Il contenuto è già eliminato</value>
+  </data>
+  <data name="Categories must be empty" xml:space="preserve">
+    <value>Le categorie devono essere vuote</value>
+  </data>
+  <data name="Tags must be empty" xml:space="preserve">
+    <value>I tag devono essere vuoti</value>
+  </data>
 </root>

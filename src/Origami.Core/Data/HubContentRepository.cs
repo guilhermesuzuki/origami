@@ -64,16 +64,33 @@ namespace Origami.Core.Data
                 // check permissions
                 if (UserHasPermission(db, userId.Id, permission) == false) return new(root) { Info = permission, Error = Text.Original(Text.YouDontHavePermissionForThisFeature), };
 
+                //private scope
+                {
+                    var fresh = (from a in db.Set<T1>().AsNoTracking() where a.Id == root.Entity.Id select a.IsDeleted).ToList();
+                    if (fresh.Any() == false)
+                    {
+                        return new(root) { Error = Text.Original("Content must exist"), };
+                    }
+                    if (fresh.Any(f => f == true))
+                    {
+                        // TODO: add this to resx files
+                        return new(root) { Error = Text.Original("Content is already deleted"), };
+                    }
+                }
+
                 // marks as deleted
                 db.Set<T1>().AsNoTracking().Where(x => x.Id == root.Entity.Id).ExecuteUpdate(s => s.SetProperty(x => x.IsDeleted, true));
 
                 // needs to hit the database for the entity
-                var entity = db.Set<T1>().AsNoTracking().Id(root.Entity.Id);
+                var entity = db.Set<T1>().AsNoTracking().Id(root.Entity.Id)!;
 
                 // needs to update cache
                 _memoryCache.Save(entity as OrigamiContent);
 
                 this.History(db, root.Entity, DateTime.UtcNow, "Content deleted", userId);
+
+                root.Entity.IsDeleted = entity.IsDeleted;
+                root.Entity.Version(entity);
 
                 // returns success
                 return new(root) { Success = Text.Original(Text.OperationCompletedSuccessfully), };
@@ -117,9 +134,17 @@ namespace Origami.Core.Data
         {
             var result = new T2();
 
-            result.Entity = this.GetEntity(rootId) ?? Activator.CreateInstance<T1>();
-            result.Parent = this.GetParent(result.Entity);
+            var entity = this.GetEntity(rootId);
+            if (entity != null)
+            {
+                result.Entity = entity;
+            }
+            else
+            {
+                result.Entity.Id = Guid.Empty;
+            }
 
+            result.Parent = this.GetParent(result.Entity);
             result.Children.AddRange(this.GetChildren(result.Entity));
             result.Categories.AddRange(this.GetEntities<OrigamiContentCategory>(rootId));
             result.Comments.AddRange(this.GetEntities<OrigamiContentComment>(rootId));
@@ -193,6 +218,20 @@ namespace Origami.Core.Data
                 // check permissions
                 if (UserHasPermission(db, userId.Id, permission) == false) return new(root) { Info = permission, Error = Text.Original(Text.YouDontHavePermissionForThisFeature), };
 
+                //private scope
+                {
+                    var fresh = (from a in db.Set<T1>().AsNoTracking() where a.Id == root.Entity.Id select a.IsPublished).ToList();
+                    if (fresh.Any() == false)
+                    {
+                        return new(root) { Error = Text.Original("Content must exist"), };
+                    }
+                    if (fresh.Any(f => f == true))
+                    {
+                        // TODO: add this to resx files
+                        return new(root) { Error = Text.Original("Content is already published"), };
+                    }
+                }
+
                 // marks as published
                 db.Set<T1>().AsNoTracking().Where(x => x.Id == root.Entity.Id).ExecuteUpdate(
                     s =>
@@ -202,12 +241,16 @@ namespace Origami.Core.Data
                     });
 
                 // needs to hit the database for the entity
-                var entity = db.Set<T1>().AsNoTracking().Id(root.Entity.Id);
+                var entity = db.Set<T1>().AsNoTracking().Id(root.Entity.Id)!;
 
                 // needs to update cache
                 _memoryCache.Save(entity as OrigamiContent);
 
                 this.History(db, root.Entity, DateTime.UtcNow, "Content published", userId);
+
+                root.Entity.IsPublished = entity.IsPublished;
+                root.Entity.DatePublished = entity.DatePublished;
+                root.Entity.Version(entity);
 
                 // returns success
                 return new(root) { Success = Text.Original(Text.OperationCompletedSuccessfully), };
@@ -287,16 +330,33 @@ namespace Origami.Core.Data
                 // check permissions
                 if (UserHasPermission(db, userId.Id, RestorePermission) == false) return new(root) { Info = RestorePermission, Error = Text.Original(Text.YouDontHavePermissionForThisFeature), };
 
-                // marks as deleted
+                //private scope
+                {
+                    var fresh = (from a in db.Set<T1>().AsNoTracking() where a.Id == root.Entity.Id select a.IsDeleted).ToList();
+                    if (fresh.Any() == false)
+                    {
+                        return new(root) { Error = Text.Original("Content must exist"), };
+                    }
+                    if (fresh.Any(f => f == false))
+                    {
+                        // TODO: add this to resx files
+                        return new(root) { Error = Text.Original("Content is already restored"), };
+                    }
+                }
+
+                // marks as undeleted
                 db.Set<T1>().AsNoTracking().Where(x => x.Id == root.Entity.Id).ExecuteUpdate(s => s.SetProperty(x => x.IsDeleted, false));
 
                 // needs to hit the database for the entity
-                var entity = db.Set<T1>().AsNoTracking().Id(root.Entity.Id);
+                var entity = db.Set<T1>().AsNoTracking().Id(root.Entity.Id)!;
 
                 // needs to update cache
                 _memoryCache.Save(entity as OrigamiContent);
 
                 this.History(db, root.Entity, DateTime.UtcNow, "Content restored", userId);
+
+                root.Entity.IsDeleted = entity.IsDeleted;
+                root.Entity.Version(entity);
 
                 // returns success
                 return new(root) { Success = Text.Original(Text.OperationCompletedSuccessfully), };
@@ -375,6 +435,20 @@ namespace Origami.Core.Data
                 // check permissions
                 if (UserHasPermission(db, userId.Id, permission) == false) return new(root) { Info = permission, Error = Text.Original(Text.YouDontHavePermissionForThisFeature), };
 
+                //private scope
+                {
+                    var fresh = (from a in db.Set<T1>().AsNoTracking() where a.Id == root.Entity.Id select a.IsPublished).ToList();
+                    if (fresh.Any() == false)
+                    {
+                        return new(root) { Error = Text.Original("Content must exist"), };
+                    }
+                    if (fresh.Any(f => f == false))
+                    {
+                        // TODO: add this to resx files
+                        return new(root) { Error = Text.Original("Content is already unpublished"), };
+                    }
+                }
+
                 // marks as unpublished
                 db.Set<T1>().AsNoTracking().Where(x => x.Id == root.Entity.Id).ExecuteUpdate(
                     s =>
@@ -384,12 +458,16 @@ namespace Origami.Core.Data
                     });
 
                 // needs to hit the database for the entity
-                var entity = db.Set<T1>().AsNoTracking().Id(root.Entity.Id);
+                var entity = db.Set<T1>().AsNoTracking().Id(root.Entity.Id)!;
 
                 // needs to update cache
                 _memoryCache.Save(entity as OrigamiContent);
 
                 this.History(db, root.Entity, DateTime.UtcNow, "Content unpublished", userId);
+
+                root.Entity.IsPublished = entity.IsPublished;
+                root.Entity.DatePublished = entity.DatePublished;
+                root.Entity.Version(entity);
 
                 // returns success
                 return new(root) { Success = Text.Original(Text.OperationCompletedSuccessfully), };
