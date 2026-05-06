@@ -2466,4 +2466,10 @@
   <data name="Content is already deleted" xml:space="preserve">
     <value>Inhalt ist bereits gelöscht</value>
   </data>
+  <data name="Categories must be empty" xml:space="preserve">
+    <value>Kategorien müssen leer sein</value>
+  </data>
+  <data name="Tags must be empty" xml:space="preserve">
+    <value>Tags müssen leer sein</value>
+  </data>
 </root>

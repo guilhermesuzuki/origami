@@ -2466,4 +2466,10 @@
   <data name="Content is already deleted" xml:space="preserve">
     <value>内容已删除</value>
   </data>
+  <data name="Categories must be empty" xml:space="preserve">
+    <value>分类必须为空</value>
+  </data>
+  <data name="Tags must be empty" xml:space="preserve">
+    <value>标签必须为空</value>
+  </data>
 </root>
