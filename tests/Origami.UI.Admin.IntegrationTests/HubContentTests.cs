@@ -31,7 +31,7 @@ namespace Origami.UI.Admin.IntegrationTests
             scope.CreateTestCategory(TestCategory, TestUser);
 
             var t2 = Activator.CreateInstance<T2>()!;
-            if (t2 is HubContentPage or HubContentPost or HubContentVideo)
+            if (t2 is HubContentPage or HubContentPost or HubContentVideo or HubContentQuickNote)
             {
                 t2.Entity.BlogId = TestBlog.Id;
             }
@@ -206,7 +206,7 @@ namespace Origami.UI.Admin.IntegrationTests
             scope.CreateTestCategory(TestCategory, TestUser);
 
             var t2 = Activator.CreateInstance<T2>()!;
-            if (t2 is HubContentPage or HubContentPost or HubContentVideo)
+            if (t2 is HubContentPage or HubContentPost or HubContentVideo or HubContentQuickNote)
             {
                 t2.Entity.BlogId = TestBlog.Id;
             }
@@ -307,7 +307,7 @@ namespace Origami.UI.Admin.IntegrationTests
             scope.CreateTestCategory(TestCategory, TestUser);
 
             var t2 = Activator.CreateInstance<T2>()!;
-            if (t2 is HubContentPage or HubContentPost or HubContentVideo)
+            if (t2 is HubContentPage or HubContentPost or HubContentVideo or HubContentQuickNote)
             {
                 t2.Entity.BlogId = TestBlog.Id;
             }
@@ -444,7 +444,7 @@ namespace Origami.UI.Admin.IntegrationTests
             scope.CreateTestCategory(TestCategory, TestUser);
 
             var t2 = Activator.CreateInstance<T2>()!;
-            if (t2 is HubContentPage or HubContentPost or HubContentVideo)
+            if (t2 is HubContentPage or HubContentPost or HubContentVideo or HubContentQuickNote)
             {
                 t2.Entity.BlogId = TestBlog.Id;
             }
@@ -639,7 +639,7 @@ namespace Origami.UI.Admin.IntegrationTests
             scope.CreateTestCategory(TestCategory, TestUser);
 
             var t2 = Activator.CreateInstance<T2>()!;
-            if (t2 is HubContentPage or HubContentPost or HubContentVideo)
+            if (t2 is HubContentPage or HubContentPost or HubContentVideo or HubContentQuickNote)
             {
                 t2.Entity.BlogId = TestBlog.Id;
             }
@@ -888,7 +888,7 @@ namespace Origami.UI.Admin.IntegrationTests
             scope.CreateTestCategory(TestCategory, TestUser);
 
             var t2 = Activator.CreateInstance<T2>()!;
-            if (t2 is HubContentPage or HubContentPost or HubContentVideo)
+            if (t2 is HubContentPage or HubContentPost or HubContentVideo or HubContentQuickNote)
             {
                 t2.Entity.BlogId = TestBlog.Id;
             }
@@ -1059,7 +1059,7 @@ namespace Origami.UI.Admin.IntegrationTests
             scope.CreateTestCategory(TestCategory, TestUser);
 
             var t2 = Activator.CreateInstance<T2>()!;
-            if (t2 is HubContentPage or HubContentPost or HubContentVideo)
+            if (t2 is HubContentPage or HubContentPost or HubContentVideo or HubContentQuickNote)
             {
                 t2.Entity.BlogId = TestBlog.Id;
             }
