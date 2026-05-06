@@ -2454,4 +2454,13 @@
   <data name="Content saved" xml:space="preserve">
     <value>सामग्री सहेजी गई</value>
   </data>
+  <data name="Content is already unpublished" xml:space="preserve">
+    <value>सामग्री पहले से ही अप्रकाशित है</value>
+  </data>
+  <data name="Content is already restored" xml:space="preserve">
+    <value>सामग्री पहले से ही पुनर्स्थापित है</value>
+  </data>
+  <data name="Content is already published" xml:space="preserve">
+    <value>सामग्री पहले से ही प्रकाशित है</value>
+  </data>
 </root>

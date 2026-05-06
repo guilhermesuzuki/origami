@@ -206,7 +206,7 @@ namespace Origami.Core.Data
 
                 //private scope
                 {
-                    var fresh = from a in db.Set<T1>().AsNoTracking() where a.Id == root.Entity.Id select a.IsPublished;
+                    var fresh = (from a in db.Set<T1>().AsNoTracking() where a.Id == root.Entity.Id select a.IsPublished).ToList();
                     if (fresh.Any() == false)
                     {
                         return new(root) { Error = Text.Original("Content must exist"), };
@@ -318,7 +318,7 @@ namespace Origami.Core.Data
 
                 //private scope
                 {
-                    var fresh = from a in db.Set<T1>().AsNoTracking() where a.Id == root.Entity.Id select a.IsDeleted;
+                    var fresh = (from a in db.Set<T1>().AsNoTracking() where a.Id == root.Entity.Id select a.IsDeleted).ToList();
                     if (fresh.Any() == false)
                     {
                         return new(root) { Error = Text.Original("Content must exist"), };
@@ -423,7 +423,7 @@ namespace Origami.Core.Data
 
                 //private scope
                 {
-                    var fresh = from a in db.Set<T1>().AsNoTracking() where a.Id == root.Entity.Id select a.IsPublished;
+                    var fresh = (from a in db.Set<T1>().AsNoTracking() where a.Id == root.Entity.Id select a.IsPublished).ToList();
                     if (fresh.Any() == false)
                     {
                         return new(root) { Error = Text.Original("Content must exist"), };

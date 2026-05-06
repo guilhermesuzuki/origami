@@ -2454,4 +2454,13 @@
   <data name="Content saved" xml:space="preserve">
     <value>Contenido guardado</value>
   </data>
+  <data name="Content is already unpublished" xml:space="preserve">
+    <value>El contenido ya está despublicado</value>
+  </data>
+  <data name="Content is already restored" xml:space="preserve">
+    <value>El contenido ya está restaurado</value>
+  </data>
+  <data name="Content is already published" xml:space="preserve">
+    <value>El contenido ya está publicado</value>
+  </data>
 </root>

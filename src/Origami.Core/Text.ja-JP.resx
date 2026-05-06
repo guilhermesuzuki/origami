@@ -2454,4 +2454,13 @@
   <data name="Content saved" xml:space="preserve">
     <value>コンテンツを保存しました</value>
   </data>
+  <data name="Content is already unpublished" xml:space="preserve">
+    <value>コンテンツはすでに非公開です</value>
+  </data>
+  <data name="Content is already restored" xml:space="preserve">
+    <value>コンテンツはすでに復元されています</value>
+  </data>
+  <data name="Content is already published" xml:space="preserve">
+    <value>コンテンツはすでに公開されています</value>
+  </data>
 </root>
