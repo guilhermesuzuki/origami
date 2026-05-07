@@ -28,6 +28,8 @@ public class DbConfigurationProvider : ConfigurationProvider, IDisposable
         this.Data["Site:Name"] = settings.Name.ToLower();
         this.Data["OpenTelemetry:Enabled"] = settings.OpenTelemetry.Enabled.ToString();
         this.Data["OpenTelemetry:Endpoint"] = settings.OpenTelemetry.Endpoint.ToString();
+        this.Data["Seq:Enabled"] = settings.Seq.Enabled.ToString();
+        this.Data["Seq:Endpoint"] = settings.Seq.Endpoint.ToString();
 
         IList<(string key, string value)> socialNetwork = new List<(string key, string value)>();
 
