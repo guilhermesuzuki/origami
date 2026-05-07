@@ -417,10 +417,16 @@ namespace Origami.Core.Data
 
                 return hub;
             }
+            catch (ValidationException ex)
+            {
+                hub.Pull(ex);
+            }
             catch (Exception ex)
             {
-                return new(root) { Error = ex.GetMessage(), };
+                hub.Error = ex.GetMessage();
             }
+
+            return hub;
         }
 
         public Result<T2> Unpublish(T2 root, IId userId)

@@ -230,7 +230,7 @@ namespace Origami.UI.Admin.IntegrationTests
             hub.Messages.ShouldNotBeEmpty();
             hub.Messages.Count.ShouldBe(1);
             hub.Messages[0].MessageType.ShouldBe(ResultMessage.MessageTypes.Error);
-            hub.Messages[0].Message.ShouldBe("Validation failed: \r\n -- Entity.AuthorId: Author is required Severity: Error");
+            hub.Messages[0].Message.ShouldBe("Author is required");
 
             var dbEntity = db.Set<T1>().AsNoTracking().Id(t2.Entity.Id);
             dbEntity.ShouldBeNull();
@@ -289,7 +289,7 @@ namespace Origami.UI.Admin.IntegrationTests
             hub.Messages.ShouldNotBeEmpty();
             hub.Messages.Count.ShouldBe(1);
             hub.Messages[0].MessageType.ShouldBe(ResultMessage.MessageTypes.Error);
-            hub.Messages[0].Message.ShouldBe("Validation failed: \r\n -- Entity.Content: Content must be a valid HTML Severity: Error");
+            hub.Messages[0].Message.ShouldBe("Content must be a valid HTML");
 
             var dbEntity = db.Set<T1>().AsNoTracking().Id(t2.Entity.Id);
             dbEntity.ShouldBeNull();
@@ -449,7 +449,7 @@ namespace Origami.UI.Admin.IntegrationTests
             hub.Messages.ShouldNotBeEmpty();
             hub.Messages.Count.ShouldBe(1);
             hub.Messages[0].MessageType.ShouldBe(ResultMessage.MessageTypes.Error);
-            hub.Messages[0].Message.ShouldBe("Validation failed: \r\n -- Entity.LanguageWrittenOn: Language must be valid Severity: Error");
+            hub.Messages[0].Message.ShouldBe("Language must be valid");
 
             var dbEntity = db.Set<T1>().AsNoTracking().Id(t2.Entity.Id);
             dbEntity.ShouldBeNull();
@@ -515,9 +515,11 @@ namespace Origami.UI.Admin.IntegrationTests
             hubB.ShouldNotBeNull();
             hubB.Ok.ShouldBeFalse();
             hubB.Messages.ShouldNotBeEmpty();
-            hubB.Messages.Count.ShouldBe(1);
+            hubB.Messages.Count.ShouldBe(2);
             hubB.Messages[0].MessageType.ShouldBe(ResultMessage.MessageTypes.Error);
-            hubB.Messages[0].Message.ShouldBe("Validation failed: \r\n -- Entity: Title is already in use Severity: Error\r\n -- Entity: Slug is already in use Severity: Error");
+            hubB.Messages[0].Message.ShouldBe("Title is already in use");
+            hubB.Messages[1].MessageType.ShouldBe(ResultMessage.MessageTypes.Error);
+            hubB.Messages[1].Message.ShouldBe("Slug is already in use");
 
             var dbEntity = db.Set<T1>().AsNoTracking().Id(t2b.Entity.Id);
             dbEntity.ShouldBeNull();
