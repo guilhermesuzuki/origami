@@ -11,6 +11,7 @@ namespace Origami.Core.Models
         public OrigamiSpecialMessage() : base()
         {
             this.Type = nameof(OrigamiSpecialMessage);
+            this.Subtype = OrigamiSpecialMessageTypes.None.ToString();
         }
 
         public event EventHandler<PropertyChangedEventArgs> OrigamiSpecialMessageChanged = (sender, e) => { };

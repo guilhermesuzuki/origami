@@ -31,7 +31,7 @@ namespace Origami.UI.Admin.IntegrationTests
             scope.CreateTestCategory(TestCategory, TestUser);
 
             var t2 = Activator.CreateInstance<T2>()!;
-            if (t2 is HubContentPage or HubContentPost or HubContentVideo)
+            if (t2 is HubContentPage or HubContentPost or HubContentVideo or HubContentQuickNote)
             {
                 t2.Entity.BlogId = TestBlog.Id;
             }
@@ -194,6 +194,123 @@ namespace Origami.UI.Admin.IntegrationTests
         }
 
         [Fact]
+        public void Insert_WhenAuthorIsNull_ShouldFail()
+        {
+            using var factory = new CustomWebApplicationFactory();
+            using var transaction = new TransactionScope();
+            using var scope = factory.Services.CreateScope();
+            using var db = scope.ServiceProvider.GetRequiredService<IDbContextFactory<OrigamiDbContext>>().CreateDbContext();
+            var superRepository = scope.ServiceProvider.GetRequiredService<ISuperRepository>();
+
+            scope.CreateTestBlog(TestBlog, TestRole, TestUser);
+            scope.CreateTestCategory(TestCategory, TestUser);
+
+            var t2 = Activator.CreateInstance<T2>()!;
+            if (t2 is HubContentPage or HubContentPost or HubContentVideo or HubContentQuickNote)
+            {
+                t2.Entity.BlogId = TestBlog.Id;
+            }
+            if (t2 is HubContentPost or HubContentVideo)
+            {
+                t2.Categories.Add(new() { CategoryId = TestCategory.Id, ContentId = t2.Id });
+                t2.Tags.Add(new() { ContentId = t2.Id, Tag = "Test Tag", Slug = "Test Tag".GetSlug() });
+            }
+
+            t2.Entity.Content = "<p>Test content</p>";
+            t2.Entity.Description = "Test Description";
+            t2.Entity.LanguageWrittenOn = "en-US";
+            t2.Entity.Slug = "Test Title".GetSlug();
+            t2.Entity.Title = "Test Title";
+
+            var hubRepository = scope.ServiceProvider.GetRequiredService<IHubContentRepository<T2>>();
+            var hub = hubRepository.Save(t2, TestUser);
+
+            hub.ShouldNotBeNull();
+            hub.Ok.ShouldBeFalse();
+            hub.Messages.ShouldNotBeEmpty();
+            hub.Messages.Count.ShouldBe(1);
+            hub.Messages[0].MessageType.ShouldBe(ResultMessage.MessageTypes.Error);
+            hub.Messages[0].Message.ShouldBe("Author is required");
+
+            var dbEntity = db.Set<T1>().AsNoTracking().Id(t2.Entity.Id);
+            dbEntity.ShouldBeNull();
+
+            var cacheHubContent = hubRepository.Get(t2);
+            cacheHubContent.ShouldNotBeNull();
+            cacheHubContent.Entity.Id.ShouldBe(Guid.Empty);
+            cacheHubContent.Categories.Count.ShouldBe(0);
+            cacheHubContent.Tags.Count.ShouldBe(0);
+
+            var dbCategories = db.Set<OrigamiContentCategory>().AsNoTracking().Where(x => x.ContentId == t2.Entity.Id).Any();
+            dbCategories.ShouldBeFalse();
+
+            var dbTags = db.Set<OrigamiContentTag>().AsNoTracking().Where(x => x.ContentId == t2.Entity.Id).Any();
+            dbTags.ShouldBeFalse();
+
+            var dbHubHistories = db.Set<OrigamiContentHistory>().AsNoTracking().Where(x => x.ContentId == t2.Entity.Id).Any();
+            dbHubHistories.ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Insert_WhenContentIsInvalid_ShouldFail()
+        {
+            using var factory = new CustomWebApplicationFactory();
+            using var transaction = new TransactionScope();
+            using var scope = factory.Services.CreateScope();
+            using var db = scope.ServiceProvider.GetRequiredService<IDbContextFactory<OrigamiDbContext>>().CreateDbContext();
+            var superRepository = scope.ServiceProvider.GetRequiredService<ISuperRepository>();
+
+            scope.CreateTestBlog(TestBlog, TestRole, TestUser);
+            scope.CreateTestCategory(TestCategory, TestUser);
+
+            var t2 = Activator.CreateInstance<T2>()!;
+            if (t2 is HubContentPage or HubContentPost or HubContentVideo or HubContentQuickNote)
+            {
+                t2.Entity.BlogId = TestBlog.Id;
+            }
+            if (t2 is HubContentPost or HubContentVideo)
+            {
+                t2.Categories.Add(new() { CategoryId = TestCategory.Id, ContentId = t2.Id });
+                t2.Tags.Add(new() { ContentId = t2.Id, Tag = "Test Tag", Slug = "Test Tag".GetSlug() });
+            }
+
+            t2.Entity.AuthorId = TestUser.Id;
+            t2.Entity.Content = "<p>Invalid test content";
+            t2.Entity.Description = "Test Description";
+            t2.Entity.LanguageWrittenOn = "en-US";
+            t2.Entity.Slug = "Test Title".GetSlug();
+            t2.Entity.Title = "Test Title";
+
+            var hubRepository = scope.ServiceProvider.GetRequiredService<IHubContentRepository<T2>>();
+            var hub = hubRepository.Save(t2, TestUser);
+
+            hub.ShouldNotBeNull();
+            hub.Ok.ShouldBeFalse();
+            hub.Messages.ShouldNotBeEmpty();
+            hub.Messages.Count.ShouldBe(1);
+            hub.Messages[0].MessageType.ShouldBe(ResultMessage.MessageTypes.Error);
+            hub.Messages[0].Message.ShouldBe("Content must be a valid HTML");
+
+            var dbEntity = db.Set<T1>().AsNoTracking().Id(t2.Entity.Id);
+            dbEntity.ShouldBeNull();
+
+            var cacheHubContent = hubRepository.Get(t2);
+            cacheHubContent.ShouldNotBeNull();
+            cacheHubContent.Entity.Id.ShouldBe(Guid.Empty);
+            cacheHubContent.Categories.Count.ShouldBe(0);
+            cacheHubContent.Tags.Count.ShouldBe(0);
+
+            var dbCategories = db.Set<OrigamiContentCategory>().AsNoTracking().Where(x => x.ContentId == t2.Entity.Id).Any();
+            dbCategories.ShouldBeFalse();
+
+            var dbTags = db.Set<OrigamiContentTag>().AsNoTracking().Where(x => x.ContentId == t2.Entity.Id).Any();
+            dbTags.ShouldBeFalse();
+
+            var dbHubHistories = db.Set<OrigamiContentHistory>().AsNoTracking().Where(x => x.ContentId == t2.Entity.Id).Any();
+            dbHubHistories.ShouldBeFalse();
+        }
+
+        [Fact]
         public void Insert_WhenEntityIsValid_ShouldPersistRecord()
         {
             using var factory = new CustomWebApplicationFactory();
@@ -206,7 +323,7 @@ namespace Origami.UI.Admin.IntegrationTests
             scope.CreateTestCategory(TestCategory, TestUser);
 
             var t2 = Activator.CreateInstance<T2>()!;
-            if (t2 is HubContentPage or HubContentPost or HubContentVideo)
+            if (t2 is HubContentPage or HubContentPost or HubContentVideo or HubContentQuickNote)
             {
                 t2.Entity.BlogId = TestBlog.Id;
             }
@@ -295,6 +412,129 @@ namespace Origami.UI.Admin.IntegrationTests
         }
 
         [Fact]
+        public void Insert_WhenLanguageIsInvalid_ShouldFail()
+        {
+            using var factory = new CustomWebApplicationFactory();
+            using var transaction = new TransactionScope();
+            using var scope = factory.Services.CreateScope();
+            using var db = scope.ServiceProvider.GetRequiredService<IDbContextFactory<OrigamiDbContext>>().CreateDbContext();
+            var superRepository = scope.ServiceProvider.GetRequiredService<ISuperRepository>();
+
+            scope.CreateTestBlog(TestBlog, TestRole, TestUser);
+            scope.CreateTestCategory(TestCategory, TestUser);
+
+            var t2 = Activator.CreateInstance<T2>()!;
+            if (t2 is HubContentPage or HubContentPost or HubContentVideo or HubContentQuickNote)
+            {
+                t2.Entity.BlogId = TestBlog.Id;
+            }
+            if (t2 is HubContentPost or HubContentVideo)
+            {
+                t2.Categories.Add(new() { CategoryId = TestCategory.Id, ContentId = t2.Id });
+                t2.Tags.Add(new() { ContentId = t2.Id, Tag = "Test Tag", Slug = "Test Tag".GetSlug() });
+            }
+
+            t2.Entity.AuthorId = TestUser.Id;
+            t2.Entity.Content = "<p>Test content</p>";
+            t2.Entity.Description = "Test Description";
+            t2.Entity.LanguageWrittenOn = "??-??";
+            t2.Entity.Slug = "Test Title".GetSlug();
+            t2.Entity.Title = "Test Title";
+
+            var hubRepository = scope.ServiceProvider.GetRequiredService<IHubContentRepository<T2>>();
+            var hub = hubRepository.Save(t2, TestUser);
+
+            hub.ShouldNotBeNull();
+            hub.Ok.ShouldBeFalse();
+            hub.Messages.ShouldNotBeEmpty();
+            hub.Messages.Count.ShouldBe(1);
+            hub.Messages[0].MessageType.ShouldBe(ResultMessage.MessageTypes.Error);
+            hub.Messages[0].Message.ShouldBe("Language must be valid");
+
+            var dbEntity = db.Set<T1>().AsNoTracking().Id(t2.Entity.Id);
+            dbEntity.ShouldBeNull();
+
+            var cacheHubContent = hubRepository.Get(t2);
+            cacheHubContent.ShouldNotBeNull();
+            cacheHubContent.Entity.Id.ShouldBe(Guid.Empty);
+            cacheHubContent.Categories.Count.ShouldBe(0);
+            cacheHubContent.Tags.Count.ShouldBe(0);
+
+            var dbCategories = db.Set<OrigamiContentCategory>().AsNoTracking().Where(x => x.ContentId == t2.Entity.Id).Any();
+            dbCategories.ShouldBeFalse();
+
+            var dbTags = db.Set<OrigamiContentTag>().AsNoTracking().Where(x => x.ContentId == t2.Entity.Id).Any();
+            dbTags.ShouldBeFalse();
+
+            var dbHubHistories = db.Set<OrigamiContentHistory>().AsNoTracking().Where(x => x.ContentId == t2.Entity.Id).Any();
+            dbHubHistories.ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Insert_WhenTitleIsDuplicate_ShouldFail()
+        {
+            using var factory = new CustomWebApplicationFactory();
+            using var transaction = new TransactionScope();
+            using var scope = factory.Services.CreateScope();
+            using var db = scope.ServiceProvider.GetRequiredService<IDbContextFactory<OrigamiDbContext>>().CreateDbContext();
+            var superRepository = scope.ServiceProvider.GetRequiredService<ISuperRepository>();
+
+            scope.CreateTestBlog(TestBlog, TestRole, TestUser);
+            scope.CreateTestCategory(TestCategory, TestUser);
+
+            var t2a = Activator.CreateInstance<T2>()!;
+            var t2b = Activator.CreateInstance<T2>()!;
+
+            if (t2a is HubContentPage or HubContentPost or HubContentVideo or HubContentQuickNote)
+            {
+                t2a.Entity.BlogId = TestBlog.Id;
+                t2b.Entity.BlogId = TestBlog.Id;
+            }
+
+            t2a.Entity.AuthorId = TestUser.Id;
+            t2a.Entity.Content = "<p>Test content</p>";
+            t2a.Entity.Description = "Test Description";
+            t2a.Entity.LanguageWrittenOn = "en-US";
+            t2a.Entity.Slug = "Test Title".GetSlug();
+            t2a.Entity.Title = "Test Title";
+
+            t2b.Entity.AuthorId = TestUser.Id;
+            t2b.Entity.Content = "<p>Test content</p>";
+            t2b.Entity.Description = "Test Description";
+            t2b.Entity.LanguageWrittenOn = "en-US";
+            t2b.Entity.Slug = "Test Title".GetSlug();
+            t2b.Entity.Title = "Test Title";
+
+            var hubRepository = scope.ServiceProvider.GetRequiredService<IHubContentRepository<T2>>();
+            var hubA = hubRepository.Save(t2a, TestUser);
+            var hubB = hubRepository.Save(t2b, TestUser);
+
+            hubA.ShouldNotBeNull();
+            hubA.Ok.ShouldBeTrue();
+
+            hubB.ShouldNotBeNull();
+            hubB.Ok.ShouldBeFalse();
+            hubB.Messages.ShouldNotBeEmpty();
+            hubB.Messages.Count.ShouldBe(2);
+            hubB.Messages[0].MessageType.ShouldBe(ResultMessage.MessageTypes.Error);
+            hubB.Messages[0].Message.ShouldBe("Title is already in use");
+            hubB.Messages[1].MessageType.ShouldBe(ResultMessage.MessageTypes.Error);
+            hubB.Messages[1].Message.ShouldBe("Slug is already in use");
+
+            var dbEntity = db.Set<T1>().AsNoTracking().Id(t2b.Entity.Id);
+            dbEntity.ShouldBeNull();
+
+            var cacheHubContent = hubRepository.Get(t2b);
+            cacheHubContent.ShouldNotBeNull();
+            cacheHubContent.Entity.Id.ShouldBe(Guid.Empty);
+            cacheHubContent.Categories.Count.ShouldBe(0);
+            cacheHubContent.Tags.Count.ShouldBe(0);
+
+            var dbHubHistories = db.Set<OrigamiContentHistory>().AsNoTracking().Where(x => x.ContentId == t2b.Entity.Id).Any();
+            dbHubHistories.ShouldBeFalse();
+        }
+
+        [Fact]
         public void Publish_WhenEntityIsValid_ShouldPersistRecord()
         {
             using var factory = new CustomWebApplicationFactory();
@@ -307,7 +547,7 @@ namespace Origami.UI.Admin.IntegrationTests
             scope.CreateTestCategory(TestCategory, TestUser);
 
             var t2 = Activator.CreateInstance<T2>()!;
-            if (t2 is HubContentPage or HubContentPost or HubContentVideo)
+            if (t2 is HubContentPage or HubContentPost or HubContentVideo or HubContentQuickNote)
             {
                 t2.Entity.BlogId = TestBlog.Id;
             }
@@ -444,7 +684,7 @@ namespace Origami.UI.Admin.IntegrationTests
             scope.CreateTestCategory(TestCategory, TestUser);
 
             var t2 = Activator.CreateInstance<T2>()!;
-            if (t2 is HubContentPage or HubContentPost or HubContentVideo)
+            if (t2 is HubContentPage or HubContentPost or HubContentVideo or HubContentQuickNote)
             {
                 t2.Entity.BlogId = TestBlog.Id;
             }
@@ -639,7 +879,7 @@ namespace Origami.UI.Admin.IntegrationTests
             scope.CreateTestCategory(TestCategory, TestUser);
 
             var t2 = Activator.CreateInstance<T2>()!;
-            if (t2 is HubContentPage or HubContentPost or HubContentVideo)
+            if (t2 is HubContentPage or HubContentPost or HubContentVideo or HubContentQuickNote)
             {
                 t2.Entity.BlogId = TestBlog.Id;
             }
@@ -888,7 +1128,7 @@ namespace Origami.UI.Admin.IntegrationTests
             scope.CreateTestCategory(TestCategory, TestUser);
 
             var t2 = Activator.CreateInstance<T2>()!;
-            if (t2 is HubContentPage or HubContentPost or HubContentVideo)
+            if (t2 is HubContentPage or HubContentPost or HubContentVideo or HubContentQuickNote)
             {
                 t2.Entity.BlogId = TestBlog.Id;
             }
@@ -1059,7 +1299,7 @@ namespace Origami.UI.Admin.IntegrationTests
             scope.CreateTestCategory(TestCategory, TestUser);
 
             var t2 = Activator.CreateInstance<T2>()!;
-            if (t2 is HubContentPage or HubContentPost or HubContentVideo)
+            if (t2 is HubContentPage or HubContentPost or HubContentVideo or HubContentQuickNote)
             {
                 t2.Entity.BlogId = TestBlog.Id;
             }

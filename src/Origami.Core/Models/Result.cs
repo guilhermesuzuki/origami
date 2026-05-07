@@ -321,7 +321,15 @@ namespace Origami.Core.Models
         public Result(T entity, IValidator<T> validator) : this()
         {
             Entity = entity;
-            validator.Validate(entity).Errors.Each(e => Error = e.ErrorMessage);
+
+            try
+            {
+                validator.ValidateAndThrow(entity);
+            }
+            catch (ValidationException ex)
+            {
+                this.Pull(ex);
+            }
         }
 
         /// <summary>

@@ -119,6 +119,28 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("Slug is already in use"));
         }
 
+        public static IRuleBuilderOptions<T, T> TitleMustBeUnique<T>(this IRuleBuilder<T, T> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory) where T : class, IId, ITitle
+        {
+            return ruleBuilder
+                .Must(entity =>
+                {
+                    using var db = dbContextFactory.CreateDbContext();
+                    var exists = db.Set<T>().AsNoTracking().Any(x => x.Title == entity.Title && x.Id != entity.Id);
+                    return !exists;
+                })
+                .WithMessage(text.Original("Title is already in use"));
+        }
 
+        public static IRuleBuilderOptions<T, T> TitleMustBeUniqueByBlog<T>(this IRuleBuilder<T, T> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory) where T : class, IId, IBlogIdNull, ITitle
+        {
+            return ruleBuilder
+                .Must(entity =>
+                {
+                    using var db = dbContextFactory.CreateDbContext();
+                    var exists = db.Set<T>().AsNoTracking().Any(x => x.Title == entity.Title && x.BlogId == entity.BlogId && x.Id != entity.Id);
+                    return !exists;
+                })
+                .WithMessage(text.Original("Title is already in use"));
+        }
     }
 }

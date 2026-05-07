@@ -26,11 +26,13 @@ namespace Origami.Core.Validators
             if (isBlogIdRequired)
             {
                 RuleFor(x => x.BlogId).BlogId(text);
+                RuleFor(x => x).TitleMustBeUniqueByBlog(text, dbContextFactory);
                 RuleFor(x => x).SlugMustBeUniqueByBlog(text, dbContextFactory);
             }
             else
             {
                 RuleFor(x => x.BlogId).BlogIdMustBeNull(text);
+                RuleFor(x => x).TitleMustBeUnique(text, dbContextFactory);
                 RuleFor(x => x).SlugMustBeUnique(text, dbContextFactory);
             }
         }
