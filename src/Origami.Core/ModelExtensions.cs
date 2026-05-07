@@ -1,5 +1,6 @@
 ﻿using AngleSharp;
 using CloneExtensions;
+using FluentValidation;
 using Origami.Core.Models;
 using Origami.Core.Models.Settings;
 using System.Collections.Specialized;
@@ -437,6 +438,14 @@ namespace Origami.Core
             }
 
             return names.Count == 1 ? names[0] : string.Empty;
+        }
+
+        public static void GenerateTimestamp(this IId entity)
+        {
+            if (entity is IVersion version)
+            {
+                version.Version = BitConverter.GetBytes(DateTime.UtcNow.Ticks);
+            }
         }
 
         public static DataOperationContext<T> GetContext<T>(this T entity)
@@ -1012,6 +1021,15 @@ namespace Origami.Core
             }
         }
 
+        public static T Pull<T>(this T hub, ValidationException validationException) where T : Result
+        {
+            foreach (var error in validationException.Errors)
+            {
+                hub.Error = error.ErrorMessage;
+            }
+            return hub;
+        }
+
         /// <summary>
         /// Adds a query string to <paramref name="url"/>
         /// </summary>
@@ -1429,7 +1447,6 @@ namespace Origami.Core
             if (to != null) to.Version = from!.Version;
             return entity;
         }
-
         /// <summary>
         /// TODO: comment this
         /// </summary>
@@ -1462,14 +1479,6 @@ namespace Origami.Core
             if (depth >= 8) return string.Empty;
             if (exception == null) return string.Empty;
             return string.Concat(" • ", exception.Message, exception.InnerException.M(depth + 1));
-        }
-
-        public static void GenerateTimestamp(this IId entity)
-        {
-            if (entity is IVersion version)
-            {
-                version.Version = BitConverter.GetBytes(DateTime.UtcNow.Ticks);
-            }
         }
     }
 }

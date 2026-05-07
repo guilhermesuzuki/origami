@@ -2472,4 +2472,7 @@
   <data name="Tags must be empty" xml:space="preserve">
     <value>Tags must be empty</value>
   </data>
+  <data name="Title is already in use" xml:space="preserve">
+    <value>Title is already in use</value>
+  </data>
 </root>

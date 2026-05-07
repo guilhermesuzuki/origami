@@ -2472,4 +2472,7 @@
   <data name="Tags must be empty" xml:space="preserve">
     <value>タグは空である必要があります</value>
   </data>
+  <data name="Title is already in use" xml:space="preserve">
+    <value>タイトルはすでに使用されています</value>
+  </data>
 </root>
