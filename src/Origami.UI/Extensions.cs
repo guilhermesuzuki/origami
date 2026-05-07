@@ -394,10 +394,12 @@ namespace Origami.UI
 
             builder.Host.UseSerilog((context, configuration) =>
             {
+                var seq = context.Configuration.GetValue("Seq:Enabled", false);
+                var seqEndpoint = context.Configuration.GetValue("Seq:Endpoint", string.Empty);
+
                 configuration.ReadFrom.Configuration(context.Configuration);
                 configuration.WriteTo.Console();
-                var seq = context.Configuration.GetValue("Seq:Enabled", false);
-                var seqEndpoint = context.Configuration.GetValue("Seq:Endpoint", string.Empty)!;
+                
                 if (seq && seqEndpoint.Has() == true)
                 {
                     configuration.WriteTo.Seq(seqEndpoint);
