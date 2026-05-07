@@ -40,7 +40,7 @@
                                     <span class="me-1">@context.Item.Value</span>
                                     @if (context.Item.Value is IList list)
                                     {
-                                        <span class="text-decoration-underline">@list.Count @Text.Lower("item(s)")</span>
+                                        <span class="p-1 shadow-sm border">@list.Count @Text.Lower("item(s)")</span>
                                     }
                                 </CellTemplate>
                             </TemplateColumn>
@@ -61,12 +61,11 @@
 @code {
     protected IDictionary<object, object?> GetEntries()
     {
-        var mem = (MemoryCache)this.MemoryCache;
         var result = new Dictionary<object, object?>();
 
-        foreach (var key in mem.Keys.OrderBy(x => x.ToString()))
+        foreach (var key in this.MemoryCache.Keys.OrderBy(x => x.ToString()))
         {
-            result[key] = mem.Get(key);
+            result[key] = this.MemoryCache.Get(key);
         }
 
         return result;

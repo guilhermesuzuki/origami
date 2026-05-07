@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -59,46 +59,46 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -117,15 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="_comments.Count" xml:space="preserve">
-    <value>_comments.Count</value>
-  </data>
-  <data name="_directories.Count()" xml:space="preserve">
-    <value>_directories.Count()</value>
-  </data>
-  <data name="_resetPassword" xml:space="preserve">
-    <value>_resetPassword</value>
-  </data>
   <data name="({0} files max)" xml:space="preserve">
     <value>({0} files max)</value>
   </data>
@@ -555,9 +546,6 @@
   <data name="Commented on post:" xml:space="preserve">
     <value>Commented on post:</value>
   </data>
-  <data name="commentReaction.Reaction" xml:space="preserve">
-    <value>commentReaction.Reaction</value>
-  </data>
   <data name="Comments" xml:space="preserve">
     <value>Comments</value>
   </data>
@@ -590,15 +578,6 @@
   </data>
   <data name="Content must exist" xml:space="preserve">
     <value>Content must exist</value>
-  </data>
-  <data name="context.Item.Description" xml:space="preserve">
-    <value>context.Item.Description</value>
-  </data>
-  <data name="context.Item.GetEmail()" xml:space="preserve">
-    <value>context.Item.GetEmail()</value>
-  </data>
-  <data name="context.Item.TypeName" xml:space="preserve">
-    <value>context.Item.TypeName</value>
   </data>
   <data name="Cookie policy" xml:space="preserve">
     <value>Cookie policy</value>
@@ -926,57 +905,6 @@
   </data>
   <data name="Entity header cannot be updated" xml:space="preserve">
     <value>Entity header cannot be updated</value>
-  </data>
-  <data name="Entity.EnableSsl.YesNo()" xml:space="preserve">
-    <value>Entity.EnableSsl.YesNo()</value>
-  </data>
-  <data name="Entity.Entity.IsCommentEnabled.YesNo()" xml:space="preserve">
-    <value>Entity.Entity.IsCommentEnabled.YesNo()</value>
-  </data>
-  <data name="Entity.Entity.IsDraft.YesNo()" xml:space="preserve">
-    <value>Entity.Entity.IsDraft.YesNo()</value>
-  </data>
-  <data name="Entity.GetTOTPRecoveryCodes().Any().YesNo()" xml:space="preserve">
-    <value>Entity.GetTOTPRecoveryCodes().Any().YesNo()</value>
-  </data>
-  <data name="Entity.IsActive.YesNo()" xml:space="preserve">
-    <value>Entity.IsActive.YesNo()</value>
-  </data>
-  <data name="Entity.IsApproved.YesNo()" xml:space="preserve">
-    <value>Entity.IsApproved.YesNo()</value>
-  </data>
-  <data name="Entity.IsCommentEnabled.YesNo()" xml:space="preserve">
-    <value>Entity.IsCommentEnabled.YesNo()</value>
-  </data>
-  <data name="Entity.IsDeleted.YesNo()" xml:space="preserve">
-    <value>Entity.IsDeleted.YesNo()</value>
-  </data>
-  <data name="Entity.IsPrimary.YesNo()" xml:space="preserve">
-    <value>Entity.IsPrimary.YesNo()</value>
-  </data>
-  <data name="Entity.IsSpam.YesNo()" xml:space="preserve">
-    <value>Entity.IsSpam.YesNo()</value>
-  </data>
-  <data name="Entity.KeepTestingTheSmtpServerConnectivity.YesNo()" xml:space="preserve">
-    <value>Entity.KeepTestingTheSmtpServerConnectivity.YesNo()</value>
-  </data>
-  <data name="Entity.OpenTelemetry.Enabled.YesNo()" xml:space="preserve">
-    <value>Entity.OpenTelemetry.Enabled.YesNo()</value>
-  </data>
-  <data name="Entity.SocialNetwork.Facebook.Enabled.YesNo()" xml:space="preserve">
-    <value>Entity.SocialNetwork.Facebook.Enabled.YesNo()</value>
-  </data>
-  <data name="Entity.SocialNetwork.GitHub.Enabled.YesNo()" xml:space="preserve">
-    <value>Entity.SocialNetwork.GitHub.Enabled.YesNo()</value>
-  </data>
-  <data name="Entity.SocialNetwork.Google.Enabled.YesNo()" xml:space="preserve">
-    <value>Entity.SocialNetwork.Google.Enabled.YesNo()</value>
-  </data>
-  <data name="Entity.SocialNetwork.Microsoft.Enabled.YesNo()" xml:space="preserve">
-    <value>Entity.SocialNetwork.Microsoft.Enabled.YesNo()</value>
-  </data>
-  <data name="Entity.TOTPSecret.Has().YesNo()" xml:space="preserve">
-    <value>Entity.TOTPSecret.Has().YesNo()</value>
   </data>
   <data name="Error" xml:space="preserve">
     <value>Error</value>
@@ -1506,12 +1434,6 @@
   <data name="Post" xml:space="preserve">
     <value>Post</value>
   </data>
-  <data name="postRating.Rating" xml:space="preserve">
-    <value>postRating.Rating</value>
-  </data>
-  <data name="postReaction.Reaction" xml:space="preserve">
-    <value>postReaction.Reaction</value>
-  </data>
   <data name="Posts" xml:space="preserve">
     <value>Posts</value>
   </data>
@@ -1626,9 +1548,6 @@
   <data name="Published videos" xml:space="preserve">
     <value>Published videos</value>
   </data>
-  <data name="published.GetType().Name" xml:space="preserve">
-    <value>published.GetType().Name</value>
-  </data>
   <data name="Purge blogs" xml:space="preserve">
     <value>Purge blogs</value>
   </data>
@@ -1695,12 +1614,6 @@
   <data name="Rating must be less than or equal to 5" xml:space="preserve">
     <value>Rating must be less than or equal to 5</value>
   </data>
-  <data name="rating!.Rating" xml:space="preserve">
-    <value>rating!.Rating</value>
-  </data>
-  <data name="rating.Rating" xml:space="preserve">
-    <value>rating.Rating</value>
-  </data>
   <data name="Ratings" xml:space="preserve">
     <value>Ratings</value>
   </data>
@@ -1718,9 +1631,6 @@
   </data>
   <data name="Reaction needs one author" xml:space="preserve">
     <value>Reaction needs one author</value>
-  </data>
-  <data name="reaction.Reaction" xml:space="preserve">
-    <value>reaction.Reaction</value>
   </data>
   <data name="Reactions" xml:space="preserve">
     <value>Reactions</value>
@@ -1757,9 +1667,6 @@
   </data>
   <data name="Repeat new password" xml:space="preserve">
     <value>Repeat new password</value>
-  </data>
-  <data name="replies.Count()" xml:space="preserve">
-    <value>replies.Count()</value>
   </data>
   <data name="Reply" xml:space="preserve">
     <value>Reply</value>
@@ -1959,17 +1866,11 @@
   <data name="Select trash" xml:space="preserve">
     <value>Select trash</value>
   </data>
-  <data name="SelectedEntities.Count" xml:space="preserve">
-    <value>SelectedEntities.Count</value>
-  </data>
   <data name="Send verification code" xml:space="preserve">
     <value>Send verification code</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Settings</value>
-  </data>
-  <data name="settings.Name" xml:space="preserve">
-    <value>settings.Name</value>
   </data>
   <data name="Size" xml:space="preserve">
     <value>Size</value>
@@ -2012,24 +1913,6 @@
   </data>
   <data name="Social profiles found in the search" xml:space="preserve">
     <value>Social profiles found in the search</value>
-  </data>
-  <data name="socialProfileDelete.PostCommentReactions" xml:space="preserve">
-    <value>socialProfileDelete.PostCommentReactions</value>
-  </data>
-  <data name="socialProfileDelete.PostComments" xml:space="preserve">
-    <value>socialProfileDelete.PostComments</value>
-  </data>
-  <data name="socialProfileDelete.PostRatings" xml:space="preserve">
-    <value>socialProfileDelete.PostRatings</value>
-  </data>
-  <data name="socialProfileDelete.VideoCommentReactions" xml:space="preserve">
-    <value>socialProfileDelete.VideoCommentReactions</value>
-  </data>
-  <data name="socialProfileDelete.VideoComments" xml:space="preserve">
-    <value>socialProfileDelete.VideoComments</value>
-  </data>
-  <data name="socialProfileDelete.VideoRatings" xml:space="preserve">
-    <value>socialProfileDelete.VideoRatings</value>
   </data>
   <data name="Source and destination images share the same location" xml:space="preserve">
     <value>Source and destination images share the same location</value>
@@ -2127,24 +2010,6 @@
   <data name="Test connection" xml:space="preserve">
     <value>Test connection</value>
   </data>
-  <data name="Text.OperationCompletedSuccessfully" xml:space="preserve">
-    <value>Text.OperationCompletedSuccessfully</value>
-  </data>
-  <data name="Text.SomethingWentWrongPleaseTryAgain" xml:space="preserve">
-    <value>Text.SomethingWentWrongPleaseTryAgain</value>
-  </data>
-  <data name="Text.Styles.Original" xml:space="preserve">
-    <value>Text.Styles.Original</value>
-  </data>
-  <data name="Text.Styles.Uppercase" xml:space="preserve">
-    <value>Text.Styles.Uppercase</value>
-  </data>
-  <data name="Text.YouDontHavePermissionForThisFeature" xml:space="preserve">
-    <value>Text.YouDontHavePermissionForThisFeature</value>
-  </data>
-  <data name="Text.YouMadeTooManyCommentsIn5Minutes" xml:space="preserve">
-    <value>Text.YouMadeTooManyCommentsIn5Minutes</value>
-  </data>
   <data name="The author marked this as draft" xml:space="preserve">
     <value>The author marked this as draft</value>
   </data>
@@ -2162,27 +2027,6 @@
   </data>
   <data name="this is a front-page" xml:space="preserve">
     <value>this is a front-page</value>
-  </data>
-  <data name="this._files.Count()" xml:space="preserve">
-    <value>this._files.Count()</value>
-  </data>
-  <data name="this.Entity.GetEmail()" xml:space="preserve">
-    <value>this.Entity.GetEmail()</value>
-  </data>
-  <data name="this.FileLimitInBytes.SizeInBytes()" xml:space="preserve">
-    <value>this.FileLimitInBytes.SizeInBytes()</value>
-  </data>
-  <data name="this.PublishedPosts" xml:space="preserve">
-    <value>this.PublishedPosts</value>
-  </data>
-  <data name="this.PublishedVideos" xml:space="preserve">
-    <value>this.PublishedVideos</value>
-  </data>
-  <data name="this.Super.GetContents(context.Item, this.UserFacade.BlogId).OfType&lt;OrigamiPost&gt;().Published().Count()" xml:space="preserve">
-    <value>this.Super.GetContents(context.Item, this.UserFacade.BlogId).OfType&lt;OrigamiPost&gt;().Published().Count()</value>
-  </data>
-  <data name="this.Super.GetContents(context.Item, this.UserFacade.BlogId).OfType&lt;OrigamiVideo&gt;().Published().Count()" xml:space="preserve">
-    <value>this.Super.GetContents(context.Item, this.UserFacade.BlogId).OfType&lt;OrigamiVideo&gt;().Published().Count()</value>
   </data>
   <data name="Thumbnail" xml:space="preserve">
     <value>Thumbnail</value>
@@ -2597,5 +2441,35 @@
   </data>
   <data name="Calm down, you made too many comments in 5 minutes" xml:space="preserve">
     <value>Calm down, you made too many comments in 5 minutes</value>
+  </data>
+  <data name="Content created" xml:space="preserve">
+    <value>Content created</value>
+  </data>
+  <data name="Content deleted" xml:space="preserve">
+    <value>Content deleted</value>
+  </data>
+  <data name="Content restored" xml:space="preserve">
+    <value>Content restored</value>
+  </data>
+  <data name="Content saved" xml:space="preserve">
+    <value>Content saved</value>
+  </data>
+  <data name="Content is already unpublished" xml:space="preserve">
+    <value>Content is already unpublished</value>
+  </data>
+  <data name="Content is already restored" xml:space="preserve">
+    <value>Content is already restored</value>
+  </data>
+  <data name="Content is already published" xml:space="preserve">
+    <value>Content is already published</value>
+  </data>
+  <data name="Content is already deleted" xml:space="preserve">
+    <value>Content is already deleted</value>
+  </data>
+  <data name="Categories must be empty" xml:space="preserve">
+    <value>Categories must be empty</value>
+  </data>
+  <data name="Tags must be empty" xml:space="preserve">
+    <value>Tags must be empty</value>
   </data>
 </root>

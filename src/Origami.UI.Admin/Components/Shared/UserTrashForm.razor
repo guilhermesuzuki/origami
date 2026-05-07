@@ -60,7 +60,7 @@
             }
             else if (Entity.Type.Like("QuickNote") == true)
             {
-                var entity = this.Super.QuickNotes.ReadFromCache().Id(Entity.Id)!;
+                var entity = this.Super.Contents.ReadFromCache().OfType<OrigamiQuickNote>().Id(Entity.Id)!;
                 <TrashFormQuickNote Entity="entity"></TrashFormQuickNote>
             }
             else if (Entity.Type.Like("OrigamiSpecialPage") == true)

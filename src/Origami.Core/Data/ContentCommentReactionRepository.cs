@@ -1,11 +1,10 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Origami.Core.Models;
 
 namespace Origami.Core.Data
 {
-    public class ContentCommentReactionRepository:
+    public class ContentCommentReactionRepository :
         RepositoryOuterLayer<OrigamiContentCommentReaction>,
         IContentCommentReactionRepository
     {
@@ -24,7 +23,7 @@ namespace Origami.Core.Data
         public ContentCommentReactionRepository(
             IValidator<OrigamiContentCommentReaction> validator,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
-            IMemoryCache memoryCache,
+            IMyMemoryCache memoryCache,
             IWebRootPath wwwRoot,
             Text text)
             : base(text, dbContextFactory, memoryCache, wwwRoot)

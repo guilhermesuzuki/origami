@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Origami.Core.Models
+﻿namespace Origami.Core.Models
 {
-    public class WhenIClickHereEventArgs: EventArgs
+    public class WhenIClickHereEventArgs : EventArgs
     {
         /// <summary>
         /// Entity
@@ -28,7 +24,7 @@ namespace Origami.Core.Models
         /// </summary>
         public WhenIClickHereEventArgs() : base()
         {
-            
+
         }
     }
 }

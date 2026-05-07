@@ -117,15 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="_comments.Count" xml:space="preserve">
-    <value>_comments.Count</value>
-  </data>
-  <data name="_directories.Count()" xml:space="preserve">
-    <value>_directories.Count()</value>
-  </data>
-  <data name="_resetPassword" xml:space="preserve">
-    <value>_resetPassword</value>
-  </data>
   <data name="({0} files max)" xml:space="preserve">
     <value>({0} arquivos máx.)</value>
   </data>
@@ -490,7 +481,7 @@
     <value>Escolha o estilo de fundo</value>
   </data>
   <data name="Clear" xml:space="preserve">
-    <value>Claro</value>
+    <value>Limpar</value>
   </data>
   <data name="Clear cache" xml:space="preserve">
     <value>Limpar cache</value>
@@ -555,9 +546,6 @@
   <data name="Commented on post:" xml:space="preserve">
     <value>Comentário na postagem:</value>
   </data>
-  <data name="commentReaction.Reaction" xml:space="preserve">
-    <value>commentReaction.Reaction</value>
-  </data>
   <data name="Comments" xml:space="preserve">
     <value>Comentários</value>
   </data>
@@ -590,15 +578,6 @@
   </data>
   <data name="Content must exist" xml:space="preserve">
     <value>O conteúdo deve existir</value>
-  </data>
-  <data name="context.Item.Description" xml:space="preserve">
-    <value>context.Item.Description</value>
-  </data>
-  <data name="context.Item.GetEmail()" xml:space="preserve">
-    <value>context.Item.GetEmail()</value>
-  </data>
-  <data name="context.Item.TypeName" xml:space="preserve">
-    <value>context.Item.TypeName</value>
   </data>
   <data name="Cookie policy" xml:space="preserve">
     <value>Política de cookies</value>
@@ -901,10 +880,10 @@
     <value>As configurações de e-mail estão corretas</value>
   </data>
   <data name="Enable" xml:space="preserve">
-    <value>Habilitar</value>
+    <value>Ativar</value>
   </data>
   <data name="Enable SSL" xml:space="preserve">
-    <value>Habilitar SSL</value>
+    <value>Ativar SSL</value>
   </data>
   <data name="End date" xml:space="preserve">
     <value>Data de término</value>
@@ -926,57 +905,6 @@
   </data>
   <data name="Entity header cannot be updated" xml:space="preserve">
     <value>O cabeçalho da entidade não pode ser atualizado</value>
-  </data>
-  <data name="Entity.EnableSsl.YesNo()" xml:space="preserve">
-    <value>Entity.EnableSsl.YesNo()</value>
-  </data>
-  <data name="Entity.Entity.IsCommentEnabled.YesNo()" xml:space="preserve">
-    <value>Entity.Entity.IsCommentEnabled.YesNo()</value>
-  </data>
-  <data name="Entity.Entity.IsDraft.YesNo()" xml:space="preserve">
-    <value>Entity.Entity.IsDraft.YesNo()</value>
-  </data>
-  <data name="Entity.GetTOTPRecoveryCodes().Any().YesNo()" xml:space="preserve">
-    <value>Entity.GetTOTPRecoveryCodes().Any().YesNo()</value>
-  </data>
-  <data name="Entity.IsActive.YesNo()" xml:space="preserve">
-    <value>Entity.IsActive.YesNo()</value>
-  </data>
-  <data name="Entity.IsApproved.YesNo()" xml:space="preserve">
-    <value>Entity.IsApproved.YesNo()</value>
-  </data>
-  <data name="Entity.IsCommentEnabled.YesNo()" xml:space="preserve">
-    <value>Entity.IsCommentEnabled.YesNo()</value>
-  </data>
-  <data name="Entity.IsDeleted.YesNo()" xml:space="preserve">
-    <value>Entity.IsDeleted.YesNo()</value>
-  </data>
-  <data name="Entity.IsPrimary.YesNo()" xml:space="preserve">
-    <value>Entity.IsPrimary.YesNo()</value>
-  </data>
-  <data name="Entity.IsSpam.YesNo()" xml:space="preserve">
-    <value>Entity.IsSpam.YesNo()</value>
-  </data>
-  <data name="Entity.KeepTestingTheSmtpServerConnectivity.YesNo()" xml:space="preserve">
-    <value>Entity.KeepTestingTheSmtpServerConnectivity.YesNo()</value>
-  </data>
-  <data name="Entity.OpenTelemetry.Enabled.YesNo()" xml:space="preserve">
-    <value>Entity.OpenTelemetry.Enabled.YesNo()</value>
-  </data>
-  <data name="Entity.SocialNetwork.Facebook.Enabled.YesNo()" xml:space="preserve">
-    <value>Entity.SocialNetwork.Facebook.Enabled.YesNo()</value>
-  </data>
-  <data name="Entity.SocialNetwork.GitHub.Enabled.YesNo()" xml:space="preserve">
-    <value>Entity.SocialNetwork.GitHub.Enabled.YesNo()</value>
-  </data>
-  <data name="Entity.SocialNetwork.Google.Enabled.YesNo()" xml:space="preserve">
-    <value>Entity.SocialNetwork.Google.Enabled.YesNo()</value>
-  </data>
-  <data name="Entity.SocialNetwork.Microsoft.Enabled.YesNo()" xml:space="preserve">
-    <value>Entity.SocialNetwork.Microsoft.Enabled.YesNo()</value>
-  </data>
-  <data name="Entity.TOTPSecret.Has().YesNo()" xml:space="preserve">
-    <value>Entity.TOTPSecret.Has().YesNo()</value>
   </data>
   <data name="Error" xml:space="preserve">
     <value>Erro</value>
@@ -1506,12 +1434,6 @@
   <data name="Post" xml:space="preserve">
     <value>Publicar</value>
   </data>
-  <data name="postRating.Rating" xml:space="preserve">
-    <value>postRating.Rating</value>
-  </data>
-  <data name="postReaction.Reaction" xml:space="preserve">
-    <value>postReaction.Reaction</value>
-  </data>
   <data name="Posts" xml:space="preserve">
     <value>Postagens</value>
   </data>
@@ -1626,9 +1548,6 @@
   <data name="Published videos" xml:space="preserve">
     <value>Vídeos publicados</value>
   </data>
-  <data name="published.GetType().Name" xml:space="preserve">
-    <value>published.GetType().Name</value>
-  </data>
   <data name="Purge blogs" xml:space="preserve">
     <value>Limpar blogs</value>
   </data>
@@ -1695,12 +1614,6 @@
   <data name="Rating must be less than or equal to 5" xml:space="preserve">
     <value>A classificação deve ser menor ou igual a 5</value>
   </data>
-  <data name="rating!.Rating" xml:space="preserve">
-    <value>rating!.Rating</value>
-  </data>
-  <data name="rating.Rating" xml:space="preserve">
-    <value>rating.Rating</value>
-  </data>
   <data name="Ratings" xml:space="preserve">
     <value>Avaliações</value>
   </data>
@@ -1718,9 +1631,6 @@
   </data>
   <data name="Reaction needs one author" xml:space="preserve">
     <value>A reação precisa de um autor</value>
-  </data>
-  <data name="reaction.Reaction" xml:space="preserve">
-    <value>reaction.Reaction</value>
   </data>
   <data name="Reactions" xml:space="preserve">
     <value>Reações</value>
@@ -1757,9 +1667,6 @@
   </data>
   <data name="Repeat new password" xml:space="preserve">
     <value>Repita a nova senha</value>
-  </data>
-  <data name="replies.Count()" xml:space="preserve">
-    <value>replies.Count()</value>
   </data>
   <data name="Reply" xml:space="preserve">
     <value>Responder</value>
@@ -1959,17 +1866,11 @@
   <data name="Select trash" xml:space="preserve">
     <value>Selecione a lixeira</value>
   </data>
-  <data name="SelectedEntities.Count" xml:space="preserve">
-    <value>SelectedEntities.Count</value>
-  </data>
   <data name="Send verification code" xml:space="preserve">
     <value>Enviar código de verificação</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Configurações</value>
-  </data>
-  <data name="settings.Name" xml:space="preserve">
-    <value>settings.Name</value>
   </data>
   <data name="Size" xml:space="preserve">
     <value>Tamanho</value>
@@ -2012,24 +1913,6 @@
   </data>
   <data name="Social profiles found in the search" xml:space="preserve">
     <value>Perfis sociais encontrados na pesquisa</value>
-  </data>
-  <data name="socialProfileDelete.PostCommentReactions" xml:space="preserve">
-    <value>socialProfileDelete.PostCommentReactions</value>
-  </data>
-  <data name="socialProfileDelete.PostComments" xml:space="preserve">
-    <value>socialProfileDelete.PostComments</value>
-  </data>
-  <data name="socialProfileDelete.PostRatings" xml:space="preserve">
-    <value>socialProfileDelete.PostRatings</value>
-  </data>
-  <data name="socialProfileDelete.VideoCommentReactions" xml:space="preserve">
-    <value>socialProfileDelete.VideoCommentReactions</value>
-  </data>
-  <data name="socialProfileDelete.VideoComments" xml:space="preserve">
-    <value>socialProfileDelete.VideoComments</value>
-  </data>
-  <data name="socialProfileDelete.VideoRatings" xml:space="preserve">
-    <value>socialProfileDelete.VideoRatings</value>
   </data>
   <data name="Source and destination images share the same location" xml:space="preserve">
     <value>As imagens de origem e destino compartilham o mesmo local</value>
@@ -2127,24 +2010,6 @@
   <data name="Test connection" xml:space="preserve">
     <value>Conexão de teste</value>
   </data>
-  <data name="Text.OperationCompletedSuccessfully" xml:space="preserve">
-    <value>Text.OperationCompletedSuccessfully</value>
-  </data>
-  <data name="Text.SomethingWentWrongPleaseTryAgain" xml:space="preserve">
-    <value>Text.SomethingWentWrongPleaseTryAgain</value>
-  </data>
-  <data name="Text.Styles.Original" xml:space="preserve">
-    <value>Text.Styles.Original</value>
-  </data>
-  <data name="Text.Styles.Uppercase" xml:space="preserve">
-    <value>Text.Styles.Uppercase</value>
-  </data>
-  <data name="Text.YouDontHavePermissionForThisFeature" xml:space="preserve">
-    <value>Text.YouDontHavePermissionForThisFeature</value>
-  </data>
-  <data name="Text.YouMadeTooManyCommentsIn5Minutes" xml:space="preserve">
-    <value>Text.YouMadeTooManyCommentsIn5Minutes</value>
-  </data>
   <data name="The author marked this as draft" xml:space="preserve">
     <value>O autor marcou isso como rascunho</value>
   </data>
@@ -2162,27 +2027,6 @@
   </data>
   <data name="this is a front-page" xml:space="preserve">
     <value>esta é uma primeira página</value>
-  </data>
-  <data name="this._files.Count()" xml:space="preserve">
-    <value>this._files.Count()</value>
-  </data>
-  <data name="this.Entity.GetEmail()" xml:space="preserve">
-    <value>this.Entity.GetEmail()</value>
-  </data>
-  <data name="this.FileLimitInBytes.SizeInBytes()" xml:space="preserve">
-    <value>this.FileLimitInBytes.SizeInBytes()</value>
-  </data>
-  <data name="this.PublishedPosts" xml:space="preserve">
-    <value>this.PublishedPosts</value>
-  </data>
-  <data name="this.PublishedVideos" xml:space="preserve">
-    <value>this.PublishedVideos</value>
-  </data>
-  <data name="this.Super.GetContents(context.Item, this.UserFacade.BlogId).OfType&lt;OrigamiPost&gt;().Published().Count()" xml:space="preserve">
-    <value>this.Super.GetContents(context.Item, this.UserFacade.BlogID).OfType&lt;OrigamiPost&gt;().Published().Count()</value>
-  </data>
-  <data name="this.Super.GetContents(context.Item, this.UserFacade.BlogId).OfType&lt;OrigamiVideo&gt;().Published().Count()" xml:space="preserve">
-    <value>this.Super.GetContents(context.Item, this.UserFacade.BlogID).OfType&lt;OrigamiVideo&gt;().Published().Count()</value>
   </data>
   <data name="Thumbnail" xml:space="preserve">
     <value>Miniatura</value>
@@ -2597,5 +2441,35 @@
   </data>
   <data name="Calm down, you made too many comments in 5 minutes" xml:space="preserve">
     <value>Calma aê, você fez muitos comentários em 5 minutos</value>
+  </data>
+  <data name="Content created" xml:space="preserve">
+    <value>Conteúdo criado</value>
+  </data>
+  <data name="Content deleted" xml:space="preserve">
+    <value>Conteúdo excluído</value>
+  </data>
+  <data name="Content restored" xml:space="preserve">
+    <value>Conteúdo restaurado</value>
+  </data>
+  <data name="Content saved" xml:space="preserve">
+    <value>Conteúdo salvo</value>
+  </data>
+  <data name="Content is already unpublished" xml:space="preserve">
+    <value>O conteúdo já está despublicado</value>
+  </data>
+  <data name="Content is already restored" xml:space="preserve">
+    <value>O conteúdo já está restaurado</value>
+  </data>
+  <data name="Content is already published" xml:space="preserve">
+    <value>O conteúdo já está publicado</value>
+  </data>
+  <data name="Content is already deleted" xml:space="preserve">
+    <value>O conteúdo já está excluído</value>
+  </data>
+  <data name="Categories must be empty" xml:space="preserve">
+    <value>As categorias devem estar vazias</value>
+  </data>
+  <data name="Tags must be empty" xml:space="preserve">
+    <value>As tags devem estar vazias</value>
   </data>
 </root>

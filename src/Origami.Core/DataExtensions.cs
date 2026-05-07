@@ -8,10 +8,8 @@ using Origami.Core;
 using Origami.Core.Data;
 using Origami.Core.Models;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq.Dynamic.Core;
-using System.Net.WebSockets;
 using System.Reflection;
 
 namespace Origami.Core
@@ -126,7 +124,7 @@ namespace Origami.Core
             {
                 codes.Add(NanoidDotNet.Nanoid.Generate(NanoidDotNet.Nanoid.Alphabets.Digits, 6));
             }
-            return codes.Distinct().Take(10).OrderBy(x => x).ToArray();
+            return [.. codes.Distinct().Take(10).OrderBy(x => x)];
         }
 
         public static IEnumerable<T> GetAllChildren<T>(this IEnumerable<T>? source, T entity)
@@ -198,7 +196,7 @@ namespace Origami.Core
         public static IEnumerable<T> GetChildren<T, T2>(this IEnumerable<T> entities, T2 entity)
             where T2 : IParentIdNull, T, IId
         {
-            return entities.Cast<T2>().Where(x => x.ParentId == entity.Id).Cast<T>().ToList();
+            return [.. entities.Cast<T2>().Where(x => x.ParentId == entity.Id).Cast<T>()];
         }
 
         /// <summary>
@@ -264,9 +262,9 @@ namespace Origami.Core
         {
             var words = new List<string> { "origami", "Origami", "oriGami", "ORIGAMI", };
 
-            foreach (var word in words)
+            foreach (var origami in words)
             {
-                var connection = configuration.GetConnectionString(word);
+                var connection = configuration.GetConnectionString(origami);
                 if (connection != null) return connection;
             }
 
@@ -290,7 +288,7 @@ namespace Origami.Core
                 match.Each(x => x.SetValue(role, true));
             }
 
-            return roles.ToList();
+            return roles;
         }
 
         /// <summary>
@@ -405,78 +403,19 @@ namespace Origami.Core
             return (rowNumber.Count(), query.ToList());
         }
 
-        /// <summary>
-        /// Retrieves a list of entities of the specified type from the memory cache, loading them from the database if
-        /// they are not already cached.
-        /// </summary>
-        /// <remarks>For certain derived types, such as OrigamiPage, OrigamiPost, OrigamiSpecialMessage,
-        /// OrigamiSpecialPage, and OrigamiVideo, the method retrieves and filters entities from the OrigamiContent
-        /// cache. The method is thread-safe and uses locking to prevent race conditions when populating the
-        /// cache.</remarks>
-        /// <typeparam name="T">The type of entity to retrieve. Must be a reference type.</typeparam>
-        /// <param name="db">The database context used to query entities if they are not present in the cache.</param>
-        /// <param name="memoryCache">The memory cache instance used to store and retrieve cached entities.</param>
-        /// <returns>A list of entities of type X retrieved from the cache, or from the database if not cached. Returns an empty
-        /// list if no entities are found.</returns>
-        public static List<T> ReadFromCache<T>(this IDbContextFactory<OrigamiDbContext> dbContextFactory, IMemoryCache memoryCache) where T : class
-        {
-            var timestamp = Stopwatch.GetTimestamp();
-            var key = typeof(T).KeyForCaching();
-
-            if (typeof(T).IsAbstract == false)
-            {
-                var t = Activator.CreateInstance<T>();
-                switch (t)
-                {
-                    case OrigamiPage:
-                    case OrigamiPost:
-                    case OrigamiSpecialMessage:
-                    case OrigamiSpecialPage:
-                    case OrigamiVideo:
-                        return dbContextFactory.ReadFromCache<OrigamiContent>(memoryCache).OfType<T>().ToList();
-                    default: break;
-                }
-            }
-
-            try
-            {
-                //race condition
-                if (memoryCache.Get(key) == null)
-                {
-                    lock (OrigamiConstants.SyncRoot)
-                    {
-                        if (memoryCache.Get(key) == null)
-                        {
-                            using var db = dbContextFactory.CreateDbContext();
-                            var list = db.ReadFromDatabase<T>();
-                            memoryCache.Set(key, list);
-                        }
-                    }
-                }
-
-                return memoryCache.GetList<T>(key) ?? [];
-            }
-            finally
-            {
-                var elapsedTime = Stopwatch.GetElapsedTime(timestamp);
-                Console.ForegroundColor = elapsedTime.Milliseconds >= 100 ? ConsoleColor.Red : ConsoleColor.White;
-                Console.WriteLine($"{key} obtained in {elapsedTime}");
-            }
-        }
-
-        public static List<T> ReadFromDatabase<T>(this DbContext db) where T : class
+        public static List<T> Read<T>(this DbContext db) where T : class
         {
             if (typeof(T).IsAbstract == false)
             {
                 var t = Activator.CreateInstance<T>();
                 return t switch
                 {
-                    OrigamiRole => db.GetRolesFromDatabase().Cast<T>().ToList(),
-                    _ => db.Set<T>().AsNoTracking().ToList(),
+                    OrigamiRole => [.. db.GetRolesFromDatabase().Cast<T>()],
+                    _ => [.. db.Set<T>().AsNoTracking()],
                 };
             }
-             
-            return db.Set<T>().AsNoTracking().ToList();
+
+            return [.. db.Set<T>().AsNoTracking()];
         }
         /// <summary>
         /// Tries to retrieve a blog by its slug. Returns null if not found or if the blog is deleted or inactive.

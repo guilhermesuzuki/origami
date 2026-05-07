@@ -1,5 +1,4 @@
-﻿using NanoidDotNet;
-using Origami.Core.Models;
+﻿using Origami.Core.Models;
 using OtpNet;
 
 namespace Origami.Core.Data
@@ -204,12 +203,12 @@ namespace Origami.Core.Data
                     this.WelcomeToTheApplication?.Invoke(this, EventArgs.Empty);
                 }
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 this._userFacade.Result = new() { Error = ex.GetMessage(), };
             }
-            finally 
-            { 
+            finally
+            {
                 this.CurrentStepChanged?.Invoke(this, EventArgs.Empty);
                 this.RefreshUI?.Invoke(this, EventArgs.Empty);
             }
@@ -260,7 +259,7 @@ namespace Origami.Core.Data
         {
             var secretBytes = Base32Encoding.ToBytes(this.User.TOTPSecret.ToString());
             var totp = new Totp(secretBytes);
-            
+
             var valid = totp.VerifyTotp(this.TOTPCodeForValidation, out long timeStepMatched, VerificationWindow.RfcSpecifiedNetworkDelay);
             if (valid)
             {

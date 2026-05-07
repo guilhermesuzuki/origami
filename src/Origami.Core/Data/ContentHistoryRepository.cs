@@ -1,14 +1,10 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Origami.Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Origami.Core.Data
 {
-    public class ContentHistoryRepository:
+    public class ContentHistoryRepository :
         RepositoryOuterLayer<OrigamiContentHistory>,
         IContentHistoryRepository
     {
@@ -22,7 +18,7 @@ namespace Origami.Core.Data
         public ContentHistoryRepository(
             IValidator<OrigamiContentHistory> validator,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
-            IMemoryCache memoryCache,
+            IMyMemoryCache memoryCache,
             IWebRootPath wwwRoot,
             Text text)
             : base(text, dbContextFactory, memoryCache, wwwRoot)

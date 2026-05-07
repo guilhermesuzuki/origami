@@ -3,7 +3,6 @@ using Microsoft.Extensions.Configuration;
 using NanoidDotNet;
 using Origami.Core.Models;
 using System.Globalization;
-using System.Reflection.Metadata;
 using System.Transactions;
 
 namespace Origami.Core.Data
@@ -23,7 +22,6 @@ namespace Origami.Core.Data
             IPhysicalPageRepository physicalPageRepository,
             IPhysicalPageViewRepository physicalPageViewRepository,
             IPostRepository postRepository,
-            IQuickNoteRepository quickNoteRepository,
             IRightRepository rightRepository,
             IRoleRepository roleRepository,
             ISettingsRepository settingsRepository,
@@ -50,7 +48,9 @@ namespace Origami.Core.Data
             IContentRepository contentRepository,
             IContentTagRepository contentTagRepository,
 
-            IDbContextFactory<OrigamiDbContext> dbContextFactory) : base()
+            IDbContextFactory<OrigamiDbContext> dbContextFactory,
+            IMyMemoryCache myMemoryCache
+            ) : base()
         {
             AppFacade = appFacade;
             BackupAndRestores = backupAndRestores;
@@ -65,7 +65,6 @@ namespace Origami.Core.Data
             PhysicalPages = physicalPageRepository;
             PhysicalPageViews = physicalPageViewRepository;
             Posts = postRepository;
-            QuickNotes = quickNoteRepository;
             Rights = rightRepository;
             Roles = roleRepository;
             Settings = settingsRepository;
@@ -91,6 +90,8 @@ namespace Origami.Core.Data
             ContentReactions = contentReactionRepository;
             Contents = contentRepository;
             ContentTags = contentTagRepository;
+
+            MyMemoryCache = myMemoryCache;
         }
 
         public IAppFacade AppFacade { get; }
@@ -111,11 +112,11 @@ namespace Origami.Core.Data
         public IEmailRepository Emails { get; }
         public IFileRepository Files { get; }
         public bool MaintenanceLockout => this.GetMaintenancePages().Any();
+        public IMyMemoryCache MyMemoryCache { get; }
         public IPageRepository Pages { get; }
         public IPhysicalPageRepository PhysicalPages { get; }
         public IPhysicalPageViewRepository PhysicalPageViews { get; }
         public IPostRepository Posts { get; }
-        public IQuickNoteRepository QuickNotes { get; }
         public IRightRepository Rights { get; }
         public IRoleRepository Roles { get; }
         public ISettingsRepository Settings { get; }
@@ -132,11 +133,11 @@ namespace Origami.Core.Data
         public IUserViewRepository UserViews { get; }
         public IVideoRepository Videos { get; }
         public IWhatToSeeNextRepository WhatToSeeNext { get; }
+
         public bool EmptyHome(Guid blogId)
         {
             if (Contents.ReadFromCache().OfType<OrigamiPage>().FrontPage(blogId) != null) return false;
             if (Contents.ReadFromCache().Published().Blog(blogId).Any() == true) return false;
-            if (QuickNotes.ReadFromCache().Published().Blog(blogId).Any() == true) return false;
             return true;
         }
 
@@ -366,52 +367,22 @@ namespace Origami.Core.Data
             return GetNanoIds().FirstOrDefault(x => x.NanoId == text);
         }
 
-        public bool IsParentDeleted(OrigamiCategory category)
+        public bool IsParentDeleted<T>(T entity) where T : class, IId, IParentIdNull, IDeleted
         {
-            if (category.ParentId.HasValue)
+            if (entity.ParentId.HasValue)
             {
-                var parent = Categories.ReadFromCache().Id(category.ParentId.Value);
+                var parent = MyMemoryCache.Read<T>().Id(entity.ParentId.Value);
                 if (parent != null)
                 {
                     if (parent.IsDeleted)
                     {
                         return true;
                     }
-                    return this.IsParentDeleted(parent);
+                    return this.IsParentDeleted<T>(parent);
                 }
             }
             return false;
         }
-
-        public bool IsParentDeleted(OrigamiContent page)
-        {
-            if (page.ParentId.HasValue)
-            {
-                var parent = Contents.ReadFromCache().Id(page.ParentId.Value);
-                if (parent != null)
-                {
-                    if (parent.IsDeleted)
-                    {
-                        return true;
-                    }
-                    return this.IsParentDeleted(parent);
-                }
-            }
-            return false;
-        }
-
-        public bool IsParentDeleted(OrigamiContentComment comment)
-        {
-            if (comment.ParentId.HasValue)
-            {
-                var parent = ContentComments.ReadFromCache().Id(comment.ParentId.Value);
-                if (parent != null && parent.IsDeleted) return true;
-                if (parent != null) return this.IsParentDeleted(parent);
-            }
-            return false;
-        }
-
-
 
         /// <summary>
         /// Refreshes the caches and updates the counts for all repositories managed by the specified <see
@@ -428,15 +399,16 @@ namespace Origami.Core.Data
         {
             Blogs.RefreshCache();
             Categories.RefreshCache();
+            Contents.RefreshCache();
             ContentCategories.RefreshCache();
             ContentCommentReactions.RefreshCache();
             ContentComments.RefreshCache();
+            ContentHistories.RefreshCache();
             ContentRatings.RefreshCache();
             ContentReactions.RefreshCache();
-            Contents.RefreshCache();
             ContentTags.RefreshCache();
             PhysicalPages.RefreshCache();
-            QuickNotes.RefreshCache();
+            PhysicalPageViews.RefreshCache();
             Roles.RefreshCache();
             SocialProfiles.RefreshCache();
             Subscribers.RefreshCache();
@@ -466,7 +438,6 @@ namespace Origami.Core.Data
             ContentComments.CreateSearchIndex();
             Contents.CreateSearchIndex();
             ContentTags.CreateSearchIndex();
-            QuickNotes.CreateSearchIndex();
             Roles.CreateSearchIndex();
             SocialProfiles.CreateSearchIndex();
             Users.CreateSearchIndex();

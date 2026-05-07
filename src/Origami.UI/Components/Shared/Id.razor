@@ -8,6 +8,20 @@
     isDeleted |= this.Entity is OrigamiPage page && this.Super.IsParentDeleted(page) == true;
     <span class="id @Class">
         <span class="col-1">
+            @if (isDeleted)
+            {
+                <span class="is-deleted me-1 bg-danger text-white px-1">
+                    <i class="bi bi-trash-fill"></i>
+                    <span>@Text.Lower("Deleted")</span>
+                </span>
+            }
+            @if (this.Entity is IDraft draft && draft.IsDraft.GetValueOrDefault() == true)
+            {
+                <span class="me-1 bg-info text-white px-1">
+                    <i class="bi bi-exclamation-diamond-fill"></i>
+                    @Text.Lower("Draft")
+                </span>
+            }
             @if (this.Entity is INanoId nanoId)
             {
                 <span class="me-1" title="@Text.Original("Nano Id")">
@@ -25,20 +39,6 @@
             @if (this.Entity is IVersion version && version.Version.SequenceEqual([]) == false)
             {
                 <span class="me-1" title="@Text.Original("Version")">[@version.Version.HexString()]</span>
-            }
-            @if (isDeleted)
-            {
-                <span class="is-deleted me-1 text-danger">
-                    <i class="bi bi-trash-fill"></i>
-                    <span>@Text.Lower("Deleted")</span>
-                </span>
-            }
-            @if (this.Entity is IDraft draft && draft.IsDraft.GetValueOrDefault() == true)
-            {
-                <span class="me-1 text-info">
-                    <i class="bi bi-exclamation-diamond-fill"></i>
-                    @Text.Lower("Draft")
-                </span>
             }
         </span>
         <span class="col-2">

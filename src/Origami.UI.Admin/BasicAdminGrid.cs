@@ -307,7 +307,7 @@ namespace Origami.UI.Admin
             if (typeof(T).Implements<IContentId>() == true)
             {
                 var query = from a in items.Cast<IContentId>()
-                            join b in DbContextFactory.ReadFromCache<OrigamiContent>(MemoryCache) on a.ContentId equals b.Id
+                            join b in MemoryCache.Read<OrigamiContent>() on a.ContentId equals b.Id
                             where b.BlogId == this.UserFacade.BlogId
                             select a;
 
@@ -464,7 +464,7 @@ namespace Origami.UI.Admin
         {
             if (this.NanoId.Has() == true)
             {
-                var entity = (from a in this.DbContextFactory.ReadFromCache<T>(MemoryCache).Cast<INanoId>()
+                var entity = (from a in this.MemoryCache.Read<T>().Cast<INanoId>()
                               where a.NanoId == this.NanoId
                               select a).FirstOrDefault();
 

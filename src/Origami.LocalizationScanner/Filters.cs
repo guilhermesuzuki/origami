@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Origami.LocalizationScanner
+﻿namespace Origami.LocalizationScanner
 {
     public static class Filters
     {

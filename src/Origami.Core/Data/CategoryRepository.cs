@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Origami.Core.Models;
 
 namespace Origami.Core.Data
@@ -21,7 +20,7 @@ namespace Origami.Core.Data
             IValidator<OrigamiCategory> validator,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IContentCategoryRepository contentCategoryRepository,
-            IMemoryCache memoryCache,
+            IMyMemoryCache memoryCache,
             IWebRootPath wwwRoot,
             Text text)
             : base(text, dbContextFactory, memoryCache, wwwRoot)
@@ -39,7 +38,7 @@ namespace Origami.Core.Data
 
         public override Result<OrigamiCategory> CreateValidation(DataOperationContext<OrigamiCategory> ctx)
         {
-            return new Result<OrigamiCategory>(ctx.Entity, _validator);
+            return new(ctx.Entity, _validator);
         }
 
         public override void PurgeRelationshipsFromCache(OrigamiCategory entity)
@@ -59,7 +58,7 @@ namespace Origami.Core.Data
 
         public override Result<OrigamiCategory> UpdateValidation(DataOperationContext<OrigamiCategory> ctx)
         {
-            return new Result<OrigamiCategory>(ctx.Entity, _validator);
+            return new(ctx.Entity, _validator);
         }
     }
 }

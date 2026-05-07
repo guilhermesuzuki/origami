@@ -1,6 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Origami.Core.Models;
 using System.Diagnostics;
@@ -9,8 +8,8 @@ using System.Text.Json.Nodes;
 
 namespace Origami.Core.Data
 {
-    public class BackupRestoreRepository : 
-        RepositoryOuterLayer<OrigamiBackup>, 
+    public class BackupRestoreRepository :
+        RepositoryOuterLayer<OrigamiBackup>,
         IBackupRestoreRepository
     {
         protected readonly IAppFacade _appFacade;
@@ -23,7 +22,7 @@ namespace Origami.Core.Data
             IConfiguration configuration,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IFileRepository fileRepository,
-            IMemoryCache memoryCache,
+            IMyMemoryCache memoryCache,
             IUserRepository userRepository,
             IWebRootPath wwwRoot,
             Text text)
@@ -140,7 +139,7 @@ namespace Origami.Core.Data
                 {
                     Directory.Delete(extractPath, true);
                 }
-                
+
                 Current = restore.Clone();
 
                 //asks to refresh the UI
@@ -251,7 +250,7 @@ namespace Origami.Core.Data
                     FileName = "sqlpackage",
                     Arguments = $"/Action:Export " +
                     $"/SourceConnectionString:\"{oi}\" " +
-                    $"/TargetFile:\"{target}\" " + 
+                    $"/TargetFile:\"{target}\" " +
                     $"/OverwriteFiles:True",
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,

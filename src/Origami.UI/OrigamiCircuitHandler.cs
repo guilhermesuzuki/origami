@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components.Server.Circuits;
+using Origami.Core.Data;
 using Origami.Core.Models;
 
 namespace Origami.UI
@@ -6,10 +7,12 @@ namespace Origami.UI
     public class OrigamiCircuitHandler : CircuitHandler
     {
         protected readonly IAppFacade _appFacade;
+        protected readonly IMyMemoryCache _myMemoryCache;
 
-        public OrigamiCircuitHandler(IAppFacade appFacade) : base()
+        public OrigamiCircuitHandler(IAppFacade appFacade, IMyMemoryCache myMemoryCache) : base()
         {
             _appFacade = appFacade;
+            _myMemoryCache = myMemoryCache;
         }
 
         public override Task OnCircuitOpenedAsync(Circuit circuit, CancellationToken cancellationToken)
@@ -21,6 +24,7 @@ namespace Origami.UI
         public override Task OnCircuitClosedAsync(Circuit circuit, CancellationToken cancellationToken)
         {
             _appFacade.OnlineUsers.Remove(circuit.Id);
+            _myMemoryCache.Remove($"Origami_UserLocation_{circuit.Id}");
             return Task.CompletedTask;
         }
     }

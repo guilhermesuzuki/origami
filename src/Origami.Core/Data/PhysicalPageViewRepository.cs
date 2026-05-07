@@ -15,7 +15,7 @@ namespace Origami.Core.Data
         /// <param name="distributedCache"></param>
         public PhysicalPageViewRepository(
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
-            IMemoryCache memoryCache,
+            IMyMemoryCache memoryCache,
             IWebRootPath wwwRoot,
             Text text)
             : base(text, dbContextFactory, memoryCache, wwwRoot)
@@ -28,11 +28,13 @@ namespace Origami.Core.Data
             return new(ctx.Entity);
         }
 
-        public async Task<List<PhysicalPageViewTotal>> FastRead()
+        /// <summary>
+        /// Does nothing, views shouldn't be added to cache
+        /// </summary>
+        /// <param name="entity"></param>
+        public override void CreateCache(OrigamiPhysicalPageView entity)
         {
-            using var dbContextFactory = DbContextFactory.CreateDbContext();
-            var sql = "SELECT COUNT_BIG(pv.Id) as TotalViews, p.Id as PhysicalPageId FROM dbo.oi_PhysicalPageViews pv RIGHT JOIN dbo.oi_PhysicalPages p ON p.Id = pv.PhysicalPageId GROUP BY p.Id";
-            return await dbContextFactory.Database.SqlQueryRaw<PhysicalPageViewTotal>(sql).ToListAsync();
+            return;
         }
 
         /// <summary>
@@ -47,32 +49,8 @@ namespace Origami.Core.Data
 
         public long GetViews<T>(T entity) where T : IId
         {
-            var x = 0L;
             var key = entity.KeyForCachingViews();
-            var options = new MemoryCacheEntryOptions() { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(3) };
-
-            // already in cache, return it
-            if (this.MemoryCache.TryGetValue(key, out x))
-            {
-                return x;
-            }
-
-            try
-            {
-                using var db = DbContextFactory.CreateDbContext();
-
-                var query = from view in db.Set<OrigamiPhysicalPageView>()
-                            where view.ContentId != null
-                            where view.ContentId == entity.Id
-                            select view;
-
-                x = query.LongCount();
-                return x;
-            }
-            finally
-            {
-                this.MemoryCache.Set(key, x, options);
-            }
+            return this.MemoryCache.TryGetValue(key, out long x) ? x : 0;
         }
 
         public void SetViews(OrigamiPhysicalPage entity, long count) => this.Views(entity, count);
@@ -81,6 +59,31 @@ namespace Origami.Core.Data
         {
             entities.Each(entity => this.SetViews(new(entity.PhysicalPageId), entity.TotalViews));
             return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Does nothing, views shouldn't be updated in cache
+        /// </summary>
+        /// <param name="entity"></param>
+        public override void UpdateCache(OrigamiPhysicalPageView entity)
+        {
+            return;
+        }
+
+        public override void RefreshCache()
+        {
+            using var db = DbContextFactory.CreateDbContext();
+            var query = from view in db.Set<OrigamiPhysicalPageView>().AsNoTracking() group view by view.ContentId into g select new { ContentId = g.Key, TotalViews = g.LongCount() };
+            var options = new MemoryCacheEntryOptions() { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(3) };
+            foreach (var view in query)
+            {
+                var content = this.MemoryCache.Read<OrigamiContent>().Id(view.ContentId);
+                if (content != null)
+                {
+                    var key = content.KeyForCachingViews();
+                    this.MemoryCache.Set(key, view.TotalViews, options);
+                }
+            }
         }
     }
 }

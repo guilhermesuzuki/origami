@@ -1,0 +1,2475 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="({0} files max)" xml:space="preserve">
+    <value>(Fichiers max. {0})</value>
+  </data>
+  <data name="[At the time]" xml:space="preserve">
+    <value>[À l'heure actuelle]</value>
+  </data>
+  <data name="{0} comment(s)" xml:space="preserve">
+    <value>Commentaires sur {0}</value>
+  </data>
+  <data name="{0} directories" xml:space="preserve">
+    <value>Annuaires {0}</value>
+  </data>
+  <data name="{0} directory" xml:space="preserve">
+    <value>Répertoire {0}</value>
+  </data>
+  <data name="{0} does NOT exist" xml:space="preserve">
+    <value>{0} N’EXISTE PAS</value>
+  </data>
+  <data name="{0} file" xml:space="preserve">
+    <value>Fichier {0}</value>
+  </data>
+  <data name="{0} files" xml:space="preserve">
+    <value>Fichiers {0}</value>
+  </data>
+  <data name="{0} is already published" xml:space="preserve">
+    <value>{0} a déjà été publié</value>
+  </data>
+  <data name="{0} is already unpublished" xml:space="preserve">
+    <value>{0} n'est plus publié</value>
+  </data>
+  <data name="{0} max." xml:space="preserve">
+    <value>{0} max.</value>
+  </data>
+  <data name="{0} people rated this content" xml:space="preserve">
+    <value>Des utilisateurs de {0} ont évalué ce contenu</value>
+  </data>
+  <data name="{0} person rated this content" xml:space="preserve">
+    <value>Une personne de {0} a noté ce contenu</value>
+  </data>
+  <data name="{0} post comment(s)" xml:space="preserve">
+    <value>Commentaires sur le message {0}</value>
+  </data>
+  <data name="{0} post rating(s)" xml:space="preserve">
+    <value>Avis sur {0} dans le message</value>
+  </data>
+  <data name="{0} post reaction(s)" xml:space="preserve">
+    <value>Réaction(s) {0} sur le post</value>
+  </data>
+  <data name="{0} post(s)" xml:space="preserve">
+    <value>Message(s) {0}</value>
+  </data>
+  <data name="{0} replies" xml:space="preserve">
+    <value>Réponses de {0}</value>
+  </data>
+  <data name="{0} reply" xml:space="preserve">
+    <value>Réponse {0}</value>
+  </data>
+  <data name="{0} video comment(s)" xml:space="preserve">
+    <value>Commentaires vidéo sur {0}</value>
+  </data>
+  <data name="{0} video rating(s)" xml:space="preserve">
+    <value>Commentaires vidéo sur {0}</value>
+  </data>
+  <data name="{0} video reaction(s)" xml:space="preserve">
+    <value>Réaction(s) vidéo {0}</value>
+  </data>
+  <data name="{0} video(s)" xml:space="preserve">
+    <value>Vidéo(s) {0}</value>
+  </data>
+  <data name="{0}: Invalid domain format." xml:space="preserve">
+    <value>{0} : format de domaine non valide.</value>
+  </data>
+  <data name="{0}: URL must be a valid website address" xml:space="preserve">
+    <value>{0} : l'URL doit être une adresse de site Web valide</value>
+  </data>
+  <data name="{0}GB max." xml:space="preserve">
+    <value>{0}GB max.</value>
+  </data>
+  <data name="{0}KB max." xml:space="preserve">
+    <value>{0}KB max.</value>
+  </data>
+  <data name="{0}MB max." xml:space="preserve">
+    <value>{0}MB max.</value>
+  </data>
+  <data name="*** [Test] Subscribe to the website ***" xml:space="preserve">
+    <value>*** [Test] Inscrivez-vous sur le site Web ***</value>
+  </data>
+  <data name="1. tell us your e-mail" xml:space="preserve">
+    <value>1. dites-nous votre email</value>
+  </data>
+  <data name="2. validate e-mail (check your spam folder)" xml:space="preserve">
+    <value>2. validez l'email (vérifiez votre dossier spam)</value>
+  </data>
+  <data name="2FA code" xml:space="preserve">
+    <value>Code 2FA</value>
+  </data>
+  <data name="2FA recovery codes?" xml:space="preserve">
+    <value>Codes de récupération 2FA ?</value>
+  </data>
+  <data name="2FA secret?" xml:space="preserve">
+    <value>Le secret de la 2FA ?</value>
+  </data>
+  <data name="2FA setup" xml:space="preserve">
+    <value>Configuration 2FA</value>
+  </data>
+  <data name="A backup or restore process is already running. Please try again later." xml:space="preserve">
+    <value>Un processus de sauvegarde ou de restauration est déjà en cours. Veuillez réessayer plus tard.</value>
+  </data>
+  <data name="A backup process is currently running. Some actions are disabled until the process is complete." xml:space="preserve">
+    <value>Un processus de sauvegarde est en cours. Certaines actions sont désactivées jusqu'à ce que le processus soit terminé.</value>
+  </data>
+  <data name="A restore process is currently running. Some actions are disabled until the process is complete." xml:space="preserve">
+    <value>Un processus de restauration est en cours. Certaines actions sont désactivées jusqu'à ce que le processus soit terminé.</value>
+  </data>
+  <data name="Accessed" xml:space="preserve">
+    <value>Acessado</value>
+  </data>
+  <data name="Activate blog" xml:space="preserve">
+    <value>Activer le blog</value>
+  </data>
+  <data name="Activate blogs" xml:space="preserve">
+    <value>Activer les blogs</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>Ativo</value>
+  </data>
+  <data name="Add comment" xml:space="preserve">
+    <value>Ajouter un commentaire</value>
+  </data>
+  <data name="Add folder" xml:space="preserve">
+    <value>Ajouter un dossier</value>
+  </data>
+  <data name="Admin" xml:space="preserve">
+    <value>Administrateur</value>
+  </data>
+  <data name="All" xml:space="preserve">
+    <value>Todos</value>
+  </data>
+  <data name="All comments" xml:space="preserve">
+    <value>Tous les commentaires</value>
+  </data>
+  <data name="All location providers failed" xml:space="preserve">
+    <value>Tous les fournisseurs de localisation ont échoué</value>
+  </data>
+  <data name="Alphabetical sorting" xml:space="preserve">
+    <value>Tri alphabétique</value>
+  </data>
+  <data name="Alphabetical sorting inverted" xml:space="preserve">
+    <value>Tri alphabétique inversé</value>
+  </data>
+  <data name="Also in" xml:space="preserve">
+    <value>Également dans</value>
+  </data>
+  <data name="An entity cannot be its own parent" xml:space="preserve">
+    <value>Une entité ne peut pas être son propre contrôleur</value>
+  </data>
+  <data name="An error has occurred" xml:space="preserve">
+    <value>Une erreur s'est produite</value>
+  </data>
+  <data name="An unhandled exception has occurred" xml:space="preserve">
+    <value>Une exception non gérée s'est produite</value>
+  </data>
+  <data name="And click OK to close this pop-up window" xml:space="preserve">
+    <value>Et cliquez sur OK pour fermer cette fenêtre pop-up</value>
+  </data>
+  <data name="Anonymous" xml:space="preserve">
+    <value>Anonyme</value>
+  </data>
+  <data name="Answering" xml:space="preserve">
+    <value>En cours de réponse</value>
+  </data>
+  <data name="Anyway, click here to go back to the Website" xml:space="preserve">
+    <value>Quoi qu'il en soit, cliquez ici pour revenir au site Web</value>
+  </data>
+  <data name="Api key" xml:space="preserve">
+    <value>Clé API</value>
+  </data>
+  <data name="App id" xml:space="preserve">
+    <value>Identifiant de la demande</value>
+  </data>
+  <data name="App name" xml:space="preserve">
+    <value>Nom de la demande</value>
+  </data>
+  <data name="App secret" xml:space="preserve">
+    <value>Secret de candidature</value>
+  </data>
+  <data name="Approved" xml:space="preserve">
+    <value>Aprovado</value>
+  </data>
+  <data name="Approved comments" xml:space="preserve">
+    <value>Commentaires approuvés</value>
+  </data>
+  <data name="Are comments enabled?" xml:space="preserve">
+    <value>Les commentaires sont-ils activés ?</value>
+  </data>
+  <data name="Are you sure?" xml:space="preserve">
+    <value>Il en est sûr ?</value>
+  </data>
+  <data name="Are you sure? You will NOT be able to recover these items." xml:space="preserve">
+    <value>Il en est sûr ? Vous ne pourrez PAS récupérer ces éléments.</value>
+  </data>
+  <data name="Author" xml:space="preserve">
+    <value>Auteur</value>
+  </data>
+  <data name="Author is required" xml:space="preserve">
+    <value>L'auteur est requis</value>
+  </data>
+  <data name="Backup" xml:space="preserve">
+    <value>Sauvegarde</value>
+  </data>
+  <data name="Backup and restore" xml:space="preserve">
+    <value>Sauvegarde et restauration</value>
+  </data>
+  <data name="Backup file not found" xml:space="preserve">
+    <value>Fichier de sauvegarde introuvable</value>
+  </data>
+  <data name="Backup files and database" xml:space="preserve">
+    <value>Sauvegarde de fichiers et de bases de données</value>
+  </data>
+  <data name="Backup system" xml:space="preserve">
+    <value>Système de sauvegarde</value>
+  </data>
+  <data name="Backups" xml:space="preserve">
+    <value>Sauvegardes</value>
+  </data>
+  <data name="BACPAC file created successfully" xml:space="preserve">
+    <value>Fichier BACPAC créé avec succès</value>
+  </data>
+  <data name="Base64 image" xml:space="preserve">
+    <value>Image Base64</value>
+  </data>
+  <data name="Based on title" xml:space="preserve">
+    <value>Basé sur le titre</value>
+  </data>
+  <data name="Basic" xml:space="preserve">
+    <value>Basique</value>
+  </data>
+  <data name="Be careful when choosing a username, you won't be able to change it later" xml:space="preserve">
+    <value>Soyez prudent lorsque vous choisissez un nom d'utilisateur, vous ne pourrez pas le modifier par la suite</value>
+  </data>
+  <data name="Be the first to comment" xml:space="preserve">
+    <value>Soyez le premier à commenter</value>
+  </data>
+  <data name="Block social profiles" xml:space="preserve">
+    <value>Bloquer les profils sociaux</value>
+  </data>
+  <data name="Block user" xml:space="preserve">
+    <value>Bloquer l'utilisateur</value>
+  </data>
+  <data name="Block user self" xml:space="preserve">
+    <value>Bloquer l'utilisateur lui-même</value>
+  </data>
+  <data name="Block users other than self" xml:space="preserve">
+    <value>Bloquer les utilisateurs autres que vous</value>
+  </data>
+  <data name="Blocked" xml:space="preserve">
+    <value>Bloqueado</value>
+  </data>
+  <data name="Blog" xml:space="preserve">
+    <value>Blogue</value>
+  </data>
+  <data name="Blog could not be found" xml:space="preserve">
+    <value>Impossible de trouver le blog</value>
+  </data>
+  <data name="Blog is already activated" xml:space="preserve">
+    <value>Le blog est maintenant activé</value>
+  </data>
+  <data name="Blog is already deactivated" xml:space="preserve">
+    <value>Le blog est désormais désactivé</value>
+  </data>
+  <data name="Blog is required" xml:space="preserve">
+    <value>Bloguer est obligatoire</value>
+  </data>
+  <data name="Blog must be null" xml:space="preserve">
+    <value>Le blog doit être nul</value>
+  </data>
+  <data name="Blogs" xml:space="preserve">
+    <value>Blogues</value>
+  </data>
+  <data name="Blogs found in the search" xml:space="preserve">
+    <value>Blogs trouvés lors de la recherche</value>
+  </data>
+  <data name="Blogs this user has access to" xml:space="preserve">
+    <value>Blogs auxquels cet utilisateur a accès</value>
+  </data>
+  <data name="Blogs, specials..." xml:space="preserve">
+    <value>Blogs, promotions...</value>
+  </data>
+  <data name="Browser • Url" xml:space="preserve">
+    <value>Navigateur • URL</value>
+  </data>
+  <data name="Browsers" xml:space="preserve">
+    <value>Navegadores</value>
+  </data>
+  <data name="But login first" xml:space="preserve">
+    <value>Mais connectez-vous d'abord</value>
+  </data>
+  <data name="By continuing to use our site, you consent to our use of cookies" xml:space="preserve">
+    <value>En poursuivant votre navigation sur notre site Internet, vous acceptez l'utilisation de cookies</value>
+  </data>
+  <data name="By language, most recent" xml:space="preserve">
+    <value>Par langue, la plus récente</value>
+  </data>
+  <data name="By language, note" xml:space="preserve">
+    <value>Par langue, veuillez noter</value>
+  </data>
+  <data name="By language, title" xml:space="preserve">
+    <value>Par langue, titre</value>
+  </data>
+  <data name="By most recent" xml:space="preserve">
+    <value>Par le plus récent</value>
+  </data>
+  <data name="By note" xml:space="preserve">
+    <value>Par note</value>
+  </data>
+  <data name="By note desc." xml:space="preserve">
+    <value>Par note desc.</value>
+  </data>
+  <data name="By oldest" xml:space="preserve">
+    <value>Aussi vieux soit-il</value>
+  </data>
+  <data name="By title" xml:space="preserve">
+    <value>Par titre</value>
+  </data>
+  <data name="By title desc." xml:space="preserve">
+    <value>Par titre desc.</value>
+  </data>
+  <data name="Cache explorer" xml:space="preserve">
+    <value>Explorateur de cache</value>
+  </data>
+  <data name="Callback path" xml:space="preserve">
+    <value>Chemin de rappel</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="Categories" xml:space="preserve">
+    <value>Categorias</value>
+  </data>
+  <data name="Categories found in the search" xml:space="preserve">
+    <value>Catégories trouvées lors de la recherche</value>
+  </data>
+  <data name="Categories must be unique" xml:space="preserve">
+    <value>Les catégories doivent être uniques</value>
+  </data>
+  <data name="Category" xml:space="preserve">
+    <value>Categoria</value>
+  </data>
+  <data name="Category must exist" xml:space="preserve">
+    <value>La catégorie doit exister</value>
+  </data>
+  <data name="Change password" xml:space="preserve">
+    <value>Changer le mot de passe</value>
+  </data>
+  <data name="Child categories" xml:space="preserve">
+    <value>Catégories secondaires</value>
+  </data>
+  <data name="Children will be purged too" xml:space="preserve">
+    <value>Les enfants seront également purgés</value>
+  </data>
+  <data name="Choose the background style" xml:space="preserve">
+    <value>Choisissez le style d'arrière-plan</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Claro</value>
+  </data>
+  <data name="Clear cache" xml:space="preserve">
+    <value>Vider le cache</value>
+  </data>
+  <data name="Clear header" xml:space="preserve">
+    <value>Effacer l'en-tête</value>
+  </data>
+  <data name="Clear icon" xml:space="preserve">
+    <value>Icône Effacer</value>
+  </data>
+  <data name="Clear image" xml:space="preserve">
+    <value>Image claire</value>
+  </data>
+  <data name="Clear picture" xml:space="preserve">
+    <value>Image claire</value>
+  </data>
+  <data name="Clear selection" xml:space="preserve">
+    <value>Effacer la sélection</value>
+  </data>
+  <data name="Clear video" xml:space="preserve">
+    <value>Effacer la vidéo</value>
+  </data>
+  <data name="Click here to change it" xml:space="preserve">
+    <value>Cliquez ici pour le changer</value>
+  </data>
+  <data name="Click here to read our cookie policy" xml:space="preserve">
+    <value>Cliquez ici pour lire notre politique en matière de cookies</value>
+  </data>
+  <data name="Click here to reset password" xml:space="preserve">
+    <value>Cliquez ici pour réinitialiser le mot de passe</value>
+  </data>
+  <data name="Client id" xml:space="preserve">
+    <value>Numéro client</value>
+  </data>
+  <data name="Client secret" xml:space="preserve">
+    <value>Secret client</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Fechar</value>
+  </data>
+  <data name="Close menu" xml:space="preserve">
+    <value>Fermer le menu</value>
+  </data>
+  <data name="Close window" xml:space="preserve">
+    <value>Fermer la fenêtre</value>
+  </data>
+  <data name="Closes the window" xml:space="preserve">
+    <value>Fermez la fenêtre</value>
+  </data>
+  <data name="Comment" xml:space="preserve">
+    <value>Commentaire</value>
+  </data>
+  <data name="Comment reactions on posts" xml:space="preserve">
+    <value>Commentez les réactions sur les publications</value>
+  </data>
+  <data name="Comment reactions on videos" xml:space="preserve">
+    <value>Commentez les réactions sur les vidéos</value>
+  </data>
+  <data name="Comment section" xml:space="preserve">
+    <value>Section commentaires</value>
+  </data>
+  <data name="Commented on post:" xml:space="preserve">
+    <value>Commentaire sur l'article :</value>
+  </data>
+  <data name="Comments" xml:space="preserve">
+    <value>Commentaires</value>
+  </data>
+  <data name="Comments [including deleted]" xml:space="preserve">
+    <value>Commentaires [y compris supprimés]</value>
+  </data>
+  <data name="Comments found In the search" xml:space="preserve">
+    <value>Commentaires trouvés lors de la recherche</value>
+  </data>
+  <data name="Comments on posts" xml:space="preserve">
+    <value>Commentaires sur les articles</value>
+  </data>
+  <data name="Comments on videos" xml:space="preserve">
+    <value>Commentaires sur les vidéos</value>
+  </data>
+  <data name="Confirm password" xml:space="preserve">
+    <value>Confirmez votre mot de passe</value>
+  </data>
+  <data name="Congratulations" xml:space="preserve">
+    <value>Félicitations</value>
+  </data>
+  <data name="Contact an administrator to solve this issue" xml:space="preserve">
+    <value>Contactez un administrateur pour résoudre ce problème</value>
+  </data>
+  <data name="Content" xml:space="preserve">
+    <value>Contenu</value>
+  </data>
+  <data name="Content must be a valid HTML" xml:space="preserve">
+    <value>Le contenu doit être du HTML valide</value>
+  </data>
+  <data name="Content must exist" xml:space="preserve">
+    <value>Le contenu doit exister</value>
+  </data>
+  <data name="Cookie policy" xml:space="preserve">
+    <value>Politique de cookies</value>
+  </data>
+  <data name="count" xml:space="preserve">
+    <value>Nombre</value>
+  </data>
+  <data name="Create blogs" xml:space="preserve">
+    <value>Créer des blogs</value>
+  </data>
+  <data name="Create categories" xml:space="preserve">
+    <value>Créer des catégories</value>
+  </data>
+  <data name="Create new messages" xml:space="preserve">
+    <value>Créer de nouveaux messages</value>
+  </data>
+  <data name="Create new pages" xml:space="preserve">
+    <value>Créer de nouvelles pages</value>
+  </data>
+  <data name="Create new posts" xml:space="preserve">
+    <value>Créer de nouveaux messages</value>
+  </data>
+  <data name="Create new quick notes" xml:space="preserve">
+    <value>Créer de nouvelles notes rapides</value>
+  </data>
+  <data name="Create new roles" xml:space="preserve">
+    <value>Créer de nouveaux rôles</value>
+  </data>
+  <data name="Create new special pages" xml:space="preserve">
+    <value>Créer de nouvelles pages spéciales</value>
+  </data>
+  <data name="Create new users" xml:space="preserve">
+    <value>Créer de nouveaux utilisateurs</value>
+  </data>
+  <data name="Create new videos" xml:space="preserve">
+    <value>Créer de nouvelles vidéos</value>
+  </data>
+  <data name="Create slug" xml:space="preserve">
+    <value>Créer une limace</value>
+  </data>
+  <data name="Created" xml:space="preserve">
+    <value>Criado</value>
+  </data>
+  <data name="Current month" xml:space="preserve">
+    <value>Mois en cours</value>
+  </data>
+  <data name="Current password" xml:space="preserve">
+    <value>Mot de passe actuel</value>
+  </data>
+  <data name="Current year" xml:space="preserve">
+    <value>Année en cours</value>
+  </data>
+  <data name="Custom" xml:space="preserve">
+    <value>Personalizado</value>
+  </data>
+  <data name="Cycle detected: you must choose another parent" xml:space="preserve">
+    <value>Cycle détecté : vous devez choisir un autre parent</value>
+  </data>
+  <data name="Danger" xml:space="preserve">
+    <value>Perigo</value>
+  </data>
+  <data name="Dashboard" xml:space="preserve">
+    <value>Painel</value>
+  </data>
+  <data name="Dashboard analytics" xml:space="preserve">
+    <value>Analyse du tableau de bord</value>
+  </data>
+  <data name="Database restored successfully." xml:space="preserve">
+    <value>Base de données restaurée avec succès.</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Data</value>
+  </data>
+  <data name="Date of modification must happen after the creation date" xml:space="preserve">
+    <value>La date de modification doit être postérieure à la date de création</value>
+  </data>
+  <data name="Date published" xml:space="preserve">
+    <value>Date de parution</value>
+  </data>
+  <data name="Date released" xml:space="preserve">
+    <value>Date de sortie</value>
+  </data>
+  <data name="Db settings file updated successfully" xml:space="preserve">
+    <value>Fichier de paramètres de base de données mis à jour avec succès</value>
+  </data>
+  <data name="Deactivate blog" xml:space="preserve">
+    <value>Désactiver le blog</value>
+  </data>
+  <data name="Deactivate blogs" xml:space="preserve">
+    <value>Désactiver les blogs</value>
+  </data>
+  <data name="Default sorting" xml:space="preserve">
+    <value>Classement standard</value>
+  </data>
+  <data name="Delete blogs" xml:space="preserve">
+    <value>Supprimer des blogs</value>
+  </data>
+  <data name="Delete categories" xml:space="preserve">
+    <value>Supprimer des catégories</value>
+  </data>
+  <data name="Delete comment" xml:space="preserve">
+    <value>Supprimer le commentaire</value>
+  </data>
+  <data name="Delete other users messages" xml:space="preserve">
+    <value>Supprimer les messages des autres utilisateurs</value>
+  </data>
+  <data name="Delete other users pages" xml:space="preserve">
+    <value>Supprimer les pages des autres utilisateurs</value>
+  </data>
+  <data name="Delete other users posts" xml:space="preserve">
+    <value>Supprimer les messages d'autres utilisateurs</value>
+  </data>
+  <data name="Delete other users quick notes" xml:space="preserve">
+    <value>Supprimer les notes rapides des autres utilisateurs</value>
+  </data>
+  <data name="Delete other users special pages" xml:space="preserve">
+    <value>Supprimer les pages spéciales des autres utilisateurs</value>
+  </data>
+  <data name="Delete other users videos" xml:space="preserve">
+    <value>Supprimer les vidéos des autres utilisateurs</value>
+  </data>
+  <data name="Delete own messages" xml:space="preserve">
+    <value>Supprimer ses propres messages</value>
+  </data>
+  <data name="Delete own pages" xml:space="preserve">
+    <value>Supprimer les pages possédées</value>
+  </data>
+  <data name="Delete own posts" xml:space="preserve">
+    <value>Supprimer ses propres messages</value>
+  </data>
+  <data name="Delete own quick notes" xml:space="preserve">
+    <value>Supprimez vos propres notes rapides</value>
+  </data>
+  <data name="Delete own special pages" xml:space="preserve">
+    <value>Supprimer ses propres pages spéciales</value>
+  </data>
+  <data name="Delete own videos" xml:space="preserve">
+    <value>Supprimer ses propres vidéos</value>
+  </data>
+  <data name="Delete roles" xml:space="preserve">
+    <value>Supprimer des rôles</value>
+  </data>
+  <data name="Delete selected item(s)" xml:space="preserve">
+    <value>Supprimer les éléments sélectionnés</value>
+  </data>
+  <data name="Delete Subtitle" xml:space="preserve">
+    <value>Supprimer le sous-titre</value>
+  </data>
+  <data name="Delete tags" xml:space="preserve">
+    <value>Supprimer les balises</value>
+  </data>
+  <data name="Delete user self" xml:space="preserve">
+    <value>Supprimer son propre utilisateur</value>
+  </data>
+  <data name="Delete users other than self" xml:space="preserve">
+    <value>Supprimer des utilisateurs autres que vous</value>
+  </data>
+  <data name="Deleted" xml:space="preserve">
+    <value>Supprimé</value>
+  </data>
+  <data name="Deleted comments" xml:space="preserve">
+    <value>Commentaires supprimés</value>
+  </data>
+  <data name="Deleted?" xml:space="preserve">
+    <value>Supprimé ?</value>
+  </data>
+  <data name="Deleting {0} item(s)" xml:space="preserve">
+    <value>Suppression d'éléments {0}</value>
+  </data>
+  <data name="Demote from front-page" xml:space="preserve">
+    <value>Rétrograder dès la première page</value>
+  </data>
+  <data name="Demoting from front-page" xml:space="preserve">
+    <value>Rétrograder dès la première page</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="Description cannot exceed {0} characters" xml:space="preserve">
+    <value>La description ne peut pas dépasser les caractères {0}</value>
+  </data>
+  <data name="Description of the website (for meta tags)" xml:space="preserve">
+    <value>Description du site (pour les balises méta)</value>
+  </data>
+  <data name="Direct replies" xml:space="preserve">
+    <value>Réponses directes</value>
+  </data>
+  <data name="Display name" xml:space="preserve">
+    <value>Nom d'affichage</value>
+  </data>
+  <data name="Display name cannot exceed {0} characters" xml:space="preserve">
+    <value>Le nom à afficher ne peut pas dépasser les caractères {0}.</value>
+  </data>
+  <data name="Display name is required" xml:space="preserve">
+    <value>Le nom d’affichage est requis</value>
+  </data>
+  <data name="Do NOT share this code with anybody" xml:space="preserve">
+    <value>NE partagez ce code avec personne</value>
+  </data>
+  <data name="Don't share that link" xml:space="preserve">
+    <value>Ne partagez pas ce lien</value>
+  </data>
+  <data name="Don't share that link with anybody else" xml:space="preserve">
+    <value>Ne partagez ce lien avec personne d'autre</value>
+  </data>
+  <data name="Done" xml:space="preserve">
+    <value>Feito</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Download</value>
+  </data>
+  <data name="Draft" xml:space="preserve">
+    <value>Rascunho</value>
+  </data>
+  <data name="Draft pages" xml:space="preserve">
+    <value>Brouillons de pages</value>
+  </data>
+  <data name="Draft posts" xml:space="preserve">
+    <value>Brouillons de messages</value>
+  </data>
+  <data name="Draft special messages" xml:space="preserve">
+    <value>Brouillons de messages spéciaux</value>
+  </data>
+  <data name="Draft special pages" xml:space="preserve">
+    <value>Brouillons de pages spéciales</value>
+  </data>
+  <data name="Draft videos" xml:space="preserve">
+    <value>Brouillons vidéo</value>
+  </data>
+  <data name="Drafts" xml:space="preserve">
+    <value>Rascunhos</value>
+  </data>
+  <data name="E-mail" xml:space="preserve">
+    <value>Courriel</value>
+  </data>
+  <data name="Edit blogs" xml:space="preserve">
+    <value>Modifier des blogs</value>
+  </data>
+  <data name="Edit categories" xml:space="preserve">
+    <value>Modifier les catégories</value>
+  </data>
+  <data name="Edit comment" xml:space="preserve">
+    <value>Modifier le commentaire</value>
+  </data>
+  <data name="Edit other users" xml:space="preserve">
+    <value>Modifier d'autres utilisateurs</value>
+  </data>
+  <data name="Edit other users messages" xml:space="preserve">
+    <value>Modifier les messages d'autres utilisateurs</value>
+  </data>
+  <data name="Edit other users pages" xml:space="preserve">
+    <value>Modifier les pages des autres utilisateurs</value>
+  </data>
+  <data name="Edit other users posts" xml:space="preserve">
+    <value>Modifier les messages des autres utilisateurs</value>
+  </data>
+  <data name="Edit other users quick notes" xml:space="preserve">
+    <value>Modifier les notes rapides d'autres utilisateurs</value>
+  </data>
+  <data name="Edit other users special pages" xml:space="preserve">
+    <value>Modifier les pages spéciales des autres utilisateurs</value>
+  </data>
+  <data name="Edit other users videos" xml:space="preserve">
+    <value>Modifier les vidéos d'autres utilisateurs</value>
+  </data>
+  <data name="Edit own messages" xml:space="preserve">
+    <value>Modifier ses propres messages</value>
+  </data>
+  <data name="Edit own pages" xml:space="preserve">
+    <value>Modifier vos propres pages</value>
+  </data>
+  <data name="Edit own posts" xml:space="preserve">
+    <value>Modifier ses propres messages</value>
+  </data>
+  <data name="Edit own quick notes" xml:space="preserve">
+    <value>Modifiez vos propres notes rapides</value>
+  </data>
+  <data name="Edit own special pages" xml:space="preserve">
+    <value>Modifiez vos propres pages spéciales</value>
+  </data>
+  <data name="Edit own user" xml:space="preserve">
+    <value>Modifier son propre utilisateur</value>
+  </data>
+  <data name="Edit own videos" xml:space="preserve">
+    <value>Modifiez vos propres vidéos</value>
+  </data>
+  <data name="Edit roles" xml:space="preserve">
+    <value>Modifier les rôles</value>
+  </data>
+  <data name="Edit tags" xml:space="preserve">
+    <value>Modifier les balises</value>
+  </data>
+  <data name="Email address cannot exceed {0} characters" xml:space="preserve">
+    <value>L'adresse courriel ne peut pas dépasser les caractères {0}</value>
+  </data>
+  <data name="Email address is required" xml:space="preserve">
+    <value>L'adresse courriel est requise</value>
+  </data>
+  <data name="Email settings are fine" xml:space="preserve">
+    <value>Les paramètres de messagerie sont corrects</value>
+  </data>
+  <data name="Enable" xml:space="preserve">
+    <value>Activer</value>
+  </data>
+  <data name="Enable SSL" xml:space="preserve">
+    <value>Activer SSL</value>
+  </data>
+  <data name="End date" xml:space="preserve">
+    <value>Date de fin</value>
+  </data>
+  <data name="Endpoint (URL)" xml:space="preserve">
+    <value>Point final (URL)</value>
+  </data>
+  <data name="Enter" xml:space="preserve">
+    <value>Digitar</value>
+  </data>
+  <data name="Enter incognito" xml:space="preserve">
+    <value>Passer en mode navigation privée</value>
+  </data>
+  <data name="Enter maintenance mode" xml:space="preserve">
+    <value>Passer en mode maintenance</value>
+  </data>
+  <data name="Enter the TOTP code here" xml:space="preserve">
+    <value>Entrez le code TOTP ici</value>
+  </data>
+  <data name="Entity header cannot be updated" xml:space="preserve">
+    <value>L'en-tête de l'entité ne peut pas être mis à jour</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Erreur</value>
+  </data>
+  <data name="Error parsing the JSON file" xml:space="preserve">
+    <value>Erreur lors de l'analyse du fichier JSON</value>
+  </data>
+  <data name="Everything" xml:space="preserve">
+    <value>Tout</value>
+  </data>
+  <data name="Extension" xml:space="preserve">
+    <value>Extension</value>
+  </data>
+  <data name="Facebook" xml:space="preserve">
+    <value>Facebook</value>
+  </data>
+  <data name="Failed to authenticate you" xml:space="preserve">
+    <value>Impossible de vous authentifier</value>
+  </data>
+  <data name="Failed to connect to email server with default settings" xml:space="preserve">
+    <value>Échec de la connexion au serveur de messagerie avec les paramètres par défaut</value>
+  </data>
+  <data name="Failed to reset 2FA for user" xml:space="preserve">
+    <value>Échec de la réinitialisation de 2FA pour l'utilisateur</value>
+  </data>
+  <data name="Failed to reset password" xml:space="preserve">
+    <value>Échec de la réinitialisation du mot de passe</value>
+  </data>
+  <data name="Failed to reset password for user" xml:space="preserve">
+    <value>Échec de la réinitialisation du mot de passe utilisateur</value>
+  </data>
+  <data name="Feeds" xml:space="preserve">
+    <value>Feeds</value>
+  </data>
+  <data name="field" xml:space="preserve">
+    <value>campo</value>
+  </data>
+  <data name="File is too large" xml:space="preserve">
+    <value>Le fichier est trop volumineux</value>
+  </data>
+  <data name="File manager" xml:space="preserve">
+    <value>Gestionnaire de fichiers</value>
+  </data>
+  <data name="Filler" xml:space="preserve">
+    <value>Preenchimento</value>
+  </data>
+  <data name="Filter" xml:space="preserve">
+    <value>Filtro</value>
+  </data>
+  <data name="First name" xml:space="preserve">
+    <value>Prénom</value>
+  </data>
+  <data name="First name cannot exceed {0} characters" xml:space="preserve">
+    <value>Le nom ne peut pas dépasser les caractères {0}</value>
+  </data>
+  <data name="First name is required" xml:space="preserve">
+    <value>Le prénom est obligatoire</value>
+  </data>
+  <data name="Forgot password" xml:space="preserve">
+    <value>Mot de passe oublié</value>
+  </data>
+  <data name="Front-page" xml:space="preserve">
+    <value>Première page</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>En général</value>
+  </data>
+  <data name="GitHub" xml:space="preserve">
+    <value>GitHub</value>
+  </data>
+  <data name="Go back" xml:space="preserve">
+    <value>Volte</value>
+  </data>
+  <data name="Go to blog" xml:space="preserve">
+    <value>Aller sur le blog</value>
+  </data>
+  <data name="Go to Profile" xml:space="preserve">
+    <value>Aller au profil</value>
+  </data>
+  <data name="Go to top" xml:space="preserve">
+    <value>Allez au sommet</value>
+  </data>
+  <data name="Google" xml:space="preserve">
+    <value>Google</value>
+  </data>
+  <data name="Grant moderator to user" xml:space="preserve">
+    <value>Accorder un modérateur à l'utilisateur</value>
+  </data>
+  <data name="Header" xml:space="preserve">
+    <value>En-tête</value>
+  </data>
+  <data name="Header image must be valid" xml:space="preserve">
+    <value>L'image d'en-tête doit être valide</value>
+  </data>
+  <data name="Here's your verification code for {0}" xml:space="preserve">
+    <value>Voici votre code de vérification pour {0}</value>
+  </data>
+  <data name="History" xml:space="preserve">
+    <value>Histoire</value>
+  </data>
+  <data name="How to delete your data" xml:space="preserve">
+    <value>Comment supprimer vos données</value>
+  </data>
+  <data name="Id" xml:space="preserve">
+    <value>Id</value>
+  </data>
+  <data name="Id is required" xml:space="preserve">
+    <value>Une pièce d'identité est obligatoire</value>
+  </data>
+  <data name="If you changed open telemetry settings, you have to restart both admin and front-end to take effect" xml:space="preserve">
+    <value>Si vous avez modifié les paramètres de télémétrie ouverte, vous devrez redémarrer l'administrateur et le frontal pour qu'ils prennent effet.</value>
+  </data>
+  <data name="If you changed social network settings, you have to restart front-end to take effect" xml:space="preserve">
+    <value>Si vous avez modifié vos paramètres de réseaux sociaux, vous devrez redémarrer le front-end pour que cela prenne effet.</value>
+  </data>
+  <data name="If you did not request this, please ignore this email" xml:space="preserve">
+    <value>Si vous ne l'avez pas demandé, veuillez ignorer cet courriel</value>
+  </data>
+  <data name="Iframe must be valid" xml:space="preserve">
+    <value>L'iframe doit être valide</value>
+  </data>
+  <data name="Incognito Mode" xml:space="preserve">
+    <value>Mode navigation privée</value>
+  </data>
+  <data name="Info" xml:space="preserve">
+    <value>Information</value>
+  </data>
+  <data name="Instagram" xml:space="preserve">
+    <value>Instagram</value>
+  </data>
+  <data name="Interactions (Last 50)" xml:space="preserve">
+    <value>Interactions (50 dernières)</value>
+  </data>
+  <data name="Invalid ids (may contain deleted, inactive blog ids)" xml:space="preserve">
+    <value>Identifiants invalides (peuvent contenir des identifiants de blog inactifs et supprimés)</value>
+  </data>
+  <data name="Ip" xml:space="preserve">
+    <value>IP</value>
+  </data>
+  <data name="item(s)" xml:space="preserve">
+    <value>articles)</value>
+  </data>
+  <data name="Keep testing SMTP server connectivity in the background?" xml:space="preserve">
+    <value>Continuer à tester la connectivité du serveur SMTP en arrière-plan ?</value>
+  </data>
+  <data name="Keep these recovery codes somewhere safe" xml:space="preserve">
+    <value>Conservez ces codes de récupération dans un endroit sûr</value>
+  </data>
+  <data name="Key" xml:space="preserve">
+    <value>Chave</value>
+  </data>
+  <data name="Keywords" xml:space="preserve">
+    <value>Mots-clés</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Linguagem</value>
+  </data>
+  <data name="Language must be valid" xml:space="preserve">
+    <value>La langue doit être valide</value>
+  </data>
+  <data name="Large" xml:space="preserve">
+    <value>Grande</value>
+  </data>
+  <data name="Last 180 days" xml:space="preserve">
+    <value>180 derniers jours</value>
+  </data>
+  <data name="Last 24 hours" xml:space="preserve">
+    <value>Dernières 24 heures</value>
+  </data>
+  <data name="Last 30 days" xml:space="preserve">
+    <value>30 derniers jours</value>
+  </data>
+  <data name="Last 365 days" xml:space="preserve">
+    <value>365 derniers jours</value>
+  </data>
+  <data name="Last 7 days" xml:space="preserve">
+    <value>7 derniers jours</value>
+  </data>
+  <data name="Last 90 days" xml:space="preserve">
+    <value>90 derniers jours</value>
+  </data>
+  <data name="Last name" xml:space="preserve">
+    <value>Sobrenome</value>
+  </data>
+  <data name="Last name cannot exceed {0} characters" xml:space="preserve">
+    <value>Le nom de famille ne peut pas dépasser les caractères {0}.</value>
+  </data>
+  <data name="Last name is required" xml:space="preserve">
+    <value>Le nom de famille est obligatoire</value>
+  </data>
+  <data name="Latest comments" xml:space="preserve">
+    <value>Derniers commentaires</value>
+  </data>
+  <data name="Latest news" xml:space="preserve">
+    <value>Dernières nouvelles</value>
+  </data>
+  <data name="Leave" xml:space="preserve">
+    <value>Sair</value>
+  </data>
+  <data name="Leave incognito" xml:space="preserve">
+    <value>Laisser anonyme</value>
+  </data>
+  <data name="Leave maintenance mode" xml:space="preserve">
+    <value>Quitter le mode maintenance</value>
+  </data>
+  <data name="link" xml:space="preserve">
+    <value>link</value>
+  </data>
+  <data name="LinkedIn" xml:space="preserve">
+    <value>LinkedIn</value>
+  </data>
+  <data name="List of blogs in the front-end" xml:space="preserve">
+    <value>Liste des blogs sur le front-end</value>
+  </data>
+  <data name="Local path" xml:space="preserve">
+    <value>Chemin local</value>
+  </data>
+  <data name="Log out" xml:space="preserve">
+    <value>Sair</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Connecter</value>
+  </data>
+  <data name="Login to quick reply" xml:space="preserve">
+    <value>Connectez-vous pour répondre rapidement</value>
+  </data>
+  <data name="Login to rate this" xml:space="preserve">
+    <value>Connectez-vous pour noter ceci</value>
+  </data>
+  <data name="Login to react" xml:space="preserve">
+    <value>Connectez-vous pour réagir</value>
+  </data>
+  <data name="Logo" xml:space="preserve">
+    <value>Logotipo</value>
+  </data>
+  <data name="Logo • Avatar" xml:space="preserve">
+    <value>Logo • Avatar</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Sair</value>
+  </data>
+  <data name="Loop in relationships are not allowed" xml:space="preserve">
+    <value>Les boucles dans les relations ne sont pas autorisées</value>
+  </data>
+  <data name="Maintenance" xml:space="preserve">
+    <value>Entretien</value>
+  </data>
+  <data name="Make primary" xml:space="preserve">
+    <value>Rendre primaire</value>
+  </data>
+  <data name="Manage extensions" xml:space="preserve">
+    <value>Gérer les extensions</value>
+  </data>
+  <data name="Manage files" xml:space="preserve">
+    <value>Gérer les fichiers</value>
+  </data>
+  <data name="Manage packages" xml:space="preserve">
+    <value>Gérer les forfaits</value>
+  </data>
+  <data name="Manage themes" xml:space="preserve">
+    <value>Gérer les thèmes</value>
+  </data>
+  <data name="Manage widgets" xml:space="preserve">
+    <value>Gérer les widgets</value>
+  </data>
+  <data name="Maybe later" xml:space="preserve">
+    <value>Peut-être plus tard</value>
+  </data>
+  <data name="Medium" xml:space="preserve">
+    <value>Moyenne</value>
+  </data>
+  <data name="Microsoft" xml:space="preserve">
+    <value>Microsoft</value>
+  </data>
+  <data name="Misc" xml:space="preserve">
+    <value>Diversos</value>
+  </data>
+  <data name="Moderate comments" xml:space="preserve">
+    <value>Commentaires modérés</value>
+  </data>
+  <data name="Moderated by" xml:space="preserve">
+    <value>Modéré par</value>
+  </data>
+  <data name="Moderator" xml:space="preserve">
+    <value>Moderador</value>
+  </data>
+  <data name="Modified" xml:space="preserve">
+    <value>Modificado</value>
+  </data>
+  <data name="Most popular" xml:space="preserve">
+    <value>Le plus populaire</value>
+  </data>
+  <data name="Most recent" xml:space="preserve">
+    <value>Le plus récent</value>
+  </data>
+  <data name="Moves down in the list" xml:space="preserve">
+    <value>Descendez la liste</value>
+  </data>
+  <data name="Moves up in the list" xml:space="preserve">
+    <value>Remonter dans la liste</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="Name (website)" xml:space="preserve">
+    <value>Nom (site Web)</value>
+  </data>
+  <data name="Name cannot exceed {0} characters" xml:space="preserve">
+    <value>Le nom ne peut pas dépasser les caractères {0}</value>
+  </data>
+  <data name="Name is required" xml:space="preserve">
+    <value>Le nom est obligatoire</value>
+  </data>
+  <data name="Nano Id" xml:space="preserve">
+    <value>Nano-identification</value>
+  </data>
+  <data name="Nano Id cannot exceed {0} characters" xml:space="preserve">
+    <value>Le Nano ID ne peut pas dépasser les caractères {0}</value>
+  </data>
+  <data name="Nano Id is required" xml:space="preserve">
+    <value>La Nano ID est obligatoire</value>
+  </data>
+  <data name="New" xml:space="preserve">
+    <value>Novo</value>
+  </data>
+  <data name="New folder" xml:space="preserve">
+    <value>Nouveau dossier</value>
+  </data>
+  <data name="New name" xml:space="preserve">
+    <value>Nouveau nom</value>
+  </data>
+  <data name="New password" xml:space="preserve">
+    <value>Nouveau mot de passe</value>
+  </data>
+  <data name="New passwords do NOT match, they differ from each other" xml:space="preserve">
+    <value>Les nouveaux mots de passe NE correspondent PAS, ils diffèrent les uns des autres</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>Non</value>
+  </data>
+  <data name="No categories whatsoever" xml:space="preserve">
+    <value>Aucune catégorie</value>
+  </data>
+  <data name="No content" xml:space="preserve">
+    <value>Aucun contenu</value>
+  </data>
+  <data name="No content for now" xml:space="preserve">
+    <value>Aucun contenu pour l'instant</value>
+  </data>
+  <data name="No entities were selected" xml:space="preserve">
+    <value>Aucune entité n'a été sélectionnée</value>
+  </data>
+  <data name="No entries were found" xml:space="preserve">
+    <value>Aucune entrée n'a été trouvée</value>
+  </data>
+  <data name="No header information available" xml:space="preserve">
+    <value>Aucune information d'en-tête disponible</value>
+  </data>
+  <data name="No pages whatsoever" xml:space="preserve">
+    <value>Aucune page</value>
+  </data>
+  <data name="No posts whatsoever" xml:space="preserve">
+    <value>Aucun message</value>
+  </data>
+  <data name="No subtitle file" xml:space="preserve">
+    <value>Pas de fichier de sous-titres</value>
+  </data>
+  <data name="No tags whatsoever" xml:space="preserve">
+    <value>Sans aucune balise</value>
+  </data>
+  <data name="No text from this content" xml:space="preserve">
+    <value>Aucun texte de ce contenu</value>
+  </data>
+  <data name="No text from this page" xml:space="preserve">
+    <value>Pas de texte sur cette page</value>
+  </data>
+  <data name="No videos whatsoever" xml:space="preserve">
+    <value>Aucune vidéo</value>
+  </data>
+  <data name="None" xml:space="preserve">
+    <value>Nenhum</value>
+  </data>
+  <data name="Not specified" xml:space="preserve">
+    <value>Non spécifié</value>
+  </data>
+  <data name="Note" xml:space="preserve">
+    <value>Observation</value>
+  </data>
+  <data name="Note cannot exceed {0} characters" xml:space="preserve">
+    <value>La note ne peut pas dépasser les caractères {0}</value>
+  </data>
+  <data name="Note is required" xml:space="preserve">
+    <value>La remarque est obligatoire</value>
+  </data>
+  <data name="Nothing to see here" xml:space="preserve">
+    <value>Rien à voir ici</value>
+  </data>
+  <data name="Ok" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Only a top-level page can become front-page" xml:space="preserve">
+    <value>Seule une page de niveau supérieur peut devenir la première page</value>
+  </data>
+  <data name="Only image files" xml:space="preserve">
+    <value>Fichiers images uniquement</value>
+  </data>
+  <data name="Only top-level pages can be promoted to front page" xml:space="preserve">
+    <value>Seules les pages de niveau supérieur peuvent être promues en page d'accueil</value>
+  </data>
+  <data name="Only video files" xml:space="preserve">
+    <value>Fichiers vidéo uniquement</value>
+  </data>
+  <data name="Oops" xml:space="preserve">
+    <value>Oups</value>
+  </data>
+  <data name="Oops, this key is not valid or it was already used to reset your password" xml:space="preserve">
+    <value>Oups, cette clé n'est pas valide ou a déjà été utilisée pour réinitialiser votre mot de passe</value>
+  </data>
+  <data name="Open telemetry" xml:space="preserve">
+    <value>Télémétrie ouverte</value>
+  </data>
+  <data name="Or click here to reset password" xml:space="preserve">
+    <value>Ou cliquez ici pour réinitialiser le mot de passe</value>
+  </data>
+  <data name="Or paste this URI" xml:space="preserve">
+    <value>Ou collez cet URI</value>
+  </data>
+  <data name="Origami" xml:space="preserve">
+    <value>Origami</value>
+  </data>
+  <data name="Original" xml:space="preserve">
+    <value>Original</value>
+  </data>
+  <data name="Original name" xml:space="preserve">
+    <value>Nom d'origine</value>
+  </data>
+  <data name="Other trashes" xml:space="preserve">
+    <value>Autres déchets</value>
+  </data>
+  <data name="P" xml:space="preserve">
+    <value>P</value>
+  </data>
+  <data name="Page" xml:space="preserve">
+    <value>Page</value>
+  </data>
+  <data name="Page cannot be retrieved" xml:space="preserve">
+    <value>La page ne peut pas être récupérée</value>
+  </data>
+  <data name="Page does not exist" xml:space="preserve">
+    <value>La page n'existe pas</value>
+  </data>
+  <data name="Page is already front-page" xml:space="preserve">
+    <value>La page est déjà sur la première page</value>
+  </data>
+  <data name="Page is not front-page" xml:space="preserve">
+    <value>La page n'est pas la première page</value>
+  </data>
+  <data name="Page not found" xml:space="preserve">
+    <value>Page introuvable</value>
+  </data>
+  <data name="Pages" xml:space="preserve">
+    <value>Pages</value>
+  </data>
+  <data name="Pages found in the search" xml:space="preserve">
+    <value>Pages trouvées lors de la recherche</value>
+  </data>
+  <data name="Parent" xml:space="preserve">
+    <value>Pai</value>
+  </data>
+  <data name="Parent category" xml:space="preserve">
+    <value>Catégorie parente</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Senha</value>
+  </data>
+  <data name="Password has been reset successfully" xml:space="preserve">
+    <value>Le mot de passe a été réinitialisé avec succès</value>
+  </data>
+  <data name="Password reset" xml:space="preserve">
+    <value>Réinitialisation du mot de passe</value>
+  </data>
+  <data name="Password reset history" xml:space="preserve">
+    <value>Historique de réinitialisation du mot de passe</value>
+  </data>
+  <data name="Password reset link has been created, please check your email for further instructions" xml:space="preserve">
+    <value>Un lien de réinitialisation du mot de passe a été créé. Vérifiez votre courrier électronique pour plus d'instructions</value>
+  </data>
+  <data name="Paste your HTML iframe here to embed, like YouTube and so on" xml:space="preserve">
+    <value>Collez votre iframe HTML ici pour l'intégrer, comme YouTube, etc.</value>
+  </data>
+  <data name="Path" xml:space="preserve">
+    <value>Caminho</value>
+  </data>
+  <data name="People online" xml:space="preserve">
+    <value>Personnes en ligne</value>
+  </data>
+  <data name="Pick from file manager" xml:space="preserve">
+    <value>Choisissez parmi le gestionnaire de fichiers</value>
+  </data>
+  <data name="Pick your categories" xml:space="preserve">
+    <value>Choisissez vos catégories</value>
+  </data>
+  <data name="Pick your tags" xml:space="preserve">
+    <value>Choisissez vos balises</value>
+  </data>
+  <data name="Pin comment" xml:space="preserve">
+    <value>Épingler le commentaire</value>
+  </data>
+  <data name="Pinned" xml:space="preserve">
+    <value>Épinglé</value>
+  </data>
+  <data name="Pinned by" xml:space="preserve">
+    <value>Épinglé par</value>
+  </data>
+  <data name="Place your comment here" xml:space="preserve">
+    <value>Placez votre commentaire ici</value>
+  </data>
+  <data name="Platforms" xml:space="preserve">
+    <value>Plateformes</value>
+  </data>
+  <data name="Please, talk to a system administrator" xml:space="preserve">
+    <value>Veuillez parler à un administrateur système</value>
+  </data>
+  <data name="Please, try again later" xml:space="preserve">
+    <value>Veuillez réessayer plus tard</value>
+  </data>
+  <data name="Post" xml:space="preserve">
+    <value>Publication</value>
+  </data>
+  <data name="Posts" xml:space="preserve">
+    <value>Publications</value>
+  </data>
+  <data name="Posts comments" xml:space="preserve">
+    <value>Publier des commentaires</value>
+  </data>
+  <data name="Posts found in the search" xml:space="preserve">
+    <value>Messages trouvés lors de la recherche</value>
+  </data>
+  <data name="Posts, videos" xml:space="preserve">
+    <value>Articles, vidéos</value>
+  </data>
+  <data name="Primary" xml:space="preserve">
+    <value>Primaire</value>
+  </data>
+  <data name="Primary blog cannot be deactivated" xml:space="preserve">
+    <value>Le blog principal ne peut pas être désactivé</value>
+  </data>
+  <data name="Primary blog cannot be deleted" xml:space="preserve">
+    <value>Le blog principal ne peut pas être supprimé</value>
+  </data>
+  <data name="Privacy policy" xml:space="preserve">
+    <value>politique de confidentialité</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>Perfil</value>
+  </data>
+  <data name="Profile data was wiped out" xml:space="preserve">
+    <value>Les données de profil ont été supprimées</value>
+  </data>
+  <data name="Profile Information" xml:space="preserve">
+    <value>Informations sur le profil</value>
+  </data>
+  <data name="Profile Not Found" xml:space="preserve">
+    <value>Profil introuvable</value>
+  </data>
+  <data name="Progress" xml:space="preserve">
+    <value>Progression</value>
+  </data>
+  <data name="Promote to front-page" xml:space="preserve">
+    <value>Promouvoir vers la première page</value>
+  </data>
+  <data name="Promoting to front-page" xml:space="preserve">
+    <value>Promotion vers la première page</value>
+  </data>
+  <data name="Publish {0} item(s)" xml:space="preserve">
+    <value>Publier un ou plusieurs éléments {0}</value>
+  </data>
+  <data name="Publish message(s)" xml:space="preserve">
+    <value>Publier des messages</value>
+  </data>
+  <data name="Publish other quick notes" xml:space="preserve">
+    <value>Publier d'autres notes rapides</value>
+  </data>
+  <data name="Publish other users messages" xml:space="preserve">
+    <value>Publier des messages d'autres utilisateurs</value>
+  </data>
+  <data name="Publish other users pages" xml:space="preserve">
+    <value>Publier les pages d'autres utilisateurs</value>
+  </data>
+  <data name="Publish other users posts" xml:space="preserve">
+    <value>Publier les messages d'autres utilisateurs</value>
+  </data>
+  <data name="Publish other users special pages" xml:space="preserve">
+    <value>Publier des pages spéciales d'autres utilisateurs</value>
+  </data>
+  <data name="Publish other users videos" xml:space="preserve">
+    <value>Publier des vidéos d'autres utilisateurs</value>
+  </data>
+  <data name="Publish own messages" xml:space="preserve">
+    <value>Publier ses propres messages</value>
+  </data>
+  <data name="Publish own pages" xml:space="preserve">
+    <value>Publiez vos propres pages</value>
+  </data>
+  <data name="Publish own posts" xml:space="preserve">
+    <value>Publiez vos propres articles</value>
+  </data>
+  <data name="Publish own quick notes" xml:space="preserve">
+    <value>Publiez vos propres notes rapides</value>
+  </data>
+  <data name="Publish own special pages" xml:space="preserve">
+    <value>Publiez vos propres pages spéciales</value>
+  </data>
+  <data name="Publish own videos" xml:space="preserve">
+    <value>Publiez vos propres vidéos</value>
+  </data>
+  <data name="Publish page(s)" xml:space="preserve">
+    <value>Publier des pages</value>
+  </data>
+  <data name="Publish post(s)" xml:space="preserve">
+    <value>Publier des articles</value>
+  </data>
+  <data name="Publish video(s)" xml:space="preserve">
+    <value>Publier des vidéos</value>
+  </data>
+  <data name="Published" xml:space="preserve">
+    <value>Publié</value>
+  </data>
+  <data name="Published pages" xml:space="preserve">
+    <value>Pages publiées</value>
+  </data>
+  <data name="Published posts" xml:space="preserve">
+    <value>Articles publiés</value>
+  </data>
+  <data name="Published special messages" xml:space="preserve">
+    <value>Messages spéciaux publiés</value>
+  </data>
+  <data name="Published special pages" xml:space="preserve">
+    <value>Pages spéciales publiées</value>
+  </data>
+  <data name="Published videos" xml:space="preserve">
+    <value>Vidéos publiées</value>
+  </data>
+  <data name="Purge blogs" xml:space="preserve">
+    <value>Effacer les blogs</value>
+  </data>
+  <data name="Purge categories" xml:space="preserve">
+    <value>Supprimer des catégories</value>
+  </data>
+  <data name="Purge comments" xml:space="preserve">
+    <value>Commentaires clairs</value>
+  </data>
+  <data name="Purge instead" xml:space="preserve">
+    <value>Purgez plutôt</value>
+  </data>
+  <data name="Purge pages" xml:space="preserve">
+    <value>Effacer les pages</value>
+  </data>
+  <data name="Purge posts" xml:space="preserve">
+    <value>Effacer les messages</value>
+  </data>
+  <data name="Purge quick notes" xml:space="preserve">
+    <value>Effacer les notes rapides</value>
+  </data>
+  <data name="Purge roles" xml:space="preserve">
+    <value>Supprimer des rôles</value>
+  </data>
+  <data name="Purge special messages" xml:space="preserve">
+    <value>Effacer les messages spéciaux</value>
+  </data>
+  <data name="Purge special pages" xml:space="preserve">
+    <value>Effacer les pages spéciales</value>
+  </data>
+  <data name="Purge tags" xml:space="preserve">
+    <value>Effacer les balises</value>
+  </data>
+  <data name="Purge users" xml:space="preserve">
+    <value>Effacer les utilisateurs</value>
+  </data>
+  <data name="Purge videos" xml:space="preserve">
+    <value>Vidéos claires</value>
+  </data>
+  <data name="Purging {0} Item(s)" xml:space="preserve">
+    <value>Purger les éléments {0}</value>
+  </data>
+  <data name="Quick note" xml:space="preserve">
+    <value>Note rapide</value>
+  </data>
+  <data name="Quick notes" xml:space="preserve">
+    <value>Notes rapides</value>
+  </data>
+  <data name="Quick notes found in the search" xml:space="preserve">
+    <value>Notes rapides trouvées dans la recherche</value>
+  </data>
+  <data name="Quick reply" xml:space="preserve">
+    <value>Réponse rapide</value>
+  </data>
+  <data name="Rated {0} on:" xml:space="preserve">
+    <value>Révisé sur {0} sur :</value>
+  </data>
+  <data name="Rating" xml:space="preserve">
+    <value>Évaluation</value>
+  </data>
+  <data name="Rating 1 is not accounted for in the final rating" xml:space="preserve">
+    <value>Le classement 1 ne compte pas dans le classement final</value>
+  </data>
+  <data name="Rating must be less than or equal to 5" xml:space="preserve">
+    <value>La note doit être inférieure ou égale à 5</value>
+  </data>
+  <data name="Ratings" xml:space="preserve">
+    <value>Avis</value>
+  </data>
+  <data name="Ratings on posts" xml:space="preserve">
+    <value>Avis sur les articles</value>
+  </data>
+  <data name="Ratings on videos" xml:space="preserve">
+    <value>Revues vidéo</value>
+  </data>
+  <data name="Reacted {0} on:" xml:space="preserve">
+    <value>A réagi {0} dans :</value>
+  </data>
+  <data name="Reacted {0} to:" xml:space="preserve">
+    <value>{0} a réagi à :</value>
+  </data>
+  <data name="Reaction needs one author" xml:space="preserve">
+    <value>La réaction a besoin d'un auteur</value>
+  </data>
+  <data name="Reactions" xml:space="preserve">
+    <value>Réactions</value>
+  </data>
+  <data name="Refresh your browser" xml:space="preserve">
+    <value>Mettez à jour votre navigateur</value>
+  </data>
+  <data name="Regenerate nano-ids" xml:space="preserve">
+    <value>Régénérer les nano-identifiants</value>
+  </data>
+  <data name="Regenerate recovery codes" xml:space="preserve">
+    <value>Régénérer les codes de récupération</value>
+  </data>
+  <data name="Regenerate secret" xml:space="preserve">
+    <value>Régénérer le secret</value>
+  </data>
+  <data name="Related content" xml:space="preserve">
+    <value>Contenu associé</value>
+  </data>
+  <data name="Related pages" xml:space="preserve">
+    <value>Pages connexes</value>
+  </data>
+  <data name="Related special pages" xml:space="preserve">
+    <value>Pages spéciales associées</value>
+  </data>
+  <data name="Release date" xml:space="preserve">
+    <value>Date de sortie</value>
+  </data>
+  <data name="Reload" xml:space="preserve">
+    <value>Recharger</value>
+  </data>
+  <data name="Remove picture" xml:space="preserve">
+    <value>Supprimer l'image</value>
+  </data>
+  <data name="Repeat new password" xml:space="preserve">
+    <value>Répétez le nouveau mot de passe</value>
+  </data>
+  <data name="Reply" xml:space="preserve">
+    <value>Répondre</value>
+  </data>
+  <data name="Reply comment" xml:space="preserve">
+    <value>Répondre au commentaire</value>
+  </data>
+  <data name="Request date" xml:space="preserve">
+    <value>Date de la demande</value>
+  </data>
+  <data name="Requested by" xml:space="preserve">
+    <value>Demandé par</value>
+  </data>
+  <data name="Requests for information wipe-out" xml:space="preserve">
+    <value>Demandes d'informations supprimées</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Réinitialiser</value>
+  </data>
+  <data name="Reset 2FA" xml:space="preserve">
+    <value>Réinitialiser 2FA</value>
+  </data>
+  <data name="Reset other users 2FA" xml:space="preserve">
+    <value>Réinitialiser le 2FA des autres utilisateurs</value>
+  </data>
+  <data name="Reset other users passwords" xml:space="preserve">
+    <value>Réinitialiser les mots de passe des autres utilisateurs</value>
+  </data>
+  <data name="Reset own 2FA" xml:space="preserve">
+    <value>Réinitialiser son propre 2FA</value>
+  </data>
+  <data name="Reset own password" xml:space="preserve">
+    <value>Réinitialisez votre propre mot de passe</value>
+  </data>
+  <data name="Reset password" xml:space="preserve">
+    <value>Réinitialiser le mot de passe</value>
+  </data>
+  <data name="Restore" xml:space="preserve">
+    <value>Restaurer</value>
+  </data>
+  <data name="Restore blogs" xml:space="preserve">
+    <value>Restaurer des blogs</value>
+  </data>
+  <data name="Restore categories" xml:space="preserve">
+    <value>Restaurer les catégories</value>
+  </data>
+  <data name="Restore comments" xml:space="preserve">
+    <value>Restaurer les commentaires</value>
+  </data>
+  <data name="Restore files and database from a backup in the list below" xml:space="preserve">
+    <value>Restaurer les fichiers et la base de données à partir d'une sauvegarde dans la liste ci-dessous</value>
+  </data>
+  <data name="Restore files and database from a zip file" xml:space="preserve">
+    <value>Restaurer les fichiers et la base de données à partir d'un fichier zip</value>
+  </data>
+  <data name="Restore from a zip file" xml:space="preserve">
+    <value>Restaurer à partir d'un fichier zip</value>
+  </data>
+  <data name="Restore from list" xml:space="preserve">
+    <value>Restaurer à partir de la liste</value>
+  </data>
+  <data name="Restore pages" xml:space="preserve">
+    <value>Restaurer les pages</value>
+  </data>
+  <data name="Restore posts" xml:space="preserve">
+    <value>Restaurer les publications</value>
+  </data>
+  <data name="Restore quick notes" xml:space="preserve">
+    <value>Restaurer les notes rapides</value>
+  </data>
+  <data name="Restore roles" xml:space="preserve">
+    <value>Fonctions de restauration</value>
+  </data>
+  <data name="Restore special messages" xml:space="preserve">
+    <value>Restaurer les messages spéciaux</value>
+  </data>
+  <data name="Restore special pages" xml:space="preserve">
+    <value>Restaurer les pages spéciales</value>
+  </data>
+  <data name="Restore system" xml:space="preserve">
+    <value>Restaurer le système</value>
+  </data>
+  <data name="Restore users" xml:space="preserve">
+    <value>Restaurer les utilisateurs</value>
+  </data>
+  <data name="Restore videos" xml:space="preserve">
+    <value>Restaurer des vidéos</value>
+  </data>
+  <data name="Restoring {0} item(s)" xml:space="preserve">
+    <value>Restauration d'un ou plusieurs éléments {0}</value>
+  </data>
+  <data name="Revoke moderator from user" xml:space="preserve">
+    <value>Révoquer le modérateur de l'utilisateur</value>
+  </data>
+  <data name="Revoke moderator roles from social profiles" xml:space="preserve">
+    <value>Révoquer les rôles de modérateur de profil social</value>
+  </data>
+  <data name="Role" xml:space="preserve">
+    <value>Fonction</value>
+  </data>
+  <data name="Roles" xml:space="preserve">
+    <value>Fonctions</value>
+  </data>
+  <data name="Roles are up-to-date" xml:space="preserve">
+    <value>Les fonctions sont mises à jour</value>
+  </data>
+  <data name="Roles have been created" xml:space="preserve">
+    <value>Des fonctions ont été créées</value>
+  </data>
+  <data name="RSS feed" xml:space="preserve">
+    <value>Flux RSS</value>
+  </data>
+  <data name="RSS feed #1" xml:space="preserve">
+    <value>Flux RSS n°1</value>
+  </data>
+  <data name="RSS feed #2" xml:space="preserve">
+    <value>Fil RSS #2</value>
+  </data>
+  <data name="RSS feed #3" xml:space="preserve">
+    <value>Fil RSS #3</value>
+  </data>
+  <data name="RSS feed #4" xml:space="preserve">
+    <value>Fil RSS #4</value>
+  </data>
+  <data name="RSS feed #5" xml:space="preserve">
+    <value>Fil RSS #5</value>
+  </data>
+  <data name="RSS feed must be a valid website address" xml:space="preserve">
+    <value>Le flux RSS doit être une adresse de site Web valide</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Enregistrer</value>
+  </data>
+  <data name="Save and publish" xml:space="preserve">
+    <value>Enregistrer et publier</value>
+  </data>
+  <data name="Save changes" xml:space="preserve">
+    <value>Enregistrer les modifications</value>
+  </data>
+  <data name="Save password" xml:space="preserve">
+    <value>Enregistrer le mot de passe</value>
+  </data>
+  <data name="Save reply" xml:space="preserve">
+    <value>Enregistrer la réponse</value>
+  </data>
+  <data name="Scan this QR code with your authenticator app" xml:space="preserve">
+    <value>Scannez ce code QR avec votre application d'authentification</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Rechercher</value>
+  </data>
+  <data name="See browser dev tools for details" xml:space="preserve">
+    <value>Voir les outils de développement de navigateur pour plus de détails</value>
+  </data>
+  <data name="See more comments" xml:space="preserve">
+    <value>Voir plus de commentaires</value>
+  </data>
+  <data name="See more contents" xml:space="preserve">
+    <value>Voir plus de contenu</value>
+  </data>
+  <data name="See more notes" xml:space="preserve">
+    <value>Voir plus de remarques</value>
+  </data>
+  <data name="See more pages" xml:space="preserve">
+    <value>Voir plus de pages</value>
+  </data>
+  <data name="See more posts" xml:space="preserve">
+    <value>Voir plus de messages</value>
+  </data>
+  <data name="See more ratings" xml:space="preserve">
+    <value>Voir plus d'avis</value>
+  </data>
+  <data name="See more videos" xml:space="preserve">
+    <value>Voir plus de vidéos</value>
+  </data>
+  <data name="Select a comment" xml:space="preserve">
+    <value>Sélectionnez un commentaire</value>
+  </data>
+  <data name="Select a file" xml:space="preserve">
+    <value>Sélectionnez un fichier</value>
+  </data>
+  <data name="Select a profile" xml:space="preserve">
+    <value>Sélectionnez un profil</value>
+  </data>
+  <data name="Select a tag" xml:space="preserve">
+    <value>Sélectionnez une balise</value>
+  </data>
+  <data name="Select all" xml:space="preserve">
+    <value>Tout sélectionner</value>
+  </data>
+  <data name="Select parent category" xml:space="preserve">
+    <value>Sélectionnez la catégorie parent</value>
+  </data>
+  <data name="Select parent page" xml:space="preserve">
+    <value>Sélectionnez la page parent</value>
+  </data>
+  <data name="Select trash" xml:space="preserve">
+    <value>Sélectionnez la corbeille</value>
+  </data>
+  <data name="Send verification code" xml:space="preserve">
+    <value>Envoyer le code de vérification</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Paramètres</value>
+  </data>
+  <data name="Size" xml:space="preserve">
+    <value>Taille</value>
+  </data>
+  <data name="Slow" xml:space="preserve">
+    <value>Lent</value>
+  </data>
+  <data name="Slug" xml:space="preserve">
+    <value>Slug</value>
+  </data>
+  <data name="Slug cannot exceed {0} characters" xml:space="preserve">
+    <value>Slug ne peut pas dépasser les caractères {0}</value>
+  </data>
+  <data name="Slug is already in use" xml:space="preserve">
+    <value>Slug est déjà utilisé</value>
+  </data>
+  <data name="Small" xml:space="preserve">
+    <value>Petit</value>
+  </data>
+  <data name="SMTP password" xml:space="preserve">
+    <value>Mot de passe SMTP</value>
+  </data>
+  <data name="SMTP server" xml:space="preserve">
+    <value>Serveur SMTP</value>
+  </data>
+  <data name="SMTP server port" xml:space="preserve">
+    <value>Port du serveur SMTP</value>
+  </data>
+  <data name="SMTP username" xml:space="preserve">
+    <value>Nom d'utilisateur SMTP</value>
+  </data>
+  <data name="Social network logins" xml:space="preserve">
+    <value>Connexions aux réseaux sociaux</value>
+  </data>
+  <data name="Social profile is not a subscriber" xml:space="preserve">
+    <value>Le profil social n'est pas abonné</value>
+  </data>
+  <data name="Social profiles" xml:space="preserve">
+    <value>Profils sociaux</value>
+  </data>
+  <data name="Social profiles found in the search" xml:space="preserve">
+    <value>Profils sociaux trouvés dans la recherche</value>
+  </data>
+  <data name="Source and destination images share the same location" xml:space="preserve">
+    <value>Les images source et de destination partagent le même emplacement</value>
+  </data>
+  <data name="Spam" xml:space="preserve">
+    <value>Spam</value>
+  </data>
+  <data name="Spam comments" xml:space="preserve">
+    <value>Commentaires indésirables</value>
+  </data>
+  <data name="Special message" xml:space="preserve">
+    <value>Message spécial</value>
+  </data>
+  <data name="Special messages" xml:space="preserve">
+    <value>Messages spéciaux</value>
+  </data>
+  <data name="Special messages found in the search" xml:space="preserve">
+    <value>Messages spéciaux trouvés dans la recherche</value>
+  </data>
+  <data name="Special page" xml:space="preserve">
+    <value>Page spéciale</value>
+  </data>
+  <data name="Special pages" xml:space="preserve">
+    <value>Pages spéciales</value>
+  </data>
+  <data name="Special pages found in the search" xml:space="preserve">
+    <value>Pages spéciales trouvées lors de la recherche</value>
+  </data>
+  <data name="Start date" xml:space="preserve">
+    <value>Date de début</value>
+  </data>
+  <data name="Start date cannot be later than end date" xml:space="preserve">
+    <value>La date de début ne peut pas être postérieure à la date de fin</value>
+  </data>
+  <data name="Stats" xml:space="preserve">
+    <value>Statistiques</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Still a draft?" xml:space="preserve">
+    <value>Est-ce encore un brouillon ?</value>
+  </data>
+  <data name="Stop" xml:space="preserve">
+    <value>Parar</value>
+  </data>
+  <data name="Stops the timer" xml:space="preserve">
+    <value>Pour le chronomètre</value>
+  </data>
+  <data name="Subscribe" xml:space="preserve">
+    <value>S'abonner</value>
+  </data>
+  <data name="Subscribe to the website" xml:space="preserve">
+    <value>Inscrivez-vous sur le site Web</value>
+  </data>
+  <data name="Subscriber" xml:space="preserve">
+    <value>Assinante</value>
+  </data>
+  <data name="Subscriber(s)" xml:space="preserve">
+    <value>Abonné(s)</value>
+  </data>
+  <data name="Success" xml:space="preserve">
+    <value>Succès</value>
+  </data>
+  <data name="System role" xml:space="preserve">
+    <value>Fonction du système</value>
+  </data>
+  <data name="Tag" xml:space="preserve">
+    <value>Marquage</value>
+  </data>
+  <data name="Tag cannot exceed {0} characters" xml:space="preserve">
+    <value>La balise ne peut pas dépasser les caractères {0}</value>
+  </data>
+  <data name="Tags" xml:space="preserve">
+    <value>Marquages</value>
+  </data>
+  <data name="Tags found in the search" xml:space="preserve">
+    <value>Balises trouvées lors de la recherche</value>
+  </data>
+  <data name="Tags must be unique" xml:space="preserve">
+    <value>Les balises doivent être uniques</value>
+  </data>
+  <data name="Talk to an administrator, if this is not correct" xml:space="preserve">
+    <value>Parlez à un administrateur si ce n'est pas correct</value>
+  </data>
+  <data name="Tenant id" xml:space="preserve">
+    <value>ID du locataire</value>
+  </data>
+  <data name="Terms and conditions" xml:space="preserve">
+    <value>Termes et conditions</value>
+  </data>
+  <data name="Terms of service" xml:space="preserve">
+    <value>Conditions d'utilisation</value>
+  </data>
+  <data name="Test connection" xml:space="preserve">
+    <value>Tester la connexion</value>
+  </data>
+  <data name="The author marked this as draft" xml:space="preserve">
+    <value>L'auteur a marqué ceci comme brouillon</value>
+  </data>
+  <data name="The entity you are trying to access does not exist" xml:space="preserve">
+    <value>L'entité à laquelle vous essayez d'accéder n'existe pas</value>
+  </data>
+  <data name="This application may no longer respond until reloaded" xml:space="preserve">
+    <value>Cette application peut ne plus répondre jusqu'à ce qu'elle soit rechargée</value>
+  </data>
+  <data name="This code is for the subscription process in the website" xml:space="preserve">
+    <value>Ce code est destiné au processus d'inscription au site Web</value>
+  </data>
+  <data name="This has already been restored." xml:space="preserve">
+    <value>Celui-ci a maintenant été restauré.</value>
+  </data>
+  <data name="this is a front-page" xml:space="preserve">
+    <value>c'est une première page</value>
+  </data>
+  <data name="Thumbnail" xml:space="preserve">
+    <value>Miniature</value>
+  </data>
+  <data name="Time period" xml:space="preserve">
+    <value>Période</value>
+  </data>
+  <data name="Timezone" xml:space="preserve">
+    <value>Fuseau horaire</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Titre</value>
+  </data>
+  <data name="Title cannot exceed 255 characters" xml:space="preserve">
+    <value>Le titre ne peut pas dépasser 255 caractères</value>
+  </data>
+  <data name="Title is required" xml:space="preserve">
+    <value>Le titre est obligatoire</value>
+  </data>
+  <data name="To promote to front-page, that page must be top-level" xml:space="preserve">
+    <value>Pour promouvoir la première page, cette page doit être de premier niveau</value>
+  </data>
+  <data name="Trash" xml:space="preserve">
+    <value>Corbeille</value>
+  </data>
+  <data name="Try again to solve this issue" xml:space="preserve">
+    <value>Veuillez réessayer pour résoudre ce problème</value>
+  </data>
+  <data name="Turn social profiles into moderators" xml:space="preserve">
+    <value>Transformez les profils sociaux en modérateurs</value>
+  </data>
+  <data name="Type Here" xml:space="preserve">
+    <value>Tapez ici</value>
+  </data>
+  <data name="Type in here to search" xml:space="preserve">
+    <value>Tapez ici pour rechercher</value>
+  </data>
+  <data name="Type is required for special messages" xml:space="preserve">
+    <value>Le type est requis pour les messages spéciaux</value>
+  </data>
+  <data name="Type is required for special pages" xml:space="preserve">
+    <value>Le type est requis pour les pages spéciales</value>
+  </data>
+  <data name="Type must be a valid special message type" xml:space="preserve">
+    <value>Le type doit être un type de message spécial valide</value>
+  </data>
+  <data name="Type must be a valid special page type" xml:space="preserve">
+    <value>Le type doit être un type de page spécial valide</value>
+  </data>
+  <data name="Type your note here" xml:space="preserve">
+    <value>Entrez votre note ici</value>
+  </data>
+  <data name="Unable to restore" xml:space="preserve">
+    <value>Impossible de restaurer</value>
+  </data>
+  <data name="Unable to restore trash" xml:space="preserve">
+    <value>Impossible de restaurer la corbeille</value>
+  </data>
+  <data name="Unable to retrieve IP location" xml:space="preserve">
+    <value>Impossible de récupérer l'emplacement IP</value>
+  </data>
+  <data name="Unapproved comments" xml:space="preserve">
+    <value>Commentaires non approuvés</value>
+  </data>
+  <data name="Unblock social profiles" xml:space="preserve">
+    <value>Débloquez les profils sociaux</value>
+  </data>
+  <data name="Unblock user" xml:space="preserve">
+    <value>Débloquer l'utilisateur</value>
+  </data>
+  <data name="Unblock users" xml:space="preserve">
+    <value>Débloquer les utilisateurs</value>
+  </data>
+  <data name="Undo" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="Undo changes" xml:space="preserve">
+    <value>Annuler les modifications</value>
+  </data>
+  <data name="Unpin comment" xml:space="preserve">
+    <value>Commentaire de publication</value>
+  </data>
+  <data name="Unpublish {0} item(s)" xml:space="preserve">
+    <value>Dépublier les éléments {0}</value>
+  </data>
+  <data name="Unpublish message(s)" xml:space="preserve">
+    <value>Annuler la publication des messages</value>
+  </data>
+  <data name="Unpublish other users messages" xml:space="preserve">
+    <value>Annuler la publication des messages d'autres utilisateurs</value>
+  </data>
+  <data name="Unpublish other users pages" xml:space="preserve">
+    <value>Dépublier les pages des autres utilisateurs</value>
+  </data>
+  <data name="Unpublish other users posts" xml:space="preserve">
+    <value>Annuler la publication des messages d'autres utilisateurs</value>
+  </data>
+  <data name="Unpublish other users quick notes" xml:space="preserve">
+    <value>Annuler la publication des notes rapides des autres utilisateurs</value>
+  </data>
+  <data name="Unpublish other users special pages" xml:space="preserve">
+    <value>Annuler la publication des pages spéciales des autres utilisateurs</value>
+  </data>
+  <data name="Unpublish other users videos" xml:space="preserve">
+    <value>Dépublier les vidéos d'autres utilisateurs</value>
+  </data>
+  <data name="Unpublish own messages" xml:space="preserve">
+    <value>Dépublier vos propres messages</value>
+  </data>
+  <data name="Unpublish own pages" xml:space="preserve">
+    <value>Dépublier vos propres pages</value>
+  </data>
+  <data name="Unpublish own posts" xml:space="preserve">
+    <value>Dépublier vos propres messages</value>
+  </data>
+  <data name="Unpublish own quick notes" xml:space="preserve">
+    <value>Annulez la publication de vos propres notes rapides</value>
+  </data>
+  <data name="Unpublish own special pages" xml:space="preserve">
+    <value>Dépublier vos propres pages spéciales</value>
+  </data>
+  <data name="Unpublish own videos" xml:space="preserve">
+    <value>Dépublier vos propres vidéos</value>
+  </data>
+  <data name="Unpublish page(s)" xml:space="preserve">
+    <value>Dépublier des pages</value>
+  </data>
+  <data name="Unpublish post(s)" xml:space="preserve">
+    <value>Dépublier le(s) message(s)</value>
+  </data>
+  <data name="Unpublish video(s)" xml:space="preserve">
+    <value>Dépublier des vidéos</value>
+  </data>
+  <data name="Unselect all" xml:space="preserve">
+    <value>Tout désélectionner</value>
+  </data>
+  <data name="Unsubscribe from the website" xml:space="preserve">
+    <value>Se désabonner du site</value>
+  </data>
+  <data name="Unsubscribe social profiles" xml:space="preserve">
+    <value>Se désabonner des profils sociaux</value>
+  </data>
+  <data name="Unsubscribe user" xml:space="preserve">
+    <value>Désinscrire l'utilisateur</value>
+  </data>
+  <data name="Upload" xml:space="preserve">
+    <value>Téléverser</value>
+  </data>
+  <data name="Upload files" xml:space="preserve">
+    <value>Télécharger des fichiers</value>
+  </data>
+  <data name="Upload picture" xml:space="preserve">
+    <value>Télécharger une image</value>
+  </data>
+  <data name="Upload subtitle" xml:space="preserve">
+    <value>Télécharger le sous-titre</value>
+  </data>
+  <data name="Uploading a file" xml:space="preserve">
+    <value>Télécharger un fichier</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>Utilisateur</value>
+  </data>
+  <data name="User actions" xml:space="preserve">
+    <value>Actions de l'utilisateur</value>
+  </data>
+  <data name="User Activity" xml:space="preserve">
+    <value>Activité de l'utilisateur</value>
+  </data>
+  <data name="User came from" xml:space="preserve">
+    <value>L'utilisateur venait de</value>
+  </data>
+  <data name="User did not share an e-mail address" xml:space="preserve">
+    <value>L'utilisateur n'a pas partagé d'adresse courriel</value>
+  </data>
+  <data name="User trashes" xml:space="preserve">
+    <value>Corbeille de l'utilisateur</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Nom d'utilisateur</value>
+  </data>
+  <data name="Username (read-only)" xml:space="preserve">
+    <value>Nom d'utilisateur (lecture seule)</value>
+  </data>
+  <data name="Username and current password do NOT exist in the database" xml:space="preserve">
+    <value>Le nom d'utilisateur et le mot de passe actuels n'existent PAS dans la base de données</value>
+  </data>
+  <data name="Username cannot exceed {0} characters" xml:space="preserve">
+    <value>Le nom d'utilisateur ne peut pas dépasser les caractères {0}.</value>
+  </data>
+  <data name="Username is required" xml:space="preserve">
+    <value>Le nom d'utilisateur est requis</value>
+  </data>
+  <data name="Users" xml:space="preserve">
+    <value>Utilisateurs</value>
+  </data>
+  <data name="Validate code and finish subscribing" xml:space="preserve">
+    <value>Validez le code et complétez la signature</value>
+  </data>
+  <data name="Validate the 2FA code and login" xml:space="preserve">
+    <value>Validez le code 2FA et connectez-vous</value>
+  </data>
+  <data name="Validate the TOTP code and proceed" xml:space="preserve">
+    <value>Validez le code TOTP et continuez</value>
+  </data>
+  <data name="Value" xml:space="preserve">
+    <value>Valeur</value>
+  </data>
+  <data name="Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="Video" xml:space="preserve">
+    <value>Vidéo</value>
+  </data>
+  <data name="Video cannot be updated" xml:space="preserve">
+    <value>La vidéo ne peut pas être mise à jour</value>
+  </data>
+  <data name="Videos" xml:space="preserve">
+    <value>Vidéos</value>
+  </data>
+  <data name="Videos comments" xml:space="preserve">
+    <value>Commentaires vidéo</value>
+  </data>
+  <data name="Videos found in the search" xml:space="preserve">
+    <value>Vidéos trouvées lors de la recherche</value>
+  </data>
+  <data name="View backup and restore system" xml:space="preserve">
+    <value>Afficher le système de sauvegarde et de restauration</value>
+  </data>
+  <data name="View blogs" xml:space="preserve">
+    <value>Voir les blogs</value>
+  </data>
+  <data name="View categories" xml:space="preserve">
+    <value>Afficher les catégories</value>
+  </data>
+  <data name="View comments" xml:space="preserve">
+    <value>Voir les commentaires</value>
+  </data>
+  <data name="View dashboard" xml:space="preserve">
+    <value>Afficher le tableau de bord</value>
+  </data>
+  <data name="View messages" xml:space="preserve">
+    <value>Afficher les messages</value>
+  </data>
+  <data name="View pages" xml:space="preserve">
+    <value>Afficher les pages</value>
+  </data>
+  <data name="View posts" xml:space="preserve">
+    <value>Afficher les messages</value>
+  </data>
+  <data name="View quick notes" xml:space="preserve">
+    <value>Afficher les notes rapides</value>
+  </data>
+  <data name="View roles" xml:space="preserve">
+    <value>Afficher les fonctions</value>
+  </data>
+  <data name="View settings" xml:space="preserve">
+    <value>Afficher les paramètres</value>
+  </data>
+  <data name="View social profiles" xml:space="preserve">
+    <value>Afficher les profils sociaux</value>
+  </data>
+  <data name="View special pages" xml:space="preserve">
+    <value>Voir les pages spéciales</value>
+  </data>
+  <data name="View tags" xml:space="preserve">
+    <value>Afficher les balises</value>
+  </data>
+  <data name="View trashes" xml:space="preserve">
+    <value>Voir les corbeilles</value>
+  </data>
+  <data name="View users" xml:space="preserve">
+    <value>Afficher les utilisateurs</value>
+  </data>
+  <data name="View videos" xml:space="preserve">
+    <value>Regarder des vidéos</value>
+  </data>
+  <data name="Warning" xml:space="preserve">
+    <value>Avertissement</value>
+  </data>
+  <data name="We need a valid e-mail to subscribe" xml:space="preserve">
+    <value>Nous avons besoin d'un email valide pour nous inscrire</value>
+  </data>
+  <data name="We use cookies and similar technologies to enhance your browsing experience, analyze site traffic, personalize content, and serve targeted advertisements" xml:space="preserve">
+    <value>Nous utilisons des cookies et des technologies similaires pour améliorer votre expérience de navigation, analyser le trafic du site, personnaliser le contenu et diffuser des publicités ciblées.</value>
+  </data>
+  <data name="Website" xml:space="preserve">
+    <value>Site web</value>
+  </data>
+  <data name="What to see next" xml:space="preserve">
+    <value>Que voir ensuite</value>
+  </data>
+  <data name="Wipe all data from the website" xml:space="preserve">
+    <value>Effacer toutes les données du site Web</value>
+  </data>
+  <data name="Wipe data out from social profiles" xml:space="preserve">
+    <value>Effacer les données des profils sociaux</value>
+  </data>
+  <data name="Wipe out user data" xml:space="preserve">
+    <value>Effacer les données utilisateur</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Oui</value>
+  </data>
+  <data name="Yes, since" xml:space="preserve">
+    <value>Oui, depuis</value>
+  </data>
+  <data name="You already reacted with this emoji" xml:space="preserve">
+    <value>Avez-vous déjà réagi avec cet emoji</value>
+  </data>
+  <data name="You are adding a new {0}" xml:space="preserve">
+    <value>Vous ajoutez un nouveau {0}</value>
+  </data>
+  <data name="You are seeing this page, because &lt;b&gt;you denied access to your information from the Social Network&lt;/b&gt;" xml:space="preserve">
+    <value>Vous consultez cette page car &lt;b&gt; vous a refusé l'accès aux informations de vos réseaux sociaux&lt;/b&gt;</value>
+  </data>
+  <data name="You are seeing this page, because &lt;b&gt;your access token is invalid/expired&lt;/b&gt;" xml:space="preserve">
+    <value>Vous voyez cette page car &lt;b&gt;votre jeton d'accès n'est pas valide/expiré&lt;/b&gt;</value>
+  </data>
+  <data name="You are seeing this page, because &lt;b&gt;your user has been blocked&lt;/b&gt;" xml:space="preserve">
+    <value>Vous voyez cette page car &lt;b&gt;votre utilisateur a été bloqué&lt;/b&gt;</value>
+  </data>
+  <data name="You are viewing a deleted {0}" xml:space="preserve">
+    <value>Vous consultez un {0} supprimé</value>
+  </data>
+  <data name="You are viewing an existing {0}" xml:space="preserve">
+    <value>Vous consultez un {0} existant</value>
+  </data>
+  <data name="You are viewing an existing trash" xml:space="preserve">
+    <value>Vous consultez une corbeille existante</value>
+  </data>
+  <data name="You asked for a password reset and here's the link to paste in your browser" xml:space="preserve">
+    <value>Vous avez demandé une réinitialisation de mot de passe et voici le lien à coller dans votre navigateur</value>
+  </data>
+  <data name="You asked for a password reset and here's the link to paste in your browser: {0}" xml:space="preserve">
+    <value>Vous avez demandé une réinitialisation de mot de passe et voici le lien à coller dans votre navigateur : {0}</value>
+  </data>
+  <data name="You can change your display name at any time though" xml:space="preserve">
+    <value>Vous pouvez modifier votre nom d'affichage à tout moment</value>
+  </data>
+  <data name="You can't modify a system role" xml:space="preserve">
+    <value>Vous ne pouvez pas modifier une fonction système</value>
+  </data>
+  <data name="You cannot edit this comment" xml:space="preserve">
+    <value>Vous ne pouvez pas modifier ce commentaire</value>
+  </data>
+  <data name="You did NOT change passwords, current and new are the same" xml:space="preserve">
+    <value>Vous n'avez PAS modifié vos mots de passe, l'actuel et le nouveau sont les mêmes</value>
+  </data>
+  <data name="You don't have access to any blogs" xml:space="preserve">
+    <value>Vous n'avez accès à aucun blog</value>
+  </data>
+  <data name="You don't have access to this feature" xml:space="preserve">
+    <value>Vous n'avez pas accès à cette fonctionnalité</value>
+  </data>
+  <data name="You don't have permission to reset 2FA" xml:space="preserve">
+    <value>Vous n'êtes pas autorisé à réinitialiser 2FA</value>
+  </data>
+  <data name="You don't have permission to reset password" xml:space="preserve">
+    <value>Vous n'êtes pas autorisé à réinitialiser le mot de passe</value>
+  </data>
+  <data name="You don't have permission to reset your own password" xml:space="preserve">
+    <value>Vous n'êtes pas autorisé à réinitialiser votre propre mot de passe</value>
+  </data>
+  <data name="You must change your password" xml:space="preserve">
+    <value>Vous devez changer votre mot de passe</value>
+  </data>
+  <data name="You must enable two-factor authentication" xml:space="preserve">
+    <value>Vous devez activer l'authentification à deux facteurs</value>
+  </data>
+  <data name="You need to allow access to it when prompted to solve this issue" xml:space="preserve">
+    <value>Vous devez en autoriser l'accès lorsque vous êtes invité à résoudre ce problème.</value>
+  </data>
+  <data name="You need to pick a video" xml:space="preserve">
+    <value>Vous devez choisir une vidéo</value>
+  </data>
+  <data name="You need to pick an image" xml:space="preserve">
+    <value>Vous devez choisir une image</value>
+  </data>
+  <data name="You need to select one page" xml:space="preserve">
+    <value>Vous devez sélectionner une page</value>
+  </data>
+  <data name="You rated this post: {0} star(s)" xml:space="preserve">
+    <value>Vous avez noté cet article : {0} étoile(s)</value>
+  </data>
+  <data name="You subscribed to this website" xml:space="preserve">
+    <value>Vous êtes inscrit sur ce site</value>
+  </data>
+  <data name="You switched to a different blog" xml:space="preserve">
+    <value>Vous avez déménagé vers un autre blog</value>
+  </data>
+  <data name="Your comments" xml:space="preserve">
+    <value>Vos commentaires</value>
+  </data>
+  <data name="Your temporary password: {0}" xml:space="preserve">
+    <value>Votre mot de passe temporaire : {0}</value>
+  </data>
+  <data name="ZIP file created successfully." xml:space="preserve">
+    <value>Fichier ZIP créé avec succès.</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Yay! Everything went smoothly" xml:space="preserve">
+    <value>Oui! Tout s'est bien passé</value>
+  </data>
+  <data name="Ah heck, something went wrong, try again" xml:space="preserve">
+    <value>Ah merde, quelque chose s'est mal passé, réessaye</value>
+  </data>
+  <data name="You don't have permission for this feature" xml:space="preserve">
+    <value>Vous n'avez pas l'autorisation pour cette fonctionnalité</value>
+  </data>
+  <data name="Calm down, you made too many comments in 5 minutes" xml:space="preserve">
+    <value>Calme-toi, tu as fait beaucoup de commentaires en 5 minutes</value>
+  </data>
+  <data name="Content created" xml:space="preserve">
+    <value>Contenu créé</value>
+  </data>
+  <data name="Content deleted" xml:space="preserve">
+    <value>Contenu supprimé</value>
+  </data>
+  <data name="Content restored" xml:space="preserve">
+    <value>Contenu restauré</value>
+  </data>
+  <data name="Content saved" xml:space="preserve">
+    <value>Contenu enregistré</value>
+  </data>
+  <data name="Content is already unpublished" xml:space="preserve">
+    <value>Le contenu est déjà dépublié</value>
+  </data>
+  <data name="Content is already restored" xml:space="preserve">
+    <value>Le contenu est déjà restauré</value>
+  </data>
+  <data name="Content is already published" xml:space="preserve">
+    <value>Le contenu est déjà publié</value>
+  </data>
+  <data name="Content is already deleted" xml:space="preserve">
+    <value>Le contenu est déjà supprimé</value>
+  </data>
+  <data name="Categories must be empty" xml:space="preserve">
+    <value>Les catégories doivent être vides</value>
+  </data>
+  <data name="Tags must be empty" xml:space="preserve">
+    <value>Les étiquettes doivent être vides</value>
+  </data>
+</root>

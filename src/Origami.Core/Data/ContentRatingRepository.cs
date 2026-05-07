@@ -1,14 +1,10 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Origami.Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Origami.Core.Data
 {
-    public class ContentRatingRepository: 
+    public class ContentRatingRepository :
         RepositoryOuterLayer<OrigamiContentRating>,
         IContentRatingRepository
     {
@@ -24,7 +20,7 @@ namespace Origami.Core.Data
             IValidator<OrigamiContentRating> validator,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             ISocialProfileRepository socialProfileRepository,
-            IMemoryCache memoryCache,
+            IMyMemoryCache memoryCache,
             IWebRootPath wwwRoot,
             Text text)
             : base(text, dbContextFactory, memoryCache, wwwRoot)

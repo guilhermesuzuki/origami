@@ -2,7 +2,9 @@
 
 namespace Origami.Core.Data
 {
-    public interface IBaseRepository<T> where T : IId
+    public interface IBaseRepository<T> :
+        IReadFromCache<T>
+        where T : IId
     {
         Text Text { get; }
 
@@ -11,10 +13,6 @@ namespace Origami.Core.Data
         void PurgeChildrenFromCache(T entity);
 
         void PurgeRelationshipsFromCache(T entity);
-
-        List<T> ReadFromCache();
-
-        List<X> ReadFromCache<X>() where X : class;
 
         void RefreshCache();
     }

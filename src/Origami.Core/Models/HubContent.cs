@@ -1,12 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Origami.Core.Models
+﻿namespace Origami.Core.Models
 {
-    public abstract class HubContent<T> : IHubContent<T> where T : OrigamiContent
+    public abstract class HubContent<T> :
+        IHubContent<T>,
+        IAuthorId
+        where T : OrigamiContent
     {
         protected HubContent() { }
+
+        public Guid AuthorId
+        {
+            get => Entity.AuthorId;
+            set => Entity.AuthorId = value;
+        }
 
         /// <summary>
         /// The main entity, root of all information here

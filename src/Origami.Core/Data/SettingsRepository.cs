@@ -20,7 +20,7 @@ public class SettingsRepository :
     /// <param name="distributedCache"></param>
     public SettingsRepository(
         IDbContextFactory<OrigamiDbContext> dbContextFactory,
-        IMemoryCache memoryCache,
+        IMyMemoryCache memoryCache,
         ISettingRepository settingRepository,
         IValidator<OrigamiSettings> validator,
         Text text,
@@ -58,18 +58,18 @@ public class SettingsRepository :
 
     public override Result<OrigamiSettings> CreateValidation(DataOperationContext<OrigamiSettings> ctx)
     {
-        return new Result<OrigamiSettings>(ctx.Entity, _validator);
+        return new(ctx.Entity, _validator);
     }
 
     public OrigamiSettings GetSettings()
     {
         var key = $"entity-{typeof(OrigamiSettings).FullName}";
-        
+
         if (MemoryCache.TryGetValue(key, out OrigamiSettings? settings) == true && settings != null)
         {
             return settings;
         }
-        
+
         return MemoryCache.Set(key, ExtractSettings(), new MemoryCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1) });
     }
 
@@ -108,7 +108,7 @@ public class SettingsRepository :
 
     public override Result<OrigamiSettings> UpdateValidation(DataOperationContext<OrigamiSettings> ctx)
     {
-        return new Result<OrigamiSettings>(ctx.Entity, _validator);
+        return new(ctx.Entity, _validator);
     }
 
     protected OrigamiSettings ExtractSettings()

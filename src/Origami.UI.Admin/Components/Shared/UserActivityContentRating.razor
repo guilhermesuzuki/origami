@@ -1,13 +1,10 @@
 ﻿@inherits Basic
 @implements IId
-@inject IPostRepository _post
-@inject IContentCommentReactionRepository _postCommentReaction
-@inject IContentCommentRepository _postComment
-@inject IContentRatingRepository _postRating
+@inject IContentRatingRepository _contentRating
 
 @if (Id != Guid.Empty)
 {
-    var rating = _postRating.ReadFromCache().Id(Id);
+    var rating = _contentRating.ReadFromCache().Id(Id);
     if (rating != null)
     {
         var content = this.Super.Contents.ReadFromCache().Id(rating.ContentId)!;

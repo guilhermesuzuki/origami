@@ -1,7 +1,5 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Configuration;
 using Origami.Core.Models;
 using System.Linq.Dynamic.Core;
 
@@ -11,18 +9,18 @@ namespace Origami.Core.Data
         RepositoryOuterLayer<OrigamiBlog>,
         IBlogRepository
     {
-        protected readonly IValidator<OrigamiBlog> _validator;
         protected readonly ICategoryRepository _categoryRepository;
         protected readonly IHubContentRepository<HubContentPage> _hubPageRepository;
         protected readonly IHubContentRepository<HubContentPost> _hubPostRepository;
         protected readonly IHubContentRepository<HubContentQuickNote> _hubQuickNoteRepository;
         protected readonly IHubContentRepository<HubContentVideo> _hubVideoRepository;
+        protected readonly IValidator<OrigamiBlog> _validator;
 
         public BlogRepository(
             IValidator<OrigamiBlog> validator,
             ICategoryRepository categoryRepository,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
-            IMemoryCache memoryCache,
+            IMyMemoryCache memoryCache,
             IHubContentRepository<HubContentPage> hubPageRepository,
             IHubContentRepository<HubContentPost> hubPostRepository,
             IHubContentRepository<HubContentQuickNote> hubQuickNoteRepository,
@@ -70,9 +68,7 @@ namespace Origami.Core.Data
 
         public override Result<OrigamiBlog> CreateValidation(DataOperationContext<OrigamiBlog> ctx)
         {
-            var validation = new Result<OrigamiBlog>(ctx.Entity, _validator);
-            this.ValidateSlug(ctx).Push(validation);
-            return validation;
+            return new(ctx.Entity, _validator);
         }
 
         public Result<OrigamiBlog> Deactivate(DataOperationContext<OrigamiBlog> ctx, bool checkPermission)
@@ -131,6 +127,45 @@ namespace Origami.Core.Data
             return db.Blogs.Single(x => x.IsPrimary);
         }
 
+        public override Result<OrigamiBlog> Purge(DataOperationContext<OrigamiBlog> ctx)
+        {
+            var hub = new Result<OrigamiBlog>();
+
+            using var db = DbContextFactory.CreateDbContext();
+
+            this._purgeCategories(db, ctx).Push(hub);
+            this._purgePages(db, ctx).Push(hub);
+            this._purgePosts(db, ctx).Push(hub);
+            this._purgeQuickNotes(db, ctx).Push(hub);
+            this._purgeVideos(db, ctx).Push(hub);
+
+            // blogs the users have access to
+            db.UserBlogs.AsNoTracking().Where(x => x.BlogId == ctx.Entity.Id).ExecuteDelete();
+
+            // blog is purged at last to prevent foreign key constraint issues
+            base.Purge(ctx);
+
+            return hub;
+        }
+
+        public override Result<OrigamiBlog> PurgeValidation(DataOperationContext<OrigamiBlog> ctx)
+        {
+            var hub = base.DeleteValidation(ctx);
+            if (hub.Ok)
+            {
+                var fresh = ReadFromDatabase(ctx.Entity);
+                if (fresh == null)
+                {
+                    hub.Error = Text.Original("Blog could not be found");
+                }
+                else if (fresh is { IsPrimary: true })
+                {
+                    hub.Error = Text.Original("Primary blog cannot be purged");
+                }
+            }
+            return hub;
+        }
+
         public Result<OrigamiBlog> SetPrimary(DataOperationContext<OrigamiBlog> ctx, bool checkPermission)
         {
             if (checkPermission)
@@ -146,6 +181,12 @@ namespace Origami.Core.Data
 
             //sets the IsPrimary property to true for the current blog
             ctx.Entity.IsPrimary = true;
+
+            //fresh from the oven
+            var fresh = this.ReadFromDatabase(ctx.Entity)!;
+
+            //pulls the latest version of the blog entity from the database to ensure the cache is updated with the correct version
+            ctx.Entity.Version(fresh);
 
             //refreshes the cache
             RefreshCache();
@@ -228,32 +269,8 @@ namespace Origami.Core.Data
 
         public override Result<OrigamiBlog> UpdateValidation(DataOperationContext<OrigamiBlog> ctx)
         {
-            var validation = new Result<OrigamiBlog>(ctx.Entity, _validator);
-            this.ValidateSlug(ctx).Push(validation);
-            return validation;
+            return new(ctx.Entity, _validator);
         }
-
-        public override Result<OrigamiBlog> Purge(DataOperationContext<OrigamiBlog> ctx)
-        {
-            var hub = new Result<OrigamiBlog>();
-
-            using var db = DbContextFactory.CreateDbContext();
-
-            this._purgeCategories(db, ctx).Push(hub);
-            this._purgePages(db, ctx).Push(hub);
-            this._purgePosts(db, ctx).Push(hub);
-            this._purgeQuickNotes(db, ctx).Push(hub);
-            this._purgeVideos(db, ctx).Push(hub);
-
-            // blogs the users have access to
-            db.UserBlogs.AsNoTracking().Where(x => x.BlogId == ctx.Entity.Id).ExecuteDelete();
-
-            // blog is purged at last to prevent foreign key constraint issues
-            base.Purge(ctx);
-
-            return hub;
-        }
-
         private Result _purgeCategories(OrigamiDbContext db, DataOperationContext<OrigamiBlog> ctx)
         {
             var categories = from a in db.Categories.AsNoTracking().Blog(ctx.Entity.Id)

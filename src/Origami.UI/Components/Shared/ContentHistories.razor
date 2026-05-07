@@ -3,7 +3,7 @@
 
 @if (this.Entity is { New: false })
 {
-    var histories = this.DbContextFactory.ReadFromCache<OrigamiContentHistory>(this.MemoryCache)
+    var histories = this.MemoryCache.Read<OrigamiContentHistory>()
         .Where(x => x.ContentId == this.Entity.Id)
         .OrderByDescending(x => x.DateCreated);
 
@@ -19,7 +19,7 @@
                     <CellTemplate>
                         @if (context.Item != null)
                         {
-                            var author = this.DbContextFactory.ReadFromCache<OrigamiUser>(this.MemoryCache).FirstOrDefault(x => x.Id == context.Item.AuthorId);
+                            var author = this.MemoryCache.Read<OrigamiUser>().FirstOrDefault(x => x.Id == context.Item.AuthorId);
                             <UserHeaderInline Entity="author"></UserHeaderInline>
                         }
                     </CellTemplate>

@@ -12,7 +12,7 @@
             var parent = this.Repository.ReadFromCache().Id(this.Entity.ParentId.Value);
             <div class="p-3 border">
                 <div class="wrapper p-3 border">
-                    <CategoryHeaderLite Class="" Entity="parent"></CategoryHeaderLite>
+                    <CategoryHeaderInline Class="" Entity="parent"></CategoryHeaderInline>
                 </div>
                 <div class="btn-group mt-2 w-100">
                     <button class="btn btn-light w-100" @onclick="() => this.ShowParentSelector = !this.ShowParentSelector">
@@ -44,7 +44,7 @@
                     <Columns>
                         <TemplateColumn Title="@Text.Upper("Name")" Sortable="true" Filterable="false" CellClass="col-8" SortBy="x => x.Name">
                             <CellTemplate>
-                                <CategoryHeaderLite Class="" Entity="context.Item"></CategoryHeaderLite>
+                                <CategoryHeaderInline Class="" Entity="context.Item"></CategoryHeaderInline>
                             </CellTemplate>
                         </TemplateColumn>
                         <TemplateColumn Sortable="false" Filterable="false" CellClass="col-1 text-center">

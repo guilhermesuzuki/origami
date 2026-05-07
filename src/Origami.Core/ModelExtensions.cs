@@ -7,7 +7,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Net;
 using System.Net.Mail;
 using System.Reflection;
 using System.Security.Cryptography;
@@ -95,6 +94,14 @@ namespace Origami.Core
             return (zeroTime + span).Year - 1;
         }
 
+        public static StringBuilder Append(this StringBuilder builder, string value, bool condition)
+        {
+            if (condition == false) return builder;
+
+            builder.Append(value);
+            return builder;
+        }
+
         /// <summary>
         /// Converts the <paramref name="base64image"/> into a byte array
         /// </summary>
@@ -141,6 +148,21 @@ namespace Origami.Core
             }
 
             return result;
+        }
+
+        public static bool CanBeRated(this OrigamiContent? origamiContent)
+        {
+            if (origamiContent != null)
+            {
+                return origamiContent switch
+                {
+                    OrigamiPage => true,
+                    OrigamiPost => true,
+                    OrigamiVideo => true,
+                    _ => false,
+                };
+            }
+            return false;
         }
 
         /// <summary>
@@ -485,6 +507,18 @@ namespace Origami.Core
         }
 
         /// <summary>
+        /// Name or FirstName and LastName
+        /// </summary>
+        /// <param name="socialProfile"></param>
+        /// <returns></returns>
+        public static string GetName(this OrigamiSocialProfile? socialProfile)
+        {
+            if (socialProfile == null) return string.Empty;
+            if (socialProfile.Name.Has() == true) return $"{socialProfile.Name}";
+            return $"{socialProfile.FirstName} {socialProfile.LastName}";
+        }
+
+        /// <summary>
         /// Gets the plural from a <paramref name="type"/>'s name
         /// </summary>
         /// <param name="type"></param>
@@ -743,23 +777,33 @@ namespace Origami.Core
         /// </summary>
         /// <param name="password"></param>
         /// <returns></returns>
-        public static Result IsPasswordStrong(this string password)
+        public static Result IsPasswordStrong(this string password, Text text)
         {
             var result = new Result();
 
             if (password.Has() == false)
             {
-                result.Error = "Password is empty";
+                result.Error = text.Original("Password is empty");
             }
             else
             {
-                if (password.Length < 5) result.Error = "Password too short";
-                if (Regex.IsMatch(password, "[0-9]+") == false) result.Error = "Number was not found in password";
-                if (Regex.IsMatch(password, "[a-zA-Z]+") == false) result.Error = "Character was not found in password";
-                if (Regex.IsMatch(password, @"[!@#$%^&*()_\-+=\[\]{}|\\:;\""<>,.?/~`]") == false) result.Error = "Special character was not found in password";
+                if (password.Length < 5) result.Error = text.Original("Password too short");
+                if (Regex.IsMatch(password, "[0-9]+") == false) result.Error = text.Original("Number was not found in password");
+                if (Regex.IsMatch(password, "[a-zA-Z]+") == false) result.Error = text.Original("Character was not found in password");
+                if (Regex.IsMatch(password, @"[!@#$%^&*()_\-+=\[\]{}|\\:;\""<>,.?/~`]") == false) result.Error = text.Original("Special character was not found in password");
             }
 
-            return result.Ok ? new() { Success = "Password is strong" } : result;
+            return result.Ok ? new() { Success = text.Original("Password is strong") } : result;
+        }
+
+        /// <summary>
+        /// Is the input a valid URL?
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static bool IsValidUrl(this string? input)
+        {
+            return Uri.TryCreate(input, UriKind.Absolute, out var uri) && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps);
         }
 
         /// <summary>
@@ -822,19 +866,6 @@ namespace Origami.Core
         {
             return string.Equals(a, b, comparison);
         }
-
-        /// <summary>
-        /// Name or FirstName and LastName
-        /// </summary>
-        /// <param name="socialProfile"></param>
-        /// <returns></returns>
-        public static string GetName(this OrigamiSocialProfile? socialProfile)
-        {
-            if (socialProfile == null) return string.Empty;
-            if (socialProfile.Name.Has() == true) return $"{socialProfile.Name}";
-            return $"{socialProfile.FirstName} {socialProfile.LastName}";
-        }
-
         /// <summary>
         /// Retrieves the first entity from the collection that matches the specified Nano ID.
         /// </summary>
@@ -1218,6 +1249,37 @@ namespace Origami.Core
             return entity;
         }
 
+        public static T SetSlug<T>(this T entity)
+            where T : IId
+        {
+            if (entity is ISlug slugger)
+            {
+                slugger.Slug = entity switch
+                {
+                    ITitle title => title.Title.GetSlug(),
+                    IName name => name.Name.GetSlug(),
+                    ITag tag => tag.Tag.GetSlug(),
+                    _ => string.Empty,
+                };
+            }
+
+            return entity;
+        }
+
+        public static T2 SetSlug<T1, T2>(this T2 root)
+            where T1 : OrigamiContent
+            where T2 : IHubContent<T1>
+        {
+            root.Entity.Slug = root.Entity.Title.GetSlug();
+
+            foreach (var tag in root.Tags)
+            {
+                tag.Slug = tag.Tag.GetSlug();
+            }
+
+            return root;
+        }
+
         /// <summary>
         /// Generates a SHA256 string from <paramref name="rawData"/>
         /// </summary>
@@ -1359,13 +1421,12 @@ namespace Origami.Core
         {
             return Uri.UnescapeDataString(value ?? string.Empty);
         }
+
         public static T Version<T>(this T entity, T version)
         {
-            var version1 = entity as IVersion;
-            var version2 = version as IVersion;
-
-            if (version1 != null) version1.Version = version2!.Version;
-
+            var to = entity as IVersion;
+            var from = version as IVersion;
+            if (to != null) to.Version = from!.Version;
             return entity;
         }
 
@@ -1403,12 +1464,12 @@ namespace Origami.Core
             return string.Concat(" • ", exception.Message, exception.InnerException.M(depth + 1));
         }
 
-        public static StringBuilder Append(this StringBuilder builder, string value, bool condition)
+        public static void GenerateTimestamp(this IId entity)
         {
-            if (condition == false) return builder;
-
-            builder.Append(value);
-            return builder;
+            if (entity is IVersion version)
+            {
+                version.Version = BitConverter.GetBytes(DateTime.UtcNow.Ticks);
+            }
         }
     }
 }

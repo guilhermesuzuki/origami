@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Origami.Core.Models;
 
 namespace Origami.Core.Data
@@ -8,7 +7,7 @@ namespace Origami.Core.Data
     public class HubContentPostRepository : HubContentRepository<OrigamiPost, HubContentPost>
     {
         public HubContentPostRepository(
-            IMemoryCache memoryCache,
+            IMyMemoryCache memoryCache,
             IValidator<HubContentPost> validator,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             Text text

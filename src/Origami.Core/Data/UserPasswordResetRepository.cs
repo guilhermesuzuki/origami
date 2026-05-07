@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Origami.Core.Models;
 
 namespace Origami.Core.Data
@@ -10,7 +9,7 @@ namespace Origami.Core.Data
     {
         public UserPasswordResetRepository(
             Text text,
-            IMemoryCache memoryCache,
+            IMyMemoryCache memoryCache,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IWebRootPath wwwRoot)
             : base(text, dbContextFactory, memoryCache, wwwRoot)

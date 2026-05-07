@@ -2,13 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Origami.Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Origami.Core.Data
 {
-    public class ContentCommentRepository: 
+    public class ContentCommentRepository :
         RepositoryOuterLayer<OrigamiContentComment>,
         IContentCommentRepository
     {
@@ -25,7 +22,7 @@ namespace Origami.Core.Data
             IValidator<OrigamiContentComment> validator,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IContentCommentReactionRepository contentCommentReactionRepository,
-            IMemoryCache memoryCache,
+            IMyMemoryCache memoryCache,
             IWebRootPath wwwRoot,
             Text text)
             : base(text, dbContextFactory, memoryCache, wwwRoot)
@@ -56,7 +53,7 @@ namespace Origami.Core.Data
         {
             //comments from a post
             var comments = ReadFromCache().Where(x => x.SocialProfileId == entity.Id);
-            
+
             //retrieves the deleted ones or not
             if (deleted == false) comments = comments.Where(x => x.IsDeleted == false);
 
@@ -72,22 +69,7 @@ namespace Origami.Core.Data
         public long GetComments(OrigamiContent entity)
         {
             var key = entity.KeyForCachingComments();
-            if (MemoryCache.TryGetValue(key, out long value) == true)
-            {
-                return value;
-            }
-
-            using var db = DbContextFactory.CreateDbContext();
-
-            var query = from c in db.Set<OrigamiContentComment>().AsNoTracking()
-                        where c.ContentId == entity.Id
-                        select c.Id;
-
-            var count = query.LongCount();
-
-            MemoryCache.Set(key, count, TimeSpan.FromMinutes(3));
-
-            return count;
+            return this.MemoryCache.TryGetValue(key, out long x) ? x : 0;
         }
 
         public Result<OrigamiContentComment> Pin(DataOperationContextFrontEnd<OrigamiContentComment> ctx)
@@ -146,6 +128,12 @@ namespace Origami.Core.Data
             using var db = DbContextFactory.CreateDbContext();
             hub.RowsAffected += (from x in db.Set<OrigamiContentCommentReaction>().AsNoTracking() where x.CommentId == ctx.Entity.Id select x).ExecuteDelete();
             return hub;
+        }
+
+        public override void RefreshCache()
+        {
+            base.RefreshCache();
+            this.RefreshCacheII();
         }
 
         public Result<OrigamiContentComment> SmartCreate(DataOperationContextFrontEnd<OrigamiContentComment> ctx)
@@ -266,6 +254,26 @@ namespace Origami.Core.Data
         public override Result<OrigamiContentComment> UpdateValidation(DataOperationContext<OrigamiContentComment> ctx)
         {
             return new Result<OrigamiContentComment>(ctx.Entity, _validator);
+        }
+
+        protected void RefreshCacheII()
+        {
+            using var db = DbContextFactory.CreateDbContext();
+            var query = from view in db.Set<OrigamiContentComment>().AsNoTracking()
+                        where view.IsDeleted == false
+                        group view by view.ContentId into g
+                        select new { ContentId = g.Key, TotalComments = g.LongCount() };
+            var options = new MemoryCacheEntryOptions() { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(3) };
+
+            foreach (var view in query)
+            {
+                var content = this.MemoryCache.Read<OrigamiContent>().Id(view.ContentId);
+                if (content != null)
+                {
+                    var key = content.KeyForCachingComments();
+                    this.MemoryCache.Set(key, view.TotalComments, options);
+                }
+            }
         }
     }
 }

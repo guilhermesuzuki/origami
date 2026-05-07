@@ -81,6 +81,9 @@ namespace Origami.Core.Data
             {
                 OrigamiPage => "Page",
                 OrigamiPost => "Post",
+                OrigamiQuickNote => "QuickNote",
+                OrigamiSpecialMessage => "SpecialMessage",
+                OrigamiSpecialPage => "SpecialPage",
                 OrigamiVideo => "Video",
                 _ => "Unknown"
             };

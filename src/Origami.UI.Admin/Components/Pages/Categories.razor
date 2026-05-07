@@ -33,7 +33,7 @@
                             <TemplateColumn Title="@Text.Upper("Name")" Sortable="false" Filterable="false" CellClass="col-6" SortBy="x => nameof(x.Name)">
                                 <CellTemplate>
                                     <div class="cursor-pointer" @onclick="() => OnEdit(context.Item)">
-                                        <CategoryHeaderLite Class="" Entity="context.Item"></CategoryHeaderLite>
+                                        <CategoryHeaderInline Class="" Entity="context.Item"></CategoryHeaderInline>
                                         <div class="x-small">@context.Item.Description</div>
                                     </div>
                                 </CellTemplate>
@@ -46,7 +46,7 @@
                                         @if (parent != null)
                                         {
                                             <div class="category-parent mb-1 me-1 shadow-sm border p-2 d-inline-block @(parent.IsDeleted ? "deleted" : null)">
-                                                <CategoryHeaderLite Entity="parent"></CategoryHeaderLite>
+                                                <CategoryHeaderInline Entity="parent"></CategoryHeaderInline>
                                             </div>
                                         }
                                     }
@@ -61,7 +61,7 @@
                                             continue;
                                         }
                                         <div class="category-child mb-1 me-1 shadow-sm border p-2 d-inline-block @(category.IsDeleted ? "deleted" : null)">
-                                            <CategoryHeaderLite Entity="category"></CategoryHeaderLite>
+                                            <CategoryHeaderInline Entity="category"></CategoryHeaderInline>
                                         </div>
                                     }
                                 </CellTemplate>

@@ -10,7 +10,7 @@ namespace Origami.Core.Data
         protected RepositoryOuterLayer(
             Text text,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
-            IMemoryCache memoryCache,
+            IMyMemoryCache memoryCache,
             IWebRootPath webRootPath)
             : base(text, dbContextFactory, memoryCache, webRootPath)
         {
@@ -25,7 +25,7 @@ namespace Origami.Core.Data
             lock (OrigamiConstants.SyncRoot)
             {
                 using var db = DbContextFactory.CreateDbContext();
-                var l = db.ReadFromDatabase<T>();
+                var l = db.Read<T>();
                 MemoryCache.Set(k, l);
             }
         }

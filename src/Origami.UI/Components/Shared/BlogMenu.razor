@@ -1,13 +1,6 @@
-﻿@inherits Basic
+﻿@using System.Diagnostics
+@inherits Basic
 
-@* <style>
-    .blog-menu .categories .id { display: none; }
-    .blog-menu .content-header-lite { display: none; }
-    .blog-menu .page-header-image,
-    .blog-menu .post-header-image,
-    .blog-menu .video-header-image { max-height: 111.03px; }
-    .blog-menu .nothing-to-see-here { max-height: 111.03px; }
-</style> *@
 <div class="blog-menu @Class">
     <div class="row">
         <div class="col-12 col-xxl-4"></div>
@@ -30,21 +23,31 @@
         <div class="col-12 col-xxl-4"></div>
     </div>
     <div class="row mt-2">
-        <div class="col-12 col-xxl-3">
+        <div class="col-12 col-xxl-5">
             <div class="row">
                 <div class="col-12 col-xxl-6 categories">
                     <a class="text-center focusable" href="/blogs/@_blog.Slug/categories">
                         <i class="fa-solid fa-layer-group"></i>
                         <span>@Text.Lower("Categories")</span>
                     </a>
-                    @if (_categories.Any() == true)
-                    {
-                        @foreach (var category in _categories)
-                        {
-                            <CategoryHeader Class="mt-2 p-2 text-center border shadow-sm" Entity="category"></CategoryHeader>
-                        }
-                    }
-                    else
+                    <MudTable Class="mt-3" Items="_categories" Dense="true">
+                        <RowTemplate>
+                            <MudTd>
+                                <a href="@_blog.GetHyperlink(context)#content-start">
+                                    <div class="cursor-pointer text-left">
+                                        <CategoryHeaderInline Class="" Entity="context"></CategoryHeaderInline>
+                                    </div>
+                                </a>
+                            </MudTd>
+                        </RowTemplate>
+                        <PagerContent>
+                            <MudTablePager PageSizeOptions="new int[] { 10, 25, 50, 100 }"
+                                           HorizontalAlignment="HorizontalAlignment.Center"
+                                           HideRowsPerPage="true"
+                                           HidePageNumber="true" />
+                        </PagerContent>
+                    </MudTable>
+                    @if (_categories.Any() == false)
                     {
                         <NothingToSeeHere Class="mt-2 border p-3 shadow-sm">
                             <TitleTemplate>
@@ -59,14 +62,24 @@
                         <i class="fa-solid fa-tag"></i>
                         <span>@Text.Lower("Tags")</span>
                     </a>
-                    @if (_tags.Any() == true)
-                    {
-                        @foreach (var tag in _tags)
-                        {
-                            <ContentTagHeader Class="mt-2 p-2 text-center border shadow-sm" Entity="tag"></ContentTagHeader>
-                        }
-                    }
-                    else
+                    <MudTable Class="mt-3" Items="_tags" Dense="true">
+                        <RowTemplate>
+                            <MudTd>
+                                <a href="@_blog.GetHyperlink(context)#content-start">
+                                    <div class="cursor-pointer text-left">
+                                        <ContentTagHeaderInline Entity="context"></ContentTagHeaderInline>
+                                    </div>
+                                </a>
+                            </MudTd>
+                        </RowTemplate>
+                        <PagerContent>
+                            <MudTablePager PageSizeOptions="new int[] { 10, 25, 50, 100 }"
+                                           HorizontalAlignment="HorizontalAlignment.Center"
+                                           HideRowsPerPage="true"
+                                           HidePageNumber="true" />
+                        </PagerContent>
+                    </MudTable>
+                    @if (_tags.Any() == false)
                     {
                         <NothingToSeeHere Class="mt-2 border p-3 shadow-sm">
                             <TitleTemplate>
@@ -78,7 +91,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 col-xxl-9">
+        <div class="col-12 col-xxl-7">
             <div class="row">
                 <div class="col-12 col-xxl-4">
                     <ul class="inline-list">
@@ -96,16 +109,15 @@
                             </select>
                         </li>
                     </ul>
-                    @if (_pages.Any() == true)
+                    @foreach (var page in _pages)
                     {
-                        @foreach (var page in _pages)
-                        {
-                            <div class="mt-2">
-                                <ContentHeaderLite Entity="page"></ContentHeaderLite>
+                        <a href="@(page.Hyperlink)#content-start">
+                            <div class="mt-2 p-3 border cursor-pointer shadow-sm">
+                                <ContentHeaderInline Class="text-left" Entity="page"></ContentHeaderInline>
                             </div>
-                        }
+                        </a>
                     }
-                    else
+                    @if (_pages.Any() == false)
                     {
                         <NothingToSeeHere Class="mt-2 border p-3 shadow-sm">
                             <TitleTemplate>
@@ -131,16 +143,15 @@
                             </select>
                         </li>
                     </ul>
-                    @if (_posts.Any() == true)
+                    @foreach (var post in _posts)
                     {
-                        @foreach (var post in _posts)
-                        {
-                            <div class="mt-2">
-                                <ContentHeaderLite Entity="post"></ContentHeaderLite>
+                        <a href="@post.Hyperlink#content-start">
+                            <div class="mt-2 p-3 border cursor-pointer shadow-sm">
+                                <ContentHeaderInline Class="text-left" Entity="post"></ContentHeaderInline>
                             </div>
-                        }
+                        </a>
                     }
-                    else
+                    @if (_posts.Any() == false)
                     {
                         <NothingToSeeHere Class="mt-2 border p-3 shadow-sm">
                             <TitleTemplate>
@@ -166,16 +177,15 @@
                             </select>
                         </li>
                     </ul>
-                    @if (_videos.Any() == true)
+                    @foreach (var video in _videos)
                     {
-                        @foreach (var video in _videos)
-                        {
-                            <div class="mt-2">
-                                <ContentHeaderLite Entity="video"></ContentHeaderLite>
+                        <a href="@video.Hyperlink#content-start">
+                            <div class="mt-2 p-3 border cursor-pointer shadow-sm">
+                                <ContentHeaderInline Class="text-left" Entity="video"></ContentHeaderInline>
                             </div>
-                        }
+                        </a>
                     }
-                    else
+                    @if (_videos.Any() == false)
                     {
                         <NothingToSeeHere Class="mt-2 border p-3 shadow-sm">
                             <TitleTemplate>
@@ -241,10 +251,9 @@
 
     private void LoadCategories()
     {
-        _categories = this.Super.GetCategories()
+        _categories = this.Super
+            .GetCategories()
             .Blog(BlogId)
-            .OrderByDescending(x => { return Super.GetPosts(x).Published().Count() + Super.GetVideos(x).Published().Count(); })
-            .Take(7)
             .OrderBy(x => x.Name);
     }
 
@@ -289,16 +298,15 @@
 
     private void LoadTags()
     {
-        _tags = this.Super.ContentTags.ReadFromCache()
+        _tags = this.Super.ContentTags
+            .ReadFromCache()
             .DistinctBy(x => x.Tag)
-            .OrderByDescending(x => { return Super.GetContents(x, BlogId).Published().Count(); });
+            .OrderBy(x => x.Tag);
 
         _tags = from a in _tags
                 join b in this.Super.Contents.ReadFromCache().Published() on a.ContentId equals b.Id
                 where b.BlogId == BlogId
                 select a;
-
-        _tags = _tags.Take(7);
     }
 
     private void LoadVideos(string order = "1")
@@ -318,6 +326,7 @@
 
     protected override void OnParametersSet()
     {
+        var timestamp = Stopwatch.GetTimestamp();
         base.OnParametersSet();
         this.LoadBlog();
         this.LoadCategories();
@@ -325,6 +334,8 @@
         this.LoadPosts();
         this.LoadTags();
         this.LoadVideos();
+        var elapsed = Stopwatch.GetElapsedTime(timestamp);
+        Console.WriteLine($"BlogMenu took {elapsed} to gather all information");
     }
 
     private void GoToBlog()

@@ -1,12 +1,9 @@
-﻿using AngleSharp.Dom;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using Microsoft.Extensions.Caching.Memory;
 using MudBlazor;
 using Origami.Core;
 using Origami.Core.Data;
 using Origami.Core.Models;
-using System.Text;
 using System.Transactions;
 
 namespace Origami.UI.Admin
@@ -83,27 +80,20 @@ namespace Origami.UI.Admin
         protected virtual List<T> Get<T>() where T : class
         {
             var t = Activator.CreateInstance<T>();
-            var query = from c in this.DbContextFactory.ReadFromCache<T>(this.MemoryCache) select c;
+            var query = from c in this.MemoryCache.Read<T>() select c;
 
             if (t is IBlogIdNull blogIdNull)
             {
                 query = query.Where(x => (x as IBlogIdNull)?.BlogId == this.Entity.Entity.BlogId);
             }
 
-            try
+            query = t switch
             {
-                query = t switch
-                {
-                    IName => query.Cast<IName>().OrderBy(x => x.Name).Cast<T>(),
-                    ITag => query.Cast<ITag>().DistinctBy(x => x.Tag).OrderBy(x => x.Tag).Cast<T>(),
-                    _ => query,
-                };
-                return [.. query];
-            }
-            finally
-            {
-
-            }
+                IName => query.Cast<IName>().OrderBy(x => x.Name).Cast<T>(),
+                ITag => query.Cast<ITag>().DistinctBy(x => x.Tag).OrderBy(x => x.Tag).Cast<T>(),
+                _ => query,
+            };
+            return [.. query];
         }
 
         protected override void OnInitialized()
@@ -135,8 +125,8 @@ namespace Origami.UI.Admin
         protected override void CreateEntityBeforeEvent(T2 entity)
         {
             entity.Entity.SetAuthor(UserFacade.User);
-            entity.Entity.BlogId = entity.Entity switch 
-            { 
+            entity.Entity.BlogId = entity.Entity switch
+            {
                 OrigamiSpecialMessage => null,
                 OrigamiSpecialPage => null,
                 _ => GetBlogFromUserFacade().Id,
@@ -151,7 +141,7 @@ namespace Origami.UI.Admin
 
         protected virtual IEnumerable<T1> GetParents()
         {
-            return from x in this.DbContextFactory.ReadFromCache<T1>(this.MemoryCache)
+            return from x in this.MemoryCache.Read<T1>()
                    where x.BlogId == this.UserFacade.BlogId
                    where x.IsDeleted == false
                    where this.Super.IsParentDeleted(x) == false

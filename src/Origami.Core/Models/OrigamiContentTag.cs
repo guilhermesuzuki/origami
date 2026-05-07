@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using NanoidDotNet;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -10,17 +8,16 @@ namespace Origami.Core.Models
     public class OrigamiContentTag :
         BaseModel,
         IChanged,
-        IId,
         IContentId,
         ITag,
         ISlug,
         IVersion,
-        INew,
-        INanoId
+        INew
     {
-        private Guid _contentId;
-        private string _tag = string.Empty;
+        protected Guid _contentId;
+        protected string _tag = string.Empty;
         protected byte[] _version = Array.Empty<byte>();
+        protected string _slug = string.Empty;
 
         /// <summary>
         /// Default constructor
@@ -30,7 +27,10 @@ namespace Origami.Core.Models
 
         }
 
-        public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) => { };
+        public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) =>
+        {
+
+        };
 
         public Guid ContentId
         {
@@ -40,12 +40,17 @@ namespace Origami.Core.Models
 
         public bool New => _version.SequenceEqual(Array.Empty<byte>());
 
-        public string Slug => Tag.GetSlug();
+        [StringLength(128)]
+        public string Slug
+        {
+            get => _slug;
+            set => this.Set(ref _slug, value, Changed);
+        }
 
         /// <summary>
         /// Tag
         /// </summary>
-        [StringLength(50)]
+        [StringLength(128)]
         public string Tag
         {
             get => _tag;

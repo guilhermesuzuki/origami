@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Origami.Core.Models
 {
@@ -13,6 +11,7 @@ namespace Origami.Core.Models
         {
             Type = nameof(OrigamiQuickNote);
             IsDraft = false;
+            IsCommentEnabled = false;
         }
 
         [NotMapped]

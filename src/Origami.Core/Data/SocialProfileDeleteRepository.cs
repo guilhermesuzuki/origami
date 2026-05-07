@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Origami.Core.Models;
 using System.Transactions;
 
@@ -22,7 +21,7 @@ namespace Origami.Core.Data
         /// <param name="distributedCache"></param>
         public SocialProfileDeleteRepository(
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
-            IMemoryCache memoryCache,
+            IMyMemoryCache memoryCache,
             ISocialProfileRepository socialProfileRepository,
             IContentCommentReactionRepository contentCommentReactionRepository,
             IContentCommentRepository contentCommentRepository,

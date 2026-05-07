@@ -26,7 +26,7 @@
                 @if (QuickNotes.Count > i)
                 {
                     <div class="col-12 col-xl-4 mb-3">
-                        <QuickNoteHeader Entity="QuickNotes[i]"></QuickNoteHeader>
+                        <ContentHeader Entity="QuickNotes[i]"></ContentHeader>
                     </div>
                 }
             }
@@ -49,9 +49,9 @@
 
     private bool _disableLoadMore
     {
-        get => _super.QuickNotes
+        get => _super.Contents
             .ReadFromCache()
-            .NonDeleted()
+            .OfType<OrigamiQuickNote>()
             .Published()
             .Blog(this.BlogId)
             .Count() <= this.Page * this.PageSize;
@@ -62,9 +62,9 @@
     /// </summary>
     protected void LoadQuickNotes()
     {
-        var pages = _super.QuickNotes
+        var pages = _super.Contents
             .ReadFromCache()
-            .NonDeleted()
+            .OfType<OrigamiQuickNote>()
             .Published()
             .Blog(this.BlogId);
 

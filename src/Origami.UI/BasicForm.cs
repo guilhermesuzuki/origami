@@ -1,7 +1,5 @@
-﻿using AngleSharp.Dom;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using MudBlazor;
 using NanoidDotNet;
 using Origami.Core;
 using Origami.Core.Models;
@@ -55,15 +53,15 @@ namespace Origami.UI
         /// <summary>
         /// Author from the Entity (when available)
         /// </summary>
-        protected OrigamiUser Author
+        protected virtual OrigamiUser Author
         {
             get
             {
                 if (Entity is IAuthorId author)
                 {
-                    return Super.Users.ReadFromCache().Id(author.AuthorId) ?? new();
+                    return Super.Users.ReadFromCache().Id(author.AuthorId) ?? new() { Username = "Unknown" };
                 }
-                return new();
+                return new() { Username = "Unknown" };
             }
         }
 
@@ -120,7 +118,7 @@ namespace Origami.UI
                 parent.ParentId = entity.Id;
                 return;
             }
-            
+
             throw new NotImplementedException("Entity does not support parent");
         }
         /// <summary>
@@ -332,7 +330,7 @@ namespace Origami.UI
                 UserFacade.Result = new(ex);
                 return (false, string.Empty, string.Empty);
             }
-            
+
             await using Stream stream = file.OpenReadStream(file.Size, FileUploadingToken.Token);
 
             const int bufferSize = 1024 * 1024; // 1 MB

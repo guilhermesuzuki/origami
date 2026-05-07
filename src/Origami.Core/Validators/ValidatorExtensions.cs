@@ -1,11 +1,8 @@
 ﻿using FluentValidation;
-using Microsoft.EntityFrameworkCore;
-using Origami.Core.Data;
 using Origami.Core.Models;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using System.Globalization;
-using System.Text.RegularExpressions;
 
 namespace Origami.Core.Validators
 {
@@ -33,42 +30,7 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("Blog must be null"));
         }
 
-        public static IRuleBuilderOptions<T, List<OrigamiContentCategory>> CategoriesMustBeUnique<T>(this IRuleBuilder<T, List<OrigamiContentCategory>> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory)
-        {
-            return ruleBuilder
-                .Must(categories =>
-                {
-                    if (categories.DistinctBy(x => x.CategoryId).Count() != categories.Count)
-                    {
-                        return false;
-                    }
 
-                    return true;
-                })
-                .WithMessage(text.Original("Categories must be unique"));
-        }
-
-        public static IRuleBuilderOptions<T, Guid> Category<T>(this IRuleBuilder<T, Guid> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory)
-        {
-            return ruleBuilder
-                .Must(categoryId =>
-                {
-                    using var db = dbContextFactory.CreateDbContext();
-                    return db.Set<OrigamiCategory>().AsNoTracking().Id(categoryId) != null;
-                })
-                .WithMessage(text.Original("Category must exist"));
-        }
-
-        public static IRuleBuilderOptions<T, Guid> Content<T>(this IRuleBuilder<T, Guid> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory)
-        {
-            return ruleBuilder
-                .Must(contentId =>
-                {
-                    using var db = dbContextFactory.CreateDbContext();
-                    return db.Set<OrigamiContent>().AsNoTracking().Id(contentId) != null;
-                })
-                .WithMessage(text.Original("Content must exist"));
-        }
 
         public static IRuleBuilderOptions<T, string> ContentType<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
         {
@@ -241,13 +203,13 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("Date of modification must happen after the creation date"));
         }
 
-        public static IRuleBuilderOptions<T, string> Name<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
+        public static IRuleBuilderOptions<T, string> Name<T>(this IRuleBuilder<T, string> ruleBuilder, Text text, int maximumCharactersAllowed = 255)
         {
             return ruleBuilder
                 .NotEmpty()
                 .WithMessage(text.Original("Name is required"))
-                .MaximumLength(255)
-                .WithMessage(text.Original("Name cannot exceed {0} characters", 255));
+                .MaximumLength(maximumCharactersAllowed)
+                .WithMessage(text.Original("Name cannot exceed {0} characters", maximumCharactersAllowed));
         }
 
         public static IRuleBuilderOptions<T, string> NanoId<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
@@ -296,42 +258,29 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("RSS feed must be a valid website address"));
         }
 
-        public static IRuleBuilderOptions<T, string> ShortName<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
+        public static IRuleBuilderOptions<T, string> Slug<T>(this IRuleBuilder<T, string> ruleBuilder, Text text, int maximumCharactersAllowed = 255)
         {
             return ruleBuilder
+                .NotNull()
+                // TODO: add this to resx files
+                .WithMessage(text.Original("Slug is required"))
                 .NotEmpty()
-                .WithMessage(text.Original("Name is required"))
-                .MaximumLength(50)
-                .WithMessage(text.Original("Name cannot exceed {0} characters", 50));
-        }
-
-        public static IRuleBuilderOptions<T, string> Slug<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
-        {
-            return ruleBuilder
-                .MaximumLength(255)
-                .WithMessage(text.Original("Slug cannot exceed {0} characters", 255));
+                // TODO: add this to resx files
+                .WithMessage(text.Original("Slug is required"))
+                .MaximumLength(maximumCharactersAllowed)
+                .WithMessage(text.Original("Slug cannot exceed {0} characters", maximumCharactersAllowed));
         }
 
         public static IRuleBuilderOptions<T, string> Tag<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
         {
             return ruleBuilder
+                .NotEmpty()
+                // TODO: add this to resx files
+                .WithMessage(text.Original("Tag is required"))
                 .MaximumLength(128)
                 .WithMessage(text.Original("Tag cannot exceed {0} characters", 128));
         }
 
-        public static IRuleBuilderOptions<T, List<OrigamiContentTag>> TagsMustBeUnique<T>(this IRuleBuilder<T, List<OrigamiContentTag>> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory)
-        {
-            return ruleBuilder
-                .Must(tags =>
-                {
-                    if (tags.DistinctBy(x => x.Tag).Count() != tags.Count)
-                    {
-                        return false;
-                    }
-                    return true;
-                })
-                .WithMessage(text.Original("Tags must be unique"));
-        }
         public static IRuleBuilderOptions<T, string> Title<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
         {
             return ruleBuilder
@@ -378,6 +327,35 @@ namespace Origami.Core.Validators
                     return true;
                 })
                 .WithMessage(text.Original("{0}: URL must be a valid website address", field));
+        }
+
+        public static IRuleBuilderOptions<T, List<OrigamiContentTag>> TagsMustBeUnique<T>(this IRuleBuilder<T, List<OrigamiContentTag>> ruleBuilder, Text text)
+        {
+            return ruleBuilder
+                .Must(tags =>
+                {
+                    if (tags.DistinctBy(x => x.Tag).Count() != tags.Count)
+                    {
+                        return false;
+                    }
+                    return true;
+                })
+                .WithMessage(text.Original("Tags must be unique"));
+        }
+
+        public static IRuleBuilderOptions<T, List<OrigamiContentCategory>> CategoriesMustBeUnique<T>(this IRuleBuilder<T, List<OrigamiContentCategory>> ruleBuilder, Text text)
+        {
+            return ruleBuilder
+                .Must(categories =>
+                {
+                    if (categories.DistinctBy(x => x.CategoryId).Count() != categories.Count)
+                    {
+                        return false;
+                    }
+
+                    return true;
+                })
+                .WithMessage(text.Original("Categories must be unique"));
         }
     }
 }

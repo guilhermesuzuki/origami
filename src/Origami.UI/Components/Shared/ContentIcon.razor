@@ -28,6 +28,10 @@ else if (Entity is OrigamiVideo)
 {
     <i class="bi bi-file-earmark-play-fill" title="@Text.Lower("Video")" style="margin-left: -2px;"></i>
 }
+else if (Entity is OrigamiQuickNote)
+{
+    <i class="bi bi-lightning-fill" title="@Text.Lower("Quick note")" style="margin-left: -2px;"></i>
+}
 
 @code {
     [Parameter] public OrigamiContent? Entity { get; set; }

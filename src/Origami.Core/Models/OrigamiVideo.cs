@@ -1,11 +1,10 @@
 ﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
 
 namespace Origami.Core.Models
 {
-    public class OrigamiVideo : 
+    public class OrigamiVideo :
         OrigamiContent,
         IDateReleased,
         IVideo,
@@ -24,6 +23,7 @@ namespace Origami.Core.Models
         {
             this.Type = nameof(OrigamiVideo);
             this.LanguageWrittenOn = CultureInfo.DefaultThreadCurrentUICulture?.Name ?? "en-US";
+            this.IsCommentEnabled = true;
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace Origami.Core.Models
         {
             for (int i = 0; i < count; i++) yield return GetFake();
         }
-        
+
         /// <summary>
         /// Extracts all subtitles in this video
         /// </summary>

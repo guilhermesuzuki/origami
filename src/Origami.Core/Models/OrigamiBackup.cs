@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace Origami.Core.Models
 {
@@ -74,7 +71,7 @@ namespace Origami.Core.Models
         [Timestamp]
         public byte[] Version
         {
-            get => _version; 
+            get => _version;
             set => this.Set(ref _version, value, Changed);
         }
     }

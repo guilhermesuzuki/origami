@@ -1,9 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Origami.Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Origami.Core.Data
 {
@@ -14,7 +10,7 @@ namespace Origami.Core.Data
         protected RepositoryLayer0Data(
             Text text,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
-            IMemoryCache memoryCache,
+            IMyMemoryCache memoryCache,
             IWebRootPath webRootPath)
             : base(text, dbContextFactory, memoryCache, webRootPath)
         {
@@ -27,10 +23,10 @@ namespace Origami.Core.Data
             {
                 var clone = ctx.Entity.Clone();
 
-                using (var dbContext = DbContextFactory.CreateDbContext())
+                using (var db = DbContextFactory.CreateDbContext())
                 {
-                    clone = dbContext.Add(clone).Entity;
-                    dbContext.SaveChanges();
+                    clone = db.Add(clone).Entity;
+                    db.SaveChanges();
                 }
 
                 ctx.Entity.Version(clone);

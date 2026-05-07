@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Origami.Core.Models;
 
 namespace Origami.Core.Data
@@ -20,7 +19,7 @@ namespace Origami.Core.Data
         public SpecialPageRepository(
             IValidator<OrigamiSpecialPage> validator,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
-            IMemoryCache memoryCache,
+            IMyMemoryCache memoryCache,
             ISettingRepository settingRepository,
             Text text,
             IWebRootPath wwwRoot)
@@ -43,13 +42,6 @@ namespace Origami.Core.Data
         public override string UpdateOtherUsersPermission => nameof(OrigamiRole.EditOtherUsersSpecialPages);
         public override string UpdateOwnPermission => nameof(OrigamiRole.EditOwnSpecialPages);
 
-        public override Result<OrigamiSpecialPage> CreateValidation(DataOperationContext<OrigamiSpecialPage> ctx)
-        {
-            var validation = new Result<OrigamiSpecialPage>(ctx.Entity, _validator);
-            this.ValidateSlug(ctx).Push(validation);
-            return validation;
-        }
-
         public Result EnterMaintenanceMode(DataOperationContext context)
         {
             var permission = this.CheckPermission(context.User.Id, nameof(OrigamiRole.EnterMaintenanceMode));
@@ -60,7 +52,7 @@ namespace Origami.Core.Data
             var hub = new Result();
             var maintenancePages = db.Set<OrigamiSpecialPage>().AsNoTracking()
                 .Where(x => x.IsPublished == false)
-                .Where(x => x.Type== OrigamiSpecialPageTypes.Maintenance.ToString())
+                .Where(x => x.Type == OrigamiSpecialPageTypes.Maintenance.ToString())
                 .ToList();
 
             foreach (var page in maintenancePages)
@@ -96,11 +88,32 @@ namespace Origami.Core.Data
             return hub;
         }
 
+        public override Result<OrigamiSpecialPage> CreateValidation(DataOperationContext<OrigamiSpecialPage> ctx)
+        {
+            return _validationForAllOperations(ctx);
+        }
+
+        public override Result<OrigamiSpecialPage> DeleteValidation(DataOperationContext<OrigamiSpecialPage> ctx)
+        {
+            return _validationForAllOperations(ctx);
+        }
+
+        public override Result<OrigamiSpecialPage> PurgeValidation(DataOperationContext<OrigamiSpecialPage> ctx)
+        {
+            return _validationForAllOperations(ctx);
+        }
+
         public override Result<OrigamiSpecialPage> UpdateValidation(DataOperationContext<OrigamiSpecialPage> ctx)
         {
-            var validation = new Result<OrigamiSpecialPage>(ctx.Entity, _validator);
-            this.ValidateSlug(ctx).Push(validation);
-            return validation;
+            return _validationForAllOperations(ctx);
+        }
+
+        private Result<OrigamiSpecialPage> _validationForAllOperations(DataOperationContext<OrigamiSpecialPage> ctx)
+        {
+            Result<OrigamiSpecialPage> result = new(ctx.Entity);
+            result.Error = Text.Original("Operation not allowed");
+            result.Error = Text.Original("Use the HubContentSpecialPage repository instead");
+            return result;
         }
     }
 }

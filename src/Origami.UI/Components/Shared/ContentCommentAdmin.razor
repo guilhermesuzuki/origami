@@ -198,7 +198,7 @@
     private Guid _emojiPickerId = Guid.NewGuid();
     private OrigamiContentComment? CommentForUpdating { get; set; }
     private OrigamiContentComment? CommentForReplying { get; set; }
-    private DotNetObjectReference<ContentComment2>? objRef;
+    private DotNetObjectReference<ContentCommentAdmin>? objRef;
     private ElementReference elementRef;
 
     [Parameter] public OrigamiContentComment? Entity { get; set; }
@@ -272,7 +272,7 @@
         {
             var context = new DataOperationContext<OrigamiContentComment>(UserFacade.User, this.CommentForReplying);
 
-            this.Super.ContentComments.SmartSave(context, true)
+            this.Super.ContentComments.SmartSave(context, false)
                 .OnSuccess(() => this.OnCommentUpdated.InvokeAsync(this.CommentForReplying))
                 .OnSuccess(() => this.CommentHasChanged());
 

@@ -38,7 +38,7 @@ namespace Origami.UI
                     var url = "https://api.ipify.org/?format=json";
                     using var client = new HttpClient()
                     {
-                        Timeout = TimeSpan.FromMilliseconds(500),
+                        Timeout = TimeSpan.FromMilliseconds(150),
                     };
                     var response = await client.GetAsync(url).ConfigureAwait(false);
                     if (response.IsSuccessStatusCode)

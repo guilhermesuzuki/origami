@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using MudBlazor;
-using MudBlazor.Charts;
-using NanoidDotNet;
 using Origami.Core;
 using Origami.Core.Data;
 using Origami.Core.Models;
@@ -28,6 +26,7 @@ namespace Origami.UI.Admin
 
         [Inject] public IHubContentRepository<T2> HubContentRepository { get; set; } = null!;
         [Parameter] public string NanoId { get; set; } = string.Empty;
+
         /// <summary>
         /// Default ordering, in case there's no order-by
         /// </summary>
@@ -240,7 +239,7 @@ namespace Origami.UI.Admin
         {
             var t1 = new T1();
 
-            IEnumerable<T1> items = this.DbContextFactory.ReadFromCache<T1>(this.MemoryCache);
+            IEnumerable<T1> items = this.MemoryCache.Read<T1>();
 
             if (IncludeDeletedEntitiesInDataGrid == false)
             {
@@ -455,10 +454,7 @@ namespace Origami.UI.Admin
         {
             if (this.NanoId.Has() == true)
             {
-                var entity = (from a in this.DbContextFactory.ReadFromCache<T1>(MemoryCache)
-                              where a.NanoId == this.NanoId
-                              select a).FirstOrDefault();
-
+                var entity = (from a in this.MemoryCache.Read<T1>() where a.NanoId == this.NanoId select a).FirstOrDefault();
                 if (entity != null)
                 {
                     SelectedEntity = this.HubContentRepository.Get(entity).Clone();
