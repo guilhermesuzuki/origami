@@ -397,6 +397,7 @@ namespace Origami.UI
                 var seq = context.Configuration.GetValue("Seq:Enabled", false);
                 var seqEndpoint = context.Configuration.GetValue("Seq:Endpoint", string.Empty);
 
+                configuration.Enrich.WithProperty("Application", serviceName);
                 configuration.ReadFrom.Configuration(context.Configuration);
                 configuration.WriteTo.Console();
                 
