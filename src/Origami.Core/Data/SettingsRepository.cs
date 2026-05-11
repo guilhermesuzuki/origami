@@ -125,6 +125,7 @@ public class SettingsRepository :
             if (property.Name.Like(nameof(OrigamiSettings.Id)) == true) continue;
             if (property.Name.Like(nameof(OrigamiSettings.OpenTelemetry)) == true) continue;
             if (property.Name.Like(nameof(OrigamiSettings.SocialNetwork)) == true) continue;
+            if (property.Name.Like(nameof(OrigamiSettings.Seq)) == true) continue;
 
             var name = property.Name.ToLower();
             var setting = dbSettings.FirstOrDefault(x => x.Name == name);
@@ -202,6 +203,15 @@ public class SettingsRepository :
             settings.SocialNetwork.Microsoft.ClientId = microsoftClientId?.Value ?? string.Empty;
             settings.SocialNetwork.Microsoft.ClientSecret = microsoftClientSecret?.Value ?? string.Empty;
             settings.SocialNetwork.Microsoft.TenantId = microsoftTenantId?.Value ?? string.Empty;
+        }
+
+        if (settings.Seq != null)
+        {
+            var prefix = "seq";
+            var seqEnabled = dbSettings.FirstOrDefault(x => x.Name.Like($"{prefix}-enabled"));
+            var seqEndpoint = dbSettings.FirstOrDefault(x => x.Name.Like($"{prefix}-endpoint"));
+            settings.Seq.Enabled = bool.Parse(seqEnabled?.Value ?? "false");
+            settings.Seq.Endpoint = seqEndpoint?.Value ?? string.Empty;
         }
 
         return settings;

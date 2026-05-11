@@ -88,6 +88,29 @@
                             </li>
                         </ul>
                     </div>
+                    <div class="seq p-3 mt-3">
+                        <div class="text-center fs-5">@Text.Lower("Seq")</div>
+                        <ul class="inline-list">
+                            <li>
+                                <MudTextField ReadOnly="true"
+                                              FullWidth="true"
+                                              Immediate="true"
+                                              Value="@(Text.Lower(Entity.Seq.Enabled.YesNo()))"
+                                              HelperText="@Text.Lower("Enable")"
+                                              Class="cursor-pointer"
+                                              title="@Text.Lower("Click here to change it")"
+                                              @onclick="() => this.Entity.Seq.Enabled = !this.Entity.Seq.Enabled"></MudTextField>
+                            </li>
+                        </ul>
+                        <ul class="inline-list">
+                            <li>
+                                <MudTextField FullWidth="true"
+                                              Immediate="true"
+                                              @bind-Value="@this.Entity.Seq.Endpoint"
+                                              HelperText="@Text.Lower("Endpoint (URL)")"></MudTextField>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="col-12 col-xxl-8">
                     <div class="e-mail p-3">

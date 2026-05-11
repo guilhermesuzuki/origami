@@ -18,6 +18,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		src\Origami.Files\dbsettings.Development.json = src\Origami.Files\dbsettings.Development.json
 		src\Origami.Files\dbsettings.json = src\Origami.Files\dbsettings.json
 		src\Directory.Build.props = src\Directory.Build.props
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origami.LocalizationScanner", "src\Origami.LocalizationScanner\Origami.LocalizationScanner.csproj", "{F7BABF35-88ED-4FBC-BD3A-46C3515A759A}"

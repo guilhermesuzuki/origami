@@ -71,12 +71,22 @@ namespace Origami.Core
             return settings;
         }
 
-        public static IList<OrigamiSetting> Add(this IList<OrigamiSetting> settings, OpenTelemetry socialNetwork)
+        public static IList<OrigamiSetting> Add(this IList<OrigamiSetting> settings, OpenTelemetry openTelemetry)
         {
             var prefix = "opentelemetry";
 
-            settings.Add(new() { Name = $"{prefix}-enabled", Value = socialNetwork.Enabled.ToString(), });
-            settings.Add(new() { Name = $"{prefix}-endpoint", Value = socialNetwork.Endpoint });
+            settings.Add(new() { Name = $"{prefix}-enabled", Value = openTelemetry.Enabled.ToString(), });
+            settings.Add(new() { Name = $"{prefix}-endpoint", Value = openTelemetry.Endpoint });
+
+            return settings;
+        }
+
+        public static IList<OrigamiSetting> Add(this IList<OrigamiSetting> settings, Seq seq)
+        {
+            var prefix = "seq";
+
+            settings.Add(new() { Name = $"{prefix}-enabled", Value = seq.Enabled.ToString(), });
+            settings.Add(new() { Name = $"{prefix}-endpoint", Value = seq.Endpoint });
 
             return settings;
         }

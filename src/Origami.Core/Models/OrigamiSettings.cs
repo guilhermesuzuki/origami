@@ -118,6 +118,7 @@ namespace Origami.Core.Models
         private string _name = string.Empty;
         private int _numberOfReferrerDays;
         private OpenTelemetry _openTelemetry = new();
+        private Seq _seq = new();
         private bool _pageOptionsCustomFields;
         private bool _pageOptionsDescription;
         private bool _pageOptionsSlug;
@@ -1480,6 +1481,7 @@ namespace Origami.Core.Models
 
             settings.Add(this.OpenTelemetry);
             settings.Add(this.SocialNetwork);
+            settings.Add(this.Seq);
 
             return settings;
         }
@@ -1611,6 +1613,15 @@ namespace Origami.Core.Models
         {
             get => _maintenanceMode;
             set => this.Set(ref _maintenanceMode, value, Changed);
+        }
+
+        /// <summary>
+        /// Seq settings
+        /// </summary>
+        public Seq Seq
+        {
+            get => _seq;
+            set => this.Set(ref _seq, value, Changed);
         }
     }
 }
