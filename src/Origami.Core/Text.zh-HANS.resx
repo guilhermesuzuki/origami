@@ -2475,4 +2475,16 @@
   <data name="Title is already in use" xml:space="preserve">
     <value>标题已被使用</value>
   </data>
+  <data name="Block" xml:space="preserve">
+    <value>屏蔽</value>
+  </data>
+  <data name="Unblock" xml:space="preserve">
+    <value>取消屏蔽</value>
+  </data>
+  <data name="This will block yourself" xml:space="preserve">
+    <value>此操作将屏蔽您自己。</value>
+  </data>
+  <data name="Yourself" xml:space="preserve">
+    <value>您自己</value>
+  </data>
 </root>

@@ -255,13 +255,24 @@
                         @Text.Lower("User actions")
                     </div>
                     <div class="btn-group w-100 mt-3">
-                        <button class="btn btn-danger text-white fw-bold w-100" @onclick="BlockUser" disabled="@this.Entity.IsBlocked">
-                            <i class="fa-solid fa-user-slash"></i>
-                            @Text.Lower("Block user")
-                        </button>
+                        @if (this.UserFacade.User.Id == this.Entity.Id)
+                        {
+                            <button class="btn btn-danger text-white fw-bold w-100" @onclick="BlockUserSelf" disabled="@this.Entity.IsBlocked" title="@Text.Original("This will block yourself")">
+                                <i class="fa-solid fa-user-slash"></i>
+                                @Text.Lower("Block")
+                                <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                            </button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-danger text-white fw-bold w-100" @onclick="BlockUser" disabled="@this.Entity.IsBlocked">
+                                <i class="fa-solid fa-user-slash"></i>
+                                @Text.Lower("Block")
+                            </button>
+                        }
                         <button class="btn btn-danger text-white fw-bold w-100" @onclick="UnblockUser" disabled="@(this.Entity.IsBlocked == false)">
                             <i class="fa-solid fa-user-check"></i>
-                            @Text.Lower("Unblock user")
+                            @Text.Lower("Unblock")
                         </button>
                         <button class="btn btn-warning text-white fw-bold w-100" @onclick="ResetPassword">
                             <i class="fa-solid fa-user-lock"></i>
@@ -619,6 +630,28 @@
         base.UndoChanges();
         this.LoadUserRoles();
         this.LoadUserBlogs();
+    }
+
+    protected async Task BlockUserSelf()
+    {
+        var yes = await this.DialogService.ShowMessageBoxAsync(
+            title: Text.Upper("Are you sure?"),
+            message: Text.Lower("This will block yourself out from the website"),
+            yesText: Text.Lower("Yes"),
+            noText: Text.Lower("No")) ?? false;
+
+        if (yes == true)
+        {
+            using var transaction = new TransactionScope();
+            var ctx = new DataOperationContext<OrigamiUser>(this.UserFacade.User, this.Entity);
+            var hub = this.Super.Users.Block(ctx, true);
+            if (hub.Ok)
+            {
+                transaction.Complete();
+                await this.OnUserBlocked.InvokeAsync(this.Entity);
+            }
+            this.UserFacade.Result = hub;
+        }
     }
 
     protected async Task BlockUser()
