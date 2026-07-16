@@ -17,6 +17,27 @@
                             <BlogHeaderInline Class="p-3 text-uppercase" Entity="blog"></BlogHeaderInline>
                         </div>
                         <MudDialog @bind-Visible="blog.IsSelected" Options="_dialogOptions">
+                            <TitleContent>
+                                <div class="text-center">
+                                    <BlogHeaderInline Entity="blog" Class="fs-3"></BlogHeaderInline>
+                                    <div class="dummy"></div>
+                                    <div class="btn-group w-100 mt-3 m-auto" style="width: 650px !important;">
+                                        <button class="btn btn-outline-dark fw-bold cursor-pointer w-100" @onclick="() => this.OpenBlog(blog)">
+                                            <i class="bi bi-box-arrow-up-right"></i>
+                                            @Text.Lower("Go to blog")
+                                        </button>
+                                        <button class="btn btn-outline-dark fw-bold cursor-pointer w-100" @onclick="() => this.GoToRss(blog)">
+                                            <i class="bi bi-rss-fill"></i>
+                                            @Text.Lower("RSS feed")
+                                        </button>
+                                        <button class="btn btn-outline-dark fw-bold cursor-pointer w-100" @onclick="() => blog.IsSelected = false">
+                                            <i class="bi bi-x-square-fill"></i>
+                                            @Text.Lower("Close menu")
+                                        </button>
+                                    </div>
+                                    <hr />
+                                </div>
+                            </TitleContent>
                             <DialogContent>
                                 <BlogMenu BlogId="@blog.Id" OnClose="() => blog.IsSelected = false"></BlogMenu>
                             </DialogContent>
@@ -30,7 +51,7 @@
 @code {
     private List<OrigamiBlog> _blogs = new();
 
-    private readonly DialogOptions _dialogOptions = new() { CloseOnEscapeKey = true, NoHeader = true, FullScreen = true };
+    private readonly DialogOptions _dialogOptions = new() { CloseOnEscapeKey = true, CloseButton = false, CloseOnNavigation = true, FullScreen = true };
 
     protected override void OnInitialized()
     {
@@ -73,5 +94,15 @@
     {
         var blog = _blogs.FirstOrDefault(x => x.IsSelected);
         blog?.IsSelected = false;
+    }
+
+    private void OpenBlog(OrigamiBlog blog)
+    {
+        this.GhostOfTheNavigator.NavigateTo($"{blog.Hyperlink}#content-start");
+    }
+
+    private void GoToRss(OrigamiBlog blog)
+    {
+        this.GhostOfTheNavigator.NavigateTo($"{blog.Hyperlink}rss.xml", true);
     }
 }
