@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Origami.Core.Models
@@ -46,12 +47,14 @@ namespace Origami.Core.Models
             set => this.Set(ref _socialProfileId, value, EventChanged);
         }
 
+        [StringLength(64)]
         public string? Subtype
         {
             get => _subtype;
             set => this.Set(ref _subtype, value, EventChanged);
         }
 
+        [StringLength(64)]
         public string Type
         {
             get => _type;
