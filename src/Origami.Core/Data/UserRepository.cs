@@ -147,7 +147,7 @@ namespace Origami.Core.Data
                 }
             }
 
-            var password = "@" 
+            var password = "@"
                 + Nanoid.Generate(alphabet: Nanoid.Alphabets.Letters, size: 4)
                 + Nanoid.Generate(alphabet: Nanoid.Alphabets.Digits, size: 4)
                 + "#";

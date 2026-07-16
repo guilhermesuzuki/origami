@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Origami.Core.Models;
+using Origami.Core.Models.Events;
 
 namespace Origami.Core.Data
 {
@@ -71,6 +72,11 @@ namespace Origami.Core.Data
         /// Content Tags
         /// </summary>
         public DbSet<OrigamiContentTag> ContentTags { get; set; }
+
+        /// <summary>
+        /// Events
+        /// </summary>
+        public DbSet<OrigamiEvent> Events { get; set; }
 
         /// <summary>
         /// Pages
@@ -167,10 +173,24 @@ namespace Origami.Core.Data
         /// </summary>
         public DbSet<OrigamiUserBlog> UserBlogs { get; set; }
 
+        public DbSet<UserDeletesCommentEvent> UserDeletesCommentEvents { get; set; }
+
+        public DbSet<UserEditsCommentEvent> UserEditsCommentEvents { get; set; }
+
+        public DbSet<UserLogsIntoWebsiteEvent> UserLogsIntoWebsiteEvents { get; set; }
+
         /// <summary>
         /// User password resets
         /// </summary>
         public DbSet<OrigamiUserPasswordReset> UserPasswordResets { get; set; }
+
+        public DbSet<UserReactsToCommentEvent> UserReactsToCommentEvents { get; set; }
+
+        public DbSet<UserReactsToContentEvent> UserReactsToContentEvents { get; set; }
+
+        public DbSet<UserRepliesToCommentEvent> UserRepliesToCommentEvents { get; set; }
+
+        public DbSet<UserRepliesToContentEvent> UserRepliesToContentEvents { get; set; }
 
         /// <summary>
         /// User Roles
@@ -182,16 +202,19 @@ namespace Origami.Core.Data
         /// </summary>
         public DbSet<OrigamiUser> Users { get; set; }
 
+        public DbSet<UserSubscribesToWebsiteEvent> UserSubscribesToWebsiteEvents { get; set; }
+
         /// <summary>
         /// User Trashes
         /// </summary>
         public DbSet<OrigamiUserTrash> UserTrashes { get; set; }
 
+        public DbSet<UserUnsubscribesFromWebsiteEvent> UserUnsubscribesFromWebsiteEvents { get; set; }
+
         /// <summary>
         /// Videos
         /// </summary>
         public DbSet<OrigamiVideo> Videos { get; set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -272,6 +295,26 @@ namespace Origami.Core.Data
             modelBuilder.Entity<OrigamiUserBlog>().HasOne<OrigamiUser>().WithMany().HasForeignKey(x => x.UserId);
             modelBuilder.Entity<OrigamiQuickNote>().HasOne<OrigamiBlog>().WithMany().HasForeignKey(x => x.BlogId);
             modelBuilder.Entity<OrigamiQuickNote>().HasOne<OrigamiUser>().WithMany().HasForeignKey(x => x.AuthorId);
+
+            /*backup and restore mapping*/
+            modelBuilder.Entity<OrigamiEvent>()
+                .ToTable("oi_Events")
+                .HasDiscriminator<string>("Type")
+                .HasValue<UserDeletesCommentEvent>(nameof(UserDeletesCommentEvent))
+                .HasValue<UserEditsCommentEvent>(nameof(UserEditsCommentEvent))
+                .HasValue<UserLogsIntoWebsiteEvent>(nameof(UserLogsIntoWebsiteEvent))
+                .HasValue<UserReactsToCommentEvent>(nameof(UserReactsToCommentEvent))
+                .HasValue<UserReactsToContentEvent>(nameof(UserReactsToContentEvent))
+                .HasValue<UserRepliesToCommentEvent>(nameof(UserRepliesToCommentEvent))
+                .HasValue<UserRepliesToContentEvent>(nameof(UserRepliesToContentEvent))
+                .HasValue<UserSubscribesToWebsiteEvent>(nameof(UserSubscribesToWebsiteEvent))
+                .HasValue<UserUnsubscribesFromWebsiteEvent>(nameof(UserUnsubscribesFromWebsiteEvent))
+                ;
+
+            modelBuilder.Entity<OrigamiEvent>().HasOne<OrigamiContentComment>().WithMany().HasForeignKey(x => x.CommentId);
+            modelBuilder.Entity<OrigamiEvent>().HasOne<OrigamiContent>().WithMany().HasForeignKey(x => x.ContentId);
+            modelBuilder.Entity<OrigamiEvent>().HasOne<OrigamiUser>().WithMany().HasForeignKey(x => x.UserId);
+            modelBuilder.Entity<OrigamiEvent>().HasOne<OrigamiSocialProfile>().WithMany().HasForeignKey(x => x.SocialProfileId);
         }
     }
 }

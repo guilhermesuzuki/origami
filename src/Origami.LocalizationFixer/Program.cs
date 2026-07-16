@@ -1,9 +1,9 @@
 ﻿using System.Globalization;
 using System.Xml.Linq;
 
-class Program
+internal class Program
 {
-    static void Main(string[] args)
+    private static void Main(string[] args)
     {
         FixTheTranslations(new CultureInfo("de-DE"));
         FixTheTranslations(new CultureInfo("es-ES"));
@@ -17,7 +17,7 @@ class Program
         FixTheTranslations(new CultureInfo("zh-HANS"));
     }
 
-    static void FixTheTranslations(CultureInfo culture)
+    private static void FixTheTranslations(CultureInfo culture)
     {
         string textFilePath = $"Input/{culture.Name}.txt";
         string resxFilePath = $"Output/Text.{culture.Name}.resx";
@@ -63,7 +63,7 @@ class Program
         Console.WriteLine($"Done. Updated {updatedCount} entries.");
     }
 
-    static Dictionary<string, string> LoadTranslations(string filePath)
+    private static Dictionary<string, string> LoadTranslations(string filePath)
     {
         var dict = new Dictionary<string, string>();
 

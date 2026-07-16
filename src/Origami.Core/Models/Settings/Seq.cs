@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Origami.Core.Models.Settings
+﻿namespace Origami.Core.Models.Settings
 {
     public class Seq : IEnabled, IEndpoint
     {

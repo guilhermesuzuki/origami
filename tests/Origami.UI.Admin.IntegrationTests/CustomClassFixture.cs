@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Origami.Core;
-using Origami.Core.Data;
+﻿using Origami.Core;
 using Origami.Core.Models;
 
 [assembly: CollectionBehavior(DisableTestParallelization = true)]
@@ -99,8 +97,8 @@ namespace Origami.UI.Admin.IntegrationTests
             NanoId = CategoryId1.ToString().Substring(0, 8),
         };
 
-        public OrigamiRole TestRole = new() 
-        { 
+        public OrigamiRole TestRole = new()
+        {
             Id = RoleId,
             DateCreated = DateTime.UtcNow,
             Name = "Test role",
@@ -186,7 +184,7 @@ namespace Origami.UI.Admin.IntegrationTests
             RestoreComments = true,
             RestorePages = true,
             RestorePosts = true,
-            RestoreQuickNotes = true, 
+            RestoreQuickNotes = true,
             RestoreRoles = true,
             RestoreSpecialMessages = true,
             RestoreSpecialPages = true,
@@ -219,12 +217,12 @@ namespace Origami.UI.Admin.IntegrationTests
 
         public CustomClassFixture() : base()
         {
-            
+
         }
 
         public void Dispose()
         {
-            
+
         }
     }
 }

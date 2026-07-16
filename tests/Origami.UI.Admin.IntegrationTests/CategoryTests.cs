@@ -12,7 +12,7 @@ namespace Origami.UI.Admin.IntegrationTests
     {
         public CategoryTests() : base()
         {
-            
+
         }
 
         [Fact]
@@ -365,7 +365,7 @@ namespace Origami.UI.Admin.IntegrationTests
                 .SmartSave(category.GetContext(TestUser), true)
                 .OnFailure(r => throw new Exception($"Failed to create test category: {r.GetMessages()}"));
 
-            var categoryAfterUpdate = db.Categories.AsNoTracking().FirstOrDefault(c => c.Id == TestCategory.Id); 
+            var categoryAfterUpdate = db.Categories.AsNoTracking().FirstOrDefault(c => c.Id == TestCategory.Id);
             categoryAfterUpdate.ShouldNotBeNull();
             categoryAfterUpdate.Name.ShouldBe("Updated category name");
 

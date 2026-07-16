@@ -400,7 +400,7 @@ namespace Origami.UI
                 configuration.Enrich.WithProperty("Application", serviceName);
                 configuration.ReadFrom.Configuration(context.Configuration);
                 configuration.WriteTo.Console();
-                
+
                 if (seq && seqEndpoint.Has() == true)
                 {
                     configuration.WriteTo.Seq(seqEndpoint);

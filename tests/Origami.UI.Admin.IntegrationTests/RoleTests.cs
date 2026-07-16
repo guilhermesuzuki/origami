@@ -3,9 +3,6 @@ using Origami.Core;
 using Origami.Core.Data;
 using Origami.Core.Models;
 using Shouldly;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Transactions;
 
 namespace Origami.UI.Admin.IntegrationTests

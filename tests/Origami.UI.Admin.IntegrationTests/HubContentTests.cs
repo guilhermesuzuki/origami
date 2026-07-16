@@ -10,12 +10,12 @@ namespace Origami.UI.Admin.IntegrationTests
 {
     public abstract class HubContentTests<T1, T2> :
         CustomClassFixture
-        where T1 : OrigamiContent  
+        where T1 : OrigamiContent
         where T2 : HubContent<T1>
     {
         public HubContentTests() : base()
         {
-            
+
         }
 
         [Fact]
