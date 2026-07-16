@@ -2,7 +2,7 @@
 @inherits Basic
 
 <div class="blog-menu @Class">
-    <div class="row">
+    <div class="row py-4">
         <div class="col-12 col-xxl-4"></div>
         <div class="col-12 col-xxl-4 text-center">
             <div class="btn-group w-100">
@@ -23,12 +23,13 @@
         <div class="col-12 col-xxl-4"></div>
     </div>
     <div class="row mt-2">
-        <div class="col-12 col-xxl-5">
+        <div class="col-12 col-xxl-4">
             <div class="row">
                 <div class="col-12 col-xxl-6 categories">
                     <a class="text-center focusable" href="/blogs/@_blog.Slug/categories">
                         <i class="fa-solid fa-layer-group"></i>
                         <span>@Text.Lower("Categories")</span>
+                        <i class="fa fa-external-link" aria-hidden="true"></i>
                     </a>
                     <MudTable Class="mt-3" Items="_categories" Dense="true">
                         <RowTemplate>
@@ -61,6 +62,7 @@
                     <a class="text-center focusable" href="/blogs/@_blog.Slug/tags">
                         <i class="fa-solid fa-tag"></i>
                         <span>@Text.Lower("Tags")</span>
+                        <i class="fa fa-external-link" aria-hidden="true"></i>
                     </a>
                     <MudTable Class="mt-3" Items="_tags" Dense="true">
                         <RowTemplate>
@@ -91,15 +93,15 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 col-xxl-7">
+        <div class="col-12 col-xxl-8">
             <div class="row">
                 <div class="col-12 col-xxl-4">
                     <ul class="inline-list">
-                        <li></li>
                         <li>
                             <a class="text-center focusable" href="/blogs/@_blog.Slug/pages">
                                 <i class="bi bi-file-earmark-text-fill"></i>
                                 <span>@Text.Lower("Pages")</span>
+                                <i class="fa fa-external-link" aria-hidden="true"></i>
                             </a>
                         </li>
                         <li class="text-right">
@@ -129,11 +131,11 @@
                 </div>
                 <div class="col-12 col-xxl-4">
                     <ul class="inline-list">
-                        <li></li>
                         <li>
                             <a class="text-center focusable" href="/blogs/@_blog.Slug/posts">
                                 <i class="bi bi-file-earmark-text-fill"></i>
                                 <span>@Text.Lower("Posts")</span>
+                                <i class="fa fa-external-link" aria-hidden="true"></i>
                             </a>
                         </li>
                         <li class="text-right">
@@ -163,11 +165,11 @@
                 </div>
                 <div class="col-12 col-xxl-4">
                     <ul class="inline-list">
-                        <li></li>
                         <li>
                             <a class="text-center focusable" href="/blogs/@_blog.Slug/videos">
                                 <i class="fa-solid fa-video"></i>
                                 <span>@Text.Lower("Videos")</span>
+                                <i class="fa fa-external-link" aria-hidden="true"></i>
                             </a>
                         </li>
                         <li class="text-right">

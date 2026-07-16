@@ -16,14 +16,11 @@
                              @onclick="() => this.GoToBlog(blog)">
                             <BlogHeaderInline Class="p-3 text-uppercase" Entity="blog"></BlogHeaderInline>
                         </div>
-                        @if (blog.IsSelected)
-                        {
-                            <div class="position-absolute p-3 z-index-front" style="left:0; right:0;" @onclick="_mustCloseItself">
-                                <div class="shadow-lg border border-dark bg-white p-3 w-100 h-100" style="">
-                                    <BlogMenu BlogId="@blog.Id" OnClose="() => blog.IsSelected = false"></BlogMenu>
-                                </div>
-                            </div>
-                        }
+                        <MudDialog @bind-Visible="blog.IsSelected" Options="_dialogOptions">
+                            <DialogContent>
+                                <BlogMenu BlogId="@blog.Id" OnClose="() => blog.IsSelected = false"></BlogMenu>
+                            </DialogContent>
+                        </MudDialog>
                     </li>
                 }
             </ul>
@@ -32,6 +29,8 @@
 }
 @code {
     private List<OrigamiBlog> _blogs = new();
+
+    private readonly DialogOptions _dialogOptions = new() { CloseOnEscapeKey = true, NoHeader = true, FullScreen = true };
 
     protected override void OnInitialized()
     {

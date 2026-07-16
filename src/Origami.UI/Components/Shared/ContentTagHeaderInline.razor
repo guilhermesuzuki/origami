@@ -5,7 +5,7 @@
 {
     <div class="content-tag-header-inline d-inline-flex align-items-center @Class">
         <i class="bi bi-tag-fill me-1"></i>
-        <span>@Entity.Tag</span>
+        <span class="ellipsis" title="@Entity.Tag">@Entity.Tag</span>
         @if (this.Entity.Slug.Equals(this.Entity.Tag, StringComparison.InvariantCultureIgnoreCase) == false)
         {
             <span class="tag-slug ms-1" title="@Text.Lower("Slug")" style="opacity: 0.8; font-size: 0.8em;">
