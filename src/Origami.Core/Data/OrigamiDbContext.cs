@@ -300,6 +300,12 @@ namespace Origami.Core.Data
             modelBuilder.Entity<OrigamiEvent>()
                 .ToTable("oi_Events")
                 .HasDiscriminator<string>("Type")
+                .HasValue<AdminUserActivatesBlog>(nameof(AdminUserActivatesBlog))
+                .HasValue<AdminUserCreatesBlog>(nameof(AdminUserCreatesBlog))
+                .HasValue<AdminUserDeactivatesBlog>(nameof(AdminUserDeactivatesBlog))
+                .HasValue<AdminUserDeletesBlog>(nameof(AdminUserDeletesBlog))
+                .HasValue<AdminUserPurgesBlog>(nameof(AdminUserPurgesBlog))
+                .HasValue<AdminUserRestoresBlog>(nameof(AdminUserRestoresBlog))
                 .HasValue<SocialProfileDeletesCommentEvent>(nameof(SocialProfileDeletesCommentEvent))
                 .HasValue<SocialProfileEditsCommentEvent>(nameof(SocialProfileEditsCommentEvent))
                 .HasValue<SocialProfileLogsIntoWebsiteEvent>(nameof(SocialProfileLogsIntoWebsiteEvent))
@@ -320,6 +326,13 @@ namespace Origami.Core.Data
             modelBuilder.Entity<SocialProfileReactsToContentEvent>().HasOne<OrigamiContentReaction>().WithMany().HasForeignKey(x => x.ReactionId);
             modelBuilder.Entity<SocialProfileRepliesToCommentEvent>().HasOne<OrigamiContentComment>().WithMany().HasForeignKey(x => x.CommentId);
             modelBuilder.Entity<SocialProfileRepliesToContentEvent>().HasOne<OrigamiContent>().WithMany().HasForeignKey(x => x.ContentId);
+
+            modelBuilder.Entity<AdminUserActivatesBlog>().HasOne<OrigamiBlog>().WithMany().HasForeignKey(x => x.BlogId);
+            modelBuilder.Entity<AdminUserCreatesBlog>().HasOne<OrigamiBlog>().WithMany().HasForeignKey(x => x.BlogId);
+            modelBuilder.Entity<AdminUserDeactivatesBlog>().HasOne<OrigamiBlog>().WithMany().HasForeignKey(x => x.BlogId);
+            modelBuilder.Entity<AdminUserDeletesBlog>().HasOne<OrigamiBlog>().WithMany().HasForeignKey(x => x.BlogId);
+            modelBuilder.Entity<AdminUserPurgesBlog>().HasOne<OrigamiBlog>().WithMany().HasForeignKey(x => x.BlogId);
+            modelBuilder.Entity<AdminUserRestoresBlog>().HasOne<OrigamiBlog>().WithMany().HasForeignKey(x => x.BlogId);
         }
     }
 }
