@@ -43,6 +43,10 @@
         <i class="fa-solid fa-cubes"></i>
         <span>@Text.Lower("Blogs")</span>
     </div>
+    <div class="menu border-bottom" @onclick="GoToSoftwareReleases">
+        <i class="fa-solid fa-file-code"></i>
+        <span>@Text.Lower("Software releases")</span>
+    </div>
     <div class="menu border-bottom" @onclick="OnContentClick">
         <i class="fa fa-align-justify"></i>
         <span>@Text.Lower("Content")</span>
@@ -91,7 +95,6 @@
                 <span>@Text.Lower("Social profiles")</span>
             </div>
             <div class="sub-menu" @onclick="GoToSpecialMessages">
-                @* <i class="bi bi-chat-left-quote-fill"></i> *@
                 <i class="fa-solid fa-bullhorn me-1"></i>
                 <span>@Text.Lower("Special messages")</span>
             </div>
@@ -329,6 +332,11 @@
     private void GoToCacheExplorer()
     {
         this.GhostOfTheNavigator!.NavigateTo($"/cache/explorer");
+    }
+
+    private void GoToSoftwareReleases()
+    {
+        this.GhostOfTheNavigator!.NavigateTo($"/software-releases");
     }
 
     private async Task RegenerateNanoIds()

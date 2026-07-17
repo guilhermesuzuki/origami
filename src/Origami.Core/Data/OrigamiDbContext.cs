@@ -138,6 +138,20 @@ namespace Origami.Core.Data
         /// </summary>
         public DbSet<OrigamiSetting> Settings { get; set; }
 
+        public DbSet<SocialProfileDeletesCommentEvent> SocialProfileDeletesCommentEvents { get; set; }
+
+        public DbSet<SocialProfileEditsCommentEvent> SocialProfileEditsCommentEvents { get; set; }
+
+        public DbSet<SocialProfileLogsIntoWebsiteEvent> SocialProfileLogsIntoWebsiteEvents { get; set; }
+
+        public DbSet<SocialProfileReactsToCommentEvent> SocialProfileReactsToCommentEvents { get; set; }
+
+        public DbSet<SocialProfileReactsToContentEvent> SocialProfileReactsToContentEvents { get; set; }
+
+        public DbSet<SocialProfileRepliesToCommentEvent> SocialProfileRepliesToCommentEvents { get; set; }
+
+        public DbSet<SocialProfileRepliesToContentEvent> SocialProfileRepliesToContentEvents { get; set; }
+
         /// <summary>
         /// Social Profiles
         /// </summary>
@@ -147,6 +161,12 @@ namespace Origami.Core.Data
         /// Social Profiles for Deletion
         /// </summary>
         public DbSet<OrigamiSocialProfileDelete> SocialProfilesForDeletion { get; set; }
+
+        public DbSet<SocialProfileSubscribesToWebsiteEvent> SocialProfileSubscribesToWebsiteEvents { get; set; }
+
+        public DbSet<SocialProfileUnsubscribesFromWebsiteEvent> SocialProfileUnsubscribesFromWebsiteEvents { get; set; }
+
+        public DbSet<OrigamiSoftwareRelease> SoftwareReleases { get; set; }
 
         /// <summary>
         /// Special messages
@@ -172,26 +192,10 @@ namespace Origami.Core.Data
         /// User blogs
         /// </summary>
         public DbSet<OrigamiUserBlog> UserBlogs { get; set; }
-
-        public DbSet<SocialProfileDeletesCommentEvent> SocialProfileDeletesCommentEvents { get; set; }
-
-        public DbSet<SocialProfileEditsCommentEvent> SocialProfileEditsCommentEvents { get; set; }
-
-        public DbSet<SocialProfileLogsIntoWebsiteEvent> SocialProfileLogsIntoWebsiteEvents { get; set; }
-
         /// <summary>
         /// User password resets
         /// </summary>
         public DbSet<OrigamiUserPasswordReset> UserPasswordResets { get; set; }
-
-        public DbSet<SocialProfileReactsToCommentEvent> SocialProfileReactsToCommentEvents { get; set; }
-
-        public DbSet<SocialProfileReactsToContentEvent> SocialProfileReactsToContentEvents { get; set; }
-
-        public DbSet<SocialProfileRepliesToCommentEvent> SocialProfileRepliesToCommentEvents { get; set; }
-
-        public DbSet<SocialProfileRepliesToContentEvent> SocialProfileRepliesToContentEvents { get; set; }
-
         /// <summary>
         /// User Roles
         /// </summary>
@@ -201,16 +205,10 @@ namespace Origami.Core.Data
         /// Users
         /// </summary>
         public DbSet<OrigamiUser> Users { get; set; }
-
-        public DbSet<SocialProfileSubscribesToWebsiteEvent> SocialProfileSubscribesToWebsiteEvents { get; set; }
-
         /// <summary>
         /// User Trashes
         /// </summary>
         public DbSet<OrigamiUserTrash> UserTrashes { get; set; }
-
-        public DbSet<SocialProfileUnsubscribesFromWebsiteEvent> SocialProfileUnsubscribesFromWebsiteEvents { get; set; }
-
         /// <summary>
         /// Videos
         /// </summary>
@@ -226,6 +224,7 @@ namespace Origami.Core.Data
                 .HasDiscriminator(x => x.Type)
                 .HasValue<OrigamiPage>(nameof(OrigamiPage))
                 .HasValue<OrigamiPost>(nameof(OrigamiPost))
+                .HasValue<OrigamiSoftwareRelease>(nameof(OrigamiSoftwareRelease))
                 .HasValue<OrigamiSpecialPage>(nameof(OrigamiSpecialPage))
                 .HasValue<OrigamiQuickNote>(nameof(OrigamiQuickNote))
                 .HasValue<OrigamiVideo>(nameof(OrigamiVideo))

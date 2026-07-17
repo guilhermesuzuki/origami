@@ -86,6 +86,7 @@ namespace Origami.Core.Models
         private bool _createNewPosts;
         private bool _createNewQuickNotes;
         private bool _createNewRoles;
+        private bool _createNewSoftwareReleases;
         private bool _createNewSpecialMessages;
         private bool _createNewSpecialPages;
         private bool _createNewUsers;
@@ -96,12 +97,14 @@ namespace Origami.Core.Models
         private bool _deleteOtherUsersPages;
         private bool _deleteOtherUsersPosts;
         private bool _deleteOtherUsersQuickNotes;
+        private bool _deleteOtherUsersSoftwareReleases;
         private bool _deleteOtherUsersSpecialMessages;
         private bool _deleteOtherUsersSpecialPages;
         private bool _deleteOtherUsersVideos;
         private bool _deleteOwnPages;
         private bool _deleteOwnPosts;
         private bool _deleteOwnQuickNotes;
+        private bool _deleteOwnSoftwareReleases;
         private bool _deleteOwnSpecialMessages;
         private bool _deleteOwnSpecialPages;
         private bool _deleteOwnVideos;
@@ -117,12 +120,14 @@ namespace Origami.Core.Models
         private bool _editOtherUsersPosts;
         private bool _editOtherUsersQuickNotes;
         private bool _editOtherUsersRoles;
+        private bool _editOtherUsersSoftwareReleases;
         private bool _editOtherUsersSpecialMessages;
         private bool _editOtherUsersSpecialPages;
         private bool _editOtherUsersVideos;
         private bool _editOwnPages;
         private bool _editOwnPosts;
         private bool _editOwnQuickNotes;
+        private bool _editOwnSoftwareReleases;
         private bool _editOwnSpecialMessages;
         private bool _editOwnSpecialPages;
         private bool _editOwnUser;
@@ -144,12 +149,14 @@ namespace Origami.Core.Models
         private bool _publishOtherUsersPages;
         private bool _publishOtherUsersPosts;
         private bool _publishOtherUsersQuickNotes;
+        private bool _publishOtherUsersSoftwareReleases;
         private bool _publishOtherUsersSpecialMessages;
         private bool _publishOtherUsersSpecialPages;
         private bool _publishOtherUsersVideos;
         private bool _publishOwnPages;
         private bool _publishOwnPosts;
         private bool _publishOwnQuickNotes;
+        private bool _publishOwnSoftwareReleases;
         private bool _publishOwnSpecialMessages;
         private bool _publishOwnSpecialPages;
         private bool _publishOwnVideos;
@@ -160,6 +167,7 @@ namespace Origami.Core.Models
         private bool _purgePosts;
         private bool _purgeQuickNotes;
         private bool _purgeRoles;
+        private bool _purgeSoftwareReleases;
         private bool _purgeSpecialMessages;
         private bool _purgeSpecialPages;
         private bool _purgeTags;
@@ -176,6 +184,7 @@ namespace Origami.Core.Models
         private bool _restorePosts;
         private bool _restoreQuickNotes;
         private bool _restoreRoles;
+        private bool _restoreSoftwareReleases;
         private bool _restoreSpecialMessages;
         private bool _restoreSpecialPages;
         private bool _restoreSystem;
@@ -190,12 +199,14 @@ namespace Origami.Core.Models
         private bool _unpublishOtherUsersPages;
         private bool _unpublishOtherUsersPosts;
         private bool _unpublishOtherUsersQuickNotes;
+        private bool _unpublishOtherUsersSoftwareReleases;
         private bool _unpublishOtherUsersSpecialMessages;
         private bool _unpublishOtherUsersSpecialPages;
         private bool _unpublishOtherUsersVideos;
         private bool _unpublishOwnPages;
         private bool _unpublishOwnPosts;
         private bool _unpublishOwnQuickNotes;
+        private bool _unpublishOwnSoftwareReleases;
         private bool _unpublishOwnSpecialMessages;
         private bool _unpublishOwnSpecialPages;
         private bool _unpublishOwnVideos;
@@ -214,6 +225,7 @@ namespace Origami.Core.Models
         private bool _viewRoles;
         private bool _viewSettings;
         private bool _viewSocialProfiles;
+        private bool _viewSoftwareReleases;
         private bool _viewSpecialMessages;
         private bool _viewSpecialPages;
         private bool _viewTags;
@@ -307,6 +319,13 @@ namespace Origami.Core.Models
         }
 
         [NotMapped]
+        public bool CreateNewSoftwareReleases
+        {
+            get => _createNewSoftwareReleases;
+            set => this.Set(ref _createNewSoftwareReleases, value, Changed);
+        }
+
+        [NotMapped]
         public bool CreateNewSpecialMessages
         {
             get => _createNewSpecialMessages;
@@ -377,6 +396,13 @@ namespace Origami.Core.Models
         }
 
         [NotMapped]
+        public bool DeleteOtherUsersSoftwareReleases
+        {
+            get => _deleteOtherUsersSoftwareReleases;
+            set => this.Set(ref _deleteOtherUsersSoftwareReleases, value, Changed);
+        }
+
+        [NotMapped]
         public bool DeleteOtherUsersSpecialMessages
         {
             get => _deleteOtherUsersSpecialMessages;
@@ -416,6 +442,13 @@ namespace Origami.Core.Models
         {
             get => _deleteOwnQuickNotes;
             set => this.Set(ref _deleteOwnQuickNotes, value, Changed);
+        }
+
+        [NotMapped]
+        public bool DeleteOwnSoftwareReleases
+        {
+            get => _deleteOwnSoftwareReleases;
+            set => this.Set(ref _deleteOwnSoftwareReleases, value, Changed);
         }
 
         [NotMapped]
@@ -524,6 +557,13 @@ namespace Origami.Core.Models
         }
 
         [NotMapped]
+        public bool EditOtherUsersSoftwareReleases
+        {
+            get => _editOtherUsersSoftwareReleases;
+            set => this.Set(ref _editOtherUsersSoftwareReleases, value, Changed);
+        }
+
+        [NotMapped]
         public bool EditOtherUsersSpecialMessages
         {
             get => _editOtherUsersSpecialMessages;
@@ -563,6 +603,13 @@ namespace Origami.Core.Models
         {
             get => _editOwnQuickNotes;
             set => this.Set(ref _editOwnQuickNotes, value, Changed);
+        }
+
+        [NotMapped]
+        public bool EditOwnSoftwareReleases
+        {
+            get => _editOwnSoftwareReleases;
+            set => this.Set(ref _editOwnSoftwareReleases, value, Changed);
         }
 
         [NotMapped]
@@ -690,6 +737,7 @@ namespace Origami.Core.Models
             get => _promoteToFrontPage;
             set => this.Set(ref _promoteToFrontPage, value, Changed);
         }
+
         [NotMapped]
         public bool PublishOtherUsersPages
         {
@@ -709,6 +757,13 @@ namespace Origami.Core.Models
         {
             get => _publishOtherUsersQuickNotes;
             set => this.Set(ref _publishOtherUsersQuickNotes, value, Changed);
+        }
+
+        [NotMapped]
+        public bool PublishOtherUsersSoftwareReleases
+        {
+            get => _publishOtherUsersSoftwareReleases;
+            set => this.Set(ref _publishOtherUsersSoftwareReleases, value, Changed);
         }
 
         [NotMapped]
@@ -751,6 +806,13 @@ namespace Origami.Core.Models
         {
             get => _publishOwnQuickNotes;
             set => this.Set(ref _publishOwnQuickNotes, value, Changed);
+        }
+
+        [NotMapped]
+        public bool PublishOwnSoftwareReleases
+        {
+            get => _publishOwnSoftwareReleases;
+            set => this.Set(ref _publishOwnSoftwareReleases, value, Changed);
         }
 
         [NotMapped]
@@ -824,6 +886,13 @@ namespace Origami.Core.Models
         }
 
         [NotMapped]
+        public bool PurgeSoftwareReleases
+        {
+            get => _purgeSoftwareReleases;
+            set => this.Set(ref _purgeSoftwareReleases, value, Changed);
+        }
+
+        [NotMapped]
         public bool PurgeSpecialMessages
         {
             get => _purgeSpecialMessages;
@@ -878,6 +947,7 @@ namespace Origami.Core.Models
             get => _resetOwn2FA;
             set => this.Set(ref _resetOwn2FA, value, Changed);
         }
+
         [NotMapped]
         public bool ResetOwnPassword
         {
@@ -934,6 +1004,12 @@ namespace Origami.Core.Models
             set => this.Set(ref _restoreRoles, value, Changed);
         }
 
+        [NotMapped]
+        public bool RestoreSoftwareReleases
+        {
+            get => _restoreSoftwareReleases;
+            set => this.Set(ref _restoreSoftwareReleases, value, Changed);
+        }
         [NotMapped]
         public bool RestoreSpecialMessages
         {
@@ -1010,6 +1086,7 @@ namespace Origami.Core.Models
             get => _unblockUsers;
             set => this.Set(ref _unblockUsers, value, Changed);
         }
+
         [NotMapped]
         public bool UnpublishOtherUsersPages
         {
@@ -1029,6 +1106,13 @@ namespace Origami.Core.Models
         {
             get => _unpublishOtherUsersQuickNotes;
             set => this.Set(ref _unpublishOtherUsersQuickNotes, value, Changed);
+        }
+
+        [NotMapped]
+        public bool UnpublishOtherUsersSoftwareReleases
+        {
+            get => _unpublishOtherUsersSoftwareReleases;
+            set => this.Set(ref _unpublishOtherUsersSoftwareReleases, value, Changed);
         }
 
         [NotMapped]
@@ -1072,6 +1156,14 @@ namespace Origami.Core.Models
             get => _unpublishOwnQuickNotes;
             set => this.Set(ref _unpublishOwnQuickNotes, value, Changed);
         }
+
+        [NotMapped]
+        public bool UnpublishOwnSoftwareReleases
+        {
+            get => _unpublishOwnSoftwareReleases;
+            set => this.Set(ref _unpublishOwnSoftwareReleases, value, Changed);
+        }
+
         [NotMapped]
         public bool UnpublishOwnSpecialMessages
         {
@@ -1198,6 +1290,12 @@ namespace Origami.Core.Models
             set => this.Set(ref _viewSocialProfiles, value, Changed);
         }
 
+        [NotMapped]
+        public bool ViewSoftwareReleases
+        {
+            get => _viewSoftwareReleases;
+            set => this.Set(ref _viewSoftwareReleases, value, Changed);
+        }
         [NotMapped]
         public bool ViewSpecialMessages
         {

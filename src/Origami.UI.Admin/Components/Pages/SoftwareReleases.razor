@@ -1,6 +1,6 @@
-﻿@page "/quicknotes"
-@page "/quicknotes/{NanoId}"
-@inherits BasicAdminGridContent<OrigamiQuickNote, HubContentQuickNote>
+﻿@page "/software-releases"
+@page "/software-releases/{NanoId}"
+@inherits BasicAdminGridContent<OrigamiSoftwareRelease, HubContentSoftwareRelease>
 
 <Root Access="this.CanAccess()">
     <HeaderTemplate>
@@ -10,17 +10,17 @@
                     <ul class="inline-list w-100">
                         <li style="width:80%;">
                             <i class="fa-solid fa-file-lines pe-1"></i>
-                            <span class="me-3">@Text.Get("Quick notes", Text.Styles.Uppercase)</span>
+                            <span class="me-3">@Text.Get("Software releases", Text.Styles.Uppercase)</span>
                             <div class="btn-group pe-1">
                                 <button class="btn btn-light text-danger border border-danger" disabled="@this.DisableTheDeleteButton" @onclick="this.DeleteSelectedEntities">
                                     <i class="fa-solid fa-trash-can"></i>
                                 </button>
                             </div>
                             <div class="btn-group">
-                                <button class="btn btn-success text-white" title="@Text.Lower("Publish quick notes(s)")" disabled="@this.DisableTheDeleteButton" @onclick="this.PublishSelectedEntities">
+                                <button class="btn btn-success text-white" title="@Text.Lower("Publish software release(s)")" disabled="@this.DisableTheDeleteButton" @onclick="this.PublishSelectedEntities">
                                     <i class="fa-solid fa-file-arrow-up"></i>
                                 </button>
-                                <button class="btn btn-warning text-white" title="@Text.Lower("Unpublish quick notes(s)")" disabled="@this.DisableTheDeleteButton" @onclick="this.UnpublishSelectedEntities">
+                                <button class="btn btn-warning text-white" title="@Text.Lower("Unpublish software release(s)")" disabled="@this.DisableTheDeleteButton" @onclick="this.UnpublishSelectedEntities">
                                     <i class="fa-solid fa-file-arrow-down"></i>
                                 </button>
                             </div>
@@ -46,24 +46,15 @@
                 <div class="datagrid-options col-12 text-right mb-1">
                     <DataGridOptions Deleted="this.IncludeDeletedEntitiesInDataGrid" DeletedChanged="this.OnIncludeDeletedEntitiesChanged"></DataGridOptions>
                 </div>
-                <div class="quick-notes col-12 col-xxl-8">
-                    <MudDataGrid @ref="DataGrid" T="HubContentQuickNote" ServerData="GetEntities" Filterable="false" SortMode="SortMode.None" Class="border selectable" SelectedItems="this.SelectedEntities" MultiSelection="true" SelectedItemsChanged="this.SelectedEntitiesChanged"
+                <div class="software-releases col-12">
+                    <MudDataGrid @ref="DataGrid" T="HubContentSoftwareRelease" ServerData="GetEntities" Filterable="false" SortMode="SortMode.None" Class="border selectable" SelectedItems="this.SelectedEntities" MultiSelection="true" SelectedItemsChanged="this.SelectedEntitiesChanged"
                                  RowClassFunc="this.RowClassFunc" Bordered="true" SelectOnRowClick="false">
                         <Columns>
-                            <SelectColumn T="HubContentQuickNote"></SelectColumn>
-                            <TemplateColumn Title="@Text.Upper("Note")">
+                            <SelectColumn T="HubContentSoftwareRelease"></SelectColumn>
+                            <TemplateColumn Title="@Text.Upper("Software Release")">
                                 <CellTemplate>
-                                    <div class="cursor-pointer d-inline-flex align-items-center" @onclick="() => OnEdit(context.Item)">
-                                        @if (context.Item.Entity.Background.Has() == true)
-                                        {
-                                            var style = $"background: {context.Item.Entity.Background}";
-                                            <MudAvatar Class="me-2"
-                                                       Size="Size.Small"
-                                                       Style="@style"
-                                                       Square="true">
-                                            </MudAvatar>
-                                        }
-                                        <QuickNoteHeaderLite Entity="context.Item.Entity"></QuickNoteHeaderLite>
+                                    <div class="cursor-pointer" @onclick="() => OnEdit(context.Item)">
+                                        <ContentTitleColumn Entity="context.Item.Entity"></ContentTitleColumn>
                                     </div>
                                 </CellTemplate>
                             </TemplateColumn>
@@ -89,20 +80,20 @@
                             </TemplateColumn>
                         </Columns>
                         <PagerContent>
-                            <MudDataGridPager T="HubContentQuickNote" />
+                            <MudDataGridPager T="HubContentSoftwareRelease" />
                         </PagerContent>
                         <NoRecordsContent>
                             <NoEntriesWereFound></NoEntriesWereFound>
                         </NoRecordsContent>
                     </MudDataGrid>
                 </div>
-                <div class="quick-note-form col-12 col-xxl-4">
-                    <QuickNoteForm Class="p-3 shadow-sm border" Entity="this.SelectedEntity" Saved="this.EntitySaved" Cancelled="this.EntityCancelled" Created="this.EntityCreated"></QuickNoteForm>
+                <div class="software-release-form col-12 mt-3">
+                    <SoftwareReleaseForm Class="p-3 shadow-sm border" Entity="this.SelectedEntity" Saved="this.EntitySaved" Cancelled="this.EntityCancelled" Created="this.EntityCreated"></SoftwareReleaseForm>
                 </div>
             </div>
         </div>
     </ContentTemplate>
 </Root>
 @code {
-    protected override string DefaultOrdering => $"{nameof(OrigamiQuickNote.Title)}";
+    protected override string DefaultOrdering => $"{nameof(OrigamiSoftwareRelease.Title)}";
 }

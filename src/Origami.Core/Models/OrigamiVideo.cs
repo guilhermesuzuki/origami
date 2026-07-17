@@ -6,11 +6,9 @@ namespace Origami.Core.Models
 {
     public class OrigamiVideo :
         OrigamiContent,
-        IDateReleased,
         IVideo,
         IEmbedIFrame
     {
-        protected DateTime? _dateReleased;
         protected OrigamiFile _mediaFile = new();
         protected OrigamiFile? _subtitle1;
         protected OrigamiFile? _subtitle2;
@@ -36,15 +34,6 @@ namespace Origami.Core.Models
         }
 
         public event EventHandler<PropertyChangedEventArgs> OrigamiVideoChanged = (sender, e) => { };
-
-        /// <summary>
-        /// Date/Time this Content was Created
-        /// </summary>
-        public DateTime? DateReleased
-        {
-            get => _dateReleased;
-            set => this.Set(ref _dateReleased, value, OrigamiVideoChanged);
-        }
 
         [NotMapped]
         public string EmbedIFrame
@@ -87,21 +76,6 @@ namespace Origami.Core.Models
         {
             get => _subtitle3;
             set => this.Set(ref _subtitle3, value, OrigamiVideoChanged);
-        }
-
-        /// <summary>
-        /// Fake video
-        /// </summary>
-        public static OrigamiVideo GetFake() => new() { Id = Guid.Empty, Title = "Veritas et Sapientia: De Vita et Cogitationibus" };
-
-        /// <summary>
-        /// Fake videos
-        /// </summary>
-        /// <param name="count"></param>
-        /// <returns></returns>
-        public static IEnumerable<OrigamiVideo> GetFakes(int count = 6)
-        {
-            for (int i = 0; i < count; i++) yield return GetFake();
         }
 
         /// <summary>
