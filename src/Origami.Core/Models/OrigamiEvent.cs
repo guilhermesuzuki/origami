@@ -14,17 +14,30 @@ namespace Origami.Core.Models
         ISocialProfileIdNull
     {
         protected DateTime _dateCreated;
+        protected bool _isProcessed;
+        protected bool _isRead;
         protected Guid? _socialProfileId;
         protected string? _subtype;
         protected string _type = string.Empty;
         protected Guid? _userId;
-
         public event EventHandler<PropertyChangedEventArgs> EventChanged = (sender, p) => { };
 
         public DateTime DateCreated
         {
             get => _dateCreated;
             set => this.Set(ref _dateCreated, value, EventChanged);
+        }
+
+        public bool IsProcessed
+        {
+            get => _isProcessed;
+            set => this.Set(ref _isProcessed, value, EventChanged);
+        }
+
+        public bool IsRead
+        {
+            get => _isRead;
+            set => this.Set(ref _isRead, value, EventChanged);
         }
 
         public Guid? SocialProfileId
