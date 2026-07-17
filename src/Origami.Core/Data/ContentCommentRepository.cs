@@ -10,8 +10,8 @@ namespace Origami.Core.Data
         IContentCommentRepository
     {
         protected readonly IValidator<OrigamiContentComment> _validator;
-
-        protected IContentCommentReactionRepository _contentCommentReactionRepository;
+        protected readonly IContentCommentReactionRepository _contentCommentReactionRepository;
+        protected readonly IEventRepository _eventRepository;
 
         /// <summary>
         /// Default constructor with DI
@@ -19,9 +19,10 @@ namespace Origami.Core.Data
         /// <param name="dbContext"></param>
         /// <param name="distributedCache"></param>
         public ContentCommentRepository(
+            IContentCommentReactionRepository contentCommentReactionRepository,
+            IEventRepository eventRepository,
             IValidator<OrigamiContentComment> validator,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
-            IContentCommentReactionRepository contentCommentReactionRepository,
             IMyMemoryCache memoryCache,
             IWebRootPath wwwRoot,
             Text text)
@@ -29,6 +30,7 @@ namespace Origami.Core.Data
         {
             _validator = validator;
             _contentCommentReactionRepository = contentCommentReactionRepository;
+            _eventRepository = eventRepository;
         }
 
         public override string CreatePermission => nameof(OrigamiRole.ModerateComments);
@@ -160,7 +162,18 @@ namespace Origami.Core.Data
                 return new(ctx.Entity) { Error = Text.Original(Text.YouMadeTooManyCommentsIn5Minutes) };
             }
 
-            return base.SmartCreate(ctx, false);
+            var hub = base.SmartCreate(ctx, false);
+
+            if (ctx.Entity.ParentId == null)
+            {
+                _eventRepository.SocialProfileRepliesToContent(ctx.Entity.SocialProfileId.GetValueOrDefault(), ctx.Entity.Id);
+            }
+            else
+            {
+                _eventRepository.SocialProfileRepliesToComment(ctx.Entity.SocialProfileId.GetValueOrDefault(), ctx.Entity.Id);
+            }
+
+            return hub;
         }
 
         public Result<OrigamiContentComment> SmartDelete(DataOperationContextFrontEnd<OrigamiContentComment> ctx)

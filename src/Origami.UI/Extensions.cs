@@ -114,14 +114,15 @@ namespace Origami.UI
             builder.Services.AddTransient<IContentCategoryRepository, ContentCategoryRepository>();
             builder.Services.AddTransient<IContentCommentReactionRepository, ContentCommentReactionRepository>();
             builder.Services.AddTransient<IContentCommentRepository, ContentCommentRepository>();
+            builder.Services.AddTransient<IContentHistoryRepository, ContentHistoryRepository>();
             builder.Services.AddTransient<IContentRatingRepository, ContentRatingRepository>();
             builder.Services.AddTransient<IContentReactionRepository, ContentReactionRepository>();
             builder.Services.AddTransient<IContentRepository, ContentRepository>();
-            builder.Services.AddTransient<IContentHistoryRepository, ContentHistoryRepository>();
             builder.Services.AddTransient<IContentTagRepository, ContentTagRepository>();
             builder.Services.AddTransient<IDashboardRepository, DashboardRepository>();
             builder.Services.AddTransient<IDirectoryRepository, DirectoryRepository>();
             builder.Services.AddTransient<IEmailRepository, EmailRepository>();
+            builder.Services.AddTransient<IEventRepository, EventRepository>();
             builder.Services.AddTransient<IFileManagerRepository, FileManagerRepository>();
             builder.Services.AddTransient<IFileRepository, FileRepository>();
             builder.Services.AddTransient<IPageRepository, PageRepository>();
