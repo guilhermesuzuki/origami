@@ -30,6 +30,8 @@ namespace Origami.UI.FrontEnd.Controllers
         protected readonly Serilog.ILogger _logger;
         protected readonly SocialNetwork _socialNetwork;
 
+        protected readonly IEventRepository _eventRepository;
+
         public FacebookController(
             ISocialProfileRepository socialProfile,
             Serilog.ILogger logger,
@@ -41,7 +43,8 @@ namespace Origami.UI.FrontEnd.Controllers
             IContentRatingRepository contentRatingRepository,
             ISocialProfileDeleteRepository facebookUserForDeletionRepository,
             IHttpContextAccessor httpContextAccessor,
-            IDbContextFactory<OrigamiDbContext> dbContextFactory
+            IDbContextFactory<OrigamiDbContext> dbContextFactory,
+            IEventRepository eventRepository
             ) : base()
         {
             _httpContextAccessor = httpContextAccessor;
@@ -55,6 +58,7 @@ namespace Origami.UI.FrontEnd.Controllers
             _socialProfile = socialProfile;
             _socialProfileForDeletion = facebookUserForDeletionRepository;
             _userFacade = userFacade;
+            _eventRepository = eventRepository;
         }
 
         /// <summary>
@@ -254,13 +258,15 @@ namespace Origami.UI.FrontEnd.Controllers
                     user.Email = user.EmailFromSocialNetwork;
                 }
 
-                var context = new DataOperationContext<OrigamiSocialProfile>(_userFacade.User!, DateTime.UtcNow, user);
+                var context = new DataOperationContext<OrigamiSocialProfile>(OrigamiUser.AnonymousUser, DateTime.UtcNow, user);
 
                 using (var transaction = new TransactionScope())
                 {
                     user = _socialProfile.SmartSave(context, false).Entity;
                     transaction.Complete();
                 }
+
+                _eventRepository.SocialProfileLogsIntoWebsite(context.Entity.Id);
 
                 _userFacade.SocialProfile = user ?? new();
                 return Redirect(Uri.UnescapeDataString(returnUrl));

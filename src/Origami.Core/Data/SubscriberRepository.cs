@@ -8,9 +8,11 @@ namespace Origami.Core.Data
         ISubscriberRepository
     {
         protected readonly IEmailRepository _emailRepository;
+        protected readonly IEventRepository _eventRepository;
         protected readonly ISettingsRepository _settingsRepository;
 
         public SubscriberRepository(
+            IEventRepository eventRepository,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IMyMemoryCache memoryCache,
             IEmailRepository emailRepository,
@@ -19,6 +21,7 @@ namespace Origami.Core.Data
             IWebRootPath wwwRoot) :
             base(text, dbContextFactory, memoryCache, wwwRoot)
         {
+            _eventRepository = eventRepository;
             _emailRepository = emailRepository;
             _settingsRepository = settingsRepository;
         }
@@ -40,7 +43,9 @@ namespace Origami.Core.Data
                 subscriber.IsVerified = true;
                 subscriber.Email = ctx.Entity.Email;
                 var subscribeContext = new DataOperationContext<OrigamiSubscriber>(ctx.User, ctx.DateTime, subscriber);
-                return SmartUpdate(subscribeContext, false);
+                var hub = SmartUpdate(subscribeContext, false);
+                _eventRepository.SocialProfileSubscribesToWebsite(ctx.Entity.Id);
+                return hub;
             }
             else
             {
@@ -53,7 +58,9 @@ namespace Origami.Core.Data
                     Email = ctx.Entity.Email,
                 };
                 var subscribeContext = new DataOperationContext<OrigamiSubscriber>(ctx.User, ctx.DateTime, newSubscriber);
-                return SmartCreate(subscribeContext, false);
+                var hub = SmartCreate(subscribeContext, false);
+                _eventRepository.SocialProfileSubscribesToWebsite(ctx.Entity.Id);
+                return hub;
             }
         }
 
@@ -78,6 +85,8 @@ namespace Origami.Core.Data
 
                 subscriber.IsDeleted = true;
                 subscriber.DateModified = DateTime.UtcNow;
+
+                _eventRepository.SocialProfileUnsubscribesFromWebsite(ctx.Entity.Id);
 
                 return SmartDelete(subscribeContext, false);
             }

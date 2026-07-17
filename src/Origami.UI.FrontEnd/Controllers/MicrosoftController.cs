@@ -25,7 +25,10 @@ namespace Origami.UI.FrontEnd.Controllers
         protected readonly ISocialProfileRepository _socialProfile;
         protected readonly IConfiguration _configuration;
 
+        protected readonly IEventRepository _eventRepository;
+
         public MicrosoftController(
+            IEventRepository eventRepository,
             ISocialProfileRepository socialProfile,
             Serilog.ILogger logger,
             IUserFacade userFacade,
@@ -40,6 +43,7 @@ namespace Origami.UI.FrontEnd.Controllers
             _memoryCache = memoryCache;
             _socialNetwork = socialNetworkOptions.Value;
             _configuration = configuration;
+            _eventRepository = eventRepository;
         }
 
         [HttpGet("token-ok")]
@@ -169,6 +173,8 @@ namespace Origami.UI.FrontEnd.Controllers
                     user = _socialProfile.SmartSave(context, false).Entity;
                     transaction.Complete();
                 }
+
+                _eventRepository.SocialProfileLogsIntoWebsite(context.Entity.Id);
 
                 _userFacade.SocialProfile = user ?? new();
                 return Redirect(Uri.UnescapeDataString(returnUrl));

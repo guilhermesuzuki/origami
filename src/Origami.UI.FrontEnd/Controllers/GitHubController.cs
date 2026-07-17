@@ -20,7 +20,10 @@ namespace Origami.UI.FrontEnd.Controllers
         protected readonly SocialNetwork _socialNetwork;
         protected readonly ISocialProfileRepository _socialProfile;
 
+        protected readonly IEventRepository _eventRepository;
+
         public GitHubController(
+            IEventRepository eventRepository,
             ISocialProfileRepository socialProfile,
             Serilog.ILogger logger,
             IUserFacade userFacade,
@@ -32,6 +35,7 @@ namespace Origami.UI.FrontEnd.Controllers
             _userFacade = userFacade;
             _memoryCache = memoryCache;
             _socialNetwork = socialNetworkOptions.Value;
+            _eventRepository = eventRepository;
         }
 
         [AllowAnonymous]
@@ -78,13 +82,15 @@ namespace Origami.UI.FrontEnd.Controllers
                     user.Email = user.EmailFromSocialNetwork;
                 }
 
-                var context = new DataOperationContext<OrigamiSocialProfile>(Core.Models.OrigamiUser.AnonymousUser, DateTime.UtcNow, user);
+                var context = new DataOperationContext<OrigamiSocialProfile>(OrigamiUser.AnonymousUser, DateTime.UtcNow, user);
 
                 using (var transaction = new TransactionScope())
                 {
                     user = _socialProfile.SmartSave(context, false).Entity;
                     transaction.Complete();
                 }
+
+                _eventRepository.SocialProfileLogsIntoWebsite(context.Entity.Id);
 
                 _userFacade.SocialProfile = user ?? new();
                 return Redirect(Uri.UnescapeDataString(returnUrl));

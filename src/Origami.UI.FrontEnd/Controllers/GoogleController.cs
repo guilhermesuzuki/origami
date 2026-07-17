@@ -24,7 +24,10 @@ namespace Origami.UI.FrontEnd.Controllers
         protected readonly string _url = "https://oauth2.googleapis.com/tokeninfo?id_token={0}";
         protected readonly string _refreshUrl = "https://oauth2.googleapis.com/token";
 
+        protected readonly IEventRepository _eventRepository;
+
         public GoogleController(
+            IEventRepository eventRepository,
             ISocialProfileRepository socialProfile,
             Serilog.ILogger logger,
             IUserFacade userFacade,
@@ -37,6 +40,7 @@ namespace Origami.UI.FrontEnd.Controllers
             _userFacade = userFacade;
             _memoryCache = memoryCache;
             _socialNetwork = socialNetworkOptions.Value;
+            _eventRepository = eventRepository;
         }
 
         [HttpGet("token-ok")]
@@ -177,6 +181,8 @@ namespace Origami.UI.FrontEnd.Controllers
                     user = _socialProfile.SmartSave(context, false).Entity;
                     transaction.Complete();
                 }
+
+                _eventRepository.SocialProfileLogsIntoWebsite(context.Entity.Id);
 
                 _userFacade.SocialProfile = user ?? new();
                 return Redirect(Uri.UnescapeDataString(returnUrl));

@@ -13,7 +13,7 @@ namespace Origami.Core.Models
         IUserIdNull,
         ISocialProfileIdNull
     {
-        protected DateTime _dateCreated;
+        protected DateTime _dateCreated = DateTime.UtcNow;
         protected bool _isProcessed;
         protected bool _isRead;
         protected Guid? _socialProfileId;
