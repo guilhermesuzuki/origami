@@ -69,12 +69,12 @@ namespace Origami.Core.Data
             return new(@event);
         }
 
-        public Result<SocialProfileReactsToCommentEvent> SocialProfileReactsToComment(Guid socialProfile, Guid comment)
+        public Result<SocialProfileReactsToCommentEvent> SocialProfileReactsToComment(Guid socialProfile, Guid reaction)
         {
             var @event = new SocialProfileReactsToCommentEvent
             {
                 SocialProfileId = socialProfile,
-                CommentId = comment,
+                ReactionId = reaction,
                 DateCreated = DateTime.UtcNow,
             };
 
@@ -85,12 +85,12 @@ namespace Origami.Core.Data
             return new(@event);
         }
 
-        public Result<SocialProfileReactsToContentEvent> SocialProfileReactsToContent(Guid socialProfile, Guid content)
+        public Result<SocialProfileReactsToContentEvent> SocialProfileReactsToContent(Guid socialProfile, Guid reaction)
         {
             var @event = new SocialProfileReactsToContentEvent
             {
                 SocialProfileId = socialProfile,
-                ContentId = content,
+                ReactionId = reaction,
                 DateCreated = DateTime.UtcNow,
             };
 

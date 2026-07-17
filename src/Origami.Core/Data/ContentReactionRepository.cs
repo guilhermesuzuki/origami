@@ -8,6 +8,7 @@ namespace Origami.Core.Data
         RepositoryOuterLayer<OrigamiContentReaction>,
         IContentReactionRepository
     {
+        protected readonly IEventRepository _eventRepository;
         protected readonly IValidator<OrigamiContentReaction> _validator;
 
         /// <summary>
@@ -16,6 +17,7 @@ namespace Origami.Core.Data
         /// <param name="dbContext"></param>
         /// <param name="distributedCache"></param>
         public ContentReactionRepository(
+            IEventRepository eventRepository,
             IValidator<OrigamiContentReaction> validator,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IMyMemoryCache memoryCache,
@@ -24,6 +26,7 @@ namespace Origami.Core.Data
             : base(text, dbContextFactory, memoryCache, wwwRoot)
         {
             _validator = validator;
+            _eventRepository = eventRepository;
         }
 
         public IEnumerable<OrigamiContentReaction> Reactions(OrigamiContent entity)
@@ -61,7 +64,11 @@ namespace Origami.Core.Data
                 return new(ctx.Entity, Text.Original("You already reacted with this emoji"));
             }
 
-            return base.SmartCreate(ctx, false);
+            var hub = base.SmartCreate(ctx, false);
+
+            _eventRepository.SocialProfileReactsToContent(ctx.SocialProfile.Id, ctx.Entity.Id);
+
+            return hub;
         }
 
         public Result<OrigamiContentReaction> SmartPurge(DataOperationContextFrontEnd<OrigamiContentReaction> ctx)

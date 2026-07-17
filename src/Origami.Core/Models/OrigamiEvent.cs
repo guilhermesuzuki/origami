@@ -13,8 +13,6 @@ namespace Origami.Core.Models
         IUserIdNull,
         ISocialProfileIdNull
     {
-        protected Guid? _commentId;
-        protected Guid? _contentId;
         protected DateTime _dateCreated;
         protected Guid? _socialProfileId;
         protected string? _subtype;
@@ -22,18 +20,6 @@ namespace Origami.Core.Models
         protected Guid? _userId;
 
         public event EventHandler<PropertyChangedEventArgs> EventChanged = (sender, p) => { };
-
-        public Guid? CommentId
-        {
-            get => _commentId;
-            set => this.Set(ref _commentId, value, EventChanged);
-        }
-
-        public Guid? ContentId
-        {
-            get => _contentId;
-            set => this.Set(ref _contentId, value, EventChanged);
-        }
 
         public DateTime DateCreated
         {

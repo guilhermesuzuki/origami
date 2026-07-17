@@ -311,10 +311,15 @@ namespace Origami.Core.Data
                 .HasValue<SocialProfileUnsubscribesFromWebsiteEvent>(nameof(SocialProfileUnsubscribesFromWebsiteEvent))
                 ;
 
-            modelBuilder.Entity<OrigamiEvent>().HasOne<OrigamiContentComment>().WithMany().HasForeignKey(x => x.CommentId);
-            modelBuilder.Entity<OrigamiEvent>().HasOne<OrigamiContent>().WithMany().HasForeignKey(x => x.ContentId);
             modelBuilder.Entity<OrigamiEvent>().HasOne<OrigamiUser>().WithMany().HasForeignKey(x => x.UserId);
             modelBuilder.Entity<OrigamiEvent>().HasOne<OrigamiSocialProfile>().WithMany().HasForeignKey(x => x.SocialProfileId);
+
+            modelBuilder.Entity<SocialProfileDeletesCommentEvent>().HasOne<OrigamiContentComment>().WithMany().HasForeignKey(x => x.CommentId);
+            modelBuilder.Entity<SocialProfileEditsCommentEvent>().HasOne<OrigamiContentComment>().WithMany().HasForeignKey(x => x.CommentId);
+            modelBuilder.Entity<SocialProfileReactsToCommentEvent>().HasOne<OrigamiContentCommentReaction>().WithMany().HasForeignKey(x => x.ReactionId);
+            modelBuilder.Entity<SocialProfileReactsToContentEvent>().HasOne<OrigamiContentReaction>().WithMany().HasForeignKey(x => x.ReactionId);
+            modelBuilder.Entity<SocialProfileRepliesToCommentEvent>().HasOne<OrigamiContentComment>().WithMany().HasForeignKey(x => x.CommentId);
+            modelBuilder.Entity<SocialProfileRepliesToContentEvent>().HasOne<OrigamiContent>().WithMany().HasForeignKey(x => x.ContentId);
         }
     }
 }

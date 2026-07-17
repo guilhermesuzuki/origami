@@ -8,8 +8,8 @@ namespace Origami.Core.Data
         Result<SocialProfileDeletesCommentEvent> SocialProfileDeletesComment(Guid socialProfile, Guid comment);
         Result<SocialProfileEditsCommentEvent> SocialProfileEditsComment(Guid socialProfile, Guid comment);
         Result<SocialProfileLogsIntoWebsiteEvent> SocialProfileLogsIntoWebsite(Guid socialProfile);
-        Result<SocialProfileReactsToCommentEvent> SocialProfileReactsToComment(Guid socialProfile, Guid comment);
-        Result<SocialProfileReactsToContentEvent> SocialProfileReactsToContent(Guid socialProfile, Guid content);
+        Result<SocialProfileReactsToCommentEvent> SocialProfileReactsToComment(Guid socialProfile, Guid reaction);
+        Result<SocialProfileReactsToContentEvent> SocialProfileReactsToContent(Guid socialProfile, Guid reaction);
         Result<SocialProfileRepliesToCommentEvent> SocialProfileRepliesToComment(Guid socialProfile, Guid comment);
         Result<SocialProfileRepliesToContentEvent> SocialProfileRepliesToContent(Guid socialProfile, Guid content);
         Result<SocialProfileSubscribesToWebsiteEvent> SocialProfileSubscribesToWebsite(Guid socialProfile);

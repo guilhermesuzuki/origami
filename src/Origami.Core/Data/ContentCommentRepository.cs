@@ -184,7 +184,11 @@ namespace Origami.Core.Data
                 var profile = db.Set<OrigamiSocialProfile>().AsNoTracking().GetProfileThrowIfBlocked(ctx.SocialProfile.Id);
                 if (profile.IsModerator)
                 {
-                    return base.SmartDelete(ctx, false);
+                    var hub = base.SmartDelete(ctx, false);
+
+                    _eventRepository.SocialProfileDeletesComment(ctx.SocialProfile.Id, ctx.Entity.Id);
+
+                    return hub;
                 }
             }
             catch (Exception)
@@ -197,7 +201,11 @@ namespace Origami.Core.Data
             {
                 if (comment.SocialProfileId == ctx.SocialProfile.Id)
                 {
-                    return base.SmartDelete(ctx, false);
+                    var hub = base.SmartDelete(ctx, false);
+
+                    _eventRepository.SocialProfileDeletesComment(ctx.SocialProfile.Id, ctx.Entity.Id);
+
+                    return hub;
                 }
             }
 
@@ -222,7 +230,11 @@ namespace Origami.Core.Data
                 return new(ctx.Entity) { Error = Text.Original("You cannot edit this comment") };
             }
 
-            return base.SmartUpdate(ctx, false);
+            var hub = base.SmartUpdate(ctx, false);
+
+            _eventRepository.SocialProfileEditsComment(ctx.SocialProfile.Id, ctx.Entity.Id);
+
+            return hub;
         }
 
         public Result<OrigamiContentComment> Unpin(DataOperationContextFrontEnd<OrigamiContentComment> ctx)
