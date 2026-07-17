@@ -73,9 +73,10 @@ namespace Origami.Core.Data
 
         public Result<OrigamiContentReaction> SmartPurge(DataOperationContextFrontEnd<OrigamiContentReaction> ctx)
         {
+            using var db = DbContextFactory.CreateDbContext();
+
             try
             {
-                using var db = DbContextFactory.CreateDbContext();
                 db.Set<OrigamiSocialProfile>().AsNoTracking().GetProfileThrowIfBlocked(ctx.SocialProfile.Id);
             }
             catch (Exception ex)

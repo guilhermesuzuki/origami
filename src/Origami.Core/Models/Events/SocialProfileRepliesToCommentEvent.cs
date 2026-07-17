@@ -7,7 +7,7 @@ namespace Origami.Core.Models.Events
     {
         protected Guid _commentId;
 
-        public SocialProfileRepliesToCommentEvent()
+        public SocialProfileRepliesToCommentEvent() : base()
         {
             this.Type = nameof(SocialProfileRepliesToCommentEvent);
         }

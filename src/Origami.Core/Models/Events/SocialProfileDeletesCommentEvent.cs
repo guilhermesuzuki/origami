@@ -9,7 +9,7 @@ namespace Origami.Core.Models.Events
     {
         protected Guid _commentId;
 
-        public SocialProfileDeletesCommentEvent()
+        public SocialProfileDeletesCommentEvent() : base()
         {
             this.Type = nameof(SocialProfileDeletesCommentEvent);
         }

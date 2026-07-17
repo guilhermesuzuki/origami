@@ -3,16 +3,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Origami.Core.Models.Events
 {
-    public class SocialProfileReactsToContentEvent : 
+    public class SocialProfileCancelsReactionToContentEvent : 
         OrigamiEvent, 
         IChanged,
         IReactionId
     {
         protected Guid _reactionId;
 
-        public SocialProfileReactsToContentEvent() : base()
+        public SocialProfileCancelsReactionToContentEvent() : base()
         {
-            this.Type = nameof(SocialProfileReactsToContentEvent);
+            this.Type = nameof(SocialProfileCancelsReactionToContentEvent);
         }
 
         public event EventHandler<PropertyChangedEventArgs> Changed = (sender, p) => { };

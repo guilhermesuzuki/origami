@@ -2,7 +2,7 @@
 {
     public class SocialProfileSubscribesToWebsiteEvent : OrigamiEvent
     {
-        public SocialProfileSubscribesToWebsiteEvent()
+        public SocialProfileSubscribesToWebsiteEvent() : base()
         {
             this.Type = nameof(SocialProfileSubscribesToWebsiteEvent);
         }
