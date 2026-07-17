@@ -165,7 +165,7 @@ namespace Origami.UI.FrontEnd.Controllers
                     user.Email = user.EmailFromSocialNetwork;
                 }
 
-                var context = new DataOperationContext<OrigamiSocialProfile>(Core.Models.OrigamiUser.AnonymousUser, DateTime.UtcNow, user);
+                var context = new DataOperationContext<OrigamiSocialProfile>(OrigamiUser.AnonymousUser, DateTime.UtcNow, user);
 
                 //saves the user into the database
                 using (var transaction = new TransactionScope())
