@@ -49,6 +49,13 @@ namespace Origami.Core.Data
         string LocalPathForFiles<T>(T entity) where T : IId;
 
         /// <summary>
+        /// removes a file from the file system
+        /// </summary>
+        /// <param name="file">The file to be removed.</param>
+        /// <returns>Boolean indicating whether the file was successfully removed.</returns>
+        bool Remove(OrigamiSystemFile file);
+
+        /// <summary>
         /// returns the web path for files (eg /files/blogs/27604F05-86AD-47EF-9E05-950BB762570C/{plural of T}/<paramref name="entity"/>.Id/)
         /// </summary>
         /// <typeparam name="T"></typeparam>

@@ -1,4 +1,5 @@
-﻿@inherits BasicFormFullContent<OrigamiSoftwareRelease, HubContentSoftwareRelease>
+﻿@using Origami.Core.Models.FileSystem
+@inherits BasicFormFullContent<OrigamiSoftwareRelease, HubContentSoftwareRelease>
 @inject ICategoryRepository _category
 @inject IDirectoryRepository _directoryRepository
 @inject IFileRepository _fileRepository
@@ -75,6 +76,33 @@
                                       InputType="InputType.Date"></MudTextField>
                     </li>
                 </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-xxl-6">
+            <div class="text-center p-3">
+                <HeaderImageCard Entity="@Entity.Entity"></HeaderImageCard>
+                <MudFileUpload T="IBrowserFile" FilesChanged="UploadHeader" Accept=".png, .jpg, .bmp, .tiff" MaximumFileCount="1">
+                    <SelectedTemplate></SelectedTemplate>
+                    <CustomContent>
+                        <div class="btn-group mt-2 w-100">
+                            <button class="btn btn-light" @onclick="context.OpenFilePickerAsync" style="width:33.33%;">
+                                <i class="fa-solid fa-cloud-arrow-up"></i>
+                                <div>@Text.Lower("Only image files")</div>
+                                <div class="x-small">@Text.Original("{0}MB max.", 6)</div>
+                            </button>
+                            <button class="btn btn-light" @onclick="() => this.FileManagerForImages = true" style="width:33.34%;">
+                                <i class="fa-solid fa-folder"></i>
+                                @Text.Lower("Pick from file manager")
+                            </button>
+                            <button class="btn btn-light" @onclick="ClearHeader" style="width:33.33%;">
+                                <i class="fa-solid fa-trash-can"></i>
+                                @Text.Lower("Clear header")
+                            </button>
+                        </div>
+                    </CustomContent>
+                </MudFileUpload>
             </div>
         </div>
     </div>
@@ -198,6 +226,47 @@
     </div>
     <div class="row">
         <div class="col-12">
+            <div class="file-upload p-3">
+                <div class="w-100 text-white bg-secondary text-center">
+                    <i class="fa-solid fa-layer-group"></i>
+                    @Text.Lower("File upload")
+                </div>
+                <MudFileUpload T="IReadOnlyList<IBrowserFile>" AppendMultipleFiles DragAndDrop="true" Class="mt-3" OnFilesChanged="_onUploadingFiles">
+                    <SelectedTemplate></SelectedTemplate>
+                </MudFileUpload>
+                <MudDataGrid T="OrigamiSystemFile" Class="border mt-3" SortMode="SortMode.None" Filterable="false" Items="_getFiles()">
+                    <Columns>
+                        <TemplateColumn CellClass="w-100">
+                            <CellTemplate>
+                                @context.Item.Name
+                            </CellTemplate>
+                        </TemplateColumn>
+                        <TemplateColumn>
+                            <CellTemplate>
+                                @context.Item.FileSize.SizeInBytes()
+                            </CellTemplate>
+                        </TemplateColumn>
+                        <TemplateColumn>
+                            <CellTemplate>
+                                <button class="cursor-pointer" @onclick="() => this._removeFile(context.Item)">
+                                    <i class="bi bi-trash-fill"></i>
+                                </button>
+                            </CellTemplate>
+                        </TemplateColumn>
+                    </Columns>
+                    <PagerContent>
+                        <MudDataGridPager T="OrigamiSystemFile" PageSizeOptions="[5,10,15]" />
+                    </PagerContent>
+                    <NoRecordsContent>
+                        <NoEntriesWereFound></NoEntriesWereFound>
+                    </NoRecordsContent>
+                </MudDataGrid>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
             <div class="p-3">
                 <MudTextField FullWidth="true"
                               Immediate="true"
@@ -232,7 +301,18 @@
 {
     <div class="position-fixed popup-container">
         <div class="border p-3 shadow-lg" style="width: 50%; background-color:white;">
-            <div class="text-center">@Text.Lower("Uploading a file")...</div>
+            <div class="text-center">
+                @if (this.FileUploadingName.Has() == true)
+                {
+                    @Text.Lower("Uploading {0}", this.FileUploadingName)
+                    <span>...</span>
+                }
+                else
+                {
+                    @Text.Lower("Uploading a file")
+                    <span>...</span>
+                }
+            </div>
             <!-- Progress bar for file upload -->
             <div class="progress" style="height: 10px;">
                 <div class="progress-bar bg-secondary" role="progressbar" style="width: @this.FileUploadingProgress%;" aria-valuenow="@this.FileUploadingProgress" aria-valuemin="0" aria-valuemax="100"></div>
@@ -291,5 +371,46 @@
     </div>
 }
 @code {
-    
+    /// <summary>
+    /// Removes a release file from the list of files associated with the software release. It prompts the user for confirmation before proceeding with the removal.
+    /// </summary>
+    /// <param name="file">The file to be removed.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    private async Task _removeFile(OrigamiSystemFile file)
+    {
+        if (file == null)
+            return;
+
+        var answer = await this.DialogService.ShowMessageBoxAsync(
+            Text.Original("Remove file"),
+            Text.Original("Are you sure?"),
+            yesText: Text.Original("Yes"), noText: Text.Original("No")
+            );
+
+        if (answer.GetValueOrDefault() == true)
+        {
+            _directoryRepository.Remove(file);
+        }
+    }
+
+    private IEnumerable<OrigamiSystemFile> _getFiles()
+    {
+        var webpath = $"{this.Super.Directories.WebPathForFiles(this.Entity)}files";
+
+        if (this.Super.Directories.DirectoryExists(webpath) == true)
+        {
+            return this.Super.Directories.GetFiles(webpath);
+        }
+
+        return [];
+    }
+
+    private async Task _onUploadingFiles(InputFileChangeEventArgs e)
+    {
+        var files = e.GetMultipleFiles();
+        foreach (var file in files)
+        {
+            await this.UploadFile(file, OrigamiConstants.MaximumFileSizeForVideos, subDirectoryName: "files");
+        }
+    }
 }

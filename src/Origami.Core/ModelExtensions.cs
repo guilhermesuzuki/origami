@@ -548,11 +548,12 @@ namespace Origami.Core
 
             switch (name)
             {
+                case "HubContentSoftwareRelease": return "Software releases";
+                case "HubContentSpecialMessage": return "Special messages";
+                case "HubContentSpecialPage": return "Special pages";
                 case "OrigamiContent": return "Contents";
                 case "OrigamiQuickNote": return "Quick notes";
                 case "OrigamiSocialProfile": return "Social profiles";
-                case "HubContentSpecialPage": return "Special pages";
-                case "HubContentSpecialMessage": return "Special messages";
                 case "OrigamiUserTrash": return "User trashes";
                 default: break;
             }
