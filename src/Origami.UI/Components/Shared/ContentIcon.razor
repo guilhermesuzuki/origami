@@ -32,6 +32,10 @@ else if (Entity is OrigamiQuickNote)
 {
     <i class="bi bi-lightning-fill" title="@Text.Lower("Quick note")" style="margin-left: -2px;"></i>
 }
+else if (Entity is OrigamiSoftwareRelease)
+{
+    <i class="fa-solid fa-file-zipper" title="@Text.Lower("Software release")" style="margin-left: -2px;"></i>
+}
 
 @code {
     [Parameter] public OrigamiContent? Entity { get; set; }
