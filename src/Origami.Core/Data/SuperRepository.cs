@@ -308,6 +308,13 @@ namespace Origami.Core.Data
             return replies;
         }
 
+        public IEnumerable<OrigamiSoftwareRelease> GetSoftwareReleases()
+        {
+            return Contents.ReadFromCache().OfType<OrigamiSoftwareRelease>()
+                .Published()
+                .OrderByDescending(x => x.DateReleased);
+        }
+
         public IEnumerable<OrigamiSpecialMessage> GetSpecialMessages()
         {
             return Contents.ReadFromCache().OfType<OrigamiSpecialMessage>();

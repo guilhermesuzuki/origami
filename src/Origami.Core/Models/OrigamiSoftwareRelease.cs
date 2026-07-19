@@ -16,6 +16,7 @@ namespace Origami.Core.Models
             this.Type = nameof(OrigamiSoftwareRelease);
             this.LanguageWrittenOn = CultureInfo.DefaultThreadCurrentUICulture?.Name ?? "en-US";
             this.IsCommentEnabled = true;
+            this.DateReleased = DateTime.UtcNow;
         }
 
         /// <summary>

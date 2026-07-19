@@ -32,6 +32,21 @@ namespace Origami.Core.Validators
 
 
 
+        public static IRuleBuilderOptions<T, List<OrigamiContentCategory>> CategoriesMustBeUnique<T>(this IRuleBuilder<T, List<OrigamiContentCategory>> ruleBuilder, Text text)
+        {
+            return ruleBuilder
+                .Must(categories =>
+                {
+                    if (categories.DistinctBy(x => x.CategoryId).Count() != categories.Count)
+                    {
+                        return false;
+                    }
+
+                    return true;
+                })
+                .WithMessage(text.Original("Categories must be unique"));
+        }
+
         public static IRuleBuilderOptions<T, string> ContentType<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
         {
             return ruleBuilder
@@ -203,6 +218,24 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("Date of modification must happen after the creation date"));
         }
 
+        public static IRuleBuilderOptions<T, string> MustHaveHtml<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
+        {
+            return ruleBuilder
+                .Must(content =>
+                {
+                    try
+                    {
+                        var doc = new HtmlAgilityPack.HtmlDocument();
+                        doc.LoadHtml(content);
+                        return doc.ParseErrors == null || !doc.ParseErrors.Any();
+                    }
+                    catch
+                    {
+                        return false;
+                    }
+                })
+                .WithMessage(text.Original("Content must be a valid HTML"));
+        }
         public static IRuleBuilderOptions<T, string> Name<T>(this IRuleBuilder<T, string> ruleBuilder, Text text, int maximumCharactersAllowed = 255)
         {
             return ruleBuilder
@@ -281,6 +314,20 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("Tag cannot exceed {0} characters", 128));
         }
 
+        public static IRuleBuilderOptions<T, List<OrigamiContentTag>> TagsMustBeUnique<T>(this IRuleBuilder<T, List<OrigamiContentTag>> ruleBuilder, Text text)
+        {
+            return ruleBuilder
+                .Must(tags =>
+                {
+                    if (tags.DistinctBy(x => x.Tag).Count() != tags.Count)
+                    {
+                        return false;
+                    }
+                    return true;
+                })
+                .WithMessage(text.Original("Tags must be unique"));
+        }
+
         public static IRuleBuilderOptions<T, string> Title<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
         {
             return ruleBuilder
@@ -327,35 +374,6 @@ namespace Origami.Core.Validators
                     return true;
                 })
                 .WithMessage(text.Original("{0}: URL must be a valid website address", field));
-        }
-
-        public static IRuleBuilderOptions<T, List<OrigamiContentTag>> TagsMustBeUnique<T>(this IRuleBuilder<T, List<OrigamiContentTag>> ruleBuilder, Text text)
-        {
-            return ruleBuilder
-                .Must(tags =>
-                {
-                    if (tags.DistinctBy(x => x.Tag).Count() != tags.Count)
-                    {
-                        return false;
-                    }
-                    return true;
-                })
-                .WithMessage(text.Original("Tags must be unique"));
-        }
-
-        public static IRuleBuilderOptions<T, List<OrigamiContentCategory>> CategoriesMustBeUnique<T>(this IRuleBuilder<T, List<OrigamiContentCategory>> ruleBuilder, Text text)
-        {
-            return ruleBuilder
-                .Must(categories =>
-                {
-                    if (categories.DistinctBy(x => x.CategoryId).Count() != categories.Count)
-                    {
-                        return false;
-                    }
-
-                    return true;
-                })
-                .WithMessage(text.Original("Categories must be unique"));
         }
     }
 }

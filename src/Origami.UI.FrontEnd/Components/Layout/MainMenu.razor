@@ -1,5 +1,4 @@
 ﻿@inherits Basic
-@inject IBlogRepository _blogRepository
 
 @if (_blogs.Count > 0)
 {
@@ -7,9 +6,19 @@
     var chunks = _blogs.Chunk(row);
     var settings = this.Super.Settings.GetSettings();
     <div class="main-menu @Class position-relative text-center" style="">
+        @if (this.Super.GetSoftwareReleases().Any() == true)
+        {
+            <div class="p-3 d-inline-flex bg-success">
+                <a href="/software-releases" class="cursor-pointer focusable">
+                    <i class="fa-solid fa-file-zipper"></i>
+                    @Text.Upper("Download")
+                    <i class="fa-solid fa-download"></i>
+                </a>
+            </div>
+        }
         @if (settings.RepositoryURL.Has() == true)
         {
-            <div class="p-3 d-inline-flex">
+            <div class="p-3 d-inline-flex bg-warning">
                 <a href="@settings.RepositoryURL" class="cursor-pointer focusable">
                     <i class="fa-solid fa-file-code"></i>
                     @Text.Upper("Go to repository")
@@ -81,7 +90,7 @@
 
     private void LoadBlogs()
     {
-        _blogs = this._blogRepository.ReadFromCache().GetFrontEnd();
+        _blogs = this.Super.Blogs.ReadFromCache().GetFrontEnd();
     }
 
     /// <summary>

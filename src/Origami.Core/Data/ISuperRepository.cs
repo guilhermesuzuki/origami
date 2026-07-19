@@ -167,6 +167,12 @@ namespace Origami.Core.Data
         IEnumerable<OrigamiContentComment> GetReplies(OrigamiContentComment comment);
 
         /// <summary>
+        /// Retrieves a collection of software releases available in the system.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<OrigamiSoftwareRelease> GetSoftwareReleases();
+
+        /// <summary>
         /// Retrieves a collection of special messages available in the system.
         /// </summary>
         /// <returns>An enumerable collection of <see cref="OrigamiSpecialMessage"/> objects representing the special messages.
