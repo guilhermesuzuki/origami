@@ -9,7 +9,7 @@
         @if (this.Super.GetSoftwareReleases().Any() == true)
         {
             <div class="p-3 d-inline-flex bg-success">
-                <a href="/software-releases" class="cursor-pointer focusable">
+                <a href="/software-releases" class="cursor-pointer focusable text-white">
                     <i class="fa-solid fa-file-zipper"></i>
                     @Text.Upper("Download")
                     <i class="fa-solid fa-download"></i>
@@ -19,7 +19,7 @@
         @if (settings.RepositoryURL.Has() == true)
         {
             <div class="p-3 d-inline-flex bg-warning">
-                <a href="@settings.RepositoryURL" class="cursor-pointer focusable">
+                <a href="@settings.RepositoryURL" class="cursor-pointer focusable text-white">
                     <i class="fa-solid fa-file-code"></i>
                     @Text.Upper("Go to repository")
                     <i class="fa-solid fa-up-right-from-square"></i>
