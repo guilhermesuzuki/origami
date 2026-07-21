@@ -53,6 +53,9 @@
     /// <returns>A task representing the asynchronous operation.</returns>
     private async Task _removeFile(OrigamiSystemFile file)
     {
+        if (this.AppFacade.Admin == false)
+            return;
+
         if (file == null)
             return;
 
