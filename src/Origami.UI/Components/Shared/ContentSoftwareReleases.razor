@@ -1,0 +1,82 @@
+﻿@using Origami.Core.Models.FileSystem
+@inherits Basic
+@implements IEntityNull<OrigamiSoftwareRelease>
+
+<div class="content-software-releases @Class">
+    <MudDataGrid T="OrigamiSystemFile" Class="border mt-3" SortMode="SortMode.None" Filterable="false" Items="_getFiles()">
+        <Columns>
+            <TemplateColumn CellClass="w-75">
+                <CellTemplate>
+                    @context.Item.Name
+                </CellTemplate>
+            </TemplateColumn>
+            <TemplateColumn CellClass="col-2">
+                <CellTemplate>
+                    @context.Item.FileSize.SizeInBytes()
+                </CellTemplate>
+            </TemplateColumn>
+            <TemplateColumn>
+                <CellTemplate>
+                    <button class="cursor-pointer" @onclick="() => this.DownloadFile(context.Item)">
+                        <i class="fa-solid fa-download"></i>
+                    </button>
+                </CellTemplate>
+            </TemplateColumn>
+            <TemplateColumn>
+                <CellTemplate>
+                    <button class="cursor-pointer" @onclick="() => this._removeFile(context.Item)">
+                        <i class="bi bi-trash-fill"></i>
+                    </button>
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="OrigamiSystemFile" PageSizeOptions="[5, 10, 15]" />
+        </PagerContent>
+        <NoRecordsContent>
+            <NoEntriesWereFound></NoEntriesWereFound>
+        </NoRecordsContent>
+    </MudDataGrid>
+</div>
+
+@code {
+    [Parameter]
+    public OrigamiSoftwareRelease? Entity { get; set; }
+
+    /// <summary>
+    /// Removes a release file from the list of files associated with the software release. It prompts the user for confirmation before proceeding with the removal.
+    /// </summary>
+    /// <param name="file">The file to be removed.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    private async Task _removeFile(OrigamiSystemFile file)
+    {
+        if (file == null)
+            return;
+
+        var answer = await this.DialogService.ShowMessageBoxAsync(
+            Text.Original("Remove file"),
+            Text.Original("Are you sure?"),
+            yesText: Text.Original("Yes"), noText: Text.Original("No")
+            );
+
+        if (answer.GetValueOrDefault() == true)
+        {
+            this.Super.Directories.Remove(file);
+        }
+    }
+
+    private IEnumerable<OrigamiSystemFile> _getFiles()
+    {
+        if (this.Entity != null)
+        {
+            var webpath = $"{this.Super.Directories.WebPathForFiles(this.Entity)}files";
+
+            if (this.Super.Directories.DirectoryExists(webpath) == true)
+            {
+                return this.Super.Directories.GetFiles(webpath);
+            }
+        }
+
+        return [];
+    }
+}

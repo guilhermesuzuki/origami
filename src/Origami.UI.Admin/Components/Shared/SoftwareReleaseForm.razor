@@ -234,33 +234,7 @@
                 <MudFileUpload T="IReadOnlyList<IBrowserFile>" AppendMultipleFiles DragAndDrop="true" Class="mt-3" OnFilesChanged="_onUploadingFiles">
                     <SelectedTemplate></SelectedTemplate>
                 </MudFileUpload>
-                <MudDataGrid T="OrigamiSystemFile" Class="border mt-3" SortMode="SortMode.None" Filterable="false" Items="_getFiles()">
-                    <Columns>
-                        <TemplateColumn CellClass="w-100">
-                            <CellTemplate>
-                                @context.Item.Name
-                            </CellTemplate>
-                        </TemplateColumn>
-                        <TemplateColumn>
-                            <CellTemplate>
-                                @context.Item.FileSize.SizeInBytes()
-                            </CellTemplate>
-                        </TemplateColumn>
-                        <TemplateColumn>
-                            <CellTemplate>
-                                <button class="cursor-pointer" @onclick="() => this._removeFile(context.Item)">
-                                    <i class="bi bi-trash-fill"></i>
-                                </button>
-                            </CellTemplate>
-                        </TemplateColumn>
-                    </Columns>
-                    <PagerContent>
-                        <MudDataGridPager T="OrigamiSystemFile" PageSizeOptions="[5,10,15]" />
-                    </PagerContent>
-                    <NoRecordsContent>
-                        <NoEntriesWereFound></NoEntriesWereFound>
-                    </NoRecordsContent>
-                </MudDataGrid>
+                <ContentSoftwareReleases Entity="Entity.Entity"></ContentSoftwareReleases>
             </div>
         </div>
     </div>
