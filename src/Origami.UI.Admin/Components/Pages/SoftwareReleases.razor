@@ -58,9 +58,19 @@
                                     </div>
                                 </CellTemplate>
                             </TemplateColumn>
-                            <TemplateColumn Title="@Text.Upper("Author")" CellClass="col-2">
+                            <TemplateColumn Title="@Text.Upper("Header")" CellClass="col-3">
                                 <CellTemplate>
-                                    <UserHeaderInline Entity="this.Super.GetAuthor(context.Item.Entity)"></UserHeaderInline>
+                                    <ContentHeader Entity="context.Item.Entity"></ContentHeader>
+                                </CellTemplate>
+                            </TemplateColumn>
+                            <TemplateColumn Title="@Text.Upper("Categories")" Sortable="false" Filterable="false" CellClass="col-2 categories">
+                                <CellTemplate>
+                                    @foreach (var category in this.Super.GetCategories(context.Item.Entity))
+                                    {
+                                        <div class="wrapper p-2 mb-1 me-1 shadow-sm border d-inline-block">
+                                            <CategoryHeaderInline Class="" Entity="category"></CategoryHeaderInline>
+                                        </div>
+                                    }
                                 </CellTemplate>
                             </TemplateColumn>
                             <TemplateColumn Title="@Text.Upper("Published")" Sortable="false" Filterable="false" CellClass="col-1 text-center">
