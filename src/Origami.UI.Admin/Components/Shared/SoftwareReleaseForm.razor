@@ -345,40 +345,6 @@
     </div>
 }
 @code {
-    /// <summary>
-    /// Removes a release file from the list of files associated with the software release. It prompts the user for confirmation before proceeding with the removal.
-    /// </summary>
-    /// <param name="file">The file to be removed.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
-    private async Task _removeFile(OrigamiSystemFile file)
-    {
-        if (file == null)
-            return;
-
-        var answer = await this.DialogService.ShowMessageBoxAsync(
-            Text.Original("Remove file"),
-            Text.Original("Are you sure?"),
-            yesText: Text.Original("Yes"), noText: Text.Original("No")
-            );
-
-        if (answer.GetValueOrDefault() == true)
-        {
-            _directoryRepository.Remove(file);
-        }
-    }
-
-    private IEnumerable<OrigamiSystemFile> _getFiles()
-    {
-        var webpath = $"{this.Super.Directories.WebPathForFiles(this.Entity)}files";
-
-        if (this.Super.Directories.DirectoryExists(webpath) == true)
-        {
-            return this.Super.Directories.GetFiles(webpath);
-        }
-
-        return [];
-    }
-
     private async Task _onUploadingFiles(InputFileChangeEventArgs e)
     {
         var files = e.GetMultipleFiles();

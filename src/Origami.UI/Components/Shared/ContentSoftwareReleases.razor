@@ -22,13 +22,16 @@
                     </button>
                 </CellTemplate>
             </TemplateColumn>
-            <TemplateColumn>
-                <CellTemplate>
-                    <button class="cursor-pointer" @onclick="() => this._removeFile(context.Item)">
-                        <i class="bi bi-trash-fill"></i>
-                    </button>
-                </CellTemplate>
-            </TemplateColumn>
+            @if (this.AppFacade.Admin == true)
+            {
+                <TemplateColumn>
+                    <CellTemplate>
+                        <button class="cursor-pointer" @onclick="() => this._removeFile(context.Item)">
+                            <i class="bi bi-trash-fill"></i>
+                        </button>
+                    </CellTemplate>
+                </TemplateColumn>
+            }
         </Columns>
         <PagerContent>
             <MudDataGridPager T="OrigamiSystemFile" PageSizeOptions="[5, 10, 15]" />
