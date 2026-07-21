@@ -9,7 +9,7 @@ namespace Origami.Core.Validators
     {
         public HubContentSoftwareReleaseValidator(Text text, IWebRootPath webRootPath, IDbContextFactory<OrigamiDbContext> dbContextFactory, IDirectoryRepository directoryRepository) : base()
         {
-            RuleFor(x => x.Entity).SetValidator(new OrigamiContentValidator(text, webRootPath, dbContextFactory));
+            RuleFor(x => x.Entity).SetValidator(new OrigamiContentValidator(text, webRootPath, dbContextFactory, isBlogIdRequired: false));
             RuleFor(x => x.Categories).CategoriesMustBeUnique(text);
             RuleFor(x => x.Tags).TagsMustBeUnique(text);
             RuleForEach(x => x.Categories).SetValidator(new OrigamiContentCategoryValidator(text, webRootPath, dbContextFactory));
