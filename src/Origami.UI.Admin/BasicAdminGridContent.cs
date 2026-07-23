@@ -248,6 +248,7 @@ namespace Origami.UI.Admin
 
             switch (t1)
             {
+                case OrigamiSoftwareRelease:
                 case OrigamiSpecialMessage:
                 case OrigamiSpecialPage:
                     // does not filter by blog id
