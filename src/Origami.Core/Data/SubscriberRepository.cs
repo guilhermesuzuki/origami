@@ -44,7 +44,7 @@ namespace Origami.Core.Data
                 subscriber.Email = ctx.Entity.Email;
                 var subscribeContext = new DataOperationContext<OrigamiSubscriber>(ctx.User, ctx.DateTime, subscriber);
                 var hub = SmartUpdate(subscribeContext, false);
-                _eventRepository.SocialProfileSubscribesToWebsite(ctx.Entity.Id);
+                hub.OnSuccess(() => _eventRepository.SocialProfileSubscribesToWebsite(ctx.Entity.Id));
                 return hub;
             }
             else
@@ -59,7 +59,7 @@ namespace Origami.Core.Data
                 };
                 var subscribeContext = new DataOperationContext<OrigamiSubscriber>(ctx.User, ctx.DateTime, newSubscriber);
                 var hub = SmartCreate(subscribeContext, false);
-                _eventRepository.SocialProfileSubscribesToWebsite(ctx.Entity.Id);
+                hub.OnSuccess(() => _eventRepository.SocialProfileSubscribesToWebsite(ctx.Entity.Id));
                 return hub;
             }
         }
@@ -86,8 +86,8 @@ namespace Origami.Core.Data
                 subscriber.IsDeleted = true;
                 subscriber.DateModified = DateTime.UtcNow;
 
-                _eventRepository.SocialProfileUnsubscribesFromWebsite(ctx.Entity.Id);
-
+                var hub = SmartDelete(subscribeContext, false);
+                hub.OnSuccess(() => _eventRepository.SocialProfileUnsubscribesFromWebsite(ctx.Entity.Id));
                 return SmartDelete(subscribeContext, false);
             }
 
