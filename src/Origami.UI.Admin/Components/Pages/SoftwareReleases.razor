@@ -105,5 +105,5 @@
     </ContentTemplate>
 </Root>
 @code {
-    protected override string DefaultOrdering => $"{nameof(OrigamiSoftwareRelease.Title)}";
+    protected override string DefaultOrdering => $"{nameof(OrigamiSoftwareRelease.DateReleased)} desc, {nameof(OrigamiSoftwareRelease.Title)}";
 }
