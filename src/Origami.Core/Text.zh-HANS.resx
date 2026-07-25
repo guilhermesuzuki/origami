@@ -2517,4 +2517,28 @@
   <data name="Publish other users software releases" xml:space="preserve">
     <value>发布其他用户的软件发布</value>
   </data>
+  <data name="Unpublish own software releases" xml:space="preserve">
+    <value>取消发布自己的软件发布</value>
+  </data>
+  <data name="Unpublish other users software releases" xml:space="preserve">
+    <value>取消发布其他用户的软件发布</value>
+  </data>
+  <data name="Purge software releases" xml:space="preserve">
+    <value>永久删除软件发布</value>
+  </data>
+  <data name="Restore software releases" xml:space="preserve">
+    <value>恢复软件发布</value>
+  </data>
+  <data name="Publish quick notes(s)" xml:space="preserve">
+    <value>发布快速笔记</value>
+  </data>
+  <data name="Unpublish quick notes(s)" xml:space="preserve">
+    <value>取消发布快速笔记</value>
+  </data>
+  <data name="Go to repository" xml:space="preserve">
+    <value>前往仓库</value>
+  </data>
+  <data name="Repository URL" xml:space="preserve">
+    <value>仓库 URL</value>
+  </data>
 </root>

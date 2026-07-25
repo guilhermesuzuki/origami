@@ -2517,4 +2517,28 @@
   <data name="Publish other users software releases" xml:space="preserve">
     <value>다른 사용자의 소프트웨어 릴리스 게시</value>
   </data>
+  <data name="Unpublish own software releases" xml:space="preserve">
+    <value>자신의 소프트웨어 릴리스 게시 취소</value>
+  </data>
+  <data name="Unpublish other users software releases" xml:space="preserve">
+    <value>다른 사용자의 소프트웨어 릴리스 게시 취소</value>
+  </data>
+  <data name="Purge software releases" xml:space="preserve">
+    <value>소프트웨어 릴리스 영구 삭제</value>
+  </data>
+  <data name="Restore software releases" xml:space="preserve">
+    <value>소프트웨어 릴리스 복원</value>
+  </data>
+  <data name="Publish quick notes(s)" xml:space="preserve">
+    <value>빠른 메모 게시</value>
+  </data>
+  <data name="Unpublish quick notes(s)" xml:space="preserve">
+    <value>빠른 메모 게시 취소</value>
+  </data>
+  <data name="Go to repository" xml:space="preserve">
+    <value>리포지토리로 이동</value>
+  </data>
+  <data name="Repository URL" xml:space="preserve">
+    <value>리포지토리 URL</value>
+  </data>
 </root>

@@ -2517,4 +2517,28 @@
   <data name="Publish other users software releases" xml:space="preserve">
     <value>他のユーザーのソフトウェアリリースを公開</value>
   </data>
+  <data name="Unpublish own software releases" xml:space="preserve">
+    <value>自分のソフトウェアリリースの公開を取り消す</value>
+  </data>
+  <data name="Unpublish other users software releases" xml:space="preserve">
+    <value>他のユーザーのソフトウェアリリースの公開を取り消す</value>
+  </data>
+  <data name="Purge software releases" xml:space="preserve">
+    <value>ソフトウェアリリースを完全に削除</value>
+  </data>
+  <data name="Restore software releases" xml:space="preserve">
+    <value>ソフトウェアリリースを復元</value>
+  </data>
+  <data name="Publish quick notes(s)" xml:space="preserve">
+    <value>クイックノートを公開</value>
+  </data>
+  <data name="Unpublish quick notes(s)" xml:space="preserve">
+    <value>クイックノートの公開を取り消す</value>
+  </data>
+  <data name="Go to repository" xml:space="preserve">
+    <value>リポジトリへ移動</value>
+  </data>
+  <data name="Repository URL" xml:space="preserve">
+    <value>リポジトリ URL</value>
+  </data>
 </root>

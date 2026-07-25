@@ -2517,4 +2517,28 @@
   <data name="Publish other users software releases" xml:space="preserve">
     <value>अन्य उपयोगकर्ताओं की सॉफ़्टवेयर रिलीज़ प्रकाशित करें</value>
   </data>
+  <data name="Unpublish own software releases" xml:space="preserve">
+    <value>अपनी प्रकाशित सॉफ़्टवेयर रिलीज़ वापस लें</value>
+  </data>
+  <data name="Unpublish other users software releases" xml:space="preserve">
+    <value>अन्य उपयोगकर्ताओं की प्रकाशित सॉफ़्टवेयर रिलीज़ वापस लें</value>
+  </data>
+  <data name="Purge software releases" xml:space="preserve">
+    <value>सॉफ़्टवेयर रिलीज़ स्थायी रूप से हटाएँ</value>
+  </data>
+  <data name="Restore software releases" xml:space="preserve">
+    <value>सॉफ़्टवेयर रिलीज़ पुनर्स्थापित करें</value>
+  </data>
+  <data name="Publish quick notes(s)" xml:space="preserve">
+    <value>त्वरित नोट्स प्रकाशित करें</value>
+  </data>
+  <data name="Unpublish quick notes(s)" xml:space="preserve">
+    <value>त्वरित नोट्स का प्रकाशन वापस लें</value>
+  </data>
+  <data name="Go to repository" xml:space="preserve">
+    <value>रिपॉज़िटरी पर जाएँ</value>
+  </data>
+  <data name="Repository URL" xml:space="preserve">
+    <value>रिपॉज़िटरी URL</value>
+  </data>
 </root>

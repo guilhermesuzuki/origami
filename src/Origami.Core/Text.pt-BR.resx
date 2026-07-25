@@ -2517,4 +2517,28 @@
   <data name="Publish other users software releases" xml:space="preserve">
     <value>Publicar os lançamentos de software de outros usuários</value>
   </data>
+  <data name="Unpublish own software releases" xml:space="preserve">
+    <value>Despublicar os próprios lançamentos de software</value>
+  </data>
+  <data name="Unpublish other users software releases" xml:space="preserve">
+    <value>Despublicar os lançamentos de software de outros usuários</value>
+  </data>
+  <data name="Purge software releases" xml:space="preserve">
+    <value>Excluir permanentemente os lançamentos de software</value>
+  </data>
+  <data name="Restore software releases" xml:space="preserve">
+    <value>Restaurar lançamentos de software</value>
+  </data>
+  <data name="Publish quick notes(s)" xml:space="preserve">
+    <value>Publicar notas rápidas</value>
+  </data>
+  <data name="Unpublish quick notes(s)" xml:space="preserve">
+    <value>Despublicar notas rápidas</value>
+  </data>
+  <data name="Go to repository" xml:space="preserve">
+    <value>Ir para o repositório</value>
+  </data>
+  <data name="Repository URL" xml:space="preserve">
+    <value>URL do repositório</value>
+  </data>
 </root>
