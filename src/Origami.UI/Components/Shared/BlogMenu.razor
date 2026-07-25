@@ -31,7 +31,7 @@
                         <span>@Text.Lower("Categories")</span>
                         <i class="fa fa-external-link" aria-hidden="true"></i>
                     </a>
-                    <MudTable Class="mt-3" Items="_categories" Dense="true">
+                    <MudTable Class="mt-2" Items="_categories" Dense="true">
                         <RowTemplate>
                             <MudTd>
                                 <a href="@_blog.GetHyperlink(context)#content-start">
@@ -48,15 +48,6 @@
                                            HidePageNumber="true" />
                         </PagerContent>
                     </MudTable>
-                    @if (_categories.Any() == false)
-                    {
-                        <NothingToSeeHere Class="mt-2 border p-3 shadow-sm">
-                            <TitleTemplate>
-                                <i class="fa-solid fa-face-grin-beam-sweat"></i>
-                                <span class="header">@Text.Lower("No content")</span>
-                            </TitleTemplate>
-                        </NothingToSeeHere>
-                    }
                 </div>
                 <div class="col-12 col-xxl-6 tags">
                     <a class="text-center focusable" href="/blogs/@_blog.Slug/tags">
@@ -64,7 +55,7 @@
                         <span>@Text.Lower("Tags")</span>
                         <i class="fa fa-external-link" aria-hidden="true"></i>
                     </a>
-                    <MudTable Class="mt-3" Items="_tags" Dense="true">
+                    <MudTable Class="mt-2" Items="_tags" Dense="true">
                         <RowTemplate>
                             <MudTd>
                                 <a href="@_blog.GetHyperlink(context)#content-start">
@@ -81,15 +72,6 @@
                                            HidePageNumber="true" />
                         </PagerContent>
                     </MudTable>
-                    @if (_tags.Any() == false)
-                    {
-                        <NothingToSeeHere Class="mt-2 border p-3 shadow-sm">
-                            <TitleTemplate>
-                                <i class="fa-solid fa-face-grin-beam-sweat"></i>
-                                <span class="header">@Text.Lower("No content")</span>
-                            </TitleTemplate>
-                        </NothingToSeeHere>
-                    }
                 </div>
             </div>
         </div>
