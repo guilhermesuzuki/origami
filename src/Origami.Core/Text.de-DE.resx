@@ -2487,4 +2487,10 @@
   <data name="Yourself" xml:space="preserve">
     <value>Sie selbst</value>
   </data>
+  <data name="Software release" xml:space="preserve">
+    <value>Softwareveröffentlichung</value>
+  </data>
+  <data name="Software releases" xml:space="preserve">
+    <value>Softwareveröffentlichungen</value>
+  </data>
 </root>

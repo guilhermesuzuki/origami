@@ -2487,4 +2487,10 @@
   <data name="Yourself" xml:space="preserve">
     <value>您自己</value>
   </data>
+  <data name="Software release" xml:space="preserve">
+    <value>软件发布</value>
+  </data>
+  <data name="Software releases" xml:space="preserve">
+    <value>软件发布</value>
+  </data>
 </root>
