@@ -2502,4 +2502,19 @@
   <data name="Edit own software releases" xml:space="preserve">
     <value>अपनी सॉफ़्टवेयर रिलीज़ संपादित करें</value>
   </data>
+  <data name="Edit other users software releases" xml:space="preserve">
+    <value>अन्य उपयोगकर्ताओं की सॉफ़्टवेयर रिलीज़ संपादित करें</value>
+  </data>
+  <data name="Delete own software releases" xml:space="preserve">
+    <value>अपनी सॉफ़्टवेयर रिलीज़ हटाएँ</value>
+  </data>
+  <data name="Delete other users software releases" xml:space="preserve">
+    <value>अन्य उपयोगकर्ताओं की सॉफ़्टवेयर रिलीज़ हटाएँ</value>
+  </data>
+  <data name="Publish own software releases" xml:space="preserve">
+    <value>अपनी सॉफ़्टवेयर रिलीज़ प्रकाशित करें</value>
+  </data>
+  <data name="Publish other users software releases" xml:space="preserve">
+    <value>अन्य उपयोगकर्ताओं की सॉफ़्टवेयर रिलीज़ प्रकाशित करें</value>
+  </data>
 </root>

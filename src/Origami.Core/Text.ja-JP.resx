@@ -2502,4 +2502,19 @@
   <data name="Edit own software releases" xml:space="preserve">
     <value>自分のソフトウェアリリースを編集</value>
   </data>
+  <data name="Edit other users software releases" xml:space="preserve">
+    <value>他のユーザーのソフトウェアリリースを編集</value>
+  </data>
+  <data name="Delete own software releases" xml:space="preserve">
+    <value>自分のソフトウェアリリースを削除</value>
+  </data>
+  <data name="Delete other users software releases" xml:space="preserve">
+    <value>他のユーザーのソフトウェアリリースを削除</value>
+  </data>
+  <data name="Publish own software releases" xml:space="preserve">
+    <value>自分のソフトウェアリリースを公開</value>
+  </data>
+  <data name="Publish other users software releases" xml:space="preserve">
+    <value>他のユーザーのソフトウェアリリースを公開</value>
+  </data>
 </root>

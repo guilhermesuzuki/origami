@@ -2502,4 +2502,19 @@
   <data name="Edit own software releases" xml:space="preserve">
     <value>编辑自己的软件发布</value>
   </data>
+  <data name="Edit other users software releases" xml:space="preserve">
+    <value>编辑其他用户的软件发布</value>
+  </data>
+  <data name="Delete own software releases" xml:space="preserve">
+    <value>删除自己的软件发布</value>
+  </data>
+  <data name="Delete other users software releases" xml:space="preserve">
+    <value>删除其他用户的软件发布</value>
+  </data>
+  <data name="Publish own software releases" xml:space="preserve">
+    <value>发布自己的软件发布</value>
+  </data>
+  <data name="Publish other users software releases" xml:space="preserve">
+    <value>发布其他用户的软件发布</value>
+  </data>
 </root>

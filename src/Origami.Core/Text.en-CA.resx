@@ -2502,4 +2502,19 @@
   <data name="Edit own software releases" xml:space="preserve">
     <value>Edit own software releases</value>
   </data>
+  <data name="Edit other users software releases" xml:space="preserve">
+    <value>Edit other users' software releases</value>
+  </data>
+  <data name="Delete own software releases" xml:space="preserve">
+    <value>Delete own software releases</value>
+  </data>
+  <data name="Delete other users software releases" xml:space="preserve">
+    <value>Delete other users' software releases</value>
+  </data>
+  <data name="Publish own software releases" xml:space="preserve">
+    <value>Publish own software releases</value>
+  </data>
+  <data name="Publish other users software releases" xml:space="preserve">
+    <value>Publish other users' software releases</value>
+  </data>
 </root>
