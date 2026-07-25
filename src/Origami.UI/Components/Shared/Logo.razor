@@ -33,7 +33,7 @@
     @if (this.AppFacade.Admin == false)
     {
         <div class="btn-group">
-            @if (this.Super.GetSoftwareReleases().Any() == true)
+            @if (this.Super.GetSoftwareReleases(this.UserFacade.BlogId).Any() == true)
             {
                 <div class="btn bg-success">
                     <a href="/software-releases" class="cursor-pointer focusable text-white">

@@ -2,7 +2,7 @@
 @inherits BasicPage
 
 @{
-    var softwareReleases = this.Super.GetSoftwareReleases();
+    var softwareReleases = this.Super.GetSoftwareReleases(this.UserFacade.BlogId);
 }
 
 @foreach (var release in softwareReleases)

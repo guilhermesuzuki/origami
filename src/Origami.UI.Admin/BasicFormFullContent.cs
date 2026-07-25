@@ -102,7 +102,6 @@ namespace Origami.UI.Admin
             Entity.Entity.SetAuthor(UserFacade.User);
             Entity.Entity.BlogId = Entity.Entity switch
             {
-                OrigamiSoftwareRelease => null,
                 OrigamiSpecialMessage => null,
                 OrigamiSpecialPage => null,
                 _ => GetBlogFromUserFacade().Id,
@@ -128,7 +127,6 @@ namespace Origami.UI.Admin
             entity.Entity.SetAuthor(UserFacade.User);
             entity.Entity.BlogId = entity.Entity switch
             {
-                OrigamiSoftwareRelease => null,
                 OrigamiSpecialMessage => null,
                 OrigamiSpecialPage => null,
                 _ => GetBlogFromUserFacade().Id,

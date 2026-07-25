@@ -170,7 +170,7 @@ namespace Origami.Core.Data
         /// Retrieves a collection of software releases available in the system.
         /// </summary>
         /// <returns></returns>
-        IEnumerable<OrigamiSoftwareRelease> GetSoftwareReleases();
+        IEnumerable<OrigamiSoftwareRelease> GetSoftwareReleases(Guid blog);
 
         /// <summary>
         /// Retrieves a collection of special messages available in the system.

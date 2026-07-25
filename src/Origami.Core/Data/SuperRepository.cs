@@ -308,10 +308,11 @@ namespace Origami.Core.Data
             return replies;
         }
 
-        public IEnumerable<OrigamiSoftwareRelease> GetSoftwareReleases()
+        public IEnumerable<OrigamiSoftwareRelease> GetSoftwareReleases(Guid blog)
         {
             return Contents.ReadFromCache().OfType<OrigamiSoftwareRelease>()
                 .Published()
+                .Blog(blog)
                 .OrderByDescending(x => x.DateReleased);
         }
 
