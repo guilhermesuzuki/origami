@@ -2493,4 +2493,13 @@
   <data name="Software releases" xml:space="preserve">
     <value>ソフトウェアリリース</value>
   </data>
+  <data name="View software releases" xml:space="preserve">
+    <value>ソフトウェアリリースを見る</value>
+  </data>
+  <data name="Create new software releases" xml:space="preserve">
+    <value>新しいソフトウェアリリースを作成</value>
+  </data>
+  <data name="Edit own software releases" xml:space="preserve">
+    <value>自分のソフトウェアリリースを編集</value>
+  </data>
 </root>

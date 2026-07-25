@@ -2493,4 +2493,13 @@
   <data name="Software releases" xml:space="preserve">
     <value>सॉफ़्टवेयर रिलीज़</value>
   </data>
+  <data name="View software releases" xml:space="preserve">
+    <value>सॉफ़्टवेयर रिलीज़ देखें</value>
+  </data>
+  <data name="Create new software releases" xml:space="preserve">
+    <value>नए सॉफ़्टवेयर रिलीज़ बनाएँ</value>
+  </data>
+  <data name="Edit own software releases" xml:space="preserve">
+    <value>अपनी सॉफ़्टवेयर रिलीज़ संपादित करें</value>
+  </data>
 </root>

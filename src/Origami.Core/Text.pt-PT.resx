@@ -2493,4 +2493,13 @@
   <data name="Software releases" xml:space="preserve">
     <value>Lançamentos de software</value>
   </data>
+  <data name="View software releases" xml:space="preserve">
+    <value>Ver lançamentos de software</value>
+  </data>
+  <data name="Create new software releases" xml:space="preserve">
+    <value>Criar novos lançamentos de software</value>
+  </data>
+  <data name="Edit own software releases" xml:space="preserve">
+    <value>Editar os próprios lançamentos de software</value>
+  </data>
 </root>
