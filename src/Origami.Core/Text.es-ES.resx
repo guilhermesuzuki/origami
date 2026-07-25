@@ -2541,4 +2541,16 @@
   <data name="Repository URL" xml:space="preserve">
     <value>URL del repositorio</value>
   </data>
+  <data name="Hyperlink" xml:space="preserve">
+    <value>Hipervínculo</value>
+  </data>
+  <data name="File upload" xml:space="preserve">
+    <value>Carga de archivos</value>
+  </data>
+  <data name="Uploading {0}" xml:space="preserve">
+    <value>Subiendo {0}</value>
+  </data>
+  <data name="Release date is required" xml:space="preserve">
+    <value>La fecha de lanzamiento es obligatoria</value>
+  </data>
 </root>
