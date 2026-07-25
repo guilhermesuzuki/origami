@@ -2553,4 +2553,10 @@
   <data name="Release date is required" xml:space="preserve">
     <value>Release date is required</value>
   </data>
+  <data name="Release must have at least 1 file" xml:space="preserve">
+    <value>Release must have at least 1 file</value>
+  </data>
+  <data name="Software releases found in the search" xml:space="preserve">
+    <value>Software releases found in the search</value>
+  </data>
 </root>

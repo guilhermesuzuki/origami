@@ -2553,4 +2553,10 @@
   <data name="Release date is required" xml:space="preserve">
     <value>릴리스 날짜는 필수입니다</value>
   </data>
+  <data name="Release must have at least 1 file" xml:space="preserve">
+    <value>릴리스에는 최소 1개의 파일이 있어야 합니다</value>
+  </data>
+  <data name="Software releases found in the search" xml:space="preserve">
+    <value>검색에서 찾은 소프트웨어 릴리스</value>
+  </data>
 </root>

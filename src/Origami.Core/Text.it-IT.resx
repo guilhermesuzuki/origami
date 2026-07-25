@@ -2553,4 +2553,10 @@
   <data name="Release date is required" xml:space="preserve">
     <value>La data di rilascio è obbligatoria</value>
   </data>
+  <data name="Release must have at least 1 file" xml:space="preserve">
+    <value>La versione deve contenere almeno 1 file</value>
+  </data>
+  <data name="Software releases found in the search" xml:space="preserve">
+    <value>Rilasci software trovati nella ricerca</value>
+  </data>
 </root>

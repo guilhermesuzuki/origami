@@ -2553,4 +2553,10 @@
   <data name="Release date is required" xml:space="preserve">
     <value>发布日期是必填项</value>
   </data>
+  <data name="Release must have at least 1 file" xml:space="preserve">
+    <value>发布必须至少包含 1 个文件</value>
+  </data>
+  <data name="Software releases found in the search" xml:space="preserve">
+    <value>搜索中找到的软件发布</value>
+  </data>
 </root>
