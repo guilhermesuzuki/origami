@@ -548,7 +548,7 @@ namespace Origami.UI
             var supportedCultures = OrigamiConstants.AllLanguages().Select(x => x.Name).ToArray();
             var localizationOptions = new RequestLocalizationOptions()
                 .SetDefaultCulture("en-US")
-                .AddSupportedCultures("en-US")
+                .AddSupportedCultures(supportedCultures)
                 .AddSupportedUICultures(supportedCultures);
 
             app.UseRequestLocalization(localizationOptions);

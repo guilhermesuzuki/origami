@@ -33,7 +33,10 @@
                     </div>
                     <span class="title fw-bold text-uppercase focusable ellipsis" style="" title="@Entity.Title">@Entity.Title</span>
                     <div>
-                        <span class="content-date pe-1">@(Entity.GetDate())</span>
+                        <span class="content-date pe-1" title="@Text.Original("Date published")">
+                            <i class="fa-solid fa-calendar-day"></i>
+                            @Entity.DatePublished
+                        </span>
                         <span class="content-views pe-1 @(views > 0 ? null : "d-none")">
                             <i class="fa-solid fa-eye"></i>
                             @views
