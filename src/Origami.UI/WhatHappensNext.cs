@@ -45,27 +45,28 @@ public class WhatHappensNext : IWhatHappensNext
 
         if (e.Slug is OrigamiCategory category)
         {
-            hyperlink = $"/categories/{category.NanoId}";
+            hyperlink = $"/categories?nanoid={category.NanoId}";
         }
         else if (e.Slug is OrigamiContentTag tag)
         {
-            hyperlink = $"/tags/{tag.NanoId}";
+            hyperlink = $"/tags?nanoid={tag.NanoId}";
         }
         else
         {
             hyperlink = e.Entity switch
             {
-                OrigamiCategory => $"/categories/{(e.Entity as INanoId)?.NanoId}",
-                OrigamiContentTag => $"/tags/{(e.Entity as ISlug)?.Slug}",
-                OrigamiPage => $"/pages/{(e.Entity as INanoId)?.NanoId}",
-                OrigamiPost => $"/posts/{(e.Entity as INanoId)?.NanoId}",
-                OrigamiQuickNote => $"/quicknotes/{(e.Entity as INanoId)?.NanoId}",
-                OrigamiRole => $"/roles/{(e.Entity as INanoId)?.NanoId}",
-                OrigamiSocialProfile => $"/socialprofiles/{e.Entity.Id}",
-                OrigamiSpecialMessage => $"/specialmessages/{(e.Entity as INanoId)?.NanoId}",
-                OrigamiSpecialPage => $"/specialpages/{(e.Entity as INanoId)?.NanoId}",
-                OrigamiUser => $"/users/{(e.Entity as INanoId)?.NanoId}",
-                OrigamiVideo => $"/videos/{(e.Entity as INanoId)?.NanoId}",
+                OrigamiCategory => $"/categories?nanoid={(e.Entity as INanoId)?.NanoId}",
+                OrigamiContentTag => $"/tags?nanoid={(e.Entity as ISlug)?.Slug}",
+                OrigamiPage => $"/pages?nanoid={(e.Entity as INanoId)?.NanoId}",
+                OrigamiPost => $"/posts?nanoid={(e.Entity as INanoId)?.NanoId}",
+                OrigamiQuickNote => $"/quicknotes?nanoid={(e.Entity as INanoId)?.NanoId}",
+                OrigamiRole => $"/roles?nanoid={(e.Entity as INanoId)?.NanoId}",
+                OrigamiSocialProfile => $"/socialprofiles?nanoid={(e.Entity as INanoId)?.NanoId}",
+                OrigamiSoftwareRelease => $"/softwarereleases?nanoid={(e.Entity as INanoId)?.NanoId}",
+                OrigamiSpecialMessage => $"/specialmessages?nanoid={(e.Entity as INanoId)?.NanoId}",
+                OrigamiSpecialPage => $"/specialpages?nanoid={(e.Entity as INanoId)?.NanoId}",
+                OrigamiUser => $"/users?nanoid={(e.Entity as INanoId)?.NanoId}",
+                OrigamiVideo => $"/videos?nanoid={(e.Entity as INanoId)?.NanoId}",
                 _ => string.Empty,
             };
 
@@ -74,8 +75,8 @@ public class WhatHappensNext : IWhatHappensNext
                 var content = this.SuperRepository.Contents.ReadFromCache().Id(comment.ContentId);
                 hyperlink = content switch
                 {
-                    OrigamiPost => $"/posts/comments/{comment.Id}",
-                    OrigamiVideo => $"/videos/comments/{comment.Id}",
+                    OrigamiPost => $"/posts/comments?nanoid={comment.NanoId}",
+                    OrigamiVideo => $"/videos/comments?nanoid={comment.NanoId}",
                     _ => string.Empty,
                 };
             }
@@ -83,7 +84,7 @@ public class WhatHappensNext : IWhatHappensNext
 
         if (hyperlink.Has() == true)
         {
-            GhostOfTheNavigator.NavigateTo(hyperlink);
+            GhostOfTheNavigator.NavigateTo(hyperlink, true);
             return;
         }
 
