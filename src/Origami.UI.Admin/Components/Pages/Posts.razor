@@ -1,5 +1,4 @@
 ﻿@page "/posts"
-@page "/posts/{NanoId}"
 @inherits BasicAdminGridContent<OrigamiPost, HubContentPost>
 
 <Root Access="this.CanAccess()">
@@ -106,9 +105,4 @@
 </Root>
 @code {
     protected override string DefaultOrdering => $"{nameof(OrigamiPost.Title)}";
-
-    protected override void OnEdit(HubContentPost entity)
-    {
-        GhostOfTheNavigator.NavigateTo($"/posts/{entity.Entity.NanoId}");
-    }
 }

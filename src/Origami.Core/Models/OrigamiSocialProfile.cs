@@ -6,8 +6,8 @@ namespace Origami.Core.Models
 {
     [Table("oi_SocialProfiles")]
     public class OrigamiSocialProfile :
+        BaseModel,
         IChanged,
-        IId,
         IName,
         IEmail,
         IVersion,

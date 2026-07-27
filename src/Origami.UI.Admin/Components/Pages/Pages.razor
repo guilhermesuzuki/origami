@@ -1,5 +1,4 @@
 ﻿@page "/pages"
-@page "/pages/{NanoId}"
 @inherits BasicAdminGridContent<OrigamiPage, HubContentPage>
 
 <style>
@@ -148,10 +147,5 @@
                where x.IsDeleted == false
                where this.Super.IsParentDeleted(x) == false
                select x;
-    }
-
-    protected override void OnEdit(HubContentPage entity)
-    {
-        GhostOfTheNavigator.NavigateTo($"/pages/{entity.Entity.NanoId}");
     }
 }

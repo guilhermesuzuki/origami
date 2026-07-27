@@ -1,5 +1,4 @@
 ﻿@page "/blogs"
-@page "/blogs/{NanoId}"
 @inherits BasicAdminGrid<OrigamiBlog>
 <Root Access="this.CanAccess()">
     <HeaderTemplate>
@@ -194,10 +193,5 @@
             this.UserFacade.Result = hub;
             await this.ReloadDataGrid();
         }
-    }
-
-    protected override void OnEdit(OrigamiBlog entity)
-    {
-        GhostOfTheNavigator.NavigateTo($"/blogs/{entity.NanoId}");
     }
 }
