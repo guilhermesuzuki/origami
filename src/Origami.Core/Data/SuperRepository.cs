@@ -531,6 +531,7 @@ namespace Origami.Core.Data
                 .. Categories.ReadFromCache(),
                 .. Contents.ReadFromCache().OfType<OrigamiPage>(),
                 .. Contents.ReadFromCache().OfType<OrigamiPost>(),
+                .. Contents.ReadFromCache().OfType<OrigamiSoftwareRelease>(),
                 .. Contents.ReadFromCache().OfType<OrigamiVideo>(),
                 .. Users.ReadFromCache() ];
         }
