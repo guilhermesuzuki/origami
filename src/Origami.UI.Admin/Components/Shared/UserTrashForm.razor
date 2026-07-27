@@ -58,7 +58,7 @@
                 var entity = this.Super.Blogs.ReadFromCache().Id(Entity.Id)!;
                 <TrashFormBlog Entity="entity"></TrashFormBlog>
             }
-            else if (Entity.Type.Like("QuickNote") == true)
+            else if (Entity.Type.Like("OrigamiQuickNote") == true)
             {
                 var entity = this.Super.Contents.ReadFromCache().OfType<OrigamiQuickNote>().Id(Entity.Id)!;
                 <TrashFormQuickNote Entity="entity"></TrashFormQuickNote>
@@ -72,6 +72,11 @@
             {
                 var entity = this.Super.Contents.ReadFromCache().OfType<OrigamiSpecialMessage>().Id(Entity.Id);
                 <TrashFormSpecialMessage Entity="entity"></TrashFormSpecialMessage>
+            }
+            else if (Entity.Type.Like("OrigamiSoftwareRelease") == true)
+            {
+                var entity = this.Super.Contents.ReadFromCache().OfType<OrigamiSoftwareRelease>().Id(Entity.Id);
+                <TrashFormSoftwareRelease Entity="entity"></TrashFormSoftwareRelease>
             }
         </div>
     }

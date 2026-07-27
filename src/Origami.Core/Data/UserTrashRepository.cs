@@ -7,13 +7,14 @@ namespace Origami.Core.Data
         RepositoryOuterLayer<OrigamiUserTrash>,
         IUserTrashRepository
     {
+        protected readonly IContentCommentRepository _contentCommentRepository;
         protected readonly IHubContentRepository<HubContentPage> _hubContentPageRepository;
         protected readonly IHubContentRepository<HubContentPost> _hubContentPostRepository;
         protected readonly IHubContentRepository<HubContentQuickNote> _hubContentQuickNoteRepository;
+        protected readonly IHubContentRepository<HubContentSoftwareRelease> _hubContentSoftwareReleaseRepository;
         protected readonly IHubContentRepository<HubContentSpecialMessage> _hubContentSpecialMessageRepository;
         protected readonly IHubContentRepository<HubContentSpecialPage> _hubContentSpecialPageRepository;
         protected readonly IHubContentRepository<HubContentVideo> _hubContentVideoRepository;
-        protected readonly IContentCommentRepository _contentCommentRepository;
 
         private readonly IBlogRepository _blogRepository;
         private readonly ISettingsRepository _blogSettingsRepository;
@@ -36,7 +37,7 @@ namespace Origami.Core.Data
         private readonly IUserViewRepository _userViewRepository;
         private readonly IVideoRepository _videoRepository;
         private readonly IWhatToSeeNextRepository _whatToSeeNextRepository;
-
+        
         public UserTrashRepository(
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IMyMemoryCache memoryCache,
@@ -62,13 +63,14 @@ namespace Origami.Core.Data
             IVideoRepository videoRepository,
             IWhatToSeeNextRepository whatToSeeNextRepository,
 
+            IContentCommentRepository contentCommentRepository,
             IHubContentRepository<HubContentPage> hubContentPageRepository,
             IHubContentRepository<HubContentPost> hubContentPostRepository,
             IHubContentRepository<HubContentQuickNote> hubContentQuickNoteRepository,
+            IHubContentRepository<HubContentSoftwareRelease> hubContentSoftwareReleaseRepository,
             IHubContentRepository<HubContentSpecialMessage> hubContentSpecialMessageRepository,
             IHubContentRepository<HubContentSpecialPage> hubContentSpecialPageRepository,
             IHubContentRepository<HubContentVideo> hubContentVideoRepository,
-            IContentCommentRepository contentCommentRepository,
 
             Text text,
             IWebRootPath wwwRoot)
@@ -96,13 +98,14 @@ namespace Origami.Core.Data
             _videoRepository = videoRepository;
             _whatToSeeNextRepository = whatToSeeNextRepository;
 
+            _contentCommentRepository = contentCommentRepository;
             _hubContentPageRepository = hubContentPageRepository;
             _hubContentPostRepository = hubContentPostRepository;
             _hubContentQuickNoteRepository = hubContentQuickNoteRepository;
+            _hubContentSoftwareReleaseRepository = hubContentSoftwareReleaseRepository;
             _hubContentSpecialMessageRepository = hubContentSpecialMessageRepository;
             _hubContentSpecialPageRepository = hubContentSpecialPageRepository;
             _hubContentVideoRepository = hubContentVideoRepository;
-            _contentCommentRepository = contentCommentRepository;
         }
 
         public override string ReadPermission => nameof(OrigamiRole.ViewTrashes);
@@ -179,6 +182,11 @@ namespace Origami.Core.Data
                 return _purge(_hubContentQuickNoteRepository, ctx);
             }
 
+            if (ctx.Entity.Type.Like("OrigamiSoftwareRelease") == true)
+            {
+                return _purge(_hubContentSoftwareReleaseRepository, ctx);
+            }
+
             throw new NotImplementedException();
         }
 
@@ -237,6 +245,11 @@ namespace Origami.Core.Data
             if (ctx.Entity.Type.Like("OrigamiQuickNote") == true)
             {
                 return _restore(_hubContentQuickNoteRepository, ctx);
+            }
+
+            if (ctx.Entity.Type.Like("OrigamiSoftwareRelease") == true)
+            {
+                return _restore(_hubContentSoftwareReleaseRepository, ctx);
             }
 
             throw new NotImplementedException();

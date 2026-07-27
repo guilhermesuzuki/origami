@@ -366,9 +366,9 @@ namespace Origami.UI.Admin
             this.SetEntityFromParameter();
         }
 
-        protected virtual void OnSearchResultSelected(T entity)
+        protected virtual async Task OnSearchResultSelected(T entity)
         {
-            SelectedEntity = entity.Clone();
+            await this.OnEdit(entity);
         }
 
         /// <summary>
