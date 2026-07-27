@@ -42,13 +42,13 @@
                 <div>
                     <span class="content-date-published pe-1" title="@Text.Original("Date published")">
                         <i class="fa-solid fa-calendar-day"></i>
-                        @Entity.DatePublished
+                        @Entity.DatePublished.Humanize()
                     </span>
                     @if (Entity.DateReleased.HasValue == true)
                     {
                         <span class="content-date-released pe-1" title="@Text.Original("Date released")">
                             <i class="fa-solid fa-calendar-check"></i>
-                            @Entity.DateReleased
+                            @Entity.DateReleased.Humanize()
                         </span>
                     }
                     <span class="content-views pe-1 @(views > 0 ? null : "d-none")">
