@@ -100,7 +100,7 @@ namespace Origami.UI.FrontEnd.Controllers
             HttpContext.Logout_Workaround();
 
             //redirects to the returnUrl with an error
-            return Redirect("/oops/github".QueryString("error", "Invalid GitHub Token"));
+            return Redirect("/oops/github".QueryString("error", "Invalid github token"));
         }
     }
 }

@@ -276,7 +276,7 @@ namespace Origami.UI.FrontEnd.Controllers
             HttpContext.Logout_Workaround();
 
             //redirects to the returnUrl with an error
-            return Redirect("/oops/facebook".QueryString("error", "Invalid Facebook Token"));
+            return Redirect("/oops/facebook".QueryString("error", "Invalid facebook token"));
         }
 
         /// <summary>

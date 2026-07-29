@@ -178,12 +178,12 @@ namespace Origami.UI.FrontEnd.Controllers
                 return Redirect(Uri.UnescapeDataString(returnUrl));
             }
 
-            //needs to log the user out, because the facebook user couldn't be found
+            //needs to log the user out, because the microsoft user couldn't be found
             HttpContext.SignOutAsync().GetAwaiter().GetResult();
             HttpContext.Logout_Workaround();
 
             //redirects to the returnUrl with an error
-            return Redirect("/oops/microsoft".QueryString("error", "Invalid Microsoft Token"));
+            return Redirect("/oops/microsoft".QueryString("error", "Invalid microsoft token"));
         }
     }
 }

@@ -191,7 +191,7 @@ namespace Origami.UI.FrontEnd.Controllers
             HttpContext.Logout_Workaround();
 
             //redirects to the returnUrl with an error
-            return Redirect("/oops/google".QueryString("error", "Invalid Google Token"));
+            return Redirect("/oops/google".QueryString("error", "Invalid google token"));
         }
     }
 }
