@@ -777,13 +777,7 @@ namespace Origami.Core
                 if (iframe == null) return false;
                 if (iframe.Attributes["src"] == null) return false;
 
-                var src = iframe.Attributes["src"]!.Value;
-                if (Uri.TryCreate(src, UriKind.Absolute, out var uri) == false || (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
-                {
-                    return false;
-                }
-
-                return true;
+                return iframe.Attributes["src"]!.Value.IsValidUrl();
             }
             return false;
         }
