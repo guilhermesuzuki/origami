@@ -83,7 +83,12 @@ namespace Origami.Core.Data
                 if (profile.IsModerator)
                 {
                     ctx.Entity.PinnedById = ctx.SocialProfile.Id;
-                    return base.SmartUpdate(ctx, false);
+                    var hub = base.SmartUpdate(ctx, false);
+                    if (hub.Ok == true)
+                    {
+                        this._eventRepository.SocialProfilePinsComment(ctx.SocialProfile, ctx.Entity);
+                    }
+                    return hub;
                 }
             }
             catch (Exception)
@@ -246,7 +251,12 @@ namespace Origami.Core.Data
                 if (profile.IsModerator)
                 {
                     ctx.Entity.PinnedById = null;
-                    return base.SmartUpdate(ctx, false);
+                    var hub = base.SmartUpdate(ctx, false);
+                    if (hub.Ok == true)
+                    {
+                        this._eventRepository.SocialProfileUnpinsComment(ctx.SocialProfile, ctx.Entity);
+                    }
+                    return hub;
                 }
             }
             catch (Exception)

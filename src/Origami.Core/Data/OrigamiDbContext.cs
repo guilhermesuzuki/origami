@@ -144,6 +144,8 @@ namespace Origami.Core.Data
 
         public DbSet<SocialProfileLogsIntoWebsiteEvent> SocialProfileLogsIntoWebsiteEvents { get; set; }
 
+        public DbSet<SocialProfilePinsCommentEvent> SocialProfilePinsCommentEvents { get; set; }
+
         public DbSet<SocialProfileReactsToCommentEvent> SocialProfileReactsToCommentEvents { get; set; }
 
         public DbSet<SocialProfileReactsToContentEvent> SocialProfileReactsToContentEvents { get; set; }
@@ -151,7 +153,6 @@ namespace Origami.Core.Data
         public DbSet<SocialProfileRepliesToCommentEvent> SocialProfileRepliesToCommentEvents { get; set; }
 
         public DbSet<SocialProfileRepliesToContentEvent> SocialProfileRepliesToContentEvents { get; set; }
-
         /// <summary>
         /// Social Profiles
         /// </summary>
@@ -163,7 +164,7 @@ namespace Origami.Core.Data
         public DbSet<OrigamiSocialProfileDelete> SocialProfilesForDeletion { get; set; }
 
         public DbSet<SocialProfileSubscribesToWebsiteEvent> SocialProfileSubscribesToWebsiteEvents { get; set; }
-
+        public DbSet<SocialProfileUnpinsCommentEvent> SocialProfileUnpinsCommentEvents { get; set; }
         public DbSet<SocialProfileUnsubscribesFromWebsiteEvent> SocialProfileUnsubscribesFromWebsiteEvents { get; set; }
 
         public DbSet<OrigamiSoftwareRelease> SoftwareReleases { get; set; }
@@ -308,11 +309,13 @@ namespace Origami.Core.Data
                 .HasValue<SocialProfileDeletesCommentEvent>(nameof(SocialProfileDeletesCommentEvent))
                 .HasValue<SocialProfileEditsCommentEvent>(nameof(SocialProfileEditsCommentEvent))
                 .HasValue<SocialProfileLogsIntoWebsiteEvent>(nameof(SocialProfileLogsIntoWebsiteEvent))
+                .HasValue<SocialProfilePinsCommentEvent>(nameof(SocialProfilePinsCommentEvent))
                 .HasValue<SocialProfileReactsToCommentEvent>(nameof(SocialProfileReactsToCommentEvent))
                 .HasValue<SocialProfileReactsToContentEvent>(nameof(SocialProfileReactsToContentEvent))
                 .HasValue<SocialProfileRepliesToCommentEvent>(nameof(SocialProfileRepliesToCommentEvent))
                 .HasValue<SocialProfileRepliesToContentEvent>(nameof(SocialProfileRepliesToContentEvent))
                 .HasValue<SocialProfileSubscribesToWebsiteEvent>(nameof(SocialProfileSubscribesToWebsiteEvent))
+                .HasValue<SocialProfileUnpinsCommentEvent>(nameof(SocialProfileUnpinsCommentEvent))
                 .HasValue<SocialProfileUnsubscribesFromWebsiteEvent>(nameof(SocialProfileUnsubscribesFromWebsiteEvent))
                 ;
 

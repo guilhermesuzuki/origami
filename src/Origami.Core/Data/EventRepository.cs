@@ -69,6 +69,22 @@ namespace Origami.Core.Data
             return new(@event);
         }
 
+        public Result<SocialProfilePinsCommentEvent> SocialProfilePinsComment(OrigamiSocialProfile socialProfile, OrigamiContentComment comment)
+        {
+            var @event = new SocialProfilePinsCommentEvent
+            {
+                SocialProfileId = socialProfile.Id,
+                CommentId = comment.Id,
+                DateCreated = DateTime.UtcNow,
+            };
+
+            using var db = DbContextFactory.CreateDbContext();
+            db.SocialProfilePinsCommentEvents.Add(@event);
+            db.SaveChanges();
+
+            return new(@event);
+        }
+
         public Result<SocialProfileReactsToCommentEvent> SocialProfileReactsToComment(OrigamiSocialProfile socialProfile, OrigamiContentReaction reaction)
         {
             var @event = new SocialProfileReactsToCommentEvent
@@ -143,6 +159,22 @@ namespace Origami.Core.Data
 
             using var db = DbContextFactory.CreateDbContext();
             db.SocialProfileSubscribesToWebsiteEvents.Add(@event);
+            db.SaveChanges();
+
+            return new(@event);
+        }
+
+        public Result<SocialProfileUnpinsCommentEvent> SocialProfileUnpinsComment(OrigamiSocialProfile socialProfile, OrigamiContentComment comment)
+        {
+            var @event = new SocialProfileUnpinsCommentEvent
+            {
+                SocialProfileId = socialProfile.Id,
+                CommentId = comment.Id,
+                DateCreated = DateTime.UtcNow,
+            };
+
+            using var db = DbContextFactory.CreateDbContext();
+            db.SocialProfileUnpinsCommentEvents.Add(@event);
             db.SaveChanges();
 
             return new(@event);

@@ -8,11 +8,13 @@ namespace Origami.Core.Data
         Result<SocialProfileDeletesCommentEvent> SocialProfileDeletesComment(OrigamiSocialProfile socialProfile, OrigamiContentComment comment);
         Result<SocialProfileEditsCommentEvent> SocialProfileEditsComment(OrigamiSocialProfile socialProfile, OrigamiContentComment comment);
         Result<SocialProfileLogsIntoWebsiteEvent> SocialProfileLogsIntoWebsite(OrigamiSocialProfile socialProfile);
+        Result<SocialProfilePinsCommentEvent> SocialProfilePinsComment(OrigamiSocialProfile socialProfile, OrigamiContentComment comment);
         Result<SocialProfileReactsToCommentEvent> SocialProfileReactsToComment(OrigamiSocialProfile socialProfile, OrigamiContentReaction reaction);
         Result<SocialProfileReactsToContentEvent> SocialProfileReactsToContent(OrigamiSocialProfile socialProfile, OrigamiContentReaction reaction);
         Result<SocialProfileRepliesToCommentEvent> SocialProfileRepliesToComment(OrigamiSocialProfile socialProfile, OrigamiContentComment comment);
         Result<SocialProfileRepliesToContentEvent> SocialProfileRepliesToContent(OrigamiSocialProfile socialProfile, OrigamiContentComment comment);
         Result<SocialProfileSubscribesToWebsiteEvent> SocialProfileSubscribesToWebsite(OrigamiSocialProfile socialProfile);
+        Result<SocialProfileUnpinsCommentEvent> SocialProfileUnpinsComment(OrigamiSocialProfile socialProfile, OrigamiContentComment comment);
         Result<SocialProfileUnsubscribesFromWebsiteEvent> SocialProfileUnsubscribesFromWebsite(OrigamiSocialProfile socialProfile);
     }
 }
