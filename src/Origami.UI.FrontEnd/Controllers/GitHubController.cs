@@ -75,12 +75,6 @@ namespace Origami.UI.FrontEnd.Controllers
                 user.ProfilePage = git.HtmlUrl;
                 user.ProfilePictureUrl = git.AvatarUrl;
 
-                //copies the email, if appropriate
-                if (user.Email.Has() == false && user.EmailFromSocialNetwork.Has() == true)
-                {
-                    user.Email = user.EmailFromSocialNetwork;
-                }
-
                 var context = new DataOperationContext<OrigamiSocialProfile>(OrigamiUser.AnonymousUser, DateTime.UtcNow, user);
 
                 using (var transaction = new TransactionScope())

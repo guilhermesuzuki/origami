@@ -10,7 +10,12 @@
             User = user;
             DateTime = dateTime;
         }
+
+        /// <summary>
+        /// Date and time it happened
+        /// </summary>
         public DateTime DateTime { get; }
+
         /// <summary>
         /// User who performed the operation
         /// </summary>

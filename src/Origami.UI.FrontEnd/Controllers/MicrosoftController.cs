@@ -158,12 +158,6 @@ namespace Origami.UI.FrontEnd.Controllers
                 //default no-icon profile picture
                 if (user.ProfilePictureUrl.Has() == false) user.ProfilePictureUrl = OrigamiConstants.NoUser;
 
-                //copies the email, if appropriate
-                if (user.Email.Has() == false && user.EmailFromSocialNetwork.Has() == true)
-                {
-                    user.Email = user.EmailFromSocialNetwork;
-                }
-
                 var context = new DataOperationContext<OrigamiSocialProfile>(OrigamiUser.AnonymousUser, DateTime.UtcNow, user);
 
                 //saves the user into the database
