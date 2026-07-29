@@ -110,19 +110,18 @@ namespace Origami.UI.FrontEnd.Controllers
                 //looks the user up in the database
                 var user = _socialProfile
                     .ReadFromCache()
-                    .FirstOrDefault(x => x.SocialNetwork == SocialNetworks.Microsoft && x.UserId == userId);
+                    .FirstOrDefault(x => x.SocialNetwork == SocialNetworks.Microsoft && x.UserId == userId)
+                    ?? new () { SocialNetwork = SocialNetworks.Microsoft, UserId = userId, IsBlocked = false, }
+                    ;
 
-                if (user != null && user.IsBlocked)
+                if (user.IsBlocked)
                 {
-                    //needs to log the user out, because the facebook user couldn't be found
+                    //needs to log the user out, because the microsoft user couldn't be found
                     HttpContext.SignOutAsync().GetAwaiter().GetResult();
                     HttpContext.Logout_Workaround();
                     //redirects to the returnUrl with an error
-                    return Redirect("/oops/microsoft".QueryString("error", "User has been Blocked"));
+                    return Redirect("/oops/microsoft".QueryString("error", "User has been blocked"));
                 }
-
-                //user doesn't exist in the database, must create a new instance
-                if (user == null) user = new OrigamiSocialProfile { SocialNetwork = SocialNetworks.Microsoft, UserId = userId };
 
                 user.EmailFromSocialNetwork = ok.Claims.FirstOrDefault(x => x.Type == "preferred_username")?.Value ?? string.Empty;
 

@@ -235,7 +235,7 @@ namespace Origami.UI.FrontEnd.Controllers
                     HttpContext.SignOutAsync().GetAwaiter().GetResult();
                     HttpContext.Logout_Workaround();
                     //redirects to the returnUrl with an error
-                    return Redirect("/oops/facebook".QueryString("error", "User has been Blocked"));
+                    return Redirect("/oops/facebook".QueryString("error", "User has been blocked"));
                 }
 
                 if (me != null)

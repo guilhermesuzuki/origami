@@ -65,7 +65,7 @@ namespace Origami.UI.FrontEnd.Controllers
                     await HttpContext.SignOutAsync();
                     HttpContext.Logout_Workaround();
                     //redirects to the returnUrl with an error
-                    return Redirect("/oops/github".QueryString("error", "User has been Blocked"));
+                    return Redirect("/oops/github".QueryString("error", "User has been blocked"));
                 }
 
                 //email
