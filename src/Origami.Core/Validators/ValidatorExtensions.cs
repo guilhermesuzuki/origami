@@ -15,6 +15,25 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("Author is required"));
         }
 
+        public static IRuleBuilderOptions<T, string?> Base64<T>(this IRuleBuilder<T, string?> ruleBuilder, Text text, bool isRequired, string field = "base64")
+        {
+            return ruleBuilder
+                .Must(base64 =>
+                {
+                    if (isRequired == true)
+                    {
+                        if (base64.Has() == false) return false;
+                        return base64.IsValidBase64Image();
+                    }
+                    else
+                    {
+                        if (base64.Has() == false) return true;
+                        return base64.IsValidBase64Image();
+                    }
+                })
+                .WithMessage(text.Original("{0}: Base64 string must be a valid image", field));
+        }
+
         public static IRuleBuilderOptions<T, Guid?> BlogId<T>(this IRuleBuilder<T, Guid?> ruleBuilder, Text text)
         {
             return ruleBuilder
@@ -372,6 +391,25 @@ namespace Origami.Core.Validators
                         return Uri.TryCreate(url, UriKind.Absolute, out var uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
                     }
                     return true;
+                })
+                .WithMessage(text.Original("{0}: URL must be a valid website address", field));
+        }
+
+        public static IRuleBuilderOptions<T, string?> Website<T>(this IRuleBuilder<T, string?> ruleBuilder, Text text, bool isRequired, string field = "website")
+        {
+            return ruleBuilder
+                .Must(url =>
+                {
+                    if (isRequired == true)
+                    {
+                        if (url.Has() == false) return false;
+                        return url.IsValidUrl();
+                    }
+                    else
+                    {
+                        if (url.Has() == false) return true;
+                        return url.IsValidUrl();
+                    }
                 })
                 .WithMessage(text.Original("{0}: URL must be a valid website address", field));
         }

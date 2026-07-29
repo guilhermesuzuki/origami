@@ -3,6 +3,7 @@ using CloneExtensions;
 using FluentValidation;
 using Origami.Core.Models;
 using Origami.Core.Models.Settings;
+using SixLabors.ImageSharp;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -769,7 +770,7 @@ namespace Origami.Core
             {
                 if (iframeRegex.IsMatch(html) == false) return false;
 
-                var context = BrowsingContext.New(Configuration.Default);
+                var context = BrowsingContext.New(AngleSharp.Configuration.Default);
                 var doc = context.OpenAsync(req => req.Content(html)).Result;
 
                 var iframe = doc.QuerySelector("iframe");
@@ -815,6 +816,44 @@ namespace Origami.Core
             }
 
             return result.Ok ? new() { Success = text.Original("Password is strong") } : result;
+        }
+
+        public static bool IsValidBase64Image(this string base64)
+        {
+            if (string.IsNullOrWhiteSpace(base64)) return false;
+
+            // Remove data URI prefix if present
+            int commaIndex = base64.IndexOf(',');
+            if (commaIndex >= 0 &&
+                base64.StartsWith("data:", StringComparison.OrdinalIgnoreCase))
+            {
+                base64 = base64[(commaIndex + 1)..];
+            }
+
+            byte[] imageBytes;
+
+            try
+            {
+                imageBytes = Convert.FromBase64String(base64);
+            }
+            catch (FormatException)
+            {
+                return false;
+            }
+
+            try
+            {
+                using var image = Image.Load(imageBytes);
+                return true;
+            }
+            catch (UnknownImageFormatException)
+            {
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -963,8 +1002,6 @@ namespace Origami.Core
             return noIcon;
         }
 
-
-
         /// <summary>
         /// Copies all the information <paramref name="entity"/> <paramref name="from"/>
         /// </summary>
@@ -978,6 +1015,15 @@ namespace Origami.Core
         {
             if (from != null) from.Push(entity);
             return entity;
+        }
+
+        public static T Pull<T>(this T hub, ValidationException validationException) where T : Result
+        {
+            foreach (var error in validationException.Errors)
+            {
+                hub.Error = error.ErrorMessage;
+            }
+            return hub;
         }
 
         /// <summary>
@@ -1032,16 +1078,6 @@ namespace Origami.Core
                 }
             }
         }
-
-        public static T Pull<T>(this T hub, ValidationException validationException) where T : Result
-        {
-            foreach (var error in validationException.Errors)
-            {
-                hub.Error = error.ErrorMessage;
-            }
-            return hub;
-        }
-
         /// <summary>
         /// Adds a query string to <paramref name="url"/>
         /// </summary>
@@ -1479,7 +1515,6 @@ namespace Origami.Core
             if (value != null) return value.GetValueOrDefault().YesNo();
             return "Empty (Null)";
         }
-
         /// <summary>
         /// Extracts the message.
         /// </summary>
