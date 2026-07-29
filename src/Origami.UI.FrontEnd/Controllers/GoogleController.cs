@@ -147,19 +147,18 @@ namespace Origami.UI.FrontEnd.Controllers
                 //looks the user up in the database
                 var user = _socialProfile
                     .ReadFromCache()
-                    .FirstOrDefault(x => x.SocialNetwork == SocialNetworks.Google && x.UserId == ok.Sub);
+                    .FirstOrDefault(x => x.SocialNetwork == SocialNetworks.Google && x.UserId == ok.Sub)
+                    ?? new() { SocialNetwork = SocialNetworks.Google, UserId = ok.Sub, IsBlocked = false, }
+                    ;
 
-                if (user != null && user.IsBlocked)
+                if (user.IsBlocked)
                 {
-                    //needs to log the user out, because the facebook user couldn't be found
+                    //needs to log the user out, because the google user is blocked
                     HttpContext.SignOutAsync().GetAwaiter().GetResult();
                     HttpContext.Logout_Workaround();
                     //redirects to the returnUrl with an error
                     return Redirect("/oops/google".QueryString("error", "User has been Blocked"));
                 }
-
-                //user doesn't exist in the database, must create a new instance
-                if (user == null) user = new OrigamiSocialProfile { SocialNetwork = SocialNetworks.Google, UserId = ok.Sub };
 
                 user.EmailFromSocialNetwork = ok.Email;
                 user.FirstName = ok.GivenName;
@@ -171,8 +170,14 @@ namespace Origami.UI.FrontEnd.Controllers
                 //saves the user into the database
                 using (var transaction = new TransactionScope())
                 {
-                    user = _socialProfile.SmartSave(context, false).Entity;
+                    var hub = _socialProfile.SmartSave(context, false);
+                    if (hub.Ok == false)
+                    {
+                        //redirects to the returnUrl with an error
+                        return Redirect("/oops/google".QueryString("error", "Invalid google information"));
+                    }
                     transaction.Complete();
+                    user = hub.Entity;
                 }
 
                 _userFacade.SocialProfile = user ?? new();
@@ -181,7 +186,7 @@ namespace Origami.UI.FrontEnd.Controllers
                 return Redirect(Uri.UnescapeDataString(returnUrl));
             }
 
-            //needs to log the user out, because the facebook user couldn't be found
+            //needs to log the user out, because the google user couldn't be found
             HttpContext.SignOutAsync().GetAwaiter().GetResult();
             HttpContext.Logout_Workaround();
 

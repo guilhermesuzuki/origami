@@ -163,8 +163,14 @@ namespace Origami.UI.FrontEnd.Controllers
                 //saves the user into the database
                 using (var transaction = new TransactionScope())
                 {
-                    user = _socialProfile.SmartSave(context, false).Entity;
+                    var hub = _socialProfile.SmartSave(context, false);
+                    if (hub.Ok == false)
+                    {
+                        //redirects to the returnUrl with an error
+                        return Redirect("/oops/microsoft".QueryString("error", "Invalid microsoft information"));
+                    }
                     transaction.Complete();
+                    user = hub.Entity;
                 }
 
                 _userFacade.SocialProfile = user ?? new();
