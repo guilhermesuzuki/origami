@@ -22,12 +22,12 @@ namespace Origami.Core.Data
             
         }
 
-        public Result<SocialProfileDeletesCommentEvent> SocialProfileDeletesComment(Guid socialProfile, Guid comment)
+        public Result<SocialProfileDeletesCommentEvent> SocialProfileDeletesComment(OrigamiSocialProfile socialProfile, OrigamiContentComment comment)
         {
             var @event = new SocialProfileDeletesCommentEvent
             {
-                SocialProfileId = socialProfile,
-                CommentId = comment,
+                SocialProfileId = socialProfile.Id,
+                CommentId = comment.Id,
                 DateCreated = DateTime.UtcNow,
             };
 
@@ -38,12 +38,12 @@ namespace Origami.Core.Data
             return new(@event);
         }
 
-        public Result<SocialProfileEditsCommentEvent> SocialProfileEditsComment(Guid socialProfile, Guid comment)
+        public Result<SocialProfileEditsCommentEvent> SocialProfileEditsComment(OrigamiSocialProfile socialProfile, OrigamiContentComment comment)
         {
             var @event = new SocialProfileEditsCommentEvent
             {
-                SocialProfileId = socialProfile,
-                CommentId = comment,
+                SocialProfileId = socialProfile.Id,
+                CommentId = comment.Id,
                 DateCreated = DateTime.UtcNow,
             };
 
@@ -54,11 +54,11 @@ namespace Origami.Core.Data
             return new(@event);
         }
 
-        public Result<SocialProfileLogsIntoWebsiteEvent> SocialProfileLogsIntoWebsite(Guid socialProfile)
+        public Result<SocialProfileLogsIntoWebsiteEvent> SocialProfileLogsIntoWebsite(OrigamiSocialProfile socialProfile)
         {
             var @event = new SocialProfileLogsIntoWebsiteEvent
             {
-                SocialProfileId = socialProfile,
+                SocialProfileId = socialProfile.Id,
                 DateCreated = DateTime.UtcNow,
             };
 
@@ -69,12 +69,12 @@ namespace Origami.Core.Data
             return new(@event);
         }
 
-        public Result<SocialProfileReactsToCommentEvent> SocialProfileReactsToComment(Guid socialProfile, Guid reaction)
+        public Result<SocialProfileReactsToCommentEvent> SocialProfileReactsToComment(OrigamiSocialProfile socialProfile, OrigamiContentReaction reaction)
         {
             var @event = new SocialProfileReactsToCommentEvent
             {
-                SocialProfileId = socialProfile,
-                ReactionId = reaction,
+                SocialProfileId = socialProfile.Id,
+                ReactionId = reaction.Id,
                 DateCreated = DateTime.UtcNow,
             };
 
@@ -85,12 +85,12 @@ namespace Origami.Core.Data
             return new(@event);
         }
 
-        public Result<SocialProfileReactsToContentEvent> SocialProfileReactsToContent(Guid socialProfile, Guid reaction)
+        public Result<SocialProfileReactsToContentEvent> SocialProfileReactsToContent(OrigamiSocialProfile socialProfile, OrigamiContentReaction reaction)
         {
             var @event = new SocialProfileReactsToContentEvent
             {
-                SocialProfileId = socialProfile,
-                ReactionId = reaction,
+                SocialProfileId = socialProfile.Id,
+                ReactionId = reaction.Id,
                 DateCreated = DateTime.UtcNow,
             };
 
@@ -101,12 +101,12 @@ namespace Origami.Core.Data
             return new(@event);
         }
 
-        public Result<SocialProfileRepliesToCommentEvent> SocialProfileRepliesToComment(Guid socialProfile, Guid comment)
+        public Result<SocialProfileRepliesToCommentEvent> SocialProfileRepliesToComment(OrigamiSocialProfile socialProfile, OrigamiContentComment comment)
         {
             var @event = new SocialProfileRepliesToCommentEvent
             {
-                SocialProfileId = socialProfile,
-                CommentId = comment,
+                SocialProfileId = socialProfile.Id,
+                CommentId = comment.Id,
                 DateCreated = DateTime.UtcNow,
             };
 
@@ -117,12 +117,12 @@ namespace Origami.Core.Data
             return new(@event);
         }
 
-        public Result<SocialProfileRepliesToContentEvent> SocialProfileRepliesToContent(Guid socialProfile, Guid content)
+        public Result<SocialProfileRepliesToContentEvent> SocialProfileRepliesToContent(OrigamiSocialProfile socialProfile, OrigamiContentComment comment)
         {
             var @event = new SocialProfileRepliesToContentEvent
             {
-                SocialProfileId = socialProfile,
-                ContentId = content,
+                SocialProfileId = socialProfile.Id,
+                ContentId = comment.ContentId,
                 DateCreated = DateTime.UtcNow,
             };
 
@@ -133,11 +133,11 @@ namespace Origami.Core.Data
             return new(@event);
         }
 
-        public Result<SocialProfileSubscribesToWebsiteEvent> SocialProfileSubscribesToWebsite(Guid socialProfile)
+        public Result<SocialProfileSubscribesToWebsiteEvent> SocialProfileSubscribesToWebsite(OrigamiSocialProfile socialProfile)
         {
             var @event = new SocialProfileSubscribesToWebsiteEvent
             {
-                SocialProfileId = socialProfile,
+                SocialProfileId = socialProfile.Id,
                 DateCreated = DateTime.UtcNow,
             };
 
@@ -148,11 +148,11 @@ namespace Origami.Core.Data
             return new(@event);
         }
 
-        public Result<SocialProfileUnsubscribesFromWebsiteEvent> SocialProfileUnsubscribesFromWebsite(Guid socialProfile)
+        public Result<SocialProfileUnsubscribesFromWebsiteEvent> SocialProfileUnsubscribesFromWebsite(OrigamiSocialProfile socialProfile)
         {
             var @event = new SocialProfileUnsubscribesFromWebsiteEvent
             {
-                SocialProfileId = socialProfile,
+                SocialProfileId = socialProfile.Id,
                 DateCreated = DateTime.UtcNow,
             };
 

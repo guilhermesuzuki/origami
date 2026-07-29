@@ -266,7 +266,7 @@ namespace Origami.UI.FrontEnd.Controllers
                 }
 
                 _userFacade.SocialProfile = user ?? new();
-                _eventRepository.SocialProfileLogsIntoWebsite(context.Entity.Id);
+                _eventRepository.SocialProfileLogsIntoWebsite(context.Entity);
                 
                 return Redirect(Uri.UnescapeDataString(returnUrl));
             }

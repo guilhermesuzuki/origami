@@ -166,11 +166,11 @@ namespace Origami.Core.Data
 
             if (ctx.Entity.ParentId == null)
             {
-                _eventRepository.SocialProfileRepliesToContent(ctx.Entity.SocialProfileId.GetValueOrDefault(), ctx.Entity.Id);
+                _eventRepository.SocialProfileRepliesToContent(ctx.SocialProfile, ctx.Entity);
             }
             else
             {
-                _eventRepository.SocialProfileRepliesToComment(ctx.Entity.SocialProfileId.GetValueOrDefault(), ctx.Entity.Id);
+                _eventRepository.SocialProfileRepliesToComment(ctx.SocialProfile, ctx.Entity);
             }
 
             return hub;
@@ -186,7 +186,7 @@ namespace Origami.Core.Data
                 {
                     var hub = base.SmartDelete(ctx, false);
 
-                    _eventRepository.SocialProfileDeletesComment(ctx.SocialProfile.Id, ctx.Entity.Id);
+                    _eventRepository.SocialProfileDeletesComment(ctx.SocialProfile, ctx.Entity);
 
                     return hub;
                 }
@@ -203,7 +203,7 @@ namespace Origami.Core.Data
                 {
                     var hub = base.SmartDelete(ctx, false);
 
-                    _eventRepository.SocialProfileDeletesComment(ctx.SocialProfile.Id, ctx.Entity.Id);
+                    _eventRepository.SocialProfileDeletesComment(ctx.SocialProfile, ctx.Entity);
 
                     return hub;
                 }
@@ -232,7 +232,7 @@ namespace Origami.Core.Data
 
             var hub = base.SmartUpdate(ctx, false);
 
-            _eventRepository.SocialProfileEditsComment(ctx.SocialProfile.Id, ctx.Entity.Id);
+            _eventRepository.SocialProfileEditsComment(ctx.SocialProfile, ctx.Entity);
 
             return hub;
         }

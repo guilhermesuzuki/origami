@@ -5,14 +5,14 @@ namespace Origami.Core.Data
 {
     public interface IEventRepository
     {
-        Result<SocialProfileDeletesCommentEvent> SocialProfileDeletesComment(Guid socialProfile, Guid comment);
-        Result<SocialProfileEditsCommentEvent> SocialProfileEditsComment(Guid socialProfile, Guid comment);
-        Result<SocialProfileLogsIntoWebsiteEvent> SocialProfileLogsIntoWebsite(Guid socialProfile);
-        Result<SocialProfileReactsToCommentEvent> SocialProfileReactsToComment(Guid socialProfile, Guid reaction);
-        Result<SocialProfileReactsToContentEvent> SocialProfileReactsToContent(Guid socialProfile, Guid reaction);
-        Result<SocialProfileRepliesToCommentEvent> SocialProfileRepliesToComment(Guid socialProfile, Guid comment);
-        Result<SocialProfileRepliesToContentEvent> SocialProfileRepliesToContent(Guid socialProfile, Guid content);
-        Result<SocialProfileSubscribesToWebsiteEvent> SocialProfileSubscribesToWebsite(Guid socialProfile);
-        Result<SocialProfileUnsubscribesFromWebsiteEvent> SocialProfileUnsubscribesFromWebsite(Guid socialProfile);
+        Result<SocialProfileDeletesCommentEvent> SocialProfileDeletesComment(OrigamiSocialProfile socialProfile, OrigamiContentComment comment);
+        Result<SocialProfileEditsCommentEvent> SocialProfileEditsComment(OrigamiSocialProfile socialProfile, OrigamiContentComment comment);
+        Result<SocialProfileLogsIntoWebsiteEvent> SocialProfileLogsIntoWebsite(OrigamiSocialProfile socialProfile);
+        Result<SocialProfileReactsToCommentEvent> SocialProfileReactsToComment(OrigamiSocialProfile socialProfile, OrigamiContentReaction reaction);
+        Result<SocialProfileReactsToContentEvent> SocialProfileReactsToContent(OrigamiSocialProfile socialProfile, OrigamiContentReaction reaction);
+        Result<SocialProfileRepliesToCommentEvent> SocialProfileRepliesToComment(OrigamiSocialProfile socialProfile, OrigamiContentComment comment);
+        Result<SocialProfileRepliesToContentEvent> SocialProfileRepliesToContent(OrigamiSocialProfile socialProfile, OrigamiContentComment comment);
+        Result<SocialProfileSubscribesToWebsiteEvent> SocialProfileSubscribesToWebsite(OrigamiSocialProfile socialProfile);
+        Result<SocialProfileUnsubscribesFromWebsiteEvent> SocialProfileUnsubscribesFromWebsite(OrigamiSocialProfile socialProfile);
     }
 }
