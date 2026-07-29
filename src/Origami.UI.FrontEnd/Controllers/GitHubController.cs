@@ -62,7 +62,6 @@ namespace Origami.UI.FrontEnd.Controllers
                     //needs to log the user out, because the facebook user couldn't be found
                     await HttpContext.SignOutAsync();
                     HttpContext.Logout_Workaround();
-
                     //redirects to the returnUrl with an error
                     return Redirect("/oops/github".QueryString("error", "User has been Blocked"));
                 }
