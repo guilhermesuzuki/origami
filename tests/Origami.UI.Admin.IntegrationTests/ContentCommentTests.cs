@@ -33,7 +33,7 @@ namespace Origami.UI.Admin.IntegrationTests
 
             superRepository.ContentComments.SmartCreate(new(TestFacebookProfile, DateTime.UtcNow, Comment));
 
-            var query = from a in db.ContentComments where a.Id == Comment.Id select a;
+            var query = from a in db.ContentComments.AsNoTracking() where a.Id == Comment.Id select a;
             var dbComment = query.Single();
             dbComment.Content.ShouldBe(Comment.Content);
             dbComment.ContentId.ShouldBe(Comment.ContentId);
