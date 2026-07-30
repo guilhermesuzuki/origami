@@ -43,12 +43,11 @@ namespace Origami.UI.Admin.IntegrationTests
             }
 
             var userRoleRepository = scope.ServiceProvider.GetService<IUserRoleRepository>()!;
-            if (userRoleRepository.ReadFromDatabase(new OrigamiUserRole { Id = CustomClassFixture.UserRoleId }) == null)
-            {
-                userRoleRepository
-                    .SmartSave(new OrigamiUserRole { Id = CustomClassFixture.UserRoleId, UserId = user.Id, RoleId = role.Id }.GetContext(), false)
-                    .OnFailure(r => throw new Exception($"Failed to create test user role: {r.GetMessages()}"));
-            }
+
+            userRoleRepository
+                .SmartSave(new OrigamiUserRole { UserId = user.Id, RoleId = role.Id }.GetContext(), false)
+                .OnFailure(r => throw new Exception($"Failed to create test user role: {r.GetMessages()}"));
+
         }
 
         public static void CreateTestRole(this IServiceScope scope, OrigamiRole role)
