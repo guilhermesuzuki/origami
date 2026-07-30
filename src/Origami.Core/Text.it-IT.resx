@@ -2559,4 +2559,13 @@
   <data name="Software releases found in the search" xml:space="preserve">
     <value>Rilasci software trovati nella ricerca</value>
   </data>
+  <data name="Mark blog as primary" xml:space="preserve">
+    <value>Imposta il blog come principale</value>
+  </data>
+  <data name="Make {0} blog primary" xml:space="preserve">
+    <value>Imposta il blog {0} come principale</value>
+  </data>
+  <data name="User Id is required" xml:space="preserve">
+    <value>L'ID utente è obbligatorio</value>
+  </data>
 </root>
