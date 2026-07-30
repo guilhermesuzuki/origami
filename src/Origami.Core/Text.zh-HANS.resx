@@ -2580,4 +2580,13 @@
   <data name="Profile cover url" xml:space="preserve">
     <value>个人资料封面 URL</value>
   </data>
+  <data name="Profile page url" xml:space="preserve">
+    <value>个人资料页面 URL</value>
+  </data>
+  <data name="Profile picture url" xml:space="preserve">
+    <value>个人资料图片 URL</value>
+  </data>
+  <data name="Profile cover image" xml:space="preserve">
+    <value>个人资料封面图片</value>
+  </data>
 </root>

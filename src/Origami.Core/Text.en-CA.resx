@@ -2580,4 +2580,13 @@
   <data name="Profile cover url" xml:space="preserve">
     <value>Profile cover URL</value>
   </data>
+  <data name="Profile page url" xml:space="preserve">
+    <value>Profile page URL</value>
+  </data>
+  <data name="Profile picture url" xml:space="preserve">
+    <value>Profile picture URL</value>
+  </data>
+  <data name="Profile cover image" xml:space="preserve">
+    <value>Profile cover image</value>
+  </data>
 </root>
