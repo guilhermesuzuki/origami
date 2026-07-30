@@ -66,6 +66,16 @@ namespace Origami.UI.Admin.IntegrationTests
                 cacheComment.SocialProfileId.ShouldBe(Comment.SocialProfileId);
                 cacheComment.IsDeleted.ShouldBeTrue();
             }
+
+            //private scope
+            {
+                var query = from a in db.SocialProfileDeletesCommentEvents.AsNoTracking()
+                            where a.CommentId == Comment.Id
+                            where a.SocialProfileId == TestFacebookProfile.Id
+                            select a;
+
+                var dbComment = query.Single();
+            }
         }
 
         [Theory]
@@ -141,6 +151,16 @@ namespace Origami.UI.Admin.IntegrationTests
                 cacheComment.SocialProfileId.ShouldBe(Comment.SocialProfileId);
             }
 
+            //private scope
+            {
+                var query = from a in db.SocialProfileRepliesToContentEvents.AsNoTracking()
+                            where a.ContentId == Comment.ContentId
+                            where a.SocialProfileId == TestFacebookProfile.Id
+                            select a;
+
+                var dbComment = query.Single();
+            }
+
             Comment.Content = "<p>Updated Content</p>";
 
             superRepository.ContentComments.SmartUpdate(new(TestFacebookProfile, DateTime.UtcNow, Comment));
@@ -160,6 +180,16 @@ namespace Origami.UI.Admin.IntegrationTests
                 cacheComment.ContentId.ShouldBe(Comment.ContentId);
                 cacheComment.SocialProfileId.ShouldBe(Comment.SocialProfileId);
                 cacheComment.IsDeleted.ShouldBeFalse();
+            }
+
+            //private scope
+            {
+                var query = from a in db.SocialProfileEditsCommentEvents.AsNoTracking()
+                            where a.CommentId == Comment.Id
+                            where a.SocialProfileId == TestFacebookProfile.Id
+                            select a;
+
+                var dbComment = query.Single();
             }
         }
     }
