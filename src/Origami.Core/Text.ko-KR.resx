@@ -496,7 +496,7 @@
     <value>선명한 이미지</value>
   </data>
   <data name="Clear picture" xml:space="preserve">
-    <value>선명한 사진</value>
+    <value>이미지 제거</value>
   </data>
   <data name="Clear selection" xml:space="preserve">
     <value>선택 취소</value>

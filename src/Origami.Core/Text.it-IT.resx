@@ -493,10 +493,10 @@
     <value>Icona Cancella</value>
   </data>
   <data name="Clear image" xml:space="preserve">
-    <value>Immagine chiara</value>
+    <value>Rimuovi immagine</value>
   </data>
   <data name="Clear picture" xml:space="preserve">
-    <value>Immagine chiara</value>
+    <value>Rimuovi immagine</value>
   </data>
   <data name="Clear selection" xml:space="preserve">
     <value>Cancella selezione</value>

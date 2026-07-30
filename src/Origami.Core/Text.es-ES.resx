@@ -493,10 +493,10 @@
     <value>Icono de borrar</value>
   </data>
   <data name="Clear image" xml:space="preserve">
-    <value>Imagen clara</value>
+    <value>Quitar imagen</value>
   </data>
   <data name="Clear picture" xml:space="preserve">
-    <value>Imagen clara</value>
+    <value>Quitar imagen</value>
   </data>
   <data name="Clear selection" xml:space="preserve">
     <value>Borrar selección</value>

@@ -496,7 +496,7 @@
     <value>图像清晰</value>
   </data>
   <data name="Clear picture" xml:space="preserve">
-    <value>清晰图片</value>
+    <value>移除图片</value>
   </data>
   <data name="Clear selection" xml:space="preserve">
     <value>清除选择</value>
