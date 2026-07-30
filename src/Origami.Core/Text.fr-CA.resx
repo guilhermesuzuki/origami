@@ -2568,4 +2568,13 @@
   <data name="User Id is required" xml:space="preserve">
     <value>L’identifiant utilisateur est requis</value>
   </data>
+  <data name="When provided, email must be valid" xml:space="preserve">
+    <value>Si elle est fournie, l’adresse courriel doit être valide</value>
+  </data>
+  <data name="When provided, email from social network must be valid" xml:space="preserve">
+    <value>Si elle est fournie, l’adresse courriel du réseau social doit être valide</value>
+  </data>
+  <data name="{0}: Base64 string must be a valid image" xml:space="preserve">
+    <value>{0} : La chaîne Base64 doit être une image valide</value>
+  </data>
 </root>

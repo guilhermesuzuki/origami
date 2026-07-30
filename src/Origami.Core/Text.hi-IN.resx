@@ -2568,4 +2568,13 @@
   <data name="User Id is required" xml:space="preserve">
     <value>उपयोगकर्ता आईडी आवश्यक है</value>
   </data>
+  <data name="When provided, email must be valid" xml:space="preserve">
+    <value>यदि दिया गया है, तो ईमेल मान्य होना चाहिए</value>
+  </data>
+  <data name="When provided, email from social network must be valid" xml:space="preserve">
+    <value>यदि प्रदान किया गया है, तो सोशल नेटवर्क का ईमेल मान्य होना चाहिए</value>
+  </data>
+  <data name="{0}: Base64 string must be a valid image" xml:space="preserve">
+    <value>{0}: Base64 स्ट्रिंग एक मान्य छवि होनी चाहिए</value>
+  </data>
 </root>

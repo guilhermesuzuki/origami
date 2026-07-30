@@ -2568,4 +2568,13 @@
   <data name="User Id is required" xml:space="preserve">
     <value>ユーザーIDは必須です</value>
   </data>
+  <data name="When provided, email must be valid" xml:space="preserve">
+    <value>入力されている場合、メールアドレスは有効である必要があります</value>
+  </data>
+  <data name="When provided, email from social network must be valid" xml:space="preserve">
+    <value>提供されている場合、ソーシャルネットワークのメールアドレスは有効である必要があります</value>
+  </data>
+  <data name="{0}: Base64 string must be a valid image" xml:space="preserve">
+    <value>{0}: Base64文字列は有効な画像である必要があります</value>
+  </data>
 </root>

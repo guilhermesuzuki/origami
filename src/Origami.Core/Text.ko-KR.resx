@@ -2568,4 +2568,13 @@
   <data name="User Id is required" xml:space="preserve">
     <value>사용자 ID는 필수입니다</value>
   </data>
+  <data name="When provided, email must be valid" xml:space="preserve">
+    <value>입력된 경우 이메일 주소는 유효해야 합니다</value>
+  </data>
+  <data name="When provided, email from social network must be valid" xml:space="preserve">
+    <value>제공된 경우 소셜 네트워크의 이메일 주소는 유효해야 합니다</value>
+  </data>
+  <data name="{0}: Base64 string must be a valid image" xml:space="preserve">
+    <value>{0}: Base64 문자열은 유효한 이미지여야 합니다</value>
+  </data>
 </root>
