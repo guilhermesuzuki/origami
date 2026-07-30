@@ -241,7 +241,7 @@ namespace Origami.UI.Admin.IntegrationTests
             Ip = "192.168.0.1",
             IsApproved = true,
             IsBot = true,
-            IsDeleted = true,
+            IsDeleted = false,
             IsMobileDevice = false,
             IsSpam = false,
             SocialProfileId = TestFacebookId,
