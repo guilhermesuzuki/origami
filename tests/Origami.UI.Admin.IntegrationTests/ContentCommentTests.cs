@@ -83,12 +83,15 @@ namespace Origami.UI.Admin.IntegrationTests
 
             superRepository.ContentComments.SmartCreate(new(TestFacebookProfile, DateTime.UtcNow, Comment));
 
-            var query = from a in db.ContentComments.AsNoTracking() where a.Id == Comment.Id select a;
-            var dbComment = query.Single();
-            dbComment.Content.ShouldBe(Comment.Content);
-            dbComment.ContentId.ShouldBe(Comment.ContentId);
-            dbComment.SocialProfileId.ShouldBe(Comment.SocialProfileId);
-            dbComment.IsDeleted.ShouldBeFalse();
+            //private scope
+            {
+                var query = from a in db.ContentComments.AsNoTracking() where a.Id == Comment.Id select a;
+                var dbComment = query.Single();
+                dbComment.Content.ShouldBe(Comment.Content);
+                dbComment.ContentId.ShouldBe(Comment.ContentId);
+                dbComment.SocialProfileId.ShouldBe(Comment.SocialProfileId);
+                dbComment.IsDeleted.ShouldBeFalse();
+            }
 
             var cacheComment = superRepository.ContentComments.ReadFromCache().Id(Comment.Id);
             cacheComment.ShouldNotBeNull();
@@ -96,6 +99,16 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheComment.ContentId.ShouldBe(Comment.ContentId);
             cacheComment.SocialProfileId.ShouldBe(Comment.SocialProfileId);
             cacheComment.IsDeleted.ShouldBeFalse();
+
+            //private scope
+            {
+                var query = from a in db.SocialProfileRepliesToContentEvents.AsNoTracking() 
+                            where a.ContentId == Comment.ContentId
+                            where a.SocialProfileId == TestFacebookProfile.Id
+                            select a;
+
+                var dbComment = query.Single();
+            }
         }
 
         [Theory]
