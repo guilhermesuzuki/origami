@@ -2589,4 +2589,7 @@
   <data name="Profile cover image" xml:space="preserve">
     <value>Imagen de portada del perfil</value>
   </data>
+  <data name="Profile picture image" xml:space="preserve">
+    <value>Imagen de perfil</value>
+  </data>
 </root>
