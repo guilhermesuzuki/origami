@@ -15,7 +15,6 @@ namespace Origami.Core.Models
     {
         protected DateTime _dateCreated = DateTime.UtcNow;
         protected bool _isProcessed;
-        protected bool _isRead;
         protected Guid? _socialProfileId;
         protected string? _subtype;
         protected string _type = string.Empty;
@@ -32,12 +31,6 @@ namespace Origami.Core.Models
         {
             get => _isProcessed;
             set => this.Set(ref _isProcessed, value, EventChanged);
-        }
-
-        public bool IsRead
-        {
-            get => _isRead;
-            set => this.Set(ref _isRead, value, EventChanged);
         }
 
         public Guid? SocialProfileId

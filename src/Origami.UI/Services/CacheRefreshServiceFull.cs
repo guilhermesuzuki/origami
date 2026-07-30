@@ -10,11 +10,10 @@ namespace Origami.UI.Services
 
         }
 
-        public override Task StartAsync(CancellationToken cancellationToken)
+        public override async Task StartAsync(CancellationToken cancellationToken)
         {
-            base.StartAsync(cancellationToken);
+            await base.StartAsync(cancellationToken);
             _super.RefreshAllSearchIndexes();
-            return Task.CompletedTask;
         }
 
         protected override void TimeToDoSomething(object? sender, ElapsedEventArgs e)

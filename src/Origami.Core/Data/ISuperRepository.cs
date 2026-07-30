@@ -39,6 +39,8 @@ namespace Origami.Core.Data
 
         IEmailRepository Emails { get; }
 
+        IEventRepository Events { get; }
+
         IFileRepository Files { get; }
 
         /// <summary>

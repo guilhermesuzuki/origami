@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Origami.Core.Models.Events
@@ -18,6 +19,8 @@ namespace Origami.Core.Models.Events
         }
 
         public event EventHandler<PropertyChangedEventArgs> Changed = (sender, p) => { };
+
+        [Column(nameof(CommentId))]
         public Guid CommentId
         {
             get => _commentId;

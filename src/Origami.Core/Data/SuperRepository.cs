@@ -17,6 +17,7 @@ namespace Origami.Core.Data
             IConfiguration configuration,
             IDirectoryRepository directoryRepository,
             IEmailRepository emailRepository,
+            IEventRepository eventRepository,
             IFileRepository fileRepository,
             IPageRepository pageRepository,
             IPhysicalPageRepository physicalPageRepository,
@@ -60,6 +61,7 @@ namespace Origami.Core.Data
             DbContextFactory = dbContextFactory;
             Directories = directoryRepository;
             Emails = emailRepository;
+            Events = eventRepository;
             Files = fileRepository;
             Pages = pageRepository;
             PhysicalPages = physicalPageRepository;
@@ -110,6 +112,7 @@ namespace Origami.Core.Data
         public IDbContextFactory<OrigamiDbContext> DbContextFactory { get; }
         public IDirectoryRepository Directories { get; }
         public IEmailRepository Emails { get; }
+        public IEventRepository Events { get; }
         public IFileRepository Files { get; }
         public bool MaintenanceLockout => this.GetMaintenancePages().Any();
         public IMyMemoryCache MyMemoryCache { get; }
@@ -428,6 +431,9 @@ namespace Origami.Core.Data
                 UserPasswordResets.RefreshCache();
                 UserBlogs.RefreshCache();
             }
+
+            using var db = this.DbContextFactory.CreateDbContext();
+            var events = db.Events.ToList();
 
             return new();
         }
