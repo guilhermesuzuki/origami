@@ -2592,4 +2592,7 @@
   <data name="Profile picture image" xml:space="preserve">
     <value>Imagen de perfil</value>
   </data>
+  <data name="User has been blocked" xml:space="preserve">
+    <value>El usuario ha sido bloqueado</value>
+  </data>
 </root>
