@@ -8,6 +8,7 @@ namespace Origami.Core.Data
         RepositoryOuterLayer<OrigamiContentCommentReaction>,
         IContentCommentReactionRepository
     {
+        protected readonly IEventRepository _eventRepository;
         protected readonly IValidator<OrigamiContentCommentReaction> _validator;
 
         public override string CreatePermission => nameof(OrigamiRole.ModerateComments);
@@ -21,6 +22,7 @@ namespace Origami.Core.Data
         /// <param name="dbContext"></param>
         /// <param name="distributedCache"></param>
         public ContentCommentReactionRepository(
+            IEventRepository eventRepository,
             IValidator<OrigamiContentCommentReaction> validator,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IMyMemoryCache memoryCache,
@@ -29,6 +31,7 @@ namespace Origami.Core.Data
             : base(text, dbContextFactory, memoryCache, wwwRoot)
         {
             _validator = validator;
+            _eventRepository = eventRepository;
         }
 
         public IEnumerable<OrigamiContentCommentReaction> Reactions(OrigamiContentComment entity)
@@ -53,7 +56,14 @@ namespace Origami.Core.Data
                 return new(ctx.Entity, ex.GetMessage());
             }
 
-            return base.SmartCreate(ctx, false);
+            var hub = base.SmartCreate(ctx, false);
+
+            if (hub.Ok == true)
+            {
+                _eventRepository.SocialProfileReactsToComment(ctx.SocialProfile, ctx.Entity);
+            }
+
+            return hub;
         }
 
         public Result<OrigamiContentCommentReaction> SmartPurge(DataOperationContextFrontEnd<OrigamiContentCommentReaction> ctx)
@@ -68,7 +78,14 @@ namespace Origami.Core.Data
                 return new(ctx.Entity, ex.GetMessage());
             }
 
-            return base.SmartPurge(ctx, false);
+            var hub = base.SmartPurge(ctx, false);
+
+            if (hub.Ok == true)
+            {
+                _eventRepository.SocialProfileCancelsReactionToComment(ctx.SocialProfile, ctx.Entity);
+            }
+
+            return hub;
         }
     }
 }

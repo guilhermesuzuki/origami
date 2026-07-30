@@ -117,7 +117,7 @@ namespace Origami.Core.Data
             return new(@event);
         }
 
-        public Result<SocialProfileReactsToCommentEvent> SocialProfileReactsToComment(OrigamiSocialProfile socialProfile, OrigamiContentReaction reaction)
+        public Result<SocialProfileReactsToCommentEvent> SocialProfileReactsToComment(OrigamiSocialProfile socialProfile, OrigamiContentCommentReaction reaction)
         {
             var @event = new SocialProfileReactsToCommentEvent
             {

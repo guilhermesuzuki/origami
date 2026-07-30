@@ -86,7 +86,14 @@ namespace Origami.Core.Data
                 return new(ctx.Entity, ex.GetMessage());
             }
 
-            return base.SmartPurge(ctx, false);
+            var hub = base.SmartPurge(ctx, false);
+
+            if (hub.Ok == true)
+            {
+                _eventRepository.SocialProfileCancelsReactionToContent(ctx.SocialProfile, ctx.Entity);
+            }
+
+            return hub;
         }
 
         public override Result<OrigamiContentReaction> CreateValidation(DataOperationContext<OrigamiContentReaction> ctx)
