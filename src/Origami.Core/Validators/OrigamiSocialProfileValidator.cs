@@ -22,7 +22,7 @@ namespace Origami.Core.Validators
                 return false;
             }).WithMessage("Name is required");
 
-            RuleFor(x => x.Email).Must(x => x.Has() ? x.Email() : false).WithMessage("When informed, email must be valid");
+            RuleFor(x => x.Email).Must(x => x.Has() ? x.Email() : false).WithMessage("When provided, email must be valid");
             RuleFor(x => x.EmailFromSocialNetwork).Must(x => x.Has() ? x.Email() : false).WithMessage("When informed, email from social network must be valid");
 
             RuleFor(x => x.ProfileCoverUrl).Website(text, isRequired: false, field: "Profile cover url");

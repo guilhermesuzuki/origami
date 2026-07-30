@@ -2577,4 +2577,7 @@
   <data name="{0}: Base64 string must be a valid image" xml:space="preserve">
     <value>{0}: Base64 स्ट्रिंग एक मान्य छवि होनी चाहिए</value>
   </data>
+  <data name="Profile cover url" xml:space="preserve">
+    <value>प्रोफ़ाइल कवर URL</value>
+  </data>
 </root>

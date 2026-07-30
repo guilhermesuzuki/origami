@@ -2577,4 +2577,7 @@
   <data name="{0}: Base64 string must be a valid image" xml:space="preserve">
     <value>{0}: Base64 문자열은 유효한 이미지여야 합니다</value>
   </data>
+  <data name="Profile cover url" xml:space="preserve">
+    <value>프로필 커버 URL</value>
+  </data>
 </root>

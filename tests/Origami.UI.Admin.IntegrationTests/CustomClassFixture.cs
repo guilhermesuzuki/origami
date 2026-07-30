@@ -1,4 +1,5 @@
-﻿using Origami.Core;
+﻿using NanoidDotNet;
+using Origami.Core;
 using Origami.Core.Models;
 
 [assembly: CollectionBehavior(DisableTestParallelization = true)]
@@ -213,6 +214,20 @@ namespace Origami.UI.Admin.IntegrationTests
             NanoId = UserId.ToString().Substring(0, 8),
             Password = "123test@test".SHA256Hash(),
             Username = "testuser",
+        };
+
+        public OrigamiSocialProfile TestFacebookProfile = new OrigamiSocialProfile
+        {
+            Id = Guid.NewGuid(),
+            SocialNetwork = SocialNetworks.Facebook,
+            UserId = Nanoid.Generate(Nanoid.Alphabets.LettersAndDigits, 25),
+            Email = "123@mail.facebook.com",
+            EmailFromSocialNetwork = "123@facebook.com",
+            IsBlocked = false,
+            IsModerator = true,
+            Name = "Test facebook social profile",
+            ProfilePage = "https://www.facebook.com/testprofile",
+            ProfilePictureUrl = "https://www.facebook.com/images/fb_icon_325x325.png",
         };
 
         public CustomClassFixture() : base()

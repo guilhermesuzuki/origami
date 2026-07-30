@@ -2577,4 +2577,7 @@
   <data name="{0}: Base64 string must be a valid image" xml:space="preserve">
     <value>{0}：Base64 字符串必须是有效的图像</value>
   </data>
+  <data name="Profile cover url" xml:space="preserve">
+    <value>个人资料封面 URL</value>
+  </data>
 </root>

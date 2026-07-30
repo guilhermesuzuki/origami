@@ -2577,4 +2577,7 @@
   <data name="{0}: Base64 string must be a valid image" xml:space="preserve">
     <value>{0}: La cadena Base64 debe ser una imagen válida</value>
   </data>
+  <data name="Profile cover url" xml:space="preserve">
+    <value>URL de la portada del perfil</value>
+  </data>
 </root>
