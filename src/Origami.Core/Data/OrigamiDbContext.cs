@@ -138,6 +138,10 @@ namespace Origami.Core.Data
         /// </summary>
         public DbSet<OrigamiSetting> Settings { get; set; }
 
+        public DbSet<SocialProfileCancelsReactionToCommentEvent> SocialProfileCancelsReactionToCommentEvents { get; set; }
+
+        public DbSet<SocialProfileCancelsReactionToContentEvent> SocialProfileCancelsReactionToContentEvents { get; set; }
+
         public DbSet<SocialProfileDeletesCommentEvent> SocialProfileDeletesCommentEvents { get; set; }
 
         public DbSet<SocialProfileEditsCommentEvent> SocialProfileEditsCommentEvents { get; set; }

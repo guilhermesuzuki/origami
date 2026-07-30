@@ -22,6 +22,38 @@ namespace Origami.Core.Data
             
         }
 
+        public Result<SocialProfileCancelsReactionToCommentEvent> SocialProfileCancelsReactionToComment(OrigamiSocialProfile socialProfile, OrigamiContentCommentReaction reaction)
+        {
+            var @event = new SocialProfileCancelsReactionToCommentEvent
+            {
+                SocialProfileId = socialProfile.Id,
+                ReactionId = reaction.Id,
+                DateCreated = DateTime.UtcNow,
+            };
+
+            using var db = DbContextFactory.CreateDbContext();
+            db.SocialProfileCancelsReactionToCommentEvents.Add(@event);
+            db.SaveChanges();
+
+            return new(@event);
+        }
+
+        public Result<SocialProfileCancelsReactionToContentEvent> SocialProfileCancelsReactionToContent(OrigamiSocialProfile socialProfile, OrigamiContentReaction reaction)
+        {
+            var @event = new SocialProfileCancelsReactionToContentEvent
+            {
+                SocialProfileId = socialProfile.Id,
+                ReactionId = reaction.Id,
+                DateCreated = DateTime.UtcNow,
+            };
+
+            using var db = DbContextFactory.CreateDbContext();
+            db.SocialProfileCancelsReactionToContentEvents.Add(@event);
+            db.SaveChanges();
+
+            return new(@event);
+        }
+
         public Result<SocialProfileDeletesCommentEvent> SocialProfileDeletesComment(OrigamiSocialProfile socialProfile, OrigamiContentComment comment)
         {
             var @event = new SocialProfileDeletesCommentEvent

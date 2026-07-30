@@ -5,6 +5,9 @@ namespace Origami.Core.Data
 {
     public interface IEventRepository
     {
+        Result<SocialProfileCancelsReactionToCommentEvent> SocialProfileCancelsReactionToComment(OrigamiSocialProfile socialProfile, OrigamiContentCommentReaction reaction);
+        Result<SocialProfileCancelsReactionToContentEvent> SocialProfileCancelsReactionToContent(OrigamiSocialProfile socialProfile, OrigamiContentReaction reaction);
+
         Result<SocialProfileDeletesCommentEvent> SocialProfileDeletesComment(OrigamiSocialProfile socialProfile, OrigamiContentComment comment);
         Result<SocialProfileEditsCommentEvent> SocialProfileEditsComment(OrigamiSocialProfile socialProfile, OrigamiContentComment comment);
         Result<SocialProfileLogsIntoWebsiteEvent> SocialProfileLogsIntoWebsite(OrigamiSocialProfile socialProfile);

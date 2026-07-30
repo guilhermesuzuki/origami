@@ -66,7 +66,10 @@ namespace Origami.Core.Data
 
             var hub = base.SmartCreate(ctx, false);
 
-            _eventRepository.SocialProfileReactsToContent(ctx.SocialProfile, ctx.Entity);
+            if (hub.Ok == true)
+            {
+                _eventRepository.SocialProfileReactsToContent(ctx.SocialProfile, ctx.Entity);
+            }
 
             return hub;
         }

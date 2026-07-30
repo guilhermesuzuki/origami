@@ -169,13 +169,16 @@ namespace Origami.Core.Data
 
             var hub = base.SmartCreate(ctx, false);
 
-            if (ctx.Entity.ParentId == null)
+            if (hub.Ok == true)
             {
-                _eventRepository.SocialProfileRepliesToContent(ctx.SocialProfile, ctx.Entity);
-            }
-            else
-            {
-                _eventRepository.SocialProfileRepliesToComment(ctx.SocialProfile, ctx.Entity);
+                if (ctx.Entity.ParentId == null)
+                {
+                    _eventRepository.SocialProfileRepliesToContent(ctx.SocialProfile, ctx.Entity);
+                }
+                else
+                {
+                    _eventRepository.SocialProfileRepliesToComment(ctx.SocialProfile, ctx.Entity);
+                }
             }
 
             return hub;
@@ -191,7 +194,10 @@ namespace Origami.Core.Data
                 {
                     var hub = base.SmartDelete(ctx, false);
 
-                    _eventRepository.SocialProfileDeletesComment(ctx.SocialProfile, ctx.Entity);
+                    if (hub.Ok == true)
+                    {
+                        _eventRepository.SocialProfileDeletesComment(ctx.SocialProfile, ctx.Entity);
+                    }
 
                     return hub;
                 }
@@ -208,7 +214,10 @@ namespace Origami.Core.Data
                 {
                     var hub = base.SmartDelete(ctx, false);
 
-                    _eventRepository.SocialProfileDeletesComment(ctx.SocialProfile, ctx.Entity);
+                    if (hub.Ok == true)
+                    {
+                        _eventRepository.SocialProfileDeletesComment(ctx.SocialProfile, ctx.Entity);
+                    }
 
                     return hub;
                 }
