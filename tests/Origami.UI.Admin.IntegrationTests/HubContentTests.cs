@@ -31,6 +31,15 @@ namespace Origami.UI.Admin.IntegrationTests
             scope.CreateTestCategory(TestCategory, TestUser);
 
             var t2 = Activator.CreateInstance<T2>()!;
+
+            t2.Id = ContentId;
+            t2.Entity.AuthorId = TestUser.Id;
+            t2.Entity.Content = "<p>Test content</p>";
+            t2.Entity.Description = "Test description";
+            t2.Entity.LanguageWrittenOn = "en-US";
+            t2.Entity.Slug = "Test title".GetSlug();
+            t2.Entity.Title = "Test title";
+
             if (t2 is HubContentPage or HubContentPost or HubContentVideo or HubContentQuickNote)
             {
                 t2.Entity.BlogId = TestBlog.Id;
@@ -40,13 +49,6 @@ namespace Origami.UI.Admin.IntegrationTests
                 t2.Categories.Add(new() { CategoryId = TestCategory.Id, ContentId = t2.Id });
                 t2.Tags.Add(new() { ContentId = t2.Id, Tag = "Test tag", Slug = "Test tag".GetSlug() });
             }
-
-            t2.Entity.AuthorId = TestUser.Id;
-            t2.Entity.Content = "<p>Test content</p>";
-            t2.Entity.Description = "Test description";
-            t2.Entity.LanguageWrittenOn = "en-US";
-            t2.Entity.Slug = "Test title".GetSlug();
-            t2.Entity.Title = "Test title";
 
             var hubRepository = scope.ServiceProvider.GetRequiredService<IHubContentRepository<T2>>();
             var hub = hubRepository.Save(t2, TestUser);
@@ -216,6 +218,7 @@ namespace Origami.UI.Admin.IntegrationTests
                 t2.Tags.Add(new() { ContentId = t2.Id, Tag = "Test Tag", Slug = "Test Tag".GetSlug() });
             }
 
+            t2.Id = ContentId;
             t2.Entity.Content = "<p>Test content</p>";
             t2.Entity.Description = "Test Description";
             t2.Entity.LanguageWrittenOn = "en-US";
@@ -274,6 +277,7 @@ namespace Origami.UI.Admin.IntegrationTests
                 t2.Tags.Add(new() { ContentId = t2.Id, Tag = "Test Tag", Slug = "Test Tag".GetSlug() });
             }
 
+            t2.Id = ContentId;
             t2.Entity.AuthorId = TestUser.Id;
             t2.Entity.Content = "<p>Invalid test content";
             t2.Entity.Description = "Test Description";
@@ -310,11 +314,12 @@ namespace Origami.UI.Admin.IntegrationTests
             dbHubHistories.ShouldBeFalse();
         }
 
-        [Fact]
-        public void Insert_WhenEntityIsValid_ShouldPersistRecord()
+        [Theory]
+        [InlineData(true)]
+        public void Insert_WhenEntityIsValid_ShouldPersistRecord(bool useTransaction)
         {
             using var factory = new CustomWebApplicationFactory();
-            using var transaction = new TransactionScope();
+            using var transaction = useTransaction ? new TransactionScope() : null;
             using var scope = factory.Services.CreateScope();
             using var db = scope.ServiceProvider.GetRequiredService<IDbContextFactory<OrigamiDbContext>>().CreateDbContext();
             var superRepository = scope.ServiceProvider.GetRequiredService<ISuperRepository>();
@@ -323,6 +328,15 @@ namespace Origami.UI.Admin.IntegrationTests
             scope.CreateTestCategory(TestCategory, TestUser);
 
             var t2 = Activator.CreateInstance<T2>()!;
+
+            t2.Id = ContentId;
+            t2.Entity.AuthorId = TestUser.Id;
+            t2.Entity.Content = "<p>Test content</p>";
+            t2.Entity.Description = "Test Description";
+            t2.Entity.LanguageWrittenOn = "en-US";
+            t2.Entity.Slug = "Test Title".GetSlug();
+            t2.Entity.Title = "Test Title";
+
             if (t2 is HubContentPage or HubContentPost or HubContentVideo or HubContentQuickNote)
             {
                 t2.Entity.BlogId = TestBlog.Id;
@@ -332,13 +346,6 @@ namespace Origami.UI.Admin.IntegrationTests
                 t2.Categories.Add(new() { CategoryId = TestCategory.Id, ContentId = t2.Id });
                 t2.Tags.Add(new() { ContentId = t2.Id, Tag = "Test Tag", Slug = "Test Tag".GetSlug() });
             }
-
-            t2.Entity.AuthorId = TestUser.Id;
-            t2.Entity.Content = "<p>Test content</p>";
-            t2.Entity.Description = "Test Description";
-            t2.Entity.LanguageWrittenOn = "en-US";
-            t2.Entity.Slug = "Test Title".GetSlug();
-            t2.Entity.Title = "Test Title";
 
             var hubRepository = scope.ServiceProvider.GetRequiredService<IHubContentRepository<T2>>();
             var hub = hubRepository.Save(t2, TestUser);
@@ -434,6 +441,7 @@ namespace Origami.UI.Admin.IntegrationTests
                 t2.Tags.Add(new() { ContentId = t2.Id, Tag = "Test Tag", Slug = "Test Tag".GetSlug() });
             }
 
+            t2.Id = ContentId;
             t2.Entity.AuthorId = TestUser.Id;
             t2.Entity.Content = "<p>Test content</p>";
             t2.Entity.Description = "Test Description";
@@ -547,6 +555,15 @@ namespace Origami.UI.Admin.IntegrationTests
             scope.CreateTestCategory(TestCategory, TestUser);
 
             var t2 = Activator.CreateInstance<T2>()!;
+
+            t2.Id = ContentId;
+            t2.Entity.AuthorId = TestUser.Id;
+            t2.Entity.Content = "<p>Test content</p>";
+            t2.Entity.Description = "Test Description";
+            t2.Entity.LanguageWrittenOn = "en-US";
+            t2.Entity.Slug = "Test Title".GetSlug();
+            t2.Entity.Title = "Test Title";
+
             if (t2 is HubContentPage or HubContentPost or HubContentVideo or HubContentQuickNote)
             {
                 t2.Entity.BlogId = TestBlog.Id;
@@ -556,13 +573,6 @@ namespace Origami.UI.Admin.IntegrationTests
                 t2.Categories.Add(new() { CategoryId = TestCategory.Id, ContentId = t2.Id });
                 t2.Tags.Add(new() { ContentId = t2.Id, Tag = "Test Tag", Slug = "Test Tag".GetSlug() });
             }
-
-            t2.Entity.AuthorId = TestUser.Id;
-            t2.Entity.Content = "<p>Test content</p>";
-            t2.Entity.Description = "Test Description";
-            t2.Entity.LanguageWrittenOn = "en-US";
-            t2.Entity.Slug = "Test Title".GetSlug();
-            t2.Entity.Title = "Test Title";
 
             var hubRepository = scope.ServiceProvider.GetRequiredService<IHubContentRepository<T2>>();
             var hub = hubRepository.Save(t2, TestUser);
@@ -684,6 +694,15 @@ namespace Origami.UI.Admin.IntegrationTests
             scope.CreateTestCategory(TestCategory, TestUser);
 
             var t2 = Activator.CreateInstance<T2>()!;
+
+            t2.Id = ContentId;
+            t2.Entity.AuthorId = TestUser.Id;
+            t2.Entity.Content = "<p>Test content</p>";
+            t2.Entity.Description = "Test description";
+            t2.Entity.LanguageWrittenOn = "en-US";
+            t2.Entity.Slug = "Test title".GetSlug();
+            t2.Entity.Title = "Test title";
+
             if (t2 is HubContentPage or HubContentPost or HubContentVideo or HubContentQuickNote)
             {
                 t2.Entity.BlogId = TestBlog.Id;
@@ -693,13 +712,6 @@ namespace Origami.UI.Admin.IntegrationTests
                 t2.Categories.Add(new() { CategoryId = TestCategory.Id, ContentId = t2.Id });
                 t2.Tags.Add(new() { ContentId = t2.Id, Tag = "Test tag", Slug = "Test tag".GetSlug() });
             }
-
-            t2.Entity.AuthorId = TestUser.Id;
-            t2.Entity.Content = "<p>Test content</p>";
-            t2.Entity.Description = "Test description";
-            t2.Entity.LanguageWrittenOn = "en-US";
-            t2.Entity.Slug = "Test title".GetSlug();
-            t2.Entity.Title = "Test title";
 
             var hubRepository = scope.ServiceProvider.GetRequiredService<IHubContentRepository<T2>>();
             var hub = hubRepository.Save(t2, TestUser);
@@ -879,6 +891,15 @@ namespace Origami.UI.Admin.IntegrationTests
             scope.CreateTestCategory(TestCategory, TestUser);
 
             var t2 = Activator.CreateInstance<T2>()!;
+
+            t2.Id = ContentId;
+            t2.Entity.AuthorId = TestUser.Id;
+            t2.Entity.Content = "<p>Test content</p>";
+            t2.Entity.Description = "Test description";
+            t2.Entity.LanguageWrittenOn = "en-US";
+            t2.Entity.Slug = "Test title".GetSlug();
+            t2.Entity.Title = "Test title";
+
             if (t2 is HubContentPage or HubContentPost or HubContentVideo or HubContentQuickNote)
             {
                 t2.Entity.BlogId = TestBlog.Id;
@@ -888,13 +909,6 @@ namespace Origami.UI.Admin.IntegrationTests
                 t2.Categories.Add(new() { CategoryId = TestCategory.Id, ContentId = t2.Id });
                 t2.Tags.Add(new() { ContentId = t2.Id, Tag = "Test tag", Slug = "Test tag".GetSlug() });
             }
-
-            t2.Entity.AuthorId = TestUser.Id;
-            t2.Entity.Content = "<p>Test content</p>";
-            t2.Entity.Description = "Test description";
-            t2.Entity.LanguageWrittenOn = "en-US";
-            t2.Entity.Slug = "Test title".GetSlug();
-            t2.Entity.Title = "Test title";
 
             var hubRepository = scope.ServiceProvider.GetRequiredService<IHubContentRepository<T2>>();
             var hub = hubRepository.Save(t2, TestUser);
@@ -1128,6 +1142,15 @@ namespace Origami.UI.Admin.IntegrationTests
             scope.CreateTestCategory(TestCategory, TestUser);
 
             var t2 = Activator.CreateInstance<T2>()!;
+
+            t2.Id = ContentId;
+            t2.Entity.AuthorId = TestUser.Id;
+            t2.Entity.Content = "<p>Test content</p>";
+            t2.Entity.Description = "Test Description";
+            t2.Entity.LanguageWrittenOn = "en-US";
+            t2.Entity.Slug = "Test Title".GetSlug();
+            t2.Entity.Title = "Test Title";
+
             if (t2 is HubContentPage or HubContentPost or HubContentVideo or HubContentQuickNote)
             {
                 t2.Entity.BlogId = TestBlog.Id;
@@ -1137,13 +1160,6 @@ namespace Origami.UI.Admin.IntegrationTests
                 t2.Categories.Add(new() { CategoryId = TestCategory.Id, ContentId = t2.Id });
                 t2.Tags.Add(new() { ContentId = t2.Id, Tag = "Test Tag", Slug = "Test Tag".GetSlug() });
             }
-
-            t2.Entity.AuthorId = TestUser.Id;
-            t2.Entity.Content = "<p>Test content</p>";
-            t2.Entity.Description = "Test Description";
-            t2.Entity.LanguageWrittenOn = "en-US";
-            t2.Entity.Slug = "Test Title".GetSlug();
-            t2.Entity.Title = "Test Title";
 
             var hubRepository = scope.ServiceProvider.GetRequiredService<IHubContentRepository<T2>>();
             var hub = hubRepository.Save(t2, TestUser);
@@ -1299,6 +1315,15 @@ namespace Origami.UI.Admin.IntegrationTests
             scope.CreateTestCategory(TestCategory, TestUser);
 
             var t2 = Activator.CreateInstance<T2>()!;
+
+            t2.Id = ContentId;
+            t2.Entity.AuthorId = TestUser.Id;
+            t2.Entity.Content = "<p>Test content</p>";
+            t2.Entity.Description = "Test description";
+            t2.Entity.LanguageWrittenOn = "en-US";
+            t2.Entity.Slug = "Test title".GetSlug();
+            t2.Entity.Title = "Test title";
+
             if (t2 is HubContentPage or HubContentPost or HubContentVideo or HubContentQuickNote)
             {
                 t2.Entity.BlogId = TestBlog.Id;
@@ -1308,13 +1333,6 @@ namespace Origami.UI.Admin.IntegrationTests
                 t2.Categories.Add(new() { CategoryId = TestCategory.Id, ContentId = t2.Id });
                 t2.Tags.Add(new() { ContentId = t2.Id, Tag = "Test tag", Slug = "Test tag".GetSlug() });
             }
-
-            t2.Entity.AuthorId = TestUser.Id;
-            t2.Entity.Content = "<p>Test content</p>";
-            t2.Entity.Description = "Test description";
-            t2.Entity.LanguageWrittenOn = "en-US";
-            t2.Entity.Slug = "Test title".GetSlug();
-            t2.Entity.Title = "Test title";
 
             var hubRepository = scope.ServiceProvider.GetRequiredService<IHubContentRepository<T2>>();
             var hub = hubRepository.Save(t2, TestUser);
@@ -1386,6 +1404,7 @@ namespace Origami.UI.Admin.IntegrationTests
             dbHubHistories.Count.ShouldBe(1);
             dbHubHistories[0].Description.ShouldBe("Content created");
 
+            t2.Id = ContentId;
             t2.Entity.Content = "<p>Updated test content</p>";
             t2.Entity.Description = "Updated test Description";
             t2.Entity.LanguageWrittenOn = "en-US";

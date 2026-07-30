@@ -31,7 +31,7 @@ namespace Origami.UI.Admin.IntegrationTests
             scope.CreateTestRole(TestRole);
             scope.CreateTestUser(TestUser, TestRole);
 
-            var socialProfile = this.TestFacebookProfile.Clone();
+            var socialProfile = TestFacebookProfile.Clone();
 
             socialProfile.Email = "invalid-email";
 
@@ -41,13 +41,21 @@ namespace Origami.UI.Admin.IntegrationTests
             hub.Messages.Count.ShouldBe(1);
             hub.Messages[0].Message.ShouldBe("When provided, email must be valid");
             hub.Messages[0].MessageType.ShouldBe(Core.Models.ResultMessage.MessageTypes.Error);
+
+            var query = from a in db.SocialProfiles where a.Id == TestFacebookProfile.Id select a;
+            var dbSocialProfile = query.FirstOrDefault();
+            dbSocialProfile.ShouldBeNull();
+
+            var cacheSocialProfile = superRepository.SocialProfiles.ReadFromCache().Id(TestFacebookProfile.Id);
+            cacheSocialProfile.ShouldBeNull();
         }
 
-        [Fact]
-        public void Insert_WhenEntityIsValid_ShouldPersistRecord()
+        [Theory]
+        [InlineData(true)]
+        public void Insert_WhenEntityIsValid_ShouldPersistRecord(bool useTransaction)
         {
             using var factory = new CustomWebApplicationFactory();
-            using var transaction = new TransactionScope();
+            using var transaction = useTransaction ? new TransactionScope() : null;
             using var scope = factory.Services.CreateScope();
             using var db = scope.ServiceProvider.GetRequiredService<IDbContextFactory<OrigamiDbContext>>().CreateDbContext();
             var superRepository = scope.ServiceProvider.GetRequiredService<ISuperRepository>();
@@ -55,19 +63,26 @@ namespace Origami.UI.Admin.IntegrationTests
             scope.CreateTestRole(TestRole);
             scope.CreateTestUser(TestUser, TestRole);
 
-            var hub = superRepository.SocialProfiles.SmartSave(this.TestFacebookProfile.GetContext(TestUser), false);
+            var hub = superRepository.SocialProfiles.SmartSave(TestFacebookProfile.GetContext(TestUser), false);
 
             hub.Ok.ShouldBe(true);
 
-            var query = from a in db.SocialProfiles where a.Id == this.TestFacebookProfile.Id select a;
-
+            var query = from a in db.SocialProfiles where a.Id == TestFacebookProfile.Id select a;
             var socialProfile = query.Single();
             socialProfile.ShouldNotBeNull();
-            socialProfile.SocialNetwork.ShouldBe(this.TestFacebookProfile.SocialNetwork);
-            socialProfile.UserId.ShouldBe(this.TestFacebookProfile.UserId);
-            socialProfile.Email.ShouldBe(this.TestFacebookProfile.Email);
-            socialProfile.EmailFromSocialNetwork.ShouldBe(this.TestFacebookProfile.EmailFromSocialNetwork);
-            socialProfile.Name.ShouldBe(this.TestFacebookProfile.Name);
+            socialProfile.SocialNetwork.ShouldBe(TestFacebookProfile.SocialNetwork);
+            socialProfile.UserId.ShouldBe(TestFacebookProfile.UserId);
+            socialProfile.Email.ShouldBe(TestFacebookProfile.Email);
+            socialProfile.EmailFromSocialNetwork.ShouldBe(TestFacebookProfile.EmailFromSocialNetwork);
+            socialProfile.Name.ShouldBe(TestFacebookProfile.Name);
+
+            var cacheSocialProfile = superRepository.SocialProfiles.ReadFromCache().Id(TestFacebookProfile.Id);
+            cacheSocialProfile.ShouldNotBeNull();
+            cacheSocialProfile.SocialNetwork.ShouldBe(TestFacebookProfile.SocialNetwork);
+            cacheSocialProfile.UserId.ShouldBe(TestFacebookProfile.UserId);
+            cacheSocialProfile.Email.ShouldBe(TestFacebookProfile.Email);
+            cacheSocialProfile.EmailFromSocialNetwork.ShouldBe(TestFacebookProfile.EmailFromSocialNetwork);
+            cacheSocialProfile.Name.ShouldBe(TestFacebookProfile.Name);
         }
 
         [Fact]
@@ -82,7 +97,7 @@ namespace Origami.UI.Admin.IntegrationTests
             scope.CreateTestRole(TestRole);
             scope.CreateTestUser(TestUser, TestRole);
 
-            var socialProfile = this.TestFacebookProfile.Clone();
+            var socialProfile = TestFacebookProfile.Clone();
 
             socialProfile.Name = string.Empty;
             socialProfile.FirstName = string.Empty;
@@ -94,6 +109,13 @@ namespace Origami.UI.Admin.IntegrationTests
             hub.Messages.Count.ShouldBe(1);
             hub.Messages[0].Message.ShouldBe("Name is required");
             hub.Messages[0].MessageType.ShouldBe(Core.Models.ResultMessage.MessageTypes.Error);
+
+            var query = from a in db.SocialProfiles where a.Id == TestFacebookProfile.Id select a;
+            var dbSocialProfile = query.FirstOrDefault();
+            dbSocialProfile.ShouldBeNull();
+
+            var cacheSocialProfile = superRepository.SocialProfiles.ReadFromCache().Id(TestFacebookProfile.Id);
+            cacheSocialProfile.ShouldBeNull();
         }
 
         [Fact]
@@ -108,7 +130,7 @@ namespace Origami.UI.Admin.IntegrationTests
             scope.CreateTestRole(TestRole);
             scope.CreateTestUser(TestUser, TestRole);
 
-            var socialProfile = this.TestFacebookProfile.Clone();
+            var socialProfile = TestFacebookProfile.Clone();
 
             socialProfile.ProfilePage = "invalid-profile-page";
 
@@ -118,6 +140,13 @@ namespace Origami.UI.Admin.IntegrationTests
             hub.Messages.Count.ShouldBe(1);
             hub.Messages[0].Message.ShouldBe("Profile page url: URL must be a valid website address");
             hub.Messages[0].MessageType.ShouldBe(Core.Models.ResultMessage.MessageTypes.Error);
+
+            var query = from a in db.SocialProfiles where a.Id == TestFacebookProfile.Id select a;
+            var dbSocialProfile = query.FirstOrDefault();
+            dbSocialProfile.ShouldBeNull();
+
+            var cacheSocialProfile = superRepository.SocialProfiles.ReadFromCache().Id(TestFacebookProfile.Id);
+            cacheSocialProfile.ShouldBeNull();
         }
     }
 }

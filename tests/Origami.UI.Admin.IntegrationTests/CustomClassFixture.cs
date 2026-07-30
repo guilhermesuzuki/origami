@@ -15,9 +15,12 @@ namespace Origami.UI.Admin.IntegrationTests
         public static Guid CategoryIdA = new Guid("1824ed20-0d55-476c-a716-c531667aa8ce");
         public static Guid CategoryIdB = new Guid("27e926c3-fc50-484d-85fb-328ff7f51b82");
         public static Guid CategoryIdC = new Guid("111bd28d-04a9-4e9a-b6c7-436e43aba651");
+        public static Guid ContentId = new Guid("2e288535-0168-4625-bb4a-2e5d95e24a3b");
         public static Guid RoleId = new Guid("e1f2d3c4-b5a6-7d8e-9f0a-1b2c3d4e5f6a");
         public static Guid RoleId1 = new Guid("f1e2d3c4-b5a6-7d8e-9f0a-1b2c3d4e5f6b");
+        public static Guid TestFacebookId = new Guid("5d89f755-65f9-44da-8b2c-8a2a390cec5d");
         public static Guid UserId = new Guid("d2c9e5b8-1c3a-4f8e-9a1b-2f3e4d5c6a7b");
+        public static Guid UserRoleId = new Guid("e47c0ae6-a1c4-4631-822d-569ffe583977");
 
         public OrigamiUser AnotherTestUser = new OrigamiUser
         {
@@ -218,7 +221,7 @@ namespace Origami.UI.Admin.IntegrationTests
 
         public OrigamiSocialProfile TestFacebookProfile = new OrigamiSocialProfile
         {
-            Id = Guid.NewGuid(),
+            Id = TestFacebookId,
             SocialNetwork = SocialNetworks.Facebook,
             UserId = Nanoid.Generate(Nanoid.Alphabets.LettersAndDigits, 25),
             Email = "123@mail.facebook.com",
@@ -228,6 +231,20 @@ namespace Origami.UI.Admin.IntegrationTests
             Name = "Test facebook social profile",
             ProfilePage = "https://www.facebook.com/testprofile",
             ProfilePictureUrl = "https://www.facebook.com/images/fb_icon_325x325.png",
+        };
+
+        public static OrigamiContentComment Comment = new() 
+        {
+            Content = "<p>Hey, this is a comment!</p>",
+            ContentId = ContentId,
+            DateCreated = DateTime.UtcNow,
+            Ip = "192.168.0.1",
+            IsApproved = true,
+            IsBot = true,
+            IsDeleted = true,
+            IsMobileDevice = false,
+            IsSpam = false,
+            SocialProfileId = TestFacebookId,
         };
 
         public CustomClassFixture() : base()
