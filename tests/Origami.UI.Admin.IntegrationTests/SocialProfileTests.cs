@@ -71,6 +71,32 @@ namespace Origami.UI.Admin.IntegrationTests
         }
 
         [Fact]
+        public void Insert_WhenNameIsInvalid_ShouldFail()
+        {
+            using var factory = new CustomWebApplicationFactory();
+            using var transaction = new TransactionScope();
+            using var scope = factory.Services.CreateScope();
+            using var db = scope.ServiceProvider.GetRequiredService<IDbContextFactory<OrigamiDbContext>>().CreateDbContext();
+            var superRepository = scope.ServiceProvider.GetRequiredService<ISuperRepository>();
+
+            scope.CreateTestRole(TestRole);
+            scope.CreateTestUser(TestUser, TestRole);
+
+            var socialProfile = this.TestFacebookProfile.Clone();
+
+            socialProfile.Name = string.Empty;
+            socialProfile.FirstName = string.Empty;
+            socialProfile.LastName = string.Empty;
+
+            var hub = superRepository.SocialProfiles.SmartSave(socialProfile.GetContext(TestUser), false);
+
+            hub.Ok.ShouldBe(false);
+            hub.Messages.Count.ShouldBe(1);
+            hub.Messages[0].Message.ShouldBe("Name is required");
+            hub.Messages[0].MessageType.ShouldBe(Core.Models.ResultMessage.MessageTypes.Error);
+        }
+
+        [Fact]
         public void Insert_WhenProfilePageIsInvalid_ShouldFail()
         {
             using var factory = new CustomWebApplicationFactory();
