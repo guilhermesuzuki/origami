@@ -85,6 +85,41 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheSocialProfile.Name.ShouldBe(TestFacebookProfile.Name);
         }
 
+        [Theory]
+        [InlineData(true)]
+        public void Insert_WhenEntityIsBlocked_ShouldPersistRecord(bool useTransaction)
+        {
+            using var factory = new CustomWebApplicationFactory();
+            using var transaction = useTransaction ? new TransactionScope() : null;
+            using var scope = factory.Services.CreateScope();
+            using var db = scope.ServiceProvider.GetRequiredService<IDbContextFactory<OrigamiDbContext>>().CreateDbContext();
+            var superRepository = scope.ServiceProvider.GetRequiredService<ISuperRepository>();
+
+            scope.CreateTestRole(TestRole);
+            scope.CreateTestUser(TestUser, TestRole);
+
+            var hub = superRepository.SocialProfiles.SmartSave(TestFacebookProfileButUserIsBlocked.GetContext(TestUser), false);
+
+            hub.Ok.ShouldBe(true);
+
+            var query = from a in db.SocialProfiles where a.Id == TestFacebookProfileButUserIsBlocked.Id select a;
+            var socialProfile = query.Single();
+            socialProfile.ShouldNotBeNull();
+            socialProfile.SocialNetwork.ShouldBe(TestFacebookProfileButUserIsBlocked.SocialNetwork);
+            socialProfile.UserId.ShouldBe(TestFacebookProfileButUserIsBlocked.UserId);
+            socialProfile.Email.ShouldBe(TestFacebookProfileButUserIsBlocked.Email);
+            socialProfile.EmailFromSocialNetwork.ShouldBe(TestFacebookProfileButUserIsBlocked.EmailFromSocialNetwork);
+            socialProfile.Name.ShouldBe(TestFacebookProfileButUserIsBlocked.Name);
+
+            var cacheSocialProfile = superRepository.SocialProfiles.ReadFromCache().Id(TestFacebookProfileButUserIsBlocked.Id);
+            cacheSocialProfile.ShouldNotBeNull();
+            cacheSocialProfile.SocialNetwork.ShouldBe(TestFacebookProfileButUserIsBlocked.SocialNetwork);
+            cacheSocialProfile.UserId.ShouldBe(TestFacebookProfileButUserIsBlocked.UserId);
+            cacheSocialProfile.Email.ShouldBe(TestFacebookProfileButUserIsBlocked.Email);
+            cacheSocialProfile.EmailFromSocialNetwork.ShouldBe(TestFacebookProfileButUserIsBlocked.EmailFromSocialNetwork);
+            cacheSocialProfile.Name.ShouldBe(TestFacebookProfileButUserIsBlocked.Name);
+        }
+
         [Fact]
         public void Insert_WhenNameIsInvalid_ShouldFail()
         {

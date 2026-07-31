@@ -15,7 +15,25 @@ namespace Origami.UI.Admin.IntegrationTests
         public static Guid CategoryIdA = new Guid("1824ed20-0d55-476c-a716-c531667aa8ce");
         public static Guid CategoryIdB = new Guid("27e926c3-fc50-484d-85fb-328ff7f51b82");
         public static Guid CategoryIdC = new Guid("111bd28d-04a9-4e9a-b6c7-436e43aba651");
+
+        public static OrigamiContentComment Comment = new()
+        {
+            Content = "<p>Hey, this is a comment!</p>",
+            ContentId = ContentId,
+            DateCreated = DateTime.UtcNow,
+            Ip = "192.168.0.1",
+            IsApproved = true,
+            IsBot = true,
+            IsDeleted = false,
+            IsMobileDevice = false,
+            IsSpam = false,
+            SocialProfileId = TestFacebookId,
+        };
+
         public static Guid ContentId = new Guid("2e288535-0168-4625-bb4a-2e5d95e24a3b");
+        public static Guid PageIdA = new Guid("223fef1e-16b7-4a98-9eba-3d489ca5abd3");
+        public static Guid PageIdB = new Guid("22b9cd98-ce63-45b8-b2ed-a1cf682967dc");
+        public static Guid PageIdC = new Guid("2d5ee8f2-c730-4c79-8024-cbdb786405f3");
         public static Guid RoleId = new Guid("e1f2d3c4-b5a6-7d8e-9f0a-1b2c3d4e5f6a");
         public static Guid RoleId1 = new Guid("f1e2d3c4-b5a6-7d8e-9f0a-1b2c3d4e5f6b");
         public static Guid TestFacebookId = new Guid("5d89f755-65f9-44da-8b2c-8a2a390cec5d");
@@ -99,6 +117,66 @@ namespace Origami.UI.Admin.IntegrationTests
             Name = new string('a', 500),
             DateCreated = DateTime.UtcNow,
             NanoId = CategoryId1.ToString().Substring(0, 8),
+        };
+
+        public OrigamiSocialProfile TestFacebookProfile = new OrigamiSocialProfile
+        {
+            Id = TestFacebookId,
+            SocialNetwork = SocialNetworks.Facebook,
+            UserId = Nanoid.Generate(Nanoid.Alphabets.LettersAndDigits, 25),
+            Email = "123@mail.facebook.com",
+            EmailFromSocialNetwork = "123@facebook.com",
+            IsBlocked = false,
+            IsModerator = true,
+            Name = "Test facebook social profile",
+            ProfilePage = "https://www.facebook.com/testprofile",
+            ProfilePictureUrl = "https://www.facebook.com/images/fb_icon_325x325.png",
+        };
+
+        public OrigamiSocialProfile TestFacebookProfileButUserIsBlocked = new OrigamiSocialProfile
+        {
+            Id = TestFacebookId,
+            SocialNetwork = SocialNetworks.Facebook,
+            UserId = Nanoid.Generate(Nanoid.Alphabets.LettersAndDigits, 25),
+            Email = "123@mail.facebook.com",
+            EmailFromSocialNetwork = "123@facebook.com",
+            IsBlocked = true,
+            IsModerator = true,
+            Name = "Test facebook social profile",
+            ProfilePage = "https://www.facebook.com/testprofile",
+            ProfilePictureUrl = "https://www.facebook.com/images/fb_icon_325x325.png",
+        };
+
+        public OrigamiPage TestPageA = new OrigamiPage
+        {
+            AuthorId = UserId,
+            BlogId = BlogId,
+            Id = PageIdA,
+            Title = "Test page A",
+            Content = "<p>Hey, this is a test page A!</p>",
+            DateCreated = DateTime.UtcNow
+        };
+
+        public OrigamiPage TestPageB = new OrigamiPage
+        {
+            AuthorId = UserId,
+            BlogId = BlogId,
+            Id = PageIdB,
+            Title = "Test page B",
+            Content = "<p>Hey, this is a test page B!</p>",
+            DateCreated = DateTime.UtcNow,
+            ParentId = PageIdA,
+        };
+
+        public OrigamiPage TestPageC = new OrigamiPage
+        {
+            AuthorId = UserId,
+            BlogId = BlogId,
+            Id = PageIdC,
+            Title = "Test page C",
+            Content = "<p>Hey, this is a test page C!</p>",
+            DateCreated = DateTime.UtcNow,
+            ParentId = PageIdB,
         };
 
         public OrigamiRole TestRole = new()
@@ -217,34 +295,6 @@ namespace Origami.UI.Admin.IntegrationTests
             NanoId = UserId.ToString().Substring(0, 8),
             Password = "123test@test".SHA256Hash(),
             Username = "testuser",
-        };
-
-        public OrigamiSocialProfile TestFacebookProfile = new OrigamiSocialProfile
-        {
-            Id = TestFacebookId,
-            SocialNetwork = SocialNetworks.Facebook,
-            UserId = Nanoid.Generate(Nanoid.Alphabets.LettersAndDigits, 25),
-            Email = "123@mail.facebook.com",
-            EmailFromSocialNetwork = "123@facebook.com",
-            IsBlocked = false,
-            IsModerator = true,
-            Name = "Test facebook social profile",
-            ProfilePage = "https://www.facebook.com/testprofile",
-            ProfilePictureUrl = "https://www.facebook.com/images/fb_icon_325x325.png",
-        };
-
-        public static OrigamiContentComment Comment = new() 
-        {
-            Content = "<p>Hey, this is a comment!</p>",
-            ContentId = ContentId,
-            DateCreated = DateTime.UtcNow,
-            Ip = "192.168.0.1",
-            IsApproved = true,
-            IsBot = true,
-            IsDeleted = false,
-            IsMobileDevice = false,
-            IsSpam = false,
-            SocialProfileId = TestFacebookId,
         };
 
         public CustomClassFixture() : base()
