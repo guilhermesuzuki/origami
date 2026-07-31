@@ -1,11 +1,11 @@
-﻿@page "/users/{UserId:guid}"
+﻿@page "/users/{NanoId}"
 @inherits BasicPage
 @inject IUserRepository _users
 @inject IPageRepository _pages
 @inject IVideoRepository _videos
 
 <Root>
-    @if (this.UserId != Guid.Empty)
+    @if (this.NanoId.Has() == true)
     {
         var user = this.GetUser();
         if (user != null)
@@ -102,7 +102,7 @@
                                 <i class="bi bi-file-earmark-text-fill"></i>
                                 @Text.Lower("Pages")
                             </div>
-                            <MudDataGrid Class="mt-3" T="OrigamiPage" ServerData="this.GetPages" Filterable="false" SortMode="SortMode.None">
+                            <MudDataGrid @ref="_pagesGrid" Class="mt-3" T="OrigamiPage" ServerData="this.GetPages" Filterable="false" SortMode="SortMode.None">
                                 <Columns>
                                     <TemplateColumn>
                                         <CellTemplate>
@@ -122,7 +122,7 @@
                                 <i class="bi bi-file-earmark-text-fill"></i>
                                 @Text.Lower("Posts")
                             </div>
-                            <MudDataGrid Class="mt-3" T="OrigamiPost" ServerData="this.GetPosts" Filterable="false" SortMode="SortMode.None">
+                            <MudDataGrid @ref="_postsGrid" Class="mt-3" T="OrigamiPost" ServerData="this.GetPosts" Filterable="false" SortMode="SortMode.None">
                                 <Columns>
                                     <TemplateColumn>
                                         <CellTemplate>
@@ -142,7 +142,7 @@
                                 <i class="fa-solid fa-video"></i>
                                 @Text.Lower("Videos")
                             </div>
-                            <MudDataGrid Class="mt-3" T="OrigamiVideo" ServerData="this.GetVideos" Filterable="false" SortMode="SortMode.None">
+                            <MudDataGrid @ref="_videosGrid" Class="mt-3" T="OrigamiVideo" ServerData="this.GetVideos" Filterable="false" SortMode="SortMode.None">
                                 <Columns>
                                     <TemplateColumn>
                                         <CellTemplate>
@@ -166,8 +166,12 @@
     }
 </Root>
 
-@code {
-    [Parameter] public Guid UserId { get; set; } = Guid.Empty;
+    @code {
+    [Parameter] public string NanoId { get; set; } = string.Empty;
+
+    protected MudDataGrid<OrigamiPage> _pagesGrid = new();
+    protected MudDataGrid<OrigamiPost> _postsGrid = new();
+    protected MudDataGrid<OrigamiVideo> _videosGrid = new();
 
     /// <summary>
     /// This method should retrieve the Entities from database or memory
@@ -185,7 +189,7 @@
             orders.AppendFormat(",{0} {1}", definition.SortBy, definition.Descending ? "DESC" : "ASC");
         }
 
-        var filters = new StringBuilder($"{nameof(Core.Models.OrigamiPage.AuthorId)} == \"{UserId}\"");
+        var filters = new StringBuilder($"{nameof(Core.Models.OrigamiPage.AuthorId)} == \"{GetUser().Id}\"");
 
         //iterates through every filter definition
         foreach (var definition in state.FilterDefinitions)
@@ -222,7 +226,7 @@
             orders.AppendFormat(",{0} {1}", definition.SortBy, definition.Descending ? "DESC" : "ASC");
         }
 
-        var filters = new StringBuilder($"{nameof(OrigamiPost.AuthorId)} == \"{UserId}\"");
+        var filters = new StringBuilder($"{nameof(OrigamiPost.AuthorId)} == \"{GetUser().Id}\"");
 
         //iterates through every filter definition
         foreach (var definition in state.FilterDefinitions)
@@ -259,7 +263,7 @@
             orders.AppendFormat(",{0} {1}", definition.SortBy, definition.Descending ? "DESC" : "ASC");
         }
 
-        var filters = new StringBuilder($"{nameof(OrigamiVideo.AuthorId)} == \"{UserId}\"");
+        var filters = new StringBuilder($"{nameof(OrigamiVideo.AuthorId)} == \"{GetUser().Id}\"");
 
         //iterates through every filter definition
         foreach (var definition in state.FilterDefinitions)
@@ -282,6 +286,14 @@
 
     protected OrigamiUser GetUser()
     {
-        return this.Super.Users.ReadFromCache().Id(this.UserId) ?? new();
+        return this.Super.Users.ReadFromCache().NanoId(this.NanoId) ?? new();
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        this._pagesGrid.ReloadServerData();
+        this._postsGrid.ReloadServerData();
+        this._videosGrid.ReloadServerData();
     }
 }
