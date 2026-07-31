@@ -4,8 +4,18 @@
 @inherits Basic
 
 <Root>
+    <AuthorizeView>
+        <Authorized>
+            @if (UserFacade.SocialProfile.IsModerator == true)
+            {
+                <div class="mb-3">
+                    <button class="p-3 w-100 text-white bg-danger fw-bold" @onclick="ResetCache">@Text.Upper("Clear cache")</button>
+                </div>
+            }
+        </Authorized>
+    </AuthorizeView>
     <div class="row">
-        <div class="pages col-12">
+        <div class="cache-explorer col-12">
             <MudDataGrid T="KeyValuePair<object, object>" Items="this.GetEntries()" Filterable="false" SortMode="SortMode.None" Class="border selectable" MultiSelection="true" Bordered="true" SelectOnRowClick="false">
                 <Columns>
                     <TemplateColumn Title="@Text.Upper("Key")">
@@ -45,5 +55,21 @@
         }
 
         return result;
+    }
+
+    protected async Task ResetCache()
+    {
+        var yes = await DialogService.ShowMessageBoxAsync(
+            Text.Upper("Clear cache"),
+            Text.Lower("Are you sure?"),
+            Text.Lower("Yes"),
+            Text.Lower("No")
+        );
+
+        if (yes == true)
+        {
+            this.Super.RefreshAllRepositories();
+            this.Super.RefreshAllSearchIndexes();
+        }
     }
 }
