@@ -34,6 +34,11 @@ namespace Origami.UI.Admin.IntegrationTests
         public static Guid PageIdA = new Guid("223fef1e-16b7-4a98-9eba-3d489ca5abd3");
         public static Guid PageIdB = new Guid("22b9cd98-ce63-45b8-b2ed-a1cf682967dc");
         public static Guid PageIdC = new Guid("2d5ee8f2-c730-4c79-8024-cbdb786405f3");
+
+        public static Guid PostIdA = new Guid("01ce226b-ca04-4642-a85b-5f0229961058");
+        public static Guid PostIdB = new Guid("bcaf0a73-7f21-4d34-8f9c-26d2bc3e0aeb");
+        public static Guid PostIdC = new Guid("a9e421de-e438-4d65-98e4-764d339a59ae");
+
         public static Guid RoleId = new Guid("e1f2d3c4-b5a6-7d8e-9f0a-1b2c3d4e5f6a");
         public static Guid RoleId1 = new Guid("f1e2d3c4-b5a6-7d8e-9f0a-1b2c3d4e5f6b");
         public static Guid TestFacebookId = new Guid("5d89f755-65f9-44da-8b2c-8a2a390cec5d");
@@ -177,6 +182,38 @@ namespace Origami.UI.Admin.IntegrationTests
             Content = "<p>Hey, this is a test page C!</p>",
             DateCreated = DateTime.UtcNow,
             ParentId = PageIdB,
+        };
+
+        public OrigamiPost TestPostA = new OrigamiPost
+        {
+            AuthorId = UserId,
+            BlogId = BlogId,
+            Id = PostIdA,
+            Title = "Test post A",
+            Content = "<p>Hey, this is a test post A!</p>",
+            DateCreated = DateTime.UtcNow
+        };
+
+        public OrigamiPost TestPostB = new OrigamiPost
+        {
+            AuthorId = UserId,
+            BlogId = BlogId,
+            Id = PostIdB,
+            Title = "Test post B",
+            Content = "<p>Hey, this is a test post B!</p>",
+            DateCreated = DateTime.UtcNow,
+            ParentId = PostIdA,
+        };
+
+        public OrigamiPost TestPostC = new OrigamiPost
+        {
+            AuthorId = UserId,
+            BlogId = BlogId,
+            Id = PostIdC,
+            Title = "Test post C",
+            Content = "<p>Hey, this is a test post C!</p>",
+            DateCreated = DateTime.UtcNow,
+            ParentId = PostIdB,
         };
 
         public OrigamiRole TestRole = new()
