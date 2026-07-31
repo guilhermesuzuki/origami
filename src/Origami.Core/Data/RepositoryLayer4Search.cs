@@ -134,14 +134,6 @@ namespace Origami.Core.Data
                 if (post?.Title.Has() == true) doc.Add(new TextField("comment_postTitle", post.Title, Field.Store.YES));
             }
 
-            if (_appFacade.Admin == true)
-            {
-                if (entity is OrigamiUser user)
-                {
-                    if (user.Username.Has() == true) doc.Add(new TextField("userName", user.Username, Field.Store.YES));
-                }
-            }
-
             return doc;
         }
 
