@@ -46,9 +46,12 @@ namespace Origami.Core.Data
                     if (typeof(T).IsAssignableTo(typeof(OrigamiContent)) == true)
                     {
                         var contents = from a in db.Contents.AsNoTracking()
+                                       join b in db.Blogs.AsNoTracking() on a.BlogId equals b.Id into blogs
+                                       from blog in blogs.DefaultIfEmpty()  
                                        where a.IsDeleted == false
                                        where a.IsPublished == true
                                        where a.DatePublished <= DateTime.UtcNow
+                                       where (blog == null || blog.IsDeleted == false && blog.IsActive == true)
                                        select a;
 
                         MemoryCache.Set(k, contents.ToList());
