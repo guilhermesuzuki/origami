@@ -1,0 +1,49 @@
+﻿@page "/cache/explorer"
+@using Microsoft.Extensions.Caching.Memory
+@using System.Collections
+@inherits Basic
+
+<Root>
+    <div class="row">
+        <div class="pages col-12">
+            <MudDataGrid T="KeyValuePair<object, object>" Items="this.GetEntries()" Filterable="false" SortMode="SortMode.None" Class="border selectable" MultiSelection="true" Bordered="true" SelectOnRowClick="false">
+                <Columns>
+                    <TemplateColumn Title="@Text.Upper("Key")">
+                        <CellTemplate>
+                            <span>@context.Item.Key</span>
+                        </CellTemplate>
+                    </TemplateColumn>
+                    <TemplateColumn Title="@Text.Upper("Value")">
+                        <CellTemplate>
+                            <span class="me-1">@context.Item.Value</span>
+                            @if (context.Item.Value is IList list)
+                            {
+                                <span class="p-1 shadow-sm border">@list.Count @Text.Lower("item(s)")</span>
+                            }
+                        </CellTemplate>
+                    </TemplateColumn>
+                </Columns>
+                <PagerContent>
+                    <MudDataGridPager T="KeyValuePair<object, object>" PageSizeOptions="new int[] { 25, 50, 100, }" />
+                </PagerContent>
+                <NoRecordsContent>
+                    <NoEntriesWereFound></NoEntriesWereFound>
+                </NoRecordsContent>
+            </MudDataGrid>
+        </div>
+    </div>
+</Root>
+
+@code {
+    protected IDictionary<object, object?> GetEntries()
+    {
+        var result = new Dictionary<object, object?>();
+
+        foreach (var key in this.MemoryCache.Keys.OrderBy(x => x.ToString()))
+        {
+            result[key] = this.MemoryCache.Get(key);
+        }
+
+        return result;
+    }
+}

@@ -370,7 +370,7 @@
             }
             else
             {
-                this.FESearch(queryTerm);
+                this.FrontEndSearch(queryTerm);
             }
         }
 
@@ -417,7 +417,7 @@
         this._hits.RemoveAll(id => this.FilterHits(allowedBlogs, id));
     }
 
-    protected virtual void FESearch(string queryTerm)
+    protected virtual void FrontEndSearch(string queryTerm)
     {
         var allowedBlogs = from a in this.Super.Blogs.ReadFromCache().GetFrontEnd() select a.Id;
 
@@ -428,6 +428,7 @@
                 Task.Run(() => this._hits.AddRange(Super.ContentComments.Search(queryTerm).NonDeleted().Where(x => this.Super.IsParentDeleted(x) == false))),
                 Task.Run(() => this._hits.AddRange(Super.ContentTags.Search(queryTerm).DistinctBy(x => x.Tag))),
                 Task.Run(() => this._hits.AddRange(Super.SocialProfiles.Search(queryTerm))),
+                Task.Run(() => this._hits.AddRange(Super.Users.Search(queryTerm))),
                 Task.Run(() =>
                 {
                     var contents = Super.Contents.Search(queryTerm).Published();

@@ -452,9 +452,14 @@ namespace Origami.Core.Data
             ContentComments.CreateSearchIndex();
             Contents.CreateSearchIndex();
             ContentTags.CreateSearchIndex();
-            Roles.CreateSearchIndex();
             SocialProfiles.CreateSearchIndex();
             Users.CreateSearchIndex();
+
+            if (AppFacade.Admin == true)
+            {
+                Roles.CreateSearchIndex();
+            }
+
             return new();
         }
 
