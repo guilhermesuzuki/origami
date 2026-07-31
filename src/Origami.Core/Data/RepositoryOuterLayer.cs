@@ -8,17 +8,15 @@ namespace Origami.Core.Data
     public abstract class RepositoryOuterLayer<T> : RepositoryLayer4Search<T>
         where T : class, IId
     {
-        protected readonly IAppFacade _appFacade;
-
         protected RepositoryOuterLayer(
             Text text,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IMyMemoryCache memoryCache,
             IWebRootPath webRootPath,
             IAppFacade appFacade)
-            : base(text, dbContextFactory, memoryCache, webRootPath)
+            : base(appFacade, dbContextFactory, memoryCache, webRootPath, text)
         {
-            this._appFacade = appFacade;
+            
         }
 
         public virtual void RefreshCache()

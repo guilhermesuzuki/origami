@@ -17,14 +17,18 @@ namespace Origami.Core.Data
         ISearch<T>
         where T : class, IId
     {
+        protected readonly IAppFacade _appFacade;
+
         protected RepositoryLayer4Search(
-            Text text,
+            IAppFacade appFacade,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IMyMemoryCache memoryCache,
-            IWebRootPath webRootPath)
+            IWebRootPath webRootPath,
+            Text text
+            )
             : base(text, dbContextFactory, memoryCache, webRootPath)
         {
-
+            this._appFacade = appFacade;
         }
 
         public virtual bool CreateSearchIndex()
@@ -119,11 +123,6 @@ namespace Origami.Core.Data
                 if (socialProfile.LastName.Has() == true) doc.Add(new TextField("socialProfileLastName", socialProfile.LastName, Field.Store.YES));
             }
 
-            if (entity is OrigamiUser user)
-            {
-                if (user.Username.Has() == true) doc.Add(new TextField("userName", user.Username, Field.Store.YES));
-            }
-
             if (entity is OrigamiContentComment pcomment)
             {
                 var post = this.MemoryCache.Read<OrigamiContent>().Id(pcomment.ContentId);
@@ -133,6 +132,14 @@ namespace Origami.Core.Data
                 if (pcSocialProfile?.Name.Has() == true) doc.Add(new TextField("comment_socialProfileName", pcSocialProfile.Name, Field.Store.YES));
                 if (pcSocialProfile != null) doc.Add(new TextField("comment_socialProfileSocialNetwork", pcSocialProfile.SocialNetwork.ToString(), Field.Store.YES));
                 if (post?.Title.Has() == true) doc.Add(new TextField("comment_postTitle", post.Title, Field.Store.YES));
+            }
+
+            if (_appFacade.Admin == true)
+            {
+                if (entity is OrigamiUser user)
+                {
+                    if (user.Username.Has() == true) doc.Add(new TextField("userName", user.Username, Field.Store.YES));
+                }
             }
 
             return doc;
