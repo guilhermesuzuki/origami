@@ -20,6 +20,6 @@
 
     private void _goToDetails()
     {
-        this.GhostOfTheNavigator!.NavigateTo($"/users/{Entity?.Id}");
+        this.GhostOfTheNavigator!.NavigateTo($"{Entity?.Hyperlink}#content-start");
     }
 }
