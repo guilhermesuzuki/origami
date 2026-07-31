@@ -50,11 +50,6 @@ namespace Origami.Core
             }
         }
 
-        public static void Save(this IMemoryCache memoryCache, OrigamiContent? entity)
-        {
-            memoryCache.Save<OrigamiContent>(entity);
-        }
-
         public static void Save<T>(this IMemoryCache memoryCache, T? entity) where T : class, IId
         {
             if (entity == null) return;

@@ -198,6 +198,7 @@ namespace Origami.Core
                     OrigamiPage page => page.GetClone() as T ?? Activator.CreateInstance<T>(),
                     OrigamiPost post => post.GetClone() as T ?? Activator.CreateInstance<T>(),
                     OrigamiQuickNote note => note.GetClone() as T ?? Activator.CreateInstance<T>(),
+                    OrigamiSoftwareRelease softwareRelease => softwareRelease.GetClone() as T ?? Activator.CreateInstance<T>(),
                     OrigamiSpecialMessage specialMessage => specialMessage.GetClone() as T ?? Activator.CreateInstance<T>(),
                     OrigamiSpecialPage specialPage => specialPage.GetClone() as T ?? Activator.CreateInstance<T>(),
                     OrigamiVideo video => video.GetClone() as T ?? Activator.CreateInstance<T>(),
