@@ -8,11 +8,12 @@ namespace Origami.Core.Data
         IDashboardRepository
     {
         public DashboardRepository(
+            IAppFacade appFacade,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IMyMemoryCache memoryCache,
             IWebRootPath wwwRoot,
             Text text)
-            : base(text, dbContextFactory, memoryCache, wwwRoot)
+            : base(text, dbContextFactory, memoryCache, wwwRoot, appFacade)
         {
 
         }

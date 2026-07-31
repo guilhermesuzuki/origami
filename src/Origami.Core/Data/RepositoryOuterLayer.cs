@@ -1,20 +1,24 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Origami.Core.Models;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace Origami.Core.Data
 {
     public abstract class RepositoryOuterLayer<T> : RepositoryLayer4Search<T>
         where T : class, IId
     {
+        protected readonly IAppFacade _appFacade;
+
         protected RepositoryOuterLayer(
             Text text,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IMyMemoryCache memoryCache,
-            IWebRootPath webRootPath)
+            IWebRootPath webRootPath,
+            IAppFacade appFacade)
             : base(text, dbContextFactory, memoryCache, webRootPath)
         {
-
+            this._appFacade = appFacade;
         }
 
         public virtual void RefreshCache()
@@ -25,6 +29,33 @@ namespace Origami.Core.Data
             lock (OrigamiConstants.SyncRoot)
             {
                 using var db = DbContextFactory.CreateDbContext();
+
+                //front-end
+                if (_appFacade.Admin.GetValueOrDefault() == false)
+                {
+                    if (typeof(T).IsAssignableTo(typeof(OrigamiBlog)) == true)
+                    {
+                        var blogs = from a in db.Blogs.AsNoTracking()
+                                    where a.IsDeleted == false
+                                    where a.IsActive == true
+                                    select a;
+
+                        MemoryCache.Set(k, blogs.ToList());
+                        return;
+                    }
+                    if (typeof(T).IsAssignableTo(typeof(OrigamiContent)) == true)
+                    {
+                        var contents = from a in db.Contents.AsNoTracking()
+                                       where a.IsDeleted == false
+                                       where a.IsPublished == true
+                                       where a.DatePublished <= DateTime.UtcNow
+                                       select a;
+
+                        MemoryCache.Set(k, contents.ToList());
+                        return;
+                    }
+                }
+
                 var l = db.Read<T>();
                 MemoryCache.Set(k, l);
             }

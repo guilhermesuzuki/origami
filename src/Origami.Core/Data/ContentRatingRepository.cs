@@ -17,13 +17,14 @@ namespace Origami.Core.Data
         /// <param name="dbContext"></param>
         /// <param name="distributedCache"></param>
         public ContentRatingRepository(
+            IAppFacade appFacade,
             IValidator<OrigamiContentRating> validator,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             ISocialProfileRepository socialProfileRepository,
             IMyMemoryCache memoryCache,
             IWebRootPath wwwRoot,
             Text text)
-            : base(text, dbContextFactory, memoryCache, wwwRoot)
+            : base(text, dbContextFactory, memoryCache, wwwRoot, appFacade)
         {
             _validator = validator;
             _socialProfileRepository = socialProfileRepository;

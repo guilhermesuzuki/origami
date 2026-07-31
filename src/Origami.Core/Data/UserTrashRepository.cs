@@ -39,6 +39,7 @@ namespace Origami.Core.Data
         private readonly IWhatToSeeNextRepository _whatToSeeNextRepository;
         
         public UserTrashRepository(
+            IAppFacade appFacade,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IMyMemoryCache memoryCache,
             IBlogRepository blogRepository,
@@ -74,7 +75,7 @@ namespace Origami.Core.Data
 
             Text text,
             IWebRootPath wwwRoot)
-            : base(text, dbContextFactory, memoryCache, wwwRoot)
+            : base(text, dbContextFactory, memoryCache, wwwRoot, appFacade)
         {
             _blogRepository = blogRepository;
             _blogSettingsRepository = blogSettingsRepository;

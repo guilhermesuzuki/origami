@@ -26,7 +26,7 @@ namespace Origami.Core.Data
             IUserRepository userRepository,
             IWebRootPath wwwRoot,
             Text text)
-            : base(text, dbContextFactory, memoryCache, wwwRoot)
+            : base(text, dbContextFactory, memoryCache, wwwRoot, appFacade)
         {
             _appFacade = appFacade;
             _configuration = configuration;

@@ -19,6 +19,7 @@ namespace Origami.Core.Data
         /// <param name="dbContext"></param>
         /// <param name="distributedCache"></param>
         public ContentCommentRepository(
+            IAppFacade appFacade,
             IContentCommentReactionRepository contentCommentReactionRepository,
             IEventRepository eventRepository,
             IValidator<OrigamiContentComment> validator,
@@ -26,7 +27,7 @@ namespace Origami.Core.Data
             IMyMemoryCache memoryCache,
             IWebRootPath wwwRoot,
             Text text)
-            : base(text, dbContextFactory, memoryCache, wwwRoot)
+            : base(text, dbContextFactory, memoryCache, wwwRoot, appFacade)
         {
             _validator = validator;
             _contentCommentReactionRepository = contentCommentReactionRepository;

@@ -367,7 +367,10 @@ namespace Origami.Core
         public static IEnumerable<T> Published<T>(this IEnumerable<T> entities)
             where T : IPublished
         {
-            return entities.Where(x => x.IsPublished == true).NonDeleted();
+            return from a in entities.NonDeleted()
+                   where a.IsPublished
+                   where a.DatePublished <= DateTime.UtcNow
+                   select a;
         }
 
         /// <summary>

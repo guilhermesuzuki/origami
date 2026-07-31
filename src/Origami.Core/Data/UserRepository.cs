@@ -21,6 +21,7 @@ namespace Origami.Core.Data
         /// <param name="dbContext"></param>
         /// <param name="distributedCache"></param>
         public UserRepository(
+            IAppFacade appFacade,
             IValidator<OrigamiUser> validator,
             IContentRepository contentRepository,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
@@ -30,7 +31,7 @@ namespace Origami.Core.Data
             IUserRoleRepository userRoleRepository,
             Text text,
             IWebRootPath wwwRoot)
-            : base(text, dbContextFactory, memoryCache, wwwRoot)
+            : base(text, dbContextFactory, memoryCache, wwwRoot, appFacade)
         {
             _validator = validator;
             _contentRepository = contentRepository;

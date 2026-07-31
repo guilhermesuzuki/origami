@@ -8,11 +8,12 @@ namespace Origami.Core.Data
         IUserPasswordResetRepository
     {
         public UserPasswordResetRepository(
+            IAppFacade appFacade,
             Text text,
             IMyMemoryCache memoryCache,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IWebRootPath wwwRoot)
-            : base(text, dbContextFactory, memoryCache, wwwRoot)
+            : base(text, dbContextFactory, memoryCache, wwwRoot, appFacade)
         {
 
         }

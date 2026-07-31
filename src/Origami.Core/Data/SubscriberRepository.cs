@@ -12,6 +12,7 @@ namespace Origami.Core.Data
         protected readonly ISettingsRepository _settingsRepository;
 
         public SubscriberRepository(
+            IAppFacade appFacade,
             IEventRepository eventRepository,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IMyMemoryCache memoryCache,
@@ -19,7 +20,7 @@ namespace Origami.Core.Data
             ISettingsRepository settingsRepository,
             Text text,
             IWebRootPath wwwRoot) :
-            base(text, dbContextFactory, memoryCache, wwwRoot)
+            base(text, dbContextFactory, memoryCache, wwwRoot, appFacade)
         {
             _eventRepository = eventRepository;
             _emailRepository = emailRepository;
