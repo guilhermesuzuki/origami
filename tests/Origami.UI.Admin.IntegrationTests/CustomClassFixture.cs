@@ -15,30 +15,14 @@ namespace Origami.UI.Admin.IntegrationTests
         public static Guid CategoryIdA = new Guid("1824ed20-0d55-476c-a716-c531667aa8ce");
         public static Guid CategoryIdB = new Guid("27e926c3-fc50-484d-85fb-328ff7f51b82");
         public static Guid CategoryIdC = new Guid("111bd28d-04a9-4e9a-b6c7-436e43aba651");
-
-        public static OrigamiContentComment Comment = new()
-        {
-            Content = "<p>Hey, this is a comment!</p>",
-            ContentId = ContentId,
-            DateCreated = DateTime.UtcNow,
-            Ip = "192.168.0.1",
-            IsApproved = true,
-            IsBot = true,
-            IsDeleted = false,
-            IsMobileDevice = false,
-            IsSpam = false,
-            SocialProfileId = TestFacebookId,
-        };
-
+        public static Guid CommentId = new Guid("45888848-1175-480a-b01a-d854d59e4721");
         public static Guid ContentId = new Guid("2e288535-0168-4625-bb4a-2e5d95e24a3b");
         public static Guid PageIdA = new Guid("223fef1e-16b7-4a98-9eba-3d489ca5abd3");
         public static Guid PageIdB = new Guid("22b9cd98-ce63-45b8-b2ed-a1cf682967dc");
         public static Guid PageIdC = new Guid("2d5ee8f2-c730-4c79-8024-cbdb786405f3");
-
         public static Guid PostIdA = new Guid("01ce226b-ca04-4642-a85b-5f0229961058");
         public static Guid PostIdB = new Guid("bcaf0a73-7f21-4d34-8f9c-26d2bc3e0aeb");
         public static Guid PostIdC = new Guid("a9e421de-e438-4d65-98e4-764d339a59ae");
-
         public static Guid RoleId = new Guid("e1f2d3c4-b5a6-7d8e-9f0a-1b2c3d4e5f6a");
         public static Guid RoleId1 = new Guid("f1e2d3c4-b5a6-7d8e-9f0a-1b2c3d4e5f6b");
         public static Guid TestFacebookId = new Guid("5d89f755-65f9-44da-8b2c-8a2a390cec5d");
@@ -57,6 +41,21 @@ namespace Origami.UI.Admin.IntegrationTests
             NanoId = Guid.NewGuid().ToString().Substring(0, 8),
             IsBlocked = false,
             IsDeleted = false,
+        };
+
+        public OrigamiContentComment Comment = new()
+        {
+            Id = CommentId,
+            Content = "<p>Hey, this is a comment!</p>",
+            ContentId = ContentId,
+            DateCreated = DateTime.UtcNow,
+            Ip = "192.168.0.1",
+            IsApproved = true,
+            IsBot = true,
+            IsDeleted = false,
+            IsMobileDevice = false,
+            IsSpam = false,
+            SocialProfileId = TestFacebookId,
         };
 
         public OrigamiBlog TestBlog = new OrigamiBlog

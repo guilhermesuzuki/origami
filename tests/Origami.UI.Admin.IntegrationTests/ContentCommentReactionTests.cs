@@ -42,7 +42,9 @@ namespace Origami.UI.Admin.IntegrationTests
                 Reaction = "❤️",
             };
 
-            superRepository.ContentCommentReactions.SmartCreate(new(TestFacebookProfile, DateTime.UtcNow, reaction));
+            var hub = superRepository.ContentCommentReactions.SmartCreate(new(TestFacebookProfile, DateTime.UtcNow, reaction));
+            hub.ShouldNotBeNull();
+            hub.Ok.ShouldBeTrue();
 
             var query = from a in db.ContentCommentReactions.AsNoTracking() where a.Id == reaction.Id select a;
             var dbReaction = query.Single();

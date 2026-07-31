@@ -400,11 +400,10 @@ namespace Origami.Core.Data
                 db.Entry(root.Entity).State = nil ? EntityState.Added : EntityState.Modified;
                 db.SaveChanges();
 
-                var m1 = Save(db, root.Entity, root.Categories.Clone());
-                var m2 = Save(db, root.Entity, root.Tags.Clone());
-                var clonedEntity = root.Entity.Clone();
+                var m1 = Save(db, root.Entity, root.Categories);
+                var m2 = Save(db, root.Entity, root.Tags);
 
-                _memoryCache.Save(clonedEntity as OrigamiContent);
+                _memoryCache.Save(root.Entity as OrigamiContent);
                 _memoryCache.SaveCache(m1);
                 _memoryCache.SaveCache(m2);
 

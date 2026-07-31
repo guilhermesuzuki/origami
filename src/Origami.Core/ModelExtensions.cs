@@ -190,9 +190,19 @@ namespace Origami.Core
             {
                 return restore.GetClone() as T ?? Activator.CreateInstance<T>();
             }
-            if (entity is OrigamiPost post)
+
+            if (entity is OrigamiContent content)
             {
-                return post.GetClone() as T ?? Activator.CreateInstance<T>();
+                return content switch
+                {
+                    OrigamiPage page => page.GetClone() as T ?? Activator.CreateInstance<T>(),
+                    OrigamiPost post => post.GetClone() as T ?? Activator.CreateInstance<T>(),
+                    OrigamiQuickNote note => note.GetClone() as T ?? Activator.CreateInstance<T>(),
+                    OrigamiSpecialMessage specialMessage => specialMessage.GetClone() as T ?? Activator.CreateInstance<T>(),
+                    OrigamiSpecialPage specialPage => specialPage.GetClone() as T ?? Activator.CreateInstance<T>(),
+                    OrigamiVideo video => video.GetClone() as T ?? Activator.CreateInstance<T>(),
+                    _ => throw new NotImplementedException($"Unsupported entity type: {content.GetType().FullName}"),
+                };
             }
 
             return entity != null ? entity.GetClone() : Activator.CreateInstance<T>();

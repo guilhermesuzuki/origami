@@ -91,7 +91,9 @@ namespace Origami.UI.Admin.IntegrationTests
             _hubContentPostTests.Insert_WhenEntityIsValid_ShouldPersistRecord(false);
             _socialProfileTests.Insert_WhenEntityIsValid_ShouldPersistRecord(false);
 
-            superRepository.ContentComments.SmartCreate(new(TestFacebookProfile, DateTime.UtcNow, Comment));
+            var hub = superRepository.ContentComments.SmartCreate(new(TestFacebookProfile, DateTime.UtcNow, Comment));
+            hub.ShouldNotBeNull();
+            hub.Ok.ShouldBeTrue();
 
             //private scope
             {
