@@ -96,7 +96,27 @@
                     </ul>
                 </div>
                 <div class="row">
-                    <div class="col-12 col-xxl-4">
+                    <div class="col-12 col-xxl-6">
+                        <div class="p-3 border mt-3">
+                            <div class="w-100 text-white bg-secondary text-center">
+                                <i class="bi bi-file-earmark-text-fill"></i>
+                                @Text.Lower("Quick notes")
+                            </div>
+                            <MudDataGrid @ref="_quickNotesGrid" Class="mt-3" T="OrigamiQuickNote" ServerData="this.GetQuickNotes" Filterable="false" SortMode="SortMode.None">
+                                <Columns>
+                                    <TemplateColumn>
+                                        <CellTemplate>
+                                            <ContentHeader Entity="context.Item" ShowRelatedContent="false"></ContentHeader>
+                                        </CellTemplate>
+                                    </TemplateColumn>
+                                </Columns>
+                                <PagerContent>
+                                    <MudDataGridPager T="OrigamiQuickNote" PageSizeOptions="new int[] { 5, 10, 25, }"></MudDataGridPager>
+                                </PagerContent>
+                            </MudDataGrid>
+                        </div>
+                    </div>
+                    <div class="col-12 col-xxl-6">
                         <div class="p-3 border mt-3">
                             <div class="w-100 text-white bg-secondary text-center">
                                 <i class="bi bi-file-earmark-text-fill"></i>
@@ -116,7 +136,9 @@
                             </MudDataGrid>
                         </div>
                     </div>
-                    <div class="col-12 col-xxl-4">
+                </div>
+                <div class="row">
+                    <div class="col-12 col-xxl-6">
                         <div class="p-3 border mt-3">
                             <div class="w-100 text-white bg-secondary text-center">
                                 <i class="bi bi-file-earmark-text-fill"></i>
@@ -136,7 +158,7 @@
                             </MudDataGrid>
                         </div>
                     </div>
-                    <div class="col-12 col-xxl-4">
+                    <div class="col-12 col-xxl-6">
                         <div class="p-3 border mt-3">
                             <div class="w-100 text-white bg-secondary text-center">
                                 <i class="fa-solid fa-video"></i>
@@ -171,6 +193,7 @@
 
     protected MudDataGrid<OrigamiPage> _pagesGrid = new();
     protected MudDataGrid<OrigamiPost> _postsGrid = new();
+    protected MudDataGrid<OrigamiQuickNote> _quickNotesGrid = new();
     protected MudDataGrid<OrigamiVideo> _videosGrid = new();
 
     /// <summary>
@@ -282,6 +305,43 @@
         );
 
         return Task.FromResult(new GridData<OrigamiVideo> { Items = result.Rows, TotalItems = result.NumberOfRows, });
+    }
+
+    /// <summary>
+    /// This method should retrieve the Entities from database or memory
+    /// </summary>
+    /// <param name="state"></param>
+    /// <param name="token"></param>
+    /// <returns></returns>
+    protected virtual Task<GridData<Core.Models.OrigamiQuickNote>> GetQuickNotes(GridState<Core.Models.OrigamiQuickNote> state, CancellationToken token)
+    {
+        var orders = new StringBuilder();
+
+        //iterates through every sort definition
+        foreach (var definition in state.SortDefinitions)
+        {
+            orders.AppendFormat(",{0} {1}", definition.SortBy, definition.Descending ? "DESC" : "ASC");
+        }
+
+        var filters = new StringBuilder($"{nameof(Core.Models.OrigamiQuickNote.AuthorId)} == \"{GetUser().Id}\"");
+
+        //iterates through every filter definition
+        foreach (var definition in state.FilterDefinitions)
+        {
+            filters.AppendFormat(" && ({0})", definition.Filter());
+        }
+
+        var orderBy = orders.ToString();
+
+        //pulls information from cache
+        var result = this.Super.Contents.ReadFromCache().OfType<OrigamiQuickNote>().Published().Query(
+            state.PageSize,
+            state.Page * state.PageSize,
+            filters.ToString(),
+            orderBy != string.Empty ? orderBy[1..] : $"{nameof(Core.Models.OrigamiQuickNote.Title)}"
+        );
+
+        return Task.FromResult(new GridData<Core.Models.OrigamiQuickNote> { Items = result.Rows, TotalItems = result.NumberOfRows, });
     }
 
     protected OrigamiUser GetUser()
