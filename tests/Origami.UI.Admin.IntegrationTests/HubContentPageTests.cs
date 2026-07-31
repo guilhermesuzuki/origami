@@ -25,6 +25,9 @@ namespace Origami.UI.Admin.IntegrationTests
             var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
             scope.CreateTestBlog(TestBlog, TestRole, TestUser);
+            scope.CreateTestCategory(TestCategoryA, TestUser);
+            scope.CreateTestCategory(TestCategoryB, TestUser);
+            scope.CreateTestCategory(TestCategoryC, TestUser);
 
             var hubRepository = scope.ServiceProvider.GetRequiredService<IHubContentRepository<HubContentPage>>();
             using var db = superRepository.DbContextFactory.CreateDbContext();
@@ -74,7 +77,8 @@ namespace Origami.UI.Admin.IntegrationTests
                 cachePage.IsDeleted.ShouldBe(memPage.IsDeleted);
             }
 
-            TestPageA.ParentId = TestPageC.Id;
+            hubA.Entity.ParentId = TestPageC.Id;
+
             var resultLoop = hubRepository.Save(hubA, TestUser);
 
             resultLoop.ShouldNotBeNull();
@@ -91,6 +95,14 @@ namespace Origami.UI.Admin.IntegrationTests
             var cacheAfterLoop = superRepository.MyMemoryCache.Read<OrigamiPage>().Id(TestPageA.Id);
             cacheAfterLoop.ShouldNotBeNull();
             cacheAfterLoop.ParentId.ShouldBeNull();
+
+            var dbCategories = from a in db.ContentCategories.AsNoTracking() where a.ContentId == hubA.Id select a;
+            dbCategories.ShouldNotBeNull();
+            dbCategories.Count().ShouldBe(0);
+
+            var cacheCategories = superRepository.MyMemoryCache.Read<OrigamiContentCategory>().Where(a => a.ContentId == hubA.Id);
+            cacheCategories.ShouldNotBeNull();
+            cacheCategories.Count().ShouldBe(0);
         }
     }
 }
