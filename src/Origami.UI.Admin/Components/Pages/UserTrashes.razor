@@ -1,5 +1,4 @@
 ﻿@page "/user/trashes"
-@page "/user/trashes/{NanoId}"
 @inherits BasicAdminGrid<OrigamiUserTrash>
 
 <style>
@@ -106,6 +105,11 @@
                                             var message = this.Super.GetSpecialMessages().Id(context.Item.Id);
                                             <ContentTitleColumn Entity="message"></ContentTitleColumn>
                                         }
+                                        else if (context.Item.Type.Like("OrigamiSoftwareRelease") == true)
+                                        {
+                                            var softwareRelease = this.Super.Contents.ReadFromCache().OfType<OrigamiSoftwareRelease>().Id(context.Item.Id);
+                                            <ContentTitleColumn Entity="softwareRelease"></ContentTitleColumn>
+                                        }
                                     </div>
                                 </CellTemplate>
                             </TemplateColumn>
@@ -139,6 +143,10 @@
                                         else if (context.Item.Type.Like("OrigamiVideo") == true)
                                         {
                                             <span>@Text.Original("Video")</span>
+                                        }
+                                        else if (context.Item.Type.Like("OrigamiSoftwareRelease") == true)
+                                        {
+                                            <span>@Text.Original("Software release")</span>
                                         }
                                         else
                                         {
@@ -186,15 +194,5 @@
                     select trash;
 
         return query.ToList();
-    }
-
-    protected override void OnEdit(OrigamiUserTrash entity)
-    {
-        GhostOfTheNavigator.NavigateTo($"/user/trashes/{entity.NanoId}");
-    }
-
-    protected override void OnSearchResultSelected(OrigamiUserTrash entity)
-    {
-        GhostOfTheNavigator.NavigateTo($"/user/trashes/{entity.NanoId}");
     }
 }

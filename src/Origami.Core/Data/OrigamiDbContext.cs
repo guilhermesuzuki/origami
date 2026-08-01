@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Origami.Core.Models;
+using Origami.Core.Models.Events;
 
 namespace Origami.Core.Data
 {
@@ -73,6 +74,11 @@ namespace Origami.Core.Data
         public DbSet<OrigamiContentTag> ContentTags { get; set; }
 
         /// <summary>
+        /// Events
+        /// </summary>
+        public DbSet<OrigamiEvent> Events { get; set; }
+
+        /// <summary>
         /// Pages
         /// </summary>
         public DbSet<OrigamiPage> Pages { get; set; }
@@ -132,6 +138,25 @@ namespace Origami.Core.Data
         /// </summary>
         public DbSet<OrigamiSetting> Settings { get; set; }
 
+        public DbSet<SocialProfileCancelsReactionToCommentEvent> SocialProfileCancelsReactionToCommentEvents { get; set; }
+
+        public DbSet<SocialProfileCancelsReactionToContentEvent> SocialProfileCancelsReactionToContentEvents { get; set; }
+
+        public DbSet<SocialProfileDeletesCommentEvent> SocialProfileDeletesCommentEvents { get; set; }
+
+        public DbSet<SocialProfileEditsCommentEvent> SocialProfileEditsCommentEvents { get; set; }
+
+        public DbSet<SocialProfileLogsIntoWebsiteEvent> SocialProfileLogsIntoWebsiteEvents { get; set; }
+
+        public DbSet<SocialProfilePinsCommentEvent> SocialProfilePinsCommentEvents { get; set; }
+
+        public DbSet<SocialProfileReactsToCommentEvent> SocialProfileReactsToCommentEvents { get; set; }
+
+        public DbSet<SocialProfileReactsToContentEvent> SocialProfileReactsToContentEvents { get; set; }
+
+        public DbSet<SocialProfileRepliesToCommentEvent> SocialProfileRepliesToCommentEvents { get; set; }
+
+        public DbSet<SocialProfileRepliesToContentEvent> SocialProfileRepliesToContentEvents { get; set; }
         /// <summary>
         /// Social Profiles
         /// </summary>
@@ -141,6 +166,12 @@ namespace Origami.Core.Data
         /// Social Profiles for Deletion
         /// </summary>
         public DbSet<OrigamiSocialProfileDelete> SocialProfilesForDeletion { get; set; }
+
+        public DbSet<SocialProfileSubscribesToWebsiteEvent> SocialProfileSubscribesToWebsiteEvents { get; set; }
+        public DbSet<SocialProfileUnpinsCommentEvent> SocialProfileUnpinsCommentEvents { get; set; }
+        public DbSet<SocialProfileUnsubscribesFromWebsiteEvent> SocialProfileUnsubscribesFromWebsiteEvents { get; set; }
+
+        public DbSet<OrigamiSoftwareRelease> SoftwareReleases { get; set; }
 
         /// <summary>
         /// Special messages
@@ -166,12 +197,10 @@ namespace Origami.Core.Data
         /// User blogs
         /// </summary>
         public DbSet<OrigamiUserBlog> UserBlogs { get; set; }
-
         /// <summary>
         /// User password resets
         /// </summary>
         public DbSet<OrigamiUserPasswordReset> UserPasswordResets { get; set; }
-
         /// <summary>
         /// User Roles
         /// </summary>
@@ -181,17 +210,14 @@ namespace Origami.Core.Data
         /// Users
         /// </summary>
         public DbSet<OrigamiUser> Users { get; set; }
-
         /// <summary>
         /// User Trashes
         /// </summary>
         public DbSet<OrigamiUserTrash> UserTrashes { get; set; }
-
         /// <summary>
         /// Videos
         /// </summary>
         public DbSet<OrigamiVideo> Videos { get; set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -203,6 +229,7 @@ namespace Origami.Core.Data
                 .HasDiscriminator(x => x.Type)
                 .HasValue<OrigamiPage>(nameof(OrigamiPage))
                 .HasValue<OrigamiPost>(nameof(OrigamiPost))
+                .HasValue<OrigamiSoftwareRelease>(nameof(OrigamiSoftwareRelease))
                 .HasValue<OrigamiSpecialPage>(nameof(OrigamiSpecialPage))
                 .HasValue<OrigamiQuickNote>(nameof(OrigamiQuickNote))
                 .HasValue<OrigamiVideo>(nameof(OrigamiVideo))
@@ -272,6 +299,46 @@ namespace Origami.Core.Data
             modelBuilder.Entity<OrigamiUserBlog>().HasOne<OrigamiUser>().WithMany().HasForeignKey(x => x.UserId);
             modelBuilder.Entity<OrigamiQuickNote>().HasOne<OrigamiBlog>().WithMany().HasForeignKey(x => x.BlogId);
             modelBuilder.Entity<OrigamiQuickNote>().HasOne<OrigamiUser>().WithMany().HasForeignKey(x => x.AuthorId);
+
+            /*backup and restore mapping*/
+            modelBuilder.Entity<OrigamiEvent>()
+                .ToTable("oi_Events")
+                .HasDiscriminator<string>("Type")
+                .HasValue<AdminUserActivatesBlog>(nameof(AdminUserActivatesBlog))
+                .HasValue<AdminUserCreatesBlog>(nameof(AdminUserCreatesBlog))
+                .HasValue<AdminUserDeactivatesBlog>(nameof(AdminUserDeactivatesBlog))
+                .HasValue<AdminUserDeletesBlog>(nameof(AdminUserDeletesBlog))
+                .HasValue<AdminUserPurgesBlog>(nameof(AdminUserPurgesBlog))
+                .HasValue<AdminUserRestoresBlog>(nameof(AdminUserRestoresBlog))
+                .HasValue<SocialProfileDeletesCommentEvent>(nameof(SocialProfileDeletesCommentEvent))
+                .HasValue<SocialProfileEditsCommentEvent>(nameof(SocialProfileEditsCommentEvent))
+                .HasValue<SocialProfileLogsIntoWebsiteEvent>(nameof(SocialProfileLogsIntoWebsiteEvent))
+                .HasValue<SocialProfilePinsCommentEvent>(nameof(SocialProfilePinsCommentEvent))
+                .HasValue<SocialProfileReactsToCommentEvent>(nameof(SocialProfileReactsToCommentEvent))
+                .HasValue<SocialProfileReactsToContentEvent>(nameof(SocialProfileReactsToContentEvent))
+                .HasValue<SocialProfileRepliesToCommentEvent>(nameof(SocialProfileRepliesToCommentEvent))
+                .HasValue<SocialProfileRepliesToContentEvent>(nameof(SocialProfileRepliesToContentEvent))
+                .HasValue<SocialProfileSubscribesToWebsiteEvent>(nameof(SocialProfileSubscribesToWebsiteEvent))
+                .HasValue<SocialProfileUnpinsCommentEvent>(nameof(SocialProfileUnpinsCommentEvent))
+                .HasValue<SocialProfileUnsubscribesFromWebsiteEvent>(nameof(SocialProfileUnsubscribesFromWebsiteEvent))
+                ;
+
+            modelBuilder.Entity<OrigamiEvent>().HasOne<OrigamiUser>().WithMany().HasForeignKey(x => x.UserId);
+            modelBuilder.Entity<OrigamiEvent>().HasOne<OrigamiSocialProfile>().WithMany().HasForeignKey(x => x.SocialProfileId);
+
+            modelBuilder.Entity<SocialProfileDeletesCommentEvent>().HasOne<OrigamiContentComment>().WithMany().HasForeignKey(x => x.CommentId);
+            modelBuilder.Entity<SocialProfileEditsCommentEvent>().HasOne<OrigamiContentComment>().WithMany().HasForeignKey(x => x.CommentId);
+            modelBuilder.Entity<SocialProfileReactsToCommentEvent>().HasOne<OrigamiContentCommentReaction>().WithMany().HasForeignKey(x => x.ReactionId);
+            modelBuilder.Entity<SocialProfileReactsToContentEvent>().HasOne<OrigamiContentReaction>().WithMany().HasForeignKey(x => x.ReactionId);
+            modelBuilder.Entity<SocialProfileRepliesToCommentEvent>().HasOne<OrigamiContentComment>().WithMany().HasForeignKey(x => x.CommentId);
+            modelBuilder.Entity<SocialProfileRepliesToContentEvent>().HasOne<OrigamiContent>().WithMany().HasForeignKey(x => x.ContentId);
+
+            modelBuilder.Entity<AdminUserActivatesBlog>().HasOne<OrigamiBlog>().WithMany().HasForeignKey(x => x.BlogId);
+            modelBuilder.Entity<AdminUserCreatesBlog>().HasOne<OrigamiBlog>().WithMany().HasForeignKey(x => x.BlogId);
+            modelBuilder.Entity<AdminUserDeactivatesBlog>().HasOne<OrigamiBlog>().WithMany().HasForeignKey(x => x.BlogId);
+            modelBuilder.Entity<AdminUserDeletesBlog>().HasOne<OrigamiBlog>().WithMany().HasForeignKey(x => x.BlogId);
+            modelBuilder.Entity<AdminUserPurgesBlog>().HasOne<OrigamiBlog>().WithMany().HasForeignKey(x => x.BlogId);
+            modelBuilder.Entity<AdminUserRestoresBlog>().HasOne<OrigamiBlog>().WithMany().HasForeignKey(x => x.BlogId);
         }
     }
 }

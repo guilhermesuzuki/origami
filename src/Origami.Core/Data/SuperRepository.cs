@@ -17,6 +17,7 @@ namespace Origami.Core.Data
             IConfiguration configuration,
             IDirectoryRepository directoryRepository,
             IEmailRepository emailRepository,
+            IEventRepository eventRepository,
             IFileRepository fileRepository,
             IPageRepository pageRepository,
             IPhysicalPageRepository physicalPageRepository,
@@ -60,6 +61,7 @@ namespace Origami.Core.Data
             DbContextFactory = dbContextFactory;
             Directories = directoryRepository;
             Emails = emailRepository;
+            Events = eventRepository;
             Files = fileRepository;
             Pages = pageRepository;
             PhysicalPages = physicalPageRepository;
@@ -110,6 +112,7 @@ namespace Origami.Core.Data
         public IDbContextFactory<OrigamiDbContext> DbContextFactory { get; }
         public IDirectoryRepository Directories { get; }
         public IEmailRepository Emails { get; }
+        public IEventRepository Events { get; }
         public IFileRepository Files { get; }
         public bool MaintenanceLockout => this.GetMaintenancePages().Any();
         public IMyMemoryCache MyMemoryCache { get; }
@@ -308,6 +311,14 @@ namespace Origami.Core.Data
             return replies;
         }
 
+        public IEnumerable<OrigamiSoftwareRelease> GetSoftwareReleases(Guid blog)
+        {
+            return Contents.ReadFromCache().OfType<OrigamiSoftwareRelease>()
+                .Published()
+                .Blog(blog)
+                .OrderByDescending(x => x.DateReleased);
+        }
+
         public IEnumerable<OrigamiSpecialMessage> GetSpecialMessages()
         {
             return Contents.ReadFromCache().OfType<OrigamiSpecialMessage>();
@@ -421,6 +432,9 @@ namespace Origami.Core.Data
                 UserBlogs.RefreshCache();
             }
 
+            using var db = this.DbContextFactory.CreateDbContext();
+            var events = db.Events.ToList();
+
             return new();
         }
 
@@ -438,9 +452,14 @@ namespace Origami.Core.Data
             ContentComments.CreateSearchIndex();
             Contents.CreateSearchIndex();
             ContentTags.CreateSearchIndex();
-            Roles.CreateSearchIndex();
             SocialProfiles.CreateSearchIndex();
             Users.CreateSearchIndex();
+
+            if (AppFacade.Admin == true)
+            {
+                Roles.CreateSearchIndex();
+            }
+
             return new();
         }
 
@@ -523,6 +542,7 @@ namespace Origami.Core.Data
                 .. Categories.ReadFromCache(),
                 .. Contents.ReadFromCache().OfType<OrigamiPage>(),
                 .. Contents.ReadFromCache().OfType<OrigamiPost>(),
+                .. Contents.ReadFromCache().OfType<OrigamiSoftwareRelease>(),
                 .. Contents.ReadFromCache().OfType<OrigamiVideo>(),
                 .. Users.ReadFromCache() ];
         }

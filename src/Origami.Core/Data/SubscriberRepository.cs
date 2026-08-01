@@ -8,17 +8,21 @@ namespace Origami.Core.Data
         ISubscriberRepository
     {
         protected readonly IEmailRepository _emailRepository;
+        protected readonly IEventRepository _eventRepository;
         protected readonly ISettingsRepository _settingsRepository;
 
         public SubscriberRepository(
+            IAppFacade appFacade,
+            IEventRepository eventRepository,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IMyMemoryCache memoryCache,
             IEmailRepository emailRepository,
             ISettingsRepository settingsRepository,
             Text text,
             IWebRootPath wwwRoot) :
-            base(text, dbContextFactory, memoryCache, wwwRoot)
+            base(text, dbContextFactory, memoryCache, wwwRoot, appFacade)
         {
+            _eventRepository = eventRepository;
             _emailRepository = emailRepository;
             _settingsRepository = settingsRepository;
         }
@@ -40,7 +44,9 @@ namespace Origami.Core.Data
                 subscriber.IsVerified = true;
                 subscriber.Email = ctx.Entity.Email;
                 var subscribeContext = new DataOperationContext<OrigamiSubscriber>(ctx.User, ctx.DateTime, subscriber);
-                return SmartUpdate(subscribeContext, false);
+                var hub = SmartUpdate(subscribeContext, false);
+                hub.OnSuccess(() => _eventRepository.SocialProfileSubscribesToWebsite(ctx.Entity));
+                return hub;
             }
             else
             {
@@ -53,7 +59,9 @@ namespace Origami.Core.Data
                     Email = ctx.Entity.Email,
                 };
                 var subscribeContext = new DataOperationContext<OrigamiSubscriber>(ctx.User, ctx.DateTime, newSubscriber);
-                return SmartCreate(subscribeContext, false);
+                var hub = SmartCreate(subscribeContext, false);
+                hub.OnSuccess(() => _eventRepository.SocialProfileSubscribesToWebsite(ctx.Entity));
+                return hub;
             }
         }
 
@@ -79,6 +87,8 @@ namespace Origami.Core.Data
                 subscriber.IsDeleted = true;
                 subscriber.DateModified = DateTime.UtcNow;
 
+                var hub = SmartDelete(subscribeContext, false);
+                hub.OnSuccess(() => _eventRepository.SocialProfileUnsubscribesFromWebsite(ctx.Entity));
                 return SmartDelete(subscribeContext, false);
             }
 

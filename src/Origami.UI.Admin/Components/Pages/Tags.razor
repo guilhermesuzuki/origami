@@ -1,5 +1,4 @@
 ﻿@page "/tags"
-@page "/tags/{NanoId}"
 @inherits BasicAdminGrid<OrigamiContentTag>
 
 <Root Access="this.CanAccess()">
@@ -74,10 +73,5 @@
     protected override IEnumerable<OrigamiContentTag> GetItems()
     {
         return base.GetItems().DistinctBy(x => x.Tag);
-    }
-
-    protected override void OnEdit(OrigamiContentTag entity)
-    {
-        GhostOfTheNavigator.NavigateTo($"/tags/{entity.NanoId}");
     }
 }

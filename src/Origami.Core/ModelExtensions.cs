@@ -3,6 +3,7 @@ using CloneExtensions;
 using FluentValidation;
 using Origami.Core.Models;
 using Origami.Core.Models.Settings;
+using SixLabors.ImageSharp;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -189,9 +190,20 @@ namespace Origami.Core
             {
                 return restore.GetClone() as T ?? Activator.CreateInstance<T>();
             }
-            if (entity is OrigamiPost post)
+
+            if (entity is OrigamiContent content)
             {
-                return post.GetClone() as T ?? Activator.CreateInstance<T>();
+                return content switch
+                {
+                    OrigamiPage page => page.GetClone() as T ?? Activator.CreateInstance<T>(),
+                    OrigamiPost post => post.GetClone() as T ?? Activator.CreateInstance<T>(),
+                    OrigamiQuickNote note => note.GetClone() as T ?? Activator.CreateInstance<T>(),
+                    OrigamiSoftwareRelease softwareRelease => softwareRelease.GetClone() as T ?? Activator.CreateInstance<T>(),
+                    OrigamiSpecialMessage specialMessage => specialMessage.GetClone() as T ?? Activator.CreateInstance<T>(),
+                    OrigamiSpecialPage specialPage => specialPage.GetClone() as T ?? Activator.CreateInstance<T>(),
+                    OrigamiVideo video => video.GetClone() as T ?? Activator.CreateInstance<T>(),
+                    _ => throw new NotImplementedException($"Unsupported entity type: {content.GetType().FullName}"),
+                };
             }
 
             return entity != null ? entity.GetClone() : Activator.CreateInstance<T>();
@@ -548,11 +560,13 @@ namespace Origami.Core
 
             switch (name)
             {
+                case "HubContentSoftwareRelease": return "Software releases";
+                case "HubContentSpecialMessage": return "Special messages";
+                case "HubContentSpecialPage": return "Special pages";
                 case "OrigamiContent": return "Contents";
                 case "OrigamiQuickNote": return "Quick notes";
                 case "OrigamiSocialProfile": return "Social profiles";
-                case "HubContentSpecialPage": return "Special pages";
-                case "HubContentSpecialMessage": return "Special messages";
+                case "OrigamiSoftwareRelease": return "Software releases";
                 case "OrigamiUserTrash": return "User trashes";
                 default: break;
             }
@@ -767,20 +781,14 @@ namespace Origami.Core
             {
                 if (iframeRegex.IsMatch(html) == false) return false;
 
-                var context = BrowsingContext.New(Configuration.Default);
+                var context = BrowsingContext.New(AngleSharp.Configuration.Default);
                 var doc = context.OpenAsync(req => req.Content(html)).Result;
 
                 var iframe = doc.QuerySelector("iframe");
                 if (iframe == null) return false;
                 if (iframe.Attributes["src"] == null) return false;
 
-                var src = iframe.Attributes["src"]!.Value;
-                if (Uri.TryCreate(src, UriKind.Absolute, out var uri) == false || (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
-                {
-                    return false;
-                }
-
-                return true;
+                return iframe.Attributes["src"]!.Value.IsValidUrl();
             }
             return false;
         }
@@ -813,6 +821,44 @@ namespace Origami.Core
             }
 
             return result.Ok ? new() { Success = text.Original("Password is strong") } : result;
+        }
+
+        public static bool IsValidBase64Image(this string base64)
+        {
+            if (string.IsNullOrWhiteSpace(base64)) return false;
+
+            // Remove data URI prefix if present
+            int commaIndex = base64.IndexOf(',');
+            if (commaIndex >= 0 &&
+                base64.StartsWith("data:", StringComparison.OrdinalIgnoreCase))
+            {
+                base64 = base64[(commaIndex + 1)..];
+            }
+
+            byte[] imageBytes;
+
+            try
+            {
+                imageBytes = Convert.FromBase64String(base64);
+            }
+            catch (FormatException)
+            {
+                return false;
+            }
+
+            try
+            {
+                using var image = Image.Load(imageBytes);
+                return true;
+            }
+            catch (UnknownImageFormatException)
+            {
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -961,8 +1007,6 @@ namespace Origami.Core
             return noIcon;
         }
 
-
-
         /// <summary>
         /// Copies all the information <paramref name="entity"/> <paramref name="from"/>
         /// </summary>
@@ -976,6 +1020,15 @@ namespace Origami.Core
         {
             if (from != null) from.Push(entity);
             return entity;
+        }
+
+        public static T Pull<T>(this T hub, ValidationException validationException) where T : Result
+        {
+            foreach (var error in validationException.Errors)
+            {
+                hub.Error = error.ErrorMessage;
+            }
+            return hub;
         }
 
         /// <summary>
@@ -1030,16 +1083,6 @@ namespace Origami.Core
                 }
             }
         }
-
-        public static T Pull<T>(this T hub, ValidationException validationException) where T : Result
-        {
-            foreach (var error in validationException.Errors)
-            {
-                hub.Error = error.ErrorMessage;
-            }
-            return hub;
-        }
-
         /// <summary>
         /// Adds a query string to <paramref name="url"/>
         /// </summary>
@@ -1477,7 +1520,6 @@ namespace Origami.Core
             if (value != null) return value.GetValueOrDefault().YesNo();
             return "Empty (Null)";
         }
-
         /// <summary>
         /// Extracts the message.
         /// </summary>

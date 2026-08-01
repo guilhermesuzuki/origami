@@ -18,6 +18,7 @@ namespace Origami.Core.Models
         public string EnvironmentName { get; }
 
         public IList<string> OnlineUsers { get; }
+
         public void RefreshUI(string key)
         {
             this.RefreshingTheUI?.Invoke(key, EventArgs.Empty);

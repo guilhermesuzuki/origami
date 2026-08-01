@@ -1,5 +1,4 @@
 ﻿@page "/categories"
-@page "/categories/{NanoId}"
 @inherits BasicAdminGrid<OrigamiCategory>
 
 <Root Access="this.CanAccess()">
@@ -96,10 +95,5 @@
                where x.IsDeleted == false
                where this.Super.IsParentDeleted(x) == false 
                select x;
-    }
-
-    protected override void OnEdit(OrigamiCategory entity)
-    {
-        GhostOfTheNavigator.NavigateTo($"/categories/{entity.NanoId}");
     }
 }

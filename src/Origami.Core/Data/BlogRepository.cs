@@ -17,6 +17,7 @@ namespace Origami.Core.Data
         protected readonly IValidator<OrigamiBlog> _validator;
 
         public BlogRepository(
+            IAppFacade appFacade,
             IValidator<OrigamiBlog> validator,
             ICategoryRepository categoryRepository,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
@@ -27,7 +28,7 @@ namespace Origami.Core.Data
             IHubContentRepository<HubContentVideo> hubVideoRepository,
             IWebRootPath wwwRoot,
             Text text)
-            : base(text, dbContextFactory, memoryCache, wwwRoot)
+            : base(text, dbContextFactory, memoryCache, wwwRoot, appFacade)
         {
             _validator = validator;
             _categoryRepository = categoryRepository;

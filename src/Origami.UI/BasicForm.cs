@@ -36,6 +36,11 @@ namespace Origami.UI
         protected bool FileUploading = false;
 
         /// <summary>
+        /// The name of the file currently being uploaded. This field is intended for use within derived classes to track the name of the file being uploaded.
+        /// </summary>
+        protected string FileUploadingName = string.Empty;
+
+        /// <summary>
         /// Video uploading progress
         /// </summary>
         protected int FileUploadingProgress;
@@ -289,14 +294,15 @@ namespace Origami.UI
         /// upload failed.</description></item> <item><term><c>WebPath</c></term><description>The web-accessible path
         /// for the uploaded file. Empty if the upload failed.</description></item> </list></returns>
         /// <exception cref="InvalidOperationException">Thrown if the file size exceeds <paramref name="fileLimit"/>.</exception>
-        protected async Task<(bool Ok, string LocalPath, string WebPath)> UploadFile(IBrowserFile file, long fileLimit, string? filename = null)
+        protected async Task<(bool Ok, string LocalPath, string WebPath)> UploadFile(IBrowserFile file, long fileLimit, string? filename = null, string? subDirectoryName = null)
         {
             if (file.Size > fileLimit)
             {
                 throw new InvalidOperationException(Text.Get("File is too large"));
             }
 
-            FileUploading = true;
+            this.FileUploading = true;
+            this.FileUploadingName = file.Name;
 
             // Set up timer for UI updates
             using var timer = new Timer(_ => InvokeAsync(StateHasChanged));
@@ -305,6 +311,12 @@ namespace Origami.UI
             filename = filename ?? file.Name;
 
             string basePath = Super.Directories.LocalPathForFiles(Entity);
+
+            if (subDirectoryName.Has() == true)
+            {
+                basePath = Path.Combine(basePath, subDirectoryName);
+            }
+
             string tempPath = Path.Combine(basePath, $"{Guid.NewGuid()}.tmp");
             string finalPath = Path.Combine(basePath, filename);
 

@@ -16,12 +16,13 @@ namespace Origami.Core.Data
         /// <param name="dbContext"></param>
         /// <param name="distributedCache"></param>
         public VideoRepository(
+            IAppFacade appFacade,
             IValidator<OrigamiVideo> validator,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IMyMemoryCache memoryCache,
             Text text,
             IWebRootPath wwwRoot)
-            : base(text, dbContextFactory, memoryCache, wwwRoot)
+            : base(text, dbContextFactory, memoryCache, wwwRoot, appFacade)
         {
             _validator = validator;
         }

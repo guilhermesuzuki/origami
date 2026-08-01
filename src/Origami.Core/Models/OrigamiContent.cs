@@ -16,11 +16,13 @@ namespace Origami.Core.Models
         IHeaderImage,
         IParentIdNull,
         IType,
-        ISubtypeNull
+        ISubtypeNull,
+        IDateReleased
     {
         protected Guid? _parentId;
         protected string? _subtype;
         protected string _type = string.Empty;
+        protected DateTime? _dateReleased;
 
         /// <summary>
         /// Default constructor
@@ -32,6 +34,14 @@ namespace Origami.Core.Models
 
         public event EventHandler<PropertyChangedEventArgs> ContentChanged = delegate { };
 
+        /// <summary>
+        /// Date/Time this Content was Created
+        /// </summary>
+        public DateTime? DateReleased
+        {
+            get => _dateReleased;
+            set => this.Set(ref _dateReleased, value, ContentChanged);
+        }
 
         [NotMapped]
         public string HeaderImage

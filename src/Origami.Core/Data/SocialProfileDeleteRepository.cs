@@ -20,6 +20,7 @@ namespace Origami.Core.Data
         /// <param name="dbContext"></param>
         /// <param name="distributedCache"></param>
         public SocialProfileDeleteRepository(
+            IAppFacade appFacade,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IMyMemoryCache memoryCache,
             ISocialProfileRepository socialProfileRepository,
@@ -29,7 +30,7 @@ namespace Origami.Core.Data
             IContentReactionRepository contentReactionRepository,
             IWebRootPath wwwRoot,
             Text text)
-            : base(text, dbContextFactory, memoryCache, wwwRoot)
+            : base(text, dbContextFactory, memoryCache, wwwRoot, appFacade)
         {
             _socialProfileRepository = socialProfileRepository;
             _contentCommentReactionRepository = contentCommentReactionRepository;

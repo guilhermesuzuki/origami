@@ -1454,6 +1454,11 @@ namespace Origami.Core.Models
         public string RssFeed5 { get; set; } = string.Empty;
 
         /// <summary>
+        /// Repository URL
+        /// </summary>
+        public string RepositoryURL { get; set; } = string.Empty;
+
+        /// <summary>
         /// Extracts all settings
         /// </summary>
         /// <returns></returns>

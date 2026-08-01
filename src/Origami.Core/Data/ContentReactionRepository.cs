@@ -8,6 +8,7 @@ namespace Origami.Core.Data
         RepositoryOuterLayer<OrigamiContentReaction>,
         IContentReactionRepository
     {
+        protected readonly IEventRepository _eventRepository;
         protected readonly IValidator<OrigamiContentReaction> _validator;
 
         /// <summary>
@@ -16,14 +17,17 @@ namespace Origami.Core.Data
         /// <param name="dbContext"></param>
         /// <param name="distributedCache"></param>
         public ContentReactionRepository(
+            IAppFacade appFacade,
+            IEventRepository eventRepository,
             IValidator<OrigamiContentReaction> validator,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IMyMemoryCache memoryCache,
             IWebRootPath wwwRoot,
             Text text)
-            : base(text, dbContextFactory, memoryCache, wwwRoot)
+            : base(text, dbContextFactory, memoryCache, wwwRoot, appFacade)
         {
             _validator = validator;
+            _eventRepository = eventRepository;
         }
 
         public IEnumerable<OrigamiContentReaction> Reactions(OrigamiContent entity)
@@ -61,7 +65,14 @@ namespace Origami.Core.Data
                 return new(ctx.Entity, Text.Original("You already reacted with this emoji"));
             }
 
-            return base.SmartCreate(ctx, false);
+            var hub = base.SmartCreate(ctx, false);
+
+            if (hub.Ok == true)
+            {
+                _eventRepository.SocialProfileReactsToContent(ctx.SocialProfile, ctx.Entity);
+            }
+
+            return hub;
         }
 
         public Result<OrigamiContentReaction> SmartPurge(DataOperationContextFrontEnd<OrigamiContentReaction> ctx)
@@ -76,7 +87,14 @@ namespace Origami.Core.Data
                 return new(ctx.Entity, ex.GetMessage());
             }
 
-            return base.SmartPurge(ctx, false);
+            var hub = base.SmartPurge(ctx, false);
+
+            if (hub.Ok == true)
+            {
+                _eventRepository.SocialProfileCancelsReactionToContent(ctx.SocialProfile, ctx.Entity);
+            }
+
+            return hub;
         }
 
         public override Result<OrigamiContentReaction> CreateValidation(DataOperationContext<OrigamiContentReaction> ctx)

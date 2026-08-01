@@ -1,5 +1,4 @@
 ﻿@page "/specialpages"
-@page "/specialpages/{NanoId}"
 @inherits BasicAdminGridContent<OrigamiSpecialPage, HubContentSpecialPage>
 
 <Root Access="this.CanAccess()">
@@ -108,11 +107,5 @@
     </ContentTemplate>
 </Root>
 @code {
-
     protected override string DefaultOrdering => $"{nameof(OrigamiSpecialPage.Title)}";
-
-    protected override void OnEdit(HubContentSpecialPage entity)
-    {
-        GhostOfTheNavigator.NavigateTo($"/specialpages/{entity.Entity.NanoId}");
-    }
 }

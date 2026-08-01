@@ -5,9 +5,9 @@ namespace Origami.UI.Admin.IntegrationTests;
 
 public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 {
-    public CustomWebApplicationFactory(): base()
+    public CustomWebApplicationFactory() : base()
     {
-        
+
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)

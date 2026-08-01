@@ -19,13 +19,14 @@ public class SettingsRepository :
     /// <param name="dbContext"></param>
     /// <param name="distributedCache"></param>
     public SettingsRepository(
+        IAppFacade appFacade,
         IDbContextFactory<OrigamiDbContext> dbContextFactory,
         IMyMemoryCache memoryCache,
         ISettingRepository settingRepository,
         IValidator<OrigamiSettings> validator,
         Text text,
         IWebRootPath wwwRoot)
-        : base(text, dbContextFactory, memoryCache, wwwRoot)
+        : base(text, dbContextFactory, memoryCache, wwwRoot, appFacade)
     {
         _settingRepository = settingRepository;
         _validator = validator;

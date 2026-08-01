@@ -75,10 +75,15 @@
                             var role = this.Super.Roles.ReadFromCache().Id(hit.Id);
                             <RoleHeaderLite Entity="role"></RoleHeaderLite>
                         }
-                        else if (hit.Type.Like("QuickNote") == true)
+                        else if (hit.Type.Like("OrigamiQuickNote") == true)
                         {
                             var quickNote = this.Super.Contents.ReadFromCache().OfType<OrigamiQuickNote>().Id(hit.Id);
                             <QuickNoteHeaderLite Entity="quickNote"></QuickNoteHeaderLite>
+                        }
+                        else if (hit.Type.Like("OrigamiSoftwareRelease") == true)
+                        {
+                            var softwareRelease = this.Super.Contents.ReadFromCache().OfType<OrigamiSoftwareRelease>().Id(hit.Id);
+                            <ContentHeaderInline Entity="softwareRelease"></ContentHeaderInline>
                         }
                     </div>
                 }

@@ -13,11 +13,12 @@ namespace Origami.Core.Data
         /// <param name="dbContext"></param>
         /// <param name="distributedCache"></param>
         public PhysicalPageRepository(
+            IAppFacade appFacade,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IMyMemoryCache memoryCache,
             IWebRootPath wwwRoot,
             Text text)
-            : base(text, dbContextFactory, memoryCache, wwwRoot)
+            : base(text, dbContextFactory, memoryCache, wwwRoot, appFacade)
         {
 
         }

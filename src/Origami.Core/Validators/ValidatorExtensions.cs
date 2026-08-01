@@ -15,6 +15,25 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("Author is required"));
         }
 
+        public static IRuleBuilderOptions<T, string?> Base64<T>(this IRuleBuilder<T, string?> ruleBuilder, Text text, bool isRequired, string field = "base64")
+        {
+            return ruleBuilder
+                .Must(base64 =>
+                {
+                    if (isRequired == true)
+                    {
+                        if (base64.Has() == false) return false;
+                        return base64.IsValidBase64Image();
+                    }
+                    else
+                    {
+                        if (base64.Has() == false) return true;
+                        return base64.IsValidBase64Image();
+                    }
+                })
+                .WithMessage(text.Original("{0}: Base64 string must be a valid image", field));
+        }
+
         public static IRuleBuilderOptions<T, Guid?> BlogId<T>(this IRuleBuilder<T, Guid?> ruleBuilder, Text text)
         {
             return ruleBuilder
@@ -31,6 +50,21 @@ namespace Origami.Core.Validators
         }
 
 
+
+        public static IRuleBuilderOptions<T, List<OrigamiContentCategory>> CategoriesMustBeUnique<T>(this IRuleBuilder<T, List<OrigamiContentCategory>> ruleBuilder, Text text)
+        {
+            return ruleBuilder
+                .Must(categories =>
+                {
+                    if (categories.DistinctBy(x => x.CategoryId).Count() != categories.Count)
+                    {
+                        return false;
+                    }
+
+                    return true;
+                })
+                .WithMessage(text.Original("Categories must be unique"));
+        }
 
         public static IRuleBuilderOptions<T, string> ContentType<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
         {
@@ -203,6 +237,24 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("Date of modification must happen after the creation date"));
         }
 
+        public static IRuleBuilderOptions<T, string> MustHaveHtml<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
+        {
+            return ruleBuilder
+                .Must(content =>
+                {
+                    try
+                    {
+                        var doc = new HtmlAgilityPack.HtmlDocument();
+                        doc.LoadHtml(content);
+                        return doc.ParseErrors == null || !doc.ParseErrors.Any();
+                    }
+                    catch
+                    {
+                        return false;
+                    }
+                })
+                .WithMessage(text.Original("Content must be a valid HTML"));
+        }
         public static IRuleBuilderOptions<T, string> Name<T>(this IRuleBuilder<T, string> ruleBuilder, Text text, int maximumCharactersAllowed = 255)
         {
             return ruleBuilder
@@ -281,6 +333,20 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("Tag cannot exceed {0} characters", 128));
         }
 
+        public static IRuleBuilderOptions<T, List<OrigamiContentTag>> TagsMustBeUnique<T>(this IRuleBuilder<T, List<OrigamiContentTag>> ruleBuilder, Text text)
+        {
+            return ruleBuilder
+                .Must(tags =>
+                {
+                    if (tags.DistinctBy(x => x.Tag).Count() != tags.Count)
+                    {
+                        return false;
+                    }
+                    return true;
+                })
+                .WithMessage(text.Original("Tags must be unique"));
+        }
+
         public static IRuleBuilderOptions<T, string> Title<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)
         {
             return ruleBuilder
@@ -329,33 +395,23 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("{0}: URL must be a valid website address", field));
         }
 
-        public static IRuleBuilderOptions<T, List<OrigamiContentTag>> TagsMustBeUnique<T>(this IRuleBuilder<T, List<OrigamiContentTag>> ruleBuilder, Text text)
+        public static IRuleBuilderOptions<T, string?> Website<T>(this IRuleBuilder<T, string?> ruleBuilder, Text text, bool isRequired, string field = "website")
         {
             return ruleBuilder
-                .Must(tags =>
+                .Must(url =>
                 {
-                    if (tags.DistinctBy(x => x.Tag).Count() != tags.Count)
+                    if (isRequired == true)
                     {
-                        return false;
+                        if (url.Has() == false) return false;
+                        return url.IsValidUrl();
                     }
-                    return true;
-                })
-                .WithMessage(text.Original("Tags must be unique"));
-        }
-
-        public static IRuleBuilderOptions<T, List<OrigamiContentCategory>> CategoriesMustBeUnique<T>(this IRuleBuilder<T, List<OrigamiContentCategory>> ruleBuilder, Text text)
-        {
-            return ruleBuilder
-                .Must(categories =>
-                {
-                    if (categories.DistinctBy(x => x.CategoryId).Count() != categories.Count)
+                    else
                     {
-                        return false;
+                        if (url.Has() == false) return true;
+                        return url.IsValidUrl();
                     }
-
-                    return true;
                 })
-                .WithMessage(text.Original("Categories must be unique"));
+                .WithMessage(text.Original("{0}: URL must be a valid website address", field));
         }
     }
 }

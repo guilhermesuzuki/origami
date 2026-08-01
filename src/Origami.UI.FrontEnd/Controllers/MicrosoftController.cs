@@ -25,7 +25,10 @@ namespace Origami.UI.FrontEnd.Controllers
         protected readonly ISocialProfileRepository _socialProfile;
         protected readonly IConfiguration _configuration;
 
+        protected readonly IEventRepository _eventRepository;
+
         public MicrosoftController(
+            IEventRepository eventRepository,
             ISocialProfileRepository socialProfile,
             Serilog.ILogger logger,
             IUserFacade userFacade,
@@ -40,6 +43,7 @@ namespace Origami.UI.FrontEnd.Controllers
             _memoryCache = memoryCache;
             _socialNetwork = socialNetworkOptions.Value;
             _configuration = configuration;
+            _eventRepository = eventRepository;
         }
 
         [HttpGet("token-ok")]
@@ -106,20 +110,18 @@ namespace Origami.UI.FrontEnd.Controllers
                 //looks the user up in the database
                 var user = _socialProfile
                     .ReadFromCache()
-                    .FirstOrDefault(x => x.SocialNetwork == SocialNetworks.Microsoft && x.UserId == userId);
+                    .FirstOrDefault(x => x.SocialNetwork == SocialNetworks.Microsoft && x.UserId == userId)
+                    ?? new () { SocialNetwork = SocialNetworks.Microsoft, UserId = userId, IsBlocked = false, }
+                    ;
 
-                if (user != null && user.IsBlocked)
+                if (user.IsBlocked)
                 {
-                    //needs to log the user out, because the facebook user couldn't be found
+                    //needs to log the user out, because the microsoft user couldn't be found
                     HttpContext.SignOutAsync().GetAwaiter().GetResult();
                     HttpContext.Logout_Workaround();
-
                     //redirects to the returnUrl with an error
-                    return Redirect("/oops/microsoft".QueryString("error", "User has been Blocked"));
+                    return Redirect("/oops/microsoft".QueryString("error", "User has been blocked"));
                 }
-
-                //user doesn't exist in the database, must create a new instance
-                if (user == null) user = new OrigamiSocialProfile { SocialNetwork = SocialNetworks.Microsoft, UserId = userId };
 
                 user.EmailFromSocialNetwork = ok.Claims.FirstOrDefault(x => x.Type == "preferred_username")?.Value ?? string.Empty;
 
@@ -155,31 +157,33 @@ namespace Origami.UI.FrontEnd.Controllers
                 //default no-icon profile picture
                 if (user.ProfilePictureUrl.Has() == false) user.ProfilePictureUrl = OrigamiConstants.NoUser;
 
-                //copies the email, if appropriate
-                if (user.Email.Has() == false && user.EmailFromSocialNetwork.Has() == true)
-                {
-                    user.Email = user.EmailFromSocialNetwork;
-                }
-
-                var context = new DataOperationContext<OrigamiSocialProfile>(Core.Models.OrigamiUser.AnonymousUser, DateTime.UtcNow, user);
+                var context = new DataOperationContext<OrigamiSocialProfile>(OrigamiUser.AnonymousUser, DateTime.UtcNow, user);
 
                 //saves the user into the database
                 using (var transaction = new TransactionScope())
                 {
-                    user = _socialProfile.SmartSave(context, false).Entity;
+                    var hub = _socialProfile.SmartSave(context, false);
+                    if (hub.Ok == false)
+                    {
+                        //redirects to the returnUrl with an error
+                        return Redirect("/oops/microsoft".QueryString("error", "Invalid microsoft information"));
+                    }
                     transaction.Complete();
+                    user = hub.Entity;
                 }
 
                 _userFacade.SocialProfile = user ?? new();
+                _eventRepository.SocialProfileLogsIntoWebsite(context.Entity);
+                
                 return Redirect(Uri.UnescapeDataString(returnUrl));
             }
 
-            //needs to log the user out, because the facebook user couldn't be found
+            //needs to log the user out, because the microsoft user couldn't be found
             HttpContext.SignOutAsync().GetAwaiter().GetResult();
             HttpContext.Logout_Workaround();
 
             //redirects to the returnUrl with an error
-            return Redirect("/oops/microsoft".QueryString("error", "Invalid Microsoft Token"));
+            return Redirect("/oops/microsoft".QueryString("error", "Invalid microsoft token"));
         }
     }
 }

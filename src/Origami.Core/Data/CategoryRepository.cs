@@ -17,13 +17,14 @@ namespace Origami.Core.Data
         /// <param name="dbContext"></param>
         /// <param name="distributedCache"></param>
         public CategoryRepository(
+            IAppFacade appFacade,
             IValidator<OrigamiCategory> validator,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IContentCategoryRepository contentCategoryRepository,
             IMyMemoryCache memoryCache,
             IWebRootPath wwwRoot,
             Text text)
-            : base(text, dbContextFactory, memoryCache, wwwRoot)
+            : base(text, dbContextFactory, memoryCache, wwwRoot, appFacade)
         {
             _validator = validator;
             _contentCategoryRepository = contentCategoryRepository;

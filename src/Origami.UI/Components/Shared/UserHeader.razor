@@ -11,9 +11,15 @@
             </span>
             <span class="display-name" title="@Text.Lower("Display name")">
                 (@Entity.DisplayName)
+                @if (this.UserFacade.User.Id == this.Entity.Id)
+                {
+                    <span class="bg-info text-white is-blocked px-1 fw-bold xx-small ms-1">
+                        @Text.Lower("Yourself")
+                    </span>
+                }
                 @if (this.Entity.IsBlocked == true)
                 {
-                    <span class="bg-danger text-white is-blocked px-1 fw-bold xx-small">
+                    <span class="bg-danger text-white is-blocked px-1 fw-bold xx-small ms-1">
                         @Text.Lower("Blocked")
                     </span>
                 }

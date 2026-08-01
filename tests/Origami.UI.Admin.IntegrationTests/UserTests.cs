@@ -256,9 +256,9 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheUser.NanoId.ShouldBe(AnotherTestUser.NanoId);
             cacheUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
 
-            var newPassword = "@" 
-                + Nanoid.Generate(alphabet: Nanoid.Alphabets.Letters, size: 4) 
-                + Nanoid.Generate(alphabet: Nanoid.Alphabets.Digits, size: 4) 
+            var newPassword = "@"
+                + Nanoid.Generate(alphabet: Nanoid.Alphabets.Letters, size: 4)
+                + Nanoid.Generate(alphabet: Nanoid.Alphabets.Digits, size: 4)
                 + "#";
 
             var resultNewPassword = superRepository.Users.ChangePassword(AnotherTestUser.GetContext(TestUser), password, newPassword, newPassword);

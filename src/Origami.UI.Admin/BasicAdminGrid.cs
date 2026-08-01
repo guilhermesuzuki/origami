@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Lucene.Net.Search;
+using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using MudBlazor;
 using Origami.Core;
@@ -132,8 +133,9 @@ namespace Origami.UI.Admin
             SelectedEntity = entity.Clone();
         }
 
-        protected virtual void EntityCreated(T? entity)
+        protected virtual async Task EntityCreated(T? entity)
         {
+            await JSRuntime.InvokeVoidAsync("removeQueryStringWithoutReload", "nanoid");
             SelectedEntity = entity.Clone();
             StateHasChanged();
         }
@@ -336,9 +338,14 @@ namespace Origami.UI.Admin
         /// User selects an <paramref name="entity"/> to edit
         /// </summary>
         /// <param name="entity"></param>
-        protected virtual void OnEdit(T entity)
+        protected virtual async Task OnEdit(T entity)
         {
             SelectedEntity = entity.Clone();
+            if (SelectedEntity is INanoId nanoId)
+            {
+                await JSRuntime.InvokeVoidAsync("removeQueryStringWithoutReload", "nanoid");
+                await JSRuntime.InvokeVoidAsync("addQueryStringWithoutReload", "nanoid", nanoId.NanoId);
+            }
         }
 
         /// <summary>
@@ -355,18 +362,13 @@ namespace Origami.UI.Admin
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            HasBlogChangedInUserFacade();
-        }
-
-        protected override void OnParametersSet()
-        {
-            base.OnParametersSet();
+            this.HasBlogChangedInUserFacade();
             this.SetEntityFromParameter();
         }
 
-        protected virtual void OnSearchResultSelected(T entity)
+        protected virtual async Task OnSearchResultSelected(T entity)
         {
-            SelectedEntity = entity.Clone();
+            await this.OnEdit(entity);
         }
 
         /// <summary>
@@ -462,6 +464,8 @@ namespace Origami.UI.Admin
 
         protected virtual void SetEntityFromParameter()
         {
+            this.NanoId = this.GhostOfTheNavigator.Uri.QueryString("nanoid");
+
             if (this.NanoId.Has() == true)
             {
                 var entity = (from a in this.MemoryCache.Read<T>().Cast<INanoId>()

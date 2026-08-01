@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using Origami.Core.Models;
 
 namespace Origami.Core.Data
@@ -7,19 +8,23 @@ namespace Origami.Core.Data
         RepositoryOuterLayer<OrigamiSocialProfile>,
         ISocialProfileRepository
     {
+        protected readonly IValidator<OrigamiSocialProfile> _validator;
+
         /// <summary>
         /// Default constructor with DI
         /// </summary>
         /// <param name="dbContext"></param>
         /// <param name="distributedCache"></param>
         public SocialProfileRepository(
+            IAppFacade appFacade,
+            IValidator<OrigamiSocialProfile> validator,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IMyMemoryCache memoryCache,
             Text text,
             IWebRootPath wwwRoot)
-            : base(text, dbContextFactory, memoryCache, wwwRoot)
+            : base(text, dbContextFactory, memoryCache, wwwRoot, appFacade)
         {
-
+            this._validator = validator;
         }
 
         public override string ReadPermission => nameof(OrigamiRole.ViewSocialProfiles);
@@ -33,6 +38,11 @@ namespace Origami.Core.Data
             }
             ctx.Entity.IsBlocked = true;
             return SmartUpdate(ctx, false);
+        }
+
+        public override Result<OrigamiSocialProfile> CreateValidation(DataOperationContext<OrigamiSocialProfile> ctx)
+        {
+            return new Result<OrigamiSocialProfile>(ctx.Entity, _validator);
         }
 
         public Result<OrigamiSocialProfile> GrantModerator(DataOperationContext<OrigamiSocialProfile> ctx, bool checkPermission)
@@ -66,6 +76,11 @@ namespace Origami.Core.Data
             }
             ctx.Entity.IsBlocked = false;
             return SmartUpdate(ctx, false);
+        }
+
+        public override Result<OrigamiSocialProfile> UpdateValidation(DataOperationContext<OrigamiSocialProfile> ctx)
+        {
+            return new Result<OrigamiSocialProfile>(ctx.Entity, _validator);
         }
     }
 }

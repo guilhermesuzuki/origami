@@ -17,14 +17,18 @@ namespace Origami.Core.Data
         ISearch<T>
         where T : class, IId
     {
+        protected readonly IAppFacade _appFacade;
+
         protected RepositoryLayer4Search(
-            Text text,
+            IAppFacade appFacade,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IMyMemoryCache memoryCache,
-            IWebRootPath webRootPath)
+            IWebRootPath webRootPath,
+            Text text
+            )
             : base(text, dbContextFactory, memoryCache, webRootPath)
         {
-
+            this._appFacade = appFacade;
         }
 
         public virtual bool CreateSearchIndex()
@@ -117,11 +121,6 @@ namespace Origami.Core.Data
                 doc.Add(new TextField("socialProfileSocialNetwork", socialProfile.SocialNetwork.ToString(), Field.Store.YES));
                 if (socialProfile.FirstName.Has() == true) doc.Add(new TextField("socialProfileFirstName", socialProfile.FirstName, Field.Store.YES));
                 if (socialProfile.LastName.Has() == true) doc.Add(new TextField("socialProfileLastName", socialProfile.LastName, Field.Store.YES));
-            }
-
-            if (entity is OrigamiUser user)
-            {
-                if (user.Username.Has() == true) doc.Add(new TextField("userName", user.Username, Field.Store.YES));
             }
 
             if (entity is OrigamiContentComment pcomment)

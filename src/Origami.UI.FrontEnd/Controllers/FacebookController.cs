@@ -30,6 +30,8 @@ namespace Origami.UI.FrontEnd.Controllers
         protected readonly Serilog.ILogger _logger;
         protected readonly SocialNetwork _socialNetwork;
 
+        protected readonly IEventRepository _eventRepository;
+
         public FacebookController(
             ISocialProfileRepository socialProfile,
             Serilog.ILogger logger,
@@ -41,7 +43,8 @@ namespace Origami.UI.FrontEnd.Controllers
             IContentRatingRepository contentRatingRepository,
             ISocialProfileDeleteRepository facebookUserForDeletionRepository,
             IHttpContextAccessor httpContextAccessor,
-            IDbContextFactory<OrigamiDbContext> dbContextFactory
+            IDbContextFactory<OrigamiDbContext> dbContextFactory,
+            IEventRepository eventRepository
             ) : base()
         {
             _httpContextAccessor = httpContextAccessor;
@@ -55,6 +58,7 @@ namespace Origami.UI.FrontEnd.Controllers
             _socialProfile = socialProfile;
             _socialProfileForDeletion = facebookUserForDeletionRepository;
             _userFacade = userFacade;
+            _eventRepository = eventRepository;
         }
 
         /// <summary>
@@ -221,20 +225,18 @@ namespace Origami.UI.FrontEnd.Controllers
                 //looks the user up in the database
                 var user = _socialProfile
                     .ReadFromCache()
-                    .FirstOrDefault(x => x.SocialNetwork == SocialNetworks.Facebook && x.UserId.Like(userId));
+                    .FirstOrDefault(x => x.SocialNetwork == SocialNetworks.Facebook && x.UserId.Like(userId))
+                    ?? new() { SocialNetwork = SocialNetworks.Facebook, UserId = userId, IsBlocked = false, }
+                    ;
 
-                if (user != null && user.IsBlocked)
+                if (user.IsBlocked)
                 {
                     //needs to log the user out, because the facebook user couldn't be found
                     HttpContext.SignOutAsync().GetAwaiter().GetResult();
                     HttpContext.Logout_Workaround();
-
                     //redirects to the returnUrl with an error
-                    return Redirect("/oops/facebook".QueryString("error", "User has been Blocked"));
+                    return Redirect("/oops/facebook".QueryString("error", "User has been blocked"));
                 }
-
-                //user doesn't exist in the database, must create a new instance
-                if (user == null) user = new OrigamiSocialProfile { SocialNetwork = SocialNetworks.Facebook, UserId = userId };
 
                 if (me != null)
                 {
@@ -248,21 +250,24 @@ namespace Origami.UI.FrontEnd.Controllers
                 if (me?.cover != null && me?.cover.source != null) user.ProfileCoverUrl = me!.cover.source;
                 if (cover != null && cover!.source != null) user.ProfileCoverUrl = cover!.source;
 
-                //copies the email, if appropriate
-                if (user.Email.Has() == false && user.EmailFromSocialNetwork.Has() == true)
-                {
-                    user.Email = user.EmailFromSocialNetwork;
-                }
+                var context = new DataOperationContext<OrigamiSocialProfile>(OrigamiUser.AnonymousUser, DateTime.UtcNow, user);
 
-                var context = new DataOperationContext<OrigamiSocialProfile>(_userFacade.User!, DateTime.UtcNow, user);
-
+                //saves the user into the database
                 using (var transaction = new TransactionScope())
                 {
-                    user = _socialProfile.SmartSave(context, false).Entity;
+                    var hub = _socialProfile.SmartSave(context, false);
+                    if (hub.Ok == false)
+                    {
+                        //redirects to the returnUrl with an error
+                        return Redirect("/oops/facebook".QueryString("error", "Invalid facebook information"));
+                    }
                     transaction.Complete();
+                    user = hub.Entity;
                 }
 
                 _userFacade.SocialProfile = user ?? new();
+                _eventRepository.SocialProfileLogsIntoWebsite(context.Entity);
+                
                 return Redirect(Uri.UnescapeDataString(returnUrl));
             }
 
@@ -271,7 +276,7 @@ namespace Origami.UI.FrontEnd.Controllers
             HttpContext.Logout_Workaround();
 
             //redirects to the returnUrl with an error
-            return Redirect("/oops/facebook".QueryString("error", "Invalid Facebook Token"));
+            return Redirect("/oops/facebook".QueryString("error", "Invalid facebook token"));
         }
 
         /// <summary>

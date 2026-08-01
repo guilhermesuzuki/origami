@@ -8,6 +8,7 @@ namespace Origami.UI
     public class BasicPage : Basic
     {
         [Inject] protected IPageTitleRepository PageTitle { get; set; } = null!;
+        [Parameter] public bool ShouldSetPageTitle { get; set; } = true;
 
         protected virtual void ChangeBlog()
         {
@@ -75,6 +76,7 @@ namespace Origami.UI
 
         protected virtual async Task PageTitleAsync(bool firstRender)
         {
+            if (this.ShouldSetPageTitle == false) return;
             this.SetPageTitle();
             var title = PageTitle.GetTitle();
             await JSRuntime.InvokeVoidAsync("origami.common.title", title);

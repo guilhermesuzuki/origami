@@ -1,11 +1,11 @@
-﻿@page "/users/{UserId:guid}"
+﻿@page "/users/{NanoId}"
 @inherits BasicPage
 @inject IUserRepository _users
 @inject IPageRepository _pages
 @inject IVideoRepository _videos
 
 <Root>
-    @if (this.UserId != Guid.Empty)
+    @if (this.NanoId.Has() == true)
     {
         var user = this.GetUser();
         if (user != null)
@@ -96,13 +96,33 @@
                     </ul>
                 </div>
                 <div class="row">
-                    <div class="col-12 col-xxl-4">
+                    <div class="col-12 col-xxl-6">
+                        <div class="p-3 border mt-3">
+                            <div class="w-100 text-white bg-secondary text-center">
+                                <i class="bi bi-file-earmark-text-fill"></i>
+                                @Text.Lower("Quick notes")
+                            </div>
+                            <MudDataGrid @ref="_quickNotesGrid" Class="mt-3" T="OrigamiQuickNote" ServerData="this.GetQuickNotes" Filterable="false" SortMode="SortMode.None">
+                                <Columns>
+                                    <TemplateColumn>
+                                        <CellTemplate>
+                                            <ContentHeader Entity="context.Item" ShowRelatedContent="false"></ContentHeader>
+                                        </CellTemplate>
+                                    </TemplateColumn>
+                                </Columns>
+                                <PagerContent>
+                                    <MudDataGridPager T="OrigamiQuickNote" PageSizeOptions="new int[] { 5, 10, 25, }"></MudDataGridPager>
+                                </PagerContent>
+                            </MudDataGrid>
+                        </div>
+                    </div>
+                    <div class="col-12 col-xxl-6">
                         <div class="p-3 border mt-3">
                             <div class="w-100 text-white bg-secondary text-center">
                                 <i class="bi bi-file-earmark-text-fill"></i>
                                 @Text.Lower("Pages")
                             </div>
-                            <MudDataGrid Class="mt-3" T="OrigamiPage" ServerData="this.GetPages" Filterable="false" SortMode="SortMode.None">
+                            <MudDataGrid @ref="_pagesGrid" Class="mt-3" T="OrigamiPage" ServerData="this.GetPages" Filterable="false" SortMode="SortMode.None">
                                 <Columns>
                                     <TemplateColumn>
                                         <CellTemplate>
@@ -116,13 +136,15 @@
                             </MudDataGrid>
                         </div>
                     </div>
-                    <div class="col-12 col-xxl-4">
+                </div>
+                <div class="row">
+                    <div class="col-12 col-xxl-6">
                         <div class="p-3 border mt-3">
                             <div class="w-100 text-white bg-secondary text-center">
                                 <i class="bi bi-file-earmark-text-fill"></i>
                                 @Text.Lower("Posts")
                             </div>
-                            <MudDataGrid Class="mt-3" T="OrigamiPost" ServerData="this.GetPosts" Filterable="false" SortMode="SortMode.None">
+                            <MudDataGrid @ref="_postsGrid" Class="mt-3" T="OrigamiPost" ServerData="this.GetPosts" Filterable="false" SortMode="SortMode.None">
                                 <Columns>
                                     <TemplateColumn>
                                         <CellTemplate>
@@ -136,13 +158,13 @@
                             </MudDataGrid>
                         </div>
                     </div>
-                    <div class="col-12 col-xxl-4">
+                    <div class="col-12 col-xxl-6">
                         <div class="p-3 border mt-3">
                             <div class="w-100 text-white bg-secondary text-center">
                                 <i class="fa-solid fa-video"></i>
                                 @Text.Lower("Videos")
                             </div>
-                            <MudDataGrid Class="mt-3" T="OrigamiVideo" ServerData="this.GetVideos" Filterable="false" SortMode="SortMode.None">
+                            <MudDataGrid @ref="_videosGrid" Class="mt-3" T="OrigamiVideo" ServerData="this.GetVideos" Filterable="false" SortMode="SortMode.None">
                                 <Columns>
                                     <TemplateColumn>
                                         <CellTemplate>
@@ -166,8 +188,13 @@
     }
 </Root>
 
-@code {
-    [Parameter] public Guid UserId { get; set; } = Guid.Empty;
+    @code {
+    [Parameter] public string NanoId { get; set; } = string.Empty;
+
+    protected MudDataGrid<OrigamiPage> _pagesGrid = new();
+    protected MudDataGrid<OrigamiPost> _postsGrid = new();
+    protected MudDataGrid<OrigamiQuickNote> _quickNotesGrid = new();
+    protected MudDataGrid<OrigamiVideo> _videosGrid = new();
 
     /// <summary>
     /// This method should retrieve the Entities from database or memory
@@ -185,7 +212,7 @@
             orders.AppendFormat(",{0} {1}", definition.SortBy, definition.Descending ? "DESC" : "ASC");
         }
 
-        var filters = new StringBuilder($"{nameof(Core.Models.OrigamiPage.AuthorId)} == \"{UserId}\"");
+        var filters = new StringBuilder($"{nameof(Core.Models.OrigamiPage.AuthorId)} == \"{GetUser().Id}\"");
 
         //iterates through every filter definition
         foreach (var definition in state.FilterDefinitions)
@@ -222,7 +249,7 @@
             orders.AppendFormat(",{0} {1}", definition.SortBy, definition.Descending ? "DESC" : "ASC");
         }
 
-        var filters = new StringBuilder($"{nameof(OrigamiPost.AuthorId)} == \"{UserId}\"");
+        var filters = new StringBuilder($"{nameof(OrigamiPost.AuthorId)} == \"{GetUser().Id}\"");
 
         //iterates through every filter definition
         foreach (var definition in state.FilterDefinitions)
@@ -259,7 +286,7 @@
             orders.AppendFormat(",{0} {1}", definition.SortBy, definition.Descending ? "DESC" : "ASC");
         }
 
-        var filters = new StringBuilder($"{nameof(OrigamiVideo.AuthorId)} == \"{UserId}\"");
+        var filters = new StringBuilder($"{nameof(OrigamiVideo.AuthorId)} == \"{GetUser().Id}\"");
 
         //iterates through every filter definition
         foreach (var definition in state.FilterDefinitions)
@@ -280,8 +307,53 @@
         return Task.FromResult(new GridData<OrigamiVideo> { Items = result.Rows, TotalItems = result.NumberOfRows, });
     }
 
+    /// <summary>
+    /// This method should retrieve the Entities from database or memory
+    /// </summary>
+    /// <param name="state"></param>
+    /// <param name="token"></param>
+    /// <returns></returns>
+    protected virtual Task<GridData<Core.Models.OrigamiQuickNote>> GetQuickNotes(GridState<Core.Models.OrigamiQuickNote> state, CancellationToken token)
+    {
+        var orders = new StringBuilder();
+
+        //iterates through every sort definition
+        foreach (var definition in state.SortDefinitions)
+        {
+            orders.AppendFormat(",{0} {1}", definition.SortBy, definition.Descending ? "DESC" : "ASC");
+        }
+
+        var filters = new StringBuilder($"{nameof(Core.Models.OrigamiQuickNote.AuthorId)} == \"{GetUser().Id}\"");
+
+        //iterates through every filter definition
+        foreach (var definition in state.FilterDefinitions)
+        {
+            filters.AppendFormat(" && ({0})", definition.Filter());
+        }
+
+        var orderBy = orders.ToString();
+
+        //pulls information from cache
+        var result = this.Super.Contents.ReadFromCache().OfType<OrigamiQuickNote>().Published().Query(
+            state.PageSize,
+            state.Page * state.PageSize,
+            filters.ToString(),
+            orderBy != string.Empty ? orderBy[1..] : $"{nameof(Core.Models.OrigamiQuickNote.Title)}"
+        );
+
+        return Task.FromResult(new GridData<Core.Models.OrigamiQuickNote> { Items = result.Rows, TotalItems = result.NumberOfRows, });
+    }
+
     protected OrigamiUser GetUser()
     {
-        return this.Super.Users.ReadFromCache().Id(this.UserId) ?? new();
+        return this.Super.Users.ReadFromCache().NanoId(this.NanoId) ?? new();
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        this._pagesGrid.ReloadServerData();
+        this._postsGrid.ReloadServerData();
+        this._videosGrid.ReloadServerData();
     }
 }

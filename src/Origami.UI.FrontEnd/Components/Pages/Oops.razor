@@ -1,0 +1,36 @@
+﻿@page "/oops/{socialNetwork}"
+@inherits BasicPage
+
+<Root>
+    <div class="text-center">
+        <h1>Oops <i class="fa-solid fa-bug"></i></h1>
+        <h3>
+            @Text.Original("Something went wrong with {0} login", GetSocialNetworkName())
+        </h3>
+        @if (GetError().Has() == true)
+        {
+            <p class="text-danger">@Text.Original("Error"): @GetError()</p>
+        }
+    </div>
+</Root>
+
+@code {
+    [Parameter] public string SocialNetwork { get; set; } = string.Empty;
+
+    protected string GetSocialNetworkName()
+    {
+        return SocialNetwork.ToLower() switch
+        {
+            "google" => "Google",
+            "facebook" => "Facebook",
+            "github" => "GitHub",
+            "microsoft" => "Microsoft",
+            _ => SocialNetwork
+        };
+    }
+
+    protected string GetError()
+    {
+        return this.GhostOfTheNavigator.Uri.QueryString("error");
+    }
+}

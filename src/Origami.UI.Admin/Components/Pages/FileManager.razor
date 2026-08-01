@@ -488,7 +488,7 @@
                 this._loadFiles(true);
                 this._loadDirectories(true);
 
-                this.UserFacade.Result = new() { Success = Text.Original("{0} item(s) deleted") };
+                this.UserFacade.Result = new() { Success = Text.Original("{0} item(s) deleted", count) };
             }
             catch (Exception ex)
             {

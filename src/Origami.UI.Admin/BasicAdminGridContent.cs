@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Lucene.Net.Search;
+using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using MudBlazor;
 using Origami.Core;
@@ -137,8 +138,9 @@ namespace Origami.UI.Admin
             SelectedEntity = entity.Clone();
         }
 
-        protected virtual void EntityCreated(T2? entity)
+        protected virtual async Task EntityCreated(T2? entity)
         {
+            await JSRuntime.InvokeVoidAsync("removeQueryStringWithoutReload", "nanoid");
             SelectedEntity = entity.Clone();
             StateHasChanged();
         }
@@ -302,9 +304,14 @@ namespace Origami.UI.Admin
         /// User selects an <paramref name="entity"/> to edit
         /// </summary>
         /// <param name="entity"></param>
-        protected virtual void OnEdit(T2 entity)
+        protected virtual async Task OnEdit(T2 entity)
         {
             SelectedEntity = entity.Clone();
+            if (SelectedEntity is INanoId nanoId)
+            {
+                await JSRuntime.InvokeVoidAsync("removeQueryStringWithoutReload", "nanoid");
+                await JSRuntime.InvokeVoidAsync("addQueryStringWithoutReload", "nanoid", nanoId.NanoId);
+            }
         }
 
         /// <summary>
@@ -452,6 +459,8 @@ namespace Origami.UI.Admin
 
         protected void SetEntityFromParameter()
         {
+            this.NanoId = this.GhostOfTheNavigator.Uri.QueryString("nanoid");
+
             if (this.NanoId.Has() == true)
             {
                 var entity = (from a in this.MemoryCache.Read<T1>() where a.NanoId == this.NanoId select a).FirstOrDefault();

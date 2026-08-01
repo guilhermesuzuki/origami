@@ -64,6 +64,20 @@
                     </div>
                 </div>
             }
+            @if (this._softwareReleases.Any() == true)
+            {
+                <div class="search-software-releases">
+                    <label class="fs-3 w-100 text-center mt-6">@Text.Lower("Software releases found in the search")</label>
+                    <div class="row mt-3">
+                        @foreach (var softwareRelease in _softwareReleases)
+                        {
+                            <div class="col-12 col-xl-4">
+                                <ContentHeader Class="mb-3" Entity="softwareRelease" ShowRelatedContent="false"></ContentHeader>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
             @if (this._specialMessages.Any() == true)
             {
                 <div class="search-specialmessages">
@@ -190,10 +204,15 @@
             }
             @if (this._users.Any() == true)
             {
+                var filteredUsers = 
+                    this.AppFacade.Admin.GetValueOrDefault() == false ? 
+                    (from a in _users join b in this.Super.Contents.ReadFromCache() on a.Id equals b.AuthorId select a).Distinct() : 
+                    _users;
+
                 <div class="search-users">
                     <label class="fs-3 w-100 text-center">@Text.Lower("Users found in the search")</label>
                     <div class="row mt-3">
-                        @foreach (var user in _users)
+                        @foreach (var user in filteredUsers)
                         {
                             <div class="col-12 col-xl-4 text-center">
                                 <UserHeaderCard Class="mb-3 p-3 border shadow-sm" Entity="user"></UserHeaderCard>
@@ -286,9 +305,14 @@
     private IEnumerable<OrigamiUser> _users => _hits.OfType<OrigamiUser>().OrderBy(x => x.DisplayName);
 
     /// <summary>
-    /// List of users found in the search
+    /// List of roles found in the search
     /// </summary>
     private IEnumerable<OrigamiRole> _roles => _hits.OfType<OrigamiRole>().OrderBy(x => x.Name);
+
+    /// <summary>
+    /// List of software releases found in the search
+    /// </summary>
+    private IEnumerable<OrigamiSoftwareRelease> _softwareReleases => _hits.OfType<OrigamiSoftwareRelease>().OrderBy(x => x.Title);
 
     /// <summary>
     /// List of all hits found in the search, used to check if there are any results or not
@@ -351,7 +375,7 @@
             }
             else
             {
-                this.FESearch(queryTerm);
+                this.FrontEndSearch(queryTerm);
             }
         }
 
@@ -398,7 +422,7 @@
         this._hits.RemoveAll(id => this.FilterHits(allowedBlogs, id));
     }
 
-    protected virtual void FESearch(string queryTerm)
+    protected virtual void FrontEndSearch(string queryTerm)
     {
         var allowedBlogs = from a in this.Super.Blogs.ReadFromCache().GetFrontEnd() select a.Id;
 
@@ -409,6 +433,7 @@
                 Task.Run(() => this._hits.AddRange(Super.ContentComments.Search(queryTerm).NonDeleted().Where(x => this.Super.IsParentDeleted(x) == false))),
                 Task.Run(() => this._hits.AddRange(Super.ContentTags.Search(queryTerm).DistinctBy(x => x.Tag))),
                 Task.Run(() => this._hits.AddRange(Super.SocialProfiles.Search(queryTerm))),
+                Task.Run(() => this._hits.AddRange(Super.Users.Search(queryTerm))),
                 Task.Run(() =>
                 {
                     var contents = Super.Contents.Search(queryTerm).Published();

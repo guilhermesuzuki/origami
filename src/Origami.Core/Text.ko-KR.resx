@@ -496,7 +496,7 @@
     <value>선명한 이미지</value>
   </data>
   <data name="Clear picture" xml:space="preserve">
-    <value>선명한 사진</value>
+    <value>이미지 제거</value>
   </data>
   <data name="Clear selection" xml:space="preserve">
     <value>선택 취소</value>
@@ -2474,5 +2474,128 @@
   </data>
   <data name="Title is already in use" xml:space="preserve">
     <value>제목은 이미 사용 중입니다</value>
+  </data>
+  <data name="Block" xml:space="preserve">
+    <value>차단</value>
+  </data>
+  <data name="Unblock" xml:space="preserve">
+    <value>차단 해제</value>
+  </data>
+  <data name="This will block yourself" xml:space="preserve">
+    <value>자신을 차단하게 됩니다.</value>
+  </data>
+  <data name="Yourself" xml:space="preserve">
+    <value>자신</value>
+  </data>
+  <data name="Software release" xml:space="preserve">
+    <value>소프트웨어 릴리스</value>
+  </data>
+  <data name="Software releases" xml:space="preserve">
+    <value>소프트웨어 릴리스</value>
+  </data>
+  <data name="View software releases" xml:space="preserve">
+    <value>소프트웨어 릴리스 보기</value>
+  </data>
+  <data name="Create new software releases" xml:space="preserve">
+    <value>새 소프트웨어 릴리스 만들기</value>
+  </data>
+  <data name="Edit own software releases" xml:space="preserve">
+    <value>자신의 소프트웨어 릴리스 편집</value>
+  </data>
+  <data name="Edit other users software releases" xml:space="preserve">
+    <value>다른 사용자의 소프트웨어 릴리스 편집</value>
+  </data>
+  <data name="Delete own software releases" xml:space="preserve">
+    <value>자신의 소프트웨어 릴리스 삭제</value>
+  </data>
+  <data name="Delete other users software releases" xml:space="preserve">
+    <value>다른 사용자의 소프트웨어 릴리스 삭제</value>
+  </data>
+  <data name="Publish own software releases" xml:space="preserve">
+    <value>자신의 소프트웨어 릴리스 게시</value>
+  </data>
+  <data name="Publish other users software releases" xml:space="preserve">
+    <value>다른 사용자의 소프트웨어 릴리스 게시</value>
+  </data>
+  <data name="Unpublish own software releases" xml:space="preserve">
+    <value>자신의 소프트웨어 릴리스 게시 취소</value>
+  </data>
+  <data name="Unpublish other users software releases" xml:space="preserve">
+    <value>다른 사용자의 소프트웨어 릴리스 게시 취소</value>
+  </data>
+  <data name="Purge software releases" xml:space="preserve">
+    <value>소프트웨어 릴리스 영구 삭제</value>
+  </data>
+  <data name="Restore software releases" xml:space="preserve">
+    <value>소프트웨어 릴리스 복원</value>
+  </data>
+  <data name="Publish quick notes(s)" xml:space="preserve">
+    <value>빠른 메모 게시</value>
+  </data>
+  <data name="Unpublish quick notes(s)" xml:space="preserve">
+    <value>빠른 메모 게시 취소</value>
+  </data>
+  <data name="Go to repository" xml:space="preserve">
+    <value>리포지토리로 이동</value>
+  </data>
+  <data name="Repository URL" xml:space="preserve">
+    <value>리포지토리 URL</value>
+  </data>
+  <data name="Hyperlink" xml:space="preserve">
+    <value>하이퍼링크</value>
+  </data>
+  <data name="File upload" xml:space="preserve">
+    <value>파일 업로드</value>
+  </data>
+  <data name="Uploading {0}" xml:space="preserve">
+    <value>{0} 업로드 중</value>
+  </data>
+  <data name="Release date is required" xml:space="preserve">
+    <value>릴리스 날짜는 필수입니다</value>
+  </data>
+  <data name="Release must have at least 1 file" xml:space="preserve">
+    <value>릴리스에는 최소 1개의 파일이 있어야 합니다</value>
+  </data>
+  <data name="Software releases found in the search" xml:space="preserve">
+    <value>검색에서 찾은 소프트웨어 릴리스</value>
+  </data>
+  <data name="Mark blog as primary" xml:space="preserve">
+    <value>블로그를 기본으로 설정</value>
+  </data>
+  <data name="Make {0} blog primary" xml:space="preserve">
+    <value>{0} 블로그를 기본으로 설정</value>
+  </data>
+  <data name="User Id is required" xml:space="preserve">
+    <value>사용자 ID는 필수입니다</value>
+  </data>
+  <data name="When provided, email must be valid" xml:space="preserve">
+    <value>입력된 경우 이메일 주소는 유효해야 합니다</value>
+  </data>
+  <data name="When provided, email from social network must be valid" xml:space="preserve">
+    <value>제공된 경우 소셜 네트워크의 이메일 주소는 유효해야 합니다</value>
+  </data>
+  <data name="{0}: Base64 string must be a valid image" xml:space="preserve">
+    <value>{0}: Base64 문자열은 유효한 이미지여야 합니다</value>
+  </data>
+  <data name="Profile cover url" xml:space="preserve">
+    <value>프로필 커버 URL</value>
+  </data>
+  <data name="Profile page url" xml:space="preserve">
+    <value>프로필 페이지 URL</value>
+  </data>
+  <data name="Profile picture url" xml:space="preserve">
+    <value>프로필 사진 URL</value>
+  </data>
+  <data name="Profile cover image" xml:space="preserve">
+    <value>프로필 커버 이미지</value>
+  </data>
+  <data name="Profile picture image" xml:space="preserve">
+    <value>프로필 이미지</value>
+  </data>
+  <data name="User has been blocked" xml:space="preserve">
+    <value>사용자가 차단되었습니다</value>
+  </data>
+  <data name="Something went wrong with {0} login" xml:space="preserve">
+    <value>{0} 로그인 중 문제가 발생했습니다</value>
   </data>
 </root>

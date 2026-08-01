@@ -1,0 +1,108 @@
+﻿@page "/softwarereleases"
+@inherits BasicAdminGridContent<OrigamiSoftwareRelease, HubContentSoftwareRelease>
+
+<Root Access="this.CanAccess()">
+    <HeaderTemplate>
+        <div class="p-3 border-bottom">
+            <div class="row">
+                <div class="d-inline-flex align-items-center col-12 col-xxl-8">
+                    <ul class="inline-list w-100">
+                        <li style="width:80%;">
+                            <i class="fa-solid fa-file-lines pe-1"></i>
+                            <span class="me-3">@Text.Get("Software releases", Text.Styles.Uppercase)</span>
+                            <div class="btn-group pe-1">
+                                <button class="btn btn-light text-danger border border-danger" disabled="@this.DisableTheDeleteButton" @onclick="this.DeleteSelectedEntities">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            </div>
+                            <div class="btn-group">
+                                <button class="btn btn-success text-white" title="@Text.Lower("Publish software release(s)")" disabled="@this.DisableTheDeleteButton" @onclick="this.PublishSelectedEntities">
+                                    <i class="fa-solid fa-file-arrow-up"></i>
+                                </button>
+                                <button class="btn btn-warning text-white" title="@Text.Lower("Unpublish software release(s)")" disabled="@this.DisableTheDeleteButton" @onclick="this.UnpublishSelectedEntities">
+                                    <i class="fa-solid fa-file-arrow-down"></i>
+                                </button>
+                            </div>
+                        </li>
+                        <li style="width:20%;">
+                            <MudSelect T="string" HelperText="@Text.Lower("Filter")" @bind-Value:get="Filter" @bind-Value:set="(filter) => SetFilterAndRefreshUI(filter)">
+                                <MudSelectItem T="string" Value="@(new string("all"))">@Text.Original("All")</MudSelectItem>
+                                <MudSelectItem T="string" Value="@(new string("published"))">@Text.Original("Published")</MudSelectItem>
+                                <MudSelectItem T="string" Value="@(new string("drafts"))">@Text.Original("Drafts")</MudSelectItem>
+                            </MudSelect>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-12 col-xxl-4">
+                    <BlogSelect></BlogSelect>
+                </div>
+            </div>
+        </div>
+    </HeaderTemplate>
+    <ContentTemplate>
+        <div class="p-3">
+            <div class="row">
+                <div class="datagrid-options col-12 text-right mb-1">
+                    <DataGridOptions Deleted="this.IncludeDeletedEntitiesInDataGrid" DeletedChanged="this.OnIncludeDeletedEntitiesChanged"></DataGridOptions>
+                </div>
+                <div class="software-releases col-12">
+                    <MudDataGrid @ref="DataGrid" T="HubContentSoftwareRelease" ServerData="GetEntities" Filterable="false" SortMode="SortMode.None" Class="border selectable" SelectedItems="this.SelectedEntities" MultiSelection="true" SelectedItemsChanged="this.SelectedEntitiesChanged"
+                                 RowClassFunc="this.RowClassFunc" Bordered="true" SelectOnRowClick="false">
+                        <Columns>
+                            <SelectColumn T="HubContentSoftwareRelease"></SelectColumn>
+                            <TemplateColumn Title="@Text.Upper("Software Release")">
+                                <CellTemplate>
+                                    <div class="cursor-pointer" @onclick="() => OnEdit(context.Item)">
+                                        <ContentTitleColumn Entity="context.Item.Entity"></ContentTitleColumn>
+                                    </div>
+                                </CellTemplate>
+                            </TemplateColumn>
+                            <TemplateColumn Title="@Text.Upper("Header")" CellClass="col-3">
+                                <CellTemplate>
+                                    <ContentHeader Entity="context.Item.Entity"></ContentHeader>
+                                </CellTemplate>
+                            </TemplateColumn>
+                            <TemplateColumn Title="@Text.Upper("Categories")" Sortable="false" Filterable="false" CellClass="col-2 categories">
+                                <CellTemplate>
+                                    @foreach (var category in this.Super.GetCategories(context.Item.Entity))
+                                    {
+                                        <div class="wrapper p-2 mb-1 me-1 shadow-sm border d-inline-block">
+                                            <CategoryHeaderInline Class="" Entity="category"></CategoryHeaderInline>
+                                        </div>
+                                    }
+                                </CellTemplate>
+                            </TemplateColumn>
+                            <TemplateColumn Title="@Text.Upper("Published")" Sortable="false" Filterable="false" CellClass="col-1 text-center">
+                                <CellTemplate>
+                                    @if (context.Item.Entity.IsPublished)
+                                    {
+                                        <i class="fa-solid fa-thumbs-up"></i>
+                                        <div class="small">@context.Item.Entity.DatePublished</div>
+                                    }
+                                </CellTemplate>
+                            </TemplateColumn>
+                            <TemplateColumn Title="@Text.Upper("Date")" Sortable="false" Filterable="false" CellClass="col-1 text-center">
+                                <CellTemplate>
+                                    <i class="fa-solid fa-calendar"></i>
+                                    <div class="small">@context.Item.Entity.GetDate()</div>
+                                </CellTemplate>
+                            </TemplateColumn>
+                        </Columns>
+                        <PagerContent>
+                            <MudDataGridPager T="HubContentSoftwareRelease" />
+                        </PagerContent>
+                        <NoRecordsContent>
+                            <NoEntriesWereFound></NoEntriesWereFound>
+                        </NoRecordsContent>
+                    </MudDataGrid>
+                </div>
+                <div class="software-release-form col-12 mt-3">
+                    <SoftwareReleaseForm Class="p-3 shadow-sm border" Entity="this.SelectedEntity" Saved="this.EntitySaved" Cancelled="this.EntityCancelled" Created="this.EntityCreated"></SoftwareReleaseForm>
+                </div>
+            </div>
+        </div>
+    </ContentTemplate>
+</Root>
+@code {
+    protected override string DefaultOrdering => $"{nameof(OrigamiSoftwareRelease.Title)}";
+}

@@ -6,8 +6,8 @@ namespace Origami.Core.Models
 {
     [Table("oi_SocialProfiles")]
     public class OrigamiSocialProfile :
+        BaseModel,
         IChanged,
-        IId,
         IName,
         IEmail,
         IVersion,
@@ -19,7 +19,6 @@ namespace Origami.Core.Models
         private string _email = string.Empty;
         private string _emailFromSocialNetwork = string.Empty;
         private string _firstName = string.Empty;
-        private Guid _id = Guid.NewGuid();
         private bool _isBlocked;
         private bool _isModerator;
         private string _lastName = string.Empty;
@@ -79,13 +78,6 @@ namespace Origami.Core.Models
         {
             get => _firstName;
             set => this.Set(ref _firstName, value, Changed);
-        }
-
-        [Key]
-        public Guid Id
-        {
-            get => _id;
-            set => this.Set(ref _id, value, Changed);
         }
 
         /// <summary>

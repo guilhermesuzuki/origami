@@ -114,14 +114,15 @@ namespace Origami.UI
             builder.Services.AddTransient<IContentCategoryRepository, ContentCategoryRepository>();
             builder.Services.AddTransient<IContentCommentReactionRepository, ContentCommentReactionRepository>();
             builder.Services.AddTransient<IContentCommentRepository, ContentCommentRepository>();
+            builder.Services.AddTransient<IContentHistoryRepository, ContentHistoryRepository>();
             builder.Services.AddTransient<IContentRatingRepository, ContentRatingRepository>();
             builder.Services.AddTransient<IContentReactionRepository, ContentReactionRepository>();
             builder.Services.AddTransient<IContentRepository, ContentRepository>();
-            builder.Services.AddTransient<IContentHistoryRepository, ContentHistoryRepository>();
             builder.Services.AddTransient<IContentTagRepository, ContentTagRepository>();
             builder.Services.AddTransient<IDashboardRepository, DashboardRepository>();
             builder.Services.AddTransient<IDirectoryRepository, DirectoryRepository>();
             builder.Services.AddTransient<IEmailRepository, EmailRepository>();
+            builder.Services.AddTransient<IEventRepository, EventRepository>();
             builder.Services.AddTransient<IFileManagerRepository, FileManagerRepository>();
             builder.Services.AddTransient<IFileRepository, FileRepository>();
             builder.Services.AddTransient<IPageRepository, PageRepository>();
@@ -185,6 +186,7 @@ namespace Origami.UI
             builder.Services.AddTransient<IHubContentRepository<HubContentSpecialPage>, HubContentSpecialPageRepository>();
             builder.Services.AddTransient<IHubContentRepository<HubContentQuickNote>, HubContentQuickNoteRepository>();
             builder.Services.AddTransient<IHubContentRepository<HubContentVideo>, HubContentVideoRepository>();
+            builder.Services.AddTransient<IHubContentRepository<HubContentSoftwareRelease>, HubContentSoftwareReleaseRepository>();
 
             //sets the blog as the primary one
             builder.Services.AddScoped<IUserFacade, UserFacade>(provider =>
@@ -208,9 +210,10 @@ namespace Origami.UI
 
             builder.Services.AddSingleton<IValidator<HubContentPage>, HubContentPageValidator>();
             builder.Services.AddSingleton<IValidator<HubContentPost>, HubContentPostValidator>();
+            builder.Services.AddSingleton<IValidator<HubContentQuickNote>, HubContentQuickNoteValidator>();
+            builder.Services.AddSingleton<IValidator<HubContentSoftwareRelease>, HubContentSoftwareReleaseValidator>();
             builder.Services.AddSingleton<IValidator<HubContentSpecialMessage>, HubContentSpecialMessageValidator>();
             builder.Services.AddSingleton<IValidator<HubContentSpecialPage>, HubContentSpecialPageValidator>();
-            builder.Services.AddSingleton<IValidator<HubContentQuickNote>, HubContentQuickNoteValidator>();
             builder.Services.AddSingleton<IValidator<HubContentVideo>, HubContentVideoValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiBlog>, OrigamiBlogValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiCategory>, OrigamiCategoryValidator>();
@@ -227,6 +230,7 @@ namespace Origami.UI
             builder.Services.AddSingleton<IValidator<OrigamiQuickNote>, OrigamiQuickNoteValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiRole>, OrigamiRoleValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiSettings>, OrigamiSettingsValidator>();
+            builder.Services.AddSingleton<IValidator<OrigamiSocialProfile>, OrigamiSocialProfileValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiSpecialMessage>, OrigamiSpecialMessageValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiSpecialPage>, OrigamiSpecialPageValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiUser>, OrigamiUserValidator>();
@@ -400,7 +404,7 @@ namespace Origami.UI
                 configuration.Enrich.WithProperty("Application", serviceName);
                 configuration.ReadFrom.Configuration(context.Configuration);
                 configuration.WriteTo.Console();
-                
+
                 if (seq && seqEndpoint.Has() == true)
                 {
                     configuration.WriteTo.Seq(seqEndpoint);
@@ -545,7 +549,7 @@ namespace Origami.UI
             var supportedCultures = OrigamiConstants.AllLanguages().Select(x => x.Name).ToArray();
             var localizationOptions = new RequestLocalizationOptions()
                 .SetDefaultCulture("en-US")
-                .AddSupportedCultures("en-US")
+                .AddSupportedCultures(supportedCultures)
                 .AddSupportedUICultures(supportedCultures);
 
             app.UseRequestLocalization(localizationOptions);

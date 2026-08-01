@@ -39,6 +39,8 @@ namespace Origami.Core.Data
 
         IEmailRepository Emails { get; }
 
+        IEventRepository Events { get; }
+
         IFileRepository Files { get; }
 
         /// <summary>
@@ -165,6 +167,12 @@ namespace Origami.Core.Data
         /// <param name="comment"></param>
         /// <returns></returns>
         IEnumerable<OrigamiContentComment> GetReplies(OrigamiContentComment comment);
+
+        /// <summary>
+        /// Retrieves a collection of software releases available in the system.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<OrigamiSoftwareRelease> GetSoftwareReleases(Guid blog);
 
         /// <summary>
         /// Retrieves a collection of special messages available in the system.

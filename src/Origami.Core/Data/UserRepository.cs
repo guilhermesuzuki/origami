@@ -21,6 +21,7 @@ namespace Origami.Core.Data
         /// <param name="dbContext"></param>
         /// <param name="distributedCache"></param>
         public UserRepository(
+            IAppFacade appFacade,
             IValidator<OrigamiUser> validator,
             IContentRepository contentRepository,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
@@ -30,7 +31,7 @@ namespace Origami.Core.Data
             IUserRoleRepository userRoleRepository,
             Text text,
             IWebRootPath wwwRoot)
-            : base(text, dbContextFactory, memoryCache, wwwRoot)
+            : base(text, dbContextFactory, memoryCache, wwwRoot, appFacade)
         {
             _validator = validator;
             _contentRepository = contentRepository;
@@ -147,7 +148,7 @@ namespace Origami.Core.Data
                 }
             }
 
-            var password = "@" 
+            var password = "@"
                 + Nanoid.Generate(alphabet: Nanoid.Alphabets.Letters, size: 4)
                 + Nanoid.Generate(alphabet: Nanoid.Alphabets.Digits, size: 4)
                 + "#";

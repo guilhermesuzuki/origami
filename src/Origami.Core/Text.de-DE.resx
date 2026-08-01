@@ -496,7 +496,7 @@
     <value>Bild leeren</value>
   </data>
   <data name="Clear picture" xml:space="preserve">
-    <value>Bild leeren</value>
+    <value>Bild entfernen</value>
   </data>
   <data name="Clear selection" xml:space="preserve">
     <value>Auswahl leeren</value>
@@ -2474,5 +2474,128 @@
   </data>
   <data name="Title is already in use" xml:space="preserve">
     <value>Titel wird bereits verwendet</value>
+  </data>
+  <data name="Block" xml:space="preserve">
+    <value>Blockieren</value>
+  </data>
+  <data name="Unblock" xml:space="preserve">
+    <value>Entsperren</value>
+  </data>
+  <data name="This will block yourself" xml:space="preserve">
+    <value>Dadurch blockieren Sie sich selbst.</value>
+  </data>
+  <data name="Yourself" xml:space="preserve">
+    <value>Sie selbst</value>
+  </data>
+  <data name="Software release" xml:space="preserve">
+    <value>Softwareveröffentlichung</value>
+  </data>
+  <data name="Software releases" xml:space="preserve">
+    <value>Softwareveröffentlichungen</value>
+  </data>
+  <data name="View software releases" xml:space="preserve">
+    <value>Softwareveröffentlichungen anzeigen</value>
+  </data>
+  <data name="Create new software releases" xml:space="preserve">
+    <value>Neue Softwareveröffentlichungen erstellen</value>
+  </data>
+  <data name="Edit own software releases" xml:space="preserve">
+    <value>Eigene Softwareveröffentlichungen bearbeiten</value>
+  </data>
+  <data name="Edit other users software releases" xml:space="preserve">
+    <value>Softwareveröffentlichungen anderer Benutzer bearbeiten</value>
+  </data>
+  <data name="Delete own software releases" xml:space="preserve">
+    <value>Eigene Softwareveröffentlichungen löschen</value>
+  </data>
+  <data name="Delete other users software releases" xml:space="preserve">
+    <value>Softwareveröffentlichungen anderer Benutzer löschen</value>
+  </data>
+  <data name="Publish own software releases" xml:space="preserve">
+    <value>Eigene Softwareveröffentlichungen veröffentlichen</value>
+  </data>
+  <data name="Publish other users software releases" xml:space="preserve">
+    <value>Softwareveröffentlichungen anderer Benutzer veröffentlichen</value>
+  </data>
+  <data name="Unpublish own software releases" xml:space="preserve">
+    <value>Veröffentlichung eigener Softwareveröffentlichungen aufheben</value>
+  </data>
+  <data name="Unpublish other users software releases" xml:space="preserve">
+    <value>Veröffentlichung von Softwareveröffentlichungen anderer Benutzer aufheben</value>
+  </data>
+  <data name="Purge software releases" xml:space="preserve">
+    <value>Softwareveröffentlichungen endgültig löschen</value>
+  </data>
+  <data name="Restore software releases" xml:space="preserve">
+    <value>Softwareveröffentlichungen wiederherstellen</value>
+  </data>
+  <data name="Publish quick notes(s)" xml:space="preserve">
+    <value>Kurznotizen veröffentlichen</value>
+  </data>
+  <data name="Unpublish quick notes(s)" xml:space="preserve">
+    <value>Veröffentlichung von Kurznotizen aufheben</value>
+  </data>
+  <data name="Go to repository" xml:space="preserve">
+    <value>Zum Repository wechseln</value>
+  </data>
+  <data name="Repository URL" xml:space="preserve">
+    <value>Repository-URL</value>
+  </data>
+  <data name="Hyperlink" xml:space="preserve">
+    <value>Hyperlink</value>
+  </data>
+  <data name="File upload" xml:space="preserve">
+    <value>Datei-Upload</value>
+  </data>
+  <data name="Uploading {0}" xml:space="preserve">
+    <value>{0} wird hochgeladen</value>
+  </data>
+  <data name="Release date is required" xml:space="preserve">
+    <value>Veröffentlichungsdatum ist erforderlich</value>
+  </data>
+  <data name="Release must have at least 1 file" xml:space="preserve">
+    <value>Release muss mindestens 1 Datei enthalten</value>
+  </data>
+  <data name="Software releases found in the search" xml:space="preserve">
+    <value>In der Suche gefundene Softwareveröffentlichungen</value>
+  </data>
+  <data name="Mark blog as primary" xml:space="preserve">
+    <value>Blog als primär festlegen</value>
+  </data>
+  <data name="Make {0} blog primary" xml:space="preserve">
+    <value>{0}-Blog als primär festlegen</value>
+  </data>
+  <data name="User Id is required" xml:space="preserve">
+    <value>Benutzer-ID ist erforderlich</value>
+  </data>
+  <data name="When provided, email must be valid" xml:space="preserve">
+    <value>Wenn angegeben, muss die E-Mail-Adresse gültig sein</value>
+  </data>
+  <data name="When provided, email from social network must be valid" xml:space="preserve">
+    <value>Wenn angegeben, muss die E-Mail-Adresse des sozialen Netzwerks gültig sein</value>
+  </data>
+  <data name="{0}: Base64 string must be a valid image" xml:space="preserve">
+    <value>{0}: Der Base64-String muss ein gültiges Bild sein</value>
+  </data>
+  <data name="Profile cover url" xml:space="preserve">
+    <value>URL des Profil-Titelbilds</value>
+  </data>
+  <data name="Profile page url" xml:space="preserve">
+    <value>URL der Profilseite</value>
+  </data>
+  <data name="Profile picture url" xml:space="preserve">
+    <value>URL des Profilbilds</value>
+  </data>
+  <data name="Profile cover image" xml:space="preserve">
+    <value>Profil-Titelbild</value>
+  </data>
+  <data name="Profile picture image" xml:space="preserve">
+    <value>Profilbild</value>
+  </data>
+  <data name="User has been blocked" xml:space="preserve">
+    <value>Benutzer wurde blockiert</value>
+  </data>
+  <data name="Something went wrong with {0} login" xml:space="preserve">
+    <value>Beim Anmelden mit {0} ist ein Fehler aufgetreten</value>
   </data>
 </root>

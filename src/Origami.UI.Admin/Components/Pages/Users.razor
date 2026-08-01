@@ -1,5 +1,4 @@
 ﻿@page "/users"
-@page "/users/{NanoId}"
 @inherits BasicAdminGrid<OrigamiUser>
 <style>
     .roles .id { display: none !important; }
@@ -110,10 +109,5 @@
         {
             await base.DeleteSelectedEntities();
         }
-    }
-
-    protected override void OnEdit(OrigamiUser entity)
-    {
-        GhostOfTheNavigator.NavigateTo($"/users/{entity.NanoId}");
     }
 }

@@ -2475,4 +2475,127 @@
   <data name="Title is already in use" xml:space="preserve">
     <value>Title is already in use</value>
   </data>
+  <data name="Block" xml:space="preserve">
+    <value>Block</value>
+  </data>
+  <data name="Unblock" xml:space="preserve">
+    <value>Unblock</value>
+  </data>
+  <data name="This will block yourself" xml:space="preserve">
+    <value>This will block yourself</value>
+  </data>
+  <data name="Yourself" xml:space="preserve">
+    <value>Yourself</value>
+  </data>
+  <data name="Software release" xml:space="preserve">
+    <value>Software release</value>
+  </data>
+  <data name="Software releases" xml:space="preserve">
+    <value>Software releases</value>
+  </data>
+  <data name="View software releases" xml:space="preserve">
+    <value>View software releases</value>
+  </data>
+  <data name="Create new software releases" xml:space="preserve">
+    <value>Create new software releases</value>
+  </data>
+  <data name="Edit own software releases" xml:space="preserve">
+    <value>Edit own software releases</value>
+  </data>
+  <data name="Edit other users software releases" xml:space="preserve">
+    <value>Edit other users' software releases</value>
+  </data>
+  <data name="Delete own software releases" xml:space="preserve">
+    <value>Delete own software releases</value>
+  </data>
+  <data name="Delete other users software releases" xml:space="preserve">
+    <value>Delete other users' software releases</value>
+  </data>
+  <data name="Publish own software releases" xml:space="preserve">
+    <value>Publish own software releases</value>
+  </data>
+  <data name="Publish other users software releases" xml:space="preserve">
+    <value>Publish other users' software releases</value>
+  </data>
+  <data name="Unpublish own software releases" xml:space="preserve">
+    <value>Unpublish own software releases</value>
+  </data>
+  <data name="Unpublish other users software releases" xml:space="preserve">
+    <value>Unpublish other users' software releases</value>
+  </data>
+  <data name="Purge software releases" xml:space="preserve">
+    <value>Purge software releases</value>
+  </data>
+  <data name="Restore software releases" xml:space="preserve">
+    <value>Restore software releases</value>
+  </data>
+  <data name="Publish quick notes(s)" xml:space="preserve">
+    <value>Publish quick notes</value>
+  </data>
+  <data name="Unpublish quick notes(s)" xml:space="preserve">
+    <value>Unpublish quick notes</value>
+  </data>
+  <data name="Go to repository" xml:space="preserve">
+    <value>Go to repository</value>
+  </data>
+  <data name="Repository URL" xml:space="preserve">
+    <value>Repository URL</value>
+  </data>
+  <data name="Hyperlink" xml:space="preserve">
+    <value>Hyperlink</value>
+  </data>
+  <data name="File upload" xml:space="preserve">
+    <value>File upload</value>
+  </data>
+  <data name="Uploading {0}" xml:space="preserve">
+    <value>Uploading {0}</value>
+  </data>
+  <data name="Release date is required" xml:space="preserve">
+    <value>Release date is required</value>
+  </data>
+  <data name="Release must have at least 1 file" xml:space="preserve">
+    <value>Release must have at least 1 file</value>
+  </data>
+  <data name="Software releases found in the search" xml:space="preserve">
+    <value>Software releases found in the search</value>
+  </data>
+  <data name="Mark blog as primary" xml:space="preserve">
+    <value>Mark blog as primary</value>
+  </data>
+  <data name="Make {0} blog primary" xml:space="preserve">
+    <value>Make {0} blog primary</value>
+  </data>
+  <data name="User Id is required" xml:space="preserve">
+    <value>User ID is required</value>
+  </data>
+  <data name="When provided, email must be valid" xml:space="preserve">
+    <value>When provided, email must be valid</value>
+  </data>
+  <data name="When provided, email from social network must be valid" xml:space="preserve">
+    <value>When provided, email from social network must be valid</value>
+  </data>
+  <data name="{0}: Base64 string must be a valid image" xml:space="preserve">
+    <value>{0}: Base64 string must be a valid image</value>
+  </data>
+  <data name="Profile cover url" xml:space="preserve">
+    <value>Profile cover URL</value>
+  </data>
+  <data name="Profile page url" xml:space="preserve">
+    <value>Profile page URL</value>
+  </data>
+  <data name="Profile picture url" xml:space="preserve">
+    <value>Profile picture URL</value>
+  </data>
+  <data name="Profile cover image" xml:space="preserve">
+    <value>Profile cover image</value>
+  </data>
+  <data name="Profile picture image" xml:space="preserve">
+    <value>Profile picture image</value>
+  </data>
+  <data name="User has been blocked" xml:space="preserve">
+    <value>User has been blocked</value>
+  </data>
+  <data name="Something went wrong with {0} login" xml:space="preserve">
+    <value>Something went wrong with {0} login</value>
+  </data>
 </root>

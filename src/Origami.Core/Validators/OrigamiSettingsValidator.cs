@@ -17,5 +17,6 @@ public class OrigamiSettingsValidator : AbstractValidator<OrigamiSettings>
         RuleFor(x => x.RssFeed5).RssFeed(text);
         RuleFor(x => x.OpenTelemetry.Endpoint).Website(text, field: "Open telemetry endpoint");
         RuleFor(x => x.SmtpServer).Domain(text, field: "SMTP server");
+        RuleFor(x => x.RepositoryURL).Website(text, field: "Repository URL");
     }
 }

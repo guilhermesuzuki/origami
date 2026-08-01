@@ -25,11 +25,12 @@
                     return Context switch
                     {
                         OrigamiBlog blog => blog.Name,
+                        OrigamiCategory category => category.Name,
                         OrigamiPage page => page.Title,
                         OrigamiPost post => post.Title,
-                        OrigamiVideo video => video.Title,
-                        OrigamiCategory category => category.Name,
+                        OrigamiSoftwareRelease release => release.Title,
                         OrigamiUser user => user.Username,
+                        OrigamiVideo video => video.Title,
                         _ => string.Empty,
                     };
                 }

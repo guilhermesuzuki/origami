@@ -11,13 +11,14 @@ namespace Origami.Core
 
             lock (OrigamiConstants.SyncRoot)
             {
+                var clonedEntities = entities.ToList().Clone();
                 var list = memoryCache.GetList<T>(key);
                 if (list == null)
                 {
-                    memoryCache.Set(key, entities.ToList());
+                    memoryCache.Set(key, clonedEntities);
                     return;
                 }
-                list.AddRange(entities);
+                list.AddRange(clonedEntities);
                 memoryCache.Set(key, list);
             }
         }
@@ -49,15 +50,11 @@ namespace Origami.Core
             }
         }
 
-        public static void Save(this IMemoryCache memoryCache, OrigamiContent? entity)
-        {
-            memoryCache.Save<OrigamiContent>(entity);
-        }
-
         public static void Save<T>(this IMemoryCache memoryCache, T? entity) where T : class, IId
         {
             if (entity == null) return;
 
+            var clonedEntity = entity.Clone();
             var key = typeof(T).KeyForCaching();
 
             lock (OrigamiConstants.SyncRoot)
@@ -65,12 +62,12 @@ namespace Origami.Core
                 var list = memoryCache.GetList<T>(key);
                 if (list == null)
                 {
-                    memoryCache.Set(key, new List<T> { entity });
+                    memoryCache.Set(key, new List<T> { clonedEntity });
                     return;
                 }
 
-                list.RemoveAll(x => x.Id == entity.Id);
-                list.Add(entity);
+                list.RemoveAll(x => x.Id == clonedEntity.Id);
+                list.Add(clonedEntity);
 
                 memoryCache.Set(key, list);
             }
@@ -82,18 +79,19 @@ namespace Origami.Core
 
             lock (OrigamiConstants.SyncRoot)
             {
+                var clonedEntities = entities.ToList().Clone();
                 var list = memoryCache.GetList<T>(key);
                 if (list == null)
                 {
                     return;
                 }
 
-                var found = from a in entities
+                var found = from a in clonedEntities
                             join b in list on a.Id equals b.Id
                             select b;
 
                 found.Each(list.Remove);
-                list.AddRange(entities);
+                list.AddRange(clonedEntities);
                 memoryCache.Set(key, list);
             }
         }

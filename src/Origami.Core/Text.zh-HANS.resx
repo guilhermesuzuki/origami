@@ -496,7 +496,7 @@
     <value>图像清晰</value>
   </data>
   <data name="Clear picture" xml:space="preserve">
-    <value>清晰图片</value>
+    <value>移除图片</value>
   </data>
   <data name="Clear selection" xml:space="preserve">
     <value>清除选择</value>
@@ -2474,5 +2474,128 @@
   </data>
   <data name="Title is already in use" xml:space="preserve">
     <value>标题已被使用</value>
+  </data>
+  <data name="Block" xml:space="preserve">
+    <value>屏蔽</value>
+  </data>
+  <data name="Unblock" xml:space="preserve">
+    <value>取消屏蔽</value>
+  </data>
+  <data name="This will block yourself" xml:space="preserve">
+    <value>此操作将屏蔽您自己。</value>
+  </data>
+  <data name="Yourself" xml:space="preserve">
+    <value>您自己</value>
+  </data>
+  <data name="Software release" xml:space="preserve">
+    <value>软件发布</value>
+  </data>
+  <data name="Software releases" xml:space="preserve">
+    <value>软件发布</value>
+  </data>
+  <data name="View software releases" xml:space="preserve">
+    <value>查看软件发布</value>
+  </data>
+  <data name="Create new software releases" xml:space="preserve">
+    <value>创建新的软件发布</value>
+  </data>
+  <data name="Edit own software releases" xml:space="preserve">
+    <value>编辑自己的软件发布</value>
+  </data>
+  <data name="Edit other users software releases" xml:space="preserve">
+    <value>编辑其他用户的软件发布</value>
+  </data>
+  <data name="Delete own software releases" xml:space="preserve">
+    <value>删除自己的软件发布</value>
+  </data>
+  <data name="Delete other users software releases" xml:space="preserve">
+    <value>删除其他用户的软件发布</value>
+  </data>
+  <data name="Publish own software releases" xml:space="preserve">
+    <value>发布自己的软件发布</value>
+  </data>
+  <data name="Publish other users software releases" xml:space="preserve">
+    <value>发布其他用户的软件发布</value>
+  </data>
+  <data name="Unpublish own software releases" xml:space="preserve">
+    <value>取消发布自己的软件发布</value>
+  </data>
+  <data name="Unpublish other users software releases" xml:space="preserve">
+    <value>取消发布其他用户的软件发布</value>
+  </data>
+  <data name="Purge software releases" xml:space="preserve">
+    <value>永久删除软件发布</value>
+  </data>
+  <data name="Restore software releases" xml:space="preserve">
+    <value>恢复软件发布</value>
+  </data>
+  <data name="Publish quick notes(s)" xml:space="preserve">
+    <value>发布快速笔记</value>
+  </data>
+  <data name="Unpublish quick notes(s)" xml:space="preserve">
+    <value>取消发布快速笔记</value>
+  </data>
+  <data name="Go to repository" xml:space="preserve">
+    <value>前往仓库</value>
+  </data>
+  <data name="Repository URL" xml:space="preserve">
+    <value>仓库 URL</value>
+  </data>
+  <data name="Hyperlink" xml:space="preserve">
+    <value>超链接</value>
+  </data>
+  <data name="File upload" xml:space="preserve">
+    <value>文件上传</value>
+  </data>
+  <data name="Uploading {0}" xml:space="preserve">
+    <value>正在上传 {0}</value>
+  </data>
+  <data name="Release date is required" xml:space="preserve">
+    <value>发布日期是必填项</value>
+  </data>
+  <data name="Release must have at least 1 file" xml:space="preserve">
+    <value>发布必须至少包含 1 个文件</value>
+  </data>
+  <data name="Software releases found in the search" xml:space="preserve">
+    <value>搜索中找到的软件发布</value>
+  </data>
+  <data name="Mark blog as primary" xml:space="preserve">
+    <value>将博客设为主要博客</value>
+  </data>
+  <data name="Make {0} blog primary" xml:space="preserve">
+    <value>将 {0} 博客设为主要博客</value>
+  </data>
+  <data name="User Id is required" xml:space="preserve">
+    <value>用户 ID 是必填项</value>
+  </data>
+  <data name="When provided, email must be valid" xml:space="preserve">
+    <value>如果提供，电子邮件必须有效</value>
+  </data>
+  <data name="When provided, email from social network must be valid" xml:space="preserve">
+    <value>如果提供，社交网络的电子邮件必须有效</value>
+  </data>
+  <data name="{0}: Base64 string must be a valid image" xml:space="preserve">
+    <value>{0}：Base64 字符串必须是有效的图像</value>
+  </data>
+  <data name="Profile cover url" xml:space="preserve">
+    <value>个人资料封面 URL</value>
+  </data>
+  <data name="Profile page url" xml:space="preserve">
+    <value>个人资料页面 URL</value>
+  </data>
+  <data name="Profile picture url" xml:space="preserve">
+    <value>个人资料图片 URL</value>
+  </data>
+  <data name="Profile cover image" xml:space="preserve">
+    <value>个人资料封面图片</value>
+  </data>
+  <data name="Profile picture image" xml:space="preserve">
+    <value>个人资料图片</value>
+  </data>
+  <data name="User has been blocked" xml:space="preserve">
+    <value>用户已被屏蔽</value>
+  </data>
+  <data name="Something went wrong with {0} login" xml:space="preserve">
+    <value>使用 {0} 登录时出现问题</value>
   </data>
 </root>

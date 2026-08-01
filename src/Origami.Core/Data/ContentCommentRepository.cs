@@ -10,8 +10,8 @@ namespace Origami.Core.Data
         IContentCommentRepository
     {
         protected readonly IValidator<OrigamiContentComment> _validator;
-
-        protected IContentCommentReactionRepository _contentCommentReactionRepository;
+        protected readonly IContentCommentReactionRepository _contentCommentReactionRepository;
+        protected readonly IEventRepository _eventRepository;
 
         /// <summary>
         /// Default constructor with DI
@@ -19,16 +19,19 @@ namespace Origami.Core.Data
         /// <param name="dbContext"></param>
         /// <param name="distributedCache"></param>
         public ContentCommentRepository(
+            IAppFacade appFacade,
+            IContentCommentReactionRepository contentCommentReactionRepository,
+            IEventRepository eventRepository,
             IValidator<OrigamiContentComment> validator,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
-            IContentCommentReactionRepository contentCommentReactionRepository,
             IMyMemoryCache memoryCache,
             IWebRootPath wwwRoot,
             Text text)
-            : base(text, dbContextFactory, memoryCache, wwwRoot)
+            : base(text, dbContextFactory, memoryCache, wwwRoot, appFacade)
         {
             _validator = validator;
             _contentCommentReactionRepository = contentCommentReactionRepository;
+            _eventRepository = eventRepository;
         }
 
         public override string CreatePermission => nameof(OrigamiRole.ModerateComments);
@@ -81,7 +84,12 @@ namespace Origami.Core.Data
                 if (profile.IsModerator)
                 {
                     ctx.Entity.PinnedById = ctx.SocialProfile.Id;
-                    return base.SmartUpdate(ctx, false);
+                    var hub = base.SmartUpdate(ctx, false);
+                    if (hub.Ok == true)
+                    {
+                        this._eventRepository.SocialProfilePinsComment(ctx.SocialProfile, ctx.Entity);
+                    }
+                    return hub;
                 }
             }
             catch (Exception)
@@ -160,7 +168,21 @@ namespace Origami.Core.Data
                 return new(ctx.Entity) { Error = Text.Original(Text.YouMadeTooManyCommentsIn5Minutes) };
             }
 
-            return base.SmartCreate(ctx, false);
+            var hub = base.SmartCreate(ctx, false);
+
+            if (hub.Ok == true)
+            {
+                if (ctx.Entity.ParentId == null)
+                {
+                    _eventRepository.SocialProfileRepliesToContent(ctx.SocialProfile, ctx.Entity);
+                }
+                else
+                {
+                    _eventRepository.SocialProfileRepliesToComment(ctx.SocialProfile, ctx.Entity);
+                }
+            }
+
+            return hub;
         }
 
         public Result<OrigamiContentComment> SmartDelete(DataOperationContextFrontEnd<OrigamiContentComment> ctx)
@@ -171,7 +193,14 @@ namespace Origami.Core.Data
                 var profile = db.Set<OrigamiSocialProfile>().AsNoTracking().GetProfileThrowIfBlocked(ctx.SocialProfile.Id);
                 if (profile.IsModerator)
                 {
-                    return base.SmartDelete(ctx, false);
+                    var hub = base.SmartDelete(ctx, false);
+
+                    if (hub.Ok == true)
+                    {
+                        _eventRepository.SocialProfileDeletesComment(ctx.SocialProfile, ctx.Entity);
+                    }
+
+                    return hub;
                 }
             }
             catch (Exception)
@@ -184,7 +213,14 @@ namespace Origami.Core.Data
             {
                 if (comment.SocialProfileId == ctx.SocialProfile.Id)
                 {
-                    return base.SmartDelete(ctx, false);
+                    var hub = base.SmartDelete(ctx, false);
+
+                    if (hub.Ok == true)
+                    {
+                        _eventRepository.SocialProfileDeletesComment(ctx.SocialProfile, ctx.Entity);
+                    }
+
+                    return hub;
                 }
             }
 
@@ -209,7 +245,11 @@ namespace Origami.Core.Data
                 return new(ctx.Entity) { Error = Text.Original("You cannot edit this comment") };
             }
 
-            return base.SmartUpdate(ctx, false);
+            var hub = base.SmartUpdate(ctx, false);
+
+            _eventRepository.SocialProfileEditsComment(ctx.SocialProfile, ctx.Entity);
+
+            return hub;
         }
 
         public Result<OrigamiContentComment> Unpin(DataOperationContextFrontEnd<OrigamiContentComment> ctx)
@@ -221,7 +261,12 @@ namespace Origami.Core.Data
                 if (profile.IsModerator)
                 {
                     ctx.Entity.PinnedById = null;
-                    return base.SmartUpdate(ctx, false);
+                    var hub = base.SmartUpdate(ctx, false);
+                    if (hub.Ok == true)
+                    {
+                        this._eventRepository.SocialProfileUnpinsComment(ctx.SocialProfile, ctx.Entity);
+                    }
+                    return hub;
                 }
             }
             catch (Exception)

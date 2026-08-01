@@ -30,6 +30,10 @@
     {
         type = "Quick note";
     }
+    else if (this.Entity is OrigamiSoftwareRelease)
+    {
+        type = "Software release";
+    }
 
     <div class="@Class basic-header-notes">
         @if (this.Entity is OrigamiPage { IsFrontPage: true })

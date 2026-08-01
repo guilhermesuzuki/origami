@@ -60,10 +60,11 @@ namespace Origami.Core.Data
                 {
                     case OrigamiPage:
                     case OrigamiPost:
+                    case OrigamiQuickNote:
+                    case OrigamiSoftwareRelease:
                     case OrigamiSpecialMessage:
                     case OrigamiSpecialPage:
                     case OrigamiVideo:
-                    case OrigamiQuickNote:
                         return this.Read<OrigamiContent>().OfType<T>().ToList();
                     default: break;
                 }

@@ -7,7 +7,11 @@
 @implements IBlogId
 @inject ISettingsRepository _settingsRepository
 
-<div class="m-auto wrapper">
+@{
+    var settings = this.Super.Settings.GetSettings(); 
+}
+
+<div class="m-auto wrapper text-center">
     <div class="@Class logo cursor-pointer position-relative" style="z-index:25;" @onclick="GoHome">
         <Languages Class="mb-3"></Languages>
         @if (this._blogSettings.LogoUrl.Has() == true)
@@ -24,6 +28,31 @@
     {
         <div class="text-center site-subtitle-container position-relative" style="z-index:25;">
             @this.SubtitleTemplate
+        </div>
+    }
+    @if (this.AppFacade.Admin == false)
+    {
+        <div class="btn-group">
+            @if (this.Super.GetSoftwareReleases(this.UserFacade.BlogId).Any() == true)
+            {
+                <div class="btn bg-success">
+                    <a href="/softwarereleases#content-start" class="cursor-pointer focusable text-white">
+                        <i class="fa-solid fa-file-zipper"></i>
+                        @Text.Lower("Download")
+                        <i class="fa-solid fa-download"></i>
+                    </a>
+                </div>
+            }
+            @if (settings.RepositoryURL.Has() == true)
+            {
+                <div class="btn bg-warning">
+                    <a href="@settings.RepositoryURL" class="cursor-pointer focusable text-white">
+                        <i class="fa-solid fa-code"></i>
+                        @Text.Lower("Go to repository")
+                        <i class="fa-solid fa-up-right-from-square"></i>
+                    </a>
+                </div>
+            }
         </div>
     }
 </div>

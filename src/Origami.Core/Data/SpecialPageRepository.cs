@@ -17,13 +17,14 @@ namespace Origami.Core.Data
         /// <param name="dbContext"></param>
         /// <param name="distributedCache"></param>
         public SpecialPageRepository(
+            IAppFacade appFacade,
             IValidator<OrigamiSpecialPage> validator,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IMyMemoryCache memoryCache,
             ISettingRepository settingRepository,
             Text text,
             IWebRootPath wwwRoot)
-            : base(text, dbContextFactory, memoryCache, wwwRoot)
+            : base(text, dbContextFactory, memoryCache, wwwRoot, appFacade)
         {
             _validator = validator;
             _settingRepository = settingRepository;
