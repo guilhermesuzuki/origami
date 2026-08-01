@@ -2595,4 +2595,7 @@
   <data name="User has been blocked" xml:space="preserve">
     <value>Benutzer wurde blockiert</value>
   </data>
+  <data name="Something went wrong with {0} login" xml:space="preserve">
+    <value>Beim Anmelden mit {0} ist ein Fehler aufgetreten</value>
+  </data>
 </root>
