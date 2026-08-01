@@ -28,6 +28,7 @@ namespace Origami.UI
         {
             _appFacade.OnlineUsers.Remove(circuit.Id);
             _myMemoryCache.Remove($"Origami_UserLocation_{circuit.Id}");
+            _myMemoryCache.Remove($"Origami_UserLocation_{_httpContextAccessor.HttpContext?.Connection.Id}");
             return Task.CompletedTask;
         }
     }
