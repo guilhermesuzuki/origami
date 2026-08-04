@@ -43,12 +43,6 @@
 
     protected override void OnInitialized()
     {
-        base.OnInitialized();
-        this.LoadFeeds();
-    }
-
-    protected void LoadFeeds()
-    {
         this.AppFacade.RefreshingTheUI += (obj, args) =>
         {
             if (this.HttpContextAccessor.HttpContext == null) return;
@@ -60,6 +54,12 @@
             }
         };
 
+        base.OnInitialized();
+        this.LoadFeeds();
+    }
+
+    protected void LoadFeeds()
+    {
         var settings = _settings.GetSettings();
 
         IEnumerable<string> feeds = [
