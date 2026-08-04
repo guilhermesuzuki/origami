@@ -5,17 +5,17 @@ namespace Origami.UI.FrontEnd.Controllers
     [Route("[Controller]")]
     public class SitemapController : Controller
     {
-        [HttpGet("google")]
-        public IActionResult Google()
-        {
-            Response.ContentType = "application/xml";
-            return View();
-        }
+        string[] sites = [ "bing", "google" ];
 
-        [HttpGet("bing")]
-        public IActionResult Bing()
+        [HttpGet("{site}")]
+        public IActionResult Index(string site)
         {
-            return View();
+            if (sites.Contains(site) == false)
+            {
+                return NotFound();
+            }
+            Response.ContentType = "application/xml";
+            return View("Sitemap", site);
         }
     }
 }
