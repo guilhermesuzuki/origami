@@ -280,6 +280,13 @@ namespace Origami.UI
                 options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
             });
 
+            builder.Services.AddWindowsService(options =>
+            {
+                options.ServiceName = builder.Environment.ApplicationName;
+            });
+
+            builder.Host.UseWindowsService();
+
             var services = builder.Services.BuildServiceProvider();
 
             //adds the database configuration
