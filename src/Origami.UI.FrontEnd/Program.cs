@@ -65,7 +65,7 @@ var app = builder.FoldTheOrigami<App>(
                 options.ResponseType = "code id_token";
                 options.UseTokenLifetime = false;
 
-                var scopes = "email profile user.read user.read.all".Split(' ');
+                var scopes = "Email Profile User.Read User.Read.All".Split(' ');
                 scopes.Each(options.Scope.Add);
 
                 options.GetClaimsFromUserInfoEndpoint = true;
