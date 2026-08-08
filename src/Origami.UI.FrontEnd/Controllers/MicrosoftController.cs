@@ -110,6 +110,7 @@ namespace Origami.UI.FrontEnd.Controllers
 
                 user.FirstName = me?.GivenName ?? string.Empty;
                 user.LastName = me?.SurName ?? string.Empty;
+                user.Name = me?.DisplayName ?? string.Empty;
 
                 user.ProfileCover = null;
                 user.ProfileCoverUrl = null;
