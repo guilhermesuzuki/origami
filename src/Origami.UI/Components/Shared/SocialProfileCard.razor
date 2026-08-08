@@ -28,8 +28,12 @@
                 {
                     <i class="fa-brands fa-microsoft"></i>
                 }
+                else
+                {
+                    <i class="fa-solid fa-circle-question"></i>
+                }
             </div>
-            <img src="@Entity.ProfilePictureUrl" class="w-100" onerror="this.src = '@OrigamiConstants.NoUser'" />
+            <img src="@Entity.ProfilePicture()" class="w-100" onerror="this.src = '@OrigamiConstants.NoUser'" />
         </div>
         <div class="d-inline-flex align-items-center fs-5">
             <span class="ps-1 fw-bold social-profile-name">@Entity.GetName()</span>

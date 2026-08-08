@@ -28,12 +28,12 @@
                             <i class="fa-solid fa-user"></i>
                             @Text.Lower("Profile Information")
                         </div>
-                        @if (SocialProfile.ProfilePictureUrl.Has() == true)
+                        @if (SocialProfile.ProfilePicture().Has() == true)
                         {
                             <div class="row mt-3">
                                 <div class="col-12 text-center">
                                     <div class="fs-5">@Text.Lower("Logo • Avatar")</div>
-                                    <img src="@SocialProfile.ProfilePictureUrl" onerror="this.onerror=null; this.src='@(OrigamiConstants.NoUser)'" height="128" />
+                                    <img src="@SocialProfile.ProfilePicture()" onerror="this.onerror=null; this.src='@(OrigamiConstants.NoUser)'" height="128" />
                                 </div>
                             </div>
                         }
