@@ -121,7 +121,7 @@ namespace Origami.UI.FrontEnd.Controllers
                 if (photoBytes != null)
                 {
                     var image = Image.Load(photoBytes);
-                    user.ProfilePicture = image.ToBase64String(SixLabors.ImageSharp.Formats.Jpeg.JpegFormat.Instance);
+                    user.ProfilePicture = image.ToBase64String(Image.DetectFormat(photoBytes));
                 }
 
                 var context = new DataOperationContext<OrigamiSocialProfile>(OrigamiUser.AnonymousUser, DateTime.UtcNow, user);
