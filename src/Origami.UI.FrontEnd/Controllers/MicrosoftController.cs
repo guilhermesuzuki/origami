@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using Origami.Core;
 using Origami.Core.Data;
 using Origami.Core.Models;
+using SixLabors.ImageSharp;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Net.Http.Headers;
@@ -110,15 +111,18 @@ namespace Origami.UI.FrontEnd.Controllers
                 user.FirstName = me?.GivenName ?? string.Empty;
                 user.LastName = me?.SurName ?? string.Empty;
 
-                var photoBytes = await GetProfilePhotoAsync(accessToken);
-
                 user.ProfileCover = null;
                 user.ProfileCoverUrl = null;
                 user.ProfilePage = null;
                 user.ProfilePicture = null;
                 user.ProfilePictureUrl = null;
 
-                user.ProfilePicture = photoBytes != null ? $"data:{photoBytes.GetImageFormat().MimeType};base64,{Convert.ToBase64String(photoBytes)}" : OrigamiConstants.NoUser;
+                var photoBytes = await GetProfilePhotoAsync(accessToken);
+                if (photoBytes != null)
+                {
+                    var image = Image.Load(photoBytes);
+                    user.ProfilePicture = image.ToBase64String(SixLabors.ImageSharp.Formats.Jpeg.JpegFormat.Instance);
+                }
 
                 var context = new DataOperationContext<OrigamiSocialProfile>(OrigamiUser.AnonymousUser, DateTime.UtcNow, user);
 

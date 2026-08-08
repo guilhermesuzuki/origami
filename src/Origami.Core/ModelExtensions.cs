@@ -1014,7 +1014,7 @@ namespace Origami.Core
         {
             const string noIcon = OrigamiConstants.NoUser;
             if (socialProfile == null) return noIcon;
-            if (socialProfile.ProfilePicture.Has() == true) return socialProfile.ProfilePicture;
+            if (socialProfile.ProfilePicture.Has() == true && socialProfile.ProfilePicture.IsValidBase64Image() == true) return socialProfile.ProfilePicture;
             if (socialProfile.ProfilePictureUrl.Has() == true) return socialProfile.ProfilePictureUrl;
             return noIcon;
         }
