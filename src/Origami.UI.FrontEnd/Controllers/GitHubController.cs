@@ -83,7 +83,10 @@ namespace Origami.UI.FrontEnd.Controllers
                     if (hub.Ok == false)
                     {
                         //redirects to the returnUrl with an error
-                        return Redirect("/oops/github".QueryString("error", "Invalid github information"));
+                        return Redirect("/oops/github"
+                            .QueryString("error", "Invalid github information")
+                            .QueryString("error_details", hub.Messages.Error())
+                            );
                     }
                     transaction.Complete();
                     user = hub.Entity;

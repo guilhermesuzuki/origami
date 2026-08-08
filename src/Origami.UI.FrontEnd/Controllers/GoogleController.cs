@@ -174,7 +174,10 @@ namespace Origami.UI.FrontEnd.Controllers
                     if (hub.Ok == false)
                     {
                         //redirects to the returnUrl with an error
-                        return Redirect("/oops/google".QueryString("error", "Invalid google information"));
+                        return Redirect("/oops/google"
+                            .QueryString("error", "Invalid google information")
+                            .QueryString("error_details", hub.Messages.Error())
+                            );
                     }
                     transaction.Complete();
                     user = hub.Entity;
