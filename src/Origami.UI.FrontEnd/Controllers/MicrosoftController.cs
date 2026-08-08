@@ -151,7 +151,7 @@ namespace Origami.UI.FrontEnd.Controllers
                     var content = await photoResponse.Content.ReadAsStringAsync();
                     var photo = JsonSerializer.Deserialize<MicrosoftUserPhoto>(content);
 
-                    user.ProfilePictureUrl = photo != null && photo.OData_Context.Has() ? photo.OData_Context : null;
+                    user.ProfilePictureUrl = photo != null && photo.OData_Id.Has() ? photo.OData_Id : null;
                 }
 
                 var context = new DataOperationContext<OrigamiSocialProfile>(OrigamiUser.AnonymousUser, DateTime.UtcNow, user);
