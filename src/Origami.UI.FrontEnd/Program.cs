@@ -62,10 +62,10 @@ var app = builder.FoldTheOrigami<App>(
                 options.AccessDeniedPath = "/oops/microsoft";
                 options.Authority = $"https://login.microsoftonline.com/{builder.Configuration["SocialNetwork:Microsoft:TenantId"]}/v2.0";
                 options.CallbackPath = builder.Configuration["SocialNetwork:Microsoft:CallbackPath"]!;
-                options.ResponseType = "code id_token";
+                options.ResponseType = "code";
                 options.UseTokenLifetime = false;
 
-                var scopes = "Email Profile User.Read User.Read.All".Split(' ');
+                var scopes = "openid profile email User.Read".Split(' ');
                 scopes.Each(options.Scope.Add);
 
                 options.GetClaimsFromUserInfoEndpoint = true;
