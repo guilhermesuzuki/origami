@@ -173,6 +173,8 @@ namespace Origami.UI.FrontEnd.Controllers
                     var hub = _socialProfile.SmartSave(context, false);
                     if (hub.Ok == false)
                     {
+                        HttpContext.SignOutAsync().GetAwaiter().GetResult();
+                        HttpContext.Logout_Workaround();
                         //redirects to the returnUrl with an error
                         return Redirect("/oops/google"
                             .QueryString("error", "Invalid google information")

@@ -82,6 +82,8 @@ namespace Origami.UI.FrontEnd.Controllers
                     var hub = _socialProfile.SmartSave(context, false);
                     if (hub.Ok == false)
                     {
+                        await HttpContext.SignOutAsync();
+                        HttpContext.Logout_Workaround();
                         //redirects to the returnUrl with an error
                         return Redirect("/oops/github"
                             .QueryString("error", "Invalid github information")

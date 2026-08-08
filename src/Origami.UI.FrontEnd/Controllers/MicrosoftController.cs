@@ -154,9 +154,6 @@ namespace Origami.UI.FrontEnd.Controllers
                     user.ProfilePictureUrl = photo != null && photo.OData_Context.Has() ? photo.OData_Context : null;
                 }
 
-                //default no-icon profile picture
-                if (user.ProfilePictureUrl.Has() == false) user.ProfilePictureUrl = OrigamiConstants.NoUser;
-
                 var context = new DataOperationContext<OrigamiSocialProfile>(OrigamiUser.AnonymousUser, DateTime.UtcNow, user);
 
                 //saves the user into the database
@@ -165,6 +162,8 @@ namespace Origami.UI.FrontEnd.Controllers
                     var hub = _socialProfile.SmartSave(context, false);
                     if (hub.Ok == false)
                     {
+                        HttpContext.SignOutAsync().GetAwaiter().GetResult();
+                        HttpContext.Logout_Workaround();
                         //redirects to the returnUrl with an error
                         return Redirect("/oops/microsoft"
                             .QueryString("error", "Invalid microsoft information")
