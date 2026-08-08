@@ -160,6 +160,12 @@ namespace Origami.UI.FrontEnd.Controllers
                     return Redirect("/oops/google".QueryString("error", "User has been blocked"));
                 }
 
+                user.ProfileCover = null;
+                user.ProfileCoverUrl = null;
+                user.ProfilePage = null;
+                user.ProfilePicture = null;
+                user.ProfilePictureUrl = null;
+
                 user.EmailFromSocialNetwork = ok.Email;
                 user.FirstName = ok.GivenName;
                 user.LastName = ok.FamilyName;

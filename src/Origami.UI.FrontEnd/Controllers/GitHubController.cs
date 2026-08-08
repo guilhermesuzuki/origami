@@ -68,6 +68,12 @@ namespace Origami.UI.FrontEnd.Controllers
                     return Redirect("/oops/github".QueryString("error", "User has been blocked"));
                 }
 
+                user.ProfileCover = null;
+                user.ProfileCoverUrl = null;
+                user.ProfilePage = null;
+                user.ProfilePicture = null;
+                user.ProfilePictureUrl = null;
+
                 //email
                 user.EmailFromSocialNetwork = git.Email;
                 user.Name = git.Name;

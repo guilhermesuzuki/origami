@@ -114,6 +114,8 @@ namespace Origami.UI.FrontEnd.Controllers
 
                 user.ProfileCover = null;
                 user.ProfileCoverUrl = null;
+                user.ProfilePage = null;
+                user.ProfilePicture = null;
                 user.ProfilePictureUrl = null;
 
                 user.ProfilePicture = photoBytes != null ? $"data:{photoBytes.GetImageFormat().MimeType};base64,{Convert.ToBase64String(photoBytes)}" : OrigamiConstants.NoUser;

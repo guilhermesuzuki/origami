@@ -245,10 +245,15 @@ namespace Origami.UI.FrontEnd.Controllers
                     user.LastName = me.last_name;
                 }
 
-                if (pc?.data?.url != null) user.ProfilePictureUrl = pc.data.url;
-                if (me?.link != null) user.ProfilePage = me.link;
-                if (me?.cover != null && me?.cover.source != null) user.ProfileCoverUrl = me!.cover.source;
-                if (cover != null && cover!.source != null) user.ProfileCoverUrl = cover!.source;
+                user.ProfileCover = null;
+                user.ProfileCoverUrl = null;
+                user.ProfilePage = null;
+                user.ProfilePicture = null;
+                user.ProfilePictureUrl = null;
+
+                user.ProfileCoverUrl = me?.cover?.source ?? cover?.source ?? null;
+                user.ProfilePage = me?.link ?? null;
+                user.ProfilePictureUrl = pc?.data?.url ?? null;
 
                 var context = new DataOperationContext<OrigamiSocialProfile>(OrigamiUser.AnonymousUser, DateTime.UtcNow, user);
 
