@@ -17,13 +17,10 @@ namespace Origami.UI.FrontEnd.Controllers
         protected readonly IDbContextFactory<OrigamiDbContext> _dbContextFactory;
         protected readonly IHttpContextAccessor _httpContextAccessor;
         protected readonly IMemoryCache _memoryCache;
-        protected readonly IPageRepository _page;
         protected readonly IPhysicalPageRepository _physicalPage;
         protected readonly IPhysicalPageViewRepository _physicalPageView;
-        protected readonly IPostRepository _post;
         protected readonly ISuperRepository _superRepository;
         protected readonly IUserFacade _userFacade;
-        protected readonly IVideoRepository _video;
 
         /// <summary>
         /// Constructor with DI
@@ -34,26 +31,21 @@ namespace Origami.UI.FrontEnd.Controllers
             IAppFacade appFacade,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IHttpContextAccessor httpContextAccessor,
-            IPageRepository page,
             IPhysicalPageRepository physicalPage,
             IPhysicalPageViewRepository physicalPageView,
-            IPostRepository post,
             ISuperRepository superRepository,
-            IUserFacade userFacade,
-            IVideoRepository video)
+            IUserFacade userFacade
+            )
             : base()
         {
             _appFacade = appFacade;
             _dbContextFactory = dbContextFactory;
             _httpContextAccessor = httpContextAccessor;
             _memoryCache = memoryCache;
-            _page = page;
             _physicalPage = physicalPage;
             _physicalPageView = physicalPageView;
-            _post = post;
             _superRepository = superRepository;
             _userFacade = userFacade;
-            _video = video;
         }
 
         [HttpGet]

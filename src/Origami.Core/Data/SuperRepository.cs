@@ -19,10 +19,8 @@ namespace Origami.Core.Data
             IEmailRepository emailRepository,
             IEventRepository eventRepository,
             IFileRepository fileRepository,
-            IPageRepository pageRepository,
             IPhysicalPageRepository physicalPageRepository,
             IPhysicalPageViewRepository physicalPageViewRepository,
-            IPostRepository postRepository,
             IRightRepository rightRepository,
             IRoleRepository roleRepository,
             ISettingsRepository settingsRepository,
@@ -37,7 +35,6 @@ namespace Origami.Core.Data
             IUserRoleRepository userRoleRepository,
             IUserTrashRepository userTrashRepository,
             IUserViewRepository userViewRepository,
-            IVideoRepository videoRepository,
             IWhatToSeeNextRepository whatToSeeNextRepository,
 
             IContentCategoryRepository contentCategoryRepository,
@@ -63,10 +60,8 @@ namespace Origami.Core.Data
             Emails = emailRepository;
             Events = eventRepository;
             Files = fileRepository;
-            Pages = pageRepository;
             PhysicalPages = physicalPageRepository;
             PhysicalPageViews = physicalPageViewRepository;
-            Posts = postRepository;
             Rights = rightRepository;
             Roles = roleRepository;
             Settings = settingsRepository;
@@ -81,7 +76,6 @@ namespace Origami.Core.Data
             Users = userRepository;
             UserTrashes = userTrashRepository;
             UserViews = userViewRepository;
-            Videos = videoRepository;
             WhatToSeeNext = whatToSeeNextRepository;
 
             ContentCategories = contentCategoryRepository;
@@ -116,10 +110,8 @@ namespace Origami.Core.Data
         public IFileRepository Files { get; }
         public bool MaintenanceLockout => this.GetMaintenancePages().Any();
         public IMyMemoryCache MyMemoryCache { get; }
-        public IPageRepository Pages { get; }
         public IPhysicalPageRepository PhysicalPages { get; }
         public IPhysicalPageViewRepository PhysicalPageViews { get; }
-        public IPostRepository Posts { get; }
         public IRightRepository Rights { get; }
         public IRoleRepository Roles { get; }
         public ISettingsRepository Settings { get; }
@@ -134,7 +126,6 @@ namespace Origami.Core.Data
         public IUserRepository Users { get; }
         public IUserTrashRepository UserTrashes { get; }
         public IUserViewRepository UserViews { get; }
-        public IVideoRepository Videos { get; }
         public IWhatToSeeNextRepository WhatToSeeNext { get; }
 
         public bool EmptyHome(Guid blogId)

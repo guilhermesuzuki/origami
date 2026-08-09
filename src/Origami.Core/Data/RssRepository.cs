@@ -9,25 +9,19 @@ namespace Origami.Core.Data
     {
         protected readonly IBlogRepository _blogRepository;
         protected readonly IFileRepository _fileRepository;
-        protected readonly IPostRepository _postRepository;
-        protected readonly IVideoRepository _videoRepository;
         protected readonly IContentRepository _contentRepository;
         protected readonly Text _text;
 
         public RssRepository(
             IBlogRepository blogRepository,
             IContentRepository contentRepository,
-            IPostRepository postRepository,
-            IVideoRepository videoRepository,
             IFileRepository fileRepository,
             Text text) : base()
         {
             _blogRepository = blogRepository;
             _contentRepository = contentRepository;
             _fileRepository = fileRepository;
-            _postRepository = postRepository;
             _text = text;
-            _videoRepository = videoRepository;
         }
 
         public string GetRss(string slug, string oi)
@@ -82,6 +76,7 @@ namespace Origami.Core.Data
                 OrigamiPage => "Page",
                 OrigamiPost => "Post",
                 OrigamiQuickNote => "QuickNote",
+                OrigamiSoftwareRelease => "SoftwareRelease",
                 OrigamiSpecialMessage => "SpecialMessage",
                 OrigamiSpecialPage => "SpecialPage",
                 OrigamiVideo => "Video",

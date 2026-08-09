@@ -7,7 +7,7 @@
 {
     var count = _contentRating.Ratings(this.Entity).Count();
     <div class="content-ratings @Class">
-        <label class="w-100 text-center fs-3">
+        <div class="w-100 text-center fs-3">
             <i class="fa-solid fa-star"></i>
             @if (count == 1)
             {
@@ -18,7 +18,7 @@
                 @Text.Lower("{0} people rated this content", count)
             }
             <i class="fa-solid fa-star"></i>
-        </label>
+        </div>
         <div class="row">
             @foreach (var rating in _contentRating.Ratings(this.Entity).OrderByDescending(x => x.DateCreated).Take(this.Page * this.PageSize))
             {
@@ -37,8 +37,8 @@
                         else
                         {
                             <div class="anonymous-rating">
-                                <i class="fa-solid fa-user fs-3"></i><br />
-                                <label class="fw-bold" style="font-size: 20px;">@Text.Lower("Anonymous")</label>
+                                <img src="@OrigamiConstants.NoUser" style="width: 77px; height: 77px;" /><br />
+                                <div class="fw-bold" style="font-size: 20px;">@Text.Lower("Anonymous")</div>
                             </div>
                         }
                         <div>@rating.DateCreated</div>

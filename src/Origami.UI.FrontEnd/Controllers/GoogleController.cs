@@ -160,6 +160,12 @@ namespace Origami.UI.FrontEnd.Controllers
                     return Redirect("/oops/google".QueryString("error", "User has been blocked"));
                 }
 
+                user.ProfileCover = null;
+                user.ProfileCoverUrl = null;
+                user.ProfilePage = null;
+                user.ProfilePicture = null;
+                user.ProfilePictureUrl = null;
+
                 user.EmailFromSocialNetwork = ok.Email;
                 user.FirstName = ok.GivenName;
                 user.LastName = ok.FamilyName;
@@ -173,8 +179,13 @@ namespace Origami.UI.FrontEnd.Controllers
                     var hub = _socialProfile.SmartSave(context, false);
                     if (hub.Ok == false)
                     {
+                        HttpContext.SignOutAsync().GetAwaiter().GetResult();
+                        HttpContext.Logout_Workaround();
                         //redirects to the returnUrl with an error
-                        return Redirect("/oops/google".QueryString("error", "Invalid google information"));
+                        return Redirect("/oops/google"
+                            .QueryString("error", "Invalid google information")
+                            .QueryString("error_details", hub.Messages.Error())
+                            );
                     }
                     transaction.Complete();
                     user = hub.Entity;

@@ -6,11 +6,14 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.IdentityModel.Validators;
 using Origami.Core;
 using Origami.Core.Data;
 using Origami.Core.Models;
+using SixLabors.ImageSharp;
 using System.IdentityModel.Tokens.Jwt;
-using System.Text.Json;
+using System.Net;
+using System.Net.Http.Headers;
 using System.Transactions;
 
 namespace Origami.UI.FrontEnd.Controllers
@@ -18,14 +21,14 @@ namespace Origami.UI.FrontEnd.Controllers
     [Route("[Controller]")]
     public class MicrosoftController : Controller
     {
+        protected readonly IConfiguration _configuration;
+        protected readonly IEventRepository _eventRepository;
+        protected readonly HttpClient _httpClient;
         protected readonly Serilog.ILogger _logger;
-        protected readonly IUserFacade _userFacade;
         protected readonly IMemoryCache _memoryCache;
         protected readonly SocialNetwork _socialNetwork;
         protected readonly ISocialProfileRepository _socialProfile;
-        protected readonly IConfiguration _configuration;
-
-        protected readonly IEventRepository _eventRepository;
+        protected readonly IUserFacade _userFacade;
 
         public MicrosoftController(
             IEventRepository eventRepository,
@@ -34,66 +37,40 @@ namespace Origami.UI.FrontEnd.Controllers
             IUserFacade userFacade,
             IMemoryCache memoryCache,
             IOptions<SocialNetwork> socialNetworkOptions,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            HttpClient httpClient)
             : base()
         {
-            _socialProfile = socialProfile;
-            _logger = logger;
-            _userFacade = userFacade;
-            _memoryCache = memoryCache;
-            _socialNetwork = socialNetworkOptions.Value;
             _configuration = configuration;
             _eventRepository = eventRepository;
+            _httpClient = httpClient;
+            _logger = logger;
+            _memoryCache = memoryCache;
+            _socialNetwork = socialNetworkOptions.Value;
+            _socialProfile = socialProfile;
+            _userFacade = userFacade;
         }
 
-        [HttpGet("token-ok")]
-        public async Task<JwtSecurityToken?> TokenOk(
-            string userId,
-            string token,
-            CancellationToken ct = default)
+        public async Task<byte[]?> GetProfilePhotoAsync(string accessToken, CancellationToken cancellationToken = default)
         {
-            if (string.IsNullOrEmpty(token)) throw new ArgumentNullException(nameof(token));
+            using var request = new HttpRequestMessage(
+                HttpMethod.Get,
+                "https://graph.microsoft.com/v1.0/me/photo/$value");
 
-            var issuer = $"https://login.microsoftonline.com/{_socialNetwork.Microsoft.TenantId}/v2.0";
-            var configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
-                issuer + "/.well-known/openid-configuration",
-                new OpenIdConnectConfigurationRetriever(),
-                new HttpDocumentRetriever());
+            request.Headers.Authorization =
+                new AuthenticationHeaderValue("Bearer", accessToken);
 
-            var discoveryDocument = await configurationManager.GetConfigurationAsync(ct);
-            var signingKeys = discoveryDocument.SigningKeys;
+            using var response = await _httpClient.SendAsync(
+                request,
+                HttpCompletionOption.ResponseHeadersRead,
+                cancellationToken);
 
-            var validationParameters = new TokenValidationParameters
-            {
-                RequireExpirationTime = true,
-                RequireSignedTokens = true,
-                ValidateIssuer = true,
-                ValidIssuer = issuer,
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKeys = signingKeys,
-                ValidateLifetime = true,
-                // Allow for some drift in server time
-                // (a lower value is better; we recommend two minutes or less)
-                ClockSkew = TimeSpan.FromMinutes(2),
-                // See additional validation for aud below
-                ValidateAudience = false,
-            };
+            if (response.StatusCode == HttpStatusCode.NotFound)
+                return null; // User doesn't have a profile photo
 
-            try
-            {
-                var principal = new JwtSecurityTokenHandler().ValidateToken(token, validationParameters, out var rawValidatedToken);
-                var securityToken = (JwtSecurityToken)rawValidatedToken;
+            response.EnsureSuccessStatusCode();
 
-                if (securityToken.Claims.Any(x => x.Type == "oid" && x.Value == userId)) return securityToken;
-
-                return null;
-            }
-            catch (SecurityTokenValidationException)
-            {
-                // Logging, etc.
-
-                return null;
-            }
+            return await response.Content.ReadAsByteArrayAsync(cancellationToken);
         }
 
         [AllowAnonymous]
@@ -111,7 +88,7 @@ namespace Origami.UI.FrontEnd.Controllers
                 var user = _socialProfile
                     .ReadFromCache()
                     .FirstOrDefault(x => x.SocialNetwork == SocialNetworks.Microsoft && x.UserId == userId)
-                    ?? new () { SocialNetwork = SocialNetworks.Microsoft, UserId = userId, IsBlocked = false, }
+                    ?? new() { SocialNetwork = SocialNetworks.Microsoft, UserId = userId, IsBlocked = false, }
                     ;
 
                 if (user.IsBlocked)
@@ -134,28 +111,20 @@ namespace Origami.UI.FrontEnd.Controllers
 
                 user.FirstName = me?.GivenName ?? string.Empty;
                 user.LastName = me?.SurName ?? string.Empty;
+                user.Name = me?.DisplayName ?? string.Empty;
 
-                var http2 = new HttpClient();
+                user.ProfileCover = null;
+                user.ProfileCoverUrl = null;
+                user.ProfilePage = null;
+                user.ProfilePicture = null;
+                user.ProfilePictureUrl = null;
 
-                //required (access token in the header)
-                http2.DefaultRequestHeaders.Add("Authorization", $"Bearer {accessToken}");
-                http2.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36");
-                http2.DefaultRequestHeaders.Add("Accept", "*/*");
-                http2.DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate, br");
-                http2.DefaultRequestHeaders.Add("Client-Request-Id", Guid.NewGuid().ToString());
-                http2.DefaultRequestHeaders.Add("Sdkversion", "GraphExplorer/4.0, graph-js/3.0.7 (featureUsage=6)");
-
-                var photoResponse = await http2.GetAsync("https://graph.microsoft.com/v1.0/me/photo/");
-                if (photoResponse.IsSuccessStatusCode)
+                var photoBytes = await GetProfilePhotoAsync(accessToken);
+                if (photoBytes != null)
                 {
-                    var content = await photoResponse.Content.ReadAsStringAsync();
-                    var photo = JsonSerializer.Deserialize<MicrosoftUserPhoto>(content);
-
-                    user.ProfilePictureUrl = photo != null && photo.OData_Context.Has() ? photo.OData_Context : null;
+                    var image = Image.Load(photoBytes);
+                    user.ProfilePicture = image.ToBase64String(Image.DetectFormat(photoBytes));
                 }
-
-                //default no-icon profile picture
-                if (user.ProfilePictureUrl.Has() == false) user.ProfilePictureUrl = OrigamiConstants.NoUser;
 
                 var context = new DataOperationContext<OrigamiSocialProfile>(OrigamiUser.AnonymousUser, DateTime.UtcNow, user);
 
@@ -165,8 +134,13 @@ namespace Origami.UI.FrontEnd.Controllers
                     var hub = _socialProfile.SmartSave(context, false);
                     if (hub.Ok == false)
                     {
+                        HttpContext.SignOutAsync().GetAwaiter().GetResult();
+                        HttpContext.Logout_Workaround();
                         //redirects to the returnUrl with an error
-                        return Redirect("/oops/microsoft".QueryString("error", "Invalid microsoft information"));
+                        return Redirect("/oops/microsoft"
+                            .QueryString("error", "Invalid microsoft information")
+                            .QueryString("error_details", hub.Messages.Error())
+                            );
                     }
                     transaction.Complete();
                     user = hub.Entity;
@@ -174,7 +148,7 @@ namespace Origami.UI.FrontEnd.Controllers
 
                 _userFacade.SocialProfile = user ?? new();
                 _eventRepository.SocialProfileLogsIntoWebsite(context.Entity);
-                
+
                 return Redirect(Uri.UnescapeDataString(returnUrl));
             }
 
@@ -184,6 +158,60 @@ namespace Origami.UI.FrontEnd.Controllers
 
             //redirects to the returnUrl with an error
             return Redirect("/oops/microsoft".QueryString("error", "Invalid microsoft token"));
+        }
+
+        [HttpGet("token-ok")]
+        public async Task<JwtSecurityToken?> TokenOk(
+            string userId,
+            string token,
+            CancellationToken ct = default)
+        {
+            if (string.IsNullOrEmpty(token)) throw new ArgumentNullException(nameof(token));
+
+            var issuer = $"https://login.microsoftonline.com/common/v2.0";
+            var configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
+                issuer + "/.well-known/openid-configuration",
+                new OpenIdConnectConfigurationRetriever(),
+                new HttpDocumentRetriever());
+
+            var discoveryDocument = await configurationManager.GetConfigurationAsync(ct);
+            var signingKeys = discoveryDocument.SigningKeys;
+
+            var validationParameters = new TokenValidationParameters
+            {
+                RequireExpirationTime = true,
+                RequireSignedTokens = true,
+                ValidateIssuer = true,
+
+                // IMPORTANT:
+                // Do not set ValidIssuer to /common.
+                IssuerValidator = AadIssuerValidator.GetAadIssuerValidator(issuer).Validate,
+
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKeys = signingKeys,
+                ValidateLifetime = true,
+                // Allow for some drift in server time
+                // (a lower value is better; we recommend two minutes or less)
+                ClockSkew = TimeSpan.FromMinutes(2),
+                // See additional validation for aud below
+                ValidateAudience = false,
+            };
+
+            try
+            {
+                var principal = new JwtSecurityTokenHandler().ValidateToken(token, validationParameters, out var rawValidatedToken);
+                var securityToken = (JwtSecurityToken)rawValidatedToken;
+
+                if (securityToken.Claims.Any(x => x.Type == "oid" && x.Value == userId)) return securityToken;
+
+                return null;
+            }
+            catch (SecurityTokenValidationException ex)
+            {
+                // Logging, etc.
+
+                return null;
+            }
         }
     }
 }

@@ -1,14 +1,9 @@
 ﻿@page "/filemanager/{Mode?}"
-@using System.Buffers
 @using Origami.Core.Models.FileSystem
 @inherits BasicAdmin
 @inject IDirectoryRepository directoryRepository
 @inject IFileRepository fileRepository
 @inject IBlogRepository blogRepository
-@inject IPostRepository postRepository
-@inject IPageRepository pageRepository
-@inject IVideoRepository videoRepository
-@inject ICategoryRepository categoryRepository
 @inject IUserRepository userRepository
 @inject IFileManagerRepository fileManagerRepository
 

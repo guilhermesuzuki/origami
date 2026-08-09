@@ -1,17 +1,11 @@
 ﻿@page "/socialprofiles/{SocialProfileId:guid}"
 @inherits BasicPage
 
-@inject ISocialProfileRepository _socialProfile
-@inject ISocialProfileDeleteRepository _socialProfileForDeletion
-@inject IBlogRepository _blog
-@inject IVideoRepository _video
-
 @inject IContentCommentReactionRepository _contentCommentReaction
 @inject IContentCommentRepository _contentComment
 @inject IContentRatingRepository _contentRating
-
-@inject ISubscriberRepository _subscriber
-@inject IDialogService _dialogService
+@inject ISocialProfileDeleteRepository _socialProfileForDeletion
+@inject ISocialProfileRepository _socialProfile
 
 @if (this.SocialProfile != null && this.SocialProfile.New == false)
 {
@@ -24,12 +18,12 @@
                         <i class="fa-solid fa-user"></i>
                         @Text.Lower("Profile Information")
                     </label>
-                    @if (SocialProfile.ProfilePictureUrl.Has() == true)
+                    @if (SocialProfile.ProfilePicture().Has() == true)
                     {
                         <div class="row mt-3">
                             <div class="col-12 text-center">
                                 <div class="fs-5">@Text.Lower("Logo • Avatar")</div>
-                                <img src="@SocialProfile.ProfilePictureUrl" onerror="this.onerror=null; this.src='@(OrigamiConstants.NoUser)'" height="128" />
+                                <img src="@SocialProfile.ProfilePicture()" onerror="this.onerror=null; this.src='@(OrigamiConstants.NoUser)'" height="128" />
                             </div>
                         </div>
                     }

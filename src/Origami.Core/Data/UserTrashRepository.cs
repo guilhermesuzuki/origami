@@ -22,20 +22,15 @@ namespace Origami.Core.Data
         private readonly IContentRepository _contentRepository;
         private readonly IDirectoryRepository _directoryRepository;
         private readonly IFileRepository _fileRepository;
-        private readonly IPageRepository _pageRepository;
         private readonly IPhysicalPageRepository _physicalPageRepository;
         private readonly IPhysicalPageViewRepository _physicalPageViewRepository;
-        private readonly IPostRepository _postRepository;
         private readonly IRoleRepository _roleRepository;
         private readonly ISocialProfileRepository _socialProfileRepository;
-        private readonly ISpecialMessageRepository _specialMessageRepository;
-        private readonly ISpecialPageRepository _specialPageRepository;
         private readonly ISubscriberRepository _subscriberRepository;
         private readonly IUserActivityRepository _userActivityRepository;
         private readonly IUserRepository _userRepository;
         private readonly IUserRoleRepository _userRoleRepository;
         private readonly IUserViewRepository _userViewRepository;
-        private readonly IVideoRepository _videoRepository;
         private readonly IWhatToSeeNextRepository _whatToSeeNextRepository;
         
         public UserTrashRepository(
@@ -47,21 +42,16 @@ namespace Origami.Core.Data
             IContentRepository contentRepository,
             IDirectoryRepository directoryRepository,
             IFileRepository fileRepository,
-            IPageRepository pageRepository,
             IPhysicalPageRepository physicalPageRepository,
             IPhysicalPageViewRepository physicalPageViewRepository,
-            IPostRepository postRepository,
             IRoleRepository roleRepository,
             ISettingsRepository blogSettingsRepository,
             ISocialProfileRepository socialProfileRepository,
-            ISpecialMessageRepository specialMessageRepository,
-            ISpecialPageRepository specialPageRepository,
             ISubscriberRepository subscriberRepository,
             IUserActivityRepository userActivityRepository,
             IUserRepository userRepository,
             IUserRoleRepository userRoleRepository,
             IUserViewRepository userViewRepository,
-            IVideoRepository videoRepository,
             IWhatToSeeNextRepository whatToSeeNextRepository,
 
             IContentCommentRepository contentCommentRepository,
@@ -83,20 +73,15 @@ namespace Origami.Core.Data
             _contentRepository = contentRepository;
             _directoryRepository = directoryRepository;
             _fileRepository = fileRepository;
-            _pageRepository = pageRepository;
             _physicalPageRepository = physicalPageRepository;
             _physicalPageViewRepository = physicalPageViewRepository;
-            _postRepository = postRepository;
             _roleRepository = roleRepository;
             _socialProfileRepository = socialProfileRepository;
-            _specialMessageRepository = specialMessageRepository;
-            _specialPageRepository = specialPageRepository;
             _subscriberRepository = subscriberRepository;
             _userActivityRepository = userActivityRepository;
             _userRepository = userRepository;
             _userRoleRepository = userRoleRepository;
             _userViewRepository = userViewRepository;
-            _videoRepository = videoRepository;
             _whatToSeeNextRepository = whatToSeeNextRepository;
 
             _contentCommentRepository = contentCommentRepository;

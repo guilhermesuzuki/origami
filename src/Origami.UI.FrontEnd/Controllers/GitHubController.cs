@@ -68,6 +68,12 @@ namespace Origami.UI.FrontEnd.Controllers
                     return Redirect("/oops/github".QueryString("error", "User has been blocked"));
                 }
 
+                user.ProfileCover = null;
+                user.ProfileCoverUrl = null;
+                user.ProfilePage = null;
+                user.ProfilePicture = null;
+                user.ProfilePictureUrl = null;
+
                 //email
                 user.EmailFromSocialNetwork = git.Email;
                 user.Name = git.Name;
@@ -82,8 +88,13 @@ namespace Origami.UI.FrontEnd.Controllers
                     var hub = _socialProfile.SmartSave(context, false);
                     if (hub.Ok == false)
                     {
+                        await HttpContext.SignOutAsync();
+                        HttpContext.Logout_Workaround();
                         //redirects to the returnUrl with an error
-                        return Redirect("/oops/github".QueryString("error", "Invalid github information"));
+                        return Redirect("/oops/github"
+                            .QueryString("error", "Invalid github information")
+                            .QueryString("error_details", hub.Messages.Error())
+                            );
                     }
                     transaction.Complete();
                     user = hub.Entity;

@@ -125,11 +125,9 @@ namespace Origami.UI
             builder.Services.AddTransient<IEventRepository, EventRepository>();
             builder.Services.AddTransient<IFileManagerRepository, FileManagerRepository>();
             builder.Services.AddTransient<IFileRepository, FileRepository>();
-            builder.Services.AddTransient<IPageRepository, PageRepository>();
             builder.Services.AddTransient<IPageTitleRepository, PageTitleRepository>();
             builder.Services.AddTransient<IPhysicalPageRepository, PhysicalPageRepository>();
             builder.Services.AddTransient<IPhysicalPageViewRepository, PhysicalPageViewRepository>();
-            builder.Services.AddTransient<IPostRepository, PostRepository>();
             builder.Services.AddTransient<IRightRepository, RightRepository>();
             builder.Services.AddTransient<IRightRoleRepository, RightRoleRepository>();
             builder.Services.AddTransient<IRoleRepository, RoleRepository>();
@@ -149,7 +147,6 @@ namespace Origami.UI
             builder.Services.AddTransient<IUserRoleRepository, UserRoleRepository>();
             builder.Services.AddTransient<IUserTrashRepository, UserTrashRepository>();
             builder.Services.AddTransient<IUserViewRepository, UserViewRepository>();
-            builder.Services.AddTransient<IVideoRepository, VideoRepository>();
             builder.Services.AddTransient<IWhatToSeeNextRepository, WhatToSeeNextRepository>();
 
             builder.Services.AddScoped<ILoginRules, LoginRules>();
@@ -171,14 +168,11 @@ namespace Origami.UI
             builder.Services.AddRepository<OrigamiContentReaction, ContentReactionRepository>();
             builder.Services.AddRepository<OrigamiContentTag, ContentTagRepository>();
             builder.Services.AddRepository<OrigamiFile, FileManagerRepository>();
-            builder.Services.AddRepository<OrigamiPage, PageRepository>();
-            builder.Services.AddRepository<OrigamiPost, PostRepository>();
             builder.Services.AddRepository<OrigamiRole, RoleRepository>();
             builder.Services.AddRepository<OrigamiSettings, SettingsRepository>();
             builder.Services.AddRepository<OrigamiSocialProfile, SocialProfileRepository>();
             builder.Services.AddRepository<OrigamiUser, UserRepository>();
             builder.Services.AddRepository<OrigamiUserTrash, UserTrashRepository>();
-            builder.Services.AddRepository<OrigamiVideo, VideoRepository>();
 
             builder.Services.AddTransient<IHubContentRepository<HubContentPage>, HubContentPageRepository>();
             builder.Services.AddTransient<IHubContentRepository<HubContentPost>, HubContentPostRepository>();
@@ -279,6 +273,8 @@ namespace Origami.UI
                 // Set status code on rejection
                 options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
             });
+
+            if (OperatingSystem.IsWindows()) builder.Host.UseWindowsService();
 
             var services = builder.Services.BuildServiceProvider();
 

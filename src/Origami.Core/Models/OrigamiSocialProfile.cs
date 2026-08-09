@@ -13,9 +13,13 @@ namespace Origami.Core.Models
         IVersion,
         IAdditionalInfo,
         INew,
-        IHyperlink
+        IHyperlink,
+        IDateCreated,
+        IDateModified
     {
         private string? _additionalInfo = string.Empty;
+        private DateTime _dateCreated;
+        private DateTime? _dateModified;
         private string _email = string.Empty;
         private string _emailFromSocialNetwork = string.Empty;
         private string _firstName = string.Empty;
@@ -31,23 +35,33 @@ namespace Origami.Core.Models
         private SocialNetworks _socialProfile;
         private string _userId = string.Empty;
         private byte[] _version = Array.Empty<byte>();
-
         public OrigamiSocialProfile() : base()
         {
 
         }
 
+        public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) => { };
+
         /// <summary>
         /// Anonymous user
         /// </summary>
         public static OrigamiSocialProfile AnonymousUser => new() { Id = Guid.Empty };
-
-        public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) => { };
-
         public string? AdditionalInfo
         {
             get => _additionalInfo;
             set => this.Set(ref _additionalInfo, value, Changed);
+        }
+
+        public DateTime DateCreated
+        {
+            get => _dateCreated;
+            set => this.Set(ref _dateCreated, value, Changed);
+        }
+
+        public DateTime? DateModified
+        {
+            get => _dateModified;
+            set => this.Set(ref _dateModified, value, Changed);
         }
 
         /// <summary>
@@ -79,6 +93,8 @@ namespace Origami.Core.Models
             get => _firstName;
             set => this.Set(ref _firstName, value, Changed);
         }
+
+        public string Hyperlink => $"/socialprofiles/{this.Id}";
 
         /// <summary>
         /// Is this Social Profile Blocked?
@@ -194,9 +210,6 @@ namespace Origami.Core.Models
             get => _version;
             set => this.Set(ref _version, value, Changed);
         }
-
-        public string Hyperlink => $"/socialprofiles/{this.Id}";
-
         /// <summary>
         /// First, it tries to get the e-mail from the subscription.
         /// Then, it queries the application e-mail or the e-mail coming from the social network (when shared).

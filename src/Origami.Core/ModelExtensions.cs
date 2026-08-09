@@ -527,6 +527,18 @@ namespace Origami.Core
             return $"/blogs/{blog.Slug}/categories/{category.Slug}/{entity?.NanoId}";
         }
 
+        public static (string Extension, string MimeType) GetImageFormat(this byte[] imageBytes)
+        {
+            using var stream = new MemoryStream(imageBytes);
+
+            var image = Image.Load(stream);
+
+            var format = image.Metadata.DecodedImageFormat
+                ?? throw new InvalidOperationException("Unable to determine image format.");
+
+            return (format.Name, format.DefaultMimeType);
+        }
+
         /// <summary>
         /// Extracts the exception message, traversing diving into the inner exceptions.
         /// </summary>
@@ -1002,8 +1014,8 @@ namespace Origami.Core
         {
             const string noIcon = OrigamiConstants.NoUser;
             if (socialProfile == null) return noIcon;
+            if (socialProfile.ProfilePicture.Has() == true && socialProfile.ProfilePicture.IsValidBase64Image() == true) return socialProfile.ProfilePicture;
             if (socialProfile.ProfilePictureUrl.Has() == true) return socialProfile.ProfilePictureUrl;
-            if (socialProfile.ProfilePicture.Has() == true) return socialProfile.ProfilePicture;
             return noIcon;
         }
 

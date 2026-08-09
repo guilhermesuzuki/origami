@@ -2,17 +2,12 @@
 @using Microsoft.EntityFrameworkCore
 @inherits BasicPage
 
-@inject ISocialProfileRepository _socialProfile
-@inject ISocialProfileDeleteRepository _socialProfileForDeletion
-@inject IBlogRepository _blog
-@inject IVideoRepository _video
-
 @inject IContentCommentReactionRepository _contentCommentReaction
 @inject IContentCommentRepository _contentComment
 @inject IContentRatingRepository _contentRating
-
+@inject ISocialProfileDeleteRepository _socialProfileForDeletion
+@inject ISocialProfileRepository _socialProfile
 @inject ISubscriberRepository _subscriber
-@inject IDialogService _dialogService
 
 <Root>
     @if (this.SocialProfile.New == false)
@@ -28,12 +23,12 @@
                             <i class="fa-solid fa-user"></i>
                             @Text.Lower("Profile Information")
                         </div>
-                        @if (SocialProfile.ProfilePictureUrl.Has() == true)
+                        @if (SocialProfile.ProfilePicture().Has() == true)
                         {
                             <div class="row mt-3">
                                 <div class="col-12 text-center">
                                     <div class="fs-5">@Text.Lower("Logo • Avatar")</div>
-                                    <img src="@SocialProfile.ProfilePictureUrl" onerror="this.onerror=null; this.src='@(OrigamiConstants.NoUser)'" height="128" />
+                                    <img src="@SocialProfile.ProfilePicture()" onerror="this.onerror=null; this.src='@(OrigamiConstants.NoUser)'" height="128" />
                                 </div>
                             </div>
                         }
@@ -321,7 +316,7 @@
     /// </summary>
     private async Task WipeData()
     {
-        var answer = await this._dialogService.ShowMessageBoxAsync(
+        var answer = await this.DialogService.ShowMessageBoxAsync(
             title: Text.Upper("Are you sure?"),
             message: Text.Lower("This will delete all your data from the website"),
             yesText: Text.Lower("Yes"),
