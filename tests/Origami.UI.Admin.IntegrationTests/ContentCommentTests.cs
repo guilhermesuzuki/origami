@@ -15,7 +15,7 @@ namespace Origami.UI.Admin.IntegrationTests
 
         public ContentCommentTests() : base()
         {
-            
+
         }
 
         [Theory]
@@ -114,7 +114,7 @@ namespace Origami.UI.Admin.IntegrationTests
 
             //private scope
             {
-                var query = from a in db.SocialProfileRepliesToContentEvents.AsNoTracking() 
+                var query = from a in db.SocialProfileRepliesToContentEvents.AsNoTracking()
                             where a.ContentId == Comment.ContentId
                             where a.SocialProfileId == TestFacebookProfile.Id
                             select a;

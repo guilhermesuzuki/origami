@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Origami.Core.Models;
 using Origami.Core.Models.Events;
 
@@ -20,7 +19,7 @@ namespace Origami.Core.Data
             Text text)
             : base(text, dbContextFactory, memoryCache, wwwRoot, appFacade)
         {
-            
+
         }
 
         public Result<SocialProfileCancelsReactionToCommentEvent> SocialProfileCancelsReactionToComment(OrigamiSocialProfile socialProfile, OrigamiContentCommentReaction reaction)

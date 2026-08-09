@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace Origami.Core.Models.Events
 {
-    public class AdminUserPurgesBlog : 
+    public class AdminUserPurgesBlog :
         OrigamiEvent,
         IChanged,
         IBlogId

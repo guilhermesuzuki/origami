@@ -32,7 +32,7 @@ namespace Origami.Core.Data
         private readonly IUserRoleRepository _userRoleRepository;
         private readonly IUserViewRepository _userViewRepository;
         private readonly IWhatToSeeNextRepository _whatToSeeNextRepository;
-        
+
         public UserTrashRepository(
             IAppFacade appFacade,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,

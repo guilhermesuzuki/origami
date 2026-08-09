@@ -1,5 +1,4 @@
-﻿using Lucene.Net.Search;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using MudBlazor;
 using Origami.Core;

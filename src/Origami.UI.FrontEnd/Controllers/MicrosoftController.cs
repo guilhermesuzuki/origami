@@ -205,7 +205,7 @@ namespace Origami.UI.FrontEnd.Controllers
 
                 return null;
             }
-            catch (SecurityTokenValidationException ex)
+            catch (SecurityTokenValidationException)
             {
                 // Logging, etc.
 

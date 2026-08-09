@@ -1,13 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Origami.Core;
 using Origami.Core.Data;
 using Origami.Core.Models;
 using Origami.Core.Models.Events;
 using Shouldly;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Transactions;
 
 namespace Origami.UI.Admin.IntegrationTests
@@ -18,7 +14,7 @@ namespace Origami.UI.Admin.IntegrationTests
 
         public ContentCommentReactionTests()
         {
-            
+
         }
 
         [Fact]
@@ -55,7 +51,7 @@ namespace Origami.UI.Admin.IntegrationTests
             dbReaction.SocialProfileId.ShouldBe(reaction.SocialProfileId);
             dbReaction.Reaction.ShouldBe(reaction.Reaction);
 
-            var query2 = from a in db.Events.AsNoTracking().OfType<SocialProfileReactsToCommentEvent>() 
+            var query2 = from a in db.Events.AsNoTracking().OfType<SocialProfileReactsToCommentEvent>()
                          where a.ReactionId == reaction.Id
                          where a.SocialProfileId == reaction.SocialProfileId
                          select a;
@@ -100,12 +96,12 @@ namespace Origami.UI.Admin.IntegrationTests
             //private scope
             {
                 var query = from a in db.Events.AsNoTracking().OfType<SocialProfileReactsToCommentEvent>()
-                             where a.ReactionId == reaction.Id
-                             where a.SocialProfileId == reaction.SocialProfileId
-                             select a;
+                            where a.ReactionId == reaction.Id
+                            where a.SocialProfileId == reaction.SocialProfileId
+                            select a;
                 var dbEvent = query.Single();
             }
-            
+
 
             superRepository.ContentCommentReactions.SmartPurge(new(TestFacebookProfile, DateTime.UtcNow, reaction));
 

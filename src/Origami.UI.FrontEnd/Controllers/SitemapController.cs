@@ -5,7 +5,7 @@ namespace Origami.UI.FrontEnd.Controllers
     [Route("[Controller]")]
     public class SitemapController : Controller
     {
-        string[] sites = [ "bing", "google" ];
+        private string[] sites = ["bing", "google"];
 
         [HttpGet("{site}")]
         public IActionResult Index(string site)

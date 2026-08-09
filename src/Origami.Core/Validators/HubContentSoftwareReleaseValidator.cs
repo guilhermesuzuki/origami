@@ -16,7 +16,7 @@ namespace Origami.Core.Validators
             RuleForEach(x => x.Tags).SetValidator(new OrigamiContentTagValidator(text, webRootPath, dbContextFactory));
             RuleFor(x => x.Entity.DateReleased).NotNull().WithMessage("Release date is required");
             RuleFor(x => x.Entity.Content).MustHaveHtml(text);
-            RuleFor(x => x.Entity).Must(entity => 
+            RuleFor(x => x.Entity).Must(entity =>
             {
                 var path = Path.Combine(directoryRepository.LocalPathForFiles(entity), "files");
 

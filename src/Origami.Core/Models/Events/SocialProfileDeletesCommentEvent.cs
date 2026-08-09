@@ -3,8 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Origami.Core.Models.Events
 {
-    public class SocialProfileDeletesCommentEvent : 
-        OrigamiEvent, 
+    public class SocialProfileDeletesCommentEvent :
+        OrigamiEvent,
         IChanged,
         ICommentId
     {

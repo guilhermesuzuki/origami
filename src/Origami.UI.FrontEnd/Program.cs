@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.Identity.Web.Resource;
 using Microsoft.IdentityModel.Validators;
 using Origami.Core;
 using Origami.UI;

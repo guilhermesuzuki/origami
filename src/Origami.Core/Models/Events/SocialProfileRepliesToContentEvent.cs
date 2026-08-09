@@ -1,10 +1,9 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.Design;
 
 namespace Origami.Core.Models.Events
 {
-    public class SocialProfileRepliesToContentEvent : 
+    public class SocialProfileRepliesToContentEvent :
         OrigamiEvent,
         IChanged,
         IContentId

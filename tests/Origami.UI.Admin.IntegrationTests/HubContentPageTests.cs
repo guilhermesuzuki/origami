@@ -39,7 +39,7 @@ namespace Origami.UI.Admin.IntegrationTests
             var resultB = hubRepository.Save(hubB, TestUser);
             var resultC = hubRepository.Save(hubC, TestUser);
 
-            IList<Result<HubContentPage>> results = [ resultA, resultB, resultC ];
+            IList<Result<HubContentPage>> results = [resultA, resultB, resultC];
 
             foreach (var result in results)
             {
