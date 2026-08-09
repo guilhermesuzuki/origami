@@ -15,8 +15,6 @@ namespace Origami.Core.Data
         public RssRepository(
             IBlogRepository blogRepository,
             IContentRepository contentRepository,
-            IPostRepository postRepository,
-            IVideoRepository videoRepository,
             IFileRepository fileRepository,
             Text text) : base()
         {

@@ -1,8 +1,5 @@
 ﻿@page "/users/{NanoId}"
 @inherits BasicPage
-@inject IUserRepository _users
-@inject IPageRepository _pages
-@inject IVideoRepository _videos
 
 <Root>
     @if (this.NanoId.Has() == true)

@@ -1,17 +1,11 @@
 ﻿@page "/socialprofiles/{SocialProfileId:guid}"
 @inherits BasicPage
 
-@inject ISocialProfileRepository _socialProfile
-@inject ISocialProfileDeleteRepository _socialProfileForDeletion
-@inject IBlogRepository _blog
-@inject IVideoRepository _video
-
 @inject IContentCommentReactionRepository _contentCommentReaction
 @inject IContentCommentRepository _contentComment
 @inject IContentRatingRepository _contentRating
-
-@inject ISubscriberRepository _subscriber
-@inject IDialogService _dialogService
+@inject ISocialProfileDeleteRepository _socialProfileForDeletion
+@inject ISocialProfileRepository _socialProfile
 
 @if (this.SocialProfile != null && this.SocialProfile.New == false)
 {
