@@ -8,12 +8,10 @@ namespace Origami.UI
     public class OrigamiCircuitHandler : CircuitHandler
     {
         protected readonly IAppFacade _appFacade;
-        protected readonly IMyMemoryCache _myMemoryCache;
 
-        public OrigamiCircuitHandler(IAppFacade appFacade, IMyMemoryCache myMemoryCache) : base()
+        public OrigamiCircuitHandler(IAppFacade appFacade) : base()
         {
             _appFacade = appFacade;
-            _myMemoryCache = myMemoryCache;
         }
 
         public override Task OnCircuitOpenedAsync(Circuit circuit, CancellationToken cancellationToken)
