@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.Identity.Web.Resource;
+using Microsoft.IdentityModel.Validators;
 using Origami.Core;
 using Origami.UI;
 using Origami.UI.FrontEnd.Components;
@@ -60,7 +62,7 @@ var app = builder.FoldTheOrigami<App>(
             {
                 builder.Configuration.Bind("SocialNetwork:Microsoft", options);
                 options.AccessDeniedPath = "/oops/microsoft";
-                options.Authority = $"https://login.microsoftonline.com/{builder.Configuration["SocialNetwork:Microsoft:TenantId"]}/v2.0";
+                options.Authority = "https://login.microsoftonline.com/common/v2.0";
                 options.CallbackPath = builder.Configuration["SocialNetwork:Microsoft:CallbackPath"]!;
                 options.ResponseType = "code";
                 options.UseTokenLifetime = false;
@@ -71,6 +73,12 @@ var app = builder.FoldTheOrigami<App>(
                 options.GetClaimsFromUserInfoEndpoint = true;
                 options.SaveTokens = true;
                 options.TokenValidationParameters.SaveSigninToken = true;
+
+                // IMPORTANT: /common is not an issuer.
+                options.TokenValidationParameters.ValidIssuer = null;
+                options.TokenValidationParameters.ValidIssuers = null;
+
+                options.TokenValidationParameters.IssuerValidator = AadIssuerValidator.GetAadIssuerValidator(options.Authority).Validate;
             });
     });
 

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.IdentityModel.Validators;
 using Origami.Core;
 using Origami.Core.Data;
 using Origami.Core.Models;
@@ -167,7 +168,7 @@ namespace Origami.UI.FrontEnd.Controllers
         {
             if (string.IsNullOrEmpty(token)) throw new ArgumentNullException(nameof(token));
 
-            var issuer = $"https://login.microsoftonline.com/{_socialNetwork.Microsoft.TenantId}/v2.0";
+            var issuer = $"https://login.microsoftonline.com/common/v2.0";
             var configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
                 issuer + "/.well-known/openid-configuration",
                 new OpenIdConnectConfigurationRetriever(),
@@ -181,7 +182,11 @@ namespace Origami.UI.FrontEnd.Controllers
                 RequireExpirationTime = true,
                 RequireSignedTokens = true,
                 ValidateIssuer = true,
-                ValidIssuer = issuer,
+
+                // IMPORTANT:
+                // Do not set ValidIssuer to /common.
+                IssuerValidator = AadIssuerValidator.GetAadIssuerValidator(issuer).Validate,
+
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKeys = signingKeys,
                 ValidateLifetime = true,
@@ -201,7 +206,7 @@ namespace Origami.UI.FrontEnd.Controllers
 
                 return null;
             }
-            catch (SecurityTokenValidationException)
+            catch (SecurityTokenValidationException ex)
             {
                 // Logging, etc.
 
