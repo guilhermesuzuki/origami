@@ -9,8 +9,6 @@ namespace Origami.Core.Data
     {
         protected readonly IBlogRepository _blogRepository;
         protected readonly IFileRepository _fileRepository;
-        protected readonly IPostRepository _postRepository;
-        protected readonly IVideoRepository _videoRepository;
         protected readonly IContentRepository _contentRepository;
         protected readonly Text _text;
 
@@ -25,9 +23,7 @@ namespace Origami.Core.Data
             _blogRepository = blogRepository;
             _contentRepository = contentRepository;
             _fileRepository = fileRepository;
-            _postRepository = postRepository;
             _text = text;
-            _videoRepository = videoRepository;
         }
 
         public string GetRss(string slug, string oi)

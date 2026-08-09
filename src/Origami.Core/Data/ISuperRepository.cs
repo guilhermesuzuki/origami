@@ -49,10 +49,8 @@ namespace Origami.Core.Data
         bool MaintenanceLockout { get; }
 
         IMyMemoryCache MyMemoryCache { get; }
-        IPageRepository Pages { get; }
         IPhysicalPageRepository PhysicalPages { get; }
         IPhysicalPageViewRepository PhysicalPageViews { get; }
-        IPostRepository Posts { get; }
         IRightRepository Rights { get; }
         IRoleRepository Roles { get; }
         ISettingsRepository Settings { get; }
@@ -67,7 +65,6 @@ namespace Origami.Core.Data
         IUserRepository Users { get; }
         IUserTrashRepository UserTrashes { get; }
         IUserViewRepository UserViews { get; }
-        IVideoRepository Videos { get; }
         IWhatToSeeNextRepository WhatToSeeNext { get; }
 
         bool EmptyHome(Guid blogId);
