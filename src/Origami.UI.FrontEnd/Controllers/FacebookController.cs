@@ -268,7 +268,6 @@ namespace Origami.UI.FrontEnd.Controllers
                         //redirects to the returnUrl with an error
                         return Redirect("/oops/facebook"
                             .QueryString("error", "Invalid facebook information")
-                            .QueryString("error_details", hub.Messages.Error())
                             );
                     }
                     transaction.Complete();

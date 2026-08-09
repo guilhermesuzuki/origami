@@ -139,7 +139,6 @@ namespace Origami.UI.FrontEnd.Controllers
                         //redirects to the returnUrl with an error
                         return Redirect("/oops/microsoft"
                             .QueryString("error", "Invalid microsoft information")
-                            .QueryString("error_details", hub.Messages.Error())
                             );
                     }
                     transaction.Complete();

@@ -184,7 +184,6 @@ namespace Origami.UI.FrontEnd.Controllers
                         //redirects to the returnUrl with an error
                         return Redirect("/oops/google"
                             .QueryString("error", "Invalid google information")
-                            .QueryString("error_details", hub.Messages.Error())
                             );
                     }
                     transaction.Complete();
