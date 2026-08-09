@@ -83,7 +83,7 @@ namespace Origami.UI.FrontEnd.Controllers
                 var context = new DataOperationContext<OrigamiSocialProfile>(OrigamiUser.AnonymousUser, DateTime.UtcNow, user);
 
                 //saves the user into the database
-                using (var transaction = new TransactionScope())
+                using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
                     var hub = _socialProfile.SmartSave(context, false);
                     if (hub.Ok == false)
@@ -93,7 +93,6 @@ namespace Origami.UI.FrontEnd.Controllers
                         //redirects to the returnUrl with an error
                         return Redirect("/oops/github"
                             .QueryString("error", "Invalid github information")
-                            .QueryString("error_details", hub.Messages.Error())
                             );
                     }
                     transaction.Complete();
@@ -102,7 +101,7 @@ namespace Origami.UI.FrontEnd.Controllers
 
                 _userFacade.SocialProfile = user ?? new();
                 _eventRepository.SocialProfileLogsIntoWebsite(context.Entity);
-                
+
                 return Redirect(Uri.UnescapeDataString(returnUrl));
             }
 

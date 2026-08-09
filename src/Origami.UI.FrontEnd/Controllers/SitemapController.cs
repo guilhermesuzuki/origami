@@ -5,15 +5,16 @@ namespace Origami.UI.FrontEnd.Controllers
     [Route("[Controller]")]
     public class SitemapController : Controller
     {
-        string[] sites = [ "bing", "google" ];
+        private static readonly string[] Sites = ["bing", "google"];
 
         [HttpGet("{site}")]
         public IActionResult Index(string site)
         {
-            if (sites.Contains(site) == false)
+            if (Sites.Contains(site, StringComparer.OrdinalIgnoreCase) == false)
             {
                 return NotFound();
             }
+
             Response.ContentType = "application/xml";
             return View("Sitemap", site);
         }

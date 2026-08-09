@@ -3,9 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Origami.Core;
 using Origami.Core.Data;
 using Shouldly;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Transactions;
 
 namespace Origami.UI.Admin.IntegrationTests

@@ -183,7 +183,7 @@ namespace Origami.UI.FrontEnd.Controllers
         [HttpGet("get-user")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public IActionResult GetUser([FromQuery] string userId, [FromQuery] string accessToken, [FromQuery] string returnUrl)
+        public async Task<IActionResult> GetUser([FromQuery] string userId, [FromQuery] string accessToken, [FromQuery] string returnUrl)
         {
             _logger.Information("Parameters -> userId: {0}, accessToken: {1}", userId, accessToken);
 
@@ -232,7 +232,7 @@ namespace Origami.UI.FrontEnd.Controllers
                 if (user.IsBlocked)
                 {
                     //needs to log the user out, because the facebook user couldn't be found
-                    HttpContext.SignOutAsync().GetAwaiter().GetResult();
+                    await HttpContext.SignOutAsync();
                     HttpContext.Logout_Workaround();
                     //redirects to the returnUrl with an error
                     return Redirect("/oops/facebook".QueryString("error", "User has been blocked"));
@@ -258,17 +258,16 @@ namespace Origami.UI.FrontEnd.Controllers
                 var context = new DataOperationContext<OrigamiSocialProfile>(OrigamiUser.AnonymousUser, DateTime.UtcNow, user);
 
                 //saves the user into the database
-                using (var transaction = new TransactionScope())
+                using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
                     var hub = _socialProfile.SmartSave(context, false);
                     if (hub.Ok == false)
                     {
-                        HttpContext.SignOutAsync().GetAwaiter().GetResult();
+                        await HttpContext.SignOutAsync();
                         HttpContext.Logout_Workaround();
                         //redirects to the returnUrl with an error
                         return Redirect("/oops/facebook"
                             .QueryString("error", "Invalid facebook information")
-                            .QueryString("error_details", hub.Messages.Error())
                             );
                     }
                     transaction.Complete();
@@ -277,12 +276,12 @@ namespace Origami.UI.FrontEnd.Controllers
 
                 _userFacade.SocialProfile = user ?? new();
                 _eventRepository.SocialProfileLogsIntoWebsite(context.Entity);
-                
+
                 return Redirect(Uri.UnescapeDataString(returnUrl));
             }
 
             //needs to log the user out, because the facebook user couldn't be found
-            HttpContext.SignOutAsync().GetAwaiter().GetResult();
+            await HttpContext.SignOutAsync();
             HttpContext.Logout_Workaround();
 
             //redirects to the returnUrl with an error

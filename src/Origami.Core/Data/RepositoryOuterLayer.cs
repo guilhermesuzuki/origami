@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Origami.Core.Models;
-using static System.Reflection.Metadata.BlobBuilder;
 
 namespace Origami.Core.Data
 {
@@ -16,7 +15,7 @@ namespace Origami.Core.Data
             IAppFacade appFacade)
             : base(appFacade, dbContextFactory, memoryCache, webRootPath, text)
         {
-            
+
         }
 
         public virtual void RefreshCache()
@@ -45,7 +44,7 @@ namespace Origami.Core.Data
                     {
                         var contents = from a in db.Contents.AsNoTracking()
                                        join b in db.Blogs.AsNoTracking() on a.BlogId equals b.Id into blogs
-                                       from blog in blogs.DefaultIfEmpty()  
+                                       from blog in blogs.DefaultIfEmpty()
                                        where a.IsDeleted == false
                                        where a.IsPublished == true
                                        where a.DatePublished <= DateTime.UtcNow

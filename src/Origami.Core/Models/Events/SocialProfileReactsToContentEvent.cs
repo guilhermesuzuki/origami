@@ -3,8 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Origami.Core.Models.Events
 {
-    public class SocialProfileReactsToContentEvent : 
-        OrigamiEvent, 
+    public class SocialProfileReactsToContentEvent :
+        OrigamiEvent,
         IChanged,
         IReactionId
     {

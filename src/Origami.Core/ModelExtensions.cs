@@ -530,8 +530,7 @@ namespace Origami.Core
         public static (string Extension, string MimeType) GetImageFormat(this byte[] imageBytes)
         {
             using var stream = new MemoryStream(imageBytes);
-
-            var image = Image.Load(stream);
+            using var image = Image.Load(stream);
 
             var format = image.Metadata.DecodedImageFormat
                 ?? throw new InvalidOperationException("Unable to determine image format.");

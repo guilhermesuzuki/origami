@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Origami.Core;
 using Origami.Core.Data;
 using Origami.Core.Models;
 using Origami.Core.Models.Events;
@@ -16,7 +15,7 @@ namespace Origami.UI.Admin.IntegrationTests
 
         public ContentReactionTests() : base()
         {
-            
+
         }
 
         [Theory]
@@ -105,9 +104,9 @@ namespace Origami.UI.Admin.IntegrationTests
             //private scope
             {
                 var query = from a in db.SocialProfileReactsToContentEvents.AsNoTracking()
-                             where a.ReactionId == reaction.Id
-                             where a.SocialProfileId == reaction.SocialProfileId
-                             select a;
+                            where a.ReactionId == reaction.Id
+                            where a.SocialProfileId == reaction.SocialProfileId
+                            select a;
                 var dbEvent = query.Single();
             }
 

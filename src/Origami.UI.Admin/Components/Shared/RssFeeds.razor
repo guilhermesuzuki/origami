@@ -62,18 +62,18 @@
     {
         var settings = _settings.GetSettings();
 
-        IEnumerable<string> feeds = [
+        IEnumerable<string> rssFeeds = [
             settings.RssFeed1,
             settings.RssFeed2,
             settings.RssFeed3,
             settings.RssFeed4,
             settings.RssFeed5, ];
 
-        feeds = feeds.Distinct();
+        rssFeeds = rssFeeds.Distinct();
 
         IList<Task> probing = [];
 
-        foreach (var url in feeds)
+        foreach (var url in rssFeeds)
         {
             if (url.Has() == false) continue;
 

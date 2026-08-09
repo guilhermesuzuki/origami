@@ -94,7 +94,7 @@ namespace Origami.UI.FrontEnd.Controllers
                 if (user.IsBlocked)
                 {
                     //needs to log the user out, because the microsoft user couldn't be found
-                    HttpContext.SignOutAsync().GetAwaiter().GetResult();
+                    await HttpContext.SignOutAsync();
                     HttpContext.Logout_Workaround();
                     //redirects to the returnUrl with an error
                     return Redirect("/oops/microsoft".QueryString("error", "User has been blocked"));
@@ -122,24 +122,23 @@ namespace Origami.UI.FrontEnd.Controllers
                 var photoBytes = await GetProfilePhotoAsync(accessToken);
                 if (photoBytes != null)
                 {
-                    var image = Image.Load(photoBytes);
+                    using var image = Image.Load(photoBytes);
                     user.ProfilePicture = image.ToBase64String(Image.DetectFormat(photoBytes));
                 }
 
                 var context = new DataOperationContext<OrigamiSocialProfile>(OrigamiUser.AnonymousUser, DateTime.UtcNow, user);
 
                 //saves the user into the database
-                using (var transaction = new TransactionScope())
+                using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
                     var hub = _socialProfile.SmartSave(context, false);
                     if (hub.Ok == false)
                     {
-                        HttpContext.SignOutAsync().GetAwaiter().GetResult();
+                        await HttpContext.SignOutAsync();
                         HttpContext.Logout_Workaround();
                         //redirects to the returnUrl with an error
                         return Redirect("/oops/microsoft"
                             .QueryString("error", "Invalid microsoft information")
-                            .QueryString("error_details", hub.Messages.Error())
                             );
                     }
                     transaction.Complete();
@@ -153,7 +152,7 @@ namespace Origami.UI.FrontEnd.Controllers
             }
 
             //needs to log the user out, because the microsoft user couldn't be found
-            HttpContext.SignOutAsync().GetAwaiter().GetResult();
+            await HttpContext.SignOutAsync();
             HttpContext.Logout_Workaround();
 
             //redirects to the returnUrl with an error
@@ -206,7 +205,7 @@ namespace Origami.UI.FrontEnd.Controllers
 
                 return null;
             }
-            catch (SecurityTokenValidationException ex)
+            catch (SecurityTokenValidationException)
             {
                 // Logging, etc.
 
