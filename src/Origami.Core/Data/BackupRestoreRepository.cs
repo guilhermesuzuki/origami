@@ -12,7 +12,6 @@ namespace Origami.Core.Data
         RepositoryOuterLayer<OrigamiBackup>,
         IBackupRestoreRepository
     {
-        protected readonly IAppFacade _appFacade;
         protected readonly IConfiguration _configuration;
         protected readonly IFileRepository _fileRepository;
         protected readonly IUserRepository _userRepository;
@@ -28,7 +27,6 @@ namespace Origami.Core.Data
             Text text)
             : base(text, dbContextFactory, memoryCache, wwwRoot, appFacade)
         {
-            _appFacade = appFacade;
             _configuration = configuration;
             _fileRepository = fileRepository;
             _userRepository = userRepository;

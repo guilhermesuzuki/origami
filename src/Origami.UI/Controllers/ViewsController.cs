@@ -31,13 +31,11 @@ namespace Origami.UI.FrontEnd.Controllers
             IAppFacade appFacade,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IHttpContextAccessor httpContextAccessor,
-            IPageRepository page,
             IPhysicalPageRepository physicalPage,
             IPhysicalPageViewRepository physicalPageView,
-            IPostRepository post,
             ISuperRepository superRepository,
-            IUserFacade userFacade,
-            IVideoRepository video)
+            IUserFacade userFacade
+            )
             : base()
         {
             _appFacade = appFacade;
