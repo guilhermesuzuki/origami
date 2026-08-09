@@ -129,7 +129,7 @@ namespace Origami.UI.FrontEnd.Controllers
                 var context = new DataOperationContext<OrigamiSocialProfile>(OrigamiUser.AnonymousUser, DateTime.UtcNow, user);
 
                 //saves the user into the database
-                using (var transaction = new TransactionScope())
+                using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
                     var hub = _socialProfile.SmartSave(context, false);
                     if (hub.Ok == false)
