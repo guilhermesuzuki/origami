@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components.Server.Circuits;
+using Microsoft.AspNetCore.Http;
 using Origami.Core.Data;
 using Origami.Core.Models;
 
@@ -24,7 +25,6 @@ namespace Origami.UI
         public override Task OnCircuitClosedAsync(Circuit circuit, CancellationToken cancellationToken)
         {
             _appFacade.OnlineUsers.Remove(circuit.Id);
-            _myMemoryCache.Remove($"Origami_UserLocation_{circuit.Id}");
             return Task.CompletedTask;
         }
     }
