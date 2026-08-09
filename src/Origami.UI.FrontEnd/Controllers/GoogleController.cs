@@ -137,7 +137,7 @@ namespace Origami.UI.FrontEnd.Controllers
         [HttpGet("get-user")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public IActionResult GetUser([FromQuery] string userId, [FromQuery] string accessToken, [FromQuery] string returnUrl)
+        public async Task<IActionResult> GetUser([FromQuery] string userId, [FromQuery] string accessToken, [FromQuery] string returnUrl)
         {
             _logger.Information("Parameters -> userId: {0}, accessToken: {1}", userId, accessToken);
 
@@ -154,7 +154,7 @@ namespace Origami.UI.FrontEnd.Controllers
                 if (user.IsBlocked)
                 {
                     //needs to log the user out, because the google user is blocked
-                    HttpContext.SignOutAsync().GetAwaiter().GetResult();
+                    await HttpContext.SignOutAsync();
                     HttpContext.Logout_Workaround();
                     //redirects to the returnUrl with an error
                     return Redirect("/oops/google".QueryString("error", "User has been blocked"));
@@ -179,7 +179,7 @@ namespace Origami.UI.FrontEnd.Controllers
                     var hub = _socialProfile.SmartSave(context, false);
                     if (hub.Ok == false)
                     {
-                        HttpContext.SignOutAsync().GetAwaiter().GetResult();
+                        await HttpContext.SignOutAsync();
                         HttpContext.Logout_Workaround();
                         //redirects to the returnUrl with an error
                         return Redirect("/oops/google"
@@ -197,7 +197,7 @@ namespace Origami.UI.FrontEnd.Controllers
             }
 
             //needs to log the user out, because the google user couldn't be found
-            HttpContext.SignOutAsync().GetAwaiter().GetResult();
+            await HttpContext.SignOutAsync();
             HttpContext.Logout_Workaround();
 
             //redirects to the returnUrl with an error

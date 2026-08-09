@@ -122,7 +122,7 @@ namespace Origami.UI.FrontEnd.Controllers
                 var photoBytes = await GetProfilePhotoAsync(accessToken);
                 if (photoBytes != null)
                 {
-                    var image = Image.Load(photoBytes);
+                    using var image = Image.Load(photoBytes);
                     user.ProfilePicture = image.ToBase64String(Image.DetectFormat(photoBytes));
                 }
 
