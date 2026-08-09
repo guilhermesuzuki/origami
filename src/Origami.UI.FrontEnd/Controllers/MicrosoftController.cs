@@ -94,7 +94,7 @@ namespace Origami.UI.FrontEnd.Controllers
                 if (user.IsBlocked)
                 {
                     //needs to log the user out, because the microsoft user couldn't be found
-                    HttpContext.SignOutAsync().GetAwaiter().GetResult();
+                    await HttpContext.SignOutAsync();
                     HttpContext.Logout_Workaround();
                     //redirects to the returnUrl with an error
                     return Redirect("/oops/microsoft".QueryString("error", "User has been blocked"));
@@ -134,7 +134,7 @@ namespace Origami.UI.FrontEnd.Controllers
                     var hub = _socialProfile.SmartSave(context, false);
                     if (hub.Ok == false)
                     {
-                        HttpContext.SignOutAsync().GetAwaiter().GetResult();
+                        await HttpContext.SignOutAsync();
                         HttpContext.Logout_Workaround();
                         //redirects to the returnUrl with an error
                         return Redirect("/oops/microsoft"
@@ -153,7 +153,7 @@ namespace Origami.UI.FrontEnd.Controllers
             }
 
             //needs to log the user out, because the microsoft user couldn't be found
-            HttpContext.SignOutAsync().GetAwaiter().GetResult();
+            await HttpContext.SignOutAsync();
             HttpContext.Logout_Workaround();
 
             //redirects to the returnUrl with an error

@@ -9,13 +9,11 @@ namespace Origami.UI
     {
         protected readonly IAppFacade _appFacade;
         protected readonly IMyMemoryCache _myMemoryCache;
-        protected readonly IHttpContextAccessor _httpContextAccessor;
 
-        public OrigamiCircuitHandler(IAppFacade appFacade, IMyMemoryCache myMemoryCache, IHttpContextAccessor httpContextAccessor) : base()
+        public OrigamiCircuitHandler(IAppFacade appFacade, IMyMemoryCache myMemoryCache) : base()
         {
             _appFacade = appFacade;
             _myMemoryCache = myMemoryCache;
-            _httpContextAccessor = httpContextAccessor;
         }
 
         public override Task OnCircuitOpenedAsync(Circuit circuit, CancellationToken cancellationToken)
