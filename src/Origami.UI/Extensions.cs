@@ -274,7 +274,7 @@ namespace Origami.UI
                 options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
             });
 
-            builder.Host.UseWindowsService();
+            if (OperatingSystem.IsWindows()) builder.Host.UseWindowsService();
 
             var services = builder.Services.BuildServiceProvider();
 
