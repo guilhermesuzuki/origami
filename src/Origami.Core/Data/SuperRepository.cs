@@ -423,9 +423,6 @@ namespace Origami.Core.Data
                 UserBlogs.RefreshCache();
             }
 
-            using var db = this.DbContextFactory.CreateDbContext();
-            var events = db.Events.ToList();
-
             return new();
         }
 
