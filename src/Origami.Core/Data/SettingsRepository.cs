@@ -81,7 +81,7 @@ public class SettingsRepository :
             {
                 if (MemoryCache.Get(key) == null)
                 {
-                    return MemoryCache.Set(key, ExtractSettings(), new MemoryCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1) });
+                    return MemoryCache.Set(key, ExtractSettings(), new MemoryCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(2) });
                 }
             }
         }
