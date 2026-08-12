@@ -93,7 +93,7 @@
 
     private void GoToProfile()
     {
-        this.GhostOfTheNavigator.NavigateTo($"/socialprofiles/{this.UserFacade.SocialProfile.Id}", true);
+        this.GhostOfTheNavigator.NavigateTo($"{this.UserFacade.SocialProfile.Hyperlink}#content-start", true);
     }
 
     private void TestSubscribeEmail()
