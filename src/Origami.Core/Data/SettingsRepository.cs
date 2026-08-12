@@ -62,16 +62,31 @@ public class SettingsRepository :
         return new(ctx.Entity, _validator);
     }
 
+    public bool GetMaintenanceMode()
+    {
+        using var db = DbContextFactory.CreateDbContext();
+        var query = from a in db.Settings
+                    where a.Name == nameof(OrigamiSettings.MaintenanceMode)
+                    select a.Value;
+        return query.FirstOrDefault()?.ToLower() == "true";
+    }
+
     public OrigamiSettings GetSettings()
     {
         var key = $"entity-{typeof(OrigamiSettings).FullName}";
 
-        if (MemoryCache.TryGetValue(key, out OrigamiSettings? settings) == true && settings != null)
+        if (MemoryCache.Get(key) == null)
         {
-            return settings;
+            lock (OrigamiConstants.SyncRoot)
+            {
+                if (MemoryCache.Get(key) == null)
+                {
+                    return MemoryCache.Set(key, ExtractSettings(), new MemoryCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1) });
+                }
+            }
         }
 
-        return MemoryCache.Set(key, ExtractSettings(), new MemoryCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1) });
+        return MemoryCache.Get<OrigamiSettings>(key)!;
     }
 
     public override Result<OrigamiSettings> Update(DataOperationContext<OrigamiSettings> ctx)

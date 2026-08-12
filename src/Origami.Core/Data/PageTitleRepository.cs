@@ -5,7 +5,7 @@ namespace Origami.Core.Data
 {
     public class PageTitleRepository : IPageTitleRepository
     {
-        private readonly ISettingsRepository _blogSettingsRepository;
+        private readonly ISettingsRepository _settingsRepository;
         private List<string?> _parts = [];
 
         /// <summary>
@@ -14,12 +14,12 @@ namespace Origami.Core.Data
         /// <param name="blogSettingsRepository"></param>
         public PageTitleRepository(ISettingsRepository blogSettingsRepository) : base()
         {
-            _blogSettingsRepository = blogSettingsRepository;
+            _settingsRepository = blogSettingsRepository;
         }
 
         public string GetTitle()
         {
-            var result = new StringBuilder(_blogSettingsRepository.GetSettings().Name);
+            var result = new StringBuilder(_settingsRepository.GetSettings().Name);
 
             foreach (var part in _parts)
             {
