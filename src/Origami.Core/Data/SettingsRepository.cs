@@ -62,14 +62,17 @@ public class SettingsRepository :
         return new(ctx.Entity, _validator);
     }
 
-    public bool GetMaintenanceMode()
-    {
-        using var db = DbContextFactory.CreateDbContext();
-        var query = from a in db.Settings
-                    where a.Name == nameof(OrigamiSettings.MaintenanceMode)
-                    select a.Value;
-        return query.FirstOrDefault()?.ToLower() == "true";
-    }
+public bool GetMaintenanceMode()
+{
+    using var db = DbContextFactory.CreateDbContext();
+
+    var value = db.Settings
+        .Where(a => a.Name == nameof(OrigamiSettings.MaintenanceMode))
+        .Select(a => a.Value)
+        .FirstOrDefault();
+
+    return bool.TryParse(value, out var enabled) && enabled;
+}
 
     public OrigamiSettings GetSettings()
     {
