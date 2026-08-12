@@ -11,10 +11,10 @@ namespace Origami.Core.Data
         /// <summary>
         /// Default constructor with DI
         /// </summary>
-        /// <param name="blogSettingsRepository"></param>
-        public PageTitleRepository(ISettingsRepository blogSettingsRepository) : base()
+        /// <param name="settingsRepository"></param>
+        public PageTitleRepository(ISettingsRepository settingsRepository) : base()
         {
-            _settingsRepository = blogSettingsRepository;
+            _settingsRepository = settingsRepository;
         }
 
         public string GetTitle()
