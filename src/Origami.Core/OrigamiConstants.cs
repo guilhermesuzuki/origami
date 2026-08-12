@@ -16,7 +16,7 @@ namespace Origami.Core
         /// <summary>
         /// Sync Root object
         /// </summary>
-        public static object SyncRoot { get; }
+        public static Lock SyncRoot { get; }
 
         /// <summary>
         /// Custom

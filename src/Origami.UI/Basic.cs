@@ -22,7 +22,7 @@ namespace Origami.UI
         /// <summary>
         /// Sync root object
         /// </summary>
-        public static readonly object SyncRoot = new();
+        public static readonly Lock SyncRoot = new();
 
         [Parameter] public Guid BlogId { get; set; }
         [Parameter] public string BlogSlug { get; set; } = string.Empty;
