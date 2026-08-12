@@ -124,8 +124,7 @@ namespace Origami.Core.Data
 
         public OrigamiBlog GetPrimary()
         {
-            using var db = DbContextFactory.CreateDbContext();
-            return db.Blogs.Single(x => x.IsPrimary);
+            return this.ReadFromCache().Single(x => x.IsPrimary);
         }
 
         public override Result<OrigamiBlog> Purge(DataOperationContext<OrigamiBlog> ctx)
