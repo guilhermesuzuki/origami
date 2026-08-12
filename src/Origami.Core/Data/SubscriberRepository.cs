@@ -42,7 +42,7 @@ namespace Origami.Core.Data
                 subscriber.IsDeleted = false;
                 subscriber.DateModified = DateTime.UtcNow;
                 subscriber.IsVerified = true;
-                subscriber.Email = ctx.Entity.Email;
+                subscriber.Email = ctx.Entity.GetEmail();
                 var subscribeContext = new DataOperationContext<OrigamiSubscriber>(ctx.User, ctx.DateTime, subscriber);
                 var hub = SmartUpdate(subscribeContext, false);
                 hub.OnSuccess(() => _eventRepository.SocialProfileSubscribesToWebsite(ctx.Entity));
