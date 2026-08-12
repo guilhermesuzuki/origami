@@ -16,7 +16,7 @@ namespace Origami.Core
         /// <summary>
         /// Sync Root object
         /// </summary>
-        public static object SyncRoot { get; }
+        public static Lock SyncRoot { get; }
 
         /// <summary>
         /// Custom
@@ -129,14 +129,6 @@ namespace Origami.Core
         public const int MaximumBase64StringForHeaderImages = 524288;
         public const long MaximumFileSizeForVideos = 2147483648;
         public const long MaximumFileSizeForBackupRestore = 549755813888; // 512 GB
-
-        /// <summary>
-        /// Cache options (2 minutes expiration)
-        /// </summary>
-        public static readonly MemoryCacheEntryOptions CacheForMinutes = new()
-        {
-            AbsoluteExpirationRelativeToNow = new TimeSpan(0, 2, 0),
-        };
 
         public static class Events
         {

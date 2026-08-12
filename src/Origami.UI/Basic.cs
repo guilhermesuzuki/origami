@@ -22,7 +22,7 @@ namespace Origami.UI
         /// <summary>
         /// Sync root object
         /// </summary>
-        public static readonly object SyncRoot = new();
+        public static readonly Lock SyncRoot = new();
 
         [Parameter] public Guid BlogId { get; set; }
         [Parameter] public string BlogSlug { get; set; } = string.Empty;
@@ -51,10 +51,10 @@ namespace Origami.UI
         {
             if (this.BlogSlug.Has() == true)
             {
-                return Super.Blogs.Slug(BlogSlug) ?? OrigamiBlog.Empty;
+                return Super.Blogs.ReadFromCache().Slug(BlogSlug) ?? OrigamiBlog.Empty;
             }
 
-            return Super.Blogs.GetPrimary();
+            return Super.Blogs.ReadFromCache().Single(x => x.IsPrimary);
         }
 
         public OrigamiBlog GetBlogFromUserFacade()

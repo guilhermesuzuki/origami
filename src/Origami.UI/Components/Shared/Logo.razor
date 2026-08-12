@@ -14,14 +14,14 @@
 <div class="m-auto wrapper text-center">
     <div class="@Class logo cursor-pointer position-relative" style="z-index:25;" @onclick="GoHome">
         <Languages Class="mb-3"></Languages>
-        @if (this._blogSettings.LogoUrl.Has() == true)
+        @if (this._settings.LogoUrl.Has() == true)
         {
             <div class="text-center">
-                <img class="logo-image" src="@_blogSettings.LogoUrl" title="@_blogSettings.LogoUrl" />
+                <img class="logo-image" src="@_settings.LogoUrl" title="@_settings.LogoUrl" />
             </div>
         }
         <div class="text-center site-name-container" style="margin-top: -40px;">
-            <span class="fw-bold site-name" style="font-size: 4.5rem;">@_blogSettings.Name</span>
+            <span class="fw-bold site-name" style="font-size: 4.5rem;">@_settings.Name</span>
         </div>
     </div>
     @if (this.SubtitleTemplate != null)
@@ -58,7 +58,7 @@
 </div>
 
 @code {
-    private OrigamiSettings _blogSettings = new();
+    private OrigamiSettings _settings = new();
 
     [Parameter] public RenderFragment? SubtitleTemplate { get; set; }
 
@@ -70,7 +70,7 @@
 
     private void _loadSettings()
     {
-        this._blogSettings = this._settingsRepository.GetSettings();
+        this._settings = this._settingsRepository.GetSettings();
     }
 
     protected override void OnInitialized()

@@ -65,7 +65,6 @@ namespace Origami.UI
 
             builder.Services.AddDbContextFactory<OrigamiIdentityDbContext>(options =>
             {
-                options.EnableSensitiveDataLogging();
                 options.UseSqlServer(origami);
             });
 
@@ -419,6 +418,19 @@ namespace Origami.UI
             if (openTelemetry) app.MapPrometheusScrapingEndpoint();
 
             app.MapRazorComponents<T>().AddInteractiveServerRenderMode();
+
+            if (admin == true)
+            {
+                Log.Information("*************************");
+                Log.Information("Starting Origami.UI.Admin");
+                Log.Information("*************************");
+            }
+            else
+            {
+                Log.Information("****************************");
+                Log.Information("Starting Origami.UI.FrontEnd");
+                Log.Information("****************************");
+            }
 
             return app;
         }

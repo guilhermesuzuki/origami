@@ -94,7 +94,7 @@ namespace Origami.Core.Models
             set => this.Set(ref _firstName, value, Changed);
         }
 
-        public string Hyperlink => $"/socialprofiles/{this.Id}";
+        public string Hyperlink => $"/socialprofiles/{this.NanoId}";
 
         /// <summary>
         /// Is this Social Profile Blocked?

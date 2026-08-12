@@ -3,7 +3,7 @@
 
 @if (this.Super != null)
 {
-    var maintenance = this.Super.Settings.GetSettings().MaintenanceMode;
+    var maintenance = this.Super.Settings.GetMaintenanceMode();
     <div class="root @Class">
         @if (maintenance == false)
         {

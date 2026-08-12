@@ -166,7 +166,7 @@ namespace Origami.UI.FrontEnd.Controllers
                     {
                         return Json(new
                         {
-                            url = $"{Request.Scheme}://{Request.Host}/socialprofiles/{result.Entity?.SocialProfileId}",
+                            url = $"{Request.Scheme}://{Request.Host}/socialprofiles/{facebookUser.NanoId}",
                             confirmation_code = result.Entity?.Id.ToString(),
                         });
                     }
