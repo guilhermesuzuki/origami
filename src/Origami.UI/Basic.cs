@@ -51,10 +51,10 @@ namespace Origami.UI
         {
             if (this.BlogSlug.Has() == true)
             {
-                return Super.Blogs.Slug(BlogSlug) ?? OrigamiBlog.Empty;
+                return Super.Blogs.ReadFromCache().Slug(BlogSlug) ?? OrigamiBlog.Empty;
             }
 
-            return Super.Blogs.GetPrimary();
+            return Super.Blogs.ReadFromCache().Single(x => x.IsPrimary);
         }
 
         public OrigamiBlog GetBlogFromUserFacade()
