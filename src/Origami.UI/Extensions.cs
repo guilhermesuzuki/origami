@@ -372,13 +372,14 @@ namespace Origami.UI
                     metrics.AddHttpClientInstrumentation();
                     metrics.AddPrometheusExporter();
 
-                    // Metrics provides by ASP.NET Core in .NET 8
+                    // Metrics provides by ASP.NET Core in .NET 10
                     metrics.AddMeter("Microsoft.AspNetCore.Hosting");
                     metrics.AddMeter("Microsoft.AspNetCore.Server.Kestrel");
                     metrics.AddMeter("Microsoft.AspNetCore.Http.Connections");
                     metrics.AddMeter("Microsoft.AspNetCore.Routing");
                     metrics.AddMeter("Microsoft.AspNetCore.Diagnostics");
                     metrics.AddMeter("Microsoft.AspNetCore.RateLimiting");
+                    metrics.AddMeter("Microsoft.EntityFrameworkCore");
                 });
 
                 // Add Tracing for ASP.NET Core and our custom ActivitySource and export to Jaeger
