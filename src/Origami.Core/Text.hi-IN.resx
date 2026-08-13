@@ -2598,4 +2598,7 @@
   <data name="Something went wrong with {0} login" xml:space="preserve">
     <value>{0} से साइन इन करते समय कुछ गड़बड़ हो गई</value>
   </data>
+  <data name="•• Not shared ••" xml:space="preserve">
+    <value>•• साझा नहीं किया गया ••</value>
+  </data>
 </root>
