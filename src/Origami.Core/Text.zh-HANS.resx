@@ -2610,4 +2610,10 @@
   <data name="Logged in on website" xml:space="preserve">
     <value>已登录网站</value>
   </data>
+  <data name="Subscribed to website" xml:space="preserve">
+    <value>已订阅网站</value>
+  </data>
+  <data name="Unsubscribed from website" xml:space="preserve">
+    <value>已取消网站订阅</value>
+  </data>
 </root>

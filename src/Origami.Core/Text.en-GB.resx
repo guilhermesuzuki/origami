@@ -2610,4 +2610,10 @@
   <data name="Logged in on website" xml:space="preserve">
     <value>Logged in on website</value>
   </data>
+  <data name="Subscribed to website" xml:space="preserve">
+    <value>Subscribed to website</value>
+  </data>
+  <data name="Unsubscribed from website" xml:space="preserve">
+    <value>Unsubscribed from website</value>
+  </data>
 </root>

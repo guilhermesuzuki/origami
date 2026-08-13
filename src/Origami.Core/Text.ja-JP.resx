@@ -2610,4 +2610,10 @@
   <data name="Logged in on website" xml:space="preserve">
     <value>ウェブサイトにログイン済み</value>
   </data>
+  <data name="Subscribed to website" xml:space="preserve">
+    <value>ウェブサイトを購読中</value>
+  </data>
+  <data name="Unsubscribed from website" xml:space="preserve">
+    <value>ウェブサイトの購読を解除</value>
+  </data>
 </root>

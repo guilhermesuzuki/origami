@@ -2610,4 +2610,10 @@
   <data name="Logged in on website" xml:space="preserve">
     <value>웹사이트에 로그인됨</value>
   </data>
+  <data name="Subscribed to website" xml:space="preserve">
+    <value>웹사이트 구독 중</value>
+  </data>
+  <data name="Unsubscribed from website" xml:space="preserve">
+    <value>웹사이트 구독 취소</value>
+  </data>
 </root>

@@ -2610,4 +2610,10 @@
   <data name="Logged in on website" xml:space="preserve">
     <value>वेबसाइट पर लॉग इन किया गया</value>
   </data>
+  <data name="Subscribed to website" xml:space="preserve">
+    <value>वेबसाइट की सदस्यता ली गई</value>
+  </data>
+  <data name="Unsubscribed from website" xml:space="preserve">
+    <value>वेबसाइट से सदस्यता समाप्त की गई</value>
+  </data>
 </root>
