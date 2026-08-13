@@ -8,7 +8,7 @@
     {
         var content = this.Super.Contents.ReadFromCache().Id(reaction.ContentId)!;
         <div class="user-activity-content-reaction @Class">
-            <label class="fw-bold">@Text.Lower("Reacted {0} on:", reaction.Reaction)</label>
+            <span class="fw-bold">@Text.Lower("Reacted {0} on:", reaction.Reaction)</span>
             <ContentHeaderLite Entity="content"></ContentHeaderLite>
         </div>
     }

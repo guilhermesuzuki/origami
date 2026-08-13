@@ -11,7 +11,7 @@
         var comment = _contentComment.ReadFromCache().Id(reaction.CommentId);
         var content = this.Super.Contents.ReadFromCache().Id(comment!.ContentId)!;
         <div class="user-activity-content-comment-reaction @Class">
-            <label class="fw-bold">@Text.Lower("Reacted {0} to:", reaction.Reaction)</label>
+            <span class="fw-bold">@Text.Lower("Reacted {0} to:", reaction.Reaction)</span>
             <ContentHeaderLite Entity="content"></ContentHeaderLite>
             <CommentLite Class="mt-2 p-2 frame-purple" Entity="comment"></CommentLite>
         </div>

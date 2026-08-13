@@ -65,7 +65,7 @@
                                     @Text.Lower("Reactions")
                                 </div>
                                 <span>
-                                    @_contentCommentReaction.ReactionsFromProfile(this.SocialProfile).Count()
+                                    @(_contentCommentReaction.ReactionsFromProfile(this.SocialProfile).Count() + this.Super.ContentReactions.ReactionsFromProfile(this.SocialProfile).Count())
                                 </span>
                             </div>
                         </div>
@@ -139,10 +139,10 @@
                             <Columns>
                                 <TemplateColumn>
                                     <CellTemplate>
-                                        <div class="fw-bold text-center">
+                                        <span class="fw-bold">
                                             <i class="fa-solid fa-calendar"></i>
                                             @context.Item.Date
-                                        </div>
+                                        </span>
                                         @if (context.Item.Type.Like("ContentCommentReaction") == true)
                                         {
                                             <UserActivityContentCommentReaction Id="@context.Item.Id"></UserActivityContentCommentReaction>
@@ -162,6 +162,18 @@
                                         else if (context.Item.Type.Like("SocialProfileDelete") == true)
                                         {
                                             <UserActivitySocialProfileDelete Id="@context.Item.Id"></UserActivitySocialProfileDelete>
+                                        }
+                                        else if (context.Item.Type.Like("SocialProfileLogsIntoWebsiteEvent") == true)
+                                        {
+                                            <UserActivitySocialProfileLogsIntoWebsite Id="@context.Item.Id"></UserActivitySocialProfileLogsIntoWebsite>
+                                        }
+                                        else if (context.Item.Type.Like("SocialProfileSubscribesToWebsiteEvent") == true)
+                                        {
+                                            <UserActivitySocialProfileSubscribesToWebsite Id="@context.Item.Id"></UserActivitySocialProfileSubscribesToWebsite>
+                                        }
+                                        else if (context.Item.Type.Like("SocialProfileUnsubscribesFromWebsiteEvent") == true)
+                                        {
+                                            <UserActivitySocialProfileUnsubscribesFromWebsite Id="@context.Item.Id"></UserActivitySocialProfileUnsubscribesFromWebsite>
                                         }
                                     </CellTemplate>
                                 </TemplateColumn>
