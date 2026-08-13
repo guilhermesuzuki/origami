@@ -100,7 +100,7 @@ public class WhatHappensNext : IWhatHappensNext
             if (blog != null)
             {
                 var hyperlink = blog.GetHyperlink(category, e.Entity as INanoId);
-                GhostOfTheNavigator.NavigateTo($"{hyperlink}#content-start");
+                GhostOfTheNavigator.NavigateTo($"{hyperlink}#content-start", true);
                 return;
             }
             throw new InvalidOperationException("Navigation aborted: blog not found from the given category");
@@ -118,7 +118,7 @@ public class WhatHappensNext : IWhatHappensNext
             if (blog != null)
             {
                 var hyperlink = blog.GetHyperlink(tag, e.Entity as INanoId);
-                GhostOfTheNavigator.NavigateTo($"{hyperlink}#content-start");
+                GhostOfTheNavigator.NavigateTo($"{hyperlink}#content-start", true);
                 return;
             }
             throw new InvalidOperationException("Navigation aborted: blog not found from the given tag");
@@ -127,7 +127,7 @@ public class WhatHappensNext : IWhatHappensNext
         // default route by hyperlink
         if (e.Entity is IHyperlink link)
         {
-            GhostOfTheNavigator.NavigateTo($"{link.Hyperlink}#content-start");
+            GhostOfTheNavigator.NavigateTo($"{link.Hyperlink}#content-start", true);
             return;
         }
 
