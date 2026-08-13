@@ -324,6 +324,7 @@ namespace Origami.Core.Data
                 ;
 
             modelBuilder.Entity<OrigamiSubscriber>().HasOne<OrigamiSocialProfile>().WithMany().HasForeignKey(x => x.SocialProfileId);
+            modelBuilder.Entity<OrigamiSocialProfileDelete>().HasOne<OrigamiSocialProfile>().WithMany().HasForeignKey(x => x.SocialProfileId);
 
             modelBuilder.Entity<OrigamiEvent>().HasOne<OrigamiUser>().WithMany().HasForeignKey(x => x.UserId);
             modelBuilder.Entity<OrigamiEvent>().HasOne<OrigamiSocialProfile>().WithMany().HasForeignKey(x => x.SocialProfileId);

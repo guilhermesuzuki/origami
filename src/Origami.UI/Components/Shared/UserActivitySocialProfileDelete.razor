@@ -13,29 +13,15 @@
             <ul class="inline-list small">
                 <li style="width:33.34%;">
                     <i class="fa-solid fa-comment"></i>
-                    @Text.Lower("{0} post comment(s)", socialProfileDelete.PostComments)
-                </li>
-                <li style="width:33.33%;">
-                    <i class="fa-solid fa-face-laugh-beam"></i>
-                    @Text.Lower("{0} post reaction(s)", socialProfileDelete.PostCommentReactions)
+                    @Text.Lower("{0} comment(s)", socialProfileDelete.ContentComments)
                 </li>
                 <li style="width:33.33%;">
                     <i class="fa-solid fa-star"></i>
-                    @Text.Lower("{0} post rating(s)", socialProfileDelete.PostRatings)
-                </li>
-            </ul>
-            <ul class="inline-list small">
-                <li style="width:33.34%;">
-                    <i class="fa-solid fa-comment"></i>
-                    @Text.Lower("{0} video comment(s)", socialProfileDelete.VideoComments)
+                    @Text.Lower("{0} rating(s)", socialProfileDelete.ContentRatings)
                 </li>
                 <li style="width:33.33%;">
                     <i class="fa-solid fa-face-laugh-beam"></i>
-                    @Text.Lower("{0} video reaction(s)", socialProfileDelete.VideoCommentReactions)
-                </li>
-                <li style="width:33.33%;">
-                    <i class="fa-solid fa-star"></i>
-                    @Text.Lower("{0} video rating(s)", socialProfileDelete.VideoRatings)
+                    @Text.Lower("{0} reaction(s)", socialProfileDelete.ContentReactions + socialProfileDelete.ContentCommentReactions)
                 </li>
             </ul>
         </div>
