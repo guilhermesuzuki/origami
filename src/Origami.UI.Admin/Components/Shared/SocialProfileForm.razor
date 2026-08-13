@@ -34,7 +34,7 @@
                       T="string"></MudTextField>
 
         <MudTextField FullWidth="true"
-                      Text="@Text.Lower(this.Entity.GetEmail())"
+                      Text="@this.Entity.GetEmail(Text)"
                       HelperText="@Text.Lower("E-mail")"
                       ReadOnly="true"
                       AdornmentIcon="@Icons.Material.Filled.AlternateEmail"

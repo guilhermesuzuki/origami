@@ -215,11 +215,11 @@ namespace Origami.Core.Models
         /// Then, it queries the application e-mail or the e-mail coming from the social network (when shared).
         /// </summary>
         /// <returns></returns>
-        public string GetEmail()
+        public string GetEmail(Text text)
         {
             if (Email.Has() == true) return Email;
             if (EmailFromSocialNetwork.Has() == true) return EmailFromSocialNetwork;
-            return "•• Not shared ••";
+            return text.Original("•• Not shared ••");
         }
 
         /// <summary>
