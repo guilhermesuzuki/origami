@@ -30,7 +30,7 @@ namespace Origami.UI.Admin.IntegrationTests
 
             var socialProfile = TestFacebookProfile.Clone();
 
-            socialProfile.Email = "invalid-email";
+            socialProfile.EmailFromSocialNetwork = "invalid-email";
 
             var hub = superRepository.SocialProfiles.SmartSave(socialProfile.GetContext(TestUser), false);
 
@@ -69,7 +69,6 @@ namespace Origami.UI.Admin.IntegrationTests
             socialProfile.ShouldNotBeNull();
             socialProfile.SocialNetwork.ShouldBe(TestFacebookProfile.SocialNetwork);
             socialProfile.UserId.ShouldBe(TestFacebookProfile.UserId);
-            socialProfile.Email.ShouldBe(TestFacebookProfile.Email);
             socialProfile.EmailFromSocialNetwork.ShouldBe(TestFacebookProfile.EmailFromSocialNetwork);
             socialProfile.Name.ShouldBe(TestFacebookProfile.Name);
 
@@ -77,7 +76,6 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheSocialProfile.ShouldNotBeNull();
             cacheSocialProfile.SocialNetwork.ShouldBe(TestFacebookProfile.SocialNetwork);
             cacheSocialProfile.UserId.ShouldBe(TestFacebookProfile.UserId);
-            cacheSocialProfile.Email.ShouldBe(TestFacebookProfile.Email);
             cacheSocialProfile.EmailFromSocialNetwork.ShouldBe(TestFacebookProfile.EmailFromSocialNetwork);
             cacheSocialProfile.Name.ShouldBe(TestFacebookProfile.Name);
         }
@@ -104,7 +102,6 @@ namespace Origami.UI.Admin.IntegrationTests
             socialProfile.ShouldNotBeNull();
             socialProfile.SocialNetwork.ShouldBe(TestFacebookProfileButUserIsBlocked.SocialNetwork);
             socialProfile.UserId.ShouldBe(TestFacebookProfileButUserIsBlocked.UserId);
-            socialProfile.Email.ShouldBe(TestFacebookProfileButUserIsBlocked.Email);
             socialProfile.EmailFromSocialNetwork.ShouldBe(TestFacebookProfileButUserIsBlocked.EmailFromSocialNetwork);
             socialProfile.Name.ShouldBe(TestFacebookProfileButUserIsBlocked.Name);
 
@@ -112,7 +109,6 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheSocialProfile.ShouldNotBeNull();
             cacheSocialProfile.SocialNetwork.ShouldBe(TestFacebookProfileButUserIsBlocked.SocialNetwork);
             cacheSocialProfile.UserId.ShouldBe(TestFacebookProfileButUserIsBlocked.UserId);
-            cacheSocialProfile.Email.ShouldBe(TestFacebookProfileButUserIsBlocked.Email);
             cacheSocialProfile.EmailFromSocialNetwork.ShouldBe(TestFacebookProfileButUserIsBlocked.EmailFromSocialNetwork);
             cacheSocialProfile.Name.ShouldBe(TestFacebookProfileButUserIsBlocked.Name);
         }

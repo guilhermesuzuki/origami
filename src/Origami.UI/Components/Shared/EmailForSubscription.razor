@@ -109,10 +109,9 @@
         var ok = this._subscriber.ValidateVerificationCode(new(OrigamiUser.AnonymousUser, DateTime.UtcNow, UserFacade.SocialProfile), _code);
         if (ok)
         {
-            this.UserFacade.SocialProfile.Email = _email;
             this._code = string.Empty;
             this._email = string.Empty;
-            this.UserFacade.Result = this.Super.Subscribers.Subscribe(new(OrigamiUser.AnonymousUser, DateTime.UtcNow, this.UserFacade.SocialProfile));
+            this.UserFacade.Result = this.Super.Subscribers.Subscribe(new(OrigamiUser.AnonymousUser, DateTime.UtcNow, this.UserFacade.SocialProfile), this._email);
             this.UserHasSubscribed.InvokeAsync(this.UserFacade.SocialProfile);
             return;
         }

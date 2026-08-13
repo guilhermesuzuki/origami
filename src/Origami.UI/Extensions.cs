@@ -226,6 +226,7 @@ namespace Origami.UI
             builder.Services.AddSingleton<IValidator<OrigamiSocialProfile>, OrigamiSocialProfileValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiSpecialMessage>, OrigamiSpecialMessageValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiSpecialPage>, OrigamiSpecialPageValidator>();
+            builder.Services.AddSingleton<IValidator<OrigamiSubscriber>, OrigamiSubscriberValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiUser>, OrigamiUserValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiVideo>, OrigamiVideoValidator>();
 

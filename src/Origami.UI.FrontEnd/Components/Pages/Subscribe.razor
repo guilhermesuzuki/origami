@@ -91,7 +91,7 @@
         }
         if (this.UserFacade.SocialProfile.HasEmail() == true)
         {
-            var hub = this.Super.Subscribers.Subscribe(new(OrigamiUser.AnonymousUser, DateTime.UtcNow, this.UserFacade.SocialProfile));
+            var hub = this.Super.Subscribers.Subscribe(new(OrigamiUser.AnonymousUser, DateTime.UtcNow, this.UserFacade.SocialProfile), this.UserFacade.SocialProfile.EmailFromSocialNetwork);
             this.UserFacade.Result = hub;
         }
     }

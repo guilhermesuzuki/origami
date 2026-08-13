@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using Origami.Core.Models;
 
 namespace Origami.Core.Data
@@ -10,6 +11,7 @@ namespace Origami.Core.Data
         protected readonly IEmailRepository _emailRepository;
         protected readonly IEventRepository _eventRepository;
         protected readonly ISettingsRepository _settingsRepository;
+        protected readonly IValidator<OrigamiSubscriber> _validator;
 
         public SubscriberRepository(
             IAppFacade appFacade,
@@ -18,6 +20,7 @@ namespace Origami.Core.Data
             IMyMemoryCache memoryCache,
             IEmailRepository emailRepository,
             ISettingsRepository settingsRepository,
+            IValidator<OrigamiSubscriber> validator,
             Text text,
             IWebRootPath wwwRoot) :
             base(text, dbContextFactory, memoryCache, wwwRoot, appFacade)
@@ -25,14 +28,24 @@ namespace Origami.Core.Data
             _eventRepository = eventRepository;
             _emailRepository = emailRepository;
             _settingsRepository = settingsRepository;
+            _validator = validator;
         }
 
-        public Result<OrigamiSubscriber> Subscribe(DataOperationContext<OrigamiSocialProfile> ctx)
+        public override Result<OrigamiSubscriber> CreateValidation(DataOperationContext<OrigamiSubscriber> ctx)
         {
-            //first, it needs to check for email address
-            if (ctx.Entity.HasEmail() == false)
+            return new(ctx.Entity, _validator);
+        }
+
+        public Result<OrigamiSubscriber> Subscribe(DataOperationContext<OrigamiSocialProfile> ctx, string email)
+        {
+            if (email.Has() == false)
             {
                 return new() { Error = Text.Original("User did not share an e-mail address") };
+            }
+
+            if (email.Email() == false)
+            {
+                return new() { Error = Text.Original("User did not share a valid e-mail address") };
             }
 
             var subscriber = ReadFromCache().Where(x => x.SocialProfileId == ctx.Entity.Id).FirstOrDefault();
@@ -42,7 +55,7 @@ namespace Origami.Core.Data
                 subscriber.IsDeleted = false;
                 subscriber.DateModified = DateTime.UtcNow;
                 subscriber.IsVerified = true;
-                subscriber.Email = ctx.Entity.GetEmail(Text);
+                subscriber.Email = email;
                 var subscribeContext = new DataOperationContext<OrigamiSubscriber>(ctx.User, ctx.DateTime, subscriber);
                 var hub = SmartUpdate(subscribeContext, false);
                 hub.OnSuccess(() => _eventRepository.SocialProfileSubscribesToWebsite(ctx.Entity));
@@ -56,7 +69,7 @@ namespace Origami.Core.Data
                     SocialProfileId = ctx.Entity.Id,
                     DateCreated = DateTime.UtcNow,
                     IsVerified = true,
-                    Email = ctx.Entity.Email,
+                    Email = email,
                 };
                 var subscribeContext = new DataOperationContext<OrigamiSubscriber>(ctx.User, ctx.DateTime, newSubscriber);
                 var hub = SmartCreate(subscribeContext, false);
@@ -93,6 +106,11 @@ namespace Origami.Core.Data
             }
 
             return new() { Error = Text.Original("Social profile is not a subscriber"), };
+        }
+
+        public override Result<OrigamiSubscriber> UpdateValidation(DataOperationContext<OrigamiSubscriber> ctx)
+        {
+            return new(ctx.Entity, _validator);
         }
 
         public bool ValidateVerificationCode(DataOperationContext<OrigamiSocialProfile> ctx, string code)

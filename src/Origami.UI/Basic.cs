@@ -134,7 +134,7 @@ namespace Origami.UI
         {
             if (UserFacade.SocialProfile.HasEmail() == true)
             {
-                UserFacade.Result = Super.Subscribers.Subscribe(new(OrigamiUser.AnonymousUser, DateTime.UtcNow, UserFacade.SocialProfile));
+                UserFacade.Result = Super.Subscribers.Subscribe(new(OrigamiUser.AnonymousUser, DateTime.UtcNow, UserFacade.SocialProfile), UserFacade.SocialProfile.EmailFromSocialNetwork);
                 return;
             }
             GhostOfTheNavigator.NavigateTo($"/subscribe", false);
