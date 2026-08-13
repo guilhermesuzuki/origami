@@ -274,6 +274,8 @@ namespace Origami.UI
                 options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
             });
 
+            builder.Services.AddHealthChecks();
+
             if (OperatingSystem.IsWindows()) builder.Host.UseWindowsService();
 
             var services = builder.Services.BuildServiceProvider();
@@ -343,7 +345,7 @@ namespace Origami.UI
             return string.Empty;
         }
 
-        public static WebApplication FoldTheOrigami<T>(this WebApplicationBuilder builder, string[] args, bool admin = false, Action? inject = null)
+        public static WebApplication FoldTheOrigami<T>(this WebApplicationBuilder builder, string[] args, bool admin = false, Action? injectServices = null)
         {
             //first thing in the morning
             builder.AddOrigami(args, admin: admin);
@@ -411,7 +413,7 @@ namespace Origami.UI
             builder.WebHost.ConfigureKestrel(serverOptions => serverOptions.Limits.MaxRequestBodySize = (long)8 * 1024 * 1024);
 
             /*there's services to inject*/
-            inject?.Invoke();
+            injectServices?.Invoke();
 
             /*builds and use origami*/
             var app = builder.Build().UseOrigami(admin: admin);
@@ -591,6 +593,8 @@ namespace Origami.UI
             app.MapControllers();
             app.UseStaticFiles();
             app.UseRateLimiter();
+
+            app.MapHealthChecks("/health");
 
             if (admin == false)
             {
