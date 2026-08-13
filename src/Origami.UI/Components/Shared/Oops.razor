@@ -45,11 +45,7 @@
     /// </summary>
     protected void LoadError()
     {
-        var error = this.GhostOfTheNavigator!.Uri.Split("error=");
-        if (error.Length > 1)
-        {
-            this.Error = Uri.UnescapeDataString(error[1]).ToLower();
-        }
+        this.Error = this.GhostOfTheNavigator.Uri.QueryString("error");
     }
 
     protected override void OnInitialized()

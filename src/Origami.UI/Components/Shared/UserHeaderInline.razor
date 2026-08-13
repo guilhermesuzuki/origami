@@ -20,6 +20,6 @@
 
     private void _goToDetails()
     {
-        this.GhostOfTheNavigator!.NavigateTo($"{Entity?.Hyperlink}#content-start");
+        this.WhatHappensNext.WhenIClickHere(this, new() { Entity = this.Entity });
     }
 }

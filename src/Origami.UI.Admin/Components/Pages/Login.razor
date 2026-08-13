@@ -218,8 +218,8 @@
         var token = this._generateJwtToken(this.UserFacade.User);
         await this.JSRuntime.InvokeVoidAsync("$.cookie", this.Configuration.GetUserCookieKey(), token, new { path = "/", expires = 365, });
 
-        var returnUrl = this.GhostOfTheNavigator!.Uri.QueryString("ReturnUrl");
-        this.GhostOfTheNavigator!.NavigateTo(returnUrl.Has() ? returnUrl : "/", true);
+        var returnUrl = this.GhostOfTheNavigator.Uri.QueryString("ReturnUrl");
+        this.GhostOfTheNavigator.NavigateTo(returnUrl.Has() ? returnUrl : "/", true);
     }
 
     protected override async Task OnInitializedAsync()

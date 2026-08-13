@@ -3,8 +3,8 @@
 @code {
     protected override void OnAfterRender(bool firstRender)
     {
-        var returnUrl = new Uri(this.GhostOfTheNavigator!.Uri);
+        var returnUrl = new Uri(this.GhostOfTheNavigator.Uri);
         var login = "/login".QueryString("returnUrl", returnUrl.PathAndQuery);
-        this.GhostOfTheNavigator!.NavigateTo(login, true);
+        this.GhostOfTheNavigator.NavigateTo(login, true);
     }
 }

@@ -76,6 +76,6 @@
     private void GoToProfile()
     {
         if (this.GoToProfileWhenClicking == false) return;
-        this.GhostOfTheNavigator!.NavigateTo($"/socialprofiles/{Entity?.Id}", true);
+        this.WhatHappensNext.WhenIClickHere(this, new() { Entity = this.Entity });
     }
 }
