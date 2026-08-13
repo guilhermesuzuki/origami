@@ -51,33 +51,33 @@
                       Class="social-profile subscriber mt-3"
                       T="string"></MudTextField>
 
+
         <div class="row mt-3">
-            <div class="col-12 col-xl-4">
+            <div class="col-12 col-xl-6">
                 <div class="fs-5">
                     @Text.Lower("Ratings")
                 </div>
-                <div>
-                    <i class="bi bi-file-earmark-text-fill"></i>
-                    @_postRating.RatingsFromProfile(this.Entity).Count()
-                </div>
+                <span>
+                    @this.Super.ContentRatings.RatingsFromProfile(this.Entity).Count()
+                </span>
             </div>
-            <div class="col-12 col-xl-4">
-                <div class="fs-5">
-                    @Text.Lower("Comments")
-                </div>
-                <div>
-                    <i class="bi bi-file-earmark-text-fill"></i>
-                    @_postComment.CommentsFromProfile(this.Entity, true).Count()
-                </div>
-            </div>
-            <div class="col-12 col-xl-4">
+            <div class="col-12 col-xl-6">
                 <div class="fs-5">
                     @Text.Lower("Reactions")
                 </div>
-                <div>
-                    <i class="bi bi-file-earmark-text-fill"></i>
-                    @_postCommentReaction.ReactionsFromProfile(this.Entity).Count()
+                <span>
+                    @this.Super.ContentCommentReactions.ReactionsFromProfile(this.Entity).Count()
+                </span>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-12">
+                <div class="fs-5">
+                    @Text.Lower("Comments [including deleted]")
                 </div>
+                <span>
+                    @this.Super.ContentComments.CommentsFromProfile(this.Entity, true).Count()
+                </span>
             </div>
         </div>
 
