@@ -2601,4 +2601,13 @@
   <data name="•• Not shared ••" xml:space="preserve">
     <value>•• 공유되지 않음 ••</value>
   </data>
+  <data name="Social profile is required" xml:space="preserve">
+    <value>소셜 프로필은 필수입니다</value>
+  </data>
+  <data name="User did not share a valid e-mail address" xml:space="preserve">
+    <value>사용자가 유효한 이메일 주소를 공유하지 않았습니다</value>
+  </data>
+  <data name="Logged in on website" xml:space="preserve">
+    <value>웹사이트에 로그인됨</value>
+  </data>
 </root>

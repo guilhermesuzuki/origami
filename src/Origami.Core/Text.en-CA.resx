@@ -2601,4 +2601,13 @@
   <data name="•• Not shared ••" xml:space="preserve">
     <value>•• Not shared ••</value>
   </data>
+  <data name="Social profile is required" xml:space="preserve">
+    <value>Social profile is required</value>
+  </data>
+  <data name="User did not share a valid e-mail address" xml:space="preserve">
+    <value>User did not share a valid email address</value>
+  </data>
+  <data name="Logged in on website" xml:space="preserve">
+    <value>Logged in on website</value>
+  </data>
 </root>

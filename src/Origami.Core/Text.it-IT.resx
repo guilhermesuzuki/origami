@@ -2601,4 +2601,13 @@
   <data name="•• Not shared ••" xml:space="preserve">
     <value>•• Non condiviso ••</value>
   </data>
+  <data name="Social profile is required" xml:space="preserve">
+    <value>Il profilo social è obbligatorio</value>
+  </data>
+  <data name="User did not share a valid e-mail address" xml:space="preserve">
+    <value>L'utente non ha condiviso un indirizzo e-mail valido</value>
+  </data>
+  <data name="Logged in on website" xml:space="preserve">
+    <value>Accesso effettuato sul sito web</value>
+  </data>
 </root>

@@ -2601,4 +2601,13 @@
   <data name="•• Not shared ••" xml:space="preserve">
     <value>•• 共有されていません ••</value>
   </data>
+  <data name="Social profile is required" xml:space="preserve">
+    <value>ソーシャルプロフィールは必須です</value>
+  </data>
+  <data name="User did not share a valid e-mail address" xml:space="preserve">
+    <value>ユーザーは有効なメールアドレスを共有しませんでした</value>
+  </data>
+  <data name="Logged in on website" xml:space="preserve">
+    <value>ウェブサイトにログイン済み</value>
+  </data>
 </root>

@@ -2601,4 +2601,13 @@
   <data name="•• Not shared ••" xml:space="preserve">
     <value>•• साझा नहीं किया गया ••</value>
   </data>
+  <data name="Social profile is required" xml:space="preserve">
+    <value>सोशल प्रोफ़ाइल आवश्यक है</value>
+  </data>
+  <data name="User did not share a valid e-mail address" xml:space="preserve">
+    <value>उपयोगकर्ता ने एक मान्य ईमेल पता साझा नहीं किया</value>
+  </data>
+  <data name="Logged in on website" xml:space="preserve">
+    <value>वेबसाइट पर लॉग इन किया गया</value>
+  </data>
 </root>
