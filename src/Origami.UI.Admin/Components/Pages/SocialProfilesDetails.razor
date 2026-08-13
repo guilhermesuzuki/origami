@@ -1,4 +1,4 @@
-﻿@page "/socialprofiles/{SocialProfileId:guid}"
+﻿@page "/socialprofiles/{NanoId}"
 @inherits BasicPage
 
 @inject IContentCommentReactionRepository _contentCommentReaction
@@ -106,7 +106,7 @@
                                     @if (context.Item is OrigamiContentCommentReaction commentReaction)
                                     {
                                         var comment = this.Super.ContentComments.ReadFromCache().Id(commentReaction.CommentId);
-                                        var content = this.Super.Contents.ReadFromCache().Id(comment!.ContentId);
+                                        var content = this.Super.Contents.ReadFromCache().Id(comment?.ContentId);
                                         <div class="">
                                             <span class="fw-bold">@Text.Lower("Reacted {0} to:", commentReaction.Reaction)</span>
                                             <ContentHeaderLite Entity="content"></ContentHeaderLite>
@@ -142,7 +142,7 @@
         </div>
         <AuthorizeView>
             <Authorized>
-                @if (this.SocialProfileId == this.UserFacade.SocialProfile.Id)
+                @if (this.NanoId == this.UserFacade.SocialProfile.NanoId)
                 {
                     @if (this.SocialProfileForDeletions != null && this.SocialProfileForDeletions.Any() == true)
                     {
@@ -217,7 +217,7 @@ else
 }
 
 @code {
-    [Parameter] public Guid SocialProfileId { get; set; }
+    [Parameter] public string NanoId { get; set; } = string.Empty;
 
     protected OrigamiSocialProfile? SocialProfile { get; set; }
     protected IEnumerable<OrigamiSocialProfileDelete>? SocialProfileForDeletions { get; set; }
@@ -225,7 +225,7 @@ else
 
     protected void LoadSocialProfile()
     {
-        this.SocialProfile = _socialProfile.ReadFromCache().Id(this.SocialProfileId);
+        this.SocialProfile = _socialProfile.ReadFromCache().NanoId(this.NanoId);
     }
 
     protected void LoadInteractions()
@@ -235,17 +235,17 @@ else
         var interactions = new List<IDateCreated>();
 
         // comment reactions
-        interactions.AddRange(this._contentCommentReaction.ReactionsFromProfile(this.SocialProfile!)
+        interactions.AddRange(this._contentCommentReaction.ReactionsFromProfile(this.SocialProfile)
             .OrderByDescending(x => x.DateCreated)
             .Take(50));
 
         // comments
-        interactions.AddRange(this._contentComment.CommentsFromProfile(this.SocialProfile!, this.SocialProfileId == UserFacade.SocialProfile.Id)
+        interactions.AddRange(this._contentComment.CommentsFromProfile(this.SocialProfile, this.NanoId == UserFacade.SocialProfile.NanoId)
             .OrderByDescending(x => x.DateCreated)
             .Take(50));
 
         // ratings
-        interactions.AddRange(this._contentRating.RatingsFromProfile(this.SocialProfile!)
+        interactions.AddRange(this._contentRating.RatingsFromProfile(this.SocialProfile)
             .OrderByDescending(x => x.DateCreated)
             .Take(50));
 
@@ -260,7 +260,7 @@ else
         using var db = DbContextFactory.CreateDbContext();
 
         this.SocialProfileForDeletions = db.Set<OrigamiSocialProfileDelete>().AsNoTracking()
-            .Where(x => x.SocialProfileId == this.SocialProfileId)
+            .Where(x => x.SocialProfileId == this.SocialProfile.Id)
             .OrderByDescending(x => x.DateCreated)
             .ToList();
     }
@@ -294,7 +294,7 @@ else
     private async Task LeaveIncognito()
     {
         var remove = await this.JSRuntime.InvokeAsync<bool>("$.removeCookie", "incognito-mode", new { path = "/" });
-        if (remove == true) this.GhostOfTheNavigator!.NavigateTo(this.GhostOfTheNavigator!.Uri, true);
+        if (remove == true) this.GhostOfTheNavigator.NavigateTo(this.GhostOfTheNavigator.Uri, true);
     }
 
     /// <summary>
@@ -304,7 +304,7 @@ else
     {
         var remove = await this.JSRuntime.InvokeAsync<bool>("$.removeCookie", "incognito-mode", new { path = "/" });
         var add = await this.JSRuntime.InvokeAsync<string>("$.cookie", "incognito-mode", 1, new { path = "/", expires = 365, });
-        this.GhostOfTheNavigator!.NavigateTo(this.GhostOfTheNavigator!.Uri, true);
+        this.GhostOfTheNavigator.NavigateTo(this.GhostOfTheNavigator.Uri, true);
     }
 
     protected override void OnInitialized()

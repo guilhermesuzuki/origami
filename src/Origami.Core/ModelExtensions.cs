@@ -732,12 +732,9 @@ namespace Origami.Core
             return string.IsNullOrWhiteSpace(@string) == false;
         }
 
-        public static bool Has<T>(this T? entity)
-            where T : class, INew
+        public static bool Has<T>([NotNullWhen(true)] this T? entity) where T : class, INew
         {
-            if (entity == null) return false;
-            if (entity.New) return false;
-            return true;
+            return entity is { New: false };
         }
 
         public static string HexString(this byte[] byteArray)
