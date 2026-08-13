@@ -43,24 +43,6 @@ namespace Origami.Core
             return entities.Where(x => x.AuthorId == author.Id);
         }
 
-        /// <summary>
-        /// TODO: comment this
-        /// </summary>
-        /// <typeparam name="TComment"></typeparam>
-        /// <param name="read"></param>
-        /// <param name="parent"></param>
-        /// <param name="count"></param>
-        /// <returns></returns>
-        public static long Comments<TComment>(this IRepository<TComment> read, IId parent, long count = -1)
-            where TComment : class, IId
-        {
-            var key = parent.KeyForCachingComments();
-
-            if (count >= 0) read.MemoryCache.Set(key, count);
-
-            return read.MemoryCache.Get<long>(key);
-        }
-
         public static void CreateCache<T>(this IMemoryCache memoryCache, T entity)
                     where T : class
         {

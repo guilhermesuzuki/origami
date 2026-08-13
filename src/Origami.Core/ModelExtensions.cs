@@ -890,16 +890,6 @@ namespace Origami.Core
         }
 
         /// <summary>
-        /// Generates a unique cache key for storing or retrieving comment counts associated with the specified entity.
-        /// </summary>
-        /// <param name="entity">The entity for which the cache key is generated. Must implement <see cref="IId"/>.</param>
-        /// <returns>A string representing the cache key, formatted to include the entity's type and ID.</returns>
-        public static string KeyForCachingComments(this IId entity)
-        {
-            return $"entities-comments-count-{entity.GetType().FullName}[{entity.Id}]";
-        }
-
-        /// <summary>
         /// TODO: comment this
         /// </summary>
         /// <param name="entity"></param>
