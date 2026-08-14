@@ -36,7 +36,7 @@ namespace Origami.UI.Admin.IntegrationTests
 
             hub.Ok.ShouldBe(false);
             hub.Messages.Count.ShouldBe(1);
-            hub.Messages[0].Message.ShouldBe("When provided, email must be valid");
+            hub.Messages[0].Message.ShouldBe("When informed, email from social network must be valid");
             hub.Messages[0].MessageType.ShouldBe(Core.Models.ResultMessage.MessageTypes.Error);
 
             var query = from a in db.SocialProfiles where a.Id == TestFacebookProfile.Id select a;

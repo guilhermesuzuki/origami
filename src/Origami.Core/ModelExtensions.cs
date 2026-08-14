@@ -170,6 +170,7 @@ namespace Origami.Core
                 {
                     OrigamiPage => true,
                     OrigamiPost => true,
+                    OrigamiSoftwareRelease => true,
                     OrigamiVideo => true,
                     _ => false,
                 };
