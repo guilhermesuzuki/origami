@@ -41,12 +41,6 @@ namespace Origami.Core.Data
         Task CreateNewAdminUser();
 
         /// <summary>
-        /// Gets a clean instance of the OrigamiUser class. This method returns a new instance of the OrigamiUser class with default values, which can be used as a template for creating new users or resetting user data.
-        /// </summary>
-        /// <returns></returns>
-        OrigamiUser GetCleanUser();
-
-        /// <summary>
         /// Gets the current step in the login help process. This method returns the current step that the user is on, allowing the application to determine what action to take next based on the user's progress through the steps.
         /// </summary>
         /// <returns></returns>

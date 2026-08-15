@@ -1,4 +1,5 @@
-﻿using OtpNet;
+﻿using NanoidDotNet;
+using OtpNet;
 using QRCoder;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -44,12 +45,14 @@ namespace Origami.Core.Models
         protected DateTime? _lastLoginTime;
         protected bool _mustChangePassword;
         protected string _password = string.Empty;
+        protected string _textPasswordForNewUsers = string.Empty;
         protected string _username = string.Empty;
         protected byte[] _version = [];
 
         public OrigamiUser() : base()
         {
-
+            this._mustChangePassword = true;
+            this.GenerateNewTextPasswordForNewUsers();
         }
 
         public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) => { };
@@ -198,6 +201,13 @@ namespace Origami.Core.Models
         }
 
         [NotMapped]
+        public string TextPasswordForNewUsers
+        {
+            get => _textPasswordForNewUsers;
+            set => this.Set(ref _textPasswordForNewUsers, value, Changed);
+        }
+
+        [NotMapped]
         public string TOTPRecoveryCodes
         {
             get => Get().TOTPRecoveryCodes;
@@ -247,6 +257,11 @@ namespace Origami.Core.Models
                 return true;
             }
             return false;
+        }
+
+        public void GenerateNewTextPasswordForNewUsers()
+        {
+            this._textPasswordForNewUsers = Nanoid.Generate("!@#$%&*", size: 1) + Nanoid.Generate(size: 9);
         }
 
         public void GenerateRandomTOTPSecret()

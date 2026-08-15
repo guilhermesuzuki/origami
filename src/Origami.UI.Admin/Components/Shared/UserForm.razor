@@ -2,7 +2,7 @@
 
 <style>
     .post-header-image, .video-header-image, .page-header-image { height: 200px; }
-    .mud-file-upload, .mud-file-upload > * { height:100%; }
+    .mud-file-upload, .mud-file-upload > * { height: 100%; }
 </style>
 <style>
     ul.expand { display: flex; list-style: none; padding: 0; margin: 0; }
@@ -82,6 +82,28 @@
                                       HelperText="@Text.Lower("Last name")"></MudTextField>
                     </li>
                 </ul>
+                @if (this.Entity.New)
+                {
+                    <ul class="inline-list mt-6 p-2 border">
+                        <li>
+                            <MudTextField @bind-Value="this.Entity.TextPasswordForNewUsers"
+                                          Immediate="true"
+                                          HelperText="@Text.Lower("Password")"
+                                          ReadOnly="true"
+                                          InputType="InputType.Password"></MudTextField>
+                        </li>
+                        <li class="ms-2">
+                            <div class="btn-group w-100">
+                                <button class="btn btn-primary fs-small w-100" @onclick="() => this.Entity.GenerateNewTextPasswordForNewUsers()">
+                                    @Text.Lower("New random password")
+                                </button>
+                                <button class="btn btn-secondary fs-small" style="width: 50px;" @onclick="() => this.Entity.GenerateNewTextPasswordForNewUsers()">
+                                    <i class="fa-solid fa-copy"></i>
+                                </button>
+                            </div>
+                        </li>
+                    </ul>
+                }
             </div>
             <div class="text-center p-3 mt-3">
                 <ul class="expand p-3 border">
@@ -168,14 +190,14 @@
                     <li>
                         <MudTextField ReadOnly="true"
                                       Immediate="true"
-                                      Value="@(Text.Lower(Entity.TOTPSecret.Has().YesNo()))"
+                                      Value="@(Text.Lower(Entity.TOTPSecret.Has().YesNo(Text)))"
                                       HelperText="@Text.Lower("2FA secret?")"
                                       Class="yes-no"></MudTextField>
                     </li>
                     <li>
                         <MudTextField ReadOnly="true"
                                       Immediate="true"
-                                      Value="@(Text.Lower(Entity.GetTOTPRecoveryCodes().Any().YesNo()))"
+                                      Value="@(Text.Lower(Entity.GetTOTPRecoveryCodes().Any().YesNo(Text)))"
                                       HelperText="@Text.Lower("2FA recovery codes?")"
                                       Class="yes-no"></MudTextField>
                     </li>
@@ -528,6 +550,7 @@
         this.Entity.DisplayName = this.Entity.DisplayName.Trim();
         this.Entity.FirstName = this.Entity.FirstName.Trim();
         this.Entity.LastName = this.Entity.LastName.Trim();
+        this.Entity.Password = this.Entity.TextPasswordForNewUsers.SHA256Hash();
 
         return result;
     }

@@ -1,4 +1,6 @@
-﻿using MudBlazor;
+﻿using Bogus;
+using MudBlazor;
+using NanoidDotNet;
 using Origami.Core;
 using Origami.Core.Data;
 using Origami.Core.Models;
@@ -8,11 +10,11 @@ using System.Transactions;
 namespace Origami.UI
 {
     public class LoginHelpMeRules(
-        IAppFacade AppFacade, 
+        IAppFacade AppFacade,
         IDialogService DialogService,
-        IUserFacade UserFacade, 
-        IUserRepository UserRepository, 
-        IUserRoleRepository UserRoleRepository, 
+        IUserFacade UserFacade,
+        IUserRepository UserRepository,
+        IUserRoleRepository UserRoleRepository,
         Text Text
         ) : ILoginHelpMeRules
     {
@@ -22,10 +24,10 @@ namespace Origami.UI
 
         public event EventHandler RefreshUI = null!;
 
-        public OrigamiUser NewAdminUser { get; set; } = new();
-        
+        public OrigamiUser NewAdminUser { get; set; } = GetCleanUser();
+
         public string OneTimeMasterPasswordForVerification { get; set; } = string.Empty;
-        
+
         public IList<OrigamiUserRole> RolesForTheNewAdminUser { get; } = new List<OrigamiUserRole>();
 
         public bool ShouldDisableMasterPasswordVerification => this.OneTimeMasterPasswordForVerification.Trim().Length < 10;
@@ -106,7 +108,7 @@ namespace Origami.UI
                         AppFacade.OneTimeMasterPasswordInSHA256 = string.Empty;
                         UserFacade.Result = new() { Warning = Text.Original("1-time master password used") };
                     }
-                    
+
                     return;
                 }
                 if (step == ILoginHelpMeRules.Steps.Step2_CreateNewAdminUser)
@@ -155,9 +157,24 @@ namespace Origami.UI
             }
         }
 
-        public OrigamiUser GetCleanUser()
+        public static OrigamiUser GetCleanUser()
         {
-            return new();
+            var faker = new Faker<OrigamiUser>()
+                .RuleFor(x => x.FirstName, f => f.Name.FirstName())
+                .RuleFor(x => x.LastName, f => f.Name.LastName())
+                .RuleFor(x => x.EmailAddress, f => f.Internet.Email())
+                .RuleFor(x => x.DisplayName, (f, u) => $"{u.FirstName}.{u.LastName}");
+
+            var user = faker.Generate();
+
+            return new()
+            {
+                Username = "emergency-adminuser-" + Nanoid.Generate(Nanoid.Alphabets.LowercaseLetters, size: 5),
+                DisplayName = user.DisplayName,
+                EmailAddress = user.EmailAddress,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+            };
         }
     }
 }

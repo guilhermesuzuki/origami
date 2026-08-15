@@ -1499,6 +1499,7 @@ namespace Origami.Core
             if (to != null) to.Version = from!.Version;
             return entity;
         }
+
         /// <summary>
         /// TODO: comment this
         /// </summary>
@@ -1507,6 +1508,19 @@ namespace Origami.Core
         public static string YesNo(this bool value)
         {
             return value ? "Yes" : "No";
+        }
+
+        /// <summary>
+        /// Returns "Yes" or "No" based on the boolean value, using the provided Text instance for localization.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public static string YesNo(this bool value, Text text)
+        {
+            return value 
+                ? text.Original("Yes") 
+                : text.Original("No");
         }
 
         /// <summary>
