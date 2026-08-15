@@ -223,6 +223,7 @@ namespace Origami.Core.Data
                 return Task.CompletedTask;
             }
 
+            Task.Delay(2000).Wait();
             throw new InvalidOperationException("Combination of username and password does not exist in the database");
         }
 

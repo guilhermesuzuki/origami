@@ -86,6 +86,16 @@ namespace Origami.UI
             return client;
         }
 
+        protected virtual void GoToWelcome()
+        {
+            if (this.Super.Settings.GetSafeMode() == false) return;
+
+            var uri = new Uri(this.GhostOfTheNavigator.Uri);
+            if (uri.AbsolutePath.Like("/welcome") == true) return;
+
+            this.GhostOfTheNavigator.NavigateTo("/welcome");
+        }
+
         /// <summary>
         /// Logs the SOCIAL PROFILE out and redirects to the login page.
         /// </summary>

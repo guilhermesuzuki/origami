@@ -3,6 +3,12 @@
 @code {
     protected override void OnAfterRender(bool firstRender)
     {
+        if (this.Super.Settings.GetSafeMode() == true)
+        {
+            this.GhostOfTheNavigator.NavigateTo("/safemode", true);
+            return;
+        }
+
         var returnUrl = new Uri(this.GhostOfTheNavigator.Uri);
         var login = "/login".QueryString("returnUrl", returnUrl.PathAndQuery);
         this.GhostOfTheNavigator.NavigateTo(login, true);

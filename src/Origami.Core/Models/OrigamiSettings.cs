@@ -158,6 +158,7 @@ namespace Origami.Core.Models
         private bool _useBlogNameInPageTitles;
 
         private bool _maintenanceMode = false;
+        private bool _safeMode = false;
 
         /// <summary>
         ///     Occurs when [changed].
@@ -1627,6 +1628,15 @@ namespace Origami.Core.Models
         {
             get => _seq;
             set => this.Set(ref _seq, value, Changed);
+        }
+
+        /// <summary>
+        /// Is the website in safe mode?
+        /// </summary>
+        public bool SafeMode
+        {
+            get => _safeMode;
+            set => this.Set(ref _safeMode, value, Changed);
         }
     }
 }

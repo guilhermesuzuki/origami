@@ -1,17 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Identity
-@using System.Security.Claims
-@inherits LayoutComponentBase
-
-@inject AuthenticationStateProvider _authenticationStateProvider
-@inject IBlogRepository _blog
-@inject IConfiguration _configuration
-@inject IJSRuntime _jsRuntime
-@inject ISettingsRepository _settings
-@inject IUserFacade _userFacade
-@inject IUserRepository _userRepository
-@inject NavigationManager _navigationManager
-@inject Text _text
-@inject UserManager<IdentityUser> _userManager
+@inherits BasicLayoutAdmin
 
 <CustomHeadContent>
     <link rel="stylesheet" href="_content/Origami.UI/lib/css/style-site-admin.css" />
@@ -22,7 +10,7 @@
         .languages .culture-info { color: var(--mud-pallete-black) !important; }
     </style>
 </CustomHeadContent>
-<PageTitle>@_settings.GetSettings().Name.ToLower()</PageTitle>
+<PageTitle>@this.Super.Settings.GetSettings().Name.ToLower()</PageTitle>
 <ProcessResult></ProcessResult>
 <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
     <div class="shadow-lg p-4 border" style="max-width:100%; max-height:90%; width: 800px;">
@@ -38,28 +26,5 @@
 <BlazorErrorUi></BlazorErrorUi>
 
 @code {
-    [CascadingParameter] private Task<AuthenticationState>? authenticationState { get; set; }
-
-    /// <summary>
-    /// Loads the authenticated user
-    /// </summary>
-    /// <returns></returns>
-    protected async Task LoadUserAsync()
-    {
-        var state = await authenticationState!;
-        if (state == null) return;
-        if (state.User.Identity == null) return;
-        if (state.User.Identity.IsAuthenticated == false) return;
-        var nameId = state.User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (nameId != null && Guid.TryParse(nameId, out var id) == true)
-        {
-            this._userFacade.User = _userRepository.ReadFromCache().Id(id) ?? new();
-        }
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        await this.LoadUserAsync();
-        await base.OnInitializedAsync();
-    }
+    
 }
