@@ -1,16 +1,15 @@
-﻿using FluentValidation.Internal;
+﻿using MudBlazor;
 using Origami.Core;
 using Origami.Core.Data;
 using Origami.Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics;
 using System.Transactions;
 
 namespace Origami.UI
 {
     public class LoginHelpMeRules(
         IAppFacade AppFacade, 
+        IDialogService DialogService,
         IUserFacade UserFacade, 
         IUserRepository UserRepository, 
         IUserRoleRepository UserRoleRepository, 
@@ -29,9 +28,9 @@ namespace Origami.UI
         
         public IList<OrigamiUserRole> RolesForTheNewAdminUser { get; } = new List<OrigamiUserRole>();
 
-        public Stack<ILoginHelpMeRules.Steps> State { get; } = new();
-
         public bool ShouldDisableMasterPasswordVerification => this.OneTimeMasterPasswordForVerification.Trim().Length < 10;
+
+        public Stack<ILoginHelpMeRules.Steps> State { get; } = new();
 
         public Task CreateNewAdminUser()
         {
@@ -48,6 +47,12 @@ namespace Origami.UI
             }
 
             return Task.CompletedTask;
+        }
+
+        public ILoginHelpMeRules.Steps GetCurrentStep()
+        {
+            if (State.Count == 0) return ILoginHelpMeRules.Steps.Step1_ValidateMasterPassword;
+            return State.Peek();
         }
 
         public async Task GoBackAsync()
@@ -78,9 +83,29 @@ namespace Origami.UI
                 if (step == ILoginHelpMeRules.Steps.Step1_ValidateMasterPassword)
                 {
                     await this.ValidateMasterPassword();
+
+                    var yes = await DialogService.ShowMessageBoxAsync(
+                        Text.Upper("1-time master password"),
+                        Text.Lower("Are you ready to use the 1-time master password and create a new admin user?"),
+                        Text.Lower("Yes"),
+                        Text.Lower("No")
+                        );
+
+                    if (yes.GetValueOrDefault() == false)
+                    {
+                        return;
+                    }
+
                     this.State.Push(ILoginHelpMeRules.Steps.Step2_CreateNewAdminUser);
                     this.CurrentStepChanged?.Invoke(this, EventArgs.Empty);
                     this.RefreshUI?.Invoke(this, EventArgs.Empty);
+
+                    if (Debugger.IsAttached == false)
+                    {
+                        AppFacade.OneTimeMasterPasswordInSHA256 = string.Empty;
+                    }
+                    
+                    UserFacade.Result = new() { Warning = Text.Original("1-time master password used") };
                     return;
                 }
                 if (step == ILoginHelpMeRules.Steps.Step2_CreateNewAdminUser)
@@ -105,22 +130,20 @@ namespace Origami.UI
             return Task.CompletedTask;
         }
 
-        public Task ValidateMasterPassword()
+        public async Task ValidateMasterPassword()
         {
             var sha256hash = this.OneTimeMasterPasswordForVerification.SHA256Hash();
 
             if (AppFacade.OneTimeMasterPasswordInSHA256 != sha256hash)
             {
+                await Task.Delay(2000);
                 throw new Exception(Text.Original("Master password doesn't match the system"));
             }
-
-            return Task.CompletedTask;
         }
 
-        protected ILoginHelpMeRules.Steps GetCurrentStep()
+        public OrigamiUser GetCleanUser()
         {
-            if (State.Count == 0) return ILoginHelpMeRules.Steps.Step1_ValidateMasterPassword;
-            return State.Peek();
+            return new();
         }
     }
 }

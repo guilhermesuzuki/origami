@@ -1,6 +1,72 @@
 ﻿@page "/login/helpme"
+@inherits BasicPage
 @layout CleanLayout
+@inject ILoginHelpMeRules _loginHelpMeRules
+
+@if (SyncRoot != null)
+{
+    <Root Access="new()">
+        <ContentTemplate>
+            <div class="login-helpme-wrapper mt-3">
+                @if (_loginHelpMeRules.GetCurrentStep() == ILoginHelpMeRules.Steps.Step1_ValidateMasterPassword)
+                {
+                    <ul class="inline-list mt-3">
+                        <li>
+                            <MudTextField InputType="InputType.Password" FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("1-time master password")" @bind-Value="_loginHelpMeRules.OneTimeMasterPasswordForVerification"></MudTextField>
+                        </li>
+                    </ul>
+                    <div class="btn-group mt-3 w-100">
+                        <button class="btn btn-success text-white" disabled="@_loginHelpMeRules.ShouldDisableMasterPasswordVerification" @onclick="_loginHelpMeRules.GoNextAsync" type="submit">
+                            <i class="fa-solid fa-right-to-bracket"></i>
+                            @Text.Lower("Proceed")
+                        </button>
+                        <button class="btn btn-secondary text-white" @onclick="_loginHelpMeRules.GoBackAsync">
+                            <i class="fa-solid fa-circle-chevron-left"></i>
+                            @Text.Lower("Go back")
+                        </button>
+                    </div>
+                }
+                else if (_loginHelpMeRules.GetCurrentStep() == ILoginHelpMeRules.Steps.Step2_CreateNewAdminUser)
+                {
+                    <style>
+                        .clean-layout { width: 1200px!important; }
+                        .user-form .buttons { display: none; }
+                        .user-form .misc { display: none; }
+                    </style>
+                    <UserForm Entity="_loginHelpMeRules.NewAdminUser"></UserForm>
+                    <div class="btn-group mt-3 w-100">
+                        <button class="btn btn-success text-white" @onclick="_loginHelpMeRules.GoNextAsync" type="submit">
+                            <i class="fa-solid fa-floppy-disk"></i>
+                            @Text.Lower("Save")
+                        </button>
+                        <button class="btn btn-info text-white fw-bold btn-new" @onclick="() => _loginHelpMeRules.NewAdminUser = _loginHelpMeRules.GetCleanUser()">
+                            <i class="fa-solid fa-square-plus"></i>
+                            @Text.Lower("New")
+                        </button>
+                        <button class="btn btn-secondary text-white" @onclick="_loginHelpMeRules.GoBackAsync">
+                            <i class="fa-solid fa-circle-chevron-left"></i>
+                            @Text.Lower("Go back")
+                        </button>
+                    </div>
+                }
+            </div>
+        </ContentTemplate>
+    </Root>
+}
 
 @code {
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
 
+        _loginHelpMeRules.GoToLoginPage += (sender, args) =>
+        {
+            this.GhostOfTheNavigator.NavigateTo("/login", true);
+        };
+
+        _loginHelpMeRules.RefreshUI += (sender, args) =>
+        {
+            this.InvokeAsync(StateHasChanged);
+        };
+    }
 }

@@ -360,15 +360,15 @@
     }
     <div class="buttons mt-3 p-3 text-center position-sticky" style="bottom:0;">
         <div class="btn-group">
-            <button class="btn btn-success text-white fw-bold" @onclick="Save" disabled="@this.DisableTheSaveButton">
+            <button class="btn btn-success text-white fw-bold btn-save" @onclick="Save" disabled="@this.DisableTheSaveButton">
                 <i class="fa-solid fa-floppy-disk"></i>
                 @Text.Lower("Save")
             </button>
-            <button class="btn btn-secondary text-white fw-bold" @onclick="UndoChanges" disabled="@this.Entity.New">
+            <button class="btn btn-secondary text-white fw-bold btn-undo-changes" @onclick="UndoChanges" disabled="@this.Entity.New">
                 <i class="fa-solid fa-rotate-left"></i>
                 @Text.Lower("Undo changes")
             </button>
-            <button class="btn btn-info text-white fw-bold" @onclick="CreateEntity">
+            <button class="btn btn-info text-white fw-bold btn-new" @onclick="CreateEntity">
                 <i class="fa-solid fa-square-plus"></i>
                 @Text.Lower("New")
             </button>
