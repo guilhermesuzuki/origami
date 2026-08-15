@@ -19,6 +19,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 using MudBlazor;
 using MudBlazor.Services;
+using NanoidDotNet;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -103,7 +104,7 @@ namespace Origami.UI
             builder.Services.AddScoped<OrigamiLocationMiddleware>();
 
             builder.Services.AddSingleton<Text>();
-            builder.Services.AddSingleton<IAppFacade, AppFacade>(provider => new AppFacade(admin, builder.Environment.EnvironmentName, provider.GetRequiredService<ILogger<AppFacade>>()));
+            builder.Services.AddSingleton<IAppFacade, AppFacade>(provider => new AppFacade(admin, builder.Environment.EnvironmentName));
             builder.Services.AddSingleton<ISlideRepository, SlideRepository>();
             builder.Services.AddSingleton<IEmailStatusRepository, EmailStatusRepository>();
             builder.Services.AddSingleton<IBackupRestoreRepository, BackupRestoreRepository>();
@@ -427,15 +428,19 @@ namespace Origami.UI
 
             if (admin == true)
             {
-                Log.Information("*************************");
-                Log.Information("Starting Origami.UI.Admin");
-                Log.Information("*************************");
+                app.Logger.LogInformation("*************************");
+                app.Logger.LogInformation("Starting Origami.UI.Admin");
+                app.Logger.LogInformation("*************************");
+                var masterPassword = Nanoid.Generate(size: 10);
+                var appFacade = app.Services.GetRequiredService<IAppFacade>();
+                appFacade.OneTimeMasterPasswordInSHA256 = masterPassword.SHA256Hash();
+                app.Logger.LogWarning("1-time master password: {password}", masterPassword);
             }
             else
             {
-                Log.Information("****************************");
-                Log.Information("Starting Origami.UI.FrontEnd");
-                Log.Information("****************************");
+                app.Logger.LogInformation("****************************");
+                app.Logger.LogInformation("Starting Origami.UI.FrontEnd");
+                app.Logger.LogInformation("****************************");
             }
 
             return app;

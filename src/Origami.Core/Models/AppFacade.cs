@@ -6,15 +6,12 @@ namespace Origami.Core.Models
 {
     public class AppFacade : IAppFacade
     {
-        public AppFacade(bool admin, string environmentName, ILogger<AppFacade> logger) : base()
+        public AppFacade(bool admin, string environmentName) : base()
         {
             this.Admin = admin;
             this.EnvironmentName = environmentName;
             this.OnlineUsers = [];
-
-            var oneTimeMasterPassword = Nanoid.Generate(size: 10);
-            logger.LogWarning("One-time master password: {OneTimeMasterPassword}", oneTimeMasterPassword);
-            this.OneTimeMasterPasswordInSHA256 = oneTimeMasterPassword.SHA256Hash();
+            this.OneTimeMasterPasswordInSHA256 = string.Empty;
         }
 
         public event EventHandler<object>? RefreshingTheUI;

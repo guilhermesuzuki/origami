@@ -103,14 +103,27 @@ namespace Origami.UI
                     if (Debugger.IsAttached == false)
                     {
                         AppFacade.OneTimeMasterPasswordInSHA256 = string.Empty;
+                        UserFacade.Result = new() { Warning = Text.Original("1-time master password used") };
                     }
                     
-                    UserFacade.Result = new() { Warning = Text.Original("1-time master password used") };
                     return;
                 }
                 if (step == ILoginHelpMeRules.Steps.Step2_CreateNewAdminUser)
                 {
                     await this.CreateNewAdminUser();
+
+                    var yes = await DialogService.ShowMessageBoxAsync(
+                        Text.Upper("Creating a user"),
+                        Text.Lower("Are you done with creating a new user? And go straight to the login page"),
+                        Text.Lower("Yes"),
+                        Text.Lower("No")
+                        );
+
+                    if (yes.GetValueOrDefault() == false)
+                    {
+                        return;
+                    }
+
                     this.State.Push(ILoginHelpMeRules.Steps.Step3_GoToLoginPage);
                     this.CurrentStepChanged?.Invoke(this, EventArgs.Empty);
                     this.RefreshUI?.Invoke(this, EventArgs.Empty);
