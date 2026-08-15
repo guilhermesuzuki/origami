@@ -15,6 +15,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 using MudBlazor;
 using MudBlazor.Services;
@@ -102,7 +103,7 @@ namespace Origami.UI
             builder.Services.AddScoped<OrigamiLocationMiddleware>();
 
             builder.Services.AddSingleton<Text>();
-            builder.Services.AddSingleton<IAppFacade, AppFacade>(provider => new AppFacade(admin, builder.Environment.EnvironmentName));
+            builder.Services.AddSingleton<IAppFacade, AppFacade>(provider => new AppFacade(admin, builder.Environment.EnvironmentName, provider.GetRequiredService<ILogger<AppFacade>>()));
             builder.Services.AddSingleton<ISlideRepository, SlideRepository>();
             builder.Services.AddSingleton<IEmailStatusRepository, EmailStatusRepository>();
             builder.Services.AddSingleton<IBackupRestoreRepository, BackupRestoreRepository>();

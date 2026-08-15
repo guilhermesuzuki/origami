@@ -1,14 +1,20 @@
 ﻿
+using Microsoft.Extensions.Logging;
+using NanoidDotNet;
 
 namespace Origami.Core.Models
 {
     public class AppFacade : IAppFacade
     {
-        public AppFacade(bool admin, string environmentName) : base()
+        public AppFacade(bool admin, string environmentName, ILogger<AppFacade> logger) : base()
         {
             this.Admin = admin;
             this.EnvironmentName = environmentName;
             this.OnlineUsers = [];
+
+            var oneTimeMasterPassword = Nanoid.Generate(size: 10);
+            logger.LogWarning("One-time master password: {OneTimeMasterPassword}", oneTimeMasterPassword);
+            this.OneTimeMasterPasswordInSHA256 = oneTimeMasterPassword.SHA256Hash();
         }
 
         public event EventHandler<object>? RefreshingTheUI;
@@ -16,6 +22,8 @@ namespace Origami.Core.Models
         public bool? Admin { get; }
 
         public string EnvironmentName { get; }
+
+        public string OneTimeMasterPasswordInSHA256 { get; set; }
 
         public IList<string> OnlineUsers { get; }
 
