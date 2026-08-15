@@ -46,6 +46,7 @@ namespace Origami.UI
                 throw new Exception(hub.GetMessages());
             }
 
+            transaction.Complete();
             return Task.CompletedTask;
         }
 
