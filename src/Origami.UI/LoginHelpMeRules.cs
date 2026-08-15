@@ -1,11 +1,13 @@
 ﻿using FluentValidation.Internal;
+using Origami.Core;
+using Origami.Core.Data;
 using Origami.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Transactions;
 
-namespace Origami.Core.Data
+namespace Origami.UI
 {
     public class LoginHelpMeRules(
         IAppFacade AppFacade, 

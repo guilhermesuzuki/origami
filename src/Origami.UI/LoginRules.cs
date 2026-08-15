@@ -1,7 +1,9 @@
-﻿using Origami.Core.Models;
+﻿using Origami.Core;
+using Origami.Core.Data;
+using Origami.Core.Models;
 using OtpNet;
 
-namespace Origami.Core.Data
+namespace Origami.UI
 {
     public class LoginRules : ILoginRules
     {
