@@ -1270,24 +1270,6 @@ namespace Origami.Core
             return entity;
         }
 
-        public static T? SetDateCreated<T>(this T? entity, DateTime dateTime)
-        {
-            if (entity is IDateCreated dateCreated)
-            {
-                dateCreated.DateCreated = dateTime;
-            }
-            return entity;
-        }
-
-        public static T? SetDateModified<T>(this T? entity, DateTime dateTime)
-        {
-            if (entity is IDateModified dateModified)
-            {
-                dateModified.DateModified = dateTime;
-            }
-            return entity;
-        }
-
         /// <summary>
         /// Sets the Id, when <paramref name="entity"/> is <see cref="IId"/>
         /// </summary>

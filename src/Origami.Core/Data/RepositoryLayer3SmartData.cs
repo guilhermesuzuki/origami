@@ -81,7 +81,6 @@ namespace Origami.Core.Data
                 if (permission is { Ok: false }) return permission;
             }
 
-            ctx.Entity.SetDateCreated(DateTime.UtcNow);
             ctx.Entity.SetSlug();
 
             var validation = this.CreateValidation(ctx);
@@ -256,7 +255,6 @@ namespace Origami.Core.Data
                 if (permission is { Ok: false }) return permission;
             }
 
-            ctx.Entity.SetDateModified(DateTime.UtcNow);
             ctx.Entity.SetSlug();
 
             var validation = this.UpdateValidation(ctx);

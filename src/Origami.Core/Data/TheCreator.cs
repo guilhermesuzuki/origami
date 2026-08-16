@@ -24,7 +24,6 @@ namespace Origami.Core.Data
 
             entity.SetAuthor(_userFacade.User);
             entity.SetBlog(_blogRepository.ReadFromCache().Id(_userFacade.BlogId) ?? new());
-            entity.SetDateCreated(DateTime.UtcNow);
 
             if (entity is OrigamiUser user)
             {

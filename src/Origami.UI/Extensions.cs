@@ -63,6 +63,8 @@ namespace Origami.UI
             {
                 options.EnableSensitiveDataLogging();
                 options.UseSqlServer(origami);
+                options.AddInterceptors(builder.Services.BuildServiceProvider().GetRequiredService<DateCreatedInterceptor>());
+                options.AddInterceptors(builder.Services.BuildServiceProvider().GetRequiredService<DateModifiedInterceptor>());
             });
 
             builder.Services.AddDbContextFactory<OrigamiIdentityDbContext>(options =>
@@ -233,6 +235,10 @@ namespace Origami.UI
             builder.Services.AddSingleton<IValidator<OrigamiSubscriber>, OrigamiSubscriberValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiUser>, OrigamiUserValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiVideo>, OrigamiVideoValidator>();
+
+            builder.Services.AddSingleton(TimeProvider.System);
+            builder.Services.AddSingleton<DateCreatedInterceptor>();
+            builder.Services.AddSingleton<DateModifiedInterceptor>();
 
             //jwt configuration
             builder.Services.Configure<JwtConfiguration>(builder.Configuration.GetSection("Jwt"));
