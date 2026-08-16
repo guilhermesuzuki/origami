@@ -15,6 +15,7 @@ namespace Origami.UI
         IUserFacade UserFacade,
         IUserRepository UserRepository,
         IUserRoleRepository UserRoleRepository,
+        IUserBlogRepository UserBlogRepository,
         Text Text
         ) : ILoginHelpMeRules
     {
@@ -24,15 +25,36 @@ namespace Origami.UI
 
         public event EventHandler RefreshUI = null!;
 
+        public List<OrigamiUserBlog> BlogsForTheNewAdminUser { get; } = new List<OrigamiUserBlog>();
+
         public OrigamiUser NewAdminUser { get; set; } = GetCleanUser();
 
         public string OneTimeMasterPasswordForVerification { get; set; } = string.Empty;
 
-        public IList<OrigamiUserRole> RolesForTheNewAdminUser { get; } = new List<OrigamiUserRole>();
+        public List<OrigamiUserRole> RolesForTheNewAdminUser { get; } = new List<OrigamiUserRole>();
 
         public bool ShouldDisableMasterPasswordVerification => this.OneTimeMasterPasswordForVerification.Trim().Length < 10;
 
         public Stack<ILoginHelpMeRules.Steps> State { get; } = new();
+        public static OrigamiUser GetCleanUser()
+        {
+            var faker = new Faker<OrigamiUser>()
+                .RuleFor(x => x.FirstName, f => f.Name.FirstName())
+                .RuleFor(x => x.LastName, f => f.Name.LastName())
+                .RuleFor(x => x.EmailAddress, f => f.Internet.Email())
+                .RuleFor(x => x.DisplayName, (f, u) => $"{u.FirstName}.{u.LastName}");
+
+            var user = faker.Generate();
+
+            return new()
+            {
+                Username = "emergency_adminuser_" + Nanoid.Generate(Nanoid.Alphabets.LowercaseLetters, size: 5),
+                DisplayName = user.DisplayName,
+                EmailAddress = $"fake_user.{Nanoid.Generate(Nanoid.Alphabets.LowercaseLetters, size: 5)}@fake-email.com",
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+            };
+        }
 
         public Task CreateNewAdminUser()
         {
@@ -40,8 +62,17 @@ namespace Origami.UI
             var ctx = new DataOperationContext<OrigamiUser>(OrigamiUser.AnonymousUser, this.NewAdminUser);
             var hub = UserRepository.SmartSave(ctx, false);
 
-            var cts = this.RolesForTheNewAdminUser.GetContexts(ctx);
-            cts.Each(x => UserRoleRepository.SmartSave(x, false).Push(hub));
+            //private scope
+            {
+                var cts = this.RolesForTheNewAdminUser.GetContexts(ctx);
+                cts.Each(x => UserRoleRepository.SmartSave(x, false).Push(hub));
+            }
+
+            //private scope
+            {
+                var cts = this.BlogsForTheNewAdminUser.GetContexts(ctx);
+                cts.Each(x => UserBlogRepository.SmartSave(x, false).Push(hub));
+            }
 
             if (hub.Ok == false)
             {
@@ -155,26 +186,6 @@ namespace Origami.UI
                 await Task.Delay(2000);
                 throw new Exception(Text.Original("Master password doesn't match the system"));
             }
-        }
-
-        public static OrigamiUser GetCleanUser()
-        {
-            var faker = new Faker<OrigamiUser>()
-                .RuleFor(x => x.FirstName, f => f.Name.FirstName())
-                .RuleFor(x => x.LastName, f => f.Name.LastName())
-                .RuleFor(x => x.EmailAddress, f => f.Internet.Email())
-                .RuleFor(x => x.DisplayName, (f, u) => $"{u.FirstName}.{u.LastName}");
-
-            var user = faker.Generate();
-
-            return new()
-            {
-                Username = "emergency-adminuser-" + Nanoid.Generate(Nanoid.Alphabets.LowercaseLetters, size: 5),
-                DisplayName = user.DisplayName,
-                EmailAddress = user.EmailAddress,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-            };
         }
     }
 }

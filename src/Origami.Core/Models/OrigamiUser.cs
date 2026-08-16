@@ -44,8 +44,9 @@ namespace Origami.Core.Models
         protected bool _isDeleted;
         protected DateTime? _lastLoginTime;
         protected bool _mustChangePassword;
+        protected string _newPassword1 = string.Empty;
+        protected string _newPassword2 = string.Empty;
         protected string _password = string.Empty;
-        protected string _textPasswordForNewUsers = string.Empty;
         protected string _username = string.Empty;
         protected byte[] _version = [];
 
@@ -190,6 +191,20 @@ namespace Origami.Core.Models
 
         public bool New => Version.SequenceEqual([]);
 
+        [NotMapped]
+        public string NewPassword1
+        {
+            get => _newPassword1;
+            set => this.Set(ref _newPassword1, value, Changed);
+        }
+
+        [NotMapped]
+        public string NewPassword2
+        {
+            get => _newPassword2;
+            set => this.Set(ref _newPassword2, value, Changed);
+        }
+
         /// <summary>
         /// New Password
         /// </summary>
@@ -198,13 +213,6 @@ namespace Origami.Core.Models
         {
             get => _password;
             set => this.Set(ref _password, value, Changed);
-        }
-
-        [NotMapped]
-        public string TextPasswordForNewUsers
-        {
-            get => _textPasswordForNewUsers;
-            set => this.Set(ref _textPasswordForNewUsers, value, Changed);
         }
 
         [NotMapped]
@@ -261,7 +269,8 @@ namespace Origami.Core.Models
 
         public void GenerateNewTextPasswordForNewUsers()
         {
-            this._textPasswordForNewUsers = Nanoid.Generate("!@#$%&*", size: 1) + Nanoid.Generate(size: 9);
+            this._newPassword1 = Nanoid.Generate("!@#$%&*", size: 1) + Nanoid.Generate(size: 9);
+            this._newPassword2 = this._newPassword1;
         }
 
         public void GenerateRandomTOTPSecret()

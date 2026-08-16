@@ -77,6 +77,9 @@ namespace Origami.Core.Data
 
         public Result<OrigamiUser> ChangePassword(DataOperationContext<OrigamiUser> ctx, string oldPassword, string newPassword1, string newPassword2)
         {
+            ctx.Entity.NewPassword1 = newPassword1;
+            ctx.Entity.NewPassword2 = newPassword2;
+
             using var db = DbContextFactory.CreateDbContext();
 
             // this is necessary because of ReadFromDatabase
@@ -110,17 +113,11 @@ namespace Origami.Core.Data
         {
             var hub = new Result<OrigamiUser>(ctx.Entity);
 
-            var password = "@"
-                + Nanoid.Generate(alphabet: Nanoid.Alphabets.Letters, size: 4)
-                + Nanoid.Generate(alphabet: Nanoid.Alphabets.Digits, size: 4)
-                + "#";
-
             ctx.Entity.MustChangePassword = true;
-            ctx.Entity.Password = password.SHA256Hash();
+            ctx.Entity.Password = ctx.Entity.NewPassword1.SHA256Hash();
 
-            // TODO: add this to resx files
-            hub.Info = Text.Original("A password has been created: {0}", password);
-            hub.Password = password;
+            hub.Info = Text.Original("A password has been created: {0}", ctx.Entity.NewPassword1);
+            hub.Password = ctx.Entity.NewPassword1;
 
             base.Create(ctx).Push(hub);
 
@@ -392,6 +389,17 @@ namespace Origami.Core.Data
             ctx.Entity.DateUnblocked = DateTime.UtcNow;
 
             return this.SmartUpdate(ctx, false);
+        }
+
+        public override Result<OrigamiUser> Update(DataOperationContext<OrigamiUser> ctx)
+        {
+            if (ctx.Entity.NewPassword1.Has() == true
+                && ctx.Entity.NewPassword2.Has() == true
+                && ctx.Entity.NewPassword1 == ctx.Entity.NewPassword2)
+            {
+                ctx.Entity.Password = ctx.Entity.NewPassword1.SHA256Hash();
+            }
+            return base.Update(ctx);
         }
 
         public override Result<OrigamiUser> UpdateValidation(DataOperationContext<OrigamiUser> ctx)

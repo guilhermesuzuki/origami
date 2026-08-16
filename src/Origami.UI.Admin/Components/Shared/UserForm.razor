@@ -82,27 +82,36 @@
                                       HelperText="@Text.Lower("Last name")"></MudTextField>
                     </li>
                 </ul>
-                @if (this.Entity.New)
-                {
-                    <ul class="inline-list mt-6 p-2 border">
+                <div class="mt-6 p-2 border">
+                    <ul class="inline-list">
                         <li>
-                            <MudTextField @bind-Value="this.Entity.TextPasswordForNewUsers"
+                            <MudTextField @bind-Value="this.Entity.NewPassword1"
                                           Immediate="true"
                                           HelperText="@Text.Lower("Password")"
-                                          ReadOnly="true"></MudTextField>
+                                          ReadOnly="true"
+                                          InputType="InputType.Password"></MudTextField>
                         </li>
-                        <li class="ms-2">
+                        <li>
+                            <MudTextField @bind-Value="this.Entity.NewPassword2"
+                                          Immediate="true"
+                                          HelperText="@Text.Lower("Confirm password")"
+                                          ReadOnly="true"
+                                          InputType="InputType.Password"></MudTextField>
+                        </li>
+                    </ul>
+                    <ul class="inline-list mt-3">
+                        <li>
                             <div class="btn-group w-100">
                                 <button class="btn btn-primary fs-small w-100" @onclick="() => this.Entity.GenerateNewTextPasswordForNewUsers()">
                                     @Text.Lower("New random password")
                                 </button>
-                                <button class="btn btn-secondary fs-small" style="width: 50px;" @onclick="() => this.Entity.GenerateNewTextPasswordForNewUsers()">
+                                <button class="btn btn-secondary fs-small" style="width: 50px;" @onclick="() => this.CopyToClipboard(this.Entity.NewPassword1)">
                                     <i class="fa-solid fa-copy"></i>
                                 </button>
                             </div>
                         </li>
                     </ul>
-                }
+                </div>
             </div>
             <div class="text-center p-3 mt-3">
                 <ul class="expand p-3 border">
@@ -509,12 +518,12 @@
     /// <summary>
     /// User roles associated with the user.
     /// </summary>
-    protected List<OrigamiUserRole> UserRoles = [];
+    [Parameter] public List<OrigamiUserRole> UserRoles { get; set; } = [];
 
     /// <summary>
     /// User blogs associated with the user.
     /// </summary>
-    protected List<OrigamiUserBlog> UserBlogs = [];
+    [Parameter] public List<OrigamiUserBlog> UserBlogs { get; set; } = [];
 
     [Parameter] public EventCallback<OrigamiUser> OnUserBlocked { get; set; }
     [Parameter] public EventCallback<OrigamiUser> OnUserUnblocked { get; set; }
@@ -549,7 +558,7 @@
         this.Entity.DisplayName = this.Entity.DisplayName.Trim();
         this.Entity.FirstName = this.Entity.FirstName.Trim();
         this.Entity.LastName = this.Entity.LastName.Trim();
-        this.Entity.Password = this.Entity.TextPasswordForNewUsers.SHA256Hash();
+        this.Entity.Password = this.Entity.NewPassword1.SHA256Hash();
 
         return result;
     }

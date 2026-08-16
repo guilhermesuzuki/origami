@@ -37,6 +37,14 @@ namespace Origami.Core.Validators
             RuleFor(x => x.LinkedIn).Website(text, field: "LinkedIn");
             RuleFor(x => x.Facebook).Website(text, field: "Facebook");
             RuleFor(x => x.Instagram).Website(text, field: "Instagram");
+
+            RuleFor(x => x).Must(user =>
+            {
+                if (user.NewPassword1.Has() == false && user.NewPassword2.Has() == false) return true;
+                if (user.NewPassword1 != user.NewPassword2) return false;
+                if (user.NewPassword1.IsPasswordStrong(text) is { Ok: false }) return false;
+                return true;
+            }).WithMessage(text.Original("New passwords must be valid and match each other"));
         }
     }
 }

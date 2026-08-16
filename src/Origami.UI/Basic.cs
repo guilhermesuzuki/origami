@@ -62,6 +62,11 @@ namespace Origami.UI
             return Super.Blogs.ReadFromCache().Id(UserFacade.BlogId) ?? OrigamiBlog.Empty;
         }
 
+        protected async Task CopyToClipboard(string info)
+        {
+            await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", info);
+        }
+
         protected async Task DownloadFile(OrigamiSystemFile file)
         {
             await this.JSRuntime.InvokeVoidAsync("origami.common.downloadFileFromUrl", file.WebPath);
@@ -84,16 +89,6 @@ namespace Origami.UI
             };
 
             return client;
-        }
-
-        protected virtual void GoToWelcome()
-        {
-            if (this.Super.Settings.GetSafeMode() == false) return;
-
-            var uri = new Uri(this.GhostOfTheNavigator.Uri);
-            if (uri.AbsolutePath.Like("/welcome") == true) return;
-
-            this.GhostOfTheNavigator.NavigateTo("/welcome");
         }
 
         /// <summary>

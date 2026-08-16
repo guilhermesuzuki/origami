@@ -16,6 +16,11 @@ namespace Origami.Core.Data
         }
 
         /// <summary>
+        /// Blogs to be assigned to the new admin user. This list contains the blogs that will be associated with the newly created admin user, defining their content management and access within the system.
+        /// </summary>
+        List<OrigamiUserBlog> BlogsForTheNewAdminUser { get; }
+
+        /// <summary>
         /// New admin user to be created in the system after the master password has been validated successfully.
         /// </summary>
         OrigamiUser NewAdminUser { get; set; }
@@ -28,7 +33,7 @@ namespace Origami.Core.Data
         /// <summary>
         /// Roles to be assigned to the new admin user. This list contains the roles that will be associated with the newly created admin user, defining their permissions and access levels within the system.
         /// </summary>
-        IList<OrigamiUserRole> RolesForTheNewAdminUser { get; }
+        List<OrigamiUserRole> RolesForTheNewAdminUser { get; }
 
         bool ShouldDisableMasterPasswordVerification { get; }
 
