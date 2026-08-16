@@ -141,6 +141,7 @@ namespace Origami.UI
             builder.Services.AddTransient<ISpecialPageRepository, SpecialPageRepository>();
             builder.Services.AddTransient<ISubscriberRepository, SubscriberRepository>();
             builder.Services.AddTransient<ISuperRepository, SuperRepository>();
+            builder.Services.AddTransient<ITheCreator, TheCreator>();
             builder.Services.AddTransient<IUserActivityRepository, UserActivityRepository>();
             builder.Services.AddTransient<IUserBlogRepository, UserBlogRepository>();
             builder.Services.AddTransient<IUserPasswordResetRepository, UserPasswordResetRepository>();

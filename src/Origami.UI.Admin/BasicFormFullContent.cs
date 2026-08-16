@@ -122,17 +122,6 @@ namespace Origami.UI.Admin
             this.InvokeAsync(this.StateHasChanged);
         }
 
-        protected override void CreateEntityBeforeEvent(T2 entity)
-        {
-            entity.Entity.SetAuthor(UserFacade.User);
-            entity.Entity.BlogId = entity.Entity switch
-            {
-                OrigamiSpecialMessage => null,
-                OrigamiSpecialPage => null,
-                _ => GetBlogFromUserFacade().Id,
-            };
-        }
-
         public override void SetParent(IId entity)
         {
             this.Entity.Parent = entity as T1;
