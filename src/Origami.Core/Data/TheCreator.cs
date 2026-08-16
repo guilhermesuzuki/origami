@@ -22,8 +22,9 @@ namespace Origami.Core.Data
         {
             T entity = new();
 
+            entity.SetId();
             entity.SetAuthor(_userFacade.User);
-            entity.SetBlog(_blogRepository.ReadFromCache().Id(_userFacade.BlogId) ?? new());
+            entity.SetBlog(_blogRepository.ReadFromCache().Id(_userFacade.BlogId));
 
             if (entity is OrigamiUser user)
             {

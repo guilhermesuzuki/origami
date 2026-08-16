@@ -1292,13 +1292,12 @@ namespace Origami.Core
         /// <typeparam name="T"></typeparam>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public static T? SetId<T>(this T? entity) where T : IId
+        public static T? SetId<T>(this T? entity)
         {
-            if (entity != null && entity.Id == Guid.Empty)
+            if (entity is IId id && id.Id == Guid.Empty)
             {
-                entity.Id = Guid.NewGuid();
+                id.Id = Guid.NewGuid();
             }
-
             return entity;
         }
 
