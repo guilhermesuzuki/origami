@@ -319,6 +319,7 @@ namespace Origami.UI.Admin
             base.OnInitialized();
             this.SetFilterFromQueryString();
             this.HasBlogChangedInUserFacade();
+            this.SelectedEntity = TheCreator.Create<T2>();
             this.SetEntityFromQueryString();
         }
 
@@ -456,8 +457,6 @@ namespace Origami.UI.Admin
 
                 this.UserFacade.Result = new() { Error = Text.Original("The entity you are trying to access does not exist") };
             }
-
-            SelectedEntity = TheCreator.Create<T2>();
         }
 
         protected void SetFilterFromQueryString()
