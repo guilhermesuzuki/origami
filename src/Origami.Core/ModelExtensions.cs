@@ -211,6 +211,14 @@ namespace Origami.Core
             return entity != null ? entity.GetClone() : Activator.CreateInstance<T>();
         }
 
+        public static void CreationDate<T>(this T to, T from)
+        {
+            if (from is IDateCreated fromDateCreated && to is IDateCreated toDateCreated)
+            {
+                toDateCreated.DateCreated = fromDateCreated.DateCreated;
+            }
+        }
+
         /// <summary>
         /// TODO: comment this
         /// </summary>
@@ -915,6 +923,14 @@ namespace Origami.Core
         {
             return string.Equals(a, b, comparison);
         }
+        public static void ModificationDate<T>(this T to, T from)
+        {
+            if (from is IDateModified fromDateModified && to is IDateModified toDateModified)
+            {
+                toDateModified.DateModified = fromDateModified.DateModified;
+            }
+        }
+
         /// <summary>
         /// Retrieves the first entity from the collection that matches the specified Nano ID.
         /// </summary>

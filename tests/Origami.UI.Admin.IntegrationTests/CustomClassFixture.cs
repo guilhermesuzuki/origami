@@ -41,6 +41,9 @@ namespace Origami.UI.Admin.IntegrationTests
             NanoId = Guid.NewGuid().ToString().Substring(0, 8),
             IsBlocked = false,
             IsDeleted = false,
+            NewPassword1 = "123test@test",
+            NewPassword2 = "123test@test",
+            Password = "123test@test".SHA256Hash(),
         };
 
         public OrigamiContentComment Comment = new()
@@ -327,6 +330,8 @@ namespace Origami.UI.Admin.IntegrationTests
             FirstName = "Test",
             LastName = "User",
             NanoId = UserId.ToString().Substring(0, 8),
+            NewPassword1 = "123test@test",
+            NewPassword2 = "123test@test",
             Password = "123test@test".SHA256Hash(),
             Username = "testuser",
         };
