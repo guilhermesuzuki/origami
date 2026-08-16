@@ -121,6 +121,9 @@ namespace Origami.Core.Data
 
             base.Create(ctx).Push(hub);
 
+            ctx.Entity.UserBlogs.Each(ub => ub.UserId = ctx.Entity.Id);
+            ctx.Entity.UserRoles.Each(ur => ur.UserId = ctx.Entity.Id);
+
             ctx.Entity.UserBlogs.GetContexts(ctx).Each(x => this._userBlogRepository.SmartSave(x, false).Push(hub));
             ctx.Entity.UserRoles.GetContexts(ctx).Each(x => this._userRoleRepository.SmartSave(x, false).Push(hub));
 
@@ -404,6 +407,9 @@ namespace Origami.Core.Data
             }
 
             var hub = base.Update(ctx);
+
+            ctx.Entity.UserBlogs.Each(ub => ub.UserId = ctx.Entity.Id);
+            ctx.Entity.UserRoles.Each(ur => ur.UserId = ctx.Entity.Id);
 
             using var db = this.DbContextFactory.CreateDbContext();
             var dbo1 = db.Set<OrigamiUserRole>().AsNoTracking().Where(x => x.UserId == ctx.Entity.Id).ToList();
