@@ -44,14 +44,14 @@ namespace Origami.UI
 
             var user = faker.Generate();
 
-            user.Username = "emergency_adminuser_" + Nanoid.Generate(Nanoid.Alphabets.LowercaseLetters, size: 5);
+            user.Username = "user_" + Nanoid.Generate(Nanoid.Alphabets.LowercaseLetters, size: 5);
             user.EmailAddress = $"fake_user.{Nanoid.Generate(Nanoid.Alphabets.LowercaseLetters, size: 5)}@fake-email.com";
             user.GenerateNewPasswordForNewUsers();
 
             return user;
         }
 
-        public Task CreateNewAdminUser()
+        public Task CreateNewUser()
         {
             using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
             var ctx = new DataOperationContext<OrigamiUser>(OrigamiUser.AnonymousUser, this.Entity);
@@ -102,7 +102,7 @@ namespace Origami.UI
                 return;
             }
 
-            if (step == ILoginHelpMeRules.Steps.Step2_CreateNewAdminUser)
+            if (step == ILoginHelpMeRules.Steps.Step2_CreateNewUser)
             {
                 this.State.Pop();
                 this.CurrentStepChanged?.Invoke(this, EventArgs.Empty);
@@ -133,7 +133,7 @@ namespace Origami.UI
                         return;
                     }
 
-                    this.State.Push(ILoginHelpMeRules.Steps.Step2_CreateNewAdminUser);
+                    this.State.Push(ILoginHelpMeRules.Steps.Step2_CreateNewUser);
                     this.CurrentStepChanged?.Invoke(this, EventArgs.Empty);
                     this.RefreshUI?.Invoke(this, EventArgs.Empty);
 
@@ -145,9 +145,9 @@ namespace Origami.UI
 
                     return;
                 }
-                if (step == ILoginHelpMeRules.Steps.Step2_CreateNewAdminUser)
+                if (step == ILoginHelpMeRules.Steps.Step2_CreateNewUser)
                 {
-                    await this.CreateNewAdminUser();
+                    await this.CreateNewUser();
                     this.State.Push(ILoginHelpMeRules.Steps.Step3_GoToLoginPage);
                     this.CurrentStepChanged?.Invoke(this, EventArgs.Empty);
                     this.RefreshUI?.Invoke(this, EventArgs.Empty);

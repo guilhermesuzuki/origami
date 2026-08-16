@@ -11,7 +11,7 @@ namespace Origami.Core.Data
         enum Steps
         {
             Step1_ValidateMasterPassword = 1,
-            Step2_CreateNewAdminUser = 2,
+            Step2_CreateNewUser = 2,
             Step3_GoToLoginPage = 3,
         }
 
@@ -28,7 +28,7 @@ namespace Origami.Core.Data
         /// Creates a new admin user in the system. This step is typically executed after the master password has been validated successfully.
         /// </summary>
         /// <returns></returns>
-        Task CreateNewAdminUser();
+        Task CreateNewUser();
 
         /// <summary>
         /// Gets the current step in the login help process. This method returns the current step that the user is on, allowing the application to determine what action to take next based on the user's progress through the steps.
