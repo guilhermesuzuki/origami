@@ -88,24 +88,25 @@
                             <MudTextField @bind-Value="this.Entity.NewPassword1"
                                           Immediate="true"
                                           HelperText="@Text.Lower("Password")"
-                                          ReadOnly="true"
                                           InputType="InputType.Password"></MudTextField>
                         </li>
                         <li>
                             <MudTextField @bind-Value="this.Entity.NewPassword2"
                                           Immediate="true"
                                           HelperText="@Text.Lower("Confirm password")"
-                                          ReadOnly="true"
                                           InputType="InputType.Password"></MudTextField>
                         </li>
                     </ul>
                     <ul class="inline-list mt-3">
                         <li>
                             <div class="btn-group w-100">
-                                <button class="btn btn-primary fs-small w-100" @onclick="() => this.Entity.GenerateNewTextPasswordForNewUsers()">
+                                <button class="btn btn-success fs-small w-100" @onclick="() => this.Entity.GenerateNewPasswordForNewUsers()">
                                     @Text.Lower("New random password")
                                 </button>
-                                <button class="btn btn-secondary fs-small" style="width: 50px;" @onclick="() => this.CopyToClipboard(this.Entity.NewPassword1)">
+                                <button class="btn btn-secondary fs-small w-100" @onclick="() => this.Entity.ClearNewPasswords()">
+                                    @Text.Lower("Clear")
+                                </button>
+                                <button class="btn btn-info fs-small" style="width: 50px;" @onclick="() => this.CopyToClipboard(this.Entity.NewPassword1)">
                                     <i class="fa-solid fa-copy"></i>
                                 </button>
                             </div>

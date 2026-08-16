@@ -228,7 +228,7 @@ namespace Origami.Core.Models
             set => Set(x => x.TOTPSecret = value);
         }
 
-        [NotMapped]
+        [NotMapped, NullWhenPersisting]
         public List<OrigamiUserBlog> UserBlogs { get; set; } = new();
 
         /// <summary>
@@ -241,7 +241,7 @@ namespace Origami.Core.Models
             set => this.Set(ref _username, value, Changed);
         }
 
-        [NotMapped]
+        [NotMapped, NullWhenPersisting]
         public List<OrigamiUserRole> UserRoles { get; set; } = new();
 
         [Timestamp]
@@ -272,9 +272,14 @@ namespace Origami.Core.Models
             return false;
         }
 
-        public void GenerateNewTextPasswordForNewUsers()
+        public void ClearNewPasswords()
         {
-            this._newPassword1 = Nanoid.Generate("!@#$%&*", size: 1) + Nanoid.Generate(size: 9);
+            this._newPassword1 = this._newPassword2 = string.Empty;
+        }
+
+        public void GenerateNewPasswordForNewUsers()
+        {
+            this._newPassword1 = Nanoid.Generate("!@#$%&*", size: 1) + Nanoid.Generate(size: 7) + Nanoid.Generate(Nanoid.Alphabets.Digits, size: 2);
             this._newPassword2 = this._newPassword1;
         }
 

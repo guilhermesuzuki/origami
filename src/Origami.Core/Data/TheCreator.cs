@@ -28,7 +28,7 @@ namespace Origami.Core.Data
 
             if (entity is OrigamiUser user)
             {
-                user.GenerateNewTextPasswordForNewUsers();
+                user.GenerateNewPasswordForNewUsers();
             }
 
             if (entity is OrigamiSpecialMessage specialMessage)

@@ -40,7 +40,14 @@ namespace Origami.Core.Validators
 
             RuleFor(x => x).Must(user =>
             {
-                if (user.NewPassword1.Has() == false && user.NewPassword2.Has() == false) return true;
+                if (user.New == true)
+                {
+                    if (user.NewPassword1.Has() == false || user.NewPassword2.Has() == false) return false;
+                }
+                else
+                {
+                    if (user.NewPassword1.Has() == false && user.NewPassword2.Has() == false) return true;
+                }
                 if (user.NewPassword1 != user.NewPassword2) return false;
                 if (user.NewPassword1.IsPasswordStrong(text) is { Ok: false }) return false;
                 return true;
