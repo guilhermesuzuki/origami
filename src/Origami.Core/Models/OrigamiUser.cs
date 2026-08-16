@@ -229,6 +229,9 @@ namespace Origami.Core.Models
             set => Set(x => x.TOTPSecret = value);
         }
 
+        [NotMapped]
+        public List<OrigamiUserBlog> UserBlogs { get; set; } = new();
+
         /// <summary>
         /// Username
         /// </summary>
@@ -238,6 +241,9 @@ namespace Origami.Core.Models
             get => _username;
             set => this.Set(ref _username, value, Changed);
         }
+
+        [NotMapped]
+        public List<OrigamiUserRole> UserRoles { get; set; } = new();
 
         [Timestamp]
         public byte[] Version

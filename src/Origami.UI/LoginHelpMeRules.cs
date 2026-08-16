@@ -25,17 +25,14 @@ namespace Origami.UI
 
         public event EventHandler RefreshUI = null!;
 
-        public List<OrigamiUserBlog> BlogsForTheNewAdminUser { get; } = new List<OrigamiUserBlog>();
-
-        public OrigamiUser NewAdminUser { get; set; } = GetCleanUser();
+        public OrigamiUser Entity { get; set; } = GetCleanUser();
 
         public string OneTimeMasterPasswordForVerification { get; set; } = string.Empty;
-
-        public List<OrigamiUserRole> RolesForTheNewAdminUser { get; } = new List<OrigamiUserRole>();
 
         public bool ShouldDisableMasterPasswordVerification => this.OneTimeMasterPasswordForVerification.Trim().Length < 10;
 
         public Stack<ILoginHelpMeRules.Steps> State { get; } = new();
+
         public static OrigamiUser GetCleanUser()
         {
             var faker = new Faker<OrigamiUser>()
@@ -59,19 +56,27 @@ namespace Origami.UI
         public Task CreateNewAdminUser()
         {
             using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
-            var ctx = new DataOperationContext<OrigamiUser>(OrigamiUser.AnonymousUser, this.NewAdminUser);
+            var ctx = new DataOperationContext<OrigamiUser>(OrigamiUser.AnonymousUser, this.Entity);
             var hub = UserRepository.SmartSave(ctx, false);
 
             //private scope
             {
-                var cts = this.RolesForTheNewAdminUser.GetContexts(ctx);
-                cts.Each(x => UserRoleRepository.SmartSave(x, false).Push(hub));
+                var cts = this.Entity.UserRoles.GetContexts(ctx);
+                cts.Each(x =>
+                {
+                    x.Entity.UserId = ctx.Entity.Id;
+                    UserRoleRepository.SmartSave(x, false).Push(hub);
+                });
             }
 
             //private scope
             {
-                var cts = this.BlogsForTheNewAdminUser.GetContexts(ctx);
-                cts.Each(x => UserBlogRepository.SmartSave(x, false).Push(hub));
+                var cts = this.Entity.UserBlogs.GetContexts(ctx);
+                cts.Each(x => 
+                {
+                    x.Entity.UserId = ctx.Entity.Id;
+                    UserBlogRepository.SmartSave(x, false).Push(hub);
+                });
             }
 
             if (hub.Ok == false)

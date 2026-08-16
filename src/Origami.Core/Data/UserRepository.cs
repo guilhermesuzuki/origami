@@ -121,6 +121,9 @@ namespace Origami.Core.Data
 
             base.Create(ctx).Push(hub);
 
+            ctx.Entity.UserBlogs.GetContexts(ctx).Each(x => this._userBlogRepository.SmartSave(x, false).Push(hub));
+            ctx.Entity.UserRoles.GetContexts(ctx).Each(x => this._userRoleRepository.SmartSave(x, false).Push(hub));
+
             return hub;
         }
 
@@ -399,7 +402,18 @@ namespace Origami.Core.Data
             {
                 ctx.Entity.Password = ctx.Entity.NewPassword1.SHA256Hash();
             }
-            return base.Update(ctx);
+
+            var hub = base.Update(ctx);
+
+            using var db = this.DbContextFactory.CreateDbContext();
+            var dbo1 = db.Set<OrigamiUserRole>().AsNoTracking().Where(x => x.UserId == ctx.Entity.Id).ToList();
+            var merge1 = dbo1.GetMerge(ctx.Entity.UserRoles);
+            hub.OnSuccess(() => this._userRoleRepository.Merge(ctx, merge1).Push(hub));
+            var dbo2 = db.Set<OrigamiUserBlog>().AsNoTracking().Where(x => x.UserId == ctx.Entity.Id).ToList();
+            var merge2 = dbo2.GetMerge(ctx.Entity.UserBlogs);
+            hub.OnSuccess(() => this._userBlogRepository.Merge(ctx, merge2).Push(hub));
+
+            return hub;
         }
 
         public override Result<OrigamiUser> UpdateValidation(DataOperationContext<OrigamiUser> ctx)

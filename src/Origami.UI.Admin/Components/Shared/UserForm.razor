@@ -515,22 +515,12 @@
 @code {
     private bool _showPasswordResetHistory = false;
 
-    /// <summary>
-    /// User roles associated with the user.
-    /// </summary>
-    [Parameter] public List<OrigamiUserRole> UserRoles { get; set; } = [];
-
-    /// <summary>
-    /// User blogs associated with the user.
-    /// </summary>
-    [Parameter] public List<OrigamiUserBlog> UserBlogs { get; set; } = [];
-
     [Parameter] public EventCallback<OrigamiUser> OnUserBlocked { get; set; }
     [Parameter] public EventCallback<OrigamiUser> OnUserUnblocked { get; set; }
 
     protected bool IsBlogSelected(OrigamiBlog blog)
     {
-        return this.UserBlogs.Any(x => x.BlogId == blog.Id);
+        return this.Entity.UserBlogs.Any(x => x.BlogId == blog.Id);
     }
 
     protected bool NewBlog(OrigamiBlog blog)
@@ -541,7 +531,7 @@
 
     protected bool IsRoleSelected(OrigamiRole role)
     {
-        return this.UserRoles.Any(x => x.RoleId == role.Id);
+        return this.Entity.UserRoles.Any(x => x.RoleId == role.Id);
     }
 
     protected bool NewRole(OrigamiRole role)
@@ -558,7 +548,6 @@
         this.Entity.DisplayName = this.Entity.DisplayName.Trim();
         this.Entity.FirstName = this.Entity.FirstName.Trim();
         this.Entity.LastName = this.Entity.LastName.Trim();
-        this.Entity.Password = this.Entity.NewPassword1.SHA256Hash();
 
         return result;
     }
@@ -567,11 +556,11 @@
     {
         if (IsBlogSelected(blog) == true)
         {
-            this.UserBlogs.RemoveAll(x => x.BlogId == blog.Id);
+            this.Entity.UserBlogs.RemoveAll(x => x.BlogId == blog.Id);
         }
         else
         {
-            this.UserBlogs.Add(new()
+            this.Entity.UserBlogs.Add(new()
             {
                 UserId = this.Entity.Id,
                 BlogId = blog.Id,
@@ -583,11 +572,11 @@
     {
         if (IsRoleSelected(role) == true)
         {
-            this.UserRoles.RemoveAll(x => x.RoleId == role.Id);
+            this.Entity.UserRoles.RemoveAll(x => x.RoleId == role.Id);
         }
         else
         {
-            this.UserRoles.Add(new()
+            this.Entity.UserRoles.Add(new()
             {
                 UserId = this.Entity.Id,
                 RoleId = role.Id,
@@ -618,12 +607,12 @@
 
     protected void LoadUserBlogs()
     {
-        this.UserBlogs = [.. from x in this.Super.UserBlogs.ReadFromCache() where x.UserId == this.Entity.Id select x];
+        this.Entity.UserBlogs = [.. from x in this.Super.UserBlogs.ReadFromCache() where x.UserId == this.Entity.Id select x];
     }
 
     protected void LoadUserRoles()
     {
-        this.UserRoles = [.. from x in this.Super.UserRoles.ReadFromCache() where x.UserId == this.Entity.Id select x];
+        this.Entity.UserRoles = [.. from x in this.Super.UserRoles.ReadFromCache() where x.UserId == this.Entity.Id select x];
     }
 
     protected override void OnParametersSet()
@@ -631,29 +620,6 @@
         base.OnParametersSet();
         this.LoadUserBlogs();
         this.LoadUserRoles();
-    }
-
-    protected override Result<OrigamiUser> CreateOthers()
-    {
-        var hub = new Result<OrigamiUser>();
-        var ctx = new DataOperationContext<OrigamiUser>(this.UserFacade.User, this.Entity);
-        this.UserRoles.GetContexts(ctx).Each(x => this.Super.UserRoles.SmartSave(x, false).Push(hub));
-        this.UserBlogs.GetContexts(ctx).Each(x => this.Super.UserBlogs.SmartSave(x, false).Push(hub));
-        return hub;
-    }
-
-    protected override Result<OrigamiUser> UpdateOthers()
-    {
-        using var db = this.DbContextFactory.CreateDbContext();
-        var hub = new Result<OrigamiUser>();
-        var ctx = new DataOperationContext<OrigamiUser>(this.UserFacade.User, this.Entity);
-        var dbo1 = db.Set<OrigamiUserRole>().AsNoTracking().Where(x => x.UserId == this.Entity.Id).ToList();
-        var merge1 = dbo1.GetMerge(this.UserRoles);
-        hub.OnSuccess(() => this.Super.UserRoles.Merge(ctx, merge1));
-        var dbo2 = db.Set<OrigamiUserBlog>().AsNoTracking().Where(x => x.UserId == this.Entity.Id).ToList();
-        var merge2 = dbo2.GetMerge(this.UserBlogs);
-        hub.OnSuccess(() => this.Super.UserBlogs.Merge(ctx, merge2));
-        return hub;
     }
 
     public override void UndoChanges()

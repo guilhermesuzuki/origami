@@ -33,13 +33,13 @@
                         .user-form .buttons { display: none; }
                         .user-form .misc { display: none; }
                     </style>
-                    <UserForm Entity="_loginHelpMeRules.NewAdminUser" UserRoles="_loginHelpMeRules.RolesForTheNewAdminUser" UserBlogs="_loginHelpMeRules.BlogsForTheNewAdminUser"></UserForm>
+                    <UserForm Entity="_loginHelpMeRules.Entity"></UserForm>
                     <div class="btn-group mt-3 w-100">
                         <button class="btn btn-success text-white" @onclick="_loginHelpMeRules.GoNextAsync" type="submit">
                             <i class="fa-solid fa-floppy-disk"></i>
                             @Text.Lower("Save")
                         </button>
-                        <button class="btn btn-info text-white fw-bold btn-new" @onclick="() => _loginHelpMeRules.NewAdminUser = LoginHelpMeRules.GetCleanUser()">
+                        <button class="btn btn-info text-white fw-bold btn-new" @onclick="() => _loginHelpMeRules.Entity = LoginHelpMeRules.GetCleanUser()">
                             <i class="fa-solid fa-square-plus"></i>
                             @Text.Lower("New")
                         </button>
