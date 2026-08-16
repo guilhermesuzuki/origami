@@ -95,7 +95,7 @@ namespace Origami.Core.Validators
             return ruleBuilder
                 .NotNull().WithMessage(text.Original("Display name is required"))
                 .NotEmpty().WithMessage(text.Original("Display name is required"))
-                .MaximumLength(200).WithMessage(text.Original("Display name cannot exceed {0} characters", 200));
+                .MaximumLength(100).WithMessage(text.Original("Display name cannot exceed {0} characters", 100));
         }
 
         public static IRuleBuilderOptions<T, T> DisplayNameMustBeDifferentThanUsername<T>(this IRuleBuilder<T, T> ruleBuilder, Text text)
@@ -378,7 +378,7 @@ namespace Origami.Core.Validators
             return ruleBuilder
                 .NotNull().WithMessage(text.Original("Username is required"))
                 .NotEmpty().WithMessage(text.Original("Username is required"))
-                .MaximumLength(200).WithMessage(text.Original("Username cannot exceed {0} characters", 200));
+                .MaximumLength(100).WithMessage(text.Original("Username cannot exceed {0} characters", 100));
         }
 
         public static IRuleBuilderOptions<T, string> Website<T>(this IRuleBuilder<T, string> ruleBuilder, Text text, string field = "website")

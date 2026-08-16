@@ -1,16 +1,18 @@
 ﻿using FluentValidation;
+using Microsoft.EntityFrameworkCore;
+using Origami.Core.Data;
 using Origami.Core.Models;
 
 namespace Origami.Core.Validators
 {
     public class OrigamiUserValidator : AbstractValidator<OrigamiUser>
     {
-        public OrigamiUserValidator(Text text, IWebRootPath webRootPath) : base()
+        public OrigamiUserValidator(Text text, IWebRootPath webRootPath, IDbContextFactory<OrigamiDbContext> dbContextFactory) : base()
         {
             RuleFor(x => x.Id).Id(text);
             RuleFor(x => x.NanoId).NanoId(text);
             RuleFor(x => x.HeaderImage).HeaderImage(text, webRootPath);
-            RuleFor(x => x.DisplayName).DisplayName(text);
+            RuleFor(x => x.DisplayName).Cascade(CascadeMode.Stop).DisplayName(text);
             RuleFor(x => x).DisplayNameMustBeDifferentThanUsername(text);
             RuleFor(x => x.Username).Cascade(CascadeMode.Stop).Username(text);
 
@@ -52,6 +54,9 @@ namespace Origami.Core.Validators
                 if (user.NewPassword1.IsPasswordStrong(text) is { Ok: false }) return false;
                 return true;
             }).WithMessage(text.Original("New passwords must be valid and match each other"));
+
+            RuleFor(x => x).DisplayNameMustBeUnique(text, dbContextFactory);
+            RuleFor(x => x).UsernameMustBeUnique(text, dbContextFactory);
         }
     }
 }

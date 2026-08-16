@@ -39,6 +39,7 @@ namespace Origami.Core.Models
         protected DateTime _dateCreated = DateTime.UtcNow;
         protected DateTime? _dateModified;
         protected DateTime? _dateUnblocked;
+        protected string _displayName = string.Empty;
         protected string _emailAddress = string.Empty;
         protected bool _isBlocked;
         protected bool _isDeleted;
@@ -93,11 +94,11 @@ namespace Origami.Core.Models
             set => this.Set(ref _dateUnblocked, value, Changed);
         }
 
-        [NotMapped]
+        [StringLength(100)]
         public string DisplayName
         {
-            get => Get().DisplayName;
-            set => Set(x => x.DisplayName = value);
+            get => _displayName;
+            set => this.Set(ref _displayName, value, Changed);
         }
 
         /// <summary>
