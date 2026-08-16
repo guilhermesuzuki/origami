@@ -21,7 +21,7 @@ namespace Origami.Core.Data
         {
             try
             {
-                var clone = ctx.Entity.Clone();
+                var clone = ctx.Entity.Clone().NullFKObjectsForPersistence();
 
                 using (var db = DbContextFactory.CreateDbContext())
                 {

@@ -1,6 +1,7 @@
 ﻿using Bogus;
 using MudBlazor;
 using NanoidDotNet;
+using Octokit;
 using Origami.Core;
 using Origami.Core.Data;
 using Origami.Core.Models;
@@ -43,14 +44,11 @@ namespace Origami.UI
 
             var user = faker.Generate();
 
-            return new()
-            {
-                Username = "emergency_adminuser_" + Nanoid.Generate(Nanoid.Alphabets.LowercaseLetters, size: 5),
-                DisplayName = user.DisplayName,
-                EmailAddress = $"fake_user.{Nanoid.Generate(Nanoid.Alphabets.LowercaseLetters, size: 5)}@fake-email.com",
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-            };
+            user.Username = "emergency_adminuser_" + Nanoid.Generate(Nanoid.Alphabets.LowercaseLetters, size: 5);
+            user.EmailAddress = $"fake_user.{Nanoid.Generate(Nanoid.Alphabets.LowercaseLetters, size: 5)}@fake-email.com";
+            user.GenerateNewPasswordForNewUsers();
+
+            return user;
         }
 
         public Task CreateNewAdminUser()
@@ -59,7 +57,12 @@ namespace Origami.UI
             var ctx = new DataOperationContext<OrigamiUser>(OrigamiUser.AnonymousUser, this.Entity);
             var hub = UserRepository.SmartSave(ctx, false);
 
-            //private scope
+            if (hub.Ok == false)
+            {
+                throw new Exception(hub.GetMessages());
+            }
+
+            if (hub.Ok)
             {
                 var cts = this.Entity.UserRoles.GetContexts(ctx);
                 cts.Each(x =>
@@ -69,7 +72,7 @@ namespace Origami.UI
                 });
             }
 
-            //private scope
+            if (hub.Ok)
             {
                 var cts = this.Entity.UserBlogs.GetContexts(ctx);
                 cts.Each(x => 
@@ -77,11 +80,6 @@ namespace Origami.UI
                     x.Entity.UserId = ctx.Entity.Id;
                     UserBlogRepository.SmartSave(x, false).Push(hub);
                 });
-            }
-
-            if (hub.Ok == false)
-            {
-                throw new Exception(hub.GetMessages());
             }
 
             transaction.Complete();
@@ -150,19 +148,6 @@ namespace Origami.UI
                 if (step == ILoginHelpMeRules.Steps.Step2_CreateNewAdminUser)
                 {
                     await this.CreateNewAdminUser();
-
-                    var yes = await DialogService.ShowMessageBoxAsync(
-                        Text.Upper("Creating a user"),
-                        Text.Lower("Are you done with creating a new user? And go straight to the login page"),
-                        Text.Lower("Yes"),
-                        Text.Lower("No")
-                        );
-
-                    if (yes.GetValueOrDefault() == false)
-                    {
-                        return;
-                    }
-
                     this.State.Push(ILoginHelpMeRules.Steps.Step3_GoToLoginPage);
                     this.CurrentStepChanged?.Invoke(this, EventArgs.Empty);
                     this.RefreshUI?.Invoke(this, EventArgs.Empty);

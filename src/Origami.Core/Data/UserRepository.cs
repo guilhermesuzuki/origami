@@ -230,11 +230,13 @@ namespace Origami.Core.Data
                 var del2 = db.UserPasswordResets.Where(x => x.UserId == ctx.Entity.Id).ExecuteDelete();
                 var del3 = db.UserPasswordResets.Where(x => x.AuthorId == ctx.Entity.Id).ExecuteDelete();
                 var del4 = db.UserBlogs.Where(x => x.UserId == ctx.Entity.Id).ExecuteDelete();
+                var del5 = db.PhysicalPageViews.Where(x => x.UserId == ctx.Entity.Id).ExecuteDelete();
 
                 hub.RowsAffected += del1;
                 hub.RowsAffected += del2;
                 hub.RowsAffected += del3;
                 hub.RowsAffected += del4;
+                hub.RowsAffected += del5;
             }
 
             return hub;

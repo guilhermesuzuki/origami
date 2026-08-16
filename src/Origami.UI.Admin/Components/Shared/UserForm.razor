@@ -608,12 +608,18 @@
 
     protected void LoadUserBlogs()
     {
-        this.Entity.UserBlogs = [.. from x in this.Super.UserBlogs.ReadFromCache() where x.UserId == this.Entity.Id select x];
+        if (this.Entity.New == false)
+        {
+            this.Entity.UserBlogs = [.. from x in this.Super.UserBlogs.ReadFromCache() where x.UserId == this.Entity.Id select x];
+        }
     }
 
     protected void LoadUserRoles()
     {
-        this.Entity.UserRoles = [.. from x in this.Super.UserRoles.ReadFromCache() where x.UserId == this.Entity.Id select x];
+        if (this.Entity.New == false)
+        {
+            this.Entity.UserRoles = [.. from x in this.Super.UserRoles.ReadFromCache() where x.UserId == this.Entity.Id select x];
+        }
     }
 
     protected override void OnParametersSet()
