@@ -113,7 +113,6 @@ namespace Origami.UI
                 parent.ParentId = entity.Id;
                 return;
             }
-
             throw new NotImplementedException("Entity does not support parent");
         }
         /// <summary>

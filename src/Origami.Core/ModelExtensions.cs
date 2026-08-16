@@ -4,6 +4,7 @@ using FluentValidation;
 using Origami.Core.Models;
 using Origami.Core.Models.Settings;
 using SixLabors.ImageSharp;
+using System.Collections;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -504,18 +505,7 @@ namespace Origami.Core
         /// <returns></returns>
         public static string GetHexString(this byte[] bytes)
         {
-            int j = bytes.Length;
-
-            char[] chars = new char[j * 2];
-
-            for (int i = 0; i < j; i++)
-            {
-                int b = bytes[i];
-                chars[i * 2] = _hexDigits[b >> 4];
-                chars[i * 2 + 1] = _hexDigits[b & 0xF];
-            }
-
-            return new string(chars);
+            return BitConverter.ToString(bytes).Replace("-", string.Empty).TrimStart('0');
         }
 
         public static string GetHyperlink(this OrigamiBlog blog, OrigamiContentTag tag, INanoId? entity = null)
@@ -736,11 +726,6 @@ namespace Origami.Core
         public static bool Has<T>([NotNullWhen(true)] this T? entity) where T : class, INew
         {
             return entity is { New: false };
-        }
-
-        public static string HexString(this byte[] byteArray)
-        {
-            return BitConverter.ToString(byteArray).Replace("-", string.Empty).TrimStart('0');
         }
 
         /// <summary>

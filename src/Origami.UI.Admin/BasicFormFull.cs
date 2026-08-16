@@ -68,21 +68,6 @@ namespace Origami.UI.Admin
         protected virtual Result<T> BeforeSaving()
         {
             this.ShowParentSelector = false;
-
-            //sets the FK Blog (or the save process will fail)
-            if (Entity is IBlogId blogId && blogId.BlogId == Guid.Empty)
-            {
-                blogId.BlogId = this.UserFacade.BlogId;
-                if (blogId.BlogId == Guid.Empty) throw new InvalidOperationException("BlogId is empty");
-            }
-
-            //sets the FK Blog (or the save process will fail)
-            if (Entity is IBlogIdNull blogIdNull && blogIdNull.BlogId.GetValueOrDefault() == Guid.Empty)
-            {
-                blogIdNull.BlogId = this.UserFacade.BlogId;
-                if (blogIdNull.BlogId.GetValueOrDefault() == Guid.Empty) throw new InvalidOperationException("BlogId is empty");
-            }
-
             return new(Entity);
         }
 
