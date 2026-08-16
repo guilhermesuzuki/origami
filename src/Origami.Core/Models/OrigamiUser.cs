@@ -53,7 +53,6 @@ namespace Origami.Core.Models
         public OrigamiUser() : base()
         {
             this._mustChangePassword = true;
-            this.GenerateNewTextPasswordForNewUsers();
         }
 
         public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) => { };
