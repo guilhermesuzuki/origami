@@ -479,6 +479,8 @@ namespace Origami.UI.Admin
 
                 this.UserFacade.Result = new() { Error = Text.Original("The entity you are trying to access does not exist") };
             }
+
+            SelectedEntity = TheCreator.Create<T>();
         }
 
         protected override void SetPageTitle()

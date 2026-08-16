@@ -329,6 +329,7 @@ namespace Origami.UI.Admin
             base.OnInitialized();
             SetFilterFromQueryString();
             HasBlogChangedInUserFacade();
+            this.SelectedEntity = TheCreator.Create<T2>();
         }
 
         protected override void OnParametersSet()
