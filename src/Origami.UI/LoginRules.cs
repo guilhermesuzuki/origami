@@ -216,16 +216,16 @@ namespace Origami.UI
             }
         }
 
-        public Task LoginAsync()
+        public async Task LoginAsync()
         {
             var user = this._superRepository.Users.LookupUserInDatabase(this.Username, this.Password);
             if (user != null)
             {
                 this.User = user;
-                return Task.CompletedTask;
+                return;
             }
 
-            Task.Delay(2000).Wait();
+            await Task.Delay(2000);
             throw new InvalidOperationException("Combination of username and password does not exist in the database");
         }
 

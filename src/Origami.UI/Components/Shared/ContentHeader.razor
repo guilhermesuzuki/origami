@@ -395,8 +395,21 @@
 
     private void PurgeReaction(OrigamiContentReaction reaction)
     {
-        var context = new DataOperationContext<OrigamiContentReaction>(UserFacade.User, reaction);
-        this.Super.ContentReactions.SmartPurge(context, false);
+        if (this.UserFacade.SocialProfile.New == false)
+        {
+            var context = new DataOperationContextFrontEnd<OrigamiContentReaction>(UserFacade.SocialProfile, DateTime.UtcNow, reaction);
+            this.Super.ContentReactions.SmartPurge(context);
+            return;
+        }
+
+        if (this.UserFacade.User.New == false)
+        {
+            var context = new DataOperationContext<OrigamiContentReaction>(UserFacade.User, reaction);
+            this.Super.ContentReactions.SmartPurge(context, false);
+            return;
+        }
+
+        throw new InvalidOperationException("Reaction author could not be found");
     }
 
     private void _quickReplies()
