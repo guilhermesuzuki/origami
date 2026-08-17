@@ -2622,4 +2622,13 @@
   <data name="Master password doesn't match the system" xml:space="preserve">
     <value>마스터 비밀번호가 시스템 비밀번호와 일치하지 않습니다</value>
   </data>
+  <data name="One-time master password" xml:space="preserve">
+    <value>일회용 마스터 비밀번호</value>
+  </data>
+  <data name="One-time master password used" xml:space="preserve">
+    <value>일회용 마스터 비밀번호가 사용되었습니다</value>
+  </data>
+  <data name="Are you ready to use the one-time master password and create a new admin user?" xml:space="preserve">
+    <value>일회용 마스터 비밀번호를 사용하여 새 관리자 사용자를 생성할 준비가 되셨습니까?</value>
+  </data>
 </root>

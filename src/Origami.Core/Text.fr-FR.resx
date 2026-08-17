@@ -2622,4 +2622,13 @@
   <data name="Master password doesn't match the system" xml:space="preserve">
     <value>Le mot de passe maître ne correspond pas à celui du système</value>
   </data>
+  <data name="One-time master password" xml:space="preserve">
+    <value>Mot de passe maître à usage unique</value>
+  </data>
+  <data name="One-time master password used" xml:space="preserve">
+    <value>Mot de passe maître à usage unique utilisé</value>
+  </data>
+  <data name="Are you ready to use the one-time master password and create a new admin user?" xml:space="preserve">
+    <value>Êtes-vous prêt à utiliser le mot de passe maître à usage unique et à créer un nouvel utilisateur administrateur?</value>
+  </data>
 </root>

@@ -441,7 +441,7 @@ namespace Origami.UI
                 var masterPassword = Nanoid.Generate(size: 10);
                 var appFacade = app.Services.GetRequiredService<IAppFacade>();
                 appFacade.OneTimeMasterPasswordInSHA256 = masterPassword.SHA256Hash();
-                app.Logger.LogWarning("1-time master password: {password}", masterPassword);
+                app.Logger.LogWarning("One-time master password: {password}", masterPassword);
             }
             else
             {

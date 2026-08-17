@@ -122,8 +122,8 @@ namespace Origami.UI
                     await this.ValidateMasterPassword();
 
                     var yes = await DialogService.ShowMessageBoxAsync(
-                        Text.Upper("1-time master password"),
-                        Text.Lower("Are you ready to use the 1-time master password and create a new admin user?"),
+                        Text.Upper("One-time master password"),
+                        Text.Lower("Are you ready to use the one-time master password and create a new admin user?"),
                         Text.Lower("Yes"),
                         Text.Lower("No")
                         );
@@ -140,7 +140,7 @@ namespace Origami.UI
                     if (Debugger.IsAttached == false)
                     {
                         AppFacade.OneTimeMasterPasswordInSHA256 = string.Empty;
-                        UserFacade.Result = new() { Warning = Text.Original("1-time master password used") };
+                        UserFacade.Result = new() { Warning = Text.Original("One-time master password used") };
                     }
 
                     return;
