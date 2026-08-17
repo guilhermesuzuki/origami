@@ -2631,4 +2631,16 @@
   <data name="Are you ready to use the one-time master password and create a new admin user?" xml:space="preserve">
     <value>Sei pronto a utilizzare la password principale monouso e a creare un nuovo utente amministratore?</value>
   </data>
+  <data name="Proceed" xml:space="preserve">
+    <value>Procedi</value>
+  </data>
+  <data name="Creating a user" xml:space="preserve">
+    <value>Creazione di un utente</value>
+  </data>
+  <data name="Get new random password" xml:space="preserve">
+    <value>Genera una nuova password casuale</value>
+  </data>
+  <data name="New passwords must be valid and match each other" xml:space="preserve">
+    <value>Le nuove password devono essere valide e corrispondere tra loro</value>
+  </data>
 </root>

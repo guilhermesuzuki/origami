@@ -2631,4 +2631,16 @@
   <data name="Are you ready to use the one-time master password and create a new admin user?" xml:space="preserve">
     <value>您准备好使用一次性主密码并创建新的管理员用户了吗？</value>
   </data>
+  <data name="Proceed" xml:space="preserve">
+    <value>继续</value>
+  </data>
+  <data name="Creating a user" xml:space="preserve">
+    <value>正在创建用户</value>
+  </data>
+  <data name="Get new random password" xml:space="preserve">
+    <value>生成新的随机密码</value>
+  </data>
+  <data name="New passwords must be valid and match each other" xml:space="preserve">
+    <value>新密码必须有效且彼此匹配</value>
+  </data>
 </root>

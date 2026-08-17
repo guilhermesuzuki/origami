@@ -2631,4 +2631,16 @@
   <data name="Are you ready to use the one-time master password and create a new admin user?" xml:space="preserve">
     <value>使い捨てマスターパスワードを使用して、新しい管理者ユーザーを作成しますか？</value>
   </data>
+  <data name="Proceed" xml:space="preserve">
+    <value>続行</value>
+  </data>
+  <data name="Creating a user" xml:space="preserve">
+    <value>ユーザーを作成しています</value>
+  </data>
+  <data name="Get new random password" xml:space="preserve">
+    <value>新しいランダムパスワードを生成</value>
+  </data>
+  <data name="New passwords must be valid and match each other" xml:space="preserve">
+    <value>新しいパスワードは有効であり、互いに一致している必要があります</value>
+  </data>
 </root>
