@@ -2616,4 +2616,10 @@
   <data name="Unsubscribed from website" xml:space="preserve">
     <value>Se ha cancelado la suscripción al sitio web</value>
   </data>
+  <data name="Help me" xml:space="preserve">
+    <value>Ayúdame</value>
+  </data>
+  <data name="Master password doesn't match the system" xml:space="preserve">
+    <value>La contraseña maestra no coincide con la del sistema</value>
+  </data>
 </root>

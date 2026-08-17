@@ -2616,4 +2616,10 @@
   <data name="Unsubscribed from website" xml:space="preserve">
     <value>已取消网站订阅</value>
   </data>
+  <data name="Help me" xml:space="preserve">
+    <value>帮助我</value>
+  </data>
+  <data name="Master password doesn't match the system" xml:space="preserve">
+    <value>主密码与系统密码不匹配</value>
+  </data>
 </root>
