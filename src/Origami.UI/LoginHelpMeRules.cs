@@ -57,11 +57,6 @@ namespace Origami.UI
             var ctx = new DataOperationContext<OrigamiUser>(OrigamiUser.AnonymousUser, this.Entity);
             var hub = UserRepository.SmartSave(ctx, false);
 
-            if (hub.Ok == false)
-            {
-                throw new Exception(hub.GetMessages());
-            }
-
             if (hub.Ok)
             {
                 var cts = this.Entity.UserRoles.GetContexts(ctx);
@@ -80,6 +75,11 @@ namespace Origami.UI
                     x.Entity.UserId = ctx.Entity.Id;
                     UserBlogRepository.SmartSave(x, false).Push(hub);
                 });
+            }
+
+            if (hub.Ok == false)
+            {
+                throw new Exception(hub.GetMessages());
             }
 
             transaction.Complete();
