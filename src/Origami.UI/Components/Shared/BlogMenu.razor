@@ -2,26 +2,6 @@
 @inherits Basic
 
 <div class="blog-menu @Class">
-    <div class="row py-4 d-none">
-        <div class="col-12 col-xxl-4"></div>
-        <div class="col-12 col-xxl-4 text-center">
-            <div class="btn-group w-100">
-                <button class="btn btn-outline-dark fw-bold cursor-pointer w-100" @onclick="this.GoToBlog">
-                    <i class="bi bi-box-arrow-up-right"></i>
-                    @Text.Lower("Go to blog")
-                </button>
-                <button class="btn btn-outline-dark fw-bold cursor-pointer w-100" @onclick="this.GoToRss">
-                    <i class="bi bi-rss-fill"></i>
-                    @Text.Lower("RSS feed")
-                </button>
-                <button class="btn btn-outline-dark fw-bold cursor-pointer w-100" @onclick="this.OnClose">
-                    <i class="bi bi-x-square-fill"></i>
-                    @Text.Lower("Close menu")
-                </button>
-            </div>
-        </div>
-        <div class="col-12 col-xxl-4"></div>
-    </div>
     <div class="row mt-2">
         <div class="col-12 col-xxl-4">
             <div class="row">
@@ -320,15 +300,5 @@
         this.LoadVideos();
         var elapsed = Stopwatch.GetElapsedTime(timestamp);
         Console.WriteLine($"BlogMenu took {elapsed} to gather all information");
-    }
-
-    private void GoToBlog()
-    {
-        this.GhostOfTheNavigator.NavigateTo($"{this._blog.Hyperlink}#content-start");
-    }
-
-    private void GoToRss()
-    {
-        this.GhostOfTheNavigator.NavigateTo($"{this._blog.Hyperlink}rss.xml", true);
     }
 }

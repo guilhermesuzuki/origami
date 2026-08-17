@@ -2598,4 +2598,58 @@
   <data name="Something went wrong with {0} login" xml:space="preserve">
     <value>Something went wrong with {0} login</value>
   </data>
+  <data name="•• Not shared ••" xml:space="preserve">
+    <value>•• Not shared ••</value>
+  </data>
+  <data name="Social profile is required" xml:space="preserve">
+    <value>Social profile is required</value>
+  </data>
+  <data name="User did not share a valid e-mail address" xml:space="preserve">
+    <value>User did not share a valid email address</value>
+  </data>
+  <data name="Logged in on website" xml:space="preserve">
+    <value>Logged in on website</value>
+  </data>
+  <data name="Subscribed to website" xml:space="preserve">
+    <value>Subscribed to website</value>
+  </data>
+  <data name="Unsubscribed from website" xml:space="preserve">
+    <value>Unsubscribed from website</value>
+  </data>
+  <data name="Help me" xml:space="preserve">
+    <value>Help me</value>
+  </data>
+  <data name="Master password doesn't match the system" xml:space="preserve">
+    <value>Master password doesn't match the system</value>
+  </data>
+  <data name="One-time master password" xml:space="preserve">
+    <value>One-time master password</value>
+  </data>
+  <data name="One-time master password used" xml:space="preserve">
+    <value>One-time master password used</value>
+  </data>
+  <data name="Are you ready to use the one-time master password and create a new admin user?" xml:space="preserve">
+    <value>Are you ready to use the one-time master password and create a new admin user?</value>
+  </data>
+  <data name="Proceed" xml:space="preserve">
+    <value>Proceed</value>
+  </data>
+  <data name="Creating a user" xml:space="preserve">
+    <value>Creating a user</value>
+  </data>
+  <data name="Get new random password" xml:space="preserve">
+    <value>Get new random password</value>
+  </data>
+  <data name="New passwords must be valid and match each other" xml:space="preserve">
+    <value>New passwords must be valid and match each other</value>
+  </data>
+  <data name="A password has been created" xml:space="preserve">
+    <value>A password has been created</value>
+  </data>
+  <data name="Username is already in use" xml:space="preserve">
+    <value>Username is already in use</value>
+  </data>
+  <data name="Display name is already in use" xml:space="preserve">
+    <value>Display name is already in use</value>
+  </data>
 </root>

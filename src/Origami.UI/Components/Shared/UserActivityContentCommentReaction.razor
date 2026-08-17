@@ -1,15 +1,17 @@
 ﻿@inherits Basic
 @implements IId
+@inject IContentCommentReactionRepository _contentCommentReaction
 @inject IContentCommentRepository _contentComment
 
 @if (Id != Guid.Empty)
 {
-    var comment = _contentComment.ReadFromCache().Id(Id);
-    if (comment != null)
+    var reaction = _contentCommentReaction.ReadFromCache().Id(Id);
+    if (reaction != null)
     {
+        var comment = _contentComment.ReadFromCache().Id(reaction.CommentId);
         var content = this.Super.Contents.ReadFromCache().Id(comment!.ContentId)!;
-        <div class="user-activity-content-comment @Class">
-            <label class="fw-bold">@Text.Lower("Commented on post:")</label>
+        <div class="user-activity-content-comment-reaction @Class">
+            <span class="fw-bold">@Text.Lower("Reacted {0} to:", reaction.Reaction)</span>
             <ContentHeaderLite Entity="content"></ContentHeaderLite>
             <CommentLite Class="mt-2 p-2 frame-purple" Entity="comment"></CommentLite>
         </div>

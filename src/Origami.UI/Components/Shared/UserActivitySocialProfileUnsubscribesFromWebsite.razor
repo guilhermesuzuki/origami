@@ -1,0 +1,17 @@
+﻿@inherits Basic
+@implements IId
+
+@if (Id != Guid.Empty)
+{
+    var @event = this.Super.Events.ReadFromCache().Id(Id);
+    if (@event != null)
+    {
+        <div class="user-activity-social-profile-unsubscribes-from-website @Class">
+            <span class="fw-bold">@Text.Lower("Unsubscribed from website")</span>
+        </div>
+    }
+}
+
+@code {
+    [Parameter] public override Guid Id { get; set; }
+}

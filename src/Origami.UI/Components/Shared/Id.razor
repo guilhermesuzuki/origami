@@ -38,7 +38,7 @@
             }
             @if (this.Entity is IVersion version && version.Version.SequenceEqual([]) == false)
             {
-                <span class="me-1" title="@Text.Original("Version")">[@version.Version.HexString()]</span>
+                <span class="me-1" title="@Text.Original("Version")">[@version.Version.GetHexString()]</span>
             }
         </span>
         <span class="col-2">

@@ -10,6 +10,11 @@
         string EnvironmentName { get; }
 
         /// <summary>
+        /// One-time master password in SHA256 format for secure access.
+        /// </summary>
+        string OneTimeMasterPasswordInSHA256 { get; set; }
+
+        /// <summary>
         /// List of online users in the application.
         /// </summary>
         IList<string> OnlineUsers { get; }

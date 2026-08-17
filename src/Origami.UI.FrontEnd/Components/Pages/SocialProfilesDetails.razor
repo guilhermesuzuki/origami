@@ -65,7 +65,7 @@
                                     @Text.Lower("Reactions")
                                 </div>
                                 <span>
-                                    @_contentCommentReaction.ReactionsFromProfile(this.SocialProfile).Count()
+                                    @(_contentCommentReaction.ReactionsFromProfile(this.SocialProfile).Count() + this.Super.ContentReactions.ReactionsFromProfile(this.SocialProfile).Count())
                                 </span>
                             </div>
                         </div>
@@ -128,121 +128,63 @@
                         </AuthorizeView>
                     </div>
                 </div>
-                <div class="col-12 col-xl-8">
+
+                <div class="col-12 col-xxl-8">
                     <div class="p-3 shadow-lg">
-                        <label class="w-100 text-center fs-4 p-2">
-                            <i class="fa-solid fa-user"></i>
-                            @Text.Lower("Interactions (Last 50)")
-                        </label>
-                        <MudDataGrid Class="border-top" Items="this.Interactions" SortMode="SortMode.None" Filterable="false">
+                        <div class="w-100 text-center fs-4 p-2">
+                            <i class="fa-solid fa-bolt"></i>
+                            @Text.Lower("User Activity")
+                        </div>
+                        <MudDataGrid @ref="_userActivities" T="OrigamiUserActivity" Class="border-top" ServerData="this.UserActivities" SortMode="SortMode.None" Filterable="false">
                             <Columns>
-                                <PropertyColumn Property="x => x.DateCreated" Title="@Text.Lower("Date")"></PropertyColumn>
-                                <TemplateColumn CellStyle="width: 85%;">
+                                <TemplateColumn>
                                     <CellTemplate>
-                                        @if (context.Item is OrigamiContentCommentReaction postReaction)
+                                        <span class="fw-bold">
+                                            <i class="fa-solid fa-calendar"></i>
+                                            @context.Item.Date
+                                        </span>
+                                        @if (context.Item.Type.Like("ContentCommentReaction") == true)
                                         {
-                                            var comment = _contentComment.ReadFromCache().Id(postReaction.CommentId);
-                                            var post = this.Super.Contents.ReadFromCache().Id(comment!.ContentId);
-                                            <div class="">
-                                                <span class="fw-bold">@Text.Lower("Reacted {0} to:", postReaction.Reaction)</span>
-                                                <ContentHeaderLite Entity="post"></ContentHeaderLite>
-                                                <CommentLite Class="mt-2 p-2 frame-purple" Entity="comment"></CommentLite>
-                                            </div>
+                                            <UserActivityContentCommentReaction Id="@context.Item.Id"></UserActivityContentCommentReaction>
                                         }
-                                        @if (context.Item is OrigamiContentComment postComment)
+                                        else if (context.Item.Type.Like("ContentComment") == true)
                                         {
-                                            var post = this.Super.Contents.ReadFromCache().Id(postComment.ContentId);
-                                            <div class="">
-                                                <span class="fw-bold">@Text.Lower("Commented on post:")</span>
-                                                <ContentHeaderLite Entity="post"></ContentHeaderLite>
-                                                <CommentLite Class="mt-2 p-2 frame-purple" Entity="postComment"></CommentLite>
-                                            </div>
+                                            <UserActivityContentComment Id="@context.Item.Id"></UserActivityContentComment>
                                         }
-                                        @if (context.Item is OrigamiContentRating postRating)
+                                        else if (context.Item.Type.Like("ContentRating") == true)
                                         {
-                                            var post = this.Super.Contents.ReadFromCache().Id(postRating.ContentId);
-                                            <div class="">
-                                                <span class="fw-bold">@Text.Lower("Rated {0} on:", postRating.Rating)</span>
-                                                <ContentHeaderLite Entity="post"></ContentHeaderLite>
-                                            </div>
+                                            <UserActivityContentRating Id="@context.Item.Id"></UserActivityContentRating>
+                                        }
+                                        else if (context.Item.Type.Like("ContentReaction") == true)
+                                        {
+                                            <UserActivityContentReaction Id="@context.Item.Id"></UserActivityContentReaction>
+                                        }
+                                        else if (context.Item.Type.Like("SocialProfileDelete") == true)
+                                        {
+                                            <UserActivitySocialProfileDelete Id="@context.Item.Id"></UserActivitySocialProfileDelete>
+                                        }
+                                        else if (context.Item.Type.Like("SocialProfileLogsIntoWebsiteEvent") == true)
+                                        {
+                                            <UserActivitySocialProfileLogsIntoWebsite Id="@context.Item.Id"></UserActivitySocialProfileLogsIntoWebsite>
+                                        }
+                                        else if (context.Item.Type.Like("SocialProfileSubscribesToWebsiteEvent") == true)
+                                        {
+                                            <UserActivitySocialProfileSubscribesToWebsite Id="@context.Item.Id"></UserActivitySocialProfileSubscribesToWebsite>
+                                        }
+                                        else if (context.Item.Type.Like("SocialProfileUnsubscribesFromWebsiteEvent") == true)
+                                        {
+                                            <UserActivitySocialProfileUnsubscribesFromWebsite Id="@context.Item.Id"></UserActivitySocialProfileUnsubscribesFromWebsite>
                                         }
                                     </CellTemplate>
                                 </TemplateColumn>
                             </Columns>
                             <PagerContent>
-                                <MudDataGridPager T="IDateCreated" PageSizeOptions="new[] { 5, }"></MudDataGridPager>
+                                <MudDataGridPager T="OrigamiUserActivity" PageSizeOptions="[5, 10, 25, 50, 100]"></MudDataGridPager>
                             </PagerContent>
                         </MudDataGrid>
                     </div>
                 </div>
             </div>
-            <AuthorizeView>
-                <Authorized>
-                    @if (this.NanoId == this.UserFacade.SocialProfile.NanoId)
-                    {
-                        @if (this.SocialProfileForDeletions != null && this.SocialProfileForDeletions.Any() == true)
-                        {
-                            <div class="row mt-6">
-                                <div class="col-12">
-                                    <div class="p-3 shadow-lg">
-                                        <label class="w-100 text-center fs-4 p-2">
-                                            <i class="fa-solid fa-user"></i>
-                                            @Text.Lower("Requests for information wipe-out")
-                                        </label>
-                                        <MudDataGrid Class="border-top" Items="this.SocialProfileForDeletions" SortMode="SortMode.None" Filterable="false">
-                                            <Columns>
-                                                <PropertyColumn Property="x => x.DateCreated" Title="@Text.Lower("Request date")"></PropertyColumn>
-                                                <PropertyColumn Property="x => x.PostComments" Context="gContext">
-                                                    <HeaderTemplate>
-                                                        <i class="fa-solid fa-comment"></i>
-                                                        @Text.Lower("Comments on posts")<br />
-                                                        @Text.Lower("[At the time]")
-                                                    </HeaderTemplate>
-                                                </PropertyColumn>
-                                                <PropertyColumn Property="x => x.PostCommentReactions" Context="gContext">
-                                                    <HeaderTemplate>
-                                                        <i class="fa-solid fa-thumbs-up"></i>
-                                                        @Text.Lower("Comment reactions on posts")<br />
-                                                        @Text.Lower("[At the time]")
-                                                    </HeaderTemplate>
-                                                </PropertyColumn>
-                                                <PropertyColumn Property="x => x.PostRatings" Context="gContext">
-                                                    <HeaderTemplate>
-                                                        <i class="fa-solid fa-star"></i>
-                                                        @Text.Lower("Ratings on posts")<br />
-                                                        @Text.Lower("[At the time]")
-                                                    </HeaderTemplate>
-                                                </PropertyColumn>
-                                                <PropertyColumn Property="x => x.VideoComments" Context="gContext">
-                                                    <HeaderTemplate>
-                                                        <i class="fa-solid fa-comment"></i>
-                                                        @Text.Lower("Comments on videos")<br />
-                                                        @Text.Lower("[At the time]")
-                                                    </HeaderTemplate>
-                                                </PropertyColumn>
-                                                <PropertyColumn Property="x => x.VideoCommentReactions" Context="gContext">
-                                                    <HeaderTemplate>
-                                                        <i class="fa-solid fa-thumbs-up"></i>
-                                                        @Text.Lower("Comment reactions on videos")<br />
-                                                        @Text.Lower("[At the time]")
-                                                    </HeaderTemplate>
-                                                </PropertyColumn>
-                                                <PropertyColumn Property="x => x.VideoRatings" Context="gContext">
-                                                    <HeaderTemplate>
-                                                        <i class="fa-solid fa-star"></i>
-                                                        @Text.Lower("Ratings on videos")<br />
-                                                        @Text.Lower("[At the time]")
-                                                    </HeaderTemplate>
-                                                </PropertyColumn>
-                                            </Columns>
-                                        </MudDataGrid>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                    }
-                </Authorized>
-            </AuthorizeView>
         </div>
     }
     else
@@ -252,6 +194,11 @@
 </Root>
 
     @code {
+    /// <summary>
+    /// User Activities DataGrid
+    /// </summary>
+    private MudDataGrid<OrigamiUserActivity>? _userActivities;
+
     protected OrigamiSocialProfile SocialProfile = new();
     protected IEnumerable<OrigamiSocialProfileDelete>? SocialProfileForDeletions;
     protected IEnumerable<IDateCreated>? Interactions;
@@ -265,29 +212,43 @@
         this.SocialProfile = this.Super.SocialProfiles.ReadFromCache().NonDeleted().NanoId(this.NanoId) ?? new();
     }
 
+    protected Task<GridData<OrigamiUserActivity>> UserActivities(GridState<OrigamiUserActivity> state, CancellationToken token)
+    {
+        var orders = new StringBuilder();
+
+        //iterates through every sort definition
+        foreach (var definition in state.SortDefinitions)
+        {
+            orders.AppendFormat(",{0} {1}",
+                definition.SortBy,
+                definition.Descending ? "DESC" : "ASC");
+        }
+
+        var filters = new StringBuilder($"({nameof(OrigamiUserActivity.SocialProfileId)} == \"{this.SocialProfile.Id}\")");
+
+        //iterates through every filter definition
+        foreach (var definition in state.FilterDefinitions)
+        {
+            filters.AppendFormat("&& ({0})", definition.Filter());
+        }
+
+        var orderBy = orders.ToString();
+
+        using var db = DbContextFactory.CreateDbContext();
+
+        var result = db.Set<OrigamiUserActivity>().AsNoTracking().Query(
+            state.PageSize,
+            state.Page * state.PageSize,
+            filters.ToString(),
+            orderBy != string.Empty ? orderBy[1..] : $"{nameof(OrigamiUserActivity.Date)} DESC"
+        );
+
+        return Task.FromResult(new GridData<OrigamiUserActivity> { Items = result.Rows, TotalItems = (int)result.NumberOfRows, });
+    }
+
     protected void LoadInteractions()
     {
-        if (this.SocialProfile.Has() == false) return;
-
-        var interactions = new List<IDateCreated>();
-
-        //post comment reactions
-        interactions.AddRange(this._contentCommentReaction.ReactionsFromProfile(this.SocialProfile)
-            .OrderByDescending(x => x.DateCreated)
-            .Take(50));
-
-        //post comments
-        interactions.AddRange(this._contentComment.CommentsFromProfile(this.SocialProfile, this.NanoId == UserFacade.SocialProfile.NanoId)
-            .OrderByDescending(x => x.DateCreated)
-            .Take(50));
-
-        //post ratings
-        interactions.AddRange(this._contentRating.RatingsFromProfile(this.SocialProfile)
-            .OrderByDescending(x => x.DateCreated)
-            .Take(50));
-
-        //loads the interactions
-        this.Interactions = interactions.OrderByDescending(x => x.DateCreated).Take(50);
+        this._userActivities?.ReloadServerData();
     }
 
     protected void LoadSocialProfileDeletions()
@@ -365,6 +326,12 @@
     {
         base.OnAfterRender(firstRender);
         this._loadIncognitoMode(firstRender);
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        this._userActivities?.ReloadServerData();
     }
 
     private async void _loadIncognitoMode(bool firstRender)

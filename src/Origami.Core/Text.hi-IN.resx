@@ -2598,4 +2598,58 @@
   <data name="Something went wrong with {0} login" xml:space="preserve">
     <value>{0} से साइन इन करते समय कुछ गड़बड़ हो गई</value>
   </data>
+  <data name="•• Not shared ••" xml:space="preserve">
+    <value>•• साझा नहीं किया गया ••</value>
+  </data>
+  <data name="Social profile is required" xml:space="preserve">
+    <value>सोशल प्रोफ़ाइल आवश्यक है</value>
+  </data>
+  <data name="User did not share a valid e-mail address" xml:space="preserve">
+    <value>उपयोगकर्ता ने एक मान्य ईमेल पता साझा नहीं किया</value>
+  </data>
+  <data name="Logged in on website" xml:space="preserve">
+    <value>वेबसाइट पर लॉग इन किया गया</value>
+  </data>
+  <data name="Subscribed to website" xml:space="preserve">
+    <value>वेबसाइट की सदस्यता ली गई</value>
+  </data>
+  <data name="Unsubscribed from website" xml:space="preserve">
+    <value>वेबसाइट से सदस्यता समाप्त की गई</value>
+  </data>
+  <data name="Help me" xml:space="preserve">
+    <value>मेरी मदद करें</value>
+  </data>
+  <data name="Master password doesn't match the system" xml:space="preserve">
+    <value>मास्टर पासवर्ड सिस्टम के पासवर्ड से मेल नहीं खाता</value>
+  </data>
+  <data name="One-time master password" xml:space="preserve">
+    <value>एक बार उपयोग होने वाला मास्टर पासवर्ड</value>
+  </data>
+  <data name="One-time master password used" xml:space="preserve">
+    <value>एक बार उपयोग होने वाला मास्टर पासवर्ड इस्तेमाल किया गया</value>
+  </data>
+  <data name="Are you ready to use the one-time master password and create a new admin user?" xml:space="preserve">
+    <value>क्या आप एक बार उपयोग होने वाले मास्टर पासवर्ड का उपयोग करके एक नया व्यवस्थापक उपयोगकर्ता बनाने के लिए तैयार हैं?</value>
+  </data>
+  <data name="Proceed" xml:space="preserve">
+    <value>आगे बढ़ें</value>
+  </data>
+  <data name="Creating a user" xml:space="preserve">
+    <value>उपयोगकर्ता बनाया जा रहा है</value>
+  </data>
+  <data name="Get new random password" xml:space="preserve">
+    <value>नया यादृच्छिक पासवर्ड जनरेट करें</value>
+  </data>
+  <data name="New passwords must be valid and match each other" xml:space="preserve">
+    <value>नए पासवर्ड मान्य होने चाहिए और एक-दूसरे से मेल खाने चाहिए</value>
+  </data>
+  <data name="A password has been created" xml:space="preserve">
+    <value>एक पासवर्ड बनाया गया है</value>
+  </data>
+  <data name="Username is already in use" xml:space="preserve">
+    <value>उपयोगकर्ता नाम पहले से उपयोग में है</value>
+  </data>
+  <data name="Display name is already in use" xml:space="preserve">
+    <value>प्रदर्शन नाम पहले से उपयोग में है</value>
+  </data>
 </root>

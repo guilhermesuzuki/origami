@@ -16,5 +16,11 @@ namespace Origami.Core.Data
         /// </summary>
         /// <returns></returns>
         bool GetMaintenanceMode();
+
+        /// <summary>
+        /// Returns true if the application is in safe mode, false otherwise.
+        /// </summary>
+        /// <returns></returns>
+        bool GetSafeMode();
     }
 }

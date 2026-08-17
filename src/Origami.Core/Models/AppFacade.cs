@@ -1,4 +1,6 @@
 ﻿
+using Microsoft.Extensions.Logging;
+using NanoidDotNet;
 
 namespace Origami.Core.Models
 {
@@ -9,6 +11,7 @@ namespace Origami.Core.Models
             this.Admin = admin;
             this.EnvironmentName = environmentName;
             this.OnlineUsers = [];
+            this.OneTimeMasterPasswordInSHA256 = string.Empty;
         }
 
         public event EventHandler<object>? RefreshingTheUI;
@@ -16,6 +19,8 @@ namespace Origami.Core.Models
         public bool? Admin { get; }
 
         public string EnvironmentName { get; }
+
+        public string OneTimeMasterPasswordInSHA256 { get; set; }
 
         public IList<string> OnlineUsers { get; }
 

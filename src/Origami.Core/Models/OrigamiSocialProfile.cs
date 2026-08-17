@@ -9,7 +9,6 @@ namespace Origami.Core.Models
         BaseModel,
         IChanged,
         IName,
-        IEmail,
         IVersion,
         IAdditionalInfo,
         INew,
@@ -20,7 +19,6 @@ namespace Origami.Core.Models
         private string? _additionalInfo = string.Empty;
         private DateTime _dateCreated;
         private DateTime? _dateModified;
-        private string _email = string.Empty;
         private string _emailFromSocialNetwork = string.Empty;
         private string _firstName = string.Empty;
         private bool _isBlocked;
@@ -62,16 +60,6 @@ namespace Origami.Core.Models
         {
             get => _dateModified;
             set => this.Set(ref _dateModified, value, Changed);
-        }
-
-        /// <summary>
-        /// Email (to be used by the Application)
-        /// </summary>
-        [StringLength(255)]
-        public string Email
-        {
-            get => _email;
-            set => this.Set(ref _email, value, Changed);
         }
 
         /// <summary>
@@ -215,11 +203,10 @@ namespace Origami.Core.Models
         /// Then, it queries the application e-mail or the e-mail coming from the social network (when shared).
         /// </summary>
         /// <returns></returns>
-        public string GetEmail()
+        public string GetEmail(Text text)
         {
-            if (Email.Has() == true) return Email;
             if (EmailFromSocialNetwork.Has() == true) return EmailFromSocialNetwork;
-            return "•• Not shared ••";
+            return text.Original("•• Not shared ••");
         }
 
         /// <summary>
@@ -228,7 +215,6 @@ namespace Origami.Core.Models
         /// <returns></returns>
         public bool HasEmail()
         {
-            if (Email.Has() == true) return true;
             if (EmailFromSocialNetwork.Has() == true) return true;
             return false;
         }

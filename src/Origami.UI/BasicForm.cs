@@ -16,7 +16,7 @@ namespace Origami.UI
         IEntity<T>,
         ICreateEntityVoid<T>,
         ISave
-        where T : class, IId
+        where T : class, IId, new()
     {
         /// <summary>
         /// Should show or hide the file manager for picking images
@@ -92,23 +92,13 @@ namespace Origami.UI
         {
             try
             {
-                Entity = NewEntity();
-                this.CreateEntityBeforeEvent(Entity);
+                Entity = TheCreator.Create<T>();
                 await Created.InvokeAsync(Entity);
             }
             finally
             {
                 ShowParentSelector = false;
             }
-        }
-
-        public T NewEntity()
-        {
-            var blog = GetBlogFromUserFacade();
-            var entity = Activator.CreateInstance<T>();
-            entity.SetBlog(blog);
-            entity.SetAuthor(UserFacade.User);
-            return entity;
         }
 
         /// <summary>
@@ -123,7 +113,6 @@ namespace Origami.UI
                 parent.ParentId = entity.Id;
                 return;
             }
-
             throw new NotImplementedException("Entity does not support parent");
         }
         /// <summary>
@@ -165,14 +154,6 @@ namespace Origami.UI
                 return;
             }
             throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// TODO: comment this
-        /// </summary>
-        protected virtual void CreateEntityBeforeEvent(T entity)
-        {
-
         }
 
         /// <summary>

@@ -58,6 +58,7 @@ namespace Origami.Core.Data
                 var commentReactions = _contentCommentReactionRepository.ReactionsFromProfile(socialProfile).ToList();
                 var comments = _contentCommentRepository.CommentsFromProfile(socialProfile, true);
                 var ratings = _contentRatingRepository.RatingsFromProfile(socialProfile).ToList();
+                var reactions = _contentReactionRepository.ReactionsFromProfile(socialProfile).ToList();
 
                 var hub = new Result<OrigamiSocialProfileDelete>();
 
@@ -67,15 +68,17 @@ namespace Origami.Core.Data
                     hub.OnSuccess(() => comments.Where(x => x.ParentId != null).GetContexts(ctx).Call(_contentCommentRepository.SmartPurge, false));
                     hub.OnSuccess(() => comments.Where(x => x.ParentId == null).GetContexts(ctx).Call(_contentCommentRepository.SmartPurge, false));
                     hub.OnSuccess(() => ratings.GetContexts(ctx).Call(_contentRatingRepository.SmartPurge, false));
+                    hub.OnSuccess(() => reactions.GetContexts(ctx).Call(_contentReactionRepository.SmartPurge, false));
 
                     hub.Entity = new()
                     {
                         Id = Guid.NewGuid(),
                         DateCreated = DateTime.UtcNow,
                         SocialProfileId = socialProfile.Id,
-                        PostCommentReactions = commentReactions.Count,
-                        PostComments = comments.Count,
-                        PostRatings = ratings.Count,
+                        ContentCommentReactions = commentReactions.Count,
+                        ContentComments = comments.Count,
+                        ContentRatings = ratings.Count,
+                        ContentReactions = reactions.Count,
                     };
 
                     var exists = db.Set<OrigamiSocialProfileDelete>().AsNoTracking()

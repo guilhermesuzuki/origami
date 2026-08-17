@@ -2598,4 +2598,58 @@
   <data name="Something went wrong with {0} login" xml:space="preserve">
     <value>使用 {0} 登录时出现问题</value>
   </data>
+  <data name="•• Not shared ••" xml:space="preserve">
+    <value>•• 未共享 ••</value>
+  </data>
+  <data name="Social profile is required" xml:space="preserve">
+    <value>社交资料为必填项</value>
+  </data>
+  <data name="User did not share a valid e-mail address" xml:space="preserve">
+    <value>用户未共享有效的电子邮件地址</value>
+  </data>
+  <data name="Logged in on website" xml:space="preserve">
+    <value>已登录网站</value>
+  </data>
+  <data name="Subscribed to website" xml:space="preserve">
+    <value>已订阅网站</value>
+  </data>
+  <data name="Unsubscribed from website" xml:space="preserve">
+    <value>已取消网站订阅</value>
+  </data>
+  <data name="Help me" xml:space="preserve">
+    <value>帮助我</value>
+  </data>
+  <data name="Master password doesn't match the system" xml:space="preserve">
+    <value>主密码与系统密码不匹配</value>
+  </data>
+  <data name="One-time master password" xml:space="preserve">
+    <value>一次性主密码</value>
+  </data>
+  <data name="One-time master password used" xml:space="preserve">
+    <value>一次性主密码已使用</value>
+  </data>
+  <data name="Are you ready to use the one-time master password and create a new admin user?" xml:space="preserve">
+    <value>您准备好使用一次性主密码并创建新的管理员用户了吗？</value>
+  </data>
+  <data name="Proceed" xml:space="preserve">
+    <value>继续</value>
+  </data>
+  <data name="Creating a user" xml:space="preserve">
+    <value>正在创建用户</value>
+  </data>
+  <data name="Get new random password" xml:space="preserve">
+    <value>生成新的随机密码</value>
+  </data>
+  <data name="New passwords must be valid and match each other" xml:space="preserve">
+    <value>新密码必须有效且彼此匹配</value>
+  </data>
+  <data name="A password has been created" xml:space="preserve">
+    <value>已创建密码</value>
+  </data>
+  <data name="Username is already in use" xml:space="preserve">
+    <value>用户名已被使用</value>
+  </data>
+  <data name="Display name is already in use" xml:space="preserve">
+    <value>显示名称已被使用</value>
+  </data>
 </root>

@@ -11,14 +11,13 @@ namespace Origami.UI.Admin
 {
     public abstract class BasicAdminGrid<T> :
         BasicAdmin,
-        ICreateEntity<T>,
         IFilter,
         INanoId
         where T : class, IId, new()
     {
         public string Filter { get; set; } = "all";
 
-        [Parameter] public string NanoId { get; set; } = string.Empty;
+        public string NanoId { get; set; } = string.Empty;
 
         [Inject] public IRepository<T> Repository { get; set; } = null!;
 
@@ -61,16 +60,6 @@ namespace Origami.UI.Admin
         /// Selected entity
         /// </summary>
         protected T SelectedEntity { get; set; } = new();
-
-        public T CreateEntity()
-        {
-            var blog = this.GetBlogFromUserFacade();
-            var entity = new T();
-            entity.SetId();
-            entity.SetBlog(blog);
-            entity.SetAuthor(this.UserFacade.User);
-            return entity;
-        }
 
         /// <summary>
         /// Selected entities have changed (and need to be updated)
@@ -362,7 +351,8 @@ namespace Origami.UI.Admin
         {
             base.OnInitialized();
             this.HasBlogChangedInUserFacade();
-            this.SetEntityFromParameter();
+            this.SelectedEntity = TheCreator.Create<T>();
+            this.SetEntityFromQueryString();
         }
 
         protected virtual async Task OnSearchResultSelected(T entity)
@@ -405,7 +395,7 @@ namespace Origami.UI.Admin
         /// <returns></returns>
         protected virtual async Task ReloadDataGrid()
         {
-            SelectedEntity = CreateEntity();
+            SelectedEntity = TheCreator.Create<T>();
             SelectedEntities = new();
             await DataGrid.ReloadServerData();
         }
@@ -461,7 +451,7 @@ namespace Origami.UI.Admin
             return SelectedEntities.ToList();
         }
 
-        protected virtual void SetEntityFromParameter()
+        protected virtual void SetEntityFromQueryString()
         {
             this.NanoId = this.GhostOfTheNavigator.Uri.QueryString("nanoid");
 

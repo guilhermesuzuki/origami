@@ -15,9 +15,11 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 using MudBlazor;
 using MudBlazor.Services;
+using NanoidDotNet;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -57,10 +59,15 @@ namespace Origami.UI
             //origami connection string
             var origami = builder.Configuration.GetOrigamiConnectionString();
 
-            builder.Services.AddDbContextFactory<OrigamiDbContext>(options =>
+            builder.Services.AddDbContextFactory<OrigamiDbContext>((provider, options) =>
             {
-                options.EnableSensitiveDataLogging();
+                if (builder.Environment.IsDevelopment() || builder.Environment.IsEnvironment("Testing"))
+                {
+                    options.EnableSensitiveDataLogging();
+                }
                 options.UseSqlServer(origami);
+                options.AddInterceptors(provider.GetRequiredService<DateCreatedInterceptor>());
+                options.AddInterceptors(provider.GetRequiredService<DateModifiedInterceptor>());
             });
 
             builder.Services.AddDbContextFactory<OrigamiIdentityDbContext>(options =>
@@ -139,6 +146,7 @@ namespace Origami.UI
             builder.Services.AddTransient<ISpecialPageRepository, SpecialPageRepository>();
             builder.Services.AddTransient<ISubscriberRepository, SubscriberRepository>();
             builder.Services.AddTransient<ISuperRepository, SuperRepository>();
+            builder.Services.AddTransient<ITheCreator, TheCreator>();
             builder.Services.AddTransient<IUserActivityRepository, UserActivityRepository>();
             builder.Services.AddTransient<IUserBlogRepository, UserBlogRepository>();
             builder.Services.AddTransient<IUserPasswordResetRepository, UserPasswordResetRepository>();
@@ -148,6 +156,7 @@ namespace Origami.UI
             builder.Services.AddTransient<IUserViewRepository, UserViewRepository>();
             builder.Services.AddTransient<IWhatToSeeNextRepository, WhatToSeeNextRepository>();
 
+            builder.Services.AddScoped<ILoginHelpMeRules, LoginHelpMeRules>();
             builder.Services.AddScoped<ILoginRules, LoginRules>();
             builder.Services.AddScoped<IWhatHappensNext, WhatHappensNext>();
 
@@ -226,8 +235,13 @@ namespace Origami.UI
             builder.Services.AddSingleton<IValidator<OrigamiSocialProfile>, OrigamiSocialProfileValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiSpecialMessage>, OrigamiSpecialMessageValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiSpecialPage>, OrigamiSpecialPageValidator>();
+            builder.Services.AddSingleton<IValidator<OrigamiSubscriber>, OrigamiSubscriberValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiUser>, OrigamiUserValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiVideo>, OrigamiVideoValidator>();
+
+            builder.Services.AddSingleton(TimeProvider.System);
+            builder.Services.AddSingleton<DateCreatedInterceptor>();
+            builder.Services.AddSingleton<DateModifiedInterceptor>();
 
             //jwt configuration
             builder.Services.Configure<JwtConfiguration>(builder.Configuration.GetSection("Jwt"));
@@ -272,6 +286,8 @@ namespace Origami.UI
                 // Set status code on rejection
                 options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
             });
+
+            builder.Services.AddHealthChecks();
 
             if (OperatingSystem.IsWindows()) builder.Host.UseWindowsService();
 
@@ -342,7 +358,7 @@ namespace Origami.UI
             return string.Empty;
         }
 
-        public static WebApplication FoldTheOrigami<T>(this WebApplicationBuilder builder, string[] args, bool admin = false, Action? inject = null)
+        public static WebApplication FoldTheOrigami<T>(this WebApplicationBuilder builder, string[] args, bool admin = false, Action? injectServices = null)
         {
             //first thing in the morning
             builder.AddOrigami(args, admin: admin);
@@ -369,13 +385,14 @@ namespace Origami.UI
                     metrics.AddHttpClientInstrumentation();
                     metrics.AddPrometheusExporter();
 
-                    // Metrics provides by ASP.NET Core in .NET 8
+                    // Metrics provides by ASP.NET Core in .NET 10
                     metrics.AddMeter("Microsoft.AspNetCore.Hosting");
                     metrics.AddMeter("Microsoft.AspNetCore.Server.Kestrel");
                     metrics.AddMeter("Microsoft.AspNetCore.Http.Connections");
                     metrics.AddMeter("Microsoft.AspNetCore.Routing");
                     metrics.AddMeter("Microsoft.AspNetCore.Diagnostics");
                     metrics.AddMeter("Microsoft.AspNetCore.RateLimiting");
+                    metrics.AddMeter("Microsoft.EntityFrameworkCore");
                 });
 
                 // Add Tracing for ASP.NET Core and our custom ActivitySource and export to Jaeger
@@ -410,7 +427,7 @@ namespace Origami.UI
             builder.WebHost.ConfigureKestrel(serverOptions => serverOptions.Limits.MaxRequestBodySize = (long)8 * 1024 * 1024);
 
             /*there's services to inject*/
-            inject?.Invoke();
+            injectServices?.Invoke();
 
             /*builds and use origami*/
             var app = builder.Build().UseOrigami(admin: admin);
@@ -421,15 +438,22 @@ namespace Origami.UI
 
             if (admin == true)
             {
-                Log.Information("*************************");
-                Log.Information("Starting Origami.UI.Admin");
-                Log.Information("*************************");
+                app.Logger.LogInformation("*************************");
+                app.Logger.LogInformation("Starting Origami.UI.Admin");
+                app.Logger.LogInformation("*************************");
+
+                var masterPassword = builder.Configuration["master-password"];
+                if (masterPassword.Has() == true)
+                {
+                    var appFacade = app.Services.GetRequiredService<IAppFacade>();
+                    appFacade.OneTimeMasterPasswordInSHA256 = masterPassword.SHA256Hash();
+                }
             }
             else
             {
-                Log.Information("****************************");
-                Log.Information("Starting Origami.UI.FrontEnd");
-                Log.Information("****************************");
+                app.Logger.LogInformation("****************************");
+                app.Logger.LogInformation("Starting Origami.UI.FrontEnd");
+                app.Logger.LogInformation("****************************");
             }
 
             return app;
@@ -590,6 +614,8 @@ namespace Origami.UI
             app.MapControllers();
             app.UseStaticFiles();
             app.UseRateLimiter();
+
+            app.MapHealthChecks("/health");
 
             if (admin == false)
             {

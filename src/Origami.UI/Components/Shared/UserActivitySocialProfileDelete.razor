@@ -1,0 +1,33 @@
+﻿@inherits Basic
+@implements IId
+@inject ISocialProfileDeleteRepository _socialProfileDelete
+
+@if (Id != Guid.Empty)
+{
+    using var db = DbContextFactory.CreateDbContext();
+    var socialProfileDelete = db.Set<OrigamiSocialProfileDelete>().AsNoTracking().Id(Id);
+    if (socialProfileDelete != null)
+    {
+        <div class="user-activity-social-profile-delete @Class bg-danger text-white p-3">
+            <span class="fw-bold">@Text.Lower("Profile data was wiped out")</span>
+            <ul class="inline-list small">
+                <li style="width:33.34%;">
+                    <i class="fa-solid fa-comment"></i>
+                    @Text.Lower("{0} comment(s)", socialProfileDelete.ContentComments)
+                </li>
+                <li style="width:33.33%;">
+                    <i class="fa-solid fa-star"></i>
+                    @Text.Lower("{0} rating(s)", socialProfileDelete.ContentRatings)
+                </li>
+                <li style="width:33.33%;">
+                    <i class="fa-solid fa-face-laugh-beam"></i>
+                    @Text.Lower("{0} reaction(s)", socialProfileDelete.ContentReactions + socialProfileDelete.ContentCommentReactions)
+                </li>
+            </ul>
+        </div>
+    }
+}
+
+@code {
+    [Parameter] public override Guid Id { get; set; }
+}

@@ -63,7 +63,7 @@
                             </TemplateColumn>
                             <TemplateColumn Title="@Text.Upper("E-mail")" Sortable="false" Filterable="false" CellClass="col-3">
                                 <CellTemplate>
-                                    <span>@Text.Lower(context.Item.GetEmail())</span>
+                                    <span>@context.Item.GetEmail(Text)</span>
                                 </CellTemplate>
                             </TemplateColumn>
                         </Columns>

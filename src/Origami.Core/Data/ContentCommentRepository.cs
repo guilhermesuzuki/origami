@@ -71,8 +71,11 @@ namespace Origami.Core.Data
 
         public long GetComments(OrigamiContent entity)
         {
-            var key = entity.KeyForCachingComments();
-            return this.MemoryCache.TryGetValue(key, out long x) ? x : 0;
+            var query = from a in this.ReadFromCache().NonDeleted()
+                        where a.ContentId == entity.Id
+                        select a;
+            
+            return query.LongCount();
         }
 
         public Result<OrigamiContentComment> Pin(DataOperationContextFrontEnd<OrigamiContentComment> ctx)
@@ -136,12 +139,6 @@ namespace Origami.Core.Data
             using var db = DbContextFactory.CreateDbContext();
             hub.RowsAffected += (from x in db.Set<OrigamiContentCommentReaction>().AsNoTracking() where x.CommentId == ctx.Entity.Id select x).ExecuteDelete();
             return hub;
-        }
-
-        public override void RefreshCache()
-        {
-            base.RefreshCache();
-            this.RefreshCacheII();
         }
 
         public Result<OrigamiContentComment> SmartCreate(DataOperationContextFrontEnd<OrigamiContentComment> ctx)
@@ -299,26 +296,6 @@ namespace Origami.Core.Data
         public override Result<OrigamiContentComment> UpdateValidation(DataOperationContext<OrigamiContentComment> ctx)
         {
             return new Result<OrigamiContentComment>(ctx.Entity, _validator);
-        }
-
-        protected void RefreshCacheII()
-        {
-            using var db = DbContextFactory.CreateDbContext();
-            var query = from view in db.Set<OrigamiContentComment>().AsNoTracking()
-                        where view.IsDeleted == false
-                        group view by view.ContentId into g
-                        select new { ContentId = g.Key, TotalComments = g.LongCount() };
-            var options = new MemoryCacheEntryOptions() { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(3) };
-
-            foreach (var view in query)
-            {
-                var content = this.MemoryCache.Read<OrigamiContent>().Id(view.ContentId);
-                if (content != null)
-                {
-                    var key = content.KeyForCachingComments();
-                    this.MemoryCache.Set(key, view.TotalComments, options);
-                }
-            }
         }
     }
 }

@@ -41,6 +41,9 @@ namespace Origami.UI.Admin.IntegrationTests
             NanoId = Guid.NewGuid().ToString().Substring(0, 8),
             IsBlocked = false,
             IsDeleted = false,
+            NewPassword1 = "123test@test",
+            NewPassword2 = "123test@test",
+            Password = "123test@test".SHA256Hash(),
         };
 
         public OrigamiContentComment Comment = new()
@@ -128,8 +131,7 @@ namespace Origami.UI.Admin.IntegrationTests
             Id = TestFacebookId,
             SocialNetwork = SocialNetworks.Facebook,
             UserId = Nanoid.Generate(Nanoid.Alphabets.LettersAndDigits, 25),
-            Email = "123@mail.facebook.com",
-            EmailFromSocialNetwork = "123@facebook.com",
+            EmailFromSocialNetwork = "123@mail.facebook.com",
             IsBlocked = false,
             IsModerator = true,
             Name = "Test facebook social profile",
@@ -142,8 +144,7 @@ namespace Origami.UI.Admin.IntegrationTests
             Id = TestFacebookId,
             SocialNetwork = SocialNetworks.Facebook,
             UserId = Nanoid.Generate(Nanoid.Alphabets.LettersAndDigits, 25),
-            Email = "123@mail.facebook.com",
-            EmailFromSocialNetwork = "123@facebook.com",
+            EmailFromSocialNetwork = "123@mail.facebook.com",
             IsBlocked = true,
             IsModerator = true,
             Name = "Test facebook social profile",
@@ -329,6 +330,8 @@ namespace Origami.UI.Admin.IntegrationTests
             FirstName = "Test",
             LastName = "User",
             NanoId = UserId.ToString().Substring(0, 8),
+            NewPassword1 = "123test@test",
+            NewPassword2 = "123test@test",
             Password = "123test@test".SHA256Hash(),
             Username = "testuser",
         };

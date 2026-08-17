@@ -11,7 +11,6 @@ namespace Origami.UI.Admin
 {
     public abstract class BasicAdminGridContent<T1, T2> :
         BasicAdmin,
-        ICreateEntity<T2>,
         IFilter,
         INanoId
         where T1 : OrigamiContent, new()
@@ -25,7 +24,8 @@ namespace Origami.UI.Admin
         public string Filter { get; set; } = "all";
 
         [Inject] public IHubContentRepository<T2> HubContentRepository { get; set; } = null!;
-        [Parameter] public string NanoId { get; set; } = string.Empty;
+        
+        public string NanoId { get; set; } = string.Empty;
 
         /// <summary>
         /// Default ordering, in case there's no order-by
@@ -51,16 +51,6 @@ namespace Origami.UI.Admin
         /// Selected entity
         /// </summary>
         protected T2 SelectedEntity { get; set; } = new();
-
-        public T2 CreateEntity()
-        {
-            var blog = this.GetBlogFromUserFacade();
-            var root = new T2();
-            root.Entity.SetId();
-            root.Entity.SetBlog(blog);
-            root.Entity.SetAuthor(this.UserFacade.User);
-            return root;
-        }
 
         /// <summary>
         /// Selected entities have changed (and need to be updated)
@@ -327,14 +317,10 @@ namespace Origami.UI.Admin
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            SetFilterFromQueryString();
-            HasBlogChangedInUserFacade();
-        }
-
-        protected override void OnParametersSet()
-        {
-            base.OnParametersSet();
-            this.SetEntityFromParameter();
+            this.SetFilterFromQueryString();
+            this.HasBlogChangedInUserFacade();
+            this.SelectedEntity = TheCreator.Create<T2>();
+            this.SetEntityFromQueryString();
         }
 
         protected virtual void OnSearchResultSelected(T1 entity)
@@ -410,7 +396,7 @@ namespace Origami.UI.Admin
         /// <returns></returns>
         protected virtual async Task ReloadDataGridAsync()
         {
-            SelectedEntity = CreateEntity();
+            SelectedEntity = TheCreator.Create<T2>();
             SelectedEntities = new();
             await DataGrid.ReloadServerData();
         }
@@ -456,7 +442,7 @@ namespace Origami.UI.Admin
             return SelectedEntities.ToList();
         }
 
-        protected void SetEntityFromParameter()
+        protected void SetEntityFromQueryString()
         {
             this.NanoId = this.GhostOfTheNavigator.Uri.QueryString("nanoid");
 
@@ -475,7 +461,7 @@ namespace Origami.UI.Admin
 
         protected void SetFilterFromQueryString()
         {
-            var filter = this.GhostOfTheNavigator!.Uri.QueryString("filter");
+            var filter = this.GhostOfTheNavigator.Uri.QueryString("filter");
             if (filter.Has() == false) return;
             Filter = filter;
         }

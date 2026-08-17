@@ -2,7 +2,7 @@
 
 <style>
     .post-header-image, .video-header-image, .page-header-image { height: 200px; }
-    .mud-file-upload, .mud-file-upload > * { height:100%; }
+    .mud-file-upload, .mud-file-upload > * { height: 100%; }
 </style>
 <style>
     ul.expand { display: flex; list-style: none; padding: 0; margin: 0; }
@@ -82,6 +82,37 @@
                                       HelperText="@Text.Lower("Last name")"></MudTextField>
                     </li>
                 </ul>
+                <div class="mt-6 p-2 border">
+                    <ul class="inline-list">
+                        <li>
+                            <MudTextField @bind-Value="this.Entity.NewPassword1"
+                                          Immediate="true"
+                                          HelperText="@Text.Lower("Password")"
+                                          InputType="InputType.Password"></MudTextField>
+                        </li>
+                        <li>
+                            <MudTextField @bind-Value="this.Entity.NewPassword2"
+                                          Immediate="true"
+                                          HelperText="@Text.Lower("Confirm password")"
+                                          InputType="InputType.Password"></MudTextField>
+                        </li>
+                    </ul>
+                    <ul class="inline-list mt-3">
+                        <li>
+                            <div class="btn-group w-100">
+                                <button class="btn btn-success fs-small w-100" @onclick="() => this.Entity.GenerateNewPasswordForNewUsers()">
+                                    @Text.Lower("New random password")
+                                </button>
+                                <button class="btn btn-secondary fs-small w-100" @onclick="() => this.Entity.ClearNewPasswords()">
+                                    @Text.Lower("Clear")
+                                </button>
+                                <button class="btn btn-info fs-small" style="width: 50px;" @onclick="() => this.CopyToClipboard(this.Entity.NewPassword1)">
+                                    <i class="fa-solid fa-copy"></i>
+                                </button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
             <div class="text-center p-3 mt-3">
                 <ul class="expand p-3 border">
@@ -168,14 +199,14 @@
                     <li>
                         <MudTextField ReadOnly="true"
                                       Immediate="true"
-                                      Value="@(Text.Lower(Entity.TOTPSecret.Has().YesNo()))"
+                                      Value="@(Text.Lower(Entity.TOTPSecret.Has().YesNo(Text)))"
                                       HelperText="@Text.Lower("2FA secret?")"
                                       Class="yes-no"></MudTextField>
                     </li>
                     <li>
                         <MudTextField ReadOnly="true"
                                       Immediate="true"
-                                      Value="@(Text.Lower(Entity.GetTOTPRecoveryCodes().Any().YesNo()))"
+                                      Value="@(Text.Lower(Entity.GetTOTPRecoveryCodes().Any().YesNo(Text)))"
                                       HelperText="@Text.Lower("2FA recovery codes?")"
                                       Class="yes-no"></MudTextField>
                     </li>
@@ -360,15 +391,15 @@
     }
     <div class="buttons mt-3 p-3 text-center position-sticky" style="bottom:0;">
         <div class="btn-group">
-            <button class="btn btn-success text-white fw-bold" @onclick="Save" disabled="@this.DisableTheSaveButton">
+            <button class="btn btn-success text-white fw-bold btn-save" @onclick="Save" disabled="@this.DisableTheSaveButton">
                 <i class="fa-solid fa-floppy-disk"></i>
                 @Text.Lower("Save")
             </button>
-            <button class="btn btn-secondary text-white fw-bold" @onclick="UndoChanges" disabled="@this.Entity.New">
+            <button class="btn btn-secondary text-white fw-bold btn-undo-changes" @onclick="UndoChanges" disabled="@this.Entity.New">
                 <i class="fa-solid fa-rotate-left"></i>
                 @Text.Lower("Undo changes")
             </button>
-            <button class="btn btn-info text-white fw-bold" @onclick="CreateEntity">
+            <button class="btn btn-info text-white fw-bold btn-new" @onclick="CreateEntity">
                 <i class="fa-solid fa-square-plus"></i>
                 @Text.Lower("New")
             </button>
@@ -485,22 +516,12 @@
 @code {
     private bool _showPasswordResetHistory = false;
 
-    /// <summary>
-    /// User roles associated with the user.
-    /// </summary>
-    protected List<OrigamiUserRole> UserRoles = [];
-
-    /// <summary>
-    /// User blogs associated with the user.
-    /// </summary>
-    protected List<OrigamiUserBlog> UserBlogs = [];
-
     [Parameter] public EventCallback<OrigamiUser> OnUserBlocked { get; set; }
     [Parameter] public EventCallback<OrigamiUser> OnUserUnblocked { get; set; }
 
     protected bool IsBlogSelected(OrigamiBlog blog)
     {
-        return this.UserBlogs.Any(x => x.BlogId == blog.Id);
+        return this.Entity.UserBlogs.Any(x => x.BlogId == blog.Id);
     }
 
     protected bool NewBlog(OrigamiBlog blog)
@@ -511,7 +532,7 @@
 
     protected bool IsRoleSelected(OrigamiRole role)
     {
-        return this.UserRoles.Any(x => x.RoleId == role.Id);
+        return this.Entity.UserRoles.Any(x => x.RoleId == role.Id);
     }
 
     protected bool NewRole(OrigamiRole role)
@@ -536,11 +557,11 @@
     {
         if (IsBlogSelected(blog) == true)
         {
-            this.UserBlogs.RemoveAll(x => x.BlogId == blog.Id);
+            this.Entity.UserBlogs.RemoveAll(x => x.BlogId == blog.Id);
         }
         else
         {
-            this.UserBlogs.Add(new()
+            this.Entity.UserBlogs.Add(new()
             {
                 UserId = this.Entity.Id,
                 BlogId = blog.Id,
@@ -552,11 +573,11 @@
     {
         if (IsRoleSelected(role) == true)
         {
-            this.UserRoles.RemoveAll(x => x.RoleId == role.Id);
+            this.Entity.UserRoles.RemoveAll(x => x.RoleId == role.Id);
         }
         else
         {
-            this.UserRoles.Add(new()
+            this.Entity.UserRoles.Add(new()
             {
                 UserId = this.Entity.Id,
                 RoleId = role.Id,
@@ -587,12 +608,18 @@
 
     protected void LoadUserBlogs()
     {
-        this.UserBlogs = [.. from x in this.Super.UserBlogs.ReadFromCache() where x.UserId == this.Entity.Id select x];
+        if (this.Entity.New == false)
+        {
+            this.Entity.UserBlogs = [.. from x in this.Super.UserBlogs.ReadFromCache() where x.UserId == this.Entity.Id select x];
+        }
     }
 
     protected void LoadUserRoles()
     {
-        this.UserRoles = [.. from x in this.Super.UserRoles.ReadFromCache() where x.UserId == this.Entity.Id select x];
+        if (this.Entity.New == false)
+        {
+            this.Entity.UserRoles = [.. from x in this.Super.UserRoles.ReadFromCache() where x.UserId == this.Entity.Id select x];
+        }
     }
 
     protected override void OnParametersSet()
@@ -600,29 +627,6 @@
         base.OnParametersSet();
         this.LoadUserBlogs();
         this.LoadUserRoles();
-    }
-
-    protected override Result<OrigamiUser> CreateOthers()
-    {
-        var hub = new Result<OrigamiUser>();
-        var ctx = new DataOperationContext<OrigamiUser>(this.UserFacade.User, this.Entity);
-        this.UserRoles.GetContexts(ctx).Each(x => this.Super.UserRoles.SmartSave(x, false).Push(hub));
-        this.UserBlogs.GetContexts(ctx).Each(x => this.Super.UserBlogs.SmartSave(x, false).Push(hub));
-        return hub;
-    }
-
-    protected override Result<OrigamiUser> UpdateOthers()
-    {
-        using var db = this.DbContextFactory.CreateDbContext();
-        var hub = new Result<OrigamiUser>();
-        var ctx = new DataOperationContext<OrigamiUser>(this.UserFacade.User, this.Entity);
-        var dbo1 = db.Set<OrigamiUserRole>().AsNoTracking().Where(x => x.UserId == this.Entity.Id).ToList();
-        var merge1 = dbo1.GetMerge(this.UserRoles);
-        hub.OnSuccess(() => this.Super.UserRoles.Merge(ctx, merge1));
-        var dbo2 = db.Set<OrigamiUserBlog>().AsNoTracking().Where(x => x.UserId == this.Entity.Id).ToList();
-        var merge2 = dbo2.GetMerge(this.UserBlogs);
-        hub.OnSuccess(() => this.Super.UserBlogs.Merge(ctx, merge2));
-        return hub;
     }
 
     public override void UndoChanges()

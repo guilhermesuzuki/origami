@@ -8,7 +8,7 @@ using Origami.Core.Models;
 using System.Transactions;
 using UAParser;
 
-namespace Origami.UI.FrontEnd.Controllers
+namespace Origami.UI.Controllers
 {
     [Route("views")]
     public class ViewsController : Controller

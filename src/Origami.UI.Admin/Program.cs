@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 var app = builder.FoldTheOrigami<App>(
     args,
     admin: true,
-    inject: () =>
+    injectServices: () =>
     {
         //adds admin site authentication
         builder.Services.AddAuthentication(options =>

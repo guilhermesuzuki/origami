@@ -37,15 +37,16 @@ namespace Origami.UI
         [Inject] protected IConfiguration Configuration { get; set; } = null!;
         [Inject] protected IDbContextFactory<OrigamiDbContext> DbContextFactory { get; set; } = null!;
         [Inject] protected IDialogService DialogService { get; set; } = null!;
-        [Inject] protected NavigationManager GhostOfTheNavigator { get; set; } = null!;
         [Inject] protected IHttpContextAccessor HttpContextAccessor { get; set; } = null!;
         [Inject] protected IJSRuntime JSRuntime { get; set; } = null!;
         [Inject] protected IMyMemoryCache MemoryCache { get; set; } = null!;
         [Inject] protected ISuperRepository Super { get; set; } = null!;
-        [Inject] protected Text Text { get; set; } = null!;
+        [Inject] protected ITheCreator TheCreator { get; set; } = null!;
         [Inject] protected IUserFacade UserFacade { get; set; } = null!;
         [Inject] protected IWebRootPath WebRootPath { get; set; } = null!;
         [Inject] protected IWhatHappensNext WhatHappensNext { get; set; } = null!;
+        [Inject] protected NavigationManager GhostOfTheNavigator { get; set; } = null!;
+        [Inject] protected Text Text { get; set; } = null!;
 
         public OrigamiBlog GetBlogFromSlug()
         {
@@ -60,6 +61,11 @@ namespace Origami.UI
         public OrigamiBlog GetBlogFromUserFacade()
         {
             return Super.Blogs.ReadFromCache().Id(UserFacade.BlogId) ?? OrigamiBlog.Empty;
+        }
+
+        protected async Task CopyToClipboard(string info)
+        {
+            await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", info);
         }
 
         protected async Task DownloadFile(OrigamiSystemFile file)
@@ -134,7 +140,7 @@ namespace Origami.UI
         {
             if (UserFacade.SocialProfile.HasEmail() == true)
             {
-                UserFacade.Result = Super.Subscribers.Subscribe(new(OrigamiUser.AnonymousUser, DateTime.UtcNow, UserFacade.SocialProfile));
+                UserFacade.Result = Super.Subscribers.Subscribe(new(OrigamiUser.AnonymousUser, DateTime.UtcNow, UserFacade.SocialProfile), UserFacade.SocialProfile.EmailFromSocialNetwork);
                 return;
             }
             GhostOfTheNavigator.NavigateTo($"/subscribe", false);

@@ -75,7 +75,7 @@
     {
         get
         {
-            if (this.Entity is IVersion version) return version.Version.HexString();
+            if (this.Entity is IVersion version) return version.Version.GetHexString();
             return string.Empty;
         }
     }

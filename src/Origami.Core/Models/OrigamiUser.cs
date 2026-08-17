@@ -1,4 +1,5 @@
-﻿using OtpNet;
+﻿using NanoidDotNet;
+using OtpNet;
 using QRCoder;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -38,18 +39,21 @@ namespace Origami.Core.Models
         protected DateTime _dateCreated = DateTime.UtcNow;
         protected DateTime? _dateModified;
         protected DateTime? _dateUnblocked;
+        protected string _displayName = string.Empty;
         protected string _emailAddress = string.Empty;
         protected bool _isBlocked;
         protected bool _isDeleted;
         protected DateTime? _lastLoginTime;
         protected bool _mustChangePassword;
+        protected string _newPassword1 = string.Empty;
+        protected string _newPassword2 = string.Empty;
         protected string _password = string.Empty;
         protected string _username = string.Empty;
         protected byte[] _version = [];
 
         public OrigamiUser() : base()
         {
-
+            this._mustChangePassword = true;
         }
 
         public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) => { };
@@ -90,11 +94,11 @@ namespace Origami.Core.Models
             set => this.Set(ref _dateUnblocked, value, Changed);
         }
 
-        [NotMapped]
+        [StringLength(100)]
         public string DisplayName
         {
-            get => Get().DisplayName;
-            set => Set(x => x.DisplayName = value);
+            get => _displayName;
+            set => this.Set(ref _displayName, value, Changed);
         }
 
         /// <summary>
@@ -187,6 +191,20 @@ namespace Origami.Core.Models
 
         public bool New => Version.SequenceEqual([]);
 
+        [NotMapped]
+        public string NewPassword1
+        {
+            get => _newPassword1;
+            set => this.Set(ref _newPassword1, value, Changed);
+        }
+
+        [NotMapped]
+        public string NewPassword2
+        {
+            get => _newPassword2;
+            set => this.Set(ref _newPassword2, value, Changed);
+        }
+
         /// <summary>
         /// New Password
         /// </summary>
@@ -211,6 +229,9 @@ namespace Origami.Core.Models
             set => Set(x => x.TOTPSecret = value);
         }
 
+        [NotMapped, NullWhenPersisting]
+        public List<OrigamiUserBlog> UserBlogs { get; set; } = new();
+
         /// <summary>
         /// Username
         /// </summary>
@@ -220,6 +241,9 @@ namespace Origami.Core.Models
             get => _username;
             set => this.Set(ref _username, value, Changed);
         }
+
+        [NotMapped, NullWhenPersisting]
+        public List<OrigamiUserRole> UserRoles { get; set; } = new();
 
         [Timestamp]
         public byte[] Version
@@ -247,6 +271,17 @@ namespace Origami.Core.Models
                 return true;
             }
             return false;
+        }
+
+        public void ClearNewPasswords()
+        {
+            this._newPassword1 = this._newPassword2 = string.Empty;
+        }
+
+        public void GenerateNewPasswordForNewUsers()
+        {
+            this._newPassword1 = Nanoid.Generate("!@#$%&*", size: 1) + Nanoid.Generate(size: 7) + Nanoid.Generate(Nanoid.Alphabets.Digits, size: 2);
+            this._newPassword2 = this._newPassword1;
         }
 
         public void GenerateRandomTOTPSecret()

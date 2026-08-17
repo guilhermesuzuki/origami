@@ -2598,4 +2598,58 @@
   <data name="Something went wrong with {0} login" xml:space="preserve">
     <value>Ocorreu um problema ao iniciar sessão com {0}</value>
   </data>
+  <data name="•• Not shared ••" xml:space="preserve">
+    <value>•• Não partilhado ••</value>
+  </data>
+  <data name="Social profile is required" xml:space="preserve">
+    <value>O perfil social é obrigatório</value>
+  </data>
+  <data name="User did not share a valid e-mail address" xml:space="preserve">
+    <value>O utilizador não partilhou um endereço de e-mail válido</value>
+  </data>
+  <data name="Logged in on website" xml:space="preserve">
+    <value>Sessão iniciada no site</value>
+  </data>
+  <data name="Subscribed to website" xml:space="preserve">
+    <value>Subscrito no site</value>
+  </data>
+  <data name="Unsubscribed from website" xml:space="preserve">
+    <value>Subscrição no site cancelada</value>
+  </data>
+  <data name="Help me" xml:space="preserve">
+    <value>Ajude-me</value>
+  </data>
+  <data name="Master password doesn't match the system" xml:space="preserve">
+    <value>A palavra-passe mestre não corresponde à do sistema</value>
+  </data>
+  <data name="One-time master password" xml:space="preserve">
+    <value>Palavra-passe mestre de utilização única</value>
+  </data>
+  <data name="One-time master password used" xml:space="preserve">
+    <value>Palavra-passe mestre de utilização única utilizada</value>
+  </data>
+  <data name="Are you ready to use the one-time master password and create a new admin user?" xml:space="preserve">
+    <value>Está pronto para utilizar a palavra-passe mestre de utilização única e criar um novo utilizador administrador?</value>
+  </data>
+  <data name="Proceed" xml:space="preserve">
+    <value>Prosseguir</value>
+  </data>
+  <data name="Creating a user" xml:space="preserve">
+    <value>A criar um utilizador</value>
+  </data>
+  <data name="Get new random password" xml:space="preserve">
+    <value>Gerar nova palavra-passe aleatória</value>
+  </data>
+  <data name="New passwords must be valid and match each other" xml:space="preserve">
+    <value>As novas palavras-passe têm de ser válidas e coincidir</value>
+  </data>
+  <data name="A password has been created" xml:space="preserve">
+    <value>Foi criada uma palavra-passe</value>
+  </data>
+  <data name="Username is already in use" xml:space="preserve">
+    <value>O nome de utilizador já está a ser utilizado</value>
+  </data>
+  <data name="Display name is already in use" xml:space="preserve">
+    <value>O nome de apresentação já está a ser utilizado</value>
+  </data>
 </root>

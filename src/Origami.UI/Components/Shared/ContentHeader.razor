@@ -82,27 +82,120 @@
                     }
                 </li>
                 <li class="text-center">
-                    @foreach (var reaction in _getReactions().GroupBy(x => x.Reaction).OrderBy(x => x.Key))
-                    {
-                        <MudTooltip Text="@WhoReacted(reaction.Key)">
-                            <span class="d-inline-block post-comment-reaction @(HasReactionClass(reaction.Key)) me-1 mb-1 @(this.UserFacade.SocialProfile.New ? null : "cursor-pointer")"
-                                  style="border-radius: 12px; padding-left: 3px; padding-right: 6px; padding-bottom: 3px;"
-                                  @onclick="() => this.ReactionClick(reaction.Key)" @onclick:stopPropagation="true">
+                    <MudAvatarGroup Max="5" Spacing="1" MaxSize="Size.Small" Outlined="false" Style="justify-content:center;">
+                        @foreach (var reaction in _getReactions().GroupBy(x => x.Reaction).OrderByDescending(x => x.Count()).ThenBy(x => x.Key))
+                        {
+                            <MudAvatar Size="Size.Small">
                                 <span>@reaction.Key</span>
-                                <span>@reaction.Count()</span>
-                            </span>
-                        </MudTooltip>
-                    }
+                            </MudAvatar>
+                        }
+                    </MudAvatarGroup>
                 </li>
                 <li class="text-right" style="width: 50px;">
-                    <AuthorizeView>
-                        <Authorized>
-                            <i class="bi bi-emoji-laughing-fill cursor-pointer focusable" @onclick="() => _showEmojis = !_showEmojis" @onclick:stopPropagation="true"></i>
-                        </Authorized>
-                        <NotAuthorized>
-                            <i class="bi bi-emoji-laughing-fill" title="@Text.Original("Login to react")"></i>
-                        </NotAuthorized>
-                    </AuthorizeView>
+                    <i class="bi bi-emoji-laughing-fill cursor-pointer focusable" @onclick="() => _showEmojis = !_showEmojis" @onclick:stopPropagation="true"></i>
+                    <MudDialog @bind-Visible="_showEmojis" Options="_dialogOptions" TitleClass="border-bottom" Style="min-width: 400px; max-width:600px;">
+                        <TitleContent>
+                            <span class="fs-3">@Text.Lower("Reactions")</span>
+                        </TitleContent>
+                        <DialogContent>
+                            <AuthorizeView>
+                                <Authorized>
+                                    <div class="emoji-wrapper border p-3 mb-2">
+                                        <EmojiPickerElement Class="m-auto" OnEmojiSelected="this._onEmojiSelected"></EmojiPickerElement>
+                                    </div>
+                                    @if (this._getReactionsFromUser().Any() == true)
+                                    {
+                                        <div class="mt-2 mb-2 border-bottom">
+                                            @foreach (var reaction in _getReactionsFromUser())
+                                            {
+                                                var user = this.Super.Users.ReadFromCache().Id(reaction.UserId);
+                                                <div class="border mb-2 shadow-sm">
+                                                    <ul class="inline-list p-2">
+                                                        <li>
+                                                            <UserHeaderInline Entity="user"></UserHeaderInline>
+                                                        </li>
+                                                        <li class="w-25 text-right">
+                                                            <span>@reaction.Reaction</span>
+                                                            <button class="cursor-pointer" @onclick="() => this.PurgeReaction(reaction)">
+                                                                <i class="bi bi-trash-fill"></i>
+                                                            </button>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                    @if (this._getReactionsFromSocialProfile().Any() == true)
+                                    {
+                                        <div class="mt-3">
+                                            @foreach (var reaction in _getReactionsFromSocialProfile())
+                                            {
+                                                var socialProfile = this.Super.SocialProfiles.ReadFromCache().Id(reaction.SocialProfileId);
+                                                <div class="border mb-2 shadow-sm">
+                                                    <ul class="inline-list p-2">
+                                                        <li>
+                                                            <SocialProfileHeaderInline Entity="socialProfile"></SocialProfileHeaderInline>
+                                                        </li>
+                                                        <li class="w-25 text-right">
+                                                            <span>@reaction.Reaction</span>
+                                                            <button class="cursor-pointer" @onclick="() => this.PurgeReaction(reaction)">
+                                                                <i class="bi bi-trash-fill"></i>
+                                                            </button>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                </Authorized>
+                            </AuthorizeView>
+                            @foreach (var id in _getReactions().Select(x => x.UserId ?? x.SocialProfileId ?? Guid.Empty).Distinct())
+                            {
+                                var user = this.Super.Users.ReadFromCache().Id(id);
+                                var socialProfile = this.Super.SocialProfiles.ReadFromCache().Id(id);
+                                <div class="border mb-2 shadow-sm">
+                                    <ul class="inline-list p-2">
+                                        @if (user != null)
+                                        {
+                                            <li>
+                                                <UserHeaderInline Entity="user"></UserHeaderInline>
+                                            </li>
+                                            <li class="w-50 text-right">
+                                                @foreach (var reaction in _getReactions().Where(x => x.UserId == user.Id).OrderBy(x => x.Reaction))
+                                                {
+                                                    <span>@reaction.Reaction</span>
+                                                }
+                                            </li>
+                                        }
+                                        else if (socialProfile != null)
+                                        {
+                                            <li>
+                                                <SocialProfileHeaderInline Entity="socialProfile"></SocialProfileHeaderInline>
+                                            </li>
+                                            <li class="w-50 text-right">
+                                                @foreach (var reaction in _getReactions().Where(x => x.SocialProfileId == socialProfile.Id).OrderBy(x => x.Reaction))
+                                                {
+                                                    <span>@reaction.Reaction</span>
+                                                }
+                                            </li>
+                                        }
+                                        else
+                                        {
+                                            <li>
+                                                <span>@Text.Original("Anonymous user")</span>
+                                            </li>
+                                            <li class="w-50 text-right">
+                                                @foreach (var reaction in _getReactions().Where(x => x.UserId == null && x.SocialProfileId == null).OrderBy(x => x.Reaction))
+                                                {
+                                                    <span>@reaction.Reaction</span>
+                                                }
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            }
+                        </DialogContent>
+                    </MudDialog>
                 </li>
             </ul>
         </div>
@@ -151,12 +244,6 @@
             </div>
         </div>
     }
-    @if (_showEmojis)
-    {
-        <div class="emoji-wrapper border p-3">
-            <EmojiPickerElement Class="m-auto" OnEmojiSelected="this._onEmojiSelected"></EmojiPickerElement>
-        </div>
-    }
     @if (_showQuickReply)
     {
         <div class="position-fixed popup-container z-index-front">
@@ -191,6 +278,9 @@
 }
 
 @code {
+
+    private readonly DialogOptions _dialogOptions = new() { CloseOnEscapeKey = true, CloseButton = false, CloseOnNavigation = false, };
+
     private bool _showHeaderImage = false;
     private bool _showEmojis = false;
     private bool _showQuickReply = false;
@@ -285,116 +375,41 @@
         return [];
     }
 
-    private string WhoReacted(string reaction)
+    private IEnumerable<OrigamiContentReaction> _getReactionsFromSocialProfile()
     {
-        var reactions = this.Super.ContentReactions.Reactions(Entity!).Where(x => x.Reaction == reaction);
-
-        var result = new StringBuilder(
-            this.UserFacade.SocialProfile.New && this.UserFacade.User.New ? Text.Lower("Click to add this reaction (login first)") :
-            HasReaction(reaction)
-                ? Text.Lower("Click to remove")
-                : Text.Lower("Click to add this reaction"));
-
-        foreach (var reaction__ in reactions)
+        if (this.UserFacade.SocialProfile is { New: false })
         {
-            var user = this.Super.Users.ReadFromCache().Id(reaction__.UserId);
-            var socialProfile = this.Super.SocialProfiles.ReadFromCache().Id(reaction__.SocialProfileId);
-            if (user != null) result.Append($" • {user.DisplayName}");
-            if (socialProfile != null) result.Append($" • {socialProfile.GetName()} ({socialProfile.SocialNetwork})");
+            return _getReactions().Where(x => x.SocialProfileId == this.UserFacade.SocialProfile.Id).OrderBy(x => x.Reaction);
         }
-
-        return result.ToString();
+        return [];
     }
 
-    protected bool HasReaction(string reaction)
+    private IEnumerable<OrigamiContentReaction> _getReactionsFromUser()
     {
-        if (Entity != null && this.UserFacade.SocialProfile.New == false)
+        if (this.UserFacade.User is { New : false })
         {
-            return this.Super.ContentReactions.Reactions(Entity)
-                .Where(x => x.Reaction == reaction)
-                .Where(x => x.SocialProfileId == this.UserFacade.SocialProfile.Id)
-                .Any();
+            return _getReactions().Where(x => x.UserId == this.UserFacade.User.Id).OrderBy(x => x.Reaction);
         }
-        else if (Entity != null && this.UserFacade.User.New == false)
-        {
-            return this.Super.ContentReactions.Reactions(Entity)
-                .Where(x => x.Reaction == reaction)
-                .Where(x => x.UserId == this.UserFacade.User.Id)
-                .Any();
-        }
-        return false;
+        return [];
     }
 
-    protected string HasReactionClass(string reaction)
-    {
-        return this.HasReaction(reaction) ? "reaction-selected" : "border";
-    }
-
-    private void ReactionClick(string reaction)
+    private void PurgeReaction(OrigamiContentReaction reaction)
     {
         if (this.UserFacade.SocialProfile.New == false)
         {
-            if (HasReaction(reaction) == true)
-            {
-                var remove = this.Super.ContentReactions.ReadFromCache()
-                    .Where(x => x.ContentId == this.Entity!.Id)
-                    .Where(x => x.SocialProfileId == this.UserFacade.SocialProfile.Id)
-                    .Where(x => x.Reaction == reaction)
-                    .FirstOrDefault();
-
-                if (remove != null)
-                {
-                    var context = new DataOperationContextFrontEnd<OrigamiContentReaction>(UserFacade.SocialProfile, DateTime.UtcNow, remove);
-                    this.Super.ContentReactions.SmartPurge(context);
-                }
-            }
-            else
-            {
-                var add = new Core.Models.OrigamiContentReaction
-                {
-                    Id = Guid.NewGuid(),
-                    ContentId = this.Entity!.Id,
-                    SocialProfileId = this.UserFacade.SocialProfile.Id,
-                    Reaction = reaction,
-                };
-
-                var context = new DataOperationContextFrontEnd<OrigamiContentReaction>(UserFacade.SocialProfile, DateTime.UtcNow, add);
-                this.Super.ContentReactions.SmartCreate(context);
-            }
+            var context = new DataOperationContextFrontEnd<OrigamiContentReaction>(UserFacade.SocialProfile, DateTime.UtcNow, reaction);
+            this.Super.ContentReactions.SmartPurge(context);
             return;
         }
 
         if (this.UserFacade.User.New == false)
         {
-            if (HasReaction(reaction) == true)
-            {
-                var remove = this.Super.ContentReactions.ReadFromCache()
-                    .Where(x => x.ContentId == this.Entity!.Id)
-                    .Where(x => x.UserId == this.UserFacade.User.Id)
-                    .Where(x => x.Reaction == reaction)
-                    .FirstOrDefault();
-
-                if (remove != null)
-                {
-                    var context = new DataOperationContext<OrigamiContentReaction>(UserFacade.User, remove);
-                    this.Super.ContentReactions.SmartPurge(context, false);
-                }
-            }
-            else
-            {
-                var add = new Core.Models.OrigamiContentReaction
-                {
-                    Id = Guid.NewGuid(),
-                    ContentId = this.Entity!.Id,
-                    UserId = this.UserFacade.User.Id,
-                    Reaction = reaction,
-                };
-
-                var context = new DataOperationContext<OrigamiContentReaction>(UserFacade.User, add);
-                this.Super.ContentReactions.SmartSave(context, false);
-            }
+            var context = new DataOperationContext<OrigamiContentReaction>(UserFacade.User, reaction);
+            this.Super.ContentReactions.SmartPurge(context, false);
             return;
         }
+
+        throw new InvalidOperationException("Reaction author could not be found");
     }
 
     private void _quickReplies()

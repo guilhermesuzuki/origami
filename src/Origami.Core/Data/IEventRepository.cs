@@ -3,7 +3,7 @@ using Origami.Core.Models.Events;
 
 namespace Origami.Core.Data
 {
-    public interface IEventRepository
+    public interface IEventRepository: IReadFromCache<OrigamiEvent>
     {
         Result<SocialProfileCancelsReactionToCommentEvent> SocialProfileCancelsReactionToComment(OrigamiSocialProfile socialProfile, OrigamiContentCommentReaction reaction);
         Result<SocialProfileCancelsReactionToContentEvent> SocialProfileCancelsReactionToContent(OrigamiSocialProfile socialProfile, OrigamiContentReaction reaction);

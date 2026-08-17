@@ -29,6 +29,19 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("Content must exist"));
         }
 
+        public static IRuleBuilderOptions<T, T> DisplayNameMustBeUnique<T>(this IRuleBuilder<T, T> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory) where T : OrigamiUser
+        {
+            return ruleBuilder
+                .Must(entity =>
+                {
+                    using var db = dbContextFactory.CreateDbContext();
+                    var exists = db.Set<T>().AsNoTracking().Any(x => x.DisplayName == entity.DisplayName && x.Id != entity.Id);
+                    return !exists;
+                })
+                // TODO: add string to resx files
+                .WithMessage(text.Original("Display name is already in use"));
+        }
+
         public static IRuleBuilderOptions<T, T> InfiniteLoopsAreNotAllowed<T>(this IRuleBuilder<T, T> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory) where T : class, IId, IParentIdNull
         {
             return ruleBuilder
@@ -141,6 +154,19 @@ namespace Origami.Core.Validators
                     return !exists;
                 })
                 .WithMessage(text.Original("Title is already in use"));
+        }
+
+        public static IRuleBuilderOptions<T, T> UsernameMustBeUnique<T>(this IRuleBuilder<T, T> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory) where T : OrigamiUser
+        {
+            return ruleBuilder
+                .Must(entity =>
+                {
+                    using var db = dbContextFactory.CreateDbContext();
+                    var exists = db.Set<T>().AsNoTracking().Any(x => x.Username == entity.Username && x.Id != entity.Id);
+                    return !exists;
+                })
+                // TODO: add string to resx files
+                .WithMessage(text.Original("Username is already in use"));
         }
     }
 }

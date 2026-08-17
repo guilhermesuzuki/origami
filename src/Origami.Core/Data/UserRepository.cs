@@ -77,6 +77,9 @@ namespace Origami.Core.Data
 
         public Result<OrigamiUser> ChangePassword(DataOperationContext<OrigamiUser> ctx, string oldPassword, string newPassword1, string newPassword2)
         {
+            ctx.Entity.NewPassword1 = newPassword1;
+            ctx.Entity.NewPassword2 = newPassword2;
+
             using var db = DbContextFactory.CreateDbContext();
 
             // this is necessary because of ReadFromDatabase
@@ -110,19 +113,19 @@ namespace Origami.Core.Data
         {
             var hub = new Result<OrigamiUser>(ctx.Entity);
 
-            var password = "@"
-                + Nanoid.Generate(alphabet: Nanoid.Alphabets.Letters, size: 4)
-                + Nanoid.Generate(alphabet: Nanoid.Alphabets.Digits, size: 4)
-                + "#";
-
             ctx.Entity.MustChangePassword = true;
-            ctx.Entity.Password = password.SHA256Hash();
+            ctx.Entity.Password = ctx.Entity.NewPassword1.SHA256Hash();
 
-            // TODO: add this to resx files
-            hub.Info = Text.Original("A password has been created: {0}", password);
-            hub.Password = password;
+            hub.Info = Text.Original("A password has been created");
+            hub.Password = string.Empty;
 
             base.Create(ctx).Push(hub);
+
+            ctx.Entity.UserBlogs.Each(ub => ub.UserId = ctx.Entity.Id);
+            ctx.Entity.UserRoles.Each(ur => ur.UserId = ctx.Entity.Id);
+
+            ctx.Entity.UserBlogs.GetContexts(ctx).Each(x => this._userBlogRepository.SmartSave(x, false).Push(hub));
+            ctx.Entity.UserRoles.GetContexts(ctx).Each(x => this._userRoleRepository.SmartSave(x, false).Push(hub));
 
             return hub;
         }
@@ -227,11 +230,13 @@ namespace Origami.Core.Data
                 var del2 = db.UserPasswordResets.Where(x => x.UserId == ctx.Entity.Id).ExecuteDelete();
                 var del3 = db.UserPasswordResets.Where(x => x.AuthorId == ctx.Entity.Id).ExecuteDelete();
                 var del4 = db.UserBlogs.Where(x => x.UserId == ctx.Entity.Id).ExecuteDelete();
+                var del5 = db.PhysicalPageViews.Where(x => x.UserId == ctx.Entity.Id).ExecuteDelete();
 
                 hub.RowsAffected += del1;
                 hub.RowsAffected += del2;
                 hub.RowsAffected += del3;
                 hub.RowsAffected += del4;
+                hub.RowsAffected += del5;
             }
 
             return hub;
@@ -392,6 +397,31 @@ namespace Origami.Core.Data
             ctx.Entity.DateUnblocked = DateTime.UtcNow;
 
             return this.SmartUpdate(ctx, false);
+        }
+
+        public override Result<OrigamiUser> Update(DataOperationContext<OrigamiUser> ctx)
+        {
+            if (ctx.Entity.NewPassword1.Has() == true
+                && ctx.Entity.NewPassword2.Has() == true
+                && ctx.Entity.NewPassword1 == ctx.Entity.NewPassword2)
+            {
+                ctx.Entity.Password = ctx.Entity.NewPassword1.SHA256Hash();
+            }
+
+            var hub = base.Update(ctx);
+
+            ctx.Entity.UserBlogs.Each(ub => ub.UserId = ctx.Entity.Id);
+            ctx.Entity.UserRoles.Each(ur => ur.UserId = ctx.Entity.Id);
+
+            using var db = this.DbContextFactory.CreateDbContext();
+            var dbo1 = db.Set<OrigamiUserRole>().AsNoTracking().Where(x => x.UserId == ctx.Entity.Id).ToList();
+            var merge1 = dbo1.GetMerge(ctx.Entity.UserRoles);
+            hub.OnSuccess(() => this._userRoleRepository.Merge(ctx, merge1).Push(hub));
+            var dbo2 = db.Set<OrigamiUserBlog>().AsNoTracking().Where(x => x.UserId == ctx.Entity.Id).ToList();
+            var merge2 = dbo2.GetMerge(ctx.Entity.UserBlogs);
+            hub.OnSuccess(() => this._userBlogRepository.Merge(ctx, merge2).Push(hub));
+
+            return hub;
         }
 
         public override Result<OrigamiUser> UpdateValidation(DataOperationContext<OrigamiUser> ctx)

@@ -21,7 +21,7 @@ namespace Origami.Core.Data
         {
             try
             {
-                var clone = ctx.Entity.Clone();
+                var clone = ctx.Entity.Clone().NullFKObjectsForPersistence();
 
                 using (var db = DbContextFactory.CreateDbContext())
                 {
@@ -30,6 +30,7 @@ namespace Origami.Core.Data
                 }
 
                 ctx.Entity.Version(clone);
+                ctx.Entity.CreationDate(clone);
 
                 return new(ctx.Entity);
             }
@@ -139,6 +140,7 @@ namespace Origami.Core.Data
                     db.SaveChanges();
                 }
                 ctx.Entity.Version(clone);
+                ctx.Entity.ModificationDate(clone);
                 return new(ctx.Entity);
             }
             catch (Exception ex)

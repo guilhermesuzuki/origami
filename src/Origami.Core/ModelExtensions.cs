@@ -4,6 +4,7 @@ using FluentValidation;
 using Origami.Core.Models;
 using Origami.Core.Models.Settings;
 using SixLabors.ImageSharp;
+using System.Collections;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -170,6 +171,7 @@ namespace Origami.Core
                 {
                     OrigamiPage => true,
                     OrigamiPost => true,
+                    OrigamiSoftwareRelease => true,
                     OrigamiVideo => true,
                     _ => false,
                 };
@@ -207,6 +209,14 @@ namespace Origami.Core
             }
 
             return entity != null ? entity.GetClone() : Activator.CreateInstance<T>();
+        }
+
+        public static void CreationDate<T>(this T to, T from)
+        {
+            if (from is IDateCreated fromDateCreated && to is IDateCreated toDateCreated)
+            {
+                toDateCreated.DateCreated = fromDateCreated.DateCreated;
+            }
         }
 
         /// <summary>
@@ -503,18 +513,7 @@ namespace Origami.Core
         /// <returns></returns>
         public static string GetHexString(this byte[] bytes)
         {
-            int j = bytes.Length;
-
-            char[] chars = new char[j * 2];
-
-            for (int i = 0; i < j; i++)
-            {
-                int b = bytes[i];
-                chars[i * 2] = _hexDigits[b >> 4];
-                chars[i * 2 + 1] = _hexDigits[b & 0xF];
-            }
-
-            return new string(chars);
+            return BitConverter.ToString(bytes).Replace("-", string.Empty).TrimStart('0');
         }
 
         public static string GetHyperlink(this OrigamiBlog blog, OrigamiContentTag tag, INanoId? entity = null)
@@ -732,17 +731,9 @@ namespace Origami.Core
             return string.IsNullOrWhiteSpace(@string) == false;
         }
 
-        public static bool Has<T>(this T? entity)
-            where T : class, INew
+        public static bool Has<T>([NotNullWhen(true)] this T? entity) where T : class, INew
         {
-            if (entity == null) return false;
-            if (entity.New) return false;
-            return true;
-        }
-
-        public static string HexString(this byte[] byteArray)
-        {
-            return BitConverter.ToString(byteArray).Replace("-", string.Empty).TrimStart('0');
+            return entity is { New: false };
         }
 
         /// <summary>
@@ -893,16 +884,6 @@ namespace Origami.Core
         }
 
         /// <summary>
-        /// Generates a unique cache key for storing or retrieving comment counts associated with the specified entity.
-        /// </summary>
-        /// <param name="entity">The entity for which the cache key is generated. Must implement <see cref="IId"/>.</param>
-        /// <returns>A string representing the cache key, formatted to include the entity's type and ID.</returns>
-        public static string KeyForCachingComments(this IId entity)
-        {
-            return $"entities-comments-count-{entity.GetType().FullName}[{entity.Id}]";
-        }
-
-        /// <summary>
         /// TODO: comment this
         /// </summary>
         /// <param name="entity"></param>
@@ -942,6 +923,14 @@ namespace Origami.Core
         {
             return string.Equals(a, b, comparison);
         }
+        public static void ModificationDate<T>(this T to, T from)
+        {
+            if (from is IDateModified fromDateModified && to is IDateModified toDateModified)
+            {
+                toDateModified.DateModified = fromDateModified.DateModified;
+            }
+        }
+
         /// <summary>
         /// Retrieves the first entity from the collection that matches the specified Nano ID.
         /// </summary>
@@ -1297,37 +1286,18 @@ namespace Origami.Core
             return entity;
         }
 
-        public static T? SetDateCreated<T>(this T? entity, DateTime dateTime)
-        {
-            if (entity is IDateCreated dateCreated)
-            {
-                dateCreated.DateCreated = dateTime;
-            }
-            return entity;
-        }
-
-        public static T? SetDateModified<T>(this T? entity, DateTime dateTime)
-        {
-            if (entity is IDateModified dateModified)
-            {
-                dateModified.DateModified = dateTime;
-            }
-            return entity;
-        }
-
         /// <summary>
         /// Sets the Id, when <paramref name="entity"/> is <see cref="IId"/>
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public static T? SetId<T>(this T? entity) where T : IId
+        public static T? SetId<T>(this T? entity)
         {
-            if (entity != null && entity.Id == Guid.Empty)
+            if (entity is IId id && id.Id == Guid.Empty)
             {
-                entity.Id = Guid.NewGuid();
+                id.Id = Guid.NewGuid();
             }
-
             return entity;
         }
 
@@ -1511,6 +1481,7 @@ namespace Origami.Core
             if (to != null) to.Version = from!.Version;
             return entity;
         }
+
         /// <summary>
         /// TODO: comment this
         /// </summary>
@@ -1519,6 +1490,19 @@ namespace Origami.Core
         public static string YesNo(this bool value)
         {
             return value ? "Yes" : "No";
+        }
+
+        /// <summary>
+        /// Returns "Yes" or "No" based on the boolean value, using the provided Text instance for localization.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public static string YesNo(this bool value, Text text)
+        {
+            return value 
+                ? text.Original("Yes") 
+                : text.Original("No");
         }
 
         /// <summary>

@@ -12,7 +12,7 @@ using SixLabors.ImageSharp.Processing;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Origami.UI.FrontEnd.Controllers
+namespace Origami.UI.Controllers
 {
     [ApiController]
     public class FilesController :

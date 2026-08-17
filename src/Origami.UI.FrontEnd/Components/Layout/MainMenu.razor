@@ -98,7 +98,7 @@
 
     private void OpenBlog(OrigamiBlog blog)
     {
-        this.GhostOfTheNavigator.NavigateTo($"{blog.Hyperlink}#content-start");
+        this.WhatHappensNext.WhenIClickHere(this, new() { Entity = blog, Slug = blog, });
     }
 
     private void GoToRss(OrigamiBlog blog)

@@ -2598,4 +2598,58 @@
   <data name="Something went wrong with {0} login" xml:space="preserve">
     <value>{0} 로그인 중 문제가 발생했습니다</value>
   </data>
+  <data name="•• Not shared ••" xml:space="preserve">
+    <value>•• 공유되지 않음 ••</value>
+  </data>
+  <data name="Social profile is required" xml:space="preserve">
+    <value>소셜 프로필은 필수입니다</value>
+  </data>
+  <data name="User did not share a valid e-mail address" xml:space="preserve">
+    <value>사용자가 유효한 이메일 주소를 공유하지 않았습니다</value>
+  </data>
+  <data name="Logged in on website" xml:space="preserve">
+    <value>웹사이트에 로그인됨</value>
+  </data>
+  <data name="Subscribed to website" xml:space="preserve">
+    <value>웹사이트 구독 중</value>
+  </data>
+  <data name="Unsubscribed from website" xml:space="preserve">
+    <value>웹사이트 구독 취소</value>
+  </data>
+  <data name="Help me" xml:space="preserve">
+    <value>도와주세요</value>
+  </data>
+  <data name="Master password doesn't match the system" xml:space="preserve">
+    <value>마스터 비밀번호가 시스템 비밀번호와 일치하지 않습니다</value>
+  </data>
+  <data name="One-time master password" xml:space="preserve">
+    <value>일회용 마스터 비밀번호</value>
+  </data>
+  <data name="One-time master password used" xml:space="preserve">
+    <value>일회용 마스터 비밀번호가 사용되었습니다</value>
+  </data>
+  <data name="Are you ready to use the one-time master password and create a new admin user?" xml:space="preserve">
+    <value>일회용 마스터 비밀번호를 사용하여 새 관리자 사용자를 생성할 준비가 되셨습니까?</value>
+  </data>
+  <data name="Proceed" xml:space="preserve">
+    <value>진행</value>
+  </data>
+  <data name="Creating a user" xml:space="preserve">
+    <value>사용자를 생성하는 중</value>
+  </data>
+  <data name="Get new random password" xml:space="preserve">
+    <value>새 랜덤 비밀번호 생성</value>
+  </data>
+  <data name="New passwords must be valid and match each other" xml:space="preserve">
+    <value>새 비밀번호는 유효해야 하며 서로 일치해야 합니다</value>
+  </data>
+  <data name="A password has been created" xml:space="preserve">
+    <value>비밀번호가 생성되었습니다</value>
+  </data>
+  <data name="Username is already in use" xml:space="preserve">
+    <value>사용자 이름이 이미 사용 중입니다</value>
+  </data>
+  <data name="Display name is already in use" xml:space="preserve">
+    <value>표시 이름이 이미 사용 중입니다</value>
+  </data>
 </root>

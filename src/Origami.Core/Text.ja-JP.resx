@@ -2598,4 +2598,58 @@
   <data name="Something went wrong with {0} login" xml:space="preserve">
     <value>{0} でのログイン中に問題が発生しました</value>
   </data>
+  <data name="•• Not shared ••" xml:space="preserve">
+    <value>•• 共有されていません ••</value>
+  </data>
+  <data name="Social profile is required" xml:space="preserve">
+    <value>ソーシャルプロフィールは必須です</value>
+  </data>
+  <data name="User did not share a valid e-mail address" xml:space="preserve">
+    <value>ユーザーは有効なメールアドレスを共有しませんでした</value>
+  </data>
+  <data name="Logged in on website" xml:space="preserve">
+    <value>ウェブサイトにログイン済み</value>
+  </data>
+  <data name="Subscribed to website" xml:space="preserve">
+    <value>ウェブサイトを購読中</value>
+  </data>
+  <data name="Unsubscribed from website" xml:space="preserve">
+    <value>ウェブサイトの購読を解除</value>
+  </data>
+  <data name="Help me" xml:space="preserve">
+    <value>助けて</value>
+  </data>
+  <data name="Master password doesn't match the system" xml:space="preserve">
+    <value>マスターパスワードがシステムのパスワードと一致しません</value>
+  </data>
+  <data name="One-time master password" xml:space="preserve">
+    <value>使い捨てマスターパスワード</value>
+  </data>
+  <data name="One-time master password used" xml:space="preserve">
+    <value>使い捨てマスターパスワードが使用されました</value>
+  </data>
+  <data name="Are you ready to use the one-time master password and create a new admin user?" xml:space="preserve">
+    <value>使い捨てマスターパスワードを使用して、新しい管理者ユーザーを作成しますか？</value>
+  </data>
+  <data name="Proceed" xml:space="preserve">
+    <value>続行</value>
+  </data>
+  <data name="Creating a user" xml:space="preserve">
+    <value>ユーザーを作成しています</value>
+  </data>
+  <data name="Get new random password" xml:space="preserve">
+    <value>新しいランダムパスワードを生成</value>
+  </data>
+  <data name="New passwords must be valid and match each other" xml:space="preserve">
+    <value>新しいパスワードは有効であり、互いに一致している必要があります</value>
+  </data>
+  <data name="A password has been created" xml:space="preserve">
+    <value>パスワードが作成されました</value>
+  </data>
+  <data name="Username is already in use" xml:space="preserve">
+    <value>ユーザー名はすでに使用されています</value>
+  </data>
+  <data name="Display name is already in use" xml:space="preserve">
+    <value>表示名はすでに使用されています</value>
+  </data>
 </root>

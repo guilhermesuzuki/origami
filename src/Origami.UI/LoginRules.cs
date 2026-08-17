@@ -1,7 +1,9 @@
-﻿using Origami.Core.Models;
+﻿using Origami.Core;
+using Origami.Core.Data;
+using Origami.Core.Models;
 using OtpNet;
 
-namespace Origami.Core.Data
+namespace Origami.UI
 {
     public class LoginRules : ILoginRules
     {
@@ -214,15 +216,16 @@ namespace Origami.Core.Data
             }
         }
 
-        public Task LoginAsync()
+        public async Task LoginAsync()
         {
             var user = this._superRepository.Users.LookupUserInDatabase(this.Username, this.Password);
             if (user != null)
             {
                 this.User = user;
-                return Task.CompletedTask;
+                return;
             }
 
+            await Task.Delay(2000);
             throw new InvalidOperationException("Combination of username and password does not exist in the database");
         }
 
