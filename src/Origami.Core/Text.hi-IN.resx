@@ -2643,8 +2643,8 @@
   <data name="New passwords must be valid and match each other" xml:space="preserve">
     <value>नए पासवर्ड मान्य होने चाहिए और एक-दूसरे से मेल खाने चाहिए</value>
   </data>
-  <data name="A password has been created: {0}" xml:space="preserve">
-    <value>एक पासवर्ड बनाया गया है: {0}</value>
+  <data name="A password has been created" xml:space="preserve">
+    <value>एक पासवर्ड बनाया गया है</value>
   </data>
   <data name="Username is already in use" xml:space="preserve">
     <value>उपयोगकर्ता नाम पहले से उपयोग में है</value>

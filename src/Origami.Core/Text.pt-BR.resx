@@ -2643,8 +2643,8 @@
   <data name="New passwords must be valid and match each other" xml:space="preserve">
     <value>As novas senhas devem ser válidas e iguais</value>
   </data>
-  <data name="A password has been created: {0}" xml:space="preserve">
-    <value>Uma senha foi criada: {0}</value>
+  <data name="A password has been created" xml:space="preserve">
+    <value>Uma senha foi criada</value>
   </data>
   <data name="Username is already in use" xml:space="preserve">
     <value>O nome de usuário já está em uso</value>

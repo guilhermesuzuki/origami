@@ -2643,8 +2643,8 @@
   <data name="New passwords must be valid and match each other" xml:space="preserve">
     <value>新密码必须有效且彼此匹配</value>
   </data>
-  <data name="A password has been created: {0}" xml:space="preserve">
-    <value>已创建密码：{0}</value>
+  <data name="A password has been created" xml:space="preserve">
+    <value>已创建密码</value>
   </data>
   <data name="Username is already in use" xml:space="preserve">
     <value>用户名已被使用</value>
