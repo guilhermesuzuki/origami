@@ -7,9 +7,9 @@ namespace Origami.Core.Validators
     {
         public OrigamiSubscriberValidator(Text text, IWebRootPath webRootPath) : base()
         {
-            RuleFor(x => x.Id).NotNull().NotEmpty().WithMessage("Id is required");
-            RuleFor(x => x.SocialProfileId).NotNull().NotEmpty().WithMessage("Social profile is required");
-            RuleFor(x => x.Email).Must(x => x.Has() ? x.Email() : false).WithMessage("When provided, email must be valid");
+            RuleFor(x => x.Id).NotNull().NotEmpty().WithMessage(text.Original("Id is required"));
+            RuleFor(x => x.SocialProfileId).NotNull().NotEmpty().WithMessage(text.Original("Social profile is required"));
+            RuleFor(x => x.Email).Must(x => x.Has() ? x.Email() : false).WithMessage(text.Original("Email address is required"));
         }
     }
 }
