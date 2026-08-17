@@ -2611,7 +2611,7 @@
     <value>Auf der Website angemeldet</value>
   </data>
   <data name="Subscribed to website" xml:space="preserve">
-    <value />
+    <value>Website abonniert</value>
   </data>
   <data name="Unsubscribed from website" xml:space="preserve">
     <value>Website nicht mehr abonniert</value>
