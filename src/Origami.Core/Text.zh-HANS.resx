@@ -2649,4 +2649,7 @@
   <data name="Username is already in use" xml:space="preserve">
     <value>用户名已被使用</value>
   </data>
+  <data name="Display name is already in use" xml:space="preserve">
+    <value>显示名称已被使用</value>
+  </data>
 </root>

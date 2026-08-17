@@ -2649,4 +2649,7 @@
   <data name="Username is already in use" xml:space="preserve">
     <value>O nome de utilizador já está a ser utilizado</value>
   </data>
+  <data name="Display name is already in use" xml:space="preserve">
+    <value>O nome de apresentação já está a ser utilizado</value>
+  </data>
 </root>
