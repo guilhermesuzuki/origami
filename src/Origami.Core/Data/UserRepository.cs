@@ -116,8 +116,8 @@ namespace Origami.Core.Data
             ctx.Entity.MustChangePassword = true;
             ctx.Entity.Password = ctx.Entity.NewPassword1.SHA256Hash();
 
-            hub.Info = Text.Original("A password has been created: {0}", ctx.Entity.NewPassword1);
-            hub.Password = ctx.Entity.NewPassword1;
+            hub.Info = Text.Original("A password has been created");
+            hub.Password = string.Empty;
 
             base.Create(ctx).Push(hub);
 
