@@ -59,12 +59,12 @@ namespace Origami.UI
             //origami connection string
             var origami = builder.Configuration.GetOrigamiConnectionString();
 
-            builder.Services.AddDbContextFactory<OrigamiDbContext>(options =>
+            builder.Services.AddDbContextFactory<OrigamiDbContext>((provider, options) =>
             {
                 options.EnableSensitiveDataLogging();
                 options.UseSqlServer(origami);
-                options.AddInterceptors(builder.Services.BuildServiceProvider().GetRequiredService<DateCreatedInterceptor>());
-                options.AddInterceptors(builder.Services.BuildServiceProvider().GetRequiredService<DateModifiedInterceptor>());
+                options.AddInterceptors(provider.GetRequiredService<DateCreatedInterceptor>());
+                options.AddInterceptors(provider.GetRequiredService<DateModifiedInterceptor>());
             });
 
             builder.Services.AddDbContextFactory<OrigamiIdentityDbContext>(options =>
