@@ -438,10 +438,13 @@ namespace Origami.UI
                 app.Logger.LogInformation("*************************");
                 app.Logger.LogInformation("Starting Origami.UI.Admin");
                 app.Logger.LogInformation("*************************");
-                var masterPassword = Nanoid.Generate(size: 10);
-                var appFacade = app.Services.GetRequiredService<IAppFacade>();
-                appFacade.OneTimeMasterPasswordInSHA256 = masterPassword.SHA256Hash();
-                app.Logger.LogWarning("One-time master password: {password}", masterPassword);
+
+                var masterPassword = builder.Configuration["master-password"];
+                if (masterPassword.Has() == true)
+                {
+                    var appFacade = app.Services.GetRequiredService<IAppFacade>();
+                    appFacade.OneTimeMasterPasswordInSHA256 = masterPassword.SHA256Hash();
+                }
             }
             else
             {

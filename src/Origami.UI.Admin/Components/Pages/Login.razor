@@ -7,9 +7,6 @@
 @inherits BasicPage
 @layout CleanLayout
 
-@inject AuthenticationStateProvider myAuthenticationStateProvider
-@inject IUserRepository userRepository
-@inject IUserRoleRepository userRoleRepository
 @inject IOptions<JwtConfiguration> jwtConfiguration
 @inject ILoginRules loginRules
 
@@ -41,10 +38,13 @@
                             <i class="fa-solid fa-user-lock"></i>
                             @Text.Lower("Forgot password")
                         </button>
-                        <button class="btn btn-secondary text-white w-100" @onclick="_helpMe">
-                            <i class="fa-solid fa-circle-info"></i>
-                            @Text.Lower("help me")
-                        </button>
+                        @if (this.AppFacade.OneTimeMasterPasswordInSHA256.Has() == true)
+                        {
+                            <button class="btn btn-secondary text-white w-100" @onclick="_helpMe">
+                                <i class="fa-solid fa-circle-info"></i>
+                                @Text.Lower("help me")
+                            </button>
+                        }
                     </div>
                 }
                 else if (loginRules.GetCurrentStep() == ILoginRules.Steps.Step2_MustChangePassword)
