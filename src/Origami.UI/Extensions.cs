@@ -61,7 +61,10 @@ namespace Origami.UI
 
             builder.Services.AddDbContextFactory<OrigamiDbContext>((provider, options) =>
             {
-                options.EnableSensitiveDataLogging();
+                if (builder.Environment.IsDevelopment() || builder.Environment.IsEnvironment("Testing"))
+                {
+                    options.EnableSensitiveDataLogging();
+                }
                 options.UseSqlServer(origami);
                 options.AddInterceptors(provider.GetRequiredService<DateCreatedInterceptor>());
                 options.AddInterceptors(provider.GetRequiredService<DateModifiedInterceptor>());
