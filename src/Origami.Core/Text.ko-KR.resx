@@ -2652,4 +2652,7 @@
   <data name="Display name is already in use" xml:space="preserve">
     <value>표시 이름이 이미 사용 중입니다</value>
   </data>
+  <data name="BACPAC import failed: {0}" xml:space="preserve">
+    <value>BACPAC 가져오기에 실패했습니다: {0}</value>
+  </data>
 </root>

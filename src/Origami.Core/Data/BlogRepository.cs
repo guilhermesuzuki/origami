@@ -174,6 +174,21 @@ namespace Origami.Core.Data
                 if (permission.Ok == false) return permission;
             }
 
+            var blog = this.ReadFromDatabase(ctx.Entity);
+
+            if (blog == null)
+            {
+                return new() { Error = Text.Original("Blog could not be found") };
+            }
+            if (blog.IsDeleted)
+            {
+                return new() { Error = Text.Original("Blog is deleted") };
+            }
+            if (blog.IsActive == false)
+            {
+                return new() { Error = Text.Original("Blog is deactivated") };
+            }
+
             using var db = DbContextFactory.CreateDbContext();
 
             db.Blogs.Where(x => x.IsPrimary).ExecuteUpdate(setters => setters.SetProperty(x => x.IsPrimary, false));
@@ -189,7 +204,7 @@ namespace Origami.Core.Data
             ctx.Entity.Version(fresh);
 
             //refreshes the cache
-            RefreshCache();
+            this.RefreshCache();
 
             //returns the updated blog entity
             return new(ctx.Entity);

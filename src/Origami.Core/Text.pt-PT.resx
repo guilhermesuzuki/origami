@@ -2652,4 +2652,7 @@
   <data name="Display name is already in use" xml:space="preserve">
     <value>O nome de apresentação já está a ser utilizado</value>
   </data>
+  <data name="BACPAC import failed: {0}" xml:space="preserve">
+    <value>Falha na importação do BACPAC: {0}</value>
+  </data>
 </root>
