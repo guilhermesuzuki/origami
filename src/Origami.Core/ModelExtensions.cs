@@ -1094,6 +1094,8 @@ namespace Origami.Core
         {
             if (url.Has() == true)
             {
+                if (url.IsValidBase64Image() == true) return url;
+
                 if (url.Contains($"?{key}=", StringComparison.InvariantCultureIgnoreCase) == true)
                 {
                     var split1 = url.Split('?', StringSplitOptions.RemoveEmptyEntries);

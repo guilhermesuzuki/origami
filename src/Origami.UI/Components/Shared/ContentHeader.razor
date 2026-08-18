@@ -14,11 +14,11 @@
     <div class="content-header position-relative shadow-sm cursor-pointer @Class" @onclick="this.Go" lang="@Entity.LanguageWrittenOn">
         @if (this.Entity is OrigamiQuickNote quickNote)
         {
-            <div class="content-header-image" style="background: @quickNote.Background;"></div>
+            <div class="content-header-image content-header-background" style="background: @quickNote.Background;"></div>
         }
         else
         {
-            <div class="content-header-image" style="background-image: url(@header);"></div>
+            <div class="content-header-image" style="background-image: url(@header.QueryString("size", HeaderImageSize.ToString()));"></div>
         }
         <div class="content-header-title position-absolute overflow-auto zeroes">
             <ul class="inline-list position-absolute w-100 z-index-middle cursor-pointer p-2" style="top:0;">
@@ -290,6 +290,7 @@
     [Parameter] public ISlug? Slug { get; set; }
     [Parameter] public OrigamiContent? Entity { get; set; }
     [Parameter] public bool ShowRelatedContent { get; set; } = false;
+    [Parameter] public ePictureSizes HeaderImageSize { get; set; } = ePictureSizes.original;
 
     /// <summary>
     /// Children pages
