@@ -436,7 +436,7 @@ namespace Origami.Core.Data
                 using var db = _dbContextFactory.CreateDbContext();
 
                 // needs to hit the database for the entity
-                var permission = root.Entity.AuthorId == userId.Id ? PublishOwnPermission : PublishOtherUsersPermission;
+                var permission = root.Entity.AuthorId == userId.Id ? UnpublishOwnPermission : UnpublishOtherUsersPermission;
 
                 // check permissions
                 if (UserHasPermission(db, userId.Id, permission) == false) return new(root) { Info = permission, Error = Text.Original(Text.YouDontHavePermissionForThisFeature), };

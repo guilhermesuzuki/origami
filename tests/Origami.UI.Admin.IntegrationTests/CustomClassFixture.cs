@@ -69,6 +69,7 @@ namespace Origami.UI.Admin.IntegrationTests
             NanoId = BlogId.ToString().Substring(0, 8),
             IsActive = false,
             IsDeleted = false,
+            IsPrimary = false,
         };
 
         public OrigamiBlog TestBlogWithBigName = new OrigamiBlog
@@ -311,6 +312,18 @@ namespace Origami.UI.Admin.IntegrationTests
             RestoreUsers = true,
             RestoreVideos = true,
             UnblockUsers = true,
+            UnpublishOwnPages = true,
+            UnpublishOwnPosts = true,
+            UnpublishOwnQuickNotes = true,
+            UnpublishOwnSpecialMessages = true,
+            UnpublishOwnSpecialPages = true,
+            UnpublishOwnVideos = true,
+            UnpublishOtherUsersPages = true,
+            UnpublishOtherUsersPosts = true,
+            UnpublishOtherUsersQuickNotes = true,
+            UnpublishOtherUsersSpecialMessages = true,
+            UnpublishOtherUsersSpecialPages = true,
+            UnpublishOtherUsersVideos = true,
         };
 
         public OrigamiRole TestRoleNoPermissions = new()
