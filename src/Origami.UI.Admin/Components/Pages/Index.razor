@@ -529,8 +529,8 @@
         var range = this.TimePeriod.GetRange();
         var filters = new StringBuilder($"({nameof(OrigamiUserView.BlogId)} == \"{this.UserFacade.BlogId}\")");
 
-        filters.AppendLine($" && {nameof(OrigamiUserView.DateCreated)} >= \"{range.Start}\"");
-        filters.AppendLine($" && {nameof(OrigamiUserView.DateCreated)} <= \"{range.End}\"");
+        filters.AppendLine($" && {nameof(OrigamiUserView.DateCreated)} >= \"{range.Start.ToString("yyyy.MM.dd hh:mm:ss tt")}\"");
+        filters.AppendLine($" && {nameof(OrigamiUserView.DateCreated)} <= \"{range.End.ToString("yyyy.MM.dd hh:mm:ss tt")}\"");
 
         //iterates through every filter definition
         foreach (var definition in state.FilterDefinitions)
