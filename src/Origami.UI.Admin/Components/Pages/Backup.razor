@@ -141,6 +141,11 @@
             {
                 return true;
             }
+            if (this.SelectedEntities.Any() == true)
+            {
+                var entity = this.SelectedEntities.First();
+                return entity is OrigamiBackupRestore;
+            }
             return base.DisableTheRestoreButton;
         }
     }
