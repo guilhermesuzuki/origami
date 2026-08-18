@@ -157,7 +157,7 @@
                             @foreach (var file in this._files)
                             {
                                 <div class="mb-3 cursor-pointer col-6 col-xxl-3 @(this._selectedFile != null && this._selectedFile.WebPath == file.WebPath ? "selected-file" : null) dummy" @onclick="() => _selectFile(file)">
-                                    <div class="p-2 border file shadow-sm position-relative">
+                                    <div class="p-2 border-2 file shadow-sm position-relative @(this._selectedFile != null && this._selectedFile.WebPath == file.WebPath ? null : "border-secondary-subtle")">
                                         <div class="position-absolute text-left">
                                             <MudCheckBox T="bool" @bind-Value="file.Checked"></MudCheckBox>
                                         </div>
@@ -670,7 +670,6 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        this.VirtualPath = $"/files/blogs/{this.GetBlogFromUserFacade().NanoId}/";
 
         this.UserFacade.Changed += (sender, property) =>
         {

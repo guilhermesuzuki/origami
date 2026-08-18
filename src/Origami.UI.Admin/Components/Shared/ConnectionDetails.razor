@@ -3,13 +3,12 @@
 @inject IConfiguration configuration
 
 <div class="connection-details @Class">
-    <span>@Text.Lower("Db connectivity details")</span>
     <ul class="inline-list">
         <li style="width: 25px;">
-            <i class="fa-solid fa-circle-user"></i>
+            <i class="fa-solid fa-server"></i>
         </li>
         <li>
-            @DatabaseUser().User
+            <span>@Text.Lower("Connectivity details")</span>
         </li>
     </ul>
     <ul class="inline-list">
