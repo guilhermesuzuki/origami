@@ -1,6 +1,7 @@
 ﻿@inherits BasicFormFull<OrigamiBackup>
 
 <MudFileUpload T="IBrowserFile" FilesChanged="UploadBackup" Accept=".zip" MaximumFileCount="1" Class="d-inline-block">
+    <SelectedTemplate></SelectedTemplate>
     <CustomContent>
         <div class="btn-group @Class">
             <button class="btn btn-danger text-white" title="@Text.Lower("Restore files and database from a zip file")" disabled="@this.DisableTheRestoreZipButton" @onclick="context.OpenFilePickerAsync">
