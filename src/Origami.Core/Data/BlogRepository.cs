@@ -119,7 +119,7 @@ namespace Origami.Core.Data
 
         public string DirectoryForScalingImages()
         {
-            return $"/files/{typeof(OrigamiBlog).GetPlural().ToLower()}/scaling/";
+            return $"/scaling/";
         }
 
         public OrigamiBlog GetPrimary()
