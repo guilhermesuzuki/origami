@@ -2673,4 +2673,7 @@
   <data name="Connectivity details" xml:space="preserve">
     <value>Verbindungsdetails</value>
   </data>
+  <data name="Deactivated" xml:space="preserve">
+    <value>Deaktiviert</value>
+  </data>
 </root>
