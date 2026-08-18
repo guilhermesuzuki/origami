@@ -2670,4 +2670,7 @@
   <data name="Blog is deleted" xml:space="preserve">
     <value>博客已删除</value>
   </data>
+  <data name="Connectivity details" xml:space="preserve">
+    <value>连接详细信息</value>
+  </data>
 </root>
