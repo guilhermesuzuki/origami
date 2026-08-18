@@ -84,6 +84,13 @@ namespace Origami.Core.Data
         IEnumerable<OrigamiCategory> GetCategories();
 
         /// <summary>
+        /// Gets all categories that are children of the specified parent category.
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <returns></returns>
+        IEnumerable<OrigamiCategory> GetCategories(OrigamiCategory parent);
+
+        /// <summary>
         /// Gets all comments for a specific blog
         /// </summary>
         /// <param name="blogId"></param>
@@ -91,6 +98,9 @@ namespace Origami.Core.Data
         IEnumerable<OrigamiContentComment> GetComments(Guid blogId);
 
         IEnumerable<OrigamiContent> GetContents(OrigamiContentTag tag, Guid blogId);
+
+        IEnumerable<OrigamiContent> GetContents(OrigamiCategory category);
+
         /// <summary>
         /// Draft pages
         /// </summary>

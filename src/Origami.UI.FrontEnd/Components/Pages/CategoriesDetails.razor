@@ -85,11 +85,8 @@
 
     protected void LoadFromCategory()
     {
-        Items = new();
         var category = this.GetCategory();
-        Items.AddRange(this.Super.GetPosts(category).Published());
-        Items.AddRange(this.Super.GetVideos(category).Published());
-        Items = Items.DistinctBy(x => x.Id).OrderBy(x => x.Title).ToList();
+        Items = this.Super.GetContents(category).Published().OrderBy(x => x.Title).ToList();
     }
 
     protected void LoadContent()
