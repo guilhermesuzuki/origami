@@ -21,7 +21,7 @@ namespace Origami.UI.Admin
         protected virtual async Task LogoutFromAdminAsync()
         {
             await this.JSRuntime.InvokeVoidAsync("$.removeCookie", this.Configuration.GetUserCookieKey(), new { path = "/" });
-            this.UserFacade.User = OrigamiUser.AnonymousUser;
+            this.UserFacade.UserId = OrigamiUser.AnonymousUser.Id;
             this.GhostOfTheNavigator.Refresh(true);
         }
 

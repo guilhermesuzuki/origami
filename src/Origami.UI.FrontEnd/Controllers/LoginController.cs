@@ -142,7 +142,7 @@ namespace Origami.UI.FrontEnd.Controllers
         {
             await HttpContext.SignOutAsync();
             HttpContext.Logout_Workaround();
-            _userFacade.SocialProfile = new();
+            _userFacade.SocialProfileId = OrigamiSocialProfile.AnonymousUser.Id;
             return Redirect(Uri.UnescapeDataString(returnUrl));
         }
 

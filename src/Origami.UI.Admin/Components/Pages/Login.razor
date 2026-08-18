@@ -222,7 +222,7 @@
 
     private async Task _welcomeToTheApplication(object? sender, EventArgs e)
     {
-        this.UserFacade.User = this.loginRules.User;
+        this.UserFacade.UserId = this.loginRules.User.Id;
         this.Super.Users.UpdateCache(this.UserFacade.User);
 
         var token = this._generateJwtToken(this.UserFacade.User);
