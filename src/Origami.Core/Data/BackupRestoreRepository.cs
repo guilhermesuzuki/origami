@@ -264,7 +264,7 @@ namespace Origami.Core.Data
 
             if (process.ExitCode != 0)
             {
-                return new() { Error = $"BACPAC export failed: {error}" };
+                return new() { Error = Text.Original("BACPAC export failed: {0}", error) };
             }
 
             return new(target) { Success = Text.Original("BACPAC file created successfully") };
@@ -274,12 +274,12 @@ namespace Origami.Core.Data
         {
             if (File.Exists(bacpacPath) == false)
             {
-                return new() { Error = "BACPAC file not found" };
+                return new() { Error = Text.Original("BACPAC file not found") };
             }
 
             if (Current == null)
             {
-                return new() { Error = $"Current process hasn't started yet" };
+                return new() { Error = Text.Original("Current process hasn't started yet") };
             }
 
             var oi = _configuration.GetOrigamiConnectionString();
@@ -315,7 +315,7 @@ namespace Origami.Core.Data
 
             if (process.ExitCode != 0)
             {
-                throw new Exception($"BACPAC import failed:\n{error}");
+                throw new Exception(Text.Original("BACPAC import failed: {0}", error));
             }
 
             return new() { Success = Text.Original("Database restored successfully."), };
