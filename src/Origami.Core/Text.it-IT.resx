@@ -127,10 +127,10 @@
     <value>{0} commento/i</value>
   </data>
   <data name="{0} directories" xml:space="preserve">
-    <value>Directory {0}</value>
+    <value>{0} directory</value>
   </data>
   <data name="{0} directory" xml:space="preserve">
-    <value>Rubrica {0}</value>
+    <value>{0} directory</value>
   </data>
   <data name="{0} does NOT exist" xml:space="preserve">
     <value>{0} NON ESISTE</value>
@@ -2675,5 +2675,8 @@
   </data>
   <data name="Deactivated" xml:space="preserve">
     <value>Disattivato</value>
+  </data>
+  <data name="{0} content(s)" xml:space="preserve">
+    <value>{0} contenuto/i</value>
   </data>
 </root>

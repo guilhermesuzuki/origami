@@ -124,13 +124,13 @@
     <value>[À l'heure actuelle]</value>
   </data>
   <data name="{0} comment(s)" xml:space="preserve">
-    <value>Commentaires sur {0}</value>
+    <value>{0} commentaire(s)</value>
   </data>
   <data name="{0} directories" xml:space="preserve">
-    <value>Annuaires {0}</value>
+    <value>{0} répertoires</value>
   </data>
   <data name="{0} directory" xml:space="preserve">
-    <value>Répertoire {0}</value>
+    <value>{0} répertoire</value>
   </data>
   <data name="{0} does NOT exist" xml:space="preserve">
     <value>{0} N’EXISTE PAS</value>
@@ -2675,5 +2675,8 @@
   </data>
   <data name="Deactivated" xml:space="preserve">
     <value>Désactivé</value>
+  </data>
+  <data name="{0} content(s)" xml:space="preserve">
+    <value>{0} contenu(s)</value>
   </data>
 </root>

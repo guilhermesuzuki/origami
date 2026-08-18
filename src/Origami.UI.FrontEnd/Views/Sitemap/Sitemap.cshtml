@@ -8,7 +8,6 @@
 
 @{
     var oi = $"{this.Context.Request.Scheme}://{this.Context.Request.Host}";
-    var blogs = this._super.Blogs.ReadFromCache().NonDeleted().Active().OrderBy(x => x.Name);
 
     var tags = this._super.ContentTags.ReadFromCache().ToList();
 

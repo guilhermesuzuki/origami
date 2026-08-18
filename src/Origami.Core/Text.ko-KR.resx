@@ -2676,4 +2676,7 @@
   <data name="Deactivated" xml:space="preserve">
     <value>비활성화됨</value>
   </data>
+  <data name="{0} content(s)" xml:space="preserve">
+    <value>콘텐츠 {0}개</value>
+  </data>
 </root>

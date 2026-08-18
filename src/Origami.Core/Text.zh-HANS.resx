@@ -2676,4 +2676,7 @@
   <data name="Deactivated" xml:space="preserve">
     <value>已停用</value>
   </data>
+  <data name="{0} content(s)" xml:space="preserve">
+    <value>{0} 个内容</value>
+  </data>
 </root>

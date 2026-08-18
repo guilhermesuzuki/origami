@@ -2676,4 +2676,7 @@
   <data name="Deactivated" xml:space="preserve">
     <value>Deaktiviert</value>
   </data>
+  <data name="{0} content(s)" xml:space="preserve">
+    <value>{0} Inhalt/Inhalte</value>
+  </data>
 </root>
