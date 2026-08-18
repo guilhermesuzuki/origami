@@ -116,7 +116,7 @@
                             @foreach (var dir in this._directories)
                             {
                                 <div class="mb-3 cursor-pointer col-6 col-xxl-3" @onclick="() => _openFolder(dir.Directory.WebPath)">
-                                    <div class="p-2 border shadow-sm directory position-relative">
+                                    <div class="p-2 border-2 border-secondary-subtle shadow-sm directory position-relative">
                                         <div class="position-absolute text-left">
                                             <MudCheckBox T="bool" @bind-Value="dir.Directory.Checked"></MudCheckBox>
                                         </div>
