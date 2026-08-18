@@ -2655,4 +2655,13 @@
   <data name="BACPAC import failed: {0}" xml:space="preserve">
     <value>BACPAC-Import fehlgeschlagen: {0}</value>
   </data>
+  <data name="BACPAC export failed: {0}" xml:space="preserve">
+    <value>BACPAC-Export fehlgeschlagen: {0}</value>
+  </data>
+  <data name="BACPAC file not found" xml:space="preserve">
+    <value>BACPAC-Datei nicht gefunden</value>
+  </data>
+  <data name="Current process hasn't started yet" xml:space="preserve">
+    <value>Der aktuelle Prozess wurde noch nicht gestartet</value>
+  </data>
 </root>

@@ -2655,4 +2655,13 @@
   <data name="BACPAC import failed: {0}" xml:space="preserve">
     <value>BACPAC 导入失败：{0}</value>
   </data>
+  <data name="BACPAC export failed: {0}" xml:space="preserve">
+    <value>BACPAC 导出失败：{0}</value>
+  </data>
+  <data name="BACPAC file not found" xml:space="preserve">
+    <value>未找到 BACPAC 文件</value>
+  </data>
+  <data name="Current process hasn't started yet" xml:space="preserve">
+    <value>当前进程尚未启动</value>
+  </data>
 </root>

@@ -2655,4 +2655,13 @@
   <data name="BACPAC import failed: {0}" xml:space="preserve">
     <value>BACPAC のインポートに失敗しました: {0}</value>
   </data>
+  <data name="BACPAC export failed: {0}" xml:space="preserve">
+    <value>BACPAC のエクスポートに失敗しました: {0}</value>
+  </data>
+  <data name="BACPAC file not found" xml:space="preserve">
+    <value>BACPAC ファイルが見つかりません</value>
+  </data>
+  <data name="Current process hasn't started yet" xml:space="preserve">
+    <value>現在のプロセスはまだ開始されていません</value>
+  </data>
 </root>
