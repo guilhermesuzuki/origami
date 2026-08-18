@@ -2664,4 +2664,7 @@
   <data name="Current process hasn't started yet" xml:space="preserve">
     <value>当前进程尚未启动</value>
   </data>
+  <data name="Blog is deactivated" xml:space="preserve">
+    <value>博客已停用</value>
+  </data>
 </root>

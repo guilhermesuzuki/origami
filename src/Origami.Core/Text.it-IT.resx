@@ -2664,4 +2664,7 @@
   <data name="Current process hasn't started yet" xml:space="preserve">
     <value>Il processo corrente non è ancora iniziato</value>
   </data>
+  <data name="Blog is deactivated" xml:space="preserve">
+    <value>Il blog è disattivato</value>
+  </data>
 </root>

@@ -2664,4 +2664,7 @@
   <data name="Current process hasn't started yet" xml:space="preserve">
     <value>현재 프로세스가 아직 시작되지 않았습니다</value>
   </data>
+  <data name="Blog is deactivated" xml:space="preserve">
+    <value>블로그가 비활성화되었습니다</value>
+  </data>
 </root>
