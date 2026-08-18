@@ -2665,6 +2665,9 @@
     <value>現在のプロセスはまだ開始されていません</value>
   </data>
   <data name="Blog is deactivated" xml:space="preserve">
-    <value />
+    <value>ブログは無効化されています</value>
+  </data>
+  <data name="Blog is deleted" xml:space="preserve">
+    <value>ブログは削除されています</value>
   </data>
 </root>

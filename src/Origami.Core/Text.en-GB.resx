@@ -2667,4 +2667,7 @@
   <data name="Blog is deactivated" xml:space="preserve">
     <value>Blog is deactivated</value>
   </data>
+  <data name="Blog is deleted" xml:space="preserve">
+    <value>Blog is deleted</value>
+  </data>
 </root>
