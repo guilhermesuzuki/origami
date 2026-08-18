@@ -1,0 +1,32 @@
+﻿@using Microsoft.Data.SqlClient
+@inherits Basic
+@inject IConfiguration configuration
+
+<div class="connection-details @Class">
+    <span>@Text.Lower("Db connectivity details")</span>
+    <ul class="inline-list">
+        <li style="width: 25px;">
+            <i class="fa-solid fa-circle-user"></i>
+        </li>
+        <li>
+            @DatabaseUser().User
+        </li>
+    </ul>
+    <ul class="inline-list">
+        <li style="width: 25px;">
+            <i class="fa-solid fa-database"></i>
+        </li>
+        <li>
+            @DatabaseUser().Database
+        </li>
+    </ul>
+</div>
+
+@code {
+    private (string User, string Database) DatabaseUser()
+    {
+        var cstring = configuration.GetOrigamiConnectionString();
+        var builder = new SqlConnectionStringBuilder(cstring);
+        return (builder.UserID, builder.InitialCatalog);
+    }
+}
