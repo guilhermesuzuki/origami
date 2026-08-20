@@ -15,6 +15,14 @@ namespace Origami.Core.Data
         protected readonly IUserRoleRepository _userRoleRepository;
         protected readonly IValidator<OrigamiUser> _validator;
 
+        protected readonly IHubContentRepository<HubContentPage> _hubPageRepository;
+        protected readonly IHubContentRepository<HubContentPost> _hubPostRepository;
+        protected readonly IHubContentRepository<HubContentQuickNote> _hubQuickNoteRepository;
+        protected readonly IHubContentRepository<HubContentSoftwareRelease> _hubSoftwareReleaseRepository;
+        protected readonly IHubContentRepository<HubContentSpecialMessage> _hubSpecialMessageRepository;
+        protected readonly IHubContentRepository<HubContentSpecialPage> _hubSpecialPageRepository;
+        protected readonly IHubContentRepository<HubContentVideo> _hubVideoRepository;
+
         /// <summary>
         /// Default constructor with DI
         /// </summary>
@@ -29,6 +37,15 @@ namespace Origami.Core.Data
             IUserBlogRepository userBlogRepository,
             IUserPasswordResetRepository userPasswordResetRepository,
             IUserRoleRepository userRoleRepository,
+
+            IHubContentRepository<HubContentPage> hubPageRepository,
+            IHubContentRepository<HubContentPost> hubPostRepository,
+            IHubContentRepository<HubContentQuickNote> hubQuickNoteRepository,
+            IHubContentRepository<HubContentSoftwareRelease> hubSoftwareReleaseRepository,
+            IHubContentRepository<HubContentSpecialMessage> hubSpecialMessageRepository,
+            IHubContentRepository<HubContentSpecialPage> hubSpecialPageRepository,
+            IHubContentRepository<HubContentVideo> hubVideoRepository,
+
             Text text,
             IWebRootPath wwwRoot)
             : base(text, dbContextFactory, memoryCache, wwwRoot, appFacade)
@@ -38,6 +55,14 @@ namespace Origami.Core.Data
             _userBlogRepository = userBlogRepository;
             _userPasswordResetRepository = userPasswordResetRepository;
             _userRoleRepository = userRoleRepository;
+
+            _hubPageRepository = hubPageRepository;
+            _hubPostRepository = hubPostRepository;
+            _hubSpecialMessageRepository = hubSpecialMessageRepository;
+            _hubSpecialPageRepository = hubSpecialPageRepository;
+            _hubQuickNoteRepository = hubQuickNoteRepository;
+            _hubVideoRepository = hubVideoRepository;
+            _hubSoftwareReleaseRepository = hubSoftwareReleaseRepository;
         }
 
         public override string CreatePermission => nameof(OrigamiRole.CreateNewUsers);
@@ -224,19 +249,58 @@ namespace Origami.Core.Data
             {
                 var contents = db.Contents.AsNoTracking().Where(x => x.AuthorId == ctx.Entity.Id).ToList();
 
-                contents.GetContexts(ctx).Call(_contentRepository.SmartPurge, false).Push(hub);
+                foreach (var content in contents)
+                {
+                    if (content is OrigamiPage)
+                    {
+                        var hubPage = _hubPageRepository.Get(content);
+                        _hubPageRepository.Purge(hubPage, ctx.User).Push(hub);
+                    }
+                    else if (content is OrigamiPost)
+                    {
+                        var hubPost = _hubPostRepository.Get(content);
+                        _hubPostRepository.Purge(hubPost, ctx.User).Push(hub);
+                    }
+                    else if (content is OrigamiQuickNote)
+                    {
+                        var hubQuickNote = _hubQuickNoteRepository.Get(content);
+                        _hubQuickNoteRepository.Purge(hubQuickNote, ctx.User).Push(hub);
+                    }
+                    else if (content is OrigamiSoftwareRelease)
+                    {
+                        var hubSoftwareRelease = _hubSoftwareReleaseRepository.Get(content);
+                        _hubSoftwareReleaseRepository.Purge(hubSoftwareRelease, ctx.User).Push(hub);
+                    }
+                    else if (content is OrigamiSpecialMessage)
+                    {
+                        var hubSpecialMessage = _hubSpecialMessageRepository.Get(content);
+                        _hubSpecialMessageRepository.Purge(hubSpecialMessage, ctx.User).Push(hub);
+                    }
+                    else if (content is OrigamiSpecialPage)
+                    {
+                        var hubSpecialPage = _hubSpecialPageRepository.Get(content);
+                        _hubSpecialPageRepository.Purge(hubSpecialPage, ctx.User).Push(hub);
+                    }
+                    else if (content is OrigamiVideo)
+                    {
+                        var hubVideo = _hubVideoRepository.Get(content);
+                        _hubVideoRepository.Purge(hubVideo, ctx.User).Push(hub);
+                    }
+                }
 
                 var del1 = db.UserRoles.Where(x => x.UserId == ctx.Entity.Id).ExecuteDelete();
                 var del2 = db.UserPasswordResets.Where(x => x.UserId == ctx.Entity.Id).ExecuteDelete();
                 var del3 = db.UserPasswordResets.Where(x => x.AuthorId == ctx.Entity.Id).ExecuteDelete();
                 var del4 = db.UserBlogs.Where(x => x.UserId == ctx.Entity.Id).ExecuteDelete();
                 var del5 = db.PhysicalPageViews.Where(x => x.UserId == ctx.Entity.Id).ExecuteDelete();
+                var del6 = db.Backups.Where(x => x.AuthorId == ctx.Entity.Id).ExecuteDelete();
 
                 hub.RowsAffected += del1;
                 hub.RowsAffected += del2;
                 hub.RowsAffected += del3;
                 hub.RowsAffected += del4;
                 hub.RowsAffected += del5;
+                hub.RowsAffected += del6;
             }
 
             return hub;
