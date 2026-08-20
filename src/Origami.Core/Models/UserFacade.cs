@@ -16,8 +16,8 @@ namespace Origami.Core.Models
         protected ObservableCollection<Result> _results = new();
         protected string _searchTerm = string.Empty;
         protected bool _showCookieConsent = false;
-        protected Guid _socialProfileId = Guid.NewGuid();
-        protected Guid _userId = Guid.NewGuid();
+        protected Guid _socialProfileId = Guid.Empty;
+        protected Guid _userId = Guid.Empty;
 
         /// <summary>
         /// Default constructor
