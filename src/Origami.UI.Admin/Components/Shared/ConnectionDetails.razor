@@ -24,8 +24,15 @@
 @code {
     private (string User, string Database) DatabaseUser()
     {
-        var cstring = configuration.GetOrigamiConnectionString();
-        var builder = new SqlConnectionStringBuilder(cstring);
-        return (builder.UserID, builder.InitialCatalog);
+        try
+        {
+            var cstring = configuration.GetOrigamiConnectionString();
+            var builder = new SqlConnectionStringBuilder(cstring);
+            return (builder.UserID, builder.InitialCatalog);
+        }
+        catch
+        {
+            return (string.Empty, string.Empty);
+        }
     }
 }
