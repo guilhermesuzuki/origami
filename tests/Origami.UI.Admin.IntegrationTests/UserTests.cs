@@ -225,11 +225,11 @@ namespace Origami.UI.Admin.IntegrationTests
             var result = superRepository.Users.SmartSave(AnotherTestUser.GetContext(TestUser), checkPermission: true);
             result.ShouldNotBeNull();
             result.Ok.ShouldBeTrue();
-            result.Messages.Count.ShouldBe(2);
+            result.Messages.Count.ShouldBe(1);
             result.Messages[0].MessageType.ShouldBe(ResultMessage.MessageTypes.Info);
-            result.Messages[1].MessageType.ShouldBe(ResultMessage.MessageTypes.Password);
+            result.Messages[0].Message.ShouldBe("A password has been created");
 
-            var password = result.Messages[1].Message;
+            var password = "123test@test";
 
             var userPassword = superRepository.Users.LookupUserInDatabase(AnotherTestUser.Username, password);
             userPassword.ShouldNotBeNull();
@@ -309,11 +309,11 @@ namespace Origami.UI.Admin.IntegrationTests
             var result = superRepository.Users.SmartSave(AnotherTestUser.GetContext(TestUser), checkPermission: true);
             result.ShouldNotBeNull();
             result.Ok.ShouldBeTrue();
-            result.Messages.Count.ShouldBe(2);
+            result.Messages.Count.ShouldBe(1);
             result.Messages[0].MessageType.ShouldBe(ResultMessage.MessageTypes.Info);
-            result.Messages[1].MessageType.ShouldBe(ResultMessage.MessageTypes.Password);
+            result.Messages[0].Message.ShouldBe("A password has been created");
 
-            var password = result.Messages[1].Message;
+            var password = "123test@test";
 
             var userPassword = superRepository.Users.LookupUserInDatabase(AnotherTestUser.Username, password);
             userPassword.ShouldNotBeNull();
@@ -397,11 +397,11 @@ namespace Origami.UI.Admin.IntegrationTests
             var result = superRepository.Users.SmartSave(AnotherTestUser.GetContext(TestUser), checkPermission: true);
             result.ShouldNotBeNull();
             result.Ok.ShouldBeTrue();
-            result.Messages.Count.ShouldBe(2);
+            result.Messages.Count.ShouldBe(1);
             result.Messages[0].MessageType.ShouldBe(ResultMessage.MessageTypes.Info);
-            result.Messages[1].MessageType.ShouldBe(ResultMessage.MessageTypes.Password);
+            result.Messages[0].Message.ShouldBe("A password has been created");
 
-            var password = result.Messages[1].Message;
+            var password = "123test@test";
 
             var userPassword = superRepository.Users.LookupUserInDatabase(AnotherTestUser.Username, password);
             userPassword.ShouldNotBeNull();
@@ -481,11 +481,11 @@ namespace Origami.UI.Admin.IntegrationTests
             var result = superRepository.Users.SmartSave(AnotherTestUser.GetContext(TestUser), checkPermission: true);
             result.ShouldNotBeNull();
             result.Ok.ShouldBeTrue();
-            result.Messages.Count.ShouldBe(2);
+            result.Messages.Count.ShouldBe(1);
             result.Messages[0].MessageType.ShouldBe(ResultMessage.MessageTypes.Info);
-            result.Messages[1].MessageType.ShouldBe(ResultMessage.MessageTypes.Password);
+            result.Messages[0].Message.ShouldBe("A password has been created");
 
-            var password = result.Messages[1].Message;
+            var password = "123test@test";
 
             var userPassword = superRepository.Users.LookupUserInDatabase(AnotherTestUser.Username, password);
             userPassword.ShouldNotBeNull();
@@ -569,11 +569,11 @@ namespace Origami.UI.Admin.IntegrationTests
             var result = superRepository.Users.SmartSave(AnotherTestUser.GetContext(TestUser), checkPermission: true);
             result.ShouldNotBeNull();
             result.Ok.ShouldBeTrue();
-            result.Messages.Count.ShouldBe(2);
+            result.Messages.Count.ShouldBe(1);
             result.Messages[0].MessageType.ShouldBe(ResultMessage.MessageTypes.Info);
-            result.Messages[1].MessageType.ShouldBe(ResultMessage.MessageTypes.Password);
+            result.Messages[0].Message.ShouldBe("A password has been created");
 
-            var password = result.Messages[1].Message;
+            var password = "123test@test";
 
             var userPassword = superRepository.Users.LookupUserInDatabase(AnotherTestUser.Username, password);
             userPassword.ShouldNotBeNull();
@@ -657,11 +657,11 @@ namespace Origami.UI.Admin.IntegrationTests
             var result = superRepository.Users.SmartSave(AnotherTestUser.GetContext(TestUser), checkPermission: true);
             result.ShouldNotBeNull();
             result.Ok.ShouldBeTrue();
-            result.Messages.Count.ShouldBe(2);
+            result.Messages.Count.ShouldBe(1);
             result.Messages[0].MessageType.ShouldBe(ResultMessage.MessageTypes.Info);
-            result.Messages[1].MessageType.ShouldBe(ResultMessage.MessageTypes.Password);
+            result.Messages[0].Message.ShouldBe("A password has been created");
 
-            var password = result.Messages[1].Message;
+            var password = "123test@test";
 
             var userPassword = superRepository.Users.LookupUserInDatabase(AnotherTestUser.Username, password);
             userPassword.ShouldNotBeNull();
@@ -741,11 +741,11 @@ namespace Origami.UI.Admin.IntegrationTests
             var result = superRepository.Users.SmartSave(AnotherTestUser.GetContext(TestUser), checkPermission: true);
             result.ShouldNotBeNull();
             result.Ok.ShouldBeTrue();
-            result.Messages.Count.ShouldBe(2);
+            result.Messages.Count.ShouldBe(1);
             result.Messages[0].MessageType.ShouldBe(ResultMessage.MessageTypes.Info);
-            result.Messages[1].MessageType.ShouldBe(ResultMessage.MessageTypes.Password);
+            result.Messages[0].Message.ShouldBe("A password has been created");
 
-            var password = result.Messages[1].Message;
+            var password = "123test@test";
 
             var userPassword = superRepository.Users.LookupUserInDatabase(AnotherTestUser.Username, password);
             userPassword.ShouldNotBeNull();
@@ -873,11 +873,11 @@ namespace Origami.UI.Admin.IntegrationTests
             var result = superRepository.Users.SmartSave(AnotherTestUser.GetContext(TestUser), checkPermission: true);
             result.ShouldNotBeNull();
             result.Ok.ShouldBeTrue();
-            result.Messages.Count.ShouldBe(2);
+            result.Messages.Count.ShouldBe(1);
             result.Messages[0].MessageType.ShouldBe(ResultMessage.MessageTypes.Info);
-            result.Messages[1].MessageType.ShouldBe(ResultMessage.MessageTypes.Password);
+            result.Messages[0].Message.ShouldBe("A password has been created");
 
-            var password = result.Messages[1].Message;
+            var password = "123test@test";
 
             var userPassword = superRepository.Users.LookupUserInDatabase(AnotherTestUser.Username, password);
             userPassword.ShouldNotBeNull();
@@ -893,6 +893,7 @@ namespace Origami.UI.Admin.IntegrationTests
             dbUser.Username.ShouldBe(AnotherTestUser.Username);
             dbUser.NanoId.ShouldBe(AnotherTestUser.NanoId);
             dbUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
+            dbUser.Version.ShouldBe(AnotherTestUser.Version);
 
             var cacheUser = superRepository.Users.ReadFromCache().Id(AnotherTestUser.Id);
             cacheUser.ShouldNotBeNull();
@@ -903,7 +904,6 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheUser.Username.ShouldBe(AnotherTestUser.Username);
             cacheUser.NanoId.ShouldBe(AnotherTestUser.NanoId);
             cacheUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
-
             cacheUser.Version.ShouldBe(dbUser.Version);
             cacheUser.Version.ShouldBe(AnotherTestUser.Version);
 
@@ -937,7 +937,6 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
             cacheUser.MustChangePassword.ShouldBeTrue();
             cacheUser.MustChangePassword.ShouldBe(AnotherTestUser.MustChangePassword);
-
             cacheUser.Version.ShouldBe(dbUser.Version);
             cacheUser.Version.ShouldBe(AnotherTestUser.Version);
         }
@@ -952,14 +951,13 @@ namespace Origami.UI.Admin.IntegrationTests
             scope.CreateTestRole(TestRole);
             scope.CreateTestUser(TestUser, TestRole);
 
+            var password = "123test@test";
             var result = superRepository.Users.SmartSave(AnotherTestUser.GetContext(TestUser), checkPermission: true);
             result.ShouldNotBeNull();
             result.Ok.ShouldBeTrue();
-            result.Messages.Count.ShouldBe(2);
+            result.Messages.Count.ShouldBe(1);
             result.Messages[0].MessageType.ShouldBe(ResultMessage.MessageTypes.Info);
-            result.Messages[1].MessageType.ShouldBe(ResultMessage.MessageTypes.Password);
-
-            var password = result.Messages[1].Message;
+            result.Messages[0].Message.ShouldBe("A password has been created");
 
             var userPassword = superRepository.Users.LookupUserInDatabase(AnotherTestUser.Username, password);
             userPassword.ShouldNotBeNull();
@@ -975,6 +973,7 @@ namespace Origami.UI.Admin.IntegrationTests
             dbUser.Username.ShouldBe(AnotherTestUser.Username);
             dbUser.NanoId.ShouldBe(AnotherTestUser.NanoId);
             dbUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
+            dbUser.Version.ShouldBe(AnotherTestUser.Version);
 
             var cacheUser = superRepository.Users.ReadFromCache().Id(AnotherTestUser.Id);
             cacheUser.ShouldNotBeNull();
@@ -985,7 +984,6 @@ namespace Origami.UI.Admin.IntegrationTests
             cacheUser.Username.ShouldBe(AnotherTestUser.Username);
             cacheUser.NanoId.ShouldBe(AnotherTestUser.NanoId);
             cacheUser.IsDeleted.ShouldBe(AnotherTestUser.IsDeleted);
-
             cacheUser.Version.ShouldBe(dbUser.Version);
             cacheUser.Version.ShouldBe(AnotherTestUser.Version);
         }
