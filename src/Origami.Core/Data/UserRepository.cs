@@ -14,7 +14,6 @@ namespace Origami.Core.Data
         protected readonly IUserPasswordResetRepository _userPasswordResetRepository;
         protected readonly IUserRoleRepository _userRoleRepository;
         protected readonly IValidator<OrigamiUser> _validator;
-
         protected readonly IHubContentRepository<HubContentPage> _hubPageRepository;
         protected readonly IHubContentRepository<HubContentPost> _hubPostRepository;
         protected readonly IHubContentRepository<HubContentQuickNote> _hubQuickNoteRepository;
