@@ -223,7 +223,7 @@
     private async Task _welcomeToTheApplication(object? sender, EventArgs e)
     {
         this.UserFacade.UserId = this.loginRules.User.Id;
-        this.Super.Users.UpdateCache(this.UserFacade.User);
+        this.Super.Users.UpdateCache(this.loginRules.User);
 
         var token = this._generateJwtToken(this.loginRules.User);
         await this.JSRuntime.InvokeVoidAsync("$.cookie", this.Configuration.GetUserCookieKey(), token, new { path = "/", expires = 365, });
