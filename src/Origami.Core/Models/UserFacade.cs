@@ -108,7 +108,7 @@ namespace Origami.Core.Models
 
         public OrigamiSocialProfile SocialProfile
         {
-            get => this._super.SocialProfiles.ReadFromCache().Id(this.SocialProfileId) ?? new();
+            get => this._super.SocialProfiles.ReadFromCache().Id(this.SocialProfileId) ?? OrigamiSocialProfile.AnonymousUser;
         }
 
         public Guid SocialProfileId
@@ -119,7 +119,7 @@ namespace Origami.Core.Models
 
         public OrigamiUser User
         {
-            get => this._super.Users.ReadFromCache().Id(this.UserId) ?? new();
+            get => this._super.Users.ReadFromCache().Id(this.UserId) ?? OrigamiUser.AnonymousUser;
         }
 
         public Guid UserId
