@@ -261,39 +261,49 @@ namespace Origami.Core.Data
             }
         }
 
-        public Result<T2> Purge(T2 root, IId userId)
+        public Result<T2> Purge(T2 root, IId userId, bool checkPermission = true)
         {
             using var db = _dbContextFactory.CreateDbContext();
 
             // check permissions
-            if (UserHasPermission(db, userId.Id, PurgePermission) == false) return new(root) { Info = PurgePermission, Error = Text.Original(Text.YouDontHavePermissionForThisFeature), };
+            if (checkPermission && UserHasPermission(db, userId.Id, PurgePermission) == false) return new(root) { Info = PurgePermission, Error = Text.Original(Text.YouDontHavePermissionForThisFeature), };
 
             //first, it needs to purge the relationships
             this.PurgeKids(root, userId);
 
-            var commentReactions = from a in db.Set<OrigamiContentCommentReaction>().AsNoTracking()
-                                   join b in db.Set<OrigamiContentComment>().AsNoTracking() on a.CommentId equals b.Id
-                                   where b.ContentId == root.Entity.Id
-                                   select a;
+            var queryCommentReactions = from a in db.Set<OrigamiContentCommentReaction>().AsNoTracking()
+                                        join b in db.Set<OrigamiContentComment>().AsNoTracking() on a.CommentId equals b.Id
+                                        where b.ContentId == root.Entity.Id
+                                        select a;
 
-            var comments = from a in db.Set<OrigamiContentComment>().AsNoTracking() where a.ContentId == root.Entity.Id select a;
-            var categories = from a in db.Set<OrigamiContentCategory>().AsNoTracking() where a.ContentId == root.Entity.Id select a;
-            var histories = from a in db.Set<OrigamiContentHistory>().AsNoTracking() where a.ContentId == root.Entity.Id select a;
-            var ratings = from a in db.Set<OrigamiContentRating>().AsNoTracking() where a.ContentId == root.Entity.Id select a;
-            var reactions = from a in db.Set<OrigamiContentReaction>().AsNoTracking() where a.ContentId == root.Entity.Id select a;
-            var tags = from a in db.Set<OrigamiContentTag>().AsNoTracking() where a.ContentId == root.Entity.Id select a;
-            var views = from a in db.Set<OrigamiPhysicalPageView>() where a.ContentId == root.Entity.Id select a;
-            var entity = from a in db.Set<T1>().AsNoTracking() where a.Id == root.Entity.Id select a;
+            var queryComments = from a in db.Set<OrigamiContentComment>().AsNoTracking() where a.ContentId == root.Entity.Id select a;
+            var queryCategories = from a in db.Set<OrigamiContentCategory>().AsNoTracking() where a.ContentId == root.Entity.Id select a;
+            var queryHistories = from a in db.Set<OrigamiContentHistory>().AsNoTracking() where a.ContentId == root.Entity.Id select a;
+            var queryRatings = from a in db.Set<OrigamiContentRating>().AsNoTracking() where a.ContentId == root.Entity.Id select a;
+            var queryReactions = from a in db.Set<OrigamiContentReaction>().AsNoTracking() where a.ContentId == root.Entity.Id select a;
+            var queryTags = from a in db.Set<OrigamiContentTag>().AsNoTracking() where a.ContentId == root.Entity.Id select a;
+            var queryViews = from a in db.Set<OrigamiPhysicalPageView>() where a.ContentId == root.Entity.Id select a;
+            var queryEntity = from a in db.Set<T1>().AsNoTracking() where a.Id == root.Entity.Id select a;
 
-            commentReactions.ExecuteDelete();
-            comments.ExecuteDelete();
-            categories.ExecuteDelete();
-            histories.ExecuteDelete();
-            ratings.ExecuteDelete();
-            reactions.ExecuteDelete();
-            tags.ExecuteDelete();
-            views.ExecuteDelete();
-            entity.ExecuteDelete();
+            var commentReactions = queryCommentReactions.ToList();
+            var comments = queryComments.ToList();
+            var categories = queryCategories.ToList();
+            var histories = queryHistories.ToList();
+            var ratings = queryRatings.ToList();
+            var reactions = queryReactions.ToList();
+            var tags = queryTags.ToList();
+            var views = queryViews.ToList();
+            var entity = queryEntity.FirstOrDefault();
+
+            queryCommentReactions.ExecuteDelete();
+            queryComments.ExecuteDelete();
+            queryCategories.ExecuteDelete();
+            queryHistories.ExecuteDelete();
+            queryRatings.ExecuteDelete();
+            queryReactions.ExecuteDelete();
+            queryTags.ExecuteDelete();
+            queryViews.ExecuteDelete();
+            queryEntity.ExecuteDelete();
 
             _memoryCache.Purge(commentReactions);
             _memoryCache.Purge(comments);
@@ -302,7 +312,7 @@ namespace Origami.Core.Data
             _memoryCache.Purge(ratings);
             _memoryCache.Purge(reactions);
             _memoryCache.Purge(tags);
-            _memoryCache.Purge(entity.FirstOrDefault());
+            _memoryCache.Purge(entity);
 
             return new(root) { Success = Text.Original(Text.OperationCompletedSuccessfully), };
         }

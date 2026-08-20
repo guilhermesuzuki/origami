@@ -254,37 +254,37 @@ namespace Origami.Core.Data
                     if (content is OrigamiPage)
                     {
                         var hubPage = _hubPageRepository.Get(content);
-                        _hubPageRepository.Purge(hubPage, ctx.User).Push(hub);
+                        _hubPageRepository.Purge(hubPage, ctx.User, false).Push(hub);
                     }
                     else if (content is OrigamiPost)
                     {
                         var hubPost = _hubPostRepository.Get(content);
-                        _hubPostRepository.Purge(hubPost, ctx.User).Push(hub);
+                        _hubPostRepository.Purge(hubPost, ctx.User, false).Push(hub);
                     }
                     else if (content is OrigamiQuickNote)
                     {
                         var hubQuickNote = _hubQuickNoteRepository.Get(content);
-                        _hubQuickNoteRepository.Purge(hubQuickNote, ctx.User).Push(hub);
+                        _hubQuickNoteRepository.Purge(hubQuickNote, ctx.User, false).Push(hub);
                     }
                     else if (content is OrigamiSoftwareRelease)
                     {
                         var hubSoftwareRelease = _hubSoftwareReleaseRepository.Get(content);
-                        _hubSoftwareReleaseRepository.Purge(hubSoftwareRelease, ctx.User).Push(hub);
+                        _hubSoftwareReleaseRepository.Purge(hubSoftwareRelease, ctx.User, false).Push(hub);
                     }
                     else if (content is OrigamiSpecialMessage)
                     {
                         var hubSpecialMessage = _hubSpecialMessageRepository.Get(content);
-                        _hubSpecialMessageRepository.Purge(hubSpecialMessage, ctx.User).Push(hub);
+                        _hubSpecialMessageRepository.Purge(hubSpecialMessage, ctx.User, false).Push(hub);
                     }
                     else if (content is OrigamiSpecialPage)
                     {
                         var hubSpecialPage = _hubSpecialPageRepository.Get(content);
-                        _hubSpecialPageRepository.Purge(hubSpecialPage, ctx.User).Push(hub);
+                        _hubSpecialPageRepository.Purge(hubSpecialPage, ctx.User, false).Push(hub);
                     }
                     else if (content is OrigamiVideo)
                     {
                         var hubVideo = _hubVideoRepository.Get(content);
-                        _hubVideoRepository.Purge(hubVideo, ctx.User).Push(hub);
+                        _hubVideoRepository.Purge(hubVideo, ctx.User, false).Push(hub);
                     }
                 }
 

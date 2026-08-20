@@ -10,7 +10,7 @@ namespace Origami.Core.Data
         Result CanRead(IId userId);
         Result<T> Save(T entity, IId userId);
         Result<T> Delete(T entity, IId userId);
-        Result<T> Purge(T entity, IId userId);
+        Result<T> Purge(T entity, IId userId, bool checkPermission = true);
         Result<T> Restore(T entity, IId userId);
         Result<T> Publish(T entity, IId userId);
         Result<T> Unpublish(T entity, IId userId);
