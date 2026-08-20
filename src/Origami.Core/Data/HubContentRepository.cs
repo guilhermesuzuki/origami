@@ -282,7 +282,18 @@ namespace Origami.Core.Data
             var ratings = from a in db.Set<OrigamiContentRating>().AsNoTracking() where a.ContentId == root.Entity.Id select a;
             var reactions = from a in db.Set<OrigamiContentReaction>().AsNoTracking() where a.ContentId == root.Entity.Id select a;
             var tags = from a in db.Set<OrigamiContentTag>().AsNoTracking() where a.ContentId == root.Entity.Id select a;
+            var views = from a in db.Set<OrigamiPhysicalPageView>() where a.ContentId == root.Entity.Id select a;
             var entity = from a in db.Set<T1>().AsNoTracking() where a.Id == root.Entity.Id select a;
+
+            commentReactions.ExecuteDelete();
+            comments.ExecuteDelete();
+            categories.ExecuteDelete();
+            histories.ExecuteDelete();
+            ratings.ExecuteDelete();
+            reactions.ExecuteDelete();
+            tags.ExecuteDelete();
+            views.ExecuteDelete();
+            entity.ExecuteDelete();
 
             _memoryCache.Purge(commentReactions);
             _memoryCache.Purge(comments);
@@ -292,15 +303,6 @@ namespace Origami.Core.Data
             _memoryCache.Purge(reactions);
             _memoryCache.Purge(tags);
             _memoryCache.Purge(entity.FirstOrDefault());
-
-            commentReactions.ExecuteDelete();
-            comments.ExecuteDelete();
-            categories.ExecuteDelete();
-            histories.ExecuteDelete();
-            ratings.ExecuteDelete();
-            reactions.ExecuteDelete();
-            tags.ExecuteDelete();
-            entity.ExecuteDelete();
 
             return new(root) { Success = Text.Original(Text.OperationCompletedSuccessfully), };
         }
