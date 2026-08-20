@@ -670,18 +670,6 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
-
-        this.UserFacade.Changed += (sender, property) =>
-        {
-            if (property.PropertyName.Like(nameof(IUserFacade.BlogId)))
-            {
-                this.VirtualPath = $"/files/blogs/{this.GetBlogFromUserFacade().NanoId}/";
-                this._loadFiles(true);
-                this._loadDirectories(true);
-                this.InvokeAsync(this.StateHasChanged);
-            }
-        };
-
         this._loadFiles();
         this._loadDirectories();
     }
