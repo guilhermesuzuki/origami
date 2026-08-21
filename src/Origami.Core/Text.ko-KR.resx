@@ -2682,7 +2682,7 @@
   <data name="Please inform a set of user credentials with elevated privileges to restore the backup" xml:space="preserve">
     <value>백업을 복원하려면 관리자 권한이 있는 사용자 자격 증명을 입력하세요</value>
   </data>
-  <data name="And it must a different user than current user accessing the database" xml:space="preserve">
+  <data name="And it must be a different user than current user accessing the database" xml:space="preserve">
     <value>또한 현재 데이터베이스에 액세스 중인 사용자와 다른 사용자여야 합니다</value>
   </data>
   <data name="Restore completed successfully. Please restart the application to apply the changes" xml:space="preserve">

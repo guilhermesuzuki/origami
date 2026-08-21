@@ -282,7 +282,7 @@ namespace Origami.Core.Data
             var queryRatings = from a in db.Set<OrigamiContentRating>().AsNoTracking() where a.ContentId == root.Entity.Id select a;
             var queryReactions = from a in db.Set<OrigamiContentReaction>().AsNoTracking() where a.ContentId == root.Entity.Id select a;
             var queryTags = from a in db.Set<OrigamiContentTag>().AsNoTracking() where a.ContentId == root.Entity.Id select a;
-            var queryViews = from a in db.Set<OrigamiPhysicalPageView>() where a.ContentId == root.Entity.Id select a;
+            var queryViews = from a in db.Set<OrigamiPhysicalPageView>().AsNoTracking() where a.ContentId == root.Entity.Id select a;
             var queryEntity = from a in db.Set<T1>().AsNoTracking() where a.Id == root.Entity.Id select a;
 
             var commentReactions = queryCommentReactions.ToList();
@@ -292,7 +292,6 @@ namespace Origami.Core.Data
             var ratings = queryRatings.ToList();
             var reactions = queryReactions.ToList();
             var tags = queryTags.ToList();
-            var views = queryViews.ToList();
             var entity = queryEntity.FirstOrDefault();
 
             queryCommentReactions.ExecuteDelete();

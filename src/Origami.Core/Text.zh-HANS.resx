@@ -2682,7 +2682,7 @@
   <data name="Please inform a set of user credentials with elevated privileges to restore the backup" xml:space="preserve">
     <value>请提供具有提升权限的用户凭据以还原备份</value>
   </data>
-  <data name="And it must a different user than current user accessing the database" xml:space="preserve">
+  <data name="And it must be a different user than current user accessing the database" xml:space="preserve">
     <value>并且必须是与当前访问数据库的用户不同的用户</value>
   </data>
   <data name="Restore completed successfully. Please restart the application to apply the changes" xml:space="preserve">
