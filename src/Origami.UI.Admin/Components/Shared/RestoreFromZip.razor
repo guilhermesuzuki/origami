@@ -52,8 +52,8 @@
                 </li>
             </ul>
             <div class="btn-group w-100 mt-3">
-                <button class="btn btn-success" disabled="@(_username.Has() == false || _password.Has() == false)" @onclick="RestoreOrigamiConfirmation">@Text.Lower("Proceed")</button>
-                <button class="btn btn-warning" @onclick="() => { _username = string.Empty; _password = string.Empty; }">@Text.Lower("Clear")</button>
+                <button class="btn btn-success w-100" disabled="@(_username.Has() == false || _password.Has() == false)" @onclick="RestoreOrigamiConfirmation">@Text.Lower("Proceed")</button>
+                <button class="btn btn-warning w-100" @onclick="() => { _username = string.Empty; _password = string.Empty; }">@Text.Lower("Clear")</button>
             </div>
         </div>
     </DialogContent>
