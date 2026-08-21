@@ -108,7 +108,7 @@ namespace Origami.Core.Data
             }
         }
 
-        public async Task<Result<OrigamiBackupRestore>> RestoreAsync(OrigamiUser user, OrigamiBackup backup, string? filepathOverride = null)
+        public async Task<Result<OrigamiBackupRestore>> RestoreAsync(OrigamiUser user, OrigamiBackup backup, string connectionString, string? filepathOverride = null)
         {
             if (Current != null)
             {
@@ -153,7 +153,7 @@ namespace Origami.Core.Data
                 //asks to refresh the UI
                 _appFacade.RefreshUI(OrigamiConstants.Events.Restore);
 
-                hub = await RestoreTheDatabaseAsync(Path.Combine(extractPath, "files", "db.bacpac"));
+                hub = await RestoreTheDatabaseAsync(Path.Combine(extractPath, "files", "db.bacpac"), connectionString);
                 if (hub.Ok == false)
                 {
                     return new Result<OrigamiBackupRestore>(restore).Pull(hub);
@@ -188,6 +188,11 @@ namespace Origami.Core.Data
                 {
                     var ctx = Current.GetContext(user);
                     this.SmartSave(ctx, false).Push(hub);
+                }
+
+                if (hub.Ok)
+                {
+                    hub.Info = Text.Original("Restore completed successfully. Please restart the application to apply the changes");
                 }
 
                 return new Result<OrigamiBackupRestore>(restore).Pull(hub);
@@ -270,7 +275,7 @@ namespace Origami.Core.Data
             return new(target) { Success = Text.Original("BACPAC file created successfully") };
         }
 
-        protected async Task<Result> RestoreTheDatabaseAsync(string bacpacPath)
+        protected async Task<Result> RestoreTheDatabaseAsync(string bacpacPath, string connectionString)
         {
             if (File.Exists(bacpacPath) == false)
             {
@@ -282,15 +287,14 @@ namespace Origami.Core.Data
                 return new() { Error = Text.Original("Current process hasn't started yet") };
             }
 
-            var oi = _configuration.GetOrigamiConnectionString();
-            var builder = new SqlConnectionStringBuilder(oi);
+            var builder = new SqlConnectionStringBuilder(connectionString);
 
             var args = $"/Action:Import " +
                 $"/SourceFile:\"{bacpacPath}\" " +
                 $"/TargetServerName:\"{builder.DataSource}\" " +
                 $"/TargetDatabaseName:\"{this.DatabaseName}\" " +
-                $"/TargetUser:\"origami-backup\" " +
-                $"/TargetPassword:\"zwREK18C7kDDoLXREGWs\" " +
+                $"/TargetUser:\"{builder.UserID}\" " +
+                $"/TargetPassword:\"{builder.Password}\" " +
                 $"/TargetEncryptConnection:False";
 
             var process = new Process

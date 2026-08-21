@@ -1,5 +1,5 @@
 ﻿@page "/backups"
-@using Origami.Core.Models.FileSystem
+@using Microsoft.Data.SqlClient
 @inherits BasicAdminGrid<OrigamiBackup>
 @implements IFilter
 
@@ -22,12 +22,12 @@
                                     <i class="bi bi-database-fill-add"></i>
                                     <span>@Text.Lower("Backup")</span>
                                 </button>
-                                <button class="btn btn-warning text-white" title="@Text.Lower("Restore files and database from a backup in the list below")" disabled="@this.DisableTheRestoreButton" @onclick="this.RestoreOrigami">
+                                <button class="btn btn-warning text-white" title="@Text.Lower("Restore files and database from a backup in the list below")" disabled="@this.DisableTheRestoreButton" @onclick="this.RestoreOrigamiPrompt">
                                     <i class="bi bi-database-fill-exclamation"></i>
                                     <span>@Text.Lower("Restore from list")</span>
                                 </button>
                             </div>
-                            <RestoreFromZip DisableTheRestoreZipButton="@this.DisableTheRestoreZipButton" Class="pe-1"></RestoreFromZip>
+                            <RestoreFromZip DisableTheRestoreZipButton="@this.DisableTheRestoreZipButton" Class="pe-1" RestorationIsDone="() => this.DataGrid.ReloadServerData()"></RestoreFromZip>
                         </li>
                         <li style="width:20%;">
                         </li>
@@ -124,11 +124,41 @@
                 </div>
             </div>
         </div>
+        <MudDialog @bind-Visible="_showUserCredentialsPrompt" Options="_dialogOptions" Style="min-width: 500px;">
+            <TitleContent>
+                <div class="dialog-title">
+                    <div>@Text.Original("Please inform a set of user credentials with elevated priviledges to restore the backup")</div>
+                    <div>@Text.Original("And it must a different user than current user accessing the database")</div>
+                </div>
+            </TitleContent>
+            <DialogContent>
+                <div class="dialog-content">
+                    <ul class="inline-list">
+                        <li>
+                            <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("Username")" @bind-Value="_username"></MudTextField>
+                        </li>
+                        <li>
+                            <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("Password")" InputType="InputType.Password" @bind-Value="_password"></MudTextField>
+                        </li>
+                    </ul>
+                    <div class="btn-group w-100">
+                        <button class="btn btn-success" disabled="@(_username.Has() == false || _password.Has() == false)" @onclick="RestoreOrigamiConfirmation">@Text.Lower("Proceed")</button>
+                        <button class="btn btn-warning" @onclick="() => { _username = string.Empty; _password = string.Empty; }">@Text.Lower("Clear")</button>
+                    </div>
+                </div>
+            </DialogContent>
+        </MudDialog>
     </ContentTemplate>
 </Root>
 @code {
 
     protected override string DefaultOrdering => $"{nameof(OrigamiBackup.DateCreated)}";
+
+    private readonly DialogOptions _dialogOptions = new() { CloseOnEscapeKey = true, CloseButton = false, CloseOnNavigation = true, };
+
+    private bool _showUserCredentialsPrompt = false;
+    private string _username = string.Empty;
+    private string _password = string.Empty;
 
     /// <summary>
     /// Disables the restore button if a restore process is currently running.
@@ -209,7 +239,7 @@
         }
     }
 
-    protected async Task RestoreOrigami()
+    protected async Task RestoreOrigamiPrompt()
     {
         var ok = await DialogService.ShowMessageBoxAsync(
             Text.Upper("Restore files and database"),
@@ -219,25 +249,52 @@
 
         if (ok == false) return;
 
-        if (this.Repository is IBackupRestoreRepository backupRestoreRepository)
-        {
-            var scope = new TransactionScope(
-                TransactionScopeOption.Required,
-                TransactionScopeAsyncFlowOption.Enabled);
+        this._showUserCredentialsPrompt = true;
+    }
 
-            backupRestoreRepository.BackupRestoreTask = Task.Run(async () =>
+    protected async Task RestoreOrigamiConfirmation()
+    {
+        try
+        {
+            this._showUserCredentialsPrompt = false;
+
+            if (this.Repository is IBackupRestoreRepository backupRestoreRepository)
             {
-                using (scope)
+                var builder = new SqlConnectionStringBuilder(this.Configuration.GetOrigamiConnectionString());
+                if (builder.UserID.Like(_username) == true)
                 {
-                    var hub = await backupRestoreRepository.RestoreAsync(this.UserFacade.User, this.SelectedEntities.First());
+                    await DialogService.ShowMessageBoxAsync(
+                        Text.Upper("Restore files and database"),
+                        Text.Original("The user must be different than the current user"),
+                        yesText: Text.Lower("Ok"));
+                    return;
+                }
+
+                builder.UserID = _username;
+                builder.Password = _password;
+
+                //private scope to test the connection string with the new credentials
+                {
+                    using var sqlConnection = new SqlConnection(builder.ConnectionString);
+                    await sqlConnection.OpenAsync();
+                }
+
+                backupRestoreRepository.BackupRestoreTask = Task.Run(async () =>
+                {
+                    using var scope = new TransactionScope(TransactionScopeOption.Required, TransactionScopeAsyncFlowOption.Enabled);
+                    var hub = await backupRestoreRepository.RestoreAsync(this.UserFacade.User, this.SelectedEntities.First(), builder.ConnectionString);
                     if (hub.Ok)
                     {
                         scope.Complete();
                         await this.InvokeAsync(async () => await this.DataGrid.ReloadServerData());
                     }
                     UserFacade.Result = hub;
-                }
-            });
+                });
+            }
+        }
+        catch (Exception ex)
+        {
+            this.UserFacade.Result = new(ex);
         }
     }
 
@@ -254,5 +311,11 @@
                 if (s.Like(OrigamiConstants.Events.RestoreComplete) == true) this.InvokeAsync(this.StateHasChanged);
             }
         };
+    }
+
+    private string _user()
+    {
+        var builder = new SqlConnectionStringBuilder(this.Configuration.GetOrigamiConnectionString());
+        return builder.UserID;
     }
 }

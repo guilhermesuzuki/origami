@@ -28,6 +28,6 @@ namespace Origami.Core.Data
         /// <param name="backup"></param>
         /// <param name="filepathOverride"></param>
         /// <returns></returns>
-        Task<Result<OrigamiBackupRestore>> RestoreAsync(OrigamiUser user, OrigamiBackup backup, string? filepathOverride = null);
+        Task<Result<OrigamiBackupRestore>> RestoreAsync(OrigamiUser user, OrigamiBackup backup, string connectionString, string? filepathOverride = null);
     }
 }
