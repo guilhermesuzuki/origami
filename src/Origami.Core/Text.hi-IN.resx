@@ -2682,4 +2682,10 @@
   <data name="Please inform a set of user credentials with elevated privileges to restore the backup" xml:space="preserve">
     <value>बैकअप पुनर्स्थापित करने के लिए कृपया उन्नत विशेषाधिकारों वाले उपयोगकर्ता क्रेडेंशियल प्रदान करें</value>
   </data>
+  <data name="And it must a different user than current user accessing the database" xml:space="preserve">
+    <value>और यह डेटाबेस तक पहुँचने वाले वर्तमान उपयोगकर्ता से भिन्न उपयोगकर्ता होना चाहिए</value>
+  </data>
+  <data name="Restore completed successfully. Please restart the application to apply the changes" xml:space="preserve">
+    <value>पुनर्स्थापना सफलतापूर्वक पूर्ण हो गई। परिवर्तनों को लागू करने के लिए कृपया एप्लिकेशन को पुनः प्रारंभ करें</value>
+  </data>
 </root>
