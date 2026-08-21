@@ -2679,4 +2679,7 @@
   <data name="{0} content(s)" xml:space="preserve">
     <value>콘텐츠 {0}개</value>
   </data>
+  <data name="Please inform a set of user credentials with elevated privileges to restore the backup" xml:space="preserve">
+    <value>백업을 복원하려면 관리자 권한이 있는 사용자 자격 증명을 입력하세요</value>
+  </data>
 </root>

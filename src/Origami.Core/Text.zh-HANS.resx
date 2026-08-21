@@ -2679,4 +2679,7 @@
   <data name="{0} content(s)" xml:space="preserve">
     <value>{0} 个内容</value>
   </data>
+  <data name="Please inform a set of user credentials with elevated privileges to restore the backup" xml:space="preserve">
+    <value>请提供具有提升权限的用户凭据以还原备份</value>
+  </data>
 </root>

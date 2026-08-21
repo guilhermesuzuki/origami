@@ -2679,4 +2679,7 @@
   <data name="{0} content(s)" xml:space="preserve">
     <value>{0}件のコンテンツ</value>
   </data>
+  <data name="Please inform a set of user credentials with elevated privileges to restore the backup" xml:space="preserve">
+    <value>バックアップを復元するには、昇格された権限を持つユーザーの認証情報を入力してください</value>
+  </data>
 </root>

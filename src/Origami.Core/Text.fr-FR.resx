@@ -2679,4 +2679,7 @@
   <data name="{0} content(s)" xml:space="preserve">
     <value>{0} contenu(s)</value>
   </data>
+  <data name="Please inform a set of user credentials with elevated privileges to restore the backup" xml:space="preserve">
+    <value>Veuillez fournir des identifiants utilisateur disposant de privilèges élevés pour restaurer la sauvegarde</value>
+  </data>
 </root>
