@@ -251,16 +251,17 @@ namespace Origami.Core.Data
                 StartInfo = new ProcessStartInfo
                 {
                     FileName = "sqlpackage",
-                    Arguments = $"/Action:Export " +
-                    $"/SourceConnectionString:\"{oi}\" " +
-                    $"/TargetFile:\"{target}\" " +
-                    $"/OverwriteFiles:True",
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
                     UseShellExecute = false,
                     CreateNoWindow = true,
                 }
             };
+
+            process.StartInfo.ArgumentList.Add($"/Action:Export");
+            process.StartInfo.ArgumentList.Add($"/SourceConnectionString:{oi}");
+            process.StartInfo.ArgumentList.Add($"/TargetFile:{target}");
+            process.StartInfo.ArgumentList.Add($"/OverwriteFiles:True");
 
             process.Start();
             string output = await process.StandardOutput.ReadToEndAsync();
@@ -287,28 +288,27 @@ namespace Origami.Core.Data
                 return new() { Error = Text.Original("Current process hasn't started yet") };
             }
 
-            var builder = new SqlConnectionStringBuilder(connectionString);
-
-            var args = $"/Action:Import " +
-                $"/SourceFile:\"{bacpacPath}\" " +
-                $"/TargetServerName:\"{builder.DataSource}\" " +
-                $"/TargetDatabaseName:\"{this.DatabaseName}\" " +
-                $"/TargetUser:\"{builder.UserID}\" " +
-                $"/TargetPassword:\"{builder.Password}\" " +
-                $"/TargetEncryptConnection:False";
-
             var process = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
                     FileName = "sqlpackage",
-                    Arguments = args.Replace("\n", " "),
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
                     UseShellExecute = false,
                     CreateNoWindow = true
                 }
             };
+
+            var builder = new SqlConnectionStringBuilder(connectionString);
+
+            process.StartInfo.ArgumentList.Add($"/Action:Import");
+            process.StartInfo.ArgumentList.Add($"/SourceFile:{bacpacPath}");
+            process.StartInfo.ArgumentList.Add($"/TargetServerName:{builder.DataSource}");
+            process.StartInfo.ArgumentList.Add($"/TargetDatabaseName:{this.DatabaseName}");
+            process.StartInfo.ArgumentList.Add($"/TargetUser:{builder.UserID}");
+            process.StartInfo.ArgumentList.Add($"/TargetPassword:{builder.Password}");
+            process.StartInfo.ArgumentList.Add($"/TargetEncryptConnection:False");
 
             process.Start();
 
