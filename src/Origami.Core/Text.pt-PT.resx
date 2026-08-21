@@ -1438,7 +1438,7 @@
     <value>Publicações</value>
   </data>
   <data name="Posts comments" xml:space="preserve">
-    <value>Publica comentários</value>
+    <value>Comentários de publicações</value>
   </data>
   <data name="Posts found in the search" xml:space="preserve">
     <value>Publicações encontradas na pesquisa</value>
@@ -2651,5 +2651,41 @@
   </data>
   <data name="Display name is already in use" xml:space="preserve">
     <value>O nome de apresentação já está a ser utilizado</value>
+  </data>
+  <data name="BACPAC import failed: {0}" xml:space="preserve">
+    <value>Falha na importação do BACPAC: {0}</value>
+  </data>
+  <data name="BACPAC export failed: {0}" xml:space="preserve">
+    <value>Falha na exportação do BACPAC: {0}</value>
+  </data>
+  <data name="BACPAC file not found" xml:space="preserve">
+    <value>Ficheiro BACPAC não encontrado</value>
+  </data>
+  <data name="Current process hasn't started yet" xml:space="preserve">
+    <value>O processo atual ainda não foi iniciado</value>
+  </data>
+  <data name="Blog is deactivated" xml:space="preserve">
+    <value>O blogue está desativado</value>
+  </data>
+  <data name="Blog is deleted" xml:space="preserve">
+    <value>O blogue foi eliminado</value>
+  </data>
+  <data name="Connectivity details" xml:space="preserve">
+    <value>Detalhes de conectividade</value>
+  </data>
+  <data name="Deactivated" xml:space="preserve">
+    <value>Desativado</value>
+  </data>
+  <data name="{0} content(s)" xml:space="preserve">
+    <value>{0} conteúdo(s)</value>
+  </data>
+  <data name="Please inform a set of user credentials with elevated privileges to restore the backup" xml:space="preserve">
+    <value>Indique as credenciais de um utilizador com privilégios elevados para restaurar a cópia de segurança</value>
+  </data>
+  <data name="And it must be a different user than current user accessing the database" xml:space="preserve">
+    <value>E tem de ser um utilizador diferente do utilizador atual que está a aceder à base de dados</value>
+  </data>
+  <data name="Restore completed successfully. Please restart the application to apply the changes" xml:space="preserve">
+    <value>O restauro foi concluído com sucesso. Reinicie a aplicação para aplicar as alterações</value>
   </data>
 </root>

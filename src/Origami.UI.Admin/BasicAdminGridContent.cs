@@ -386,7 +386,7 @@ namespace Origami.UI.Admin
                         yesText: Text.Lower("Yes"),
                         noText: Text.Lower("No"));
                 },
-                this.HubContentRepository.Purge
+                (entity, user) => this.HubContentRepository.Purge(entity, user, true)
             );
         }
 

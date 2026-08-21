@@ -1,7 +1,10 @@
 ﻿:root { --site-highlight: #dd00ff; --site-highlight-faded: #dd00ff60; --site-highlight-faded-plus: #dd00ff30; --site-highlight-faded-plus-plus: #dd00ff10; }
 
 html, body { overflow: hidden; }
-html, body, main { height:100vh; }
+html, body, main { height:100dvh; }
+
+.master-root { display: flex; flex-direction: column; height: 100dvh; }
+.content-max-length { flex: 1; }
 
 .btn:disabled, button:disabled { opacity: 0.35 !important; cursor: not-allowed; }
 

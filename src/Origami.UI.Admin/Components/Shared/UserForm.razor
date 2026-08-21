@@ -606,36 +606,6 @@
         return db.Set<OrigamiUserPasswordReset>().AsNoTracking().Where(x => x.UserId == this.Entity.Id).OrderByDescending(x => x.DateCreated).ToList();
     }
 
-    protected void LoadUserBlogs()
-    {
-        if (this.Entity.New == false)
-        {
-            this.Entity.UserBlogs = [.. from x in this.Super.UserBlogs.ReadFromCache() where x.UserId == this.Entity.Id select x];
-        }
-    }
-
-    protected void LoadUserRoles()
-    {
-        if (this.Entity.New == false)
-        {
-            this.Entity.UserRoles = [.. from x in this.Super.UserRoles.ReadFromCache() where x.UserId == this.Entity.Id select x];
-        }
-    }
-
-    protected override void OnParametersSet()
-    {
-        base.OnParametersSet();
-        this.LoadUserBlogs();
-        this.LoadUserRoles();
-    }
-
-    public override void UndoChanges()
-    {
-        base.UndoChanges();
-        this.LoadUserRoles();
-        this.LoadUserBlogs();
-    }
-
     protected async Task BlockUserSelf()
     {
         var yes = await this.DialogService.ShowMessageBoxAsync(

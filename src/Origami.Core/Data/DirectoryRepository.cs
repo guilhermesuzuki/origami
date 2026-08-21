@@ -1,4 +1,5 @@
-﻿using Origami.Core.Models;
+﻿using Microsoft.Extensions.Caching.Memory;
+using Origami.Core.Models;
 using Origami.Core.Models.FileSystem;
 
 namespace Origami.Core.Data
@@ -6,7 +7,7 @@ namespace Origami.Core.Data
     public class DirectoryRepository :
         IDirectoryRepository
     {
-        protected readonly IBlogRepository _blogRepository;
+        protected readonly IMyMemoryCache _memoryCache;
         protected readonly IWebRootPath _wwwRoot;
 
         /// <summary>
@@ -14,11 +15,11 @@ namespace Origami.Core.Data
         /// </summary>
         /// <param name="wwwRoot"></param>
         public DirectoryRepository(
-            IBlogRepository blogRepository,
+            IMyMemoryCache myMemoryCache,
             IWebRootPath wwwRoot)
             : base()
         {
-            _blogRepository = blogRepository;
+            _memoryCache = myMemoryCache;
             _wwwRoot = wwwRoot;
         }
 
@@ -120,14 +121,14 @@ namespace Origami.Core.Data
 
             if (entity is IBlogId blogId)
             {
-                var blog = _blogRepository.ReadFromCache().Id(blogId.BlogId);
+                var blog = _memoryCache.Read<OrigamiBlog>().Id(blogId.BlogId);
                 if (blog == null) throw new Exception($"Blog is null");
                 return $"/files/blogs/{blog.NanoId}/{plural}/{directory}/";
             }
 
             if (entity is IBlogIdNull blogIdNull && blogIdNull.BlogId.HasValue)
             {
-                var blog = _blogRepository.ReadFromCache().Id(blogIdNull.BlogId.Value);
+                var blog = _memoryCache.Read<OrigamiBlog>().Id(blogIdNull.BlogId.Value);
                 if (blog == null) throw new Exception($"Blog is null");
                 return $"/files/blogs/{blog.NanoId}/{plural}/{directory}/";
             }

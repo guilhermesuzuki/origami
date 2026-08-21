@@ -108,7 +108,7 @@ namespace Origami.Core.Data
             }
         }
 
-        public async Task<Result<OrigamiBackupRestore>> RestoreAsync(OrigamiUser user, OrigamiBackup backup, string? filepathOverride = null)
+        public async Task<Result<OrigamiBackupRestore>> RestoreAsync(OrigamiUser user, OrigamiBackup backup, string connectionString, string? filepathOverride = null)
         {
             if (Current != null)
             {
@@ -153,7 +153,7 @@ namespace Origami.Core.Data
                 //asks to refresh the UI
                 _appFacade.RefreshUI(OrigamiConstants.Events.Restore);
 
-                hub = await RestoreTheDatabaseAsync(Path.Combine(extractPath, "files", "db.bacpac"));
+                hub = await RestoreTheDatabaseAsync(Path.Combine(extractPath, "files", "db.bacpac"), connectionString);
                 if (hub.Ok == false)
                 {
                     return new Result<OrigamiBackupRestore>(restore).Pull(hub);
@@ -188,6 +188,11 @@ namespace Origami.Core.Data
                 {
                     var ctx = Current.GetContext(user);
                     this.SmartSave(ctx, false).Push(hub);
+                }
+
+                if (hub.Ok)
+                {
+                    hub.Info = Text.Original("Restore completed successfully. Please restart the application to apply the changes");
                 }
 
                 return new Result<OrigamiBackupRestore>(restore).Pull(hub);
@@ -246,10 +251,6 @@ namespace Origami.Core.Data
                 StartInfo = new ProcessStartInfo
                 {
                     FileName = "sqlpackage",
-                    Arguments = $"/Action:Export " +
-                    $"/SourceConnectionString:\"{oi}\" " +
-                    $"/TargetFile:\"{target}\" " +
-                    $"/OverwriteFiles:True",
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
                     UseShellExecute = false,
@@ -257,6 +258,11 @@ namespace Origami.Core.Data
                 }
             };
 
+            process.StartInfo.ArgumentList.Add($"/Action:Export");
+            process.StartInfo.ArgumentList.Add($"/SourceConnectionString:{oi}");
+            process.StartInfo.ArgumentList.Add($"/TargetFile:{target}");
+            process.StartInfo.ArgumentList.Add($"/OverwriteFiles:True");
+
             process.Start();
             string output = await process.StandardOutput.ReadToEndAsync();
             string error = await process.StandardError.ReadToEndAsync();
@@ -264,41 +270,29 @@ namespace Origami.Core.Data
 
             if (process.ExitCode != 0)
             {
-                return new() { Error = $"BACPAC export failed: {error}" };
+                return new() { Error = Text.Original("BACPAC export failed: {0}", error) };
             }
 
             return new(target) { Success = Text.Original("BACPAC file created successfully") };
         }
 
-        protected async Task<Result> RestoreTheDatabaseAsync(string bacpacPath)
+        protected async Task<Result> RestoreTheDatabaseAsync(string bacpacPath, string connectionString)
         {
             if (File.Exists(bacpacPath) == false)
             {
-                return new() { Error = "BACPAC file not found" };
+                return new() { Error = Text.Original("BACPAC file not found") };
             }
 
             if (Current == null)
             {
-                return new() { Error = $"Current process hasn't started yet" };
+                return new() { Error = Text.Original("Current process hasn't started yet") };
             }
-
-            var oi = _configuration.GetOrigamiConnectionString();
-            var builder = new SqlConnectionStringBuilder(oi);
-
-            var args = $"/Action:Import " +
-                $"/SourceFile:\"{bacpacPath}\" " +
-                $"/TargetServerName:\"{builder.DataSource}\" " +
-                $"/TargetDatabaseName:\"{this.DatabaseName}\" " +
-                $"/TargetUser:\"origami-backup\" " +
-                $"/TargetPassword:\"zwREK18C7kDDoLXREGWs\" " +
-                $"/TargetEncryptConnection:False";
 
             var process = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
                     FileName = "sqlpackage",
-                    Arguments = args.Replace("\n", " "),
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
                     UseShellExecute = false,
@@ -306,6 +300,16 @@ namespace Origami.Core.Data
                 }
             };
 
+            var builder = new SqlConnectionStringBuilder(connectionString);
+
+            process.StartInfo.ArgumentList.Add($"/Action:Import");
+            process.StartInfo.ArgumentList.Add($"/SourceFile:{bacpacPath}");
+            process.StartInfo.ArgumentList.Add($"/TargetServerName:{builder.DataSource}");
+            process.StartInfo.ArgumentList.Add($"/TargetDatabaseName:{this.DatabaseName}");
+            process.StartInfo.ArgumentList.Add($"/TargetUser:{builder.UserID}");
+            process.StartInfo.ArgumentList.Add($"/TargetPassword:{builder.Password}");
+            process.StartInfo.ArgumentList.Add($"/TargetEncryptConnection:False");
+
             process.Start();
 
             string output = await process.StandardOutput.ReadToEndAsync();
@@ -315,7 +319,7 @@ namespace Origami.Core.Data
 
             if (process.ExitCode != 0)
             {
-                throw new Exception($"BACPAC import failed:\n{error}");
+                throw new Exception(Text.Original("BACPAC import failed: {0}", error));
             }
 
             return new() { Success = Text.Original("Database restored successfully."), };

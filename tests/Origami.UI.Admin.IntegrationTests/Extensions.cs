@@ -1,7 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Origami.Core;
 using Origami.Core.Data;
 using Origami.Core.Models;
+using Shouldly;
 
 namespace Origami.UI.Admin.IntegrationTests
 {
@@ -13,12 +15,57 @@ namespace Origami.UI.Admin.IntegrationTests
             scope.CreateTestUser(user, role);
 
             var blogRepository = scope.ServiceProvider.GetService<IBlogRepository>()!;
-            if (blogRepository.ReadFromDatabase(blog) == null)
-            {
-                blogRepository
-                    .SmartSave(blog.GetContext(), false)
-                    .OnFailure(r => throw new Exception($"Failed to create test blog: {r.GetMessages()}"));
-            }
+            var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
+
+            blogRepository
+                .SmartSave(blog.GetContext(user), true)
+                .OnFailure(r => throw new Exception($"Failed to create test blog: {r.GetMessages()}"));
+
+            using var db = blogRepository.DbContextFactory.CreateDbContext();
+            var dbBlog = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == blog.Id);
+
+            dbBlog.ShouldNotBeNull();
+            dbBlog.Name.ShouldBe(blog.Name);
+            dbBlog.DateCreated.ShouldBe(blog.DateCreated);
+            dbBlog.NanoId.ShouldBe(blog.NanoId);
+            dbBlog.IsActive.ShouldBe(blog.IsActive);
+            dbBlog.IsDeleted.ShouldBe(blog.IsDeleted);
+            dbBlog.IsPrimary.ShouldBe(blog.IsPrimary);
+            dbBlog.Version.ShouldBe(blog.Version);
+
+            var cacheBlog = superRepository.MyMemoryCache.Read<OrigamiBlog>().Id(blog.Id);
+            cacheBlog.ShouldNotBeNull();
+            cacheBlog.Name.ShouldBe(blog.Name);
+            cacheBlog.DateCreated.ShouldBe(blog.DateCreated);
+            cacheBlog.NanoId.ShouldBe(blog.NanoId);
+            cacheBlog.IsActive.ShouldBe(blog.IsActive);
+            cacheBlog.IsDeleted.ShouldBe(blog.IsDeleted);
+            cacheBlog.IsPrimary.ShouldBe(blog.IsPrimary);
+            cacheBlog.Version.ShouldBe(blog.Version);
+
+            blogRepository.Activate(blog.GetContext(user), true)
+                .OnFailure(r => throw new Exception($"Failed to activate test blog: {r.GetMessages()}"));
+
+            dbBlog = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == blog.Id);
+
+            dbBlog.ShouldNotBeNull();
+            dbBlog.Name.ShouldBe(blog.Name);
+            dbBlog.DateCreated.ShouldBe(blog.DateCreated);
+            dbBlog.NanoId.ShouldBe(blog.NanoId);
+            dbBlog.IsActive.ShouldBe(blog.IsActive);
+            dbBlog.IsDeleted.ShouldBe(blog.IsDeleted);
+            dbBlog.IsPrimary.ShouldBe(blog.IsPrimary);
+            dbBlog.Version.ShouldBe(blog.Version);
+
+            cacheBlog = superRepository.MyMemoryCache.Read<OrigamiBlog>().Id(blog.Id);
+            cacheBlog.ShouldNotBeNull();
+            cacheBlog.Name.ShouldBe(blog.Name);
+            cacheBlog.DateCreated.ShouldBe(blog.DateCreated);
+            cacheBlog.NanoId.ShouldBe(blog.NanoId);
+            cacheBlog.IsActive.ShouldBe(blog.IsActive);
+            cacheBlog.IsDeleted.ShouldBe(blog.IsDeleted);
+            cacheBlog.IsPrimary.ShouldBe(blog.IsPrimary);
+            cacheBlog.Version.ShouldBe(blog.Version);
         }
 
         public static void CreateTestCategory(this IServiceScope scope, OrigamiCategory category, OrigamiUser user)
@@ -47,7 +94,6 @@ namespace Origami.UI.Admin.IntegrationTests
             userRoleRepository
                 .SmartSave(new OrigamiUserRole { UserId = user.Id, RoleId = role.Id }.GetContext(), false)
                 .OnFailure(r => throw new Exception($"Failed to create test user role: {r.GetMessages()}"));
-
         }
 
         public static void CreateTestRole(this IServiceScope scope, OrigamiRole role)

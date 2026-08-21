@@ -62,7 +62,7 @@ namespace Origami.UI
                         .Where(x => x.UserId == id)
                         .FirstOrDefault();
 
-                    this.UserFacade.SocialProfile = socialProfile ?? new();
+                    this.UserFacade.SocialProfileId = socialProfile?.Id ?? Guid.Empty;
                 }
                 else if (method.Like("OpenIdConnect") == true)
                 {
@@ -71,7 +71,7 @@ namespace Origami.UI
                         .Where(x => x.UserId == id)
                         .FirstOrDefault();
 
-                    this.UserFacade.SocialProfile = socialProfile ?? new();
+                    this.UserFacade.SocialProfileId = socialProfile?.Id ?? Guid.Empty;
                 }
             }
         }

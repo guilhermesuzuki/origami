@@ -13,6 +13,7 @@ namespace Origami.Core.Data
         protected readonly IHubContentRepository<HubContentPage> _hubPageRepository;
         protected readonly IHubContentRepository<HubContentPost> _hubPostRepository;
         protected readonly IHubContentRepository<HubContentQuickNote> _hubQuickNoteRepository;
+        protected readonly IHubContentRepository<HubContentSoftwareRelease> _hubSoftwareReleaseRepository;
         protected readonly IHubContentRepository<HubContentVideo> _hubVideoRepository;
         protected readonly IValidator<OrigamiBlog> _validator;
 
@@ -25,6 +26,7 @@ namespace Origami.Core.Data
             IHubContentRepository<HubContentPage> hubPageRepository,
             IHubContentRepository<HubContentPost> hubPostRepository,
             IHubContentRepository<HubContentQuickNote> hubQuickNoteRepository,
+            IHubContentRepository<HubContentSoftwareRelease> hubSoftwareReleaseRepository,
             IHubContentRepository<HubContentVideo> hubVideoRepository,
             IWebRootPath wwwRoot,
             Text text)
@@ -34,8 +36,9 @@ namespace Origami.Core.Data
             _categoryRepository = categoryRepository;
             _hubPageRepository = hubPageRepository;
             _hubPostRepository = hubPostRepository;
-            _hubVideoRepository = hubVideoRepository;
             _hubQuickNoteRepository = hubQuickNoteRepository;
+            _hubSoftwareReleaseRepository = hubSoftwareReleaseRepository;
+            _hubVideoRepository = hubVideoRepository;
         }
 
         public override string CreatePermission => nameof(OrigamiRole.CreateNewBlogs);
@@ -119,7 +122,7 @@ namespace Origami.Core.Data
 
         public string DirectoryForScalingImages()
         {
-            return $"/files/{typeof(OrigamiBlog).GetPlural().ToLower()}/scaling/";
+            return $"/scaling/";
         }
 
         public OrigamiBlog GetPrimary()
@@ -137,6 +140,7 @@ namespace Origami.Core.Data
             this._purgePages(db, ctx).Push(hub);
             this._purgePosts(db, ctx).Push(hub);
             this._purgeQuickNotes(db, ctx).Push(hub);
+            this._purgeSoftwareReleases(db, ctx).Push(hub);
             this._purgeVideos(db, ctx).Push(hub);
 
             // blogs the users have access to
@@ -174,6 +178,21 @@ namespace Origami.Core.Data
                 if (permission.Ok == false) return permission;
             }
 
+            var blog = this.ReadFromDatabase(ctx.Entity);
+
+            if (blog == null)
+            {
+                return new() { Error = Text.Original("Blog could not be found") };
+            }
+            if (blog.IsDeleted)
+            {
+                return new() { Error = Text.Original("Blog is deleted") };
+            }
+            if (blog.IsActive == false)
+            {
+                return new() { Error = Text.Original("Blog is deactivated") };
+            }
+
             using var db = DbContextFactory.CreateDbContext();
 
             db.Blogs.Where(x => x.IsPrimary).ExecuteUpdate(setters => setters.SetProperty(x => x.IsPrimary, false));
@@ -189,7 +208,7 @@ namespace Origami.Core.Data
             ctx.Entity.Version(fresh);
 
             //refreshes the cache
-            RefreshCache();
+            this.RefreshCache();
 
             //returns the updated blog entity
             return new(ctx.Entity);
@@ -271,6 +290,7 @@ namespace Origami.Core.Data
         {
             return new(ctx.Entity, _validator);
         }
+
         private Result _purgeCategories(OrigamiDbContext db, DataOperationContext<OrigamiBlog> ctx)
         {
             var categories = from a in db.Categories.AsNoTracking().Blog(ctx.Entity.Id)
@@ -286,12 +306,12 @@ namespace Origami.Core.Data
 
         private Result _purgePages(OrigamiDbContext db, DataOperationContext<OrigamiBlog> ctx)
         {
-            var pages = from p in db.Pages.AsNoTracking().Blog(ctx.Entity.Id)
-                        select new OrigamiPage { Id = p.Id, NanoId = p.NanoId };
+            var entities = from p in db.Pages.AsNoTracking().Blog(ctx.Entity.Id)
+                           select new OrigamiPage { Id = p.Id, NanoId = p.NanoId };
 
-            if (pages.Any() == true)
+            if (entities.Any() == true)
             {
-                pages.Select(x => _hubPageRepository.Get(x)).Each(x => _hubPageRepository.Purge(x, ctx.User));
+                entities.Select(x => _hubPageRepository.Get(x)).Each(x => _hubPageRepository.Purge(x, ctx.User, false));
             }
 
             return new();
@@ -299,12 +319,12 @@ namespace Origami.Core.Data
 
         private Result _purgePosts(OrigamiDbContext db, DataOperationContext<OrigamiBlog> ctx)
         {
-            var posts = from p in db.Posts.AsNoTracking().Blog(ctx.Entity.Id)
-                        select new OrigamiPost { Id = p.Id, NanoId = p.NanoId };
+            var entities = from p in db.Posts.AsNoTracking().Blog(ctx.Entity.Id)
+                           select new OrigamiPost { Id = p.Id, NanoId = p.NanoId };
 
-            if (posts.Any() == true)
+            if (entities.Any() == true)
             {
-                posts.Select(x => _hubPostRepository.Get(x)).Each(x => _hubPostRepository.Purge(x, ctx.User));
+                entities.Select(x => _hubPostRepository.Get(x)).Each(x => _hubPostRepository.Purge(x, ctx.User, false));
             }
 
             return new();
@@ -312,12 +332,25 @@ namespace Origami.Core.Data
 
         private Result _purgeQuickNotes(OrigamiDbContext db, DataOperationContext<OrigamiBlog> ctx)
         {
-            var quickNotes = from qn in db.QuickNotes.AsNoTracking().Blog(ctx.Entity.Id)
-                             select new OrigamiQuickNote { Id = qn.Id, NanoId = qn.NanoId };
+            var entities = from qn in db.QuickNotes.AsNoTracking().Blog(ctx.Entity.Id)
+                           select new OrigamiQuickNote { Id = qn.Id, NanoId = qn.NanoId };
 
-            if (quickNotes.Any() == true)
+            if (entities.Any() == true)
             {
-                quickNotes.Select(x => _hubQuickNoteRepository.Get(x)).Each(x => _hubQuickNoteRepository.Purge(x, ctx.User));
+                entities.Select(x => _hubQuickNoteRepository.Get(x)).Each(x => _hubQuickNoteRepository.Purge(x, ctx.User, false));
+            }
+
+            return new();
+        }
+
+        private Result _purgeSoftwareReleases(OrigamiDbContext db, DataOperationContext<OrigamiBlog> ctx)
+        {
+            var entities = from v in db.SoftwareReleases.AsNoTracking().Blog(ctx.Entity.Id)
+                           select new OrigamiSoftwareRelease { Id = v.Id, NanoId = v.NanoId };
+
+            if (entities.Any() == true)
+            {
+                entities.Select(x => _hubSoftwareReleaseRepository.Get(x)).Each(x => _hubSoftwareReleaseRepository.Purge(x, ctx.User, false));
             }
 
             return new();
@@ -325,12 +358,12 @@ namespace Origami.Core.Data
 
         private Result _purgeVideos(OrigamiDbContext db, DataOperationContext<OrigamiBlog> ctx)
         {
-            var videos = from v in db.Videos.AsNoTracking().Blog(ctx.Entity.Id)
-                         select new OrigamiVideo { Id = v.Id, NanoId = v.NanoId };
+            var entities = from v in db.Videos.AsNoTracking().Blog(ctx.Entity.Id)
+                           select new OrigamiVideo { Id = v.Id, NanoId = v.NanoId };
 
-            if (videos.Any() == true)
+            if (entities.Any() == true)
             {
-                videos.Select(x => _hubVideoRepository.Get(x)).Each(x => _hubVideoRepository.Purge(x, ctx.User));
+                entities.Select(x => _hubVideoRepository.Get(x)).Each(x => _hubVideoRepository.Purge(x, ctx.User, false));
             }
 
             return new();

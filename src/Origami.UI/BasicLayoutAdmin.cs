@@ -19,7 +19,8 @@ namespace Origami.UI
             var nameId = state.User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (nameId != null && Guid.TryParse(nameId, out var id) == true)
             {
-                this.UserFacade.User = this.Super.Users.ReadFromCache().Id(id) ?? new();
+                var user = this.Super.Users.ReadFromCache().Id(id);
+                this.UserFacade.UserId = user?.Id ?? Guid.Empty;
             }
         }
     }

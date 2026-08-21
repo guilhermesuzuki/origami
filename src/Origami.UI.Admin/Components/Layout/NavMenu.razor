@@ -1,7 +1,4 @@
-﻿@using System.Globalization;
-@using Microsoft.AspNetCore.Identity
-@using Microsoft.Extensions.Caching.Memory
-@using System.Security.Claims
+﻿@using Microsoft.Extensions.Caching.Memory
 
 @inherits Basic
 
@@ -14,13 +11,12 @@
 </style>
 <div class="main-menu m-2 border @Class">
     <div class="border-bottom">
-        <ul class="inline-list p-2 text-center">
-            <li>
-                <div class="logged-in-user">
-                    <UserHeaderCard Entity="this.UserFacade.User"></UserHeaderCard>
-                </div>
-            </li>
-        </ul>
+        <div class="logged-in-user p-2 text-center">
+            <UserHeaderCard Entity="this.UserFacade.User"></UserHeaderCard>
+        </div>
+    </div>
+    <div class="border-bottom">
+        <ConnectionDetails Class="p-2"></ConnectionDetails>
     </div>
     <div class="border-bottom">
         <ul class="inline-list cursor-pointer">
@@ -117,7 +113,7 @@
             </div>
         </div>
     }
-    
+
     <div class="menu border-bottom" @onclick="GoToRoles">
         <i class="fa-solid fa-id-badge"></i>
         <span>@Text.Lower("Roles")</span>
@@ -194,7 +190,7 @@
         if (answer.GetValueOrDefault() == true)
         {
             await this.JSRuntime.InvokeVoidAsync("$.removeCookie", this.Configuration.GetUserCookieKey(), new { path = "/" });
-            this.UserFacade.User = OrigamiUser.AnonymousUser;
+            this.UserFacade.UserId = OrigamiUser.AnonymousUser.Id;
             this.GhostOfTheNavigator.Refresh(true);
         }
     }

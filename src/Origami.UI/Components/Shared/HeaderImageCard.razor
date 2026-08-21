@@ -25,8 +25,9 @@
                 @if (file != null)
                 {
                     <div class="footer text-center x-small p-1 border">
-                        <span>@(new OrigamiSystemFile(file.LocalPath, this.Entity.HeaderImage).Name)</span>
-                        <span class="ps-1">@file.FileSize.SizeInBytes()</span>
+                        <span class="fw-bold">@(new OrigamiSystemFile(file.LocalPath, this.Entity.HeaderImage).Name)</span>
+                        <span class="fw-bold ps-1">@file.FileSize.SizeInBytes()</span>
+                        <div>@file.WebPath</div>
                     </div>
                 }
             }
@@ -46,7 +47,7 @@
     /// <summary>
     /// Should the footer be displayed?
     /// </summary>
-    [Parameter] public bool Footer { get; set; } = false;
+    [Parameter] public bool Footer { get; set; } = true;
 
     /// <summary>
     /// Header image URL or base64 image.

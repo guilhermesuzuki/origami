@@ -1,6 +1,4 @@
-﻿@using Microsoft.AspNetCore.Identity
-@using System.Security.Claims
-@inherits BasicLayout
+﻿@inherits BasicLayout
 
 <CustomHeadContent>
     <AppLinks></AppLinks>
@@ -8,7 +6,7 @@
 <PageTitle>@Super.Settings.GetSettings().Name.ToLower()</PageTitle>
 <ProcessResult></ProcessResult>
 <main class="overflow-x-hidden">
-    <Root>
+    <Root Class="master-root">
         <a id="top"></a>
         <IncognitoMode></IncognitoMode>
         @foreach (var message in this.Super.SpecialMessages.GetVisibleMessages())

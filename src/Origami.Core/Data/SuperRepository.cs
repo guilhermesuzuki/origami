@@ -160,6 +160,25 @@ namespace Origami.Core.Data
                    select b;
         }
 
+        public IEnumerable<OrigamiCategory> GetCategories(OrigamiCategory parent)
+        {
+            var l = new List<OrigamiCategory>();
+
+            var c = from a in Categories.ReadFromCache()
+                    where a.ParentId == parent.Id
+                    where a.IsDeleted == false
+                    where this.IsParentDeleted(a) == false
+                    select a;
+
+            foreach (var category in c)
+            {
+                l.Add(category);
+                l.AddRange(GetCategories(category));
+            }
+
+            return l;
+        }
+
         public IEnumerable<OrigamiContentComment> GetComments(Guid blog)
         {
             return from co in ContentComments.ReadFromCache()
@@ -172,9 +191,18 @@ namespace Origami.Core.Data
         {
             return (from a in ContentTags.ReadFromCache()
                     join b in Contents.ReadFromCache() on a.ContentId equals b.Id
-                    //where a.ContentId == tag.ContentId
                     where a.Tag.Like(tag.Tag)
                     select b).Distinct();
+        }
+
+        public IEnumerable<OrigamiContent> GetContents(OrigamiCategory category)
+        {
+            List<OrigamiCategory> categories = [category, .. GetCategories(category)];
+
+            return (from a in ContentCategories.ReadFromCache()
+                    join b in Contents.ReadFromCache() on a.ContentId equals b.Id
+                    join c in categories on a.CategoryId equals c.Id
+                    select b).DistinctBy(x => x.Id);
         }
 
         /// <summary>

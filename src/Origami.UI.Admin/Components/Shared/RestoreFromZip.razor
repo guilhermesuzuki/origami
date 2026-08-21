@@ -1,6 +1,8 @@
-﻿@inherits BasicFormFull<OrigamiBackup>
+﻿@using Microsoft.Data.SqlClient
+@inherits BasicFormFull<OrigamiBackup>
 
-<MudFileUpload T="IBrowserFile" FilesChanged="UploadBackup" Accept=".zip" MaximumFileCount="1" Class="d-inline-block">
+<MudFileUpload T="IBrowserFile" FilesChanged="RestoreOrigamiPrompt" Accept=".zip" MaximumFileCount="1" Class="d-inline-block">
+    <SelectedTemplate></SelectedTemplate>
     <CustomContent>
         <div class="btn-group @Class">
             <button class="btn btn-danger text-white" title="@Text.Lower("Restore files and database from a zip file")" disabled="@this.DisableTheRestoreZipButton" @onclick="context.OpenFilePickerAsync">
@@ -10,11 +12,14 @@
         </div>
     </CustomContent>
 </MudFileUpload>
-@if (this.FileUploading)
-{
-    <div class="position-fixed popup-container">
-        <div class="border p-3 shadow-lg" style="width: 50%; background-color:white;">
+<MudDialog @bind-Visible="this.FileUploading" Options="_dialogOptions">
+    <TitleContent>
+        <div class="dialog-title">
             <div class="text-center">@Text.Lower("Uploading a file")...</div>
+        </div>
+    </TitleContent>
+    <DialogContent>
+        <div class="dialog-content">
             <div class="progress" style="height: 10px;">
                 <div class="progress-bar bg-secondary" role="progressbar" style="width: @this.FileUploadingProgress%;" aria-valuenow="@this.FileUploadingProgress" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
@@ -27,33 +32,115 @@
                 </div>
             </div>
         </div>
-    </div>
-}
+    </DialogContent>
+</MudDialog>
+<MudDialog @bind-Visible="_showUserCredentialsPrompt" Options="_dialogOptions">
+    <TitleContent>
+        <div class="dialog-title">
+            <div>@Text.Original("Please inform a set of user credentials with elevated privileges to restore the backup")</div>
+            <div>@Text.Original("And it must be a different user than current user accessing the database")</div>
+        </div>
+    </TitleContent>
+    <DialogContent>
+        <div class="dialog-content">
+            <ul class="inline-list">
+                <li>
+                    <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("Username")" @bind-Value="_username"></MudTextField>
+                </li>
+                <li>
+                    <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("Password")" InputType="InputType.Password" @bind-Value="_password"></MudTextField>
+                </li>
+            </ul>
+            <div class="btn-group w-100 mt-3">
+                <button class="btn btn-success w-100" disabled="@(_username.Has() == false || _password.Has() == false)" @onclick="RestoreOrigamiConfirmation">@Text.Lower("Proceed")</button>
+                <button class="btn btn-warning w-100" @onclick="() => { _username = string.Empty; _password = string.Empty; }">@Text.Lower("Clear")</button>
+            </div>
+        </div>
+    </DialogContent>
+</MudDialog>
 @code {
     [Parameter] public bool DisableTheRestoreZipButton { get; set; } = false;
+    [Parameter] public EventCallback RestorationIsDone { get; set; }
 
-    private async Task UploadBackup(IBrowserFile file)
+    private readonly DialogOptions _dialogOptions = new() { CloseOnEscapeKey = true, CloseButton = false, CloseOnNavigation = true, MaxWidth = MaxWidth.Large, };
+
+    private bool _showUserCredentialsPrompt = false;
+    private string _username = string.Empty;
+    private string _password = string.Empty;
+
+    private (bool Ok, string LocalPath, string WebPath) _result = (false, string.Empty, string.Empty);
+
+    private async Task RestoreOrigamiPrompt(IBrowserFile file)
     {
+        this._showUserCredentialsPrompt = false;
+        this._result = new(true, string.Empty, string.Empty);
+
         var ok = await DialogService.ShowMessageBoxAsync(
             Text.Upper("Restore files and database"),
             Text.Original("Are you sure?"),
             yesText: Text.Lower("Yes"),
-            noText: Text.Lower("No"));
+            noText: Text.Lower("No")
+        );
 
-        if (ok == false) return;
-
-        var result = await this.UploadFile(file, OrigamiConstants.MaximumFileSizeForBackupRestore, Entity.Filename);
-
-        if (result.Ok)
+        if (ok == false)
         {
-            if (this.Repository is IBackupRestoreRepository backupRestoreRepository)
-            {
-                var hub = await backupRestoreRepository.RestoreAsync(UserFacade.User, this.Entity, result.LocalPath);
-                UserFacade.Result = hub;
-            }
+            return;
+        }
+
+        this._result = await this.UploadFile(file, OrigamiConstants.MaximumFileSizeForBackupRestore, Entity.Filename);
+
+        if (this._result.Ok)
+        {
+            this._showUserCredentialsPrompt = true;
             return;
         }
 
         this.UserFacade.Result = new() { Error = Text.Original("Failed to upload the backup file."), };
+    }
+
+    private async Task RestoreOrigamiConfirmation()
+    {
+        try
+        {
+            this._showUserCredentialsPrompt = false;
+
+            if (this.Repository is IBackupRestoreRepository backupRestoreRepository)
+            {
+                var builder = new SqlConnectionStringBuilder(this.Configuration.GetOrigamiConnectionString());
+                if (builder.UserID.Like(_username) == true)
+                {
+                    await DialogService.ShowMessageBoxAsync(
+                        Text.Upper("Restore files and database"),
+                        Text.Original("The user must be different than the current user"),
+                        yesText: Text.Lower("Ok"));
+                    return;
+                }
+
+                builder.UserID = _username;
+                builder.Password = _password;
+
+                //private scope to test the connection string with the new credentials
+                {
+                    using var sqlConnection = new SqlConnection(builder.ConnectionString);
+                    await sqlConnection.OpenAsync();
+                }
+
+                backupRestoreRepository.BackupRestoreTask = Task.Run(async () =>
+                {
+                    using var scope = new TransactionScope(TransactionScopeOption.Required, TransactionScopeAsyncFlowOption.Enabled);
+                    var hub = await backupRestoreRepository.RestoreAsync(this.UserFacade.User, this.Entity, builder.ConnectionString);
+                    if (hub.Ok)
+                    {
+                        scope.Complete();
+                        await this.InvokeAsync(async () => await this.RestorationIsDone.InvokeAsync());
+                    }
+                    UserFacade.Result = hub;
+                });
+            }
+        }
+        catch (Exception ex)
+        {
+            this.UserFacade.Result = new(ex);
+        }
     }
 }

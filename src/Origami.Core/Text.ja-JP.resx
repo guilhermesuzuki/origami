@@ -2652,4 +2652,40 @@
   <data name="Display name is already in use" xml:space="preserve">
     <value>表示名はすでに使用されています</value>
   </data>
+  <data name="BACPAC import failed: {0}" xml:space="preserve">
+    <value>BACPAC のインポートに失敗しました: {0}</value>
+  </data>
+  <data name="BACPAC export failed: {0}" xml:space="preserve">
+    <value>BACPAC のエクスポートに失敗しました: {0}</value>
+  </data>
+  <data name="BACPAC file not found" xml:space="preserve">
+    <value>BACPAC ファイルが見つかりません</value>
+  </data>
+  <data name="Current process hasn't started yet" xml:space="preserve">
+    <value>現在のプロセスはまだ開始されていません</value>
+  </data>
+  <data name="Blog is deactivated" xml:space="preserve">
+    <value>ブログは無効化されています</value>
+  </data>
+  <data name="Blog is deleted" xml:space="preserve">
+    <value>ブログは削除されています</value>
+  </data>
+  <data name="Connectivity details" xml:space="preserve">
+    <value>接続の詳細</value>
+  </data>
+  <data name="Deactivated" xml:space="preserve">
+    <value>無効</value>
+  </data>
+  <data name="{0} content(s)" xml:space="preserve">
+    <value>{0}件のコンテンツ</value>
+  </data>
+  <data name="Please inform a set of user credentials with elevated privileges to restore the backup" xml:space="preserve">
+    <value>バックアップを復元するには、昇格された権限を持つユーザーの認証情報を入力してください</value>
+  </data>
+  <data name="And it must be a different user than current user accessing the database" xml:space="preserve">
+    <value>また、データベースにアクセスしている現在のユーザーとは別のユーザーである必要があります</value>
+  </data>
+  <data name="Restore completed successfully. Please restart the application to apply the changes" xml:space="preserve">
+    <value>復元が正常に完了しました。変更を適用するには、アプリケーションを再起動してください</value>
+  </data>
 </root>

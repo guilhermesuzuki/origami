@@ -26,37 +26,9 @@ namespace Origami.UI.Admin.IntegrationTests
             using var scope = factory.Services.CreateScope();
             var superRepository = scope.ServiceProvider.GetService<ISuperRepository>()!;
 
+            scope.CreateTestRole(TestRole);
+            scope.CreateTestUser(TestUser, TestRole);
             scope.CreateTestBlog(TestBlog, TestRole, TestUser);
-
-            using var db = superRepository.DbContextFactory.CreateDbContext();
-            var blogRepository = scope.ServiceProvider.GetService<IBlogRepository>()!;
-            var blog = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
-
-            blog.ShouldNotBeNull();
-            blog.Name.ShouldBe(TestBlog.Name);
-            blog.DateCreated.ShouldBe(TestBlog.DateCreated);
-            blog.NanoId.ShouldBe(TestBlog.NanoId);
-            blog.IsActive.ShouldBe(false);
-            blog.IsActive.ShouldBe(TestBlog.IsActive);
-
-            blogRepository
-                .Activate(TestBlog.GetContext(TestUser), true)
-                .OnFailure(r => throw new Exception($"Failed to activate test blog: {r.GetMessages()}"));
-
-            var activatedBlog = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
-            activatedBlog.ShouldNotBeNull();
-            activatedBlog.IsActive.ShouldBeTrue();
-
-            var cacheBlog = superRepository.MyMemoryCache.Read<OrigamiBlog>().Id(TestBlog.Id);
-            cacheBlog.ShouldNotBeNull();
-            cacheBlog.Name.ShouldBe(TestBlog.Name);
-            cacheBlog.DateCreated.ShouldBe(TestBlog.DateCreated);
-            cacheBlog.NanoId.ShouldBe(TestBlog.NanoId);
-            cacheBlog.IsActive.ShouldBe(true);
-            cacheBlog.IsActive.ShouldBe(TestBlog.IsActive);
-
-            cacheBlog.Version.ShouldBe(TestBlog.Version);
-            cacheBlog.Version.ShouldBe(activatedBlog.Version);
         }
 
         [Fact]
@@ -405,37 +377,41 @@ namespace Origami.UI.Admin.IntegrationTests
 
             scope.CreateTestRole(TestRole);
             scope.CreateTestUser(TestUser, TestRole);
+            scope.CreateTestBlog(TestBlog, TestRole, TestUser);
 
             var blogRepository = scope.ServiceProvider.GetService<IBlogRepository>()!;
-
-            blogRepository
-                .SmartSave(TestBlog.GetContext(TestUser), true)
-                .OnFailure(r => throw new Exception($"Failed to create test blog: {r.GetMessages()}"));
-
             using var db = blogRepository.DbContextFactory.CreateDbContext();
-            var dbBlog = db.Blogs.AsNoTracking().FirstOrDefault(b => b.Id == TestBlog.Id);
 
-            dbBlog.ShouldNotBeNull();
-            dbBlog.Name.ShouldBe(TestBlog.Name);
-            dbBlog.DateCreated.ShouldBe(TestBlog.DateCreated);
-            dbBlog.NanoId.ShouldBe(TestBlog.NanoId);
+            var oldPrimary = db.Blogs.AsNoTracking().Single(x => x.IsPrimary);
 
-            var primary = db.Blogs.AsNoTracking().Single(x => x.IsPrimary);
+            oldPrimary.Id.ShouldNotBe(TestBlog.Id);
 
             blogRepository
                 .SetPrimary(TestBlog.GetContext(TestUser), true)
                 .OnFailure(r => throw new Exception($"Failed to activate test blog: {r.GetMessages()}"));
 
-            var oldPrimary = db.Blogs.AsNoTracking().Id(primary.Id)!;
             var newPrimary = db.Blogs.AsNoTracking().Single(x => x.IsPrimary);
 
-            oldPrimary.Id.ShouldBe(primary.Id);
-            newPrimary.Id.ShouldBe(dbBlog.Id);
+            newPrimary.Id.ShouldBe(TestBlog.Id);
+            newPrimary.Version.ShouldBe(TestBlog.Version);
 
+            newPrimary.ShouldNotBeNull();
+            newPrimary.Name.ShouldBe(TestBlog.Name);
+            newPrimary.DateCreated.ShouldBe(TestBlog.DateCreated);
+            newPrimary.NanoId.ShouldBe(TestBlog.NanoId);
+            newPrimary.IsActive.ShouldBe(TestBlog.IsActive);
+            newPrimary.IsDeleted.ShouldBe(TestBlog.IsDeleted);
+            newPrimary.IsPrimary.ShouldBe(TestBlog.IsPrimary);
             newPrimary.Version.ShouldBe(TestBlog.Version);
 
             var cacheBlog = superRepository.MyMemoryCache.Read<OrigamiBlog>().Id(TestBlog.Id);
             cacheBlog.ShouldNotBeNull();
+            cacheBlog.Name.ShouldBe(TestBlog.Name);
+            cacheBlog.DateCreated.ShouldBe(TestBlog.DateCreated);
+            cacheBlog.NanoId.ShouldBe(TestBlog.NanoId);
+            cacheBlog.IsActive.ShouldBe(TestBlog.IsActive);
+            cacheBlog.IsDeleted.ShouldBe(TestBlog.IsDeleted);
+            cacheBlog.IsPrimary.ShouldBe(TestBlog.IsPrimary);
             cacheBlog.Version.ShouldBe(TestBlog.Version);
         }
 
