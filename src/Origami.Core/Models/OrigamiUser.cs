@@ -287,8 +287,8 @@ namespace Origami.Core.Models
         public void GenerateRandomTOTPSecret()
         {
             // Generate 20 bytes (160-bit secret)
-            var secretBytes = KeyGeneration.GenerateRandomKey(20);
-            var base32Secret = Base32Encoding.ToString(secretBytes);
+            byte[] secretBytes = KeyGeneration.GenerateRandomKey(20);
+            string base32Secret = Base32Encoding.ToString(secretBytes);
             TOTPSecret = base32Secret;
         }
 

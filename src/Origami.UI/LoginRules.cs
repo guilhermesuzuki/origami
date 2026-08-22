@@ -14,8 +14,8 @@ namespace Origami.UI
         public LoginRules(ISuperRepository superRepository, IUserFacade userFacade, Text text)
         {
             _superRepository = superRepository;
-            _userFacade = userFacade;
             _text = text;
+            _userFacade = userFacade;
 
             this.TOTPRecoveryCodes = _superRepository.Users.GenerateTOTPRecoveryCodes();
 
@@ -186,12 +186,12 @@ namespace Origami.UI
                         return;
                     }
 
-                    _2FA();
+                    this._2FA();
                 }
                 else if (step == ILoginRules.Steps.Step2_MustChangePassword)
                 {
                     await this.ChangePasswordAsync();
-                    _2FA();
+                    this._2FA();
                 }
                 else if (step == ILoginRules.Steps.Step3_MustEnable2MFA)
                 {
