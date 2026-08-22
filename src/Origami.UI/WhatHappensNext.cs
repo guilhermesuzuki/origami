@@ -33,7 +33,7 @@ public class WhatHappensNext : IWhatHappensNext
     {
         if (e.StopPropagation)
         {
-            WhenClickingHere.GetInvocationList().Last().DynamicInvoke(sender, e);
+            WhenClickingHere.GetInvocationList().First().DynamicInvoke(sender, e);
             return;
         }
         this.WhenClickingHere.Invoke(sender, e);
