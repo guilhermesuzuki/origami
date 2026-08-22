@@ -3,7 +3,7 @@
 html, body { overflow: hidden; }
 html, body, main { height:100dvh; }
 
-.master-root { display: flex; flex-direction: column; height: 100dvh; }
+.master-root { display: flex; flex-direction: column; min-height: 100dvh; }
 .content-max-length { flex: 1; }
 
 .btn:disabled, button:disabled { opacity: 0.35 !important; cursor: not-allowed; }
