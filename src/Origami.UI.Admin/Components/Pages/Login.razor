@@ -186,31 +186,6 @@
         this.GhostOfTheNavigator.NavigateTo("/login/helpme", false);
     }
 
-    private string _generateJwtToken(OrigamiUser user)
-    {
-        //starts generating the JWT token
-        var issuer = jwtConfiguration.Value.Issuer;
-        var audience = jwtConfiguration.Value.Audience;
-        var key = Encoding.ASCII.GetBytes(jwtConfiguration.Value.Key);
-
-        var tokenDescriptor = new SecurityTokenDescriptor
-        {
-            Subject = new ClaimsIdentity(
-                    [
-                        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                        new Claim(JwtRegisteredClaimNames.Email, user.EmailAddress),
-                    ]),
-            Expires = DateTime.UtcNow.AddMonths(6),
-            Issuer = issuer,
-            Audience = audience,
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
-        };
-
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var token = tokenHandler.CreateToken(tokenDescriptor);
-        var jwtToken = tokenHandler.WriteToken(token);
-        return jwtToken;
-    }
 
     private void _onLogin(KeyboardEventArgs args)
     {
@@ -220,17 +195,6 @@
         }
     }
 
-    private async Task _welcomeToTheApplication(object? sender, EventArgs e)
-    {
-        this.UserFacade.UserId = this.loginRules.User.Id;
-        this.Super.Users.UpdateCache(this.loginRules.User);
-
-        var token = this._generateJwtToken(this.loginRules.User);
-        await this.JSRuntime.InvokeVoidAsync("$.cookie", this.Configuration.GetUserCookieKey(), token, new { path = "/", expires = 365, });
-
-        var returnUrl = this.GhostOfTheNavigator.Uri.QueryString("returnUrl");
-        this.GhostOfTheNavigator.NavigateTo(returnUrl.Has() ? returnUrl : "/", true);
-    }
 
     protected override async Task OnInitializedAsync()
     {

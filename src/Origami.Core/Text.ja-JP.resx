@@ -2688,4 +2688,7 @@
   <data name="Restore completed successfully. Please restart the application to apply the changes" xml:space="preserve">
     <value>復元が正常に完了しました。変更を適用するには、アプリケーションを再起動してください</value>
   </data>
+  <data name="E-mail is already in use" xml:space="preserve">
+    <value>メールアドレスはすでに使用されています</value>
+  </data>
 </root>

@@ -186,7 +186,7 @@ namespace Origami.UI
                 Subject = new ClaimsIdentity(
                         [
                             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                        new Claim(JwtRegisteredClaimNames.Email, user.EmailAddress),
+                        new Claim(JwtRegisteredClaimNames.Email, user.Email),
                     ]),
                 Expires = DateTime.UtcNow.AddMonths(6),
                 Issuer = issuer,

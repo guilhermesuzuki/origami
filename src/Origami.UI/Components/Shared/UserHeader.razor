@@ -32,11 +32,11 @@
                 @Entity.FullName()
             </span>
         }
-        @if (this.Entity.EmailAddress.Has() == true)
+        @if (this.Entity.Email.Has() == true)
         {
             <span class="d-block email-address">
                 <i class="bi bi-envelope-at-fill"></i>
-                @Entity.EmailAddress
+                @Entity.Email
             </span>
         }
         <Id Class="d-block x-small" Entity="Entity"></Id>

@@ -60,7 +60,7 @@
                 </ul>
                 <ul class="inline-list mt-3">
                     <li class="">
-                        <MudTextField @bind-Value="this.Entity.EmailAddress"
+                        <MudTextField @bind-Value="this.Entity.Email"
                                       HelperText="@Text.Lower("E-mail")"
                                       InputType="InputType.Email"
                                       Immediate="true"
@@ -736,7 +736,7 @@
                     //reads the response content
                     var html = await response.Content.ReadAsStringAsync();
                     //send the email
-                    this.UserFacade.Result = this.Super.Emails.Send(Text.Original("Password reset link"), new() { HtmlBody = html }, [this.Entity.EmailAddress]);
+                    this.UserFacade.Result = this.Super.Emails.Send(Text.Original("Password reset link"), new() { HtmlBody = html }, [this.Entity.Email]);
                 }
             }
         }

@@ -2688,4 +2688,7 @@
   <data name="Restore completed successfully. Please restart the application to apply the changes" xml:space="preserve">
     <value>La restauration a été effectuée avec succès. Veuillez redémarrer l’application pour appliquer les modifications</value>
   </data>
+  <data name="E-mail is already in use" xml:space="preserve">
+    <value>L’adresse e-mail est déjà utilisée</value>
+  </data>
 </root>

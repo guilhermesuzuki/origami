@@ -27,7 +27,8 @@ namespace Origami.Core.Models
         IGitHub,
         IPersonalWebsite,
         ILinkedIn,
-        ITOTPSecret
+        ITOTPSecret,
+        IEmail
     {
         /// <summary>
         /// Anonymous user
@@ -40,7 +41,7 @@ namespace Origami.Core.Models
         protected DateTime? _dateModified;
         protected DateTime? _dateUnblocked;
         protected string _displayName = string.Empty;
-        protected string _emailAddress = string.Empty;
+        protected string _email = string.Empty;
         protected bool _isBlocked;
         protected bool _isDeleted;
         protected DateTime? _lastLoginTime;
@@ -105,10 +106,10 @@ namespace Origami.Core.Models
         /// E-mail address
         /// </summary>
         [StringLength(100)]
-        public string EmailAddress
+        public string Email
         {
-            get => _emailAddress;
-            set => this.Set(ref _emailAddress, value, Changed);
+            get => _email;
+            set => this.Set(ref _email, value, Changed);
         }
 
         [NotMapped]
