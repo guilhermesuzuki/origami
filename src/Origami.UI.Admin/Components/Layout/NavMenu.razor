@@ -15,9 +15,12 @@
             <UserHeaderCard Entity="this.UserFacade.User"></UserHeaderCard>
         </div>
     </div>
-    <div class="border-bottom">
-        <ConnectionDetails Class="p-2"></ConnectionDetails>
-    </div>
+    @if (this.Super.Roles.CanTheUserViewTheConnectivityDetails(this.UserFacade.User) == true)
+    {
+        <div class="border-bottom">
+            <ConnectionDetails Class="p-2"></ConnectionDetails>
+        </div>
+    }
     <div class="border-bottom">
         <ul class="inline-list cursor-pointer">
             <li class="border-end text-center p-2" @onclick="LogoutAsync">
