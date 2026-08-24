@@ -40,21 +40,18 @@
                         {
                             <MudTextField @bind-Value="this.Entity.Username"
                                           HelperText="@Text.Lower("Username")"
-                                          Immediate="true"
-                                          Required="true"></MudTextField>
+                                          Immediate="true"></MudTextField>
                         }
                         else
                         {
                             <MudTextField @bind-Value="this.Entity.Username"
                                           HelperText="@Text.Lower("Username (read-only)")"
-                                          ReadOnly="true"
-                                          Required="true"></MudTextField>
+                                          ReadOnly="true"></MudTextField>
                         }
                     </li>
                     <li class="">
                         <MudTextField @bind-Value="this.Entity.DisplayName"
                                       Immediate="true"
-                                      Required="true"
                                       HelperText="@Text.Lower("Display name")"></MudTextField>
                     </li>
                 </ul>
@@ -63,8 +60,7 @@
                         <MudTextField @bind-Value="this.Entity.Email"
                                       HelperText="@Text.Lower("E-mail")"
                                       InputType="InputType.Email"
-                                      Immediate="true"
-                                      Required="true"></MudTextField>
+                                      Immediate="true"></MudTextField>
                     </li>
                     <li>
                         <Filler></Filler>
