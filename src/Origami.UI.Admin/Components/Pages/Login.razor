@@ -54,10 +54,10 @@
                     </div>
                     <ul class="inline-list">
                         <li>
-                            <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("New password")" InputType="InputType.Password" @bind-Value="loginRules.NewPassword1"></MudTextField>
+                            <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("New password")" InputType="InputType.Password" @bind-Value="loginRules.User.NewPassword1"></MudTextField>
                         </li>
                         <li>
-                            <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("Confirm password")" InputType="InputType.Password" @bind-Value="loginRules.NewPassword2"></MudTextField>
+                            <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("Confirm password")" InputType="InputType.Password" @bind-Value="loginRules.User.NewPassword2"></MudTextField>
                         </li>
                     </ul>
                     <div class="btn-group mt-3 w-100">
@@ -186,31 +186,6 @@
         this.GhostOfTheNavigator.NavigateTo("/login/helpme", false);
     }
 
-    private string _generateJwtToken(OrigamiUser user)
-    {
-        //starts generating the JWT token
-        var issuer = jwtConfiguration.Value.Issuer;
-        var audience = jwtConfiguration.Value.Audience;
-        var key = Encoding.ASCII.GetBytes(jwtConfiguration.Value.Key);
-
-        var tokenDescriptor = new SecurityTokenDescriptor
-        {
-            Subject = new ClaimsIdentity(
-                    [
-                        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                        new Claim(JwtRegisteredClaimNames.Email, user.EmailAddress),
-                    ]),
-            Expires = DateTime.UtcNow.AddMonths(6),
-            Issuer = issuer,
-            Audience = audience,
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
-        };
-
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var token = tokenHandler.CreateToken(tokenDescriptor);
-        var jwtToken = tokenHandler.WriteToken(token);
-        return jwtToken;
-    }
 
     private void _onLogin(KeyboardEventArgs args)
     {
@@ -220,17 +195,6 @@
         }
     }
 
-    private async Task _welcomeToTheApplication(object? sender, EventArgs e)
-    {
-        this.UserFacade.UserId = this.loginRules.User.Id;
-        this.Super.Users.UpdateCache(this.loginRules.User);
-
-        var token = this._generateJwtToken(this.loginRules.User);
-        await this.JSRuntime.InvokeVoidAsync("$.cookie", this.Configuration.GetUserCookieKey(), token, new { path = "/", expires = 365, });
-
-        var returnUrl = this.GhostOfTheNavigator.Uri.QueryString("returnUrl");
-        this.GhostOfTheNavigator.NavigateTo(returnUrl.Has() ? returnUrl : "/", true);
-    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -241,7 +205,7 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
+        this.loginRules.CurrentStepChanged += async (sender, e) => await this.InvokeAsync(this.StateHasChanged);
         this.loginRules.RefreshUI += async (sender, e) => await this.InvokeAsync(this.StateHasChanged);
-        this.loginRules.WelcomeToTheApplication += async (sender, e) => await this._welcomeToTheApplication(sender, e);
     }
 }

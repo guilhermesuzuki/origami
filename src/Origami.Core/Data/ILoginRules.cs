@@ -6,7 +6,6 @@ namespace Origami.Core.Data
     {
         event EventHandler CurrentStepChanged;
         event EventHandler RefreshUI;
-        event EventHandler WelcomeToTheApplication;
 
         enum Steps
         {
@@ -17,8 +16,6 @@ namespace Origami.Core.Data
             Step5_WelcomeToTheApplication = 5,
         }
 
-        string NewPassword1 { get; set; }
-        string NewPassword2 { get; set; }
         string Password { get; set; }
 
         bool ShouldDisable2FAEnablement { get; }
@@ -45,6 +42,8 @@ namespace Origami.Core.Data
 
         Task Enable2FAAsync();
 
+        string GenerateJwtToken(OrigamiUser user);
+
         Steps GetCurrentStep();
 
         Task GoBackAsync();
@@ -56,5 +55,7 @@ namespace Origami.Core.Data
 
         Task ResetAsync();
         Task Validate2FAAsync();
+
+        Task WelcomeToTheApplicationAsync();
     }
 }

@@ -343,8 +343,8 @@ namespace Origami.Core.Data
             modelBuilder.Entity<AdminUserPurgesBlog>().HasOne<OrigamiBlog>().WithMany().HasForeignKey(x => x.BlogId);
             modelBuilder.Entity<AdminUserRestoresBlog>().HasOne<OrigamiBlog>().WithMany().HasForeignKey(x => x.BlogId);
 
-            modelBuilder.Entity<OrigamiUser>().HasMany(x => x.UserRoles).WithOne().HasForeignKey(x => x.UserId);
             modelBuilder.Entity<OrigamiUser>().HasMany(x => x.UserBlogs).WithOne().HasForeignKey(x => x.UserId);
+            modelBuilder.Entity<OrigamiUser>().HasMany(x => x.UserRoles).WithOne().HasForeignKey(x => x.UserId);
             modelBuilder.Entity<OrigamiUser>().Navigation(x => x.UserBlogs).AutoInclude();
             modelBuilder.Entity<OrigamiUser>().Navigation(x => x.UserRoles).AutoInclude();
         }

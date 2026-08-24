@@ -16,7 +16,7 @@ namespace Origami.Core.Validators
             RuleFor(x => x).DisplayNameMustBeDifferentThanUsername(text);
             RuleFor(x => x.Username).Cascade(CascadeMode.Stop).Username(text);
 
-            RuleFor(x => x.EmailAddress)
+            RuleFor(x => x.Email)
                 .Cascade(CascadeMode.Stop)
                 .NotNull().WithMessage(text.Original("Email address is required"))
                 .MaximumLength(100).WithMessage(text.Original("Email address cannot exceed {0} characters", 100))
@@ -56,6 +56,7 @@ namespace Origami.Core.Validators
             }).WithMessage(text.Original("New passwords must be valid and match each other"));
 
             RuleFor(x => x).DisplayNameMustBeUnique(text, dbContextFactory);
+            RuleFor(x => x).EmailMustBeUnique(text, dbContextFactory);
             RuleFor(x => x).UsernameMustBeUnique(text, dbContextFactory);
         }
     }

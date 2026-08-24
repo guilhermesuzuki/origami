@@ -76,7 +76,7 @@
                 </ul>
                 <ul class="inline-list mt-3">
                     <li class="">
-                        <MudTextField @bind-Value="this.Entity.EmailAddress"
+                        <MudTextField @bind-Value="this.Entity.Email"
                                       HelperText="@Text.Lower("E-mail")"
                                       InputType="InputType.Email"
                                       Immediate="true"
@@ -224,7 +224,7 @@
     private void _clear()
     {
         this.Entity.DisplayName = string.Empty;
-        this.Entity.EmailAddress = string.Empty;
+        this.Entity.Email = string.Empty;
         this.Entity.FirstName = string.Empty;
         this.Entity.LastName = string.Empty;
     }
@@ -234,7 +234,7 @@
         get
         {
             if (this.Entity.DisplayName.Has() == false) return true;
-            if (this.Entity.EmailAddress.Has() == false) return true;
+            if (this.Entity.Email.Has() == false) return true;
             return false;
         }
     }

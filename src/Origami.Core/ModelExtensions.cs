@@ -667,32 +667,12 @@ namespace Origami.Core
 
         public static string GetSlug(this string text)
         {
-            if (text.Has() == false) return string.Empty;
-
-            // Normalize text to remove diacritics (e.g., accents)
-            text = text.Normalize(NormalizationForm.FormD);
-
-            var sb = new StringBuilder();
-            foreach (char c in text)
+            if (text.Has() == true)
             {
-                if (CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
-                {
-                    sb.Append(c);
-                }
+                text = text.Trim();
+                return SlugGenerator.Generate(text, maxLength: text.Length);
             }
-
-            text = sb.ToString().Normalize(NormalizationForm.FormC);
-
-            // Convert to lowercase
-            text = text.ToLowerInvariant();
-
-            // Replace invalid characters with hyphens
-            text = Regex.Replace(text, @"[^a-z0-9\s-]", string.Empty);
-
-            // Replace multiple spaces or hyphens with a single hyphen
-            text = Regex.Replace(text, @"[\s-]+", "-").Trim('-');
-
-            return text;
+            return string.Empty;
         }
 
         /// <summary>

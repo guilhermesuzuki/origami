@@ -42,6 +42,19 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("Display name is already in use"));
         }
 
+        public static IRuleBuilderOptions<T, T> EmailMustBeUnique<T>(this IRuleBuilder<T, T> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory) where T : class, IId, IEmail
+        {
+            return ruleBuilder
+                .Must(entity =>
+                {
+                    using var db = dbContextFactory.CreateDbContext();
+                    var exists = db.Set<T>().AsNoTracking().Any(x => x.Email == entity.Email && x.Id != entity.Id);
+                    return !exists;
+                })
+                // TODO: add string to resx files
+                .WithMessage(text.Original("E-mail is already in use"));
+        }
+
         public static IRuleBuilderOptions<T, T> InfiniteLoopsAreNotAllowed<T>(this IRuleBuilder<T, T> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory) where T : class, IId, IParentIdNull
         {
             return ruleBuilder
@@ -83,7 +96,6 @@ namespace Origami.Core.Validators
                 // TODO: add string to resx files
                 .WithMessage(text.Original("Name is already in use"));
         }
-
         public static IRuleBuilderOptions<T, T> NameMustBeUniqueByBlog<T>(this IRuleBuilder<T, T> ruleBuilder, Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory) where T : class, IId, IBlogIdNull, IName
         {
             return ruleBuilder

@@ -39,13 +39,13 @@ namespace Origami.UI
             var faker = new Faker<OrigamiUser>()
                 .RuleFor(x => x.FirstName, f => f.Name.FirstName())
                 .RuleFor(x => x.LastName, f => f.Name.LastName())
-                .RuleFor(x => x.EmailAddress, f => f.Internet.Email())
+                .RuleFor(x => x.Email, f => f.Internet.Email())
                 .RuleFor(x => x.DisplayName, (f, u) => $"{u.FirstName}.{u.LastName}".ToLower());
 
             var user = faker.Generate();
 
             user.Username = "user_" + Nanoid.Generate(Nanoid.Alphabets.LowercaseLetters, size: 5);
-            user.EmailAddress = $"fake_user.{Nanoid.Generate(Nanoid.Alphabets.Digits, size: 5)}@fake-email.com";
+            user.Email = $"fake_user.{Nanoid.Generate(Nanoid.Alphabets.Digits, size: 5)}@fake-email.com";
             user.GenerateNewPasswordForNewUsers();
 
             return user;

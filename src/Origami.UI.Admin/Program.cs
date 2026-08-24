@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Origami.Core.Data;
 using Origami.UI;
 using Origami.UI.Admin.Components;
 using System.Text;
@@ -11,6 +12,9 @@ var app = builder.FoldTheOrigami<App>(
     admin: true,
     injectServices: () =>
     {
+        builder.Services.AddScoped<ILoginHelpMeRules, LoginHelpMeRules>();
+        builder.Services.AddScoped<ILoginRules, LoginRules>();
+
         //adds admin site authentication
         builder.Services.AddAuthentication(options =>
         {
