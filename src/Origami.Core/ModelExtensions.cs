@@ -667,8 +667,12 @@ namespace Origami.Core
 
         public static string GetSlug(this string text)
         {
-            text = text.Trim();
-            return SlugGenerator.Generate(text, maxLength: text.Length);
+            if (text.Has() == true)
+            {
+                text = text.Trim();
+                return SlugGenerator.Generate(text, maxLength: text.Length);
+            }
+            return string.Empty;
         }
 
         /// <summary>
