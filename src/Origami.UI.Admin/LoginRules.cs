@@ -1,18 +1,42 @@
-﻿using Origami.Core;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.JSInterop;
+using Origami.Core;
 using Origami.Core.Data;
 using Origami.Core.Models;
+using Origami.Core.Models.Jwt;
 using OtpNet;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace Origami.UI
 {
     public class LoginRules : ILoginRules
     {
+        protected readonly IConfiguration _configuration;
+        protected readonly IJSRuntime _jsRuntime;
+        protected readonly NavigationManager _ghostOfTheNavigator;
+        protected readonly IOptions<JwtConfiguration> _jwtConfiguration;
         protected readonly ISuperRepository _superRepository;
         protected readonly Text _text;
         protected readonly IUserFacade _userFacade;
 
-        public LoginRules(ISuperRepository superRepository, IUserFacade userFacade, Text text)
+        public LoginRules(
+            IConfiguration configuration,
+            IJSRuntime jsRuntime,
+            NavigationManager navigationManager,
+            IOptions<JwtConfiguration> jwtConfiguration, 
+            ISuperRepository superRepository, 
+            IUserFacade userFacade, 
+            Text text 
+            )
         {
+            _configuration = configuration;
+            _ghostOfTheNavigator = navigationManager;
+            _jsRuntime = jsRuntime;
+            _jwtConfiguration = jwtConfiguration;
             _superRepository = superRepository;
             _text = text;
             _userFacade = userFacade;
@@ -24,10 +48,7 @@ namespace Origami.UI
 
         public event EventHandler CurrentStepChanged = null!;
         public event EventHandler RefreshUI = null!;
-        public event EventHandler WelcomeToTheApplication = null!;
 
-        public string NewPassword1 { get; set; } = string.Empty;
-        public string NewPassword2 { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
 
         public bool ShouldDisable2FAEnablement
@@ -64,8 +85,8 @@ namespace Origami.UI
         {
             get
             {
-                if (NewPassword1.Has() == false) return true;
-                if (NewPassword2.Has() == false) return true;
+                if (this.User.NewPassword1.Has() == false) return true;
+                if (this.User.NewPassword2.Has() == false) return true;
                 return false;
             }
         }
@@ -87,8 +108,8 @@ namespace Origami.UI
             var hub = this._superRepository.Users.ChangePassword(
                 this.User.GetContext(),
                 this.Password,
-                this.NewPassword1,
-                this.NewPassword2);
+                this.User.NewPassword1,
+                this.User.NewPassword2);
 
             try
             {
@@ -110,8 +131,8 @@ namespace Origami.UI
 
         public void ClearChangePassword()
         {
-            this.NewPassword1 = string.Empty;
-            this.NewPassword2 = string.Empty;
+            this.User.NewPassword1 = string.Empty;
+            this.User.NewPassword2 = string.Empty;
         }
 
         public void ClearCredentials()
@@ -151,6 +172,32 @@ namespace Origami.UI
             }
 
             throw new InvalidOperationException("Failed to enable 2FA");
+        }
+
+        public string GenerateJwtToken(OrigamiUser user)
+        {
+            //starts generating the JWT token
+            var issuer = _jwtConfiguration.Value.Issuer;
+            var audience = _jwtConfiguration.Value.Audience;
+            var key = Encoding.ASCII.GetBytes(_jwtConfiguration.Value.Key);
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(
+                        [
+                            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                        new Claim(JwtRegisteredClaimNames.Email, user.EmailAddress),
+                    ]),
+                Expires = DateTime.UtcNow.AddMonths(6),
+                Issuer = issuer,
+                Audience = audience,
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var jwtToken = tokenHandler.WriteToken(token);
+            return jwtToken;
         }
 
         public ILoginRules.Steps GetCurrentStep()
@@ -199,7 +246,7 @@ namespace Origami.UI
                 {
                     await this.Validate2FAAsync();
                     this.State.Push(ILoginRules.Steps.Step5_WelcomeToTheApplication);
-                    this.WelcomeToTheApplication?.Invoke(this, EventArgs.Empty);
+                    await this.WelcomeToTheApplicationAsync();
                 }
             }
             catch (Exception ex)
@@ -242,8 +289,8 @@ namespace Origami.UI
         {
             this.Username = string.Empty;
             this.Password = string.Empty;
-            this.NewPassword1 = string.Empty;
-            this.NewPassword2 = string.Empty;
+            this.User.NewPassword1 = string.Empty;
+            this.User.NewPassword2 = string.Empty;
             this.TOTPCodeForEnablement = string.Empty;
             this.TOTPCodeForValidation = string.Empty;
             this.TOTPRecoveryCodes = this._superRepository.Users.GenerateTOTPRecoveryCodes();
@@ -274,6 +321,18 @@ namespace Origami.UI
             }
 
             throw new InvalidOperationException("Failed to validate 2FA");
+        }
+
+        public async Task WelcomeToTheApplicationAsync()
+        {
+            this._userFacade.UserId = this.User.Id;
+            this._superRepository.Users.UpdateCache(this.User);
+
+            var token = this.GenerateJwtToken(this.User);
+            await this._jsRuntime.InvokeVoidAsync("$.cookie", this._configuration.GetUserCookieKey(), token, new { path = "/", expires = 365, });
+
+            var returnUrl = this._ghostOfTheNavigator.Uri.QueryString("returnUrl");
+            this._ghostOfTheNavigator.NavigateTo(returnUrl.Has() ? returnUrl : "/", true);
         }
 
         private void _2FA()

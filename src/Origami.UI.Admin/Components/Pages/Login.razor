@@ -54,10 +54,10 @@
                     </div>
                     <ul class="inline-list">
                         <li>
-                            <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("New password")" InputType="InputType.Password" @bind-Value="loginRules.NewPassword1"></MudTextField>
+                            <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("New password")" InputType="InputType.Password" @bind-Value="loginRules.User.NewPassword1"></MudTextField>
                         </li>
                         <li>
-                            <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("Confirm password")" InputType="InputType.Password" @bind-Value="loginRules.NewPassword2"></MudTextField>
+                            <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("Confirm password")" InputType="InputType.Password" @bind-Value="loginRules.User.NewPassword2"></MudTextField>
                         </li>
                     </ul>
                     <div class="btn-group mt-3 w-100">
@@ -241,7 +241,7 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
+        this.loginRules.CurrentStepChanged += async (sender, e) => await this.InvokeAsync(this.StateHasChanged);
         this.loginRules.RefreshUI += async (sender, e) => await this.InvokeAsync(this.StateHasChanged);
-        this.loginRules.WelcomeToTheApplication += async (sender, e) => await this._welcomeToTheApplication(sender, e);
     }
 }
