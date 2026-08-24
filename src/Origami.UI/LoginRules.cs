@@ -92,18 +92,15 @@ namespace Origami.UI
 
             try
             {
-                if (hub.Ok)
+                if (hub.Ok == false)
                 {
-                    await GoNextAsync();
-                    return;
+                    throw new InvalidOperationException("Failed to change password.");
                 }
             }
             finally
             {
                 this._userFacade.Result = hub;
             }
-
-            throw new InvalidOperationException("Failed to change password.");
         }
 
         public void Clear2FA()
