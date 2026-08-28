@@ -43,6 +43,16 @@ namespace Origami.Core.Data
         public override string RestorePermission => nameof(OrigamiRole.RestoreRoles);
         public override string UpdatePermission => nameof(OrigamiRole.EditRoles);
 
+        public bool CanTheUserViewTheConnectivityDetails(OrigamiUser user)
+        {
+            if (user != null)
+            {
+                return this.UserHasPermission(user.Id, nameof(OrigamiRole.ViewConnectivityDetails));
+            }
+
+            return false;
+        }
+
         public override Result<OrigamiRole> Create(DataOperationContext<OrigamiRole> ctx)
         {
             using var db = DbContextFactory.CreateDbContext();

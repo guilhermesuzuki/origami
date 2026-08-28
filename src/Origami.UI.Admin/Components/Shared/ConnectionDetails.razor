@@ -3,36 +3,68 @@
 @inject IConfiguration configuration
 
 <div class="connection-details @Class">
-    <ul class="inline-list">
+    <ul class="inline-list cursor-pointer" @onclick="() => _expand = !_expand">
         <li style="width: 25px;">
             <i class="fa-solid fa-server"></i>
         </li>
         <li>
             <span>@Text.Lower("Connectivity details")</span>
         </li>
-    </ul>
-    <ul class="inline-list text-warning">
-        <li style="width: 25px;">
-            <i class="fa-solid fa-database"></i>
+        <li class="text-right" style="width: 25px;">
+            @if (_expand)
+            {
+                <i class="fa-solid fa-chevron-up"></i>
+            }
+            else
+            {
+                <i class="fa-solid fa-chevron-down"></i>
+            }
         </li>
-        <li>
-            @DatabaseUser().Database
-        </li>
     </ul>
+    @if (_expand)
+    {
+        var cstring = DatabaseUser();
+        <ul class="inline-list text-info">
+            <li style="width: 25px;">
+                <i class="fa-solid fa-server"></i>
+            </li>
+            <li>
+                @cstring.DataSource
+            </li>
+        </ul>
+        <ul class="inline-list text-warning">
+            <li style="width: 25px;">
+                <i class="fa-solid fa-database"></i>
+            </li>
+            <li>
+                @cstring.InitialCatalog
+            </li>
+        </ul>
+        <ul class="inline-list text-danger">
+            <li style="width: 25px;">
+                <i class="fa-solid fa-user-secret"></i>
+            </li>
+            <li>
+                @cstring.UserID
+            </li>
+        </ul>
+    }
 </div>
 
 @code {
-    private (string User, string Database) DatabaseUser()
+    private bool _expand = false;
+
+    private SqlConnectionStringBuilder DatabaseUser()
     {
         try
         {
             var cstring = configuration.GetOrigamiConnectionString();
             var builder = new SqlConnectionStringBuilder(cstring);
-            return (builder.UserID, builder.InitialCatalog);
+            return builder;
         }
         catch
         {
-            return (string.Empty, string.Empty);
+            return new SqlConnectionStringBuilder();
         }
     }
 }

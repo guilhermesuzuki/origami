@@ -215,6 +215,7 @@ namespace Origami.Core.Models
         private bool _viewBlogs;
         private bool _viewCategories;
         private bool _viewComments;
+        private bool _viewConnectivityDetails;
         private bool _viewDashboard;
         private bool _viewDetailedErrorMessages;
         private bool _viewPages;
@@ -1010,6 +1011,7 @@ namespace Origami.Core.Models
             get => _restoreSoftwareReleases;
             set => this.Set(ref _restoreSoftwareReleases, value, Changed);
         }
+
         [NotMapped]
         public bool RestoreSpecialMessages
         {
@@ -1218,6 +1220,13 @@ namespace Origami.Core.Models
         {
             get => _viewComments;
             set => this.Set(ref _viewComments, value, Changed);
+        }
+
+        [NotMapped]
+        public bool ViewConnectivityDetails
+        {
+            get => _viewConnectivityDetails;
+            set => this.Set(ref _viewConnectivityDetails, value, Changed);
         }
 
         [NotMapped]
