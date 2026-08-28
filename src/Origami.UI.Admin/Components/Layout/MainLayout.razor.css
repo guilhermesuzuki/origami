@@ -3,7 +3,7 @@ html, body { width: 100%; height: 100%; }
 .sidebar { background-color: #282c37; color: #74808f; max-width: 320px; }
 .page { position: relative; display: flex; flex-direction: column; width: 100%; height: 100%; }
 
-main { flex: 1; }
+main { display: flex; flex-direction: column; min-height:100dvh; }
 
 .top-row { background-color: #f7f7f7; border-bottom: 1px solid #d6d5d5; justify-content: flex-end; height: 3.5rem; display: flex; align-items: center; }
 .top-row ::deep a, .top-row .btn-link { white-space: nowrap; margin-left: 1.5rem; }

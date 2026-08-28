@@ -1,0 +1,20 @@
+﻿@using System.Reflection
+@inherits Basic
+
+@if (this.Super != null) 
+{
+    <div class="footer p-2 bg-light border float-right d-inline-flex align-items-center w-100 @Class" style="justify-content: flex-end;">
+        <span class="origami ms-5 text-right">
+            <span class="fw-bold origami-name">@Text.Original("Origami")</span>
+            <span class="fw-bold origami-version">@GetCurrentVersion()</span>
+        </span>
+    </div>
+}
+
+@code {
+    protected string GetCurrentVersion()
+    {
+        return Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
+            ?? "WTH, Unknown?";
+    }
+}
