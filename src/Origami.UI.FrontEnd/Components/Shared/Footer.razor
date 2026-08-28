@@ -1,4 +1,5 @@
-﻿@inherits Basic
+﻿@using System.Reflection
+@inherits Basic
 
 @if (this.Super != null) 
 {
@@ -30,7 +31,10 @@
 @code {
     protected string GetCurrentVersion()
     {
-        return typeof(Footer).Assembly.GetName().Version?.ToString() ?? "0.0.0";
+        return Assembly.GetEntryAssembly()?
+            .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
+            .InformationalVersion
+            ?? "Unknown";
     }
     protected OrigamiSpecialPage CookiePolicy()
     {
