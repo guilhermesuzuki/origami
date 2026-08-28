@@ -3,7 +3,7 @@
 
 @if (this.Super != null)
 {
-    var maintenance = this.Super.Settings.GetSettings().MaintenanceMode;
+    var maintenance = this.Super.Settings.GetMaintenanceMode();
     <div class="root @Class">
         @if (maintenance == false)
         {
@@ -30,7 +30,7 @@
     protected OrigamiSpecialPage GetMaintenancePage()
     {
         var page = this.Super.GetMaintenancePages().FirstOrDefault();
-        var path = new Uri(this.NavigationManager.Uri).AbsolutePath.Split("/");
+        var path = new Uri(this.GhostOfTheNavigator.Uri).AbsolutePath.Split("/");
         if (path.Length >= 3 && path.Any(x => x.Like("specialpages")) == true)
         {
             var nano = path[2].Trim('/');

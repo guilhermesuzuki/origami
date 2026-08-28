@@ -20,7 +20,10 @@ namespace Origami.UI.FrontEnd.Controllers
         protected readonly SocialNetwork _socialNetwork;
         protected readonly ISocialProfileRepository _socialProfile;
 
+        protected readonly IEventRepository _eventRepository;
+
         public GitHubController(
+            IEventRepository eventRepository,
             ISocialProfileRepository socialProfile,
             Serilog.ILogger logger,
             IUserFacade userFacade,
@@ -32,6 +35,7 @@ namespace Origami.UI.FrontEnd.Controllers
             _userFacade = userFacade;
             _memoryCache = memoryCache;
             _socialNetwork = socialNetworkOptions.Value;
+            _eventRepository = eventRepository;
         }
 
         [AllowAnonymous]
@@ -51,20 +55,24 @@ namespace Origami.UI.FrontEnd.Controllers
                 //looks the user up in the database
                 var user = _socialProfile
                     .ReadFromCache()
-                    .FirstOrDefault(x => x.SocialNetwork == SocialNetworks.GitHub && x.UserId.Like(userId));
+                    .FirstOrDefault(x => x.SocialNetwork == SocialNetworks.GitHub && x.UserId.Like(userId))
+                    ?? new OrigamiSocialProfile { SocialNetwork = SocialNetworks.GitHub, UserId = userId, IsBlocked = false, }
+                    ;
 
-                if (user != null && user.IsBlocked)
+                if (user.IsBlocked)
                 {
-                    //needs to log the user out, because the facebook user couldn't be found
+                    //needs to log the user out, because the github user couldn't be found
                     await HttpContext.SignOutAsync();
                     HttpContext.Logout_Workaround();
-
                     //redirects to the returnUrl with an error
-                    return Redirect("/oops/github".QueryString("error", "User has been Blocked"));
+                    return Redirect("/oops/github".QueryString("error", "User has been blocked"));
                 }
 
-                //user doesn't exist in the database, must create a new instance
-                if (user == null) user = new OrigamiSocialProfile { SocialNetwork = SocialNetworks.GitHub, UserId = userId };
+                user.ProfileCover = null;
+                user.ProfileCoverUrl = null;
+                user.ProfilePage = null;
+                user.ProfilePicture = null;
+                user.ProfilePictureUrl = null;
 
                 //email
                 user.EmailFromSocialNetwork = git.Email;
@@ -72,30 +80,37 @@ namespace Origami.UI.FrontEnd.Controllers
                 user.ProfilePage = git.HtmlUrl;
                 user.ProfilePictureUrl = git.AvatarUrl;
 
-                //copies the email, if appropriate
-                if (user.Email.Has() == false && user.EmailFromSocialNetwork.Has() == true)
-                {
-                    user.Email = user.EmailFromSocialNetwork;
-                }
+                var context = new DataOperationContext<OrigamiSocialProfile>(OrigamiUser.AnonymousUser, DateTime.UtcNow, user);
 
-                var context = new DataOperationContext<OrigamiSocialProfile>(Core.Models.OrigamiUser.AnonymousUser, DateTime.UtcNow, user);
-
-                using (var transaction = new TransactionScope())
+                //saves the user into the database
+                using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    user = _socialProfile.SmartSave(context, false).Entity;
+                    var hub = _socialProfile.SmartSave(context, false);
+                    if (hub.Ok == false)
+                    {
+                        await HttpContext.SignOutAsync();
+                        HttpContext.Logout_Workaround();
+                        //redirects to the returnUrl with an error
+                        return Redirect("/oops/github"
+                            .QueryString("error", "Invalid github information")
+                            );
+                    }
                     transaction.Complete();
+                    user = hub.Entity;
                 }
 
-                _userFacade.SocialProfile = user ?? new();
+                _userFacade.SocialProfileId = user?.Id ?? Guid.Empty;
+                _eventRepository.SocialProfileLogsIntoWebsite(context.Entity);
+
                 return Redirect(Uri.UnescapeDataString(returnUrl));
             }
 
-            //needs to log the user out, because the facebook user couldn't be found
+            //needs to log the user out, because the github user couldn't be found
             await HttpContext.SignOutAsync();
             HttpContext.Logout_Workaround();
 
             //redirects to the returnUrl with an error
-            return Redirect("/oops/github".QueryString("error", "Invalid GitHub Token"));
+            return Redirect("/oops/github".QueryString("error", "Invalid github token"));
         }
     }
 }

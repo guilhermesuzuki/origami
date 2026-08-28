@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace Origami.Core.Models
 {
@@ -13,13 +10,14 @@ namespace Origami.Core.Models
         IChanged,
         IDateCreated,
         IDateModified,
-        IProgress
+        IProgress,
+        IAuthorId
     {
+        protected Guid _authorId = Guid.Empty;
         protected DateTime _dateCreated = DateTime.UtcNow;
         protected DateTime? _dateModified;
         protected byte _progress = 0;
         protected byte[] _version = Array.Empty<byte>();
-        protected Guid _userId = Guid.Empty;
 
         public OrigamiBackup() : base()
         {
@@ -27,6 +25,12 @@ namespace Origami.Core.Models
         }
 
         public event EventHandler<PropertyChangedEventArgs> Changed = delegate { };
+
+        public Guid AuthorId
+        {
+            get => _authorId;
+            set => this.Set(ref _authorId, value, Changed);
+        }
 
         public DateTime DateCreated
         {
@@ -43,6 +47,16 @@ namespace Origami.Core.Models
             set => this.Set(ref _dateModified, value, Changed);
         }
 
+        /// <summary>
+        /// Gets the relative file path of the backup archive associated with this instance.
+        /// </summary>
+        public string File => $"/files-backup/{Filename}";
+
+        /// <summary>
+        /// Gets only the filename of the backup
+        /// </summary>
+        public string Filename => $"origami-backup-{NanoId}.zip";
+
         public bool New => this.Version.SequenceEqual([]);
 
         /// <summary>
@@ -57,24 +71,8 @@ namespace Origami.Core.Models
         [Timestamp]
         public byte[] Version
         {
-            get => _version; 
+            get => _version;
             set => this.Set(ref _version, value, Changed);
         }
-
-        public Guid UserId
-        {
-            get => _userId;
-            set => this.Set(ref _userId, value, Changed);
-        }
-
-        /// <summary>
-        /// Gets the relative file path of the backup archive associated with this instance.
-        /// </summary>
-        public string File => $"/files-backup/{Filename}";
-
-        /// <summary>
-        /// Gets only the filename of the backup
-        /// </summary>
-        public string Filename => $"origami-backup-{NanoId}.zip";
     }
 }

@@ -9,24 +9,25 @@
         @if (this.ShowParentHeader)
         {
             <div class="comment-parent-header d-inline-flex align-items-center">
-                @if (Entity is OrigamiPostComment postComment)
+                @if (Entity is OrigamiContentComment contentComment)
                 {
-                    var post = this.Super.Posts.ReadFromCache().Id(postComment.PostId)!;
-                    <i class="fa-solid fa-file-lines me-1" style="font-size: 12px;"></i>
-                    <span class="">@post.Title</span>
-                }
-                else if (Entity is OrigamiVideoComment videoComment)
-                {
-                    var video = this.Super.Videos.ReadFromCache().Id(videoComment.VideoId)!;
-                    <i class="fa-solid fa-video me-1" style="font-size: 12px;"></i>
-                    <span class="">@video.Title</span>
+                    var content = this.Super.Contents.ReadFromCache().Id(contentComment.ContentId);
+                    <ContentHeaderInline Entity="content"></ContentHeaderInline>
                 }
             </div>
         }
         <div></div>
-        <div class="comment-header d-inline-flex align-items-center">
-            <SocialProfileHeaderLite Entity="socialProfile"></SocialProfileHeaderLite>
-        </div>
+        @if (this.Entity.SocialProfileId != null)
+        {
+            <div class="comment-header d-inline-flex align-items-center">
+                <SocialProfileHeaderInline Entity="socialProfile"></SocialProfileHeaderInline>
+            </div>
+        }
+        else if (this.Entity.UserId != null)
+        {
+            var user = this.Super.Users.ReadFromCache().Id(this.Entity.UserId);
+            <UserHeaderInline Entity="user"></UserHeaderInline>
+        }
         <div class="comment-info x-small">
             @if (Entity.PinnedById != null)
             {
@@ -37,7 +38,7 @@
             }
             <Id Entity="Entity" Class="pe-1"></Id>
         </div>
-        <div class="comment-text mt-2">@(Entity.Content.Markup())</div>
+        <div class="comment-text mt-2 @(Entity.IsDeleted ? "text-decoration-line-through" : null)">@(Entity.Content.Markup())</div>
     </div>
 }
 

@@ -11,12 +11,15 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 using MudBlazor;
 using MudBlazor.Services;
+using NanoidDotNet;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -31,6 +34,7 @@ using System.Buffers;
 using System.Globalization;
 using System.Text;
 using System.Threading.RateLimiting;
+using UAParser;
 
 namespace Origami.UI
 {
@@ -38,10 +42,38 @@ namespace Origami.UI
     {
         public static void AddOrigami(this WebApplicationBuilder builder, string[] args, bool admin = false)
         {
-            var files = Path.GetFullPath("..\\Origami.Files\\");
+            if (builder.Environment.IsEnvironment("Testing") == false)
+            {
+                /* For non-testing environments, the dbsettings.json file is located in the Origami.Files directory */
+                var files = Path.GetFullPath($"..{Path.DirectorySeparatorChar}Origami.Files{Path.DirectorySeparatorChar}");
 
-            builder.Configuration.AddJsonFile(Path.Combine(files, "dbsettings.json"), false, reloadOnChange: true);
-            builder.Configuration.AddJsonFile(Path.Combine(files, $"dbsettings.{builder.Environment.EnvironmentName}.json"), true, reloadOnChange: true);
+                builder.Configuration.AddJsonFile(Path.Combine(files, "dbsettings.json"), false, reloadOnChange: true);
+                builder.Configuration.AddJsonFile(Path.Combine(files, $"dbsettings.{builder.Environment.EnvironmentName}.json"), true, reloadOnChange: true);
+            }
+            else
+            {
+                /* For testing environment, the dbsettings.json file is located in the current directory */
+                builder.Configuration.AddJsonFile(Path.GetFullPath("dbsettings.json"), false, reloadOnChange: true);
+            }
+
+            //origami connection string
+            var origami = builder.Configuration.GetOrigamiConnectionString();
+
+            builder.Services.AddDbContextFactory<OrigamiDbContext>((provider, options) =>
+            {
+                if (builder.Environment.IsDevelopment() || builder.Environment.IsEnvironment("Testing"))
+                {
+                    options.EnableSensitiveDataLogging();
+                }
+                options.UseSqlServer(origami);
+                options.AddInterceptors(provider.GetRequiredService<DateCreatedInterceptor>());
+                options.AddInterceptors(provider.GetRequiredService<DateModifiedInterceptor>());
+            });
+
+            builder.Services.AddDbContextFactory<OrigamiIdentityDbContext>(options =>
+            {
+                options.UseSqlServer(origami);
+            });
 
             // Add services to the container.
             builder.Services.AddRazorPages();
@@ -71,24 +103,9 @@ namespace Origami.UI
             builder.Services.AddControllersWithViews();
             builder.Services.AddServerSideBlazor().AddHubOptions(options => { options.MaximumReceiveMessageSize = 16 * 1024 * 1024; });
 
-            //origami connection string
-            var origami = builder.Configuration.GetOrigamiConnectionString();
-
-            builder.Services.AddDbContextFactory<OrigamiDbContext>(options =>
-            {
-                options.EnableSensitiveDataLogging();
-                options.UseSqlServer(origami);
-            });
-
-            builder.Services.AddDbContextFactory<OrigamiIdentityDbContext>(options =>
-            {
-                options.EnableSensitiveDataLogging();
-                options.UseSqlServer(origami);
-            });
-
             builder.Services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<OrigamiIdentityDbContext>();
 
-            builder.Services.AddScoped<OrigamiJwtUserMiddleware>();
+            builder.Services.AddScoped<OrigamiUserMiddleware>();
             builder.Services.AddScoped<OrigamiLocationMiddleware>();
 
             builder.Services.AddSingleton<Text>();
@@ -97,29 +114,26 @@ namespace Origami.UI
             builder.Services.AddSingleton<IEmailStatusRepository, EmailStatusRepository>();
             builder.Services.AddSingleton<IBackupRestoreRepository, BackupRestoreRepository>();
             builder.Services.AddSingleton<IRepository<OrigamiBackup>, BackupRestoreRepository>();
+            builder.Services.AddSingleton<IMyMemoryCache, MyMemoryCache>();
             builder.Services.AddTransient<IBlogRepository, BlogRepository>();
-            builder.Services.AddTransient<IBlogRollRepository, BlogRollRepository>();
             builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
+            builder.Services.AddTransient<IContentCategoryRepository, ContentCategoryRepository>();
+            builder.Services.AddTransient<IContentCommentReactionRepository, ContentCommentReactionRepository>();
+            builder.Services.AddTransient<IContentCommentRepository, ContentCommentRepository>();
+            builder.Services.AddTransient<IContentHistoryRepository, ContentHistoryRepository>();
+            builder.Services.AddTransient<IContentRatingRepository, ContentRatingRepository>();
+            builder.Services.AddTransient<IContentReactionRepository, ContentReactionRepository>();
+            builder.Services.AddTransient<IContentRepository, ContentRepository>();
+            builder.Services.AddTransient<IContentTagRepository, ContentTagRepository>();
             builder.Services.AddTransient<IDashboardRepository, DashboardRepository>();
             builder.Services.AddTransient<IDirectoryRepository, DirectoryRepository>();
             builder.Services.AddTransient<IEmailRepository, EmailRepository>();
+            builder.Services.AddTransient<IEventRepository, EventRepository>();
             builder.Services.AddTransient<IFileManagerRepository, FileManagerRepository>();
             builder.Services.AddTransient<IFileRepository, FileRepository>();
-            builder.Services.AddTransient<IPageRepository, PageRepository>();
             builder.Services.AddTransient<IPageTitleRepository, PageTitleRepository>();
-            builder.Services.AddTransient<IPageViewRepository, PageViewRepository>();
             builder.Services.AddTransient<IPhysicalPageRepository, PhysicalPageRepository>();
             builder.Services.AddTransient<IPhysicalPageViewRepository, PhysicalPageViewRepository>();
-            builder.Services.AddTransient<IPingServiceRepository, PingServiceRepository>();
-            builder.Services.AddTransient<IPostCategoryRepository, PostCategoryRepository>();
-            builder.Services.AddTransient<IPostCommentReactionRepository, PostCommentReactionRepository>();
-            builder.Services.AddTransient<IPostCommentRepository, PostCommentRepository>();
-            builder.Services.AddTransient<IPostRatingRepository, PostRatingRepository>();
-            builder.Services.AddTransient<IPostRepository, PostRepository>();
-            builder.Services.AddTransient<IPostTagRepository, PostTagRepository>();
-            builder.Services.AddTransient<IPostViewRepository, PostViewRepository>();
-            builder.Services.AddTransient<IQuickNoteRepository, QuickNoteRepository>();
-            builder.Services.AddTransient<IResumeRepository, ResumeRepository>();
             builder.Services.AddTransient<IRightRepository, RightRepository>();
             builder.Services.AddTransient<IRightRoleRepository, RightRoleRepository>();
             builder.Services.AddTransient<IRoleRepository, RoleRepository>();
@@ -130,56 +144,49 @@ namespace Origami.UI
             builder.Services.AddTransient<ISocialProfileRepository, SocialProfileRepository>();
             builder.Services.AddTransient<ISpecialMessageRepository, SpecialMessageRepository>();
             builder.Services.AddTransient<ISpecialPageRepository, SpecialPageRepository>();
-            builder.Services.AddTransient<ISpecialPageViewRepository, SpecialPageViewRepository>();
             builder.Services.AddTransient<ISubscriberRepository, SubscriberRepository>();
             builder.Services.AddTransient<ISuperRepository, SuperRepository>();
-            builder.Services.AddTransient<ITagRepository, TagRepository>();
-            builder.Services.AddTransient<ITrashRepository, TrashRepository>();
+            builder.Services.AddTransient<ITheCreator, TheCreator>();
             builder.Services.AddTransient<IUserActivityRepository, UserActivityRepository>();
             builder.Services.AddTransient<IUserBlogRepository, UserBlogRepository>();
-            builder.Services.AddTransient<IUserContentRepository, UserContentRepository>();
             builder.Services.AddTransient<IUserPasswordResetRepository, UserPasswordResetRepository>();
             builder.Services.AddTransient<IUserRepository, UserRepository>();
             builder.Services.AddTransient<IUserRoleRepository, UserRoleRepository>();
             builder.Services.AddTransient<IUserTrashRepository, UserTrashRepository>();
             builder.Services.AddTransient<IUserViewRepository, UserViewRepository>();
-            builder.Services.AddTransient<IVideoCategoryRepository, VideoCategoryRepository>();
-            builder.Services.AddTransient<IVideoCommentReactionRepository, VideoCommentReactionRepository>();
-            builder.Services.AddTransient<IVideoCommentRepository, VideoCommentRepository>();
-            builder.Services.AddTransient<IVideoRatingRepository, VideoRatingRepository>();
-            builder.Services.AddTransient<IVideoRepository, VideoRepository>();
-            builder.Services.AddTransient<IVideoTagRepository, VideoTagRepository>();
-            builder.Services.AddTransient<IVideoViewRepository, VideoViewRepository>();
             builder.Services.AddTransient<IWhatToSeeNextRepository, WhatToSeeNextRepository>();
-            builder.Services.AddScoped<ILoginRepository, LoginRepository>();
+
+            builder.Services.AddScoped<IWhatHappensNext, WhatHappensNext>();
 
             builder.Services.AddKeyedSingleton<IIpLocationRepository, IpApiComRepository>(IpApiComRepository.Host);
             builder.Services.AddKeyedSingleton<IIpLocationRepository, IpApiCoRepository>(IpApiCoRepository.Host);
             builder.Services.AddKeyedSingleton<IIpLocationRepository, IpWhoIsRepository>(IpWhoIsRepository.Host);
             builder.Services.AddSingleton<IIpLocationRepository, IpLocationRepository>();
 
-            builder.Services.AddCrud<OrigamiBlog, BlogRepository>();
-            builder.Services.AddCrud<OrigamiCategory, CategoryRepository>();
-            builder.Services.AddCrud<OrigamiFile, FileManagerRepository>();
-            builder.Services.AddCrud<OrigamiPage, PageRepository>();
-            builder.Services.AddCrud<OrigamiPost, PostRepository>();
-            builder.Services.AddCrud<OrigamiPostCategory, PostCategoryRepository>();
-            builder.Services.AddCrud<OrigamiPostComment, PostCommentRepository>();
-            builder.Services.AddCrud<OrigamiPostTag, PostTagRepository>();
-            builder.Services.AddCrud<OrigamiQuickNote, QuickNoteRepository>();
-            builder.Services.AddCrud<OrigamiRole, RoleRepository>();
-            builder.Services.AddCrud<OrigamiSettings, SettingsRepository>();
-            builder.Services.AddCrud<OrigamiSocialProfile, SocialProfileRepository>();
-            builder.Services.AddCrud<OrigamiSpecialMessage, SpecialMessageRepository>();
-            builder.Services.AddCrud<OrigamiSpecialPage, SpecialPageRepository>();
-            builder.Services.AddCrud<OrigamiTag, TagRepository>();
-            builder.Services.AddCrud<OrigamiTrash, TrashRepository>();
-            builder.Services.AddCrud<OrigamiUser, UserRepository>();
-            builder.Services.AddCrud<OrigamiUserTrash, UserTrashRepository>();
-            builder.Services.AddCrud<OrigamiVideo, VideoRepository>();
-            builder.Services.AddCrud<OrigamiVideoCategory, VideoCategoryRepository>();
-            builder.Services.AddCrud<OrigamiVideoComment, VideoCommentRepository>();
-            builder.Services.AddCrud<OrigamiVideoTag, VideoTagRepository>();
+            builder.Services.AddRepository<OrigamiBlog, BlogRepository>();
+            builder.Services.AddRepository<OrigamiCategory, CategoryRepository>();
+            builder.Services.AddRepository<OrigamiContent, ContentRepository>();
+            builder.Services.AddRepository<OrigamiContentCategory, ContentCategoryRepository>();
+            builder.Services.AddRepository<OrigamiContentComment, ContentCommentRepository>();
+            builder.Services.AddRepository<OrigamiContentCommentReaction, ContentCommentReactionRepository>();
+            builder.Services.AddRepository<OrigamiContentHistory, ContentHistoryRepository>();
+            builder.Services.AddRepository<OrigamiContentRating, ContentRatingRepository>();
+            builder.Services.AddRepository<OrigamiContentReaction, ContentReactionRepository>();
+            builder.Services.AddRepository<OrigamiContentTag, ContentTagRepository>();
+            builder.Services.AddRepository<OrigamiFile, FileManagerRepository>();
+            builder.Services.AddRepository<OrigamiRole, RoleRepository>();
+            builder.Services.AddRepository<OrigamiSettings, SettingsRepository>();
+            builder.Services.AddRepository<OrigamiSocialProfile, SocialProfileRepository>();
+            builder.Services.AddRepository<OrigamiUser, UserRepository>();
+            builder.Services.AddRepository<OrigamiUserTrash, UserTrashRepository>();
+
+            builder.Services.AddTransient<IHubContentRepository<HubContentPage>, HubContentPageRepository>();
+            builder.Services.AddTransient<IHubContentRepository<HubContentPost>, HubContentPostRepository>();
+            builder.Services.AddTransient<IHubContentRepository<HubContentSpecialMessage>, HubContentSpecialMessageRepository>();
+            builder.Services.AddTransient<IHubContentRepository<HubContentSpecialPage>, HubContentSpecialPageRepository>();
+            builder.Services.AddTransient<IHubContentRepository<HubContentQuickNote>, HubContentQuickNoteRepository>();
+            builder.Services.AddTransient<IHubContentRepository<HubContentVideo>, HubContentVideoRepository>();
+            builder.Services.AddTransient<IHubContentRepository<HubContentSoftwareRelease>, HubContentSoftwareReleaseRepository>();
 
             //sets the blog as the primary one
             builder.Services.AddScoped<IUserFacade, UserFacade>(provider =>
@@ -201,19 +208,38 @@ namespace Origami.UI
             builder.Services.AddSingleton<CircuitHandler, OrigamiCircuitHandler>();
             builder.Services.AddScoped<HtmlRenderer>();
 
+            builder.Services.AddSingleton<IValidator<HubContentPage>, HubContentPageValidator>();
+            builder.Services.AddSingleton<IValidator<HubContentPost>, HubContentPostValidator>();
+            builder.Services.AddSingleton<IValidator<HubContentQuickNote>, HubContentQuickNoteValidator>();
+            builder.Services.AddSingleton<IValidator<HubContentSoftwareRelease>, HubContentSoftwareReleaseValidator>();
+            builder.Services.AddSingleton<IValidator<HubContentSpecialMessage>, HubContentSpecialMessageValidator>();
+            builder.Services.AddSingleton<IValidator<HubContentSpecialPage>, HubContentSpecialPageValidator>();
+            builder.Services.AddSingleton<IValidator<HubContentVideo>, HubContentVideoValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiBlog>, OrigamiBlogValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiCategory>, OrigamiCategoryValidator>();
+            builder.Services.AddSingleton<IValidator<OrigamiContent>, OrigamiContentValidator>();
+            builder.Services.AddSingleton<IValidator<OrigamiContentCategory>, OrigamiContentCategoryValidator>();
+            builder.Services.AddSingleton<IValidator<OrigamiContentComment>, OrigamiContentCommentValidator>();
+            builder.Services.AddSingleton<IValidator<OrigamiContentCommentReaction>, OrigamiContentCommentReactionValidator>();
+            builder.Services.AddSingleton<IValidator<OrigamiContentHistory>, OrigamiContentHistoryValidator>();
+            builder.Services.AddSingleton<IValidator<OrigamiContentRating>, OrigamiContentRatingValidator>();
+            builder.Services.AddSingleton<IValidator<OrigamiContentReaction>, OrigamiContentReactionValidator>();
+            builder.Services.AddSingleton<IValidator<OrigamiContentTag>, OrigamiContentTagValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiPage>, OrigamiPageValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiPost>, OrigamiPostValidator>();
-            builder.Services.AddSingleton<IValidator<OrigamiPostComment>, OrigamiPostCommentValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiQuickNote>, OrigamiQuickNoteValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiRole>, OrigamiRoleValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiSettings>, OrigamiSettingsValidator>();
+            builder.Services.AddSingleton<IValidator<OrigamiSocialProfile>, OrigamiSocialProfileValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiSpecialMessage>, OrigamiSpecialMessageValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiSpecialPage>, OrigamiSpecialPageValidator>();
+            builder.Services.AddSingleton<IValidator<OrigamiSubscriber>, OrigamiSubscriberValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiUser>, OrigamiUserValidator>();
             builder.Services.AddSingleton<IValidator<OrigamiVideo>, OrigamiVideoValidator>();
-            builder.Services.AddSingleton<IValidator<OrigamiVideoComment>, OrigamiVideoCommentValidator>();
+
+            builder.Services.AddSingleton(TimeProvider.System);
+            builder.Services.AddSingleton<DateCreatedInterceptor>();
+            builder.Services.AddSingleton<DateModifiedInterceptor>();
 
             //jwt configuration
             builder.Services.Configure<JwtConfiguration>(builder.Configuration.GetSection("Jwt"));
@@ -259,6 +285,10 @@ namespace Origami.UI
                 options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
             });
 
+            builder.Services.AddHealthChecks();
+
+            if (OperatingSystem.IsWindows()) builder.Host.UseWindowsService();
+
             var services = builder.Services.BuildServiceProvider();
 
             //adds the database configuration
@@ -269,26 +299,17 @@ namespace Origami.UI
         }
 
         /// <summary>
-        /// Registers CRUD-related services for the specified entity and repository types.
+        /// Registers a repository for an entity, with the corresponding interface and search interface
         /// </summary>
-        /// <remarks>This method registers the specified repository type as the implementation for various
-        /// CRUD-related interfaces, including <see cref="_ICrudCache{TEntity}"/>, <see cref="_ICreateCache{TEntity}"/>,
-        /// <see cref="_IReadCache{TEntity}"/>, <see cref="_IUpdateCache{TEntity}"/>, <see
-        /// cref="_IDeleteCache{TEntity}"/>, and <see cref="_ISaveCache{TEntity}"/>. Use this method to configure
-        /// dependency injection for CRUD operations in your application.</remarks>
-        /// <typeparam name="TEntity">The type of the entity. Must implement <see cref="IId"/>.</typeparam>
-        /// <typeparam name="TRepository">The type of the repository. Must implement <see cref="_ICrudCache{TEntity}"/>.</typeparam>
-        /// <param name="services">The <see cref="IServiceCollection"/> to which the services will be added.</param>
-        /// <returns>The updated <see cref="IServiceCollection"/> instance.</returns>
-        public static IServiceCollection AddCrud<TEntity, TRepository>(this IServiceCollection services)
+        /// <typeparam name="TEntity"></typeparam>
+        /// <typeparam name="TRepository"></typeparam>
+        /// <param name="services"></param>
+        /// <returns></returns>
+        public static IServiceCollection AddRepository<TEntity, TRepository>(this IServiceCollection services)
             where TEntity : IId
             where TRepository : class, IRepository<TEntity>
         {
             services.AddTransient<IRepository<TEntity>, TRepository>();
-            services.AddTransient<ICreateCache<TEntity>, TRepository>();
-            services.AddTransient<IReadCache<TEntity>, TRepository>();
-            services.AddTransient<IUpdateCache<TEntity>, TRepository>();
-            services.AddTransient<IDeleteCache<TEntity>, TRepository>();
             services.AddTransient<ISearch<TEntity>, TRepository>();
 
             return services;
@@ -333,6 +354,107 @@ namespace Origami.UI
             }
 
             return string.Empty;
+        }
+
+        public static WebApplication FoldTheOrigami<T>(this WebApplicationBuilder builder, string[] args, bool admin = false, Action? injectServices = null)
+        {
+            //first thing in the morning
+            builder.AddOrigami(args, admin: admin);
+
+            var siteName = builder.Configuration.GetValue<string>("Site:Name");
+            var serviceName = $"origami2, {(admin ? "admin:" : "front-end:")} {siteName}";
+
+            /*open telemetry*/
+            var openTelemetry = builder.Configuration.GetValue("OpenTelemetry:Enabled", false);
+            if (openTelemetry)
+            {
+                /*OpenTelemetry*/
+                var otel = builder.Services.AddOpenTelemetry();
+
+                // Configure OpenTelemetry Resources with the application name
+                otel.ConfigureResource(resource => resource.AddService(serviceName: serviceName));
+
+                // Add Metrics for ASP.NET Core and our custom metrics and export to Prometheus
+                otel.WithMetrics(metrics =>
+                {
+                    metrics.AddAspNetCoreInstrumentation();
+                    metrics.AddRuntimeInstrumentation();
+                    metrics.AddProcessInstrumentation();
+                    metrics.AddHttpClientInstrumentation();
+                    metrics.AddPrometheusExporter();
+
+                    // Metrics provides by ASP.NET Core in .NET 10
+                    metrics.AddMeter("Microsoft.AspNetCore.Hosting");
+                    metrics.AddMeter("Microsoft.AspNetCore.Server.Kestrel");
+                    metrics.AddMeter("Microsoft.AspNetCore.Http.Connections");
+                    metrics.AddMeter("Microsoft.AspNetCore.Routing");
+                    metrics.AddMeter("Microsoft.AspNetCore.Diagnostics");
+                    metrics.AddMeter("Microsoft.AspNetCore.RateLimiting");
+                    metrics.AddMeter("Microsoft.EntityFrameworkCore");
+                });
+
+                // Add Tracing for ASP.NET Core and our custom ActivitySource and export to Jaeger
+                otel.WithTracing(tracing =>
+                {
+                    tracing.AddAspNetCoreInstrumentation();
+                    tracing.AddHttpClientInstrumentation();
+                    tracing.AddOtlpExporter(otlpOptions =>
+                    {
+                        // Use IConfiguration directly for Otlp exporter endpoint option.
+                        otlpOptions.Endpoint = new Uri(builder.Configuration.GetValue("OpenTelemetry:Endpoint", defaultValue: "http://localhost:4317")!);
+                    });
+                });
+            }
+
+            builder.Host.UseSerilog((context, configuration) =>
+            {
+                var seq = context.Configuration.GetValue("Seq:Enabled", false);
+                var seqEndpoint = context.Configuration.GetValue("Seq:Endpoint", string.Empty);
+
+                configuration.Enrich.WithProperty("Application", serviceName);
+                configuration.ReadFrom.Configuration(context.Configuration);
+                configuration.WriteTo.Console();
+
+                if (seq && seqEndpoint.Has() == true)
+                {
+                    configuration.WriteTo.Seq(seqEndpoint);
+                }
+            });
+
+            //kestrel 8MB
+            builder.WebHost.ConfigureKestrel(serverOptions => serverOptions.Limits.MaxRequestBodySize = (long)8 * 1024 * 1024);
+
+            /*there's services to inject*/
+            injectServices?.Invoke();
+
+            /*builds and use origami*/
+            var app = builder.Build().UseOrigami(admin: admin);
+
+            if (openTelemetry) app.MapPrometheusScrapingEndpoint();
+
+            app.MapRazorComponents<T>().AddInteractiveServerRenderMode();
+
+            if (admin == true)
+            {
+                app.Logger.LogInformation("*************************");
+                app.Logger.LogInformation("Starting Origami.UI.Admin");
+                app.Logger.LogInformation("*************************");
+
+                var masterPassword = builder.Configuration["master-password"];
+                if (masterPassword.Has() == true)
+                {
+                    var appFacade = app.Services.GetRequiredService<IAppFacade>();
+                    appFacade.OneTimeMasterPasswordInSHA256 = masterPassword.SHA256Hash();
+                }
+            }
+            else
+            {
+                app.Logger.LogInformation("****************************");
+                app.Logger.LogInformation("Starting Origami.UI.FrontEnd");
+                app.Logger.LogInformation("****************************");
+            }
+
+            return app;
         }
 
         public static async Task<string> GetBase64Image(this IBrowserFile file)
@@ -419,6 +541,36 @@ namespace Origami.UI
             return new MarkupString(html);
         }
 
+        /// <summary>
+        /// Fills the <paramref name="tracking"/> with request information
+        /// </summary>
+        /// <param name="tracking"></param>
+        /// <param name="url"></param>
+        /// <param name="referrer"></param>
+        public static void TrackFields(this HttpContext httpContext, IMemoryCache memoryCache, BaseTracking tracking, string url, string referrer = "")
+        {
+            var dd = httpContext.Request.GetDeviceDetector();
+
+            // important!
+            dd.Parse();
+
+            tracking.DateCreated = DateTime.UtcNow;
+            tracking.Url = url;
+            tracking.UrlReferrer = referrer;
+            tracking.UserAgent = httpContext.Request.Header("User-Agent");
+            tracking.HostAddress = httpContext.Connection.RemoteIpAddress?.ToString() ?? string.Empty;
+            tracking.IsMobileDevice = dd.IsTablet() || dd.IsMobile();
+            tracking.IsBot = dd.IsBot();
+
+            var client = Parser.GetDefault().Parse(tracking.UserAgent);
+
+            tracking.Platform = client.OS.Family;
+            tracking.Browser = client.UA.Family;
+
+            var key = $"Origami_UserLocation_{httpContext.Connection.Id}";
+            tracking.Location = memoryCache.Get<Location>(key);
+        }
+
         public static WebApplication UseOrigami(this WebApplication app, bool admin = false)
         {
             app.UseAuthentication();
@@ -427,7 +579,7 @@ namespace Origami.UI
             var supportedCultures = OrigamiConstants.AllLanguages().Select(x => x.Name).ToArray();
             var localizationOptions = new RequestLocalizationOptions()
                 .SetDefaultCulture("en-US")
-                .AddSupportedCultures("en-US")
+                .AddSupportedCultures(supportedCultures)
                 .AddSupportedUICultures(supportedCultures);
 
             app.UseRequestLocalization(localizationOptions);
@@ -452,7 +604,7 @@ namespace Origami.UI
             app.UseAuthorization();
             app.UseAntiforgery();
 
-            app.UseMiddleware<OrigamiJwtUserMiddleware>();
+            app.UseMiddleware<OrigamiUserMiddleware>();
             app.UseMiddleware<OrigamiLocationMiddleware>();
 
             app.MapRazorPages();
@@ -461,9 +613,11 @@ namespace Origami.UI
             app.UseStaticFiles();
             app.UseRateLimiter();
 
+            app.MapHealthChecks("/health");
+
             if (admin == false)
             {
-                // RSS feed endpoint
+                // RSS feed endpoint (minimal API)
                 app.MapGet("/blogs/{slug}/rss.xml", async (string slug, HttpContext context, IRssRepository rss) =>
                 {
                     var oi = context.Request.Scheme + "://" + context.Request.Host.Value;
@@ -472,81 +626,6 @@ namespace Origami.UI
                     await context.Response.WriteAsync(xml);
                 });
             }
-
-            return app;
-        }
-
-        public static WebApplication FoldTheOrigami<T>(
-            this WebApplicationBuilder builder,
-            string[] args,
-            bool admin = false,
-            Action? inject = null)
-        {
-            //first thing in the morning
-            builder.AddOrigami(args, admin: admin);
-
-            var siteName = builder.Configuration.GetValue<string>("Site:Name");
-            var serviceName = $"origami2, {(admin ? "admin:" : "front-end:")} {siteName}";
-
-            /*open telemetry*/
-            var openTelemetry = builder.Configuration.GetValue("OpenTelemetry:Enabled", false);
-            if (openTelemetry)
-            {
-                /*OpenTelemetry*/
-                var otel = builder.Services.AddOpenTelemetry();
-
-                // Configure OpenTelemetry Resources with the application name
-                otel.ConfigureResource(resource => resource.AddService(serviceName: serviceName));
-
-                // Add Metrics for ASP.NET Core and our custom metrics and export to Prometheus
-                otel.WithMetrics(metrics =>
-                {
-                    metrics.AddAspNetCoreInstrumentation();
-                    metrics.AddRuntimeInstrumentation();
-                    metrics.AddProcessInstrumentation();
-                    metrics.AddHttpClientInstrumentation();
-                    metrics.AddPrometheusExporter();
-
-                    // Metrics provides by ASP.NET Core in .NET 8
-                    metrics.AddMeter("Microsoft.AspNetCore.Hosting");
-                    metrics.AddMeter("Microsoft.AspNetCore.Server.Kestrel");
-                    metrics.AddMeter("Microsoft.AspNetCore.Http.Connections");
-                    metrics.AddMeter("Microsoft.AspNetCore.Routing");
-                    metrics.AddMeter("Microsoft.AspNetCore.Diagnostics");
-                    metrics.AddMeter("Microsoft.AspNetCore.RateLimiting");
-                });
-
-                // Add Tracing for ASP.NET Core and our custom ActivitySource and export to Jaeger
-                otel.WithTracing(tracing =>
-                {
-                    tracing.AddAspNetCoreInstrumentation();
-                    tracing.AddHttpClientInstrumentation();
-                    tracing.AddOtlpExporter(otlpOptions =>
-                    {
-                        // Use IConfiguration directly for Otlp exporter endpoint option.
-                        otlpOptions.Endpoint = new Uri(builder.Configuration.GetValue("OpenTelemetry:Endpoint", defaultValue: "http://localhost:4317")!);
-                    });
-                });
-            }
-
-            builder.Host.UseSerilog((context, configuration) =>
-            {
-                configuration.ReadFrom.Configuration(context.Configuration);
-                configuration.WriteTo.Console();
-            });
-
-            //kestrel 8MB
-            builder.WebHost.ConfigureKestrel(serverOptions => serverOptions.Limits.MaxRequestBodySize = (long)8 * 1024 * 1024);
-
-            /*there's services to inject*/
-            inject?.Invoke();
-
-            /*builds and use origami*/
-            var app = builder.Build().UseOrigami(admin: admin);
-
-            if (openTelemetry) app.MapPrometheusScrapingEndpoint();
-
-            app.MapRazorComponents<T>().AddInteractiveServerRenderMode();
 
             return app;
         }

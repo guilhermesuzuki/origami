@@ -6,14 +6,15 @@ namespace Origami.Core.Models
 {
     public abstract class BaseModel : IId, INanoId
     {
-        protected Guid _id = Guid.NewGuid();
+        protected Guid _id = Guid.Empty;
         protected string _nanoId = string.Empty;
 
         public event EventHandler<PropertyChangedEventArgs> BaseModelChanged = (sender, p) => { };
 
         protected BaseModel()
         {
-            this.NanoId = Nanoid.Generate(Nanoid.Alphabets.LettersAndDigits, 6);
+            this._id = Guid.CreateVersion7(DateTimeOffset.UtcNow);
+            this._nanoId = Nanoid.Generate(Nanoid.Alphabets.LettersAndDigits, 8);
         }
 
         /// <summary>
@@ -29,7 +30,7 @@ namespace Origami.Core.Models
         /// <summary>
         /// Nano Id
         /// </summary>
-        [StringLength(6)]
+        [StringLength(8)]
         public virtual string NanoId
         {
             get => _nanoId;

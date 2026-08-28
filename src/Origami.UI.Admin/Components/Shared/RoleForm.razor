@@ -64,6 +64,13 @@
                         </MudCheckBox>
                     </li>
                 </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.ViewConnectivityDetails">
+                            <span>@Text.Lower("Connectivity details")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
             </div>
             <div class="blogs mt-3">
                 <div class="w-100 text-white bg-secondary text-center mb-3">
@@ -108,6 +115,13 @@
                     <li>
                         <MudCheckBox @bind-Value="Entity.DeactivateBlogs">
                             <span>@Text.Lower("Deactivate blogs")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.MarkBlogAsPrimary">
+                            <span>@Text.Lower("Mark blog as primary")</span>
                         </MudCheckBox>
                     </li>
                 </ul>
@@ -188,15 +202,15 @@
                 </ul>
                 <ul class="inline-list">
                     <li>
-                        <MudCheckBox @bind-Value="Entity.MarkAsFrontPage">
-                            <span>@Text.Lower("Mark as front-page")</span>
+                        <MudCheckBox @bind-Value="Entity.PromoteToFrontPage">
+                            <span>@Text.Lower("Promote to front-page")</span>
                         </MudCheckBox>
                     </li>
                 </ul>
                 <ul class="inline-list">
                     <li>
-                        <MudCheckBox @bind-Value="Entity.UnmarkAsFrontPage">
-                            <span>@Text.Lower("Unmark as front-page")</span>
+                        <MudCheckBox @bind-Value="Entity.DemoteFromFrontPage">
+                            <span>@Text.Lower("Demote from front-page")</span>
                         </MudCheckBox>
                     </li>
                 </ul>
@@ -447,7 +461,7 @@
             </div>
             <div class="social-profiles mt-3">
                 <div class="w-100 text-white bg-secondary text-center mb-3">
-                    @Text.Lower("Social Profiles")
+                    @Text.Lower("Social profiles")
                 </div>
                 <ul class="inline-list">
                     <li>
@@ -812,6 +826,18 @@
                         </MudCheckBox>
                     </li>
                 </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.PurgeSoftwareReleases">
+                            <span>@Text.Lower("Purge software releases")</span>
+                        </MudCheckBox>
+                    </li>
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.RestoreSoftwareReleases">
+                            <span>@Text.Lower("Restore software releases")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
@@ -1040,6 +1066,81 @@
                     <li>
                         <MudCheckBox @bind-Value="Entity.UnpublishOtherUsersSpecialMessages">
                             <span>@Text.Lower("Unpublish other users messages")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+            </div>
+            <div class="software-releases mt-3">
+                <div class="w-100 text-white bg-secondary text-center mb-3">
+                    @Text.Lower("Software releases")
+                </div>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.ViewSoftwareReleases">
+                            <span>@Text.Lower("View software releases")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.CreateNewSoftwareReleases">
+                            <span>@Text.Lower("Create new software releases")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.EditOwnSoftwareReleases">
+                            <span>@Text.Lower("Edit own software releases")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.EditOtherUsersSoftwareReleases">
+                            <span>@Text.Lower("Edit other users software releases")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.DeleteOwnSoftwareReleases">
+                            <span>@Text.Lower("Delete own software releases")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.DeleteOtherUsersSoftwareReleases">
+                            <span>@Text.Lower("Delete other users software releases")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.PublishOwnSoftwareReleases">
+                            <span>@Text.Lower("Publish own software releases")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.PublishOtherUsersSoftwareReleases">
+                            <span>@Text.Lower("Publish other users software releases")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.UnpublishOwnSoftwareReleases">
+                            <span>@Text.Lower("Unpublish own software releases")</span>
+                        </MudCheckBox>
+                    </li>
+                </ul>
+                <ul class="inline-list">
+                    <li>
+                        <MudCheckBox @bind-Value="Entity.UnpublishOtherUsersSoftwareReleases">
+                            <span>@Text.Lower("Unpublish other users software releases")</span>
                         </MudCheckBox>
                     </li>
                 </ul>

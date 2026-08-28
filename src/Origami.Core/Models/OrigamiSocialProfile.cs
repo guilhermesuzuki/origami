@@ -6,19 +6,21 @@ namespace Origami.Core.Models
 {
     [Table("oi_SocialProfiles")]
     public class OrigamiSocialProfile :
+        BaseModel,
         IChanged,
-        IId,
         IName,
-        IEmail,
         IVersion,
         IAdditionalInfo,
-        INew
+        INew,
+        IHyperlink,
+        IDateCreated,
+        IDateModified
     {
         private string? _additionalInfo = string.Empty;
-        private string _email = string.Empty;
+        private DateTime _dateCreated;
+        private DateTime? _dateModified;
         private string _emailFromSocialNetwork = string.Empty;
         private string _firstName = string.Empty;
-        private Guid _id = Guid.NewGuid();
         private bool _isBlocked;
         private bool _isModerator;
         private string _lastName = string.Empty;
@@ -31,7 +33,6 @@ namespace Origami.Core.Models
         private SocialNetworks _socialProfile;
         private string _userId = string.Empty;
         private byte[] _version = Array.Empty<byte>();
-
         public OrigamiSocialProfile() : base()
         {
 
@@ -39,20 +40,26 @@ namespace Origami.Core.Models
 
         public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) => { };
 
+        /// <summary>
+        /// Anonymous user
+        /// </summary>
+        public static OrigamiSocialProfile AnonymousUser => new() { Id = Guid.Empty };
         public string? AdditionalInfo
         {
             get => _additionalInfo;
             set => this.Set(ref _additionalInfo, value, Changed);
         }
 
-        /// <summary>
-        /// Email (to be used by the Application)
-        /// </summary>
-        [StringLength(255)]
-        public string Email
+        public DateTime DateCreated
         {
-            get => _email;
-            set => this.Set(ref _email, value, Changed);
+            get => _dateCreated;
+            set => this.Set(ref _dateCreated, value, Changed);
+        }
+
+        public DateTime? DateModified
+        {
+            get => _dateModified;
+            set => this.Set(ref _dateModified, value, Changed);
         }
 
         /// <summary>
@@ -75,12 +82,7 @@ namespace Origami.Core.Models
             set => this.Set(ref _firstName, value, Changed);
         }
 
-        [Key]
-        public Guid Id
-        {
-            get => _id;
-            set => this.Set(ref _id, value, Changed);
-        }
+        public string Hyperlink => $"/socialprofiles/{this.NanoId}";
 
         /// <summary>
         /// Is this Social Profile Blocked?
@@ -196,17 +198,15 @@ namespace Origami.Core.Models
             get => _version;
             set => this.Set(ref _version, value, Changed);
         }
-
         /// <summary>
         /// First, it tries to get the e-mail from the subscription.
         /// Then, it queries the application e-mail or the e-mail coming from the social network (when shared).
         /// </summary>
         /// <returns></returns>
-        public string GetEmail()
+        public string GetEmail(Text text)
         {
-            if (Email.Has() == true) return Email;
             if (EmailFromSocialNetwork.Has() == true) return EmailFromSocialNetwork;
-            return "•• Not shared ••";
+            return text.Original("•• Not shared ••");
         }
 
         /// <summary>
@@ -215,7 +215,6 @@ namespace Origami.Core.Models
         /// <returns></returns>
         public bool HasEmail()
         {
-            if (Email.Has() == true) return true;
             if (EmailFromSocialNetwork.Has() == true) return true;
             return false;
         }

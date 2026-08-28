@@ -5,21 +5,21 @@ namespace Origami.Core.Data
 {
     public class PageTitleRepository : IPageTitleRepository
     {
-        private readonly ISettingsRepository _blogSettingsRepository;
+        private readonly ISettingsRepository _settingsRepository;
         private List<string?> _parts = [];
 
         /// <summary>
         /// Default constructor with DI
         /// </summary>
-        /// <param name="blogSettingsRepository"></param>
-        public PageTitleRepository(ISettingsRepository blogSettingsRepository) : base()
+        /// <param name="settingsRepository"></param>
+        public PageTitleRepository(ISettingsRepository settingsRepository) : base()
         {
-            _blogSettingsRepository = blogSettingsRepository;
+            _settingsRepository = settingsRepository;
         }
 
         public string GetTitle()
         {
-            var result = new StringBuilder(_blogSettingsRepository.GetSettings().Name);
+            var result = new StringBuilder(_settingsRepository.GetSettings().Name);
 
             foreach (var part in _parts)
             {
@@ -62,11 +62,18 @@ namespace Origami.Core.Data
             _parts.AddRange(page?.Title);
         }
 
-        public void SetTitle(IName? category1, IName? category2, ITitle? page)
+        public void SetTitle(ITag? category, ITitle? page)
         {
             _parts.Clear();
-            _parts.AddRange(category1?.Name);
-            _parts.AddRange(category2?.Name);
+            _parts.AddRange(category?.Tag);
+            _parts.AddRange(page?.Title);
+        }
+
+        public void SetTitle(ITag? tag, IName? category, ITitle? page)
+        {
+            _parts.Clear();
+            _parts.AddRange(tag?.Tag);
+            _parts.AddRange(category?.Name);
             _parts.AddRange(page?.Title);
         }
     }

@@ -10,21 +10,53 @@ namespace Origami.Core.Models
     public class OrigamiSocialProfileDelete :
         IId,
         IDateCreated,
-        IFKSocialProfile,
         IChanged
     {
+        private int _contentCommentReactions;
+        private int _contentComments;
+        private int _contentRatings;
+        private int _contentReactions;
         private DateTime _dateCreated;
         private Guid _id = Guid.NewGuid();
-        private int _postCommentReactions;
-        private int _postComments;
-        private int _postRatings;
         private OrigamiSocialProfile? _socialProfile;
         private Guid _socialProfileId;
-        private int _videoCommentReactions;
-        private int _videoComments;
-        private int _videoRatings;
-
         public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) => { };
+
+        /// <summary>
+        /// Number of Content Comment Reactions Deleted
+        /// </summary>
+        public int ContentCommentReactions
+        {
+            get => _contentCommentReactions;
+            set => this.Set(ref _contentCommentReactions, value, Changed);
+        }
+
+        /// <summary>
+        /// Number of Content Comments Deleted
+        /// </summary>
+        public int ContentComments
+        {
+            get => _contentComments;
+            set => this.Set(ref _contentComments, value, Changed);
+        }
+
+        /// <summary>
+        /// Number of Content Ratings Deleted
+        /// </summary>
+        public int ContentRatings
+        {
+            get => _contentRatings;
+            set => this.Set(ref _contentRatings, value, Changed);
+        }
+
+        /// <summary>
+        /// Number of Content Reactions Deleted
+        /// </summary>
+        public int ContentReactions
+        {
+            get => _contentReactions;
+            set => this.Set(ref _contentReactions, value, Changed);
+        }
 
         public DateTime DateCreated
         {
@@ -39,71 +71,10 @@ namespace Origami.Core.Models
             set => this.Set(ref _id, value, Changed);
         }
 
-        /// <summary>
-        /// Number of Post Comment Reactions Deleted
-        /// </summary>
-        public int PostCommentReactions
-        {
-            get => _postCommentReactions;
-            set => this.Set(ref _postCommentReactions, value, Changed);
-        }
-
-        /// <summary>
-        /// Number of Post Comments Deleted
-        /// </summary>
-        public int PostComments
-        {
-            get => _postComments;
-            set => this.Set(ref _postComments, value, Changed);
-        }
-
-        /// <summary>
-        /// Number of Post Ratings Deleted
-        /// </summary>
-        public int PostRatings
-        {
-            get => _postRatings;
-            set => this.Set(ref _postRatings, value, Changed);
-        }
-
-        [ForeignKey(nameof(SocialProfileId))]
-        public OrigamiSocialProfile? SocialProfile
-        {
-            get => _socialProfile;
-            set => this.Set(ref _socialProfile, value, Changed);
-        }
-
         public Guid SocialProfileId
         {
             get => _socialProfileId;
             set => this.Set(ref _socialProfileId, value, Changed);
-        }
-
-        /// <summary>
-        /// Number of Video Reactions Deleted
-        /// </summary>
-        public int VideoCommentReactions
-        {
-            get => _videoCommentReactions;
-            set => this.Set(ref _videoCommentReactions, value, Changed);
-        }
-
-        /// <summary>
-        /// Number of Video Comments Deleted
-        /// </summary>
-        public int VideoComments
-        {
-            get => _videoComments;
-            set => this.Set(ref _videoComments, value, Changed);
-        }
-
-        /// <summary>
-        /// Number of Video Ratings Deleted
-        /// </summary>
-        public int VideoRatings
-        {
-            get => _videoRatings;
-            set => this.Set(ref _videoRatings, value, Changed);
         }
     }
 }

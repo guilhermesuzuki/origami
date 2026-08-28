@@ -5,7 +5,7 @@
         <div class="col-12">
             <BasicHeaderNotes Entity="this.Entity"></BasicHeaderNotes>
             <div class="text-center p-3 mt-3 border">
-                <HeaderImageLite Entity="this.Entity" ImgMaxWidth="256px"></HeaderImageLite>
+                <HeaderImageCard Entity="this.Entity" ImgMaxWidth="256px"></HeaderImageCard>
             </div>
             <BasicHeader Class="mt-3" Entity="this.Entity"></BasicHeader>
             <ul class="inline-list mt-3">
@@ -24,7 +24,7 @@
             </ul>
             <ul class="inline-list mt-3">
                 <li class="">
-                    <MudTextField @bind-Value="this.Entity.EmailAddress"
+                    <MudTextField @bind-Value="this.Entity.Email"
                                   HelperText="@Text.Lower("E-mail")"
                                   InputType="InputType.Email"
                                   ReadOnly="true"

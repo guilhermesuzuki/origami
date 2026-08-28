@@ -1,0 +1,19 @@
+﻿@inherits Basic
+@implements IId
+
+@if (Id != Guid.Empty)
+{
+    var reaction = this.Super.ContentReactions.ReadFromCache().Id(Id);
+    if (reaction != null)
+    {
+        var content = this.Super.Contents.ReadFromCache().Id(reaction.ContentId)!;
+        <div class="user-activity-content-reaction @Class">
+            <span class="fw-bold">@Text.Lower("Reacted {0} on:", reaction.Reaction)</span>
+            <ContentHeaderLite Entity="content"></ContentHeaderLite>
+        </div>
+    }
+}
+
+@code {
+    [Parameter] public override Guid Id { get; set; }
+}

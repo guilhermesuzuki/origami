@@ -11,17 +11,20 @@ namespace Origami.UI.Admin
 {
     public abstract class BasicAdminGrid<T> :
         BasicAdmin,
-        ICreateEntity<T>,
-        IFilter
+        IFilter,
+        INanoId
         where T : class, IId, new()
     {
         public string Filter { get; set; } = "all";
+
+        public string NanoId { get; set; } = string.Empty;
+
         [Inject] public IRepository<T> Repository { get; set; } = null!;
 
         /// <summary>
         /// DataGrid for this instance
         /// </summary>
-        protected MudDataGrid<T>? DataGrid { get; set; }
+        protected MudDataGrid<T> DataGrid { get; set; } = null!;
 
         /// <summary>
         /// Default ordering, in case there's no order-by
@@ -58,16 +61,6 @@ namespace Origami.UI.Admin
         /// </summary>
         protected T SelectedEntity { get; set; } = new();
 
-        public T CreateEntity()
-        {
-            var blog = this.GetBlogFromUserFacade();
-            var entity = new T();
-            entity.SetId();
-            entity.SetBlog(blog);
-            entity.SetAuthor(this.UserFacade.User);
-            return entity;
-        }
-
         /// <summary>
         /// Selected entities have changed (and need to be updated)
         /// </summary>
@@ -81,8 +74,8 @@ namespace Origami.UI.Admin
         {
             await JSRuntime.InvokeVoidAsync("removeQueryStringWithoutReload", "filter");
             await JSRuntime.InvokeVoidAsync("addQueryStringWithoutReload", "filter", filter);
+            await DataGrid.ReloadServerData();
             Filter = filter;
-            DataGrid?.ReloadServerData();
         }
 
         protected override Result CanAccess()
@@ -110,7 +103,7 @@ namespace Origami.UI.Admin
                 async () =>
                 {
                     return await DialogService.ShowMessageBoxAsync(
-                        Text.Upper("Deleting {0} Item(s)", SelectedEntities.Count),
+                        Text.Upper("Deleting {0} item(s)", SelectedEntities.Count),
                         Text.Original("Are you sure?"),
                         yesText: Text.Lower("Yes"),
                         noText: Text.Lower("No"));
@@ -128,8 +121,9 @@ namespace Origami.UI.Admin
             SelectedEntity = entity.Clone();
         }
 
-        protected virtual void EntityCreated(T? entity)
+        protected virtual async Task EntityCreated(T? entity)
         {
+            await JSRuntime.InvokeVoidAsync("removeQueryStringWithoutReload", "nanoid");
             SelectedEntity = entity.Clone();
             StateHasChanged();
         }
@@ -140,7 +134,7 @@ namespace Origami.UI.Admin
         /// <param name="entity"></param>
         protected virtual void EntitySaved(T entity)
         {
-            DataGrid?.ReloadServerData();
+            DataGrid.ReloadServerData();
             SelectedEntity = entity.Clone();
         }
 
@@ -199,7 +193,6 @@ namespace Origami.UI.Admin
             }
 
             await ReloadDataGrid();
-            SelectedEntity = Repository.ReadFromCache().Id(SelectedEntity.Id).Clone();
         }
 
         /// <summary>
@@ -292,6 +285,25 @@ namespace Origami.UI.Admin
                 items = query.Cast<T>();
             }
 
+            if (typeof(T).Implements<IBlogIdNull>() == true)
+            {
+                var query = from a in items.Cast<IBlogIdNull>()
+                            where a.BlogId == this.UserFacade.BlogId
+                            select a;
+
+                items = query.Cast<T>();
+            }
+
+            if (typeof(T).Implements<IContentId>() == true)
+            {
+                var query = from a in items.Cast<IContentId>()
+                            join b in MemoryCache.Read<OrigamiContent>() on a.ContentId equals b.Id
+                            where b.BlogId == this.UserFacade.BlogId
+                            select a;
+
+                items = query.Cast<T>();
+            }
+
             return items;
         }
 
@@ -314,9 +326,14 @@ namespace Origami.UI.Admin
         /// User selects an <paramref name="entity"/> to edit
         /// </summary>
         /// <param name="entity"></param>
-        protected virtual void OnEdit(T entity)
+        protected virtual async Task OnEdit(T entity)
         {
             SelectedEntity = entity.Clone();
+            if (SelectedEntity is INanoId nanoId)
+            {
+                await JSRuntime.InvokeVoidAsync("removeQueryStringWithoutReload", "nanoid");
+                await JSRuntime.InvokeVoidAsync("addQueryStringWithoutReload", "nanoid", nanoId.NanoId);
+            }
         }
 
         /// <summary>
@@ -333,12 +350,14 @@ namespace Origami.UI.Admin
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            HasBlogChangedInUserFacade();
+            this.HasBlogChangedInUserFacade();
+            this.SelectedEntity = TheCreator.Create<T>();
+            this.SetEntityFromQueryString();
         }
 
-        protected virtual void OnSearchResultSelected(T entity)
+        protected virtual async Task OnSearchResultSelected(T entity)
         {
-            SelectedEntity = entity.Clone();
+            await this.OnEdit(entity);
         }
 
         /// <summary>
@@ -376,21 +395,9 @@ namespace Origami.UI.Admin
         /// <returns></returns>
         protected virtual async Task ReloadDataGrid()
         {
-            SelectedEntity = CreateEntity();
+            SelectedEntity = TheCreator.Create<T>();
             SelectedEntities = new();
-            await DataGrid!.ReloadServerData();
-        }
-
-        /// <summary>
-        /// Clean <paramref name="entity"/> from cache and its children
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        protected virtual Result<T> RemoveEntityFromCache(T entity)
-        {
-            Repository.PurgeCache(entity);
-            SelectedEntity = SelectedEntity.Id == entity.Id ? CreateEntity() : SelectedEntity;
-            return new(entity);
+            await DataGrid.ReloadServerData();
         }
 
         /// <summary>
@@ -413,7 +420,7 @@ namespace Origami.UI.Admin
                 async () =>
                 {
                     return await DialogService.ShowMessageBoxAsync(
-                        Text.Upper("Restoring {0} Item(s)", SelectedEntities.Count),
+                        Text.Upper("Restoring {0} item(s)", SelectedEntities.Count),
                         Text.Original("Are you sure?"),
                         yesText: Text.Lower("Yes"),
                         noText: Text.Lower("No"));
@@ -442,6 +449,46 @@ namespace Origami.UI.Admin
         protected virtual List<T> SelectedEntitiesInOrder()
         {
             return SelectedEntities.ToList();
+        }
+
+        protected virtual void SetEntityFromQueryString()
+        {
+            this.NanoId = this.GhostOfTheNavigator.Uri.QueryString("nanoid");
+
+            if (this.NanoId.Has() == true)
+            {
+                var entity = (from a in this.MemoryCache.Read<T>().Cast<INanoId>()
+                              where a.NanoId == this.NanoId
+                              select a).FirstOrDefault();
+
+                if (entity != null)
+                {
+                    SelectedEntity = (entity as T).Clone();
+                    return;
+                }
+
+                this.UserFacade.Result = new() { Error = Text.Original("The entity you are trying to access does not exist") };
+            }
+        }
+
+        protected override void SetPageTitle()
+        {
+            if (SelectedEntity is INew neu && neu.New == true)
+            {
+                this.PageTitle.SetTitle(SelectedEntity.GetType().GetPlural());
+                return;
+            }
+
+            var title = SelectedEntity switch
+            {
+                ITitle t => t.Title,
+                IName n => n.Name,
+                ITag tag => tag.Tag,
+                IDisplayName d => d.DisplayName,
+                _ => null,
+            };
+
+            this.PageTitle.SetTitle(SelectedEntity.GetType().GetPlural(), title);
         }
     }
 }

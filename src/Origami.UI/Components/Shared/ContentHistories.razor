@@ -1,0 +1,42 @@
+﻿@inherits Basic
+@implements IEntityNull<OrigamiContent>
+
+@if (this.Entity is { New: false })
+{
+    var histories = this.MemoryCache.Read<OrigamiContentHistory>()
+        .Where(x => x.ContentId == this.Entity.Id)
+        .OrderByDescending(x => x.DateCreated);
+
+    <div class="content-histories wrapper @Class">
+        <MudDataGrid T="OrigamiContentHistory" Items="histories" Filterable="false" SortMode="SortMode.None" Class="border selectable">
+            <Columns>
+                <TemplateColumn Title="@Text.Upper("Date")">
+                    <CellTemplate>
+                        <span>@context.Item.DateCreated</span>
+                    </CellTemplate>
+                </TemplateColumn>
+                <TemplateColumn Title="@Text.Upper("Author")">
+                    <CellTemplate>
+                        @if (context.Item != null)
+                        {
+                            var author = this.MemoryCache.Read<OrigamiUser>().FirstOrDefault(x => x.Id == context.Item.AuthorId);
+                            <UserHeaderInline Entity="author"></UserHeaderInline>
+                        }
+                    </CellTemplate>
+                </TemplateColumn>
+                <TemplateColumn Title="@Text.Upper("Description")">
+                    <CellTemplate>
+                        @Text.Original(context.Item.Description)
+                    </CellTemplate>
+                </TemplateColumn>
+            </Columns>
+            <PagerContent>
+                <MudDataGridPager T="OrigamiContentHistory" PageSizeOptions="new[] { 5, 10, 25, 50, 100, }" />
+            </PagerContent>
+        </MudDataGrid>
+    </div>
+}
+
+@code {
+    [Parameter] public OrigamiContent? Entity { get; set; }
+}

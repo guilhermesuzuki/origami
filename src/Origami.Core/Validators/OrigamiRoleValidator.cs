@@ -1,15 +1,12 @@
 ﻿using FluentValidation;
 using Origami.Core.Models;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 
 namespace Origami.Core.Validators
 {
-    public class OrigamiRoleValidator: BaseValidator<OrigamiRole>
+    public class OrigamiRoleValidator : AbstractValidator<OrigamiRole>
     {
-        public OrigamiRoleValidator(Text text, IWebRootPath webRootPath) : base(text, webRootPath)
+        public OrigamiRoleValidator(Text text, IWebRootPath webRootPath) : base()
         {
             RuleFor(x => x.IsSystemRole).Must(system =>
             {

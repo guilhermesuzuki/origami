@@ -4,7 +4,7 @@
 <div class="position-relative login @Class">
     <AuthorizeView>
         <Authorized>
-            <SocialProfileHeader Entity="this.UserFacade.SocialProfile"></SocialProfileHeader>
+            <SocialProfileCard Entity="this.UserFacade.SocialProfile"></SocialProfileCard>
             <div class="social-profile-actions position-absolute" style="right:0;top:0;">
                 <MudMenu AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" Icon="@Icons.Material.Filled.Menu">
                     @if (System.Diagnostics.Debugger.IsAttached)
@@ -27,7 +27,7 @@
                     <MudMenuItem @onclick="this.Logout">
                         <button class="text-danger">
                             <i class="fa-solid fa-right-from-bracket pe-1"></i>
-                            @Text.Lower("Log Out")
+                            @Text.Lower("Log out")
                         </button>
                     </MudMenuItem>
                 </MudMenu>
@@ -69,36 +69,35 @@
 @code {
     private void Microsoft()
     {
-        var returnUrl = Uri.EscapeDataString(this.NavigationManager.Uri);
-        this.NavigationManager.NavigateTo($"/login/openidconnect?returnUrl={returnUrl}", true);
+        var returnUrl = Uri.EscapeDataString(this.GhostOfTheNavigator.Uri);
+        this.GhostOfTheNavigator.NavigateTo($"/login/openidconnect?returnUrl={returnUrl}", true);
     }
 
     private void Google()
     {
-        var returnUrl = Uri.EscapeDataString(this.NavigationManager.Uri);
-        this.NavigationManager.NavigateTo($"/login/google?returnUrl={returnUrl}", true);
+        var returnUrl = Uri.EscapeDataString(this.GhostOfTheNavigator.Uri);
+        this.GhostOfTheNavigator.NavigateTo($"/login/google?returnUrl={returnUrl}", true);
     }
 
     private void Facebook()
     {
-        var returnUrl = Uri.EscapeDataString(this.NavigationManager.Uri);
-        this.NavigationManager.NavigateTo($"/login/facebook?returnUrl={returnUrl}", true);
+        var returnUrl = Uri.EscapeDataString(this.GhostOfTheNavigator.Uri);
+        this.GhostOfTheNavigator.NavigateTo($"/login/facebook?returnUrl={returnUrl}", true);
     }
 
     private void GitHub()
     {
-        var returnUrl = Uri.EscapeDataString(this.NavigationManager.Uri);
-        this.NavigationManager.NavigateTo($"/login/github?returnUrl={returnUrl}", true);
+        var returnUrl = Uri.EscapeDataString(this.GhostOfTheNavigator.Uri);
+        this.GhostOfTheNavigator.NavigateTo($"/login/github?returnUrl={returnUrl}", true);
     }
 
     private void GoToProfile()
     {
-        this.NavigationManager.NavigateTo($"/socialprofiles/{this.UserFacade.SocialProfile.Id}", true);
+        this.GhostOfTheNavigator.NavigateTo($"{this.UserFacade.SocialProfile.Hyperlink}#content-start", true);
     }
 
     private void TestSubscribeEmail()
     {
-        this.UserFacade.SocialProfile.Email = string.Empty;
         this.UserFacade.SocialProfile.EmailFromSocialNetwork = string.Empty;
         this.Subscribe();
     }

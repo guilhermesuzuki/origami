@@ -22,7 +22,7 @@ namespace Origami.UI
         /// <summary>
         /// Sync root object
         /// </summary>
-        public static readonly object SyncRoot = new();
+        public static readonly Lock SyncRoot = new();
 
         [Parameter] public Guid BlogId { get; set; }
         [Parameter] public string BlogSlug { get; set; } = string.Empty;
@@ -39,26 +39,33 @@ namespace Origami.UI
         [Inject] protected IDialogService DialogService { get; set; } = null!;
         [Inject] protected IHttpContextAccessor HttpContextAccessor { get; set; } = null!;
         [Inject] protected IJSRuntime JSRuntime { get; set; } = null!;
-        [Inject] protected NavigationManager NavigationManager { get; set; } = null!;
-        [Inject] protected IPageTitleRepository PageTitle { get; set; } = null!;
+        [Inject] protected IMyMemoryCache MemoryCache { get; set; } = null!;
         [Inject] protected ISuperRepository Super { get; set; } = null!;
-        [Inject] protected Text Text { get; set; } = null!;
+        [Inject] protected ITheCreator TheCreator { get; set; } = null!;
         [Inject] protected IUserFacade UserFacade { get; set; } = null!;
         [Inject] protected IWebRootPath WebRootPath { get; set; } = null!;
+        [Inject] protected IWhatHappensNext WhatHappensNext { get; set; } = null!;
+        [Inject] protected NavigationManager GhostOfTheNavigator { get; set; } = null!;
+        [Inject] protected Text Text { get; set; } = null!;
 
         public OrigamiBlog GetBlogFromSlug()
         {
             if (this.BlogSlug.Has() == true)
             {
-                return Super.Blogs.Slug(BlogSlug) ?? OrigamiBlog.Empty;
+                return Super.Blogs.ReadFromCache().Slug(BlogSlug) ?? OrigamiBlog.Empty;
             }
 
-            return Super.Blogs.GetPrimary();
+            return Super.Blogs.ReadFromCache().Single(x => x.IsPrimary);
         }
 
         public OrigamiBlog GetBlogFromUserFacade()
         {
             return Super.Blogs.ReadFromCache().Id(UserFacade.BlogId) ?? OrigamiBlog.Empty;
+        }
+
+        protected async Task CopyToClipboard(string info)
+        {
+            await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", info);
         }
 
         protected async Task DownloadFile(OrigamiSystemFile file)
@@ -90,8 +97,8 @@ namespace Origami.UI
         /// </summary>
         protected virtual void Logout()
         {
-            var returnUrl = Uri.EscapeDataString(NavigationManager.Uri);
-            NavigationManager!.NavigateTo($"/login/out?returnUrl={returnUrl}", true);
+            var returnUrl = Uri.EscapeDataString(GhostOfTheNavigator.Uri);
+            GhostOfTheNavigator!.NavigateTo($"/login/out?returnUrl={returnUrl}", true);
         }
 
         protected override void OnInitialized()
@@ -133,10 +140,10 @@ namespace Origami.UI
         {
             if (UserFacade.SocialProfile.HasEmail() == true)
             {
-                UserFacade.Result = Super.Subscribers.Subscribe(new(OrigamiUser.AnonymousUser, DateTime.UtcNow, UserFacade.SocialProfile));
+                UserFacade.Result = Super.Subscribers.Subscribe(new(OrigamiUser.AnonymousUser, DateTime.UtcNow, UserFacade.SocialProfile), UserFacade.SocialProfile.EmailFromSocialNetwork);
                 return;
             }
-            NavigationManager.NavigateTo($"/subscribe", false);
+            GhostOfTheNavigator.NavigateTo($"/subscribe", false);
         }
 
         /// <summary>

@@ -1,0 +1,214 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+
+@using Origami.Core;
+@using Origami.Core.Data
+@using Origami.Core.Models
+
+@inject ISuperRepository _super
+
+@{
+    var oi = $"{this.Context.Request.Scheme}://{this.Context.Request.Host}";
+
+    var tags = this._super.ContentTags.ReadFromCache().ToList();
+
+    var cookiePolicy = this._super.Contents.ReadFromCache().OfType<OrigamiSpecialPage>()
+        .Where(x => x.Subtype.Like("CookiePolicy"));
+
+    var privacyPolicy = this._super.Contents.ReadFromCache().OfType<OrigamiSpecialPage>()
+        .Where(x => x.Subtype.Like("PrivacyPolicy"));
+
+    var termsAndConditions = this._super.Contents.ReadFromCache().OfType<OrigamiSpecialPage>()
+        .Where(x => x.Subtype.Like("TermsAndConditions"));
+
+    var termsOfService = this._super.Contents.ReadFromCache().OfType<OrigamiSpecialPage>()
+        .Where(x => x.Subtype.Like("TermsOfService"));
+}
+
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+
+    <url>
+        <loc>@oi?language=en-US</loc>
+        @foreach (var cinfo in OrigamiConstants.AllLanguages())
+        {
+            <xhtml:link rel="alternate" hreflang="@cinfo.Name" href="@oi?language=@cinfo.Name" />
+        }
+    </url>
+
+    @foreach (var post in _super.Contents.ReadFromCache().OfType<OrigamiPost>().Published().OrderBy(x => x.Title))
+    {
+        var loc = $"{oi}{post.Hyperlink}";
+        var header = $"{oi}{post.HeaderImage}";
+        <url>
+            <loc>@loc?language=en-US</loc>
+            <image:image>
+                <image:loc>@header</image:loc>
+            </image:image>
+            @foreach (var cinfo in OrigamiConstants.AllLanguages())
+            {
+                <xhtml:link rel="alternate" hreflang="@cinfo.Name" href="@loc?language=@cinfo.Name" />
+            }
+        </url>
+    }
+
+    @foreach (var video in _super.Contents.ReadFromCache().OfType<OrigamiVideo>().Published().OrderBy(x => x.Title))
+    {
+        var loc = $"{oi}{video.Hyperlink}";
+        var vid = $"{oi}{video.MediaFile.WebPath}";
+        var header = $"{oi}{video.HeaderImage}";
+        <url>
+            <loc>@loc?language=en-US</loc>
+            <video:video>
+                <video:thumbnail_loc>@header</video:thumbnail_loc>
+                <video:title>@video.Title</video:title>
+                <video:description>@video.Description</video:description>
+                <video:content_loc>@vid</video:content_loc>
+            </video:video>
+            @foreach (var cinfo in OrigamiConstants.AllLanguages())
+            {
+                <xhtml:link rel="alternate" hreflang="@cinfo.Name" href="@loc?language=@cinfo.Name" />
+            }
+        </url>
+    }
+
+    @foreach (var category in _super.Categories.ReadFromCache().OrderBy(x => x.Name))
+    {
+        var blog = this._super.Blogs.ReadFromCache().Id(category.BlogId)!;
+        var posts = this._super.GetPosts(category).Published().OrderBy(x => x.Title);
+        var videos = this._super.GetVideos(category).Published().OrderBy(x => x.Title);
+
+        @foreach (var post in posts)
+        {
+            var loc = $"{oi}{blog.GetHyperlink(category, post)}";
+            var header = $"{oi}{post.HeaderImage}";
+            <url>
+                <loc>@loc?language=en-US</loc>
+                <image:image>
+                    <image:loc>@header</image:loc>
+                </image:image>
+                @foreach (var cinfo in OrigamiConstants.AllLanguages())
+                {
+                    <xhtml:link rel="alternate" hreflang="@cinfo.Name" href="@loc?language=@cinfo.Name" />
+                }
+            </url>
+        }
+
+        @foreach (var video in videos)
+        {
+            var loc = $"{oi}{blog.GetHyperlink(category, video)}";
+            var vid = $"{oi}{video.MediaFile.WebPath}";
+            var header = $"{oi}{video.HeaderImage}";
+            <url>
+                <loc>@loc?language=en-US</loc>
+                <video:video>
+                    <video:thumbnail_loc>@header</video:thumbnail_loc>
+                    <video:title>@video.Title</video:title>
+                    <video:description>@video.Description</video:description>
+                    <video:content_loc>@vid</video:content_loc>
+                </video:video>
+                @foreach (var cinfo in OrigamiConstants.AllLanguages())
+                {
+                    <xhtml:link rel="alternate" hreflang="@cinfo.Name" href="@loc?language=@cinfo.Name" />
+                }
+            </url>
+        }
+    }
+
+    @foreach (var tag in tags)
+    {
+        var content = this._super.Contents.ReadFromCache().Id(tag.ContentId)!;
+        var blog = this._super.Blogs.ReadFromCache().Id(content.BlogId)!;
+        var posts = this._super.GetContents(tag, content.BlogId.GetValueOrDefault()).Published().OfType<OrigamiPost>();
+        var videos = this._super.GetContents(tag, content.BlogId.GetValueOrDefault()).Published().OfType<OrigamiVideo>();
+
+        @foreach (var post in posts)
+        {
+            var loc = $"{oi}{blog.GetHyperlink(tag, post)}";
+            var header = $"{oi}{post.HeaderImage}";
+            <url>
+                <loc>@loc?language=en-US</loc>
+                <image:image>
+                    <image:loc>@header</image:loc>
+                </image:image>
+                @foreach (var cinfo in OrigamiConstants.AllLanguages())
+                {
+                    <xhtml:link rel="alternate" hreflang="@cinfo.Name" href="@loc?language=@cinfo.Name" />
+                }
+            </url>
+        }
+
+        @foreach (var video in videos)
+        {
+            var loc = $"{oi}{blog.GetHyperlink(tag, video)}";
+            var vid = $"{oi}{video.MediaFile.WebPath}";
+            var header = $"{oi}{video.HeaderImage}";
+            <url>
+                <loc>@loc?language=en-US</loc>
+                <video:video>
+                    <video:thumbnail_loc>@header</video:thumbnail_loc>
+                    <video:title>@video.Title</video:title>
+                    <video:description>@video.Description</video:description>
+                    <video:content_loc>@vid</video:content_loc>
+                </video:video>
+                @foreach (var cinfo in OrigamiConstants.AllLanguages())
+                {
+                    <xhtml:link rel="alternate" hreflang="@cinfo.Name" href="@loc?language=@cinfo.Name" />
+                }
+            </url>
+        }
+    }
+
+    @foreach (var page in cookiePolicy)
+    {
+        var loc = $"{oi}{page.Hyperlink}";
+        <url>
+            <loc>@loc</loc>
+            @foreach (var _page in cookiePolicy)
+            {
+                var _loc = $"{oi}{_page.Hyperlink}";
+                <xhtml:link rel="alternate" hreflang="@_page.Get().LanguageWrittenOn" href="@_loc" />
+            }
+        </url>
+    }
+
+    @foreach (var page in privacyPolicy)
+    {
+        var loc = $"{oi}{page.Hyperlink}";
+        <url>
+            <loc>@loc</loc>
+            @foreach (var _page in privacyPolicy)
+            {
+                var _loc = $"{oi}{_page.Hyperlink}";
+                <xhtml:link rel="alternate" hreflang="@_page.Get().LanguageWrittenOn" href="@_loc" />
+            }
+        </url>
+    }
+
+    @foreach (var page in termsAndConditions)
+    {
+        var loc = $"{oi}{page.Hyperlink}";
+        <url>
+            <loc>@loc</loc>
+            @foreach (var _page in termsAndConditions)
+            {
+                var _loc = $"{oi}{_page.Hyperlink}";
+                <xhtml:link rel="alternate" hreflang="@_page.Get().LanguageWrittenOn" href="@_loc" />
+            }
+        </url>
+    }
+
+    @foreach (var page in termsOfService)
+    {
+        var loc = $"{oi}{page.Hyperlink}";
+        <url>
+            <loc>@loc</loc>
+            @foreach (var _page in termsOfService)
+            {
+                var _loc = $"{oi}{_page.Hyperlink}";
+                <xhtml:link rel="alternate" hreflang="@_page.Get().LanguageWrittenOn" href="@_loc" />
+            }
+        </url>
+    }
+</urlset>

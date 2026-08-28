@@ -21,17 +21,16 @@ namespace Origami.UI.FrontEnd.Controllers
         protected readonly IDbContextFactory<OrigamiDbContext> _dbContextFactory;
         protected readonly IHttpContextAccessor _httpContextAccessor;
         protected readonly IMemoryCache _memoryCache;
-        protected readonly IPostCommentReactionRepository _postCommentReactionRepository;
-        protected readonly IPostCommentRepository _postCommentRepository;
-        protected readonly IPostRatingRepository _postRatingRepository;
+        protected readonly IContentCommentReactionRepository _contentCommentReactionRepository;
+        protected readonly IContentCommentRepository _contentCommentRepository;
+        protected readonly IContentRatingRepository _contentRatingRepository;
         protected readonly ISocialProfileDeleteRepository _socialProfileForDeletion;
         protected readonly ISocialProfileRepository _socialProfile;
         protected readonly IUserFacade _userFacade;
-        protected readonly IVideoCommentReactionRepository _videoCommentReactionRepository;
-        protected readonly IVideoCommentRepository _videoCommentRepository;
-        protected readonly IVideoRatingRepository _videoRatingRepository;
         protected readonly Serilog.ILogger _logger;
         protected readonly SocialNetwork _socialNetwork;
+
+        protected readonly IEventRepository _eventRepository;
 
         public FacebookController(
             ISocialProfileRepository socialProfile,
@@ -39,31 +38,27 @@ namespace Origami.UI.FrontEnd.Controllers
             IUserFacade userFacade,
             IMemoryCache memoryCache,
             IOptions<SocialNetwork> socialNetworkOptions,
-            IPostCommentReactionRepository postCommentReactionRepository,
-            IPostCommentRepository postCommentRepository,
-            IPostRatingRepository postRatingRepository,
-            IVideoCommentReactionRepository videoCommentReactionRepository,
-            IVideoCommentRepository videoCommentRepository,
-            IVideoRatingRepository videoRatingRepository,
+            IContentCommentReactionRepository contentCommentReactionRepository,
+            IContentCommentRepository contentCommentRepository,
+            IContentRatingRepository contentRatingRepository,
             ISocialProfileDeleteRepository facebookUserForDeletionRepository,
             IHttpContextAccessor httpContextAccessor,
-            IDbContextFactory<OrigamiDbContext> dbContextFactory
+            IDbContextFactory<OrigamiDbContext> dbContextFactory,
+            IEventRepository eventRepository
             ) : base()
         {
             _httpContextAccessor = httpContextAccessor;
             _logger = logger;
             _memoryCache = memoryCache;
             _dbContextFactory = dbContextFactory;
-            _postCommentReactionRepository = postCommentReactionRepository;
-            _postCommentRepository = postCommentRepository;
-            _postRatingRepository = postRatingRepository;
+            _contentCommentReactionRepository = contentCommentReactionRepository;
+            _contentCommentRepository = contentCommentRepository;
+            _contentRatingRepository = contentRatingRepository;
             _socialNetwork = socialNetworkOptions.Value;
             _socialProfile = socialProfile;
             _socialProfileForDeletion = facebookUserForDeletionRepository;
             _userFacade = userFacade;
-            _videoCommentReactionRepository = videoCommentReactionRepository;
-            _videoCommentRepository = videoCommentRepository;
-            _videoRatingRepository = videoRatingRepository;
+            _eventRepository = eventRepository;
         }
 
         /// <summary>
@@ -171,7 +166,7 @@ namespace Origami.UI.FrontEnd.Controllers
                     {
                         return Json(new
                         {
-                            url = $"{Request.Scheme}://{Request.Host}/socialprofiles/{result.Entity?.SocialProfileId}",
+                            url = $"{Request.Scheme}://{Request.Host}/socialprofiles/{facebookUser.NanoId}",
                             confirmation_code = result.Entity?.Id.ToString(),
                         });
                     }
@@ -188,7 +183,7 @@ namespace Origami.UI.FrontEnd.Controllers
         [HttpGet("get-user")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public IActionResult GetUser([FromQuery] string userId, [FromQuery] string accessToken, [FromQuery] string returnUrl)
+        public async Task<IActionResult> GetUser([FromQuery] string userId, [FromQuery] string accessToken, [FromQuery] string returnUrl)
         {
             _logger.Information("Parameters -> userId: {0}, accessToken: {1}", userId, accessToken);
 
@@ -230,20 +225,18 @@ namespace Origami.UI.FrontEnd.Controllers
                 //looks the user up in the database
                 var user = _socialProfile
                     .ReadFromCache()
-                    .FirstOrDefault(x => x.SocialNetwork == SocialNetworks.Facebook && x.UserId.Like(userId));
+                    .FirstOrDefault(x => x.SocialNetwork == SocialNetworks.Facebook && x.UserId.Like(userId))
+                    ?? new() { SocialNetwork = SocialNetworks.Facebook, UserId = userId, IsBlocked = false, }
+                    ;
 
-                if (user != null && user.IsBlocked)
+                if (user.IsBlocked)
                 {
                     //needs to log the user out, because the facebook user couldn't be found
-                    HttpContext.SignOutAsync().GetAwaiter().GetResult();
+                    await HttpContext.SignOutAsync();
                     HttpContext.Logout_Workaround();
-
                     //redirects to the returnUrl with an error
-                    return Redirect("/oops/facebook".QueryString("error", "User has been Blocked"));
+                    return Redirect("/oops/facebook".QueryString("error", "User has been blocked"));
                 }
-
-                //user doesn't exist in the database, must create a new instance
-                if (user == null) user = new OrigamiSocialProfile { SocialNetwork = SocialNetworks.Facebook, UserId = userId };
 
                 if (me != null)
                 {
@@ -252,35 +245,47 @@ namespace Origami.UI.FrontEnd.Controllers
                     user.LastName = me.last_name;
                 }
 
-                if (pc?.data?.url != null) user.ProfilePictureUrl = pc.data.url;
-                if (me?.link != null) user.ProfilePage = me.link;
-                if (me?.cover != null && me?.cover.source != null) user.ProfileCoverUrl = me!.cover.source;
-                if (cover != null && cover!.source != null) user.ProfileCoverUrl = cover!.source;
+                user.ProfileCover = null;
+                user.ProfileCoverUrl = null;
+                user.ProfilePage = null;
+                user.ProfilePicture = null;
+                user.ProfilePictureUrl = null;
 
-                //copies the email, if appropriate
-                if (user.Email.Has() == false && user.EmailFromSocialNetwork.Has() == true)
+                user.ProfileCoverUrl = me?.cover?.source ?? cover?.source ?? null;
+                user.ProfilePage = me?.link ?? null;
+                user.ProfilePictureUrl = pc?.data?.url ?? null;
+
+                var context = new DataOperationContext<OrigamiSocialProfile>(OrigamiUser.AnonymousUser, DateTime.UtcNow, user);
+
+                //saves the user into the database
+                using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    user.Email = user.EmailFromSocialNetwork;
-                }
-
-                var context = new DataOperationContext<OrigamiSocialProfile>(_userFacade.User!, DateTime.UtcNow, user);
-
-                using (var transaction = new TransactionScope())
-                {
-                    user = _socialProfile.SmartSave(context, false).Entity;
+                    var hub = _socialProfile.SmartSave(context, false);
+                    if (hub.Ok == false)
+                    {
+                        await HttpContext.SignOutAsync();
+                        HttpContext.Logout_Workaround();
+                        //redirects to the returnUrl with an error
+                        return Redirect("/oops/facebook"
+                            .QueryString("error", "Invalid facebook information")
+                            );
+                    }
                     transaction.Complete();
+                    user = hub.Entity;
                 }
 
-                _userFacade.SocialProfile = user ?? new();
+                _userFacade.SocialProfileId = user?.Id ?? Guid.Empty;
+                _eventRepository.SocialProfileLogsIntoWebsite(context.Entity);
+
                 return Redirect(Uri.UnescapeDataString(returnUrl));
             }
 
             //needs to log the user out, because the facebook user couldn't be found
-            HttpContext.SignOutAsync().GetAwaiter().GetResult();
+            await HttpContext.SignOutAsync();
             HttpContext.Logout_Workaround();
 
             //redirects to the returnUrl with an error
-            return Redirect("/oops/facebook".QueryString("error", "Invalid Facebook Token"));
+            return Redirect("/oops/facebook".QueryString("error", "Invalid facebook token"));
         }
 
         /// <summary>

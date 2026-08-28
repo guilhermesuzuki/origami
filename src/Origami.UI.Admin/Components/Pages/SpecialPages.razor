@@ -1,9 +1,6 @@
 ﻿@page "/specialpages"
-@inherits BasicAdminGrid<OrigamiSpecialPage>
+@inherits BasicAdminGridContent<OrigamiSpecialPage, HubContentSpecialPage>
 
-<style>
-    .related-pages .id { display: none !important; }
-</style>
 <Root Access="this.CanAccess()">
     <HeaderTemplate>
         <div class="p-3 border-bottom">
@@ -40,13 +37,6 @@
                 </div>
             </div>
         </div>
-        <div class="p-3 border-bottom">
-            <div class="row">
-                <div class="col-12">
-                    <SearchLite T="OrigamiSpecialPage" OnHitSelected="this.OnSearchResultSelected"></SearchLite>
-                </div>
-            </div>
-        </div>
     </HeaderTemplate>
     <ContentTemplate>
         <div class="p-3">
@@ -55,61 +45,54 @@
                     <DataGridOptions Deleted="this.IncludeDeletedEntitiesInDataGrid" DeletedChanged="this.OnIncludeDeletedEntitiesChanged"></DataGridOptions>
                 </div>
                 <div class="pages col-12">
-                    <MudDataGrid @ref="DataGrid" T="OrigamiSpecialPage" ServerData="GetEntities" Filterable="false" SortMode="SortMode.None" Class="border selectable" SelectedItems="this.SelectedEntities" MultiSelection="true" SelectedItemsChanged="this.SelectedEntitiesChanged"
+                    <MudDataGrid @ref="DataGrid" T="HubContentSpecialPage" ServerData="GetEntities" Filterable="false" SortMode="SortMode.None" Class="border selectable" SelectedItems="this.SelectedEntities" MultiSelection="true" SelectedItemsChanged="this.SelectedEntitiesChanged"
                                  RowClassFunc="this.RowClassFunc" Bordered="true" SelectOnRowClick="false">
                         <Columns>
-                            <SelectColumn T="OrigamiSpecialPage"></SelectColumn>
+                            <SelectColumn T="HubContentSpecialPage"></SelectColumn>
                             <TemplateColumn Title="@Text.Upper("Title")">
                                 <CellTemplate>
                                     <div class="cursor-pointer" @onclick="() => OnEdit(context.Item)">
-                                        <SpecialPageHeaderLite2 Entity="context.Item"></SpecialPageHeaderLite2>
+                                        <ContentTitleColumn Entity="context.Item.Entity"></ContentTitleColumn>
                                     </div>
                                 </CellTemplate>
                             </TemplateColumn>
                             <TemplateColumn Title="@Text.Upper("Header")" CellClass="col-2">
                                 <CellTemplate>
-                                    <div class="w-100" style="height:150px; background-image: url(@context.Item.Get().HeaderImage); background-size: cover; background-position: center;"></div>
-                                    <div class="mt-1 p-1 border">
-                                        <ul class="inline-list text-center">
-                                            <li>
-                                                <i class="fa-solid fa-eye"></i>
-                                                @this.Super.PhysicalPageViews.GetViews(context.Item)
-                                            </li>
-                                        </ul>
-                                    </div>
+                                    <ContentHeaderColumn Entity="context.Item.Entity"></ContentHeaderColumn>
                                 </CellTemplate>
                             </TemplateColumn>
-                            <TemplateColumn Title="@Text.Upper("Related Pages")" Sortable="false" Filterable="false" CellClass="col-2 related-pages">
+                            <TemplateColumn Title="@Text.Upper("Related pages")" Sortable="false" Filterable="false" CellClass="col-2 related-pages">
                                 <CellTemplate>
-                                    @foreach (var page in this.Super.GetRelatedPages(context.Item).OrderBy(x => x.Title))
+                                    @foreach (var page in this.Super.GetRelatedPages(context.Item.Entity).OrderBy(x => x.Title))
                                     {
                                         if (this.IncludeDeletedEntitiesInDataGrid == false && page.IsDeleted)
                                         {
                                             continue;
                                         }
-                                        <div class="page-child mt-1 shadow-sm border p-2 @(page.IsDeleted ? "deleted" : null)">
-                                            <SpecialPageHeaderLite2 Class="" Entity="page"></SpecialPageHeaderLite2>
+                                        <div class="page-child mt-1 shadow-sm border p-2 d-inline-block @(page.IsDeleted ? "deleted" : null)">
+                                            <ContentHeaderInline Class="" Entity="page"></ContentHeaderInline>
                                         </div>
                                     }
                                 </CellTemplate>
                             </TemplateColumn>
                             <TemplateColumn Title="@Text.Upper("Published")" Sortable="false" Filterable="false" CellClass="col-1 text-center">
                                 <CellTemplate>
-                                    @if (context.Item.IsPublished)
+                                    @if (context.Item.Entity.IsPublished)
                                     {
                                         <i class="fa-solid fa-thumbs-up"></i>
+                                        <div class="small">@context.Item.Entity.DatePublished</div>
                                     }
                                 </CellTemplate>
                             </TemplateColumn>
                             <TemplateColumn Title="@Text.Upper("Date")" Sortable="false" Filterable="false" CellClass="col-1 text-center">
                                 <CellTemplate>
                                     <i class="fa-solid fa-calendar"></i>
-                                    <div class="small">@context.Item.GetDate()</div>
+                                    <div class="small">@context.Item.Entity.GetDate()</div>
                                 </CellTemplate>
                             </TemplateColumn>
                         </Columns>
                         <PagerContent>
-                            <MudDataGridPager T="OrigamiSpecialPage" />
+                            <MudDataGridPager T="HubContentSpecialPage" />
                         </PagerContent>
                         <NoRecordsContent>
                             <NoEntriesWereFound></NoEntriesWereFound>
@@ -124,109 +107,5 @@
     </ContentTemplate>
 </Root>
 @code {
-
     protected override string DefaultOrdering => $"{nameof(OrigamiSpecialPage.Title)}";
-
-    /// <summary>
-    /// Can the user delete the selected entities?
-    /// </summary>
-    protected virtual bool DisableTheFrontPageButton => SelectedEntities.Any() == false;
-
-    protected virtual Result<OrigamiSpecialPage> PublishEntity(OrigamiSpecialPage entity)
-    {
-        var context = new DataOperationContext<OrigamiSpecialPage>(this.UserFacade.User, DateTime.UtcNow, entity);
-        return this.Super.SpecialPages.SmartPublish(context, true);
-    }
-
-    protected virtual Result<OrigamiSpecialPage> UnpublishEntity(OrigamiSpecialPage entity)
-    {
-        var context = new DataOperationContext<OrigamiSpecialPage>(this.UserFacade.User, DateTime.UtcNow, entity);
-        return this.Super.SpecialPages.SmartUnpublish(context, true);
-    }
-
-    protected async Task PublishSelectedEntities()
-    {
-        await ExecuteWithSelectedEntities(
-            async () =>
-            {
-                return await DialogService.ShowMessageBoxAsync(
-                    Text.Upper("Publish {0} item(s)", SelectedEntities.Count),
-                    Text.Original("Are you sure?"),
-                    yesText: Text.Lower("Yes"),
-                    noText: Text.Lower("No"));
-            },
-            this.PublishEntity
-        );
-    }
-
-    protected async Task UnpublishSelectedEntities()
-    {
-        await ExecuteWithSelectedEntities(
-            async () =>
-            {
-                return await DialogService.ShowMessageBoxAsync(
-                    Text.Upper("Unpublish {0} item(s)", SelectedEntities.Count),
-                    Text.Original("Are you sure?"),
-                    yesText: Text.Lower("Yes"),
-                    noText: Text.Lower("No"));
-            },
-            this.UnpublishEntity
-        );
-    }
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        var filter = this.NavigationManager!.Uri.QueryString("filter");
-        this.Filter = filter.Has() ? filter : this.Filter;
-    }
-
-    protected override IEnumerable<OrigamiSpecialPage> GetItems()
-    {
-        if (this.IncludeDeletedEntitiesInDataGrid)
-        {
-            return base.GetItems();
-        }
-        return from x in base.GetItems() where x.IsDeleted == false select x;
-    }
-
-    protected async Task EnterMaintenanceMode()
-    {
-        var ok = await DialogService.ShowMessageBoxAsync(
-            Text.Upper("Entering maintenance mode"),
-            Text.Original("Are you sure?"),
-            yesText: Text.Lower("Yes"),
-            noText: Text.Lower("No"));
-
-        if (ok.GetValueOrDefault())
-        {
-            using (var transaction = new TransactionScope())
-            {
-                var ctx = new DataOperationContext(this.UserFacade.User, DateTime.UtcNow);
-                var hub = this.Super.SpecialPages.EnterMaintenanceMode(ctx);
-                this.UserFacade.Result = hub;
-                if (hub.Ok) transaction.Complete();
-            }
-        }
-    }
-
-    protected async Task LeaveMaintenanceMode()
-    {
-        var ok = await DialogService.ShowMessageBoxAsync(
-            Text.Upper("Leaving maintenance mode"),
-            Text.Original("Are you sure?"),
-            yesText: Text.Lower("Yes"),
-            noText: Text.Lower("No"));
-
-        if (ok.GetValueOrDefault())
-        {
-            using (var transaction = new TransactionScope())
-            {
-                var ctx = new DataOperationContext(this.UserFacade.User, DateTime.UtcNow);
-                var hub = this.Super.SpecialPages.LeaveMaintenanceMode(ctx);
-                this.UserFacade.Result = hub;
-                if (hub.Ok) transaction.Complete();
-            }
-        }
-    }
 }

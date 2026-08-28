@@ -1,20 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace Origami.Core.Models
 {
     [Table("oi_UserBlogs")]
     public class OrigamiUserBlog : BaseModel,
         IChanged,
-        IBlogId
+        IBlogId,
+        IEnabled
     {
+        protected bool _enabled = true;
         protected Guid _blogId;
         protected Guid _userId;
 
         public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) => { };
+
+        [NotMapped]
+        public bool Enabled
+        {
+            get { return _enabled; }
+            set { this.Set(ref _enabled, value, Changed); }
+        }
 
         public Guid BlogId
         {

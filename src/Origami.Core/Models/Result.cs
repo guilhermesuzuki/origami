@@ -95,6 +95,13 @@ namespace Origami.Core.Models
         }
 
         /// <summary>
+        /// Creates a password message
+        /// </summary>
+        public virtual string? Password
+        {
+            set => AddMessage(ResultMessage.MessageTypes.Password, value);
+        }
+        /// <summary>
         /// Rows affected
         /// </summary>
         public int RowsAffected
@@ -133,7 +140,24 @@ namespace Origami.Core.Models
         /// <returns></returns>
         public virtual object? GetEntity()
         {
-            return GetType().GetRuntimeProperty(nameof(Result<IId>.Entity))?.GetValue(this);
+            var entity = GetType().GetRuntimeProperty(nameof(Result<IId>.Entity))?.GetValue(this);
+
+            return entity switch
+            {
+                null => null,
+                HubContentPage page => page.Entity,
+                HubContentPost post => post.Entity,
+                HubContentSpecialMessage specialMessage => specialMessage.Entity,
+                HubContentSpecialPage specialPage => specialPage.Entity,
+                HubContentVideo video => video.Entity,
+                HubContentQuickNote quickNote => quickNote.Entity,
+                _ => entity
+            };
+        }
+
+        public string GetMessages()
+        {
+            return string.Join(" • ", Messages.Select(x => x.Message));
         }
 
         /// <summary>
@@ -141,7 +165,7 @@ namespace Origami.Core.Models
         /// </summary>
         /// <param name="onFail"></param>
         /// <returns></returns>
-        public virtual Result OnFail(Action onFail)
+        public virtual Result OnFailure(Action onFail)
         {
             if (Ok == false) onFail();
             return this;
@@ -297,7 +321,15 @@ namespace Origami.Core.Models
         public Result(T entity, IValidator<T> validator) : this()
         {
             Entity = entity;
-            validator.Validate(entity).Errors.Each(e => Error = e.ErrorMessage);
+
+            try
+            {
+                validator.ValidateAndThrow(entity);
+            }
+            catch (ValidationException ex)
+            {
+                this.Pull(ex);
+            }
         }
 
         /// <summary>
@@ -315,13 +347,24 @@ namespace Origami.Core.Models
         }
 
         /// <summary>
-        /// Executes the <paramref name="onFail"/> action in case of success.
+        /// Executes the <paramref name="onFail"/> action in case of failure.
         /// </summary>
         /// <param name="onFail"></param>
         /// <returns></returns>
-        public override Result<T> OnFail(Action onFail)
+        public override Result<T> OnFailure(Action onFail)
         {
             if (Ok == false) onFail();
+            return this;
+        }
+
+        /// <summary>
+        /// Executes the <paramref name="onFail"/> action in case of failure.
+        /// </summary>
+        /// <param name="onFail"></param>
+        /// <returns></returns>
+        public Result<T> OnFailure(Action<Result<T>> onFail)
+        {
+            if (Ok == false) onFail(this);
             return this;
         }
 

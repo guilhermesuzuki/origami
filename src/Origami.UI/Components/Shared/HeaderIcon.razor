@@ -35,7 +35,7 @@
     {
         <i class="fa-solid fa-user"></i>
     }
-    else if (this.Entity is OrigamiTag tag)
+    else if (this.Entity is OrigamiContentTag tag)
     {
         <i class="fa-solid fa-tag"></i>
     }
@@ -65,6 +65,41 @@
     else if (this.Entity is OrigamiSystemDirectory directory)
     {
         <i class="fa-solid fa-folder"></i>
+    }
+    else if (this.Entity is OrigamiUserTrash trash)
+    {
+        @if (trash.Type.Like("Blog"))
+        {
+            <i class="fa-solid fa-cube"></i>
+        }
+        else if (trash.Type.Like("OrigamiPost") == true)
+        {
+            <i class="fa-solid fa-file-lines"></i>
+        }
+        else if (trash.Type.Like("OrigamiVideo") == true)
+        {
+            <i class="fa-solid fa-video"></i>
+        }
+        else if (trash.Type.Like("OrigamiPage") == true)
+        {
+            <i class="fa-solid fa-file-lines"></i>
+        }
+        else if (trash.Type.Like("OrigamiCategory") == true)
+        {
+            <i class="fa-solid fa-layer-group"></i>
+        }
+        else if (trash.Type.Like("OrigamiRole") == true)
+        {
+            <i class="fa-solid fa-id-badge"></i>
+        }
+        else if (trash.Type.Like("OrigamiUser") == true)
+        {
+            <i class="fa-solid fa-user"></i>
+        }
+    }
+    else if (this.Entity is OrigamiSoftwareRelease release)
+    {
+        <i class="fa-solid fa-file-zipper"></i>
     }
     else
     {

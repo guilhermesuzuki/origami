@@ -1,122 +1,24 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Origami.Core.Models
 {
-    [Table("oi_QuickNotes")]
-    public class OrigamiQuickNote : BaseModel,
-        IChanged,
-        IId,
-        IBlogId,
-        IAuthorId,
-        IDateCreated,
-        IDateModified,
-        IDeleted,
-        ILanguageWrittenOn,
-        IVersion,
-        INew,
-        IPublished,
-        IDraft
+    public class OrigamiQuickNote : OrigamiContent
     {
-        private Guid _authorId;
-        private Guid _blogId;
-        private DateTime _dateCreated;
-        private DateTime? _dateModified;
-        private DateTime? _datePublished;
-        private bool _isDeleted = false;
-        private bool _isPublished = false;
-        private string _languageWrittenOn = string.Empty;
-        private string _note = string.Empty;
-        private byte[] _version = [];
-        private string _background = string.Empty;
-
         /// <summary>
         /// Default constructor
         /// </summary>
         public OrigamiQuickNote() : base()
         {
-            this.LanguageWrittenOn = Thread.CurrentThread.CurrentUICulture.Name;
-        }
-
-        public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) => { };
-
-        public Guid AuthorId
-        {
-            get { return _authorId; }
-            set { this.Set(ref _authorId, value, Changed); }
-        }
-
-        [StringLength(255)]
-        public string Background
-        {
-            get { return _background; }
-            set { this.Set(ref _background, value, Changed); }
-        }
-
-        public Guid BlogId
-        {
-            get { return _blogId; }
-            set { this.Set(ref _blogId, value, Changed); }
-        }
-
-        public DateTime DateCreated
-        {
-            get { return _dateCreated; }
-            set { this.Set(ref _dateCreated, value, Changed); }
-        }
-
-        public DateTime? DateModified
-        {
-            get { return _dateModified; }
-            set { this.Set(ref _dateModified, value, Changed); }
-        }
-
-        public DateTime? DatePublished
-        {
-            get { return _datePublished; }
-            set { this.Set(ref _datePublished, value, Changed); }
-        }
-
-        public bool IsDeleted
-        {
-            get { return _isDeleted; }
-            set { this.Set(ref _isDeleted, value, Changed); }
+            Type = nameof(OrigamiQuickNote);
+            IsDraft = false;
+            IsCommentEnabled = false;
         }
 
         [NotMapped]
-        public bool? IsDraft
+        public string Background
         {
-            get => false; set { }
-        }
-
-        public bool IsPublished
-        {
-            get { return _isPublished; }
-            set { this.Set(ref _isPublished, value, Changed); }
-        }
-
-        [StringLength(5)]
-        public string LanguageWrittenOn
-        {
-            get { return _languageWrittenOn; }
-            set { this.Set(ref _languageWrittenOn, value, Changed); }
-        }
-
-        public bool New => _version.SequenceEqual([]);
-
-        [StringLength(256)]
-        public string Note
-        {
-            get { return _note; }
-            set { this.Set(ref _note, value, Changed); }
-        }
-
-        [Timestamp]
-        public byte[] Version
-        {
-            get { return _version; }
-            set { this.Set(ref _version, value, Changed); }
+            get { return this.Get().Background; }
+            set { this.Set(x => x.Background = value); }
         }
     }
 }

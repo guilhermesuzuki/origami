@@ -10,5 +10,17 @@ namespace Origami.Core.Data
         /// <param name="blog"></param>
         /// <returns></returns>
         OrigamiSettings GetSettings();
+
+        /// <summary>
+        /// Returns true if the application is in maintenance mode, false otherwise.
+        /// </summary>
+        /// <returns></returns>
+        bool GetMaintenanceMode();
+
+        /// <summary>
+        /// Returns true if the application is in safe mode, false otherwise.
+        /// </summary>
+        /// <returns></returns>
+        bool GetSafeMode();
     }
 }

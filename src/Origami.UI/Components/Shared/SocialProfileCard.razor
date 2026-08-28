@@ -1,0 +1,69 @@
+﻿@inherits Basic
+@implements IEntityNull<OrigamiSocialProfile>
+@inject IBlogRepository _blog
+@inject ISubscriberRepository _subscriber
+
+@if (Entity != null)
+{
+    <div class="social-profile-card text-center cursor-pointer @Class" @onclick="this.Go">
+        <div class="logo position-relative m-auto" style="height: 77px; width: 77px;">
+            <div class="position-absolute z-index-middle bg-dark text-white" style="right:0; bottom: 0;">
+                @if (Entity.SocialNetwork == SocialNetworks.Google)
+                {
+                    <i class="fa-brands fa-google"></i>
+                }
+                else if (Entity.SocialNetwork == SocialNetworks.Facebook)
+                {
+                    <i class="fa-brands fa-facebook"></i>
+                }
+                else if (Entity.SocialNetwork == SocialNetworks.Twitter)
+                {
+                    <i class="fa-brands fa-twitter"></i>
+                }
+                else if (Entity.SocialNetwork == SocialNetworks.GitHub)
+                {
+                    <i class="fa-brands fa-github"></i>
+                }
+                else if (Entity.SocialNetwork == SocialNetworks.Microsoft)
+                {
+                    <i class="fa-brands fa-microsoft"></i>
+                }
+                else
+                {
+                    <i class="fa-solid fa-circle-question"></i>
+                }
+            </div>
+            <img src="@Entity.ProfilePicture()" class="w-100" onerror="this.src = '@OrigamiConstants.NoUser'" />
+        </div>
+        <div class="d-inline-flex align-items-center fs-5">
+            <span class="ps-1 fw-bold social-profile-name">@Entity.GetName()</span>
+            <SocialProfileFeatures Entity="Entity"></SocialProfileFeatures>
+        </div>
+    </div>
+}
+
+@code {
+
+    [Parameter] public OrigamiSocialProfile? Entity { get; set; }
+
+    private string SubscriberText()
+    {
+        if (this.Entity != null)
+        {
+            var sub = this.Super.GetSubscriber(this.Entity);
+            if (sub != null)
+            {
+                return $"{Text.Lower("Yes, since")}: {sub.GetDate()}";
+            }
+        }
+        return Text.Lower("No");
+    }
+
+    protected void Go()
+    {
+        if (this.Entity != null)
+        {
+            WhatHappensNext.WhenIClickHere(this, new() { Entity = this.Entity, });
+        }
+    }
+}

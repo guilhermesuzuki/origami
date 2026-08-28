@@ -16,7 +16,7 @@ namespace Origami.Core
         /// <summary>
         /// Sync Root object
         /// </summary>
-        public static object SyncRoot { get; }
+        public static Lock SyncRoot { get; }
 
         /// <summary>
         /// Custom
@@ -73,33 +73,13 @@ namespace Origami.Core
                 new CultureInfo("fr-CA"),
                 new CultureInfo("fr-FR"),
                 new CultureInfo("hi-IN"),
+                new CultureInfo("it-IT"),
                 new CultureInfo("ja-JP"),
                 new CultureInfo("ko-KR"),
                 new CultureInfo("pt-BR"),
                 new CultureInfo("pt-PT"),
                 new CultureInfo("zh-Hans"),
                 ];
-        }
-
-        /// <summary>
-        /// Available Languages
-        /// </summary>
-        /// <returns></returns>
-        public static List<(string Language, string Name, string Flag)> ContentLanguages()
-        {
-            var result = new List<(string Language, string Name, string Flag)>
-            {
-                ("en-US", "English (US)", "/files/language-en_us.png"),
-                ("en-CA", "English (Canada)", "/files/language-en_ca.png"),
-                ("en-GB", "English (UK)", "/files/language-en_gb.png"),
-                ("pt-BR", "Português (Brasil)", "/files/language-pt_br.png"),
-                ("fr-FR", "Français (France)", "/files/language-fr_fr.png"),
-                ("es-ES", "Español (Spain)", "/files/language-es_es.png"),
-                ("de-DE", "Deutsch (Germany)", "/files/language-de_de.png"),
-                ("ja-JP", "日本語", "/files/language-ja_jp.png"),
-            };
-
-            return result;
         }
 
         /// <summary>
@@ -116,9 +96,10 @@ namespace Origami.Core
                 { "plugins", "link image imagegrid filemanager code codesample emoticons searchreplace lists" },
                 { "contextmenu", "link image inserttable | cell row column deletetable | imagegrid" },
                 { "toolbar", "undo redo | fontfamily fontsize | emoticons forecolor | bold underline italic | alignleft aligncenter alignright alignjustify | outdent indent bullist numlist | link image | codesample code filemanager" },
-                { "height", 500 },
+                { "height", 1000 },
                 { "content_css", new List<string>() { "https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" } },
                 { "content_style", "body { margin: 20px!important; }" },
+                { "promotion", false },
             };
 
             /// <summary>
@@ -148,14 +129,6 @@ namespace Origami.Core
         public const int MaximumBase64StringForHeaderImages = 524288;
         public const long MaximumFileSizeForVideos = 2147483648;
         public const long MaximumFileSizeForBackupRestore = 549755813888; // 512 GB
-
-        /// <summary>
-        /// Cache options (2 minutes expiration)
-        /// </summary>
-        public static readonly MemoryCacheEntryOptions CacheForMinutes = new()
-        {
-            AbsoluteExpirationRelativeToNow = new TimeSpan(0, 2, 0),
-        };
 
         public static class Events
         {

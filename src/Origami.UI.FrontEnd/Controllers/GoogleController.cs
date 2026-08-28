@@ -24,7 +24,10 @@ namespace Origami.UI.FrontEnd.Controllers
         protected readonly string _url = "https://oauth2.googleapis.com/tokeninfo?id_token={0}";
         protected readonly string _refreshUrl = "https://oauth2.googleapis.com/token";
 
+        protected readonly IEventRepository _eventRepository;
+
         public GoogleController(
+            IEventRepository eventRepository,
             ISocialProfileRepository socialProfile,
             Serilog.ILogger logger,
             IUserFacade userFacade,
@@ -37,6 +40,7 @@ namespace Origami.UI.FrontEnd.Controllers
             _userFacade = userFacade;
             _memoryCache = memoryCache;
             _socialNetwork = socialNetworkOptions.Value;
+            _eventRepository = eventRepository;
         }
 
         [HttpGet("token-ok")]
@@ -133,7 +137,7 @@ namespace Origami.UI.FrontEnd.Controllers
         [HttpGet("get-user")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public IActionResult GetUser([FromQuery] string userId, [FromQuery] string accessToken, [FromQuery] string returnUrl)
+        public async Task<IActionResult> GetUser([FromQuery] string userId, [FromQuery] string accessToken, [FromQuery] string returnUrl)
         {
             _logger.Information("Parameters -> userId: {0}, accessToken: {1}", userId, accessToken);
 
@@ -143,51 +147,61 @@ namespace Origami.UI.FrontEnd.Controllers
                 //looks the user up in the database
                 var user = _socialProfile
                     .ReadFromCache()
-                    .FirstOrDefault(x => x.SocialNetwork == SocialNetworks.Google && x.UserId == ok.Sub);
+                    .FirstOrDefault(x => x.SocialNetwork == SocialNetworks.Google && x.UserId == ok.Sub)
+                    ?? new() { SocialNetwork = SocialNetworks.Google, UserId = ok.Sub, IsBlocked = false, }
+                    ;
 
-                if (user != null && user.IsBlocked)
+                if (user.IsBlocked)
                 {
-                    //needs to log the user out, because the facebook user couldn't be found
-                    HttpContext.SignOutAsync().GetAwaiter().GetResult();
+                    //needs to log the user out, because the google user is blocked
+                    await HttpContext.SignOutAsync();
                     HttpContext.Logout_Workaround();
-
                     //redirects to the returnUrl with an error
-                    return Redirect("/oops/google".QueryString("error", "User has been Blocked"));
+                    return Redirect("/oops/google".QueryString("error", "User has been blocked"));
                 }
 
-                //user doesn't exist in the database, must create a new instance
-                if (user == null) user = new OrigamiSocialProfile { SocialNetwork = SocialNetworks.Google, UserId = ok.Sub };
+                user.ProfileCover = null;
+                user.ProfileCoverUrl = null;
+                user.ProfilePage = null;
+                user.ProfilePicture = null;
+                user.ProfilePictureUrl = null;
 
                 user.EmailFromSocialNetwork = ok.Email;
                 user.FirstName = ok.GivenName;
                 user.LastName = ok.FamilyName;
                 user.ProfilePictureUrl = ok.Picture.Has() ? ok.Picture : null;
 
-                //copies the email, if appropriate
-                if (user.Email.Has() == false && user.EmailFromSocialNetwork.Has() == true)
-                {
-                    user.Email = user.EmailFromSocialNetwork;
-                }
-
-                var context = new DataOperationContext<OrigamiSocialProfile>(Core.Models.OrigamiUser.AnonymousUser, DateTime.UtcNow, user);
+                var context = new DataOperationContext<OrigamiSocialProfile>(OrigamiUser.AnonymousUser, DateTime.UtcNow, user);
 
                 //saves the user into the database
-                using (var transaction = new TransactionScope())
+                using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    user = _socialProfile.SmartSave(context, false).Entity;
+                    var hub = _socialProfile.SmartSave(context, false);
+                    if (hub.Ok == false)
+                    {
+                        await HttpContext.SignOutAsync();
+                        HttpContext.Logout_Workaround();
+                        //redirects to the returnUrl with an error
+                        return Redirect("/oops/google"
+                            .QueryString("error", "Invalid google information")
+                            );
+                    }
                     transaction.Complete();
+                    user = hub.Entity;
                 }
 
-                _userFacade.SocialProfile = user ?? new();
+                _userFacade.SocialProfileId = user?.Id ?? Guid.Empty;
+                _eventRepository.SocialProfileLogsIntoWebsite(context.Entity);
+
                 return Redirect(Uri.UnescapeDataString(returnUrl));
             }
 
-            //needs to log the user out, because the facebook user couldn't be found
-            HttpContext.SignOutAsync().GetAwaiter().GetResult();
+            //needs to log the user out, because the google user couldn't be found
+            await HttpContext.SignOutAsync();
             HttpContext.Logout_Workaround();
 
             //redirects to the returnUrl with an error
-            return Redirect("/oops/google".QueryString("error", "Invalid Google Token"));
+            return Redirect("/oops/google".QueryString("error", "Invalid google token"));
         }
     }
 }

@@ -1,0 +1,2694 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="({0} files max)" xml:space="preserve">
+    <value>（{0} 文件最大）</value>
+  </data>
+  <data name="[At the time]" xml:space="preserve">
+    <value>[当时]</value>
+  </data>
+  <data name="{0} comment(s)" xml:space="preserve">
+    <value>{0} 评论</value>
+  </data>
+  <data name="{0} directories" xml:space="preserve">
+    <value>{0} 目录</value>
+  </data>
+  <data name="{0} directory" xml:space="preserve">
+    <value>{0}目录</value>
+  </data>
+  <data name="{0} does NOT exist" xml:space="preserve">
+    <value>{0} 不存在</value>
+  </data>
+  <data name="{0} file" xml:space="preserve">
+    <value>{0} 文件</value>
+  </data>
+  <data name="{0} files" xml:space="preserve">
+    <value>{0} 文件</value>
+  </data>
+  <data name="{0} is already published" xml:space="preserve">
+    <value>{0} 已发布</value>
+  </data>
+  <data name="{0} is already unpublished" xml:space="preserve">
+    <value>{0} 已未发布</value>
+  </data>
+  <data name="{0} max." xml:space="preserve">
+    <value>{0} 最大值</value>
+  </data>
+  <data name="{0} people rated this content" xml:space="preserve">
+    <value>{0} 人们评价了此内容</value>
+  </data>
+  <data name="{0} person rated this content" xml:space="preserve">
+    <value>{0} 人评价了此内容</value>
+  </data>
+  <data name="{0} post comment(s)" xml:space="preserve">
+    <value>{0} 发表评论</value>
+  </data>
+  <data name="{0} post rating(s)" xml:space="preserve">
+    <value>{0} 帖子评级</value>
+  </data>
+  <data name="{0} post reaction(s)" xml:space="preserve">
+    <value>{0} 后反应</value>
+  </data>
+  <data name="{0} post(s)" xml:space="preserve">
+    <value>{0} 帖子</value>
+  </data>
+  <data name="{0} replies" xml:space="preserve">
+    <value>{0} 回复</value>
+  </data>
+  <data name="{0} reply" xml:space="preserve">
+    <value>{0} 回复</value>
+  </data>
+  <data name="{0} video comment(s)" xml:space="preserve">
+    <value>{0} 视频评论</value>
+  </data>
+  <data name="{0} video rating(s)" xml:space="preserve">
+    <value>{0} 视频评分</value>
+  </data>
+  <data name="{0} video reaction(s)" xml:space="preserve">
+    <value>{0} 视频反应</value>
+  </data>
+  <data name="{0} video(s)" xml:space="preserve">
+    <value>{0} 视频</value>
+  </data>
+  <data name="{0}: Invalid domain format." xml:space="preserve">
+    <value>{0}：域格式无效。</value>
+  </data>
+  <data name="{0}: URL must be a valid website address" xml:space="preserve">
+    <value>{0}：URL必须是有效的网站地址</value>
+  </data>
+  <data name="{0}GB max." xml:space="preserve">
+    <value>{0}GB 最大</value>
+  </data>
+  <data name="{0}KB max." xml:space="preserve">
+    <value>{0}KB 最大值</value>
+  </data>
+  <data name="{0}MB max." xml:space="preserve">
+    <value>{0}MB 最大值</value>
+  </data>
+  <data name="*** [Test] Subscribe to the website ***" xml:space="preserve">
+    <value>*** 【测试】订阅网站***</value>
+  </data>
+  <data name="1. tell us your e-mail" xml:space="preserve">
+    <value>1.告诉我们您的电子邮件</value>
+  </data>
+  <data name="2. validate e-mail (check your spam folder)" xml:space="preserve">
+    <value>2. 验证电子邮件（检查您的垃圾邮件文件夹）</value>
+  </data>
+  <data name="2FA code" xml:space="preserve">
+    <value>2FA 代码</value>
+  </data>
+  <data name="2FA recovery codes?" xml:space="preserve">
+    <value>2FA 恢复代码？</value>
+  </data>
+  <data name="2FA secret?" xml:space="preserve">
+    <value>2FA秘密？</value>
+  </data>
+  <data name="2FA setup" xml:space="preserve">
+    <value>2FA 设置</value>
+  </data>
+  <data name="A backup or restore process is already running. Please try again later." xml:space="preserve">
+    <value>备份或恢复进程已在运行。请稍后重试。</value>
+  </data>
+  <data name="A backup process is currently running. Some actions are disabled until the process is complete." xml:space="preserve">
+    <value>当前正在运行备份进程。在该过程完成之前，某些操作将被禁用。</value>
+  </data>
+  <data name="A restore process is currently running. Some actions are disabled until the process is complete." xml:space="preserve">
+    <value>当前正在运行恢复过程。在该过程完成之前，某些操作将被禁用。</value>
+  </data>
+  <data name="Accessed" xml:space="preserve">
+    <value>已访问</value>
+  </data>
+  <data name="Activate blog" xml:space="preserve">
+    <value>激活博客</value>
+  </data>
+  <data name="Activate blogs" xml:space="preserve">
+    <value>激活博客</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>活跃</value>
+  </data>
+  <data name="Add comment" xml:space="preserve">
+    <value>添加评论</value>
+  </data>
+  <data name="Add folder" xml:space="preserve">
+    <value>添加文件夹</value>
+  </data>
+  <data name="Admin" xml:space="preserve">
+    <value>管理员</value>
+  </data>
+  <data name="All" xml:space="preserve">
+    <value>全部</value>
+  </data>
+  <data name="All comments" xml:space="preserve">
+    <value>所有评论</value>
+  </data>
+  <data name="All location providers failed" xml:space="preserve">
+    <value>所有位置提供程序均失败</value>
+  </data>
+  <data name="Alphabetical sorting" xml:space="preserve">
+    <value>按字母顺序排序</value>
+  </data>
+  <data name="Alphabetical sorting inverted" xml:space="preserve">
+    <value>按字母顺序倒序排序</value>
+  </data>
+  <data name="Also in" xml:space="preserve">
+    <value>也在</value>
+  </data>
+  <data name="An entity cannot be its own parent" xml:space="preserve">
+    <value>实体不能是其自己的父实体</value>
+  </data>
+  <data name="An error has occurred" xml:space="preserve">
+    <value>发生错误</value>
+  </data>
+  <data name="An unhandled exception has occurred" xml:space="preserve">
+    <value>发生了未处理的异常</value>
+  </data>
+  <data name="And click OK to close this pop-up window" xml:space="preserve">
+    <value>然后单击“确定”关闭此弹出窗口</value>
+  </data>
+  <data name="Anonymous" xml:space="preserve">
+    <value>匿名</value>
+  </data>
+  <data name="Answering" xml:space="preserve">
+    <value>回复中</value>
+  </data>
+  <data name="Anyway, click here to go back to the Website" xml:space="preserve">
+    <value>无论如何，请点击此处返回网站</value>
+  </data>
+  <data name="Api key" xml:space="preserve">
+    <value>API密钥</value>
+  </data>
+  <data name="App id" xml:space="preserve">
+    <value>应用程序编号</value>
+  </data>
+  <data name="App name" xml:space="preserve">
+    <value>应用名称</value>
+  </data>
+  <data name="App secret" xml:space="preserve">
+    <value>应用秘密</value>
+  </data>
+  <data name="Approved" xml:space="preserve">
+    <value>已批准</value>
+  </data>
+  <data name="Approved comments" xml:space="preserve">
+    <value>批准的评论</value>
+  </data>
+  <data name="Are comments enabled?" xml:space="preserve">
+    <value>是否可以评论？</value>
+  </data>
+  <data name="Are you sure?" xml:space="preserve">
+    <value>你确定吗？</value>
+  </data>
+  <data name="Are you sure? You will NOT be able to recover these items." xml:space="preserve">
+    <value>你确定吗？您将无法恢复这些物品。</value>
+  </data>
+  <data name="Author" xml:space="preserve">
+    <value>作者</value>
+  </data>
+  <data name="Author is required" xml:space="preserve">
+    <value>作者必填</value>
+  </data>
+  <data name="Backup" xml:space="preserve">
+    <value>备份</value>
+  </data>
+  <data name="Backup and restore" xml:space="preserve">
+    <value>备份和恢复</value>
+  </data>
+  <data name="Backup file not found" xml:space="preserve">
+    <value>找不到备份文件</value>
+  </data>
+  <data name="Backup files and database" xml:space="preserve">
+    <value>备份文件和数据库</value>
+  </data>
+  <data name="Backup system" xml:space="preserve">
+    <value>备份系统</value>
+  </data>
+  <data name="Backups" xml:space="preserve">
+    <value>备份</value>
+  </data>
+  <data name="BACPAC file created successfully" xml:space="preserve">
+    <value>BACPAC 文件创建成功</value>
+  </data>
+  <data name="Base64 image" xml:space="preserve">
+    <value>Base64图像</value>
+  </data>
+  <data name="Based on title" xml:space="preserve">
+    <value>根据标题</value>
+  </data>
+  <data name="Basic" xml:space="preserve">
+    <value>基本</value>
+  </data>
+  <data name="Be careful when choosing a username, you won't be able to change it later" xml:space="preserve">
+    <value>选择用户名时要小心，以后将无法更改</value>
+  </data>
+  <data name="Be the first to comment" xml:space="preserve">
+    <value>成为第一个发表评论的人</value>
+  </data>
+  <data name="Block social profiles" xml:space="preserve">
+    <value>阻止社交资料</value>
+  </data>
+  <data name="Block user" xml:space="preserve">
+    <value>阻止用户</value>
+  </data>
+  <data name="Block user self" xml:space="preserve">
+    <value>阻止用户自己</value>
+  </data>
+  <data name="Block users other than self" xml:space="preserve">
+    <value>阻止除自己以外的用户</value>
+  </data>
+  <data name="Blocked" xml:space="preserve">
+    <value>已封锁</value>
+  </data>
+  <data name="Blog" xml:space="preserve">
+    <value>博客</value>
+  </data>
+  <data name="Blog could not be found" xml:space="preserve">
+    <value>找不到博客</value>
+  </data>
+  <data name="Blog is already activated" xml:space="preserve">
+    <value>博客已经激活</value>
+  </data>
+  <data name="Blog is already deactivated" xml:space="preserve">
+    <value>博客已经停用</value>
+  </data>
+  <data name="Blog is required" xml:space="preserve">
+    <value>博客为必填项</value>
+  </data>
+  <data name="Blog must be null" xml:space="preserve">
+    <value>博客必须为空</value>
+  </data>
+  <data name="Blogs" xml:space="preserve">
+    <value>博客</value>
+  </data>
+  <data name="Blogs found in the search" xml:space="preserve">
+    <value>搜索中找到的博客</value>
+  </data>
+  <data name="Blogs this user has access to" xml:space="preserve">
+    <value>该用户有权访问的博客</value>
+  </data>
+  <data name="Blogs, specials..." xml:space="preserve">
+    <value>博客、特价...</value>
+  </data>
+  <data name="Browser • Url" xml:space="preserve">
+    <value>浏览器• URL</value>
+  </data>
+  <data name="Browsers" xml:space="preserve">
+    <value>浏览器</value>
+  </data>
+  <data name="But login first" xml:space="preserve">
+    <value>不过要先登录</value>
+  </data>
+  <data name="By continuing to use our site, you consent to our use of cookies" xml:space="preserve">
+    <value>继续使用我们的网站即表示您同意我们使用 cookie</value>
+  </data>
+  <data name="By language, most recent" xml:space="preserve">
+    <value>按语言，最新</value>
+  </data>
+  <data name="By language, note" xml:space="preserve">
+    <value>按语言，注释</value>
+  </data>
+  <data name="By language, title" xml:space="preserve">
+    <value>按语言、标题</value>
+  </data>
+  <data name="By most recent" xml:space="preserve">
+    <value>截至最近</value>
+  </data>
+  <data name="By note" xml:space="preserve">
+    <value>按注释</value>
+  </data>
+  <data name="By note desc." xml:space="preserve">
+    <value>按注释说明。</value>
+  </data>
+  <data name="By oldest" xml:space="preserve">
+    <value>由最老的</value>
+  </data>
+  <data name="By title" xml:space="preserve">
+    <value>按标题</value>
+  </data>
+  <data name="By title desc." xml:space="preserve">
+    <value>按标题描述。</value>
+  </data>
+  <data name="Cache explorer" xml:space="preserve">
+    <value>缓存浏览器</value>
+  </data>
+  <data name="Callback path" xml:space="preserve">
+    <value>回调路径</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="Categories" xml:space="preserve">
+    <value>分类</value>
+  </data>
+  <data name="Categories found in the search" xml:space="preserve">
+    <value>搜索中找到的类别</value>
+  </data>
+  <data name="Categories must be unique" xml:space="preserve">
+    <value>类别必须是唯一的</value>
+  </data>
+  <data name="Category" xml:space="preserve">
+    <value>分类</value>
+  </data>
+  <data name="Category must exist" xml:space="preserve">
+    <value>类别必须存在</value>
+  </data>
+  <data name="Change password" xml:space="preserve">
+    <value>更改密码</value>
+  </data>
+  <data name="Child categories" xml:space="preserve">
+    <value>儿童类别</value>
+  </data>
+  <data name="Children will be purged too" xml:space="preserve">
+    <value>孩子们也会被净化</value>
+  </data>
+  <data name="Choose the background style" xml:space="preserve">
+    <value>选择背景风格</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>清除</value>
+  </data>
+  <data name="Clear cache" xml:space="preserve">
+    <value>清除缓存</value>
+  </data>
+  <data name="Clear header" xml:space="preserve">
+    <value>清除标题</value>
+  </data>
+  <data name="Clear icon" xml:space="preserve">
+    <value>清除图标</value>
+  </data>
+  <data name="Clear image" xml:space="preserve">
+    <value>图像清晰</value>
+  </data>
+  <data name="Clear picture" xml:space="preserve">
+    <value>移除图片</value>
+  </data>
+  <data name="Clear selection" xml:space="preserve">
+    <value>清除选择</value>
+  </data>
+  <data name="Clear video" xml:space="preserve">
+    <value>清晰视频</value>
+  </data>
+  <data name="Click here to change it" xml:space="preserve">
+    <value>单击此处进行更改</value>
+  </data>
+  <data name="Click here to read our cookie policy" xml:space="preserve">
+    <value>单击此处阅读我们的 cookie 政策</value>
+  </data>
+  <data name="Click here to reset password" xml:space="preserve">
+    <value>单击此处重置密码</value>
+  </data>
+  <data name="Client id" xml:space="preserve">
+    <value>客户编号</value>
+  </data>
+  <data name="Client secret" xml:space="preserve">
+    <value>客户秘密</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="Close menu" xml:space="preserve">
+    <value>关闭菜单</value>
+  </data>
+  <data name="Close window" xml:space="preserve">
+    <value>关闭窗口</value>
+  </data>
+  <data name="Closes the window" xml:space="preserve">
+    <value>关闭窗口</value>
+  </data>
+  <data name="Comment" xml:space="preserve">
+    <value>评论</value>
+  </data>
+  <data name="Comment reactions on posts" xml:space="preserve">
+    <value>对帖子的评论反应</value>
+  </data>
+  <data name="Comment reactions on videos" xml:space="preserve">
+    <value>对视频的评论反应</value>
+  </data>
+  <data name="Comment section" xml:space="preserve">
+    <value>评论区</value>
+  </data>
+  <data name="Commented on post:" xml:space="preserve">
+    <value>对帖子的评论：</value>
+  </data>
+  <data name="Comments" xml:space="preserve">
+    <value>评论</value>
+  </data>
+  <data name="Comments [including deleted]" xml:space="preserve">
+    <value>评论[包括已删除]</value>
+  </data>
+  <data name="Comments found In the search" xml:space="preserve">
+    <value>搜索中找到的评论</value>
+  </data>
+  <data name="Comments on posts" xml:space="preserve">
+    <value>对帖子的评论</value>
+  </data>
+  <data name="Comments on videos" xml:space="preserve">
+    <value>对视频的评论</value>
+  </data>
+  <data name="Confirm password" xml:space="preserve">
+    <value>确认密码</value>
+  </data>
+  <data name="Congratulations" xml:space="preserve">
+    <value>恭喜</value>
+  </data>
+  <data name="Contact an administrator to solve this issue" xml:space="preserve">
+    <value>联系管理员解决此问题</value>
+  </data>
+  <data name="Content" xml:space="preserve">
+    <value>内容</value>
+  </data>
+  <data name="Content must be a valid HTML" xml:space="preserve">
+    <value>内容必须是有效的 HTML</value>
+  </data>
+  <data name="Content must exist" xml:space="preserve">
+    <value>内容必须存在</value>
+  </data>
+  <data name="Cookie policy" xml:space="preserve">
+    <value>Cookie 政策</value>
+  </data>
+  <data name="count" xml:space="preserve">
+    <value>数量</value>
+  </data>
+  <data name="Create blogs" xml:space="preserve">
+    <value>创建博客</value>
+  </data>
+  <data name="Create categories" xml:space="preserve">
+    <value>创建类别</value>
+  </data>
+  <data name="Create new messages" xml:space="preserve">
+    <value>创建新消息</value>
+  </data>
+  <data name="Create new pages" xml:space="preserve">
+    <value>创建新页面</value>
+  </data>
+  <data name="Create new posts" xml:space="preserve">
+    <value>创建新帖子</value>
+  </data>
+  <data name="Create new quick notes" xml:space="preserve">
+    <value>创建新的快速笔记</value>
+  </data>
+  <data name="Create new roles" xml:space="preserve">
+    <value>创建新角色</value>
+  </data>
+  <data name="Create new special pages" xml:space="preserve">
+    <value>创建新的特殊页面</value>
+  </data>
+  <data name="Create new users" xml:space="preserve">
+    <value>创建新用户</value>
+  </data>
+  <data name="Create new videos" xml:space="preserve">
+    <value>创建新视频</value>
+  </data>
+  <data name="Create slug" xml:space="preserve">
+    <value>创建蛞蝓</value>
+  </data>
+  <data name="Created" xml:space="preserve">
+    <value>已创建</value>
+  </data>
+  <data name="Current month" xml:space="preserve">
+    <value>本月</value>
+  </data>
+  <data name="Current password" xml:space="preserve">
+    <value>当前密码</value>
+  </data>
+  <data name="Current year" xml:space="preserve">
+    <value>本年度</value>
+  </data>
+  <data name="Custom" xml:space="preserve">
+    <value>自定义</value>
+  </data>
+  <data name="Cycle detected: you must choose another parent" xml:space="preserve">
+    <value>检测到循环：您必须选择另一个父母</value>
+  </data>
+  <data name="Danger" xml:space="preserve">
+    <value>危险</value>
+  </data>
+  <data name="Dashboard" xml:space="preserve">
+    <value>仪表板</value>
+  </data>
+  <data name="Dashboard analytics" xml:space="preserve">
+    <value>仪表板分析</value>
+  </data>
+  <data name="Database restored successfully." xml:space="preserve">
+    <value>数据库恢复成功。</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>日期</value>
+  </data>
+  <data name="Date of modification must happen after the creation date" xml:space="preserve">
+    <value>修改日期必须晚于创建日期</value>
+  </data>
+  <data name="Date published" xml:space="preserve">
+    <value>发布日期</value>
+  </data>
+  <data name="Date released" xml:space="preserve">
+    <value>发布日期</value>
+  </data>
+  <data name="Db settings file updated successfully" xml:space="preserve">
+    <value>数据库设置文件更新成功</value>
+  </data>
+  <data name="Deactivate blog" xml:space="preserve">
+    <value>停用博客</value>
+  </data>
+  <data name="Deactivate blogs" xml:space="preserve">
+    <value>停用博客</value>
+  </data>
+  <data name="Default sorting" xml:space="preserve">
+    <value>默认排序</value>
+  </data>
+  <data name="Delete blogs" xml:space="preserve">
+    <value>删除博客</value>
+  </data>
+  <data name="Delete categories" xml:space="preserve">
+    <value>删除类别</value>
+  </data>
+  <data name="Delete comment" xml:space="preserve">
+    <value>删除评论</value>
+  </data>
+  <data name="Delete other users messages" xml:space="preserve">
+    <value>删除其他用户的消息</value>
+  </data>
+  <data name="Delete other users pages" xml:space="preserve">
+    <value>删除其他用户页面</value>
+  </data>
+  <data name="Delete other users posts" xml:space="preserve">
+    <value>删除其他用户的帖子</value>
+  </data>
+  <data name="Delete other users quick notes" xml:space="preserve">
+    <value>删除其他用户快速笔记</value>
+  </data>
+  <data name="Delete other users special pages" xml:space="preserve">
+    <value>删除其他用户特殊页面</value>
+  </data>
+  <data name="Delete other users videos" xml:space="preserve">
+    <value>删除其他用户的视频</value>
+  </data>
+  <data name="Delete own messages" xml:space="preserve">
+    <value>删除自己的消息</value>
+  </data>
+  <data name="Delete own pages" xml:space="preserve">
+    <value>删除自己的页面</value>
+  </data>
+  <data name="Delete own posts" xml:space="preserve">
+    <value>删除自己的帖子</value>
+  </data>
+  <data name="Delete own quick notes" xml:space="preserve">
+    <value>删除自己的快速笔记</value>
+  </data>
+  <data name="Delete own special pages" xml:space="preserve">
+    <value>删除自己的特殊页面</value>
+  </data>
+  <data name="Delete own videos" xml:space="preserve">
+    <value>删除自己的视频</value>
+  </data>
+  <data name="Delete roles" xml:space="preserve">
+    <value>删除角色</value>
+  </data>
+  <data name="Delete selected item(s)" xml:space="preserve">
+    <value>删除所选项目</value>
+  </data>
+  <data name="Delete Subtitle" xml:space="preserve">
+    <value>删除字幕</value>
+  </data>
+  <data name="Delete tags" xml:space="preserve">
+    <value>删除标签</value>
+  </data>
+  <data name="Delete user self" xml:space="preserve">
+    <value>删除用户自身</value>
+  </data>
+  <data name="Delete users other than self" xml:space="preserve">
+    <value>删除除自己以外的用户</value>
+  </data>
+  <data name="Deleted" xml:space="preserve">
+    <value>已删除</value>
+  </data>
+  <data name="Deleted comments" xml:space="preserve">
+    <value>已删除评论</value>
+  </data>
+  <data name="Deleted?" xml:space="preserve">
+    <value>确认删除？</value>
+  </data>
+  <data name="Deleting {0} item(s)" xml:space="preserve">
+    <value>删除 {0} 项目</value>
+  </data>
+  <data name="Demote from front-page" xml:space="preserve">
+    <value>从首页降级</value>
+  </data>
+  <data name="Demoting from front-page" xml:space="preserve">
+    <value>从首页降级</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>描述</value>
+  </data>
+  <data name="Description cannot exceed {0} characters" xml:space="preserve">
+    <value>描述不能超过 {0} 个字符</value>
+  </data>
+  <data name="Description of the website (for meta tags)" xml:space="preserve">
+    <value>网站描述（用于元标记）</value>
+  </data>
+  <data name="Direct replies" xml:space="preserve">
+    <value>直接回复</value>
+  </data>
+  <data name="Display name" xml:space="preserve">
+    <value>显示名称</value>
+  </data>
+  <data name="Display name cannot exceed {0} characters" xml:space="preserve">
+    <value>显示名称不能超过 {0} 个字符</value>
+  </data>
+  <data name="Display name is required" xml:space="preserve">
+    <value>显示名称为必填项</value>
+  </data>
+  <data name="Do NOT share this code with anybody" xml:space="preserve">
+    <value>请勿与任何人分享此代码</value>
+  </data>
+  <data name="Don't share that link" xml:space="preserve">
+    <value>不要分享该链接</value>
+  </data>
+  <data name="Don't share that link with anybody else" xml:space="preserve">
+    <value>不要与其他人分享该链接</value>
+  </data>
+  <data name="Done" xml:space="preserve">
+    <value>完成</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>下载</value>
+  </data>
+  <data name="Draft" xml:space="preserve">
+    <value>草稿</value>
+  </data>
+  <data name="Draft pages" xml:space="preserve">
+    <value>草稿页</value>
+  </data>
+  <data name="Draft posts" xml:space="preserve">
+    <value>草稿帖子</value>
+  </data>
+  <data name="Draft special messages" xml:space="preserve">
+    <value>起草特别消息</value>
+  </data>
+  <data name="Draft special pages" xml:space="preserve">
+    <value>起草特别页面</value>
+  </data>
+  <data name="Draft videos" xml:space="preserve">
+    <value>草稿视频</value>
+  </data>
+  <data name="Drafts" xml:space="preserve">
+    <value>草稿</value>
+  </data>
+  <data name="E-mail" xml:space="preserve">
+    <value>电子邮件</value>
+  </data>
+  <data name="Edit blogs" xml:space="preserve">
+    <value>编辑博客</value>
+  </data>
+  <data name="Edit categories" xml:space="preserve">
+    <value>编辑类别</value>
+  </data>
+  <data name="Edit comment" xml:space="preserve">
+    <value>编辑评论</value>
+  </data>
+  <data name="Edit other users" xml:space="preserve">
+    <value>编辑其他用户</value>
+  </data>
+  <data name="Edit other users messages" xml:space="preserve">
+    <value>编辑其他用户的消息</value>
+  </data>
+  <data name="Edit other users pages" xml:space="preserve">
+    <value>编辑其他用户页面</value>
+  </data>
+  <data name="Edit other users posts" xml:space="preserve">
+    <value>编辑其他用户的帖子</value>
+  </data>
+  <data name="Edit other users quick notes" xml:space="preserve">
+    <value>编辑其他用户快速笔记</value>
+  </data>
+  <data name="Edit other users special pages" xml:space="preserve">
+    <value>编辑其他用户特殊页面</value>
+  </data>
+  <data name="Edit other users videos" xml:space="preserve">
+    <value>编辑其他用户的视频</value>
+  </data>
+  <data name="Edit own messages" xml:space="preserve">
+    <value>编辑自己的消息</value>
+  </data>
+  <data name="Edit own pages" xml:space="preserve">
+    <value>编辑自己的页面</value>
+  </data>
+  <data name="Edit own posts" xml:space="preserve">
+    <value>编辑自己的帖子</value>
+  </data>
+  <data name="Edit own quick notes" xml:space="preserve">
+    <value>编辑自己的快速笔记</value>
+  </data>
+  <data name="Edit own special pages" xml:space="preserve">
+    <value>编辑自己的特殊页面</value>
+  </data>
+  <data name="Edit own user" xml:space="preserve">
+    <value>编辑自己的用户</value>
+  </data>
+  <data name="Edit own videos" xml:space="preserve">
+    <value>编辑自己的视频</value>
+  </data>
+  <data name="Edit roles" xml:space="preserve">
+    <value>编辑角色</value>
+  </data>
+  <data name="Edit tags" xml:space="preserve">
+    <value>编辑标签</value>
+  </data>
+  <data name="Email address cannot exceed {0} characters" xml:space="preserve">
+    <value>电子邮件地址不能超过 {0} 个字符</value>
+  </data>
+  <data name="Email address is required" xml:space="preserve">
+    <value>电子邮件地址为必填项</value>
+  </data>
+  <data name="Email settings are fine" xml:space="preserve">
+    <value>邮箱设置没问题</value>
+  </data>
+  <data name="Enable" xml:space="preserve">
+    <value>启用</value>
+  </data>
+  <data name="Enable SSL" xml:space="preserve">
+    <value>启用 SSL</value>
+  </data>
+  <data name="End date" xml:space="preserve">
+    <value>结束日期</value>
+  </data>
+  <data name="Endpoint (URL)" xml:space="preserve">
+    <value>端点（URL）</value>
+  </data>
+  <data name="Enter" xml:space="preserve">
+    <value>输入</value>
+  </data>
+  <data name="Enter incognito" xml:space="preserve">
+    <value>隐身进入</value>
+  </data>
+  <data name="Enter maintenance mode" xml:space="preserve">
+    <value>进入维护模式</value>
+  </data>
+  <data name="Enter the TOTP code here" xml:space="preserve">
+    <value>在此输入 TOTP 代码</value>
+  </data>
+  <data name="Entity header cannot be updated" xml:space="preserve">
+    <value>实体标头无法更新</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>错误</value>
+  </data>
+  <data name="Error parsing the JSON file" xml:space="preserve">
+    <value>解析 JSON 文件时出错</value>
+  </data>
+  <data name="Everything" xml:space="preserve">
+    <value>全部</value>
+  </data>
+  <data name="Extension" xml:space="preserve">
+    <value>扩展</value>
+  </data>
+  <data name="Facebook" xml:space="preserve">
+    <value>Facebook</value>
+  </data>
+  <data name="Failed to authenticate you" xml:space="preserve">
+    <value>无法验证您的身份</value>
+  </data>
+  <data name="Failed to connect to email server with default settings" xml:space="preserve">
+    <value>使用默认设置无法连接到电子邮件服务器</value>
+  </data>
+  <data name="Failed to reset 2FA for user" xml:space="preserve">
+    <value>无法为用户重置 2FA</value>
+  </data>
+  <data name="Failed to reset password" xml:space="preserve">
+    <value>重置密码失败</value>
+  </data>
+  <data name="Failed to reset password for user" xml:space="preserve">
+    <value>无法为用户重置密码</value>
+  </data>
+  <data name="Feeds" xml:space="preserve">
+    <value>订阅</value>
+  </data>
+  <data name="field" xml:space="preserve">
+    <value>字段</value>
+  </data>
+  <data name="File is too large" xml:space="preserve">
+    <value>文件太大</value>
+  </data>
+  <data name="File manager" xml:space="preserve">
+    <value>文件管理器</value>
+  </data>
+  <data name="Filler" xml:space="preserve">
+    <value>填充</value>
+  </data>
+  <data name="Filter" xml:space="preserve">
+    <value>筛选</value>
+  </data>
+  <data name="First name" xml:space="preserve">
+    <value>名</value>
+  </data>
+  <data name="First name cannot exceed {0} characters" xml:space="preserve">
+    <value>名字不能超过 {0} 个字符</value>
+  </data>
+  <data name="First name is required" xml:space="preserve">
+    <value>名字为必填项</value>
+  </data>
+  <data name="Forgot password" xml:space="preserve">
+    <value>忘记密码</value>
+  </data>
+  <data name="Front-page" xml:space="preserve">
+    <value>首页</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>常规</value>
+  </data>
+  <data name="GitHub" xml:space="preserve">
+    <value>GitHub</value>
+  </data>
+  <data name="Go back" xml:space="preserve">
+    <value>回去</value>
+  </data>
+  <data name="Go to blog" xml:space="preserve">
+    <value>前往博客</value>
+  </data>
+  <data name="Go to Profile" xml:space="preserve">
+    <value>前往个人资料</value>
+  </data>
+  <data name="Go to top" xml:space="preserve">
+    <value>转到顶部</value>
+  </data>
+  <data name="Google" xml:space="preserve">
+    <value>Google</value>
+  </data>
+  <data name="Grant moderator to user" xml:space="preserve">
+    <value>向用户授予主持人</value>
+  </data>
+  <data name="Header" xml:space="preserve">
+    <value>头部</value>
+  </data>
+  <data name="Header image must be valid" xml:space="preserve">
+    <value>标题图片必须有效</value>
+  </data>
+  <data name="Here's your verification code for {0}" xml:space="preserve">
+    <value>这是您的 {0} 验证码</value>
+  </data>
+  <data name="History" xml:space="preserve">
+    <value>历史</value>
+  </data>
+  <data name="How to delete your data" xml:space="preserve">
+    <value>如何删除您的数据</value>
+  </data>
+  <data name="Id" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="Id is required" xml:space="preserve">
+    <value>身份证号为必填项</value>
+  </data>
+  <data name="If you changed open telemetry settings, you have to restart both admin and front-end to take effect" xml:space="preserve">
+    <value>如果更改了开放遥测设置，则必须重新启动管理和前端才能生效</value>
+  </data>
+  <data name="If you changed social network settings, you have to restart front-end to take effect" xml:space="preserve">
+    <value>如果您更改了社交网络设置，则必须重新启动前端才能生效</value>
+  </data>
+  <data name="If you did not request this, please ignore this email" xml:space="preserve">
+    <value>如果您没有要求，请忽略此电子邮件</value>
+  </data>
+  <data name="Iframe must be valid" xml:space="preserve">
+    <value>iframe 必须有效</value>
+  </data>
+  <data name="Incognito Mode" xml:space="preserve">
+    <value>隐身模式</value>
+  </data>
+  <data name="Info" xml:space="preserve">
+    <value>信息</value>
+  </data>
+  <data name="Instagram" xml:space="preserve">
+    <value>Instagram</value>
+  </data>
+  <data name="Interactions (Last 50)" xml:space="preserve">
+    <value>互动（最后 50 次）</value>
+  </data>
+  <data name="Invalid ids (may contain deleted, inactive blog ids)" xml:space="preserve">
+    <value>无效 ID（可能包含已删除、不活动的博客 ID）</value>
+  </data>
+  <data name="Ip" xml:space="preserve">
+    <value>IP</value>
+  </data>
+  <data name="item(s)" xml:space="preserve">
+    <value>项目）</value>
+  </data>
+  <data name="Keep testing SMTP server connectivity in the background?" xml:space="preserve">
+    <value>继续在后台测试 SMTP 服务器连接吗？</value>
+  </data>
+  <data name="Keep these recovery codes somewhere safe" xml:space="preserve">
+    <value>将这些恢复代码保存在安全的地方</value>
+  </data>
+  <data name="Key" xml:space="preserve">
+    <value>键</value>
+  </data>
+  <data name="Keywords" xml:space="preserve">
+    <value>关键词</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>语言</value>
+  </data>
+  <data name="Language must be valid" xml:space="preserve">
+    <value>语言必须有效</value>
+  </data>
+  <data name="Large" xml:space="preserve">
+    <value>大</value>
+  </data>
+  <data name="Last 180 days" xml:space="preserve">
+    <value>过去 180 天</value>
+  </data>
+  <data name="Last 24 hours" xml:space="preserve">
+    <value>过去 24 小时</value>
+  </data>
+  <data name="Last 30 days" xml:space="preserve">
+    <value>过去 30 天</value>
+  </data>
+  <data name="Last 365 days" xml:space="preserve">
+    <value>过去 365 天</value>
+  </data>
+  <data name="Last 7 days" xml:space="preserve">
+    <value>过去 7 天</value>
+  </data>
+  <data name="Last 90 days" xml:space="preserve">
+    <value>过去 90 天</value>
+  </data>
+  <data name="Last name" xml:space="preserve">
+    <value>姓</value>
+  </data>
+  <data name="Last name cannot exceed {0} characters" xml:space="preserve">
+    <value>姓氏不能超过 {0} 个字符</value>
+  </data>
+  <data name="Last name is required" xml:space="preserve">
+    <value>姓氏为必填项</value>
+  </data>
+  <data name="Latest comments" xml:space="preserve">
+    <value>最新评论</value>
+  </data>
+  <data name="Latest news" xml:space="preserve">
+    <value>最新消息</value>
+  </data>
+  <data name="Leave" xml:space="preserve">
+    <value>离开</value>
+  </data>
+  <data name="Leave incognito" xml:space="preserve">
+    <value>隐身离开</value>
+  </data>
+  <data name="Leave maintenance mode" xml:space="preserve">
+    <value>离开维护模式</value>
+  </data>
+  <data name="link" xml:space="preserve">
+    <value>链接</value>
+  </data>
+  <data name="LinkedIn" xml:space="preserve">
+    <value>LinkedIn</value>
+  </data>
+  <data name="List of blogs in the front-end" xml:space="preserve">
+    <value>前端博客列表</value>
+  </data>
+  <data name="Local path" xml:space="preserve">
+    <value>本地路径</value>
+  </data>
+  <data name="Log out" xml:space="preserve">
+    <value>退出</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>登录</value>
+  </data>
+  <data name="Login to quick reply" xml:space="preserve">
+    <value>登录后可快速回复</value>
+  </data>
+  <data name="Login to rate this" xml:space="preserve">
+    <value>登录并对此进行评分</value>
+  </data>
+  <data name="Login to react" xml:space="preserve">
+    <value>登录以做出反应</value>
+  </data>
+  <data name="Logo" xml:space="preserve">
+    <value>标志</value>
+  </data>
+  <data name="Logo • Avatar" xml:space="preserve">
+    <value>标志•头像</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>登出</value>
+  </data>
+  <data name="Loop in relationships are not allowed" xml:space="preserve">
+    <value>不允许出现关系循环</value>
+  </data>
+  <data name="Maintenance" xml:space="preserve">
+    <value>维护</value>
+  </data>
+  <data name="Make primary" xml:space="preserve">
+    <value>设为主要</value>
+  </data>
+  <data name="Manage extensions" xml:space="preserve">
+    <value>管理扩展</value>
+  </data>
+  <data name="Manage files" xml:space="preserve">
+    <value>管理文件</value>
+  </data>
+  <data name="Manage packages" xml:space="preserve">
+    <value>管理包</value>
+  </data>
+  <data name="Manage themes" xml:space="preserve">
+    <value>管理主题</value>
+  </data>
+  <data name="Manage widgets" xml:space="preserve">
+    <value>管理小部件</value>
+  </data>
+  <data name="Maybe later" xml:space="preserve">
+    <value>也许稍后</value>
+  </data>
+  <data name="Medium" xml:space="preserve">
+    <value>中</value>
+  </data>
+  <data name="Microsoft" xml:space="preserve">
+    <value>Microsoft</value>
+  </data>
+  <data name="Misc" xml:space="preserve">
+    <value>其他</value>
+  </data>
+  <data name="Moderate comments" xml:space="preserve">
+    <value>适度评论</value>
+  </data>
+  <data name="Moderated by" xml:space="preserve">
+    <value>主持者</value>
+  </data>
+  <data name="Moderator" xml:space="preserve">
+    <value>版主</value>
+  </data>
+  <data name="Modified" xml:space="preserve">
+    <value>已修改</value>
+  </data>
+  <data name="Most popular" xml:space="preserve">
+    <value>最受欢迎</value>
+  </data>
+  <data name="Most recent" xml:space="preserve">
+    <value>最近的</value>
+  </data>
+  <data name="Moves down in the list" xml:space="preserve">
+    <value>在列表中向下移动</value>
+  </data>
+  <data name="Moves up in the list" xml:space="preserve">
+    <value>在列表中向上移动</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>名称</value>
+  </data>
+  <data name="Name (website)" xml:space="preserve">
+    <value>名称（网站）</value>
+  </data>
+  <data name="Name cannot exceed {0} characters" xml:space="preserve">
+    <value>名称不能超过 {0} 个字符</value>
+  </data>
+  <data name="Name is required" xml:space="preserve">
+    <value>姓名为必填项</value>
+  </data>
+  <data name="Nano Id" xml:space="preserve">
+    <value>纳米身份证</value>
+  </data>
+  <data name="Nano Id cannot exceed {0} characters" xml:space="preserve">
+    <value>Nano Id 不能超过 {0} 个字符</value>
+  </data>
+  <data name="Nano Id is required" xml:space="preserve">
+    <value>需要 Nano ID</value>
+  </data>
+  <data name="New" xml:space="preserve">
+    <value>新建</value>
+  </data>
+  <data name="New folder" xml:space="preserve">
+    <value>新建文件夹</value>
+  </data>
+  <data name="New name" xml:space="preserve">
+    <value>新名称</value>
+  </data>
+  <data name="New password" xml:space="preserve">
+    <value>新密码</value>
+  </data>
+  <data name="New passwords do NOT match, they differ from each other" xml:space="preserve">
+    <value>新密码不匹配，彼此不同</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>否</value>
+  </data>
+  <data name="No categories whatsoever" xml:space="preserve">
+    <value>没有任何类别</value>
+  </data>
+  <data name="No content" xml:space="preserve">
+    <value>没有内容</value>
+  </data>
+  <data name="No content for now" xml:space="preserve">
+    <value>暂时没有内容</value>
+  </data>
+  <data name="No entities were selected" xml:space="preserve">
+    <value>未选择任何实体</value>
+  </data>
+  <data name="No entries were found" xml:space="preserve">
+    <value>没有找到条目</value>
+  </data>
+  <data name="No header information available" xml:space="preserve">
+    <value>没有可用的标头信息</value>
+  </data>
+  <data name="No pages whatsoever" xml:space="preserve">
+    <value>没有任何页面</value>
+  </data>
+  <data name="No posts whatsoever" xml:space="preserve">
+    <value>没有任何帖子</value>
+  </data>
+  <data name="No subtitle file" xml:space="preserve">
+    <value>没有字幕文件</value>
+  </data>
+  <data name="No tags whatsoever" xml:space="preserve">
+    <value>没有任何标签</value>
+  </data>
+  <data name="No text from this content" xml:space="preserve">
+    <value>此内容中没有文字</value>
+  </data>
+  <data name="No text from this page" xml:space="preserve">
+    <value>此页面没有文字</value>
+  </data>
+  <data name="No videos whatsoever" xml:space="preserve">
+    <value>没有任何视频</value>
+  </data>
+  <data name="None" xml:space="preserve">
+    <value>无</value>
+  </data>
+  <data name="Not specified" xml:space="preserve">
+    <value>未指定</value>
+  </data>
+  <data name="Note" xml:space="preserve">
+    <value>备注</value>
+  </data>
+  <data name="Note cannot exceed {0} characters" xml:space="preserve">
+    <value>注意不能超过{0}字符</value>
+  </data>
+  <data name="Note is required" xml:space="preserve">
+    <value>备注为必填项</value>
+  </data>
+  <data name="Nothing to see here" xml:space="preserve">
+    <value>这里没什么可看的</value>
+  </data>
+  <data name="Ok" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Only a top-level page can become front-page" xml:space="preserve">
+    <value>只有顶级页面才能成为首页</value>
+  </data>
+  <data name="Only image files" xml:space="preserve">
+    <value>仅图像文件</value>
+  </data>
+  <data name="Only top-level pages can be promoted to front page" xml:space="preserve">
+    <value>只有顶级页面才能提升到首页</value>
+  </data>
+  <data name="Only video files" xml:space="preserve">
+    <value>仅视频文件</value>
+  </data>
+  <data name="Oops" xml:space="preserve">
+    <value>哎呀</value>
+  </data>
+  <data name="Oops, this key is not valid or it was already used to reset your password" xml:space="preserve">
+    <value>糟糕，此密钥无效或已用于重置您的密码</value>
+  </data>
+  <data name="Open telemetry" xml:space="preserve">
+    <value>开放式遥测</value>
+  </data>
+  <data name="Or click here to reset password" xml:space="preserve">
+    <value>或点击这里重置密码</value>
+  </data>
+  <data name="Or paste this URI" xml:space="preserve">
+    <value>或者粘贴此 URI</value>
+  </data>
+  <data name="Origami" xml:space="preserve">
+    <value>Origami</value>
+  </data>
+  <data name="Original" xml:space="preserve">
+    <value>原始</value>
+  </data>
+  <data name="Original name" xml:space="preserve">
+    <value>原名</value>
+  </data>
+  <data name="Other trashes" xml:space="preserve">
+    <value>其他垃圾</value>
+  </data>
+  <data name="P" xml:space="preserve">
+    <value>P</value>
+  </data>
+  <data name="Page" xml:space="preserve">
+    <value>页面</value>
+  </data>
+  <data name="Page cannot be retrieved" xml:space="preserve">
+    <value>页面无法检索</value>
+  </data>
+  <data name="Page does not exist" xml:space="preserve">
+    <value>页面不存在</value>
+  </data>
+  <data name="Page is already front-page" xml:space="preserve">
+    <value>页面已经是首页</value>
+  </data>
+  <data name="Page is not front-page" xml:space="preserve">
+    <value>页面不是首页</value>
+  </data>
+  <data name="Page not found" xml:space="preserve">
+    <value>找不到页面</value>
+  </data>
+  <data name="Pages" xml:space="preserve">
+    <value>页面</value>
+  </data>
+  <data name="Pages found in the search" xml:space="preserve">
+    <value>搜索中找到的页面</value>
+  </data>
+  <data name="Parent" xml:space="preserve">
+    <value>父级</value>
+  </data>
+  <data name="Parent category" xml:space="preserve">
+    <value>父类</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>密码</value>
+  </data>
+  <data name="Password has been reset successfully" xml:space="preserve">
+    <value>密码已重置成功</value>
+  </data>
+  <data name="Password reset" xml:space="preserve">
+    <value>密码重置</value>
+  </data>
+  <data name="Password reset history" xml:space="preserve">
+    <value>密码重置历史记录</value>
+  </data>
+  <data name="Password reset link has been created, please check your email for further instructions" xml:space="preserve">
+    <value>密码重置链接已创建，请检查您的电子邮件以获取更多说明</value>
+  </data>
+  <data name="Paste your HTML iframe here to embed, like YouTube and so on" xml:space="preserve">
+    <value>将您的 HTML iframe 粘贴到此处以嵌入，例如 YouTube 等</value>
+  </data>
+  <data name="Path" xml:space="preserve">
+    <value>路径</value>
+  </data>
+  <data name="People online" xml:space="preserve">
+    <value>在线人数</value>
+  </data>
+  <data name="Pick from file manager" xml:space="preserve">
+    <value>从文件管理器中选择</value>
+  </data>
+  <data name="Pick your categories" xml:space="preserve">
+    <value>选择您的类别</value>
+  </data>
+  <data name="Pick your tags" xml:space="preserve">
+    <value>选择你的标签</value>
+  </data>
+  <data name="Pin comment" xml:space="preserve">
+    <value>发表评论</value>
+  </data>
+  <data name="Pinned" xml:space="preserve">
+    <value>置顶</value>
+  </data>
+  <data name="Pinned by" xml:space="preserve">
+    <value>固定者</value>
+  </data>
+  <data name="Place your comment here" xml:space="preserve">
+    <value>在这里发表您的评论</value>
+  </data>
+  <data name="Platforms" xml:space="preserve">
+    <value>平台</value>
+  </data>
+  <data name="Please, talk to a system administrator" xml:space="preserve">
+    <value>请与系统管理员联系</value>
+  </data>
+  <data name="Please, try again later" xml:space="preserve">
+    <value>请稍后重试</value>
+  </data>
+  <data name="Post" xml:space="preserve">
+    <value>发布</value>
+  </data>
+  <data name="Posts" xml:space="preserve">
+    <value>发布</value>
+  </data>
+  <data name="Posts comments" xml:space="preserve">
+    <value>帖子评论</value>
+  </data>
+  <data name="Posts found in the search" xml:space="preserve">
+    <value>在搜索中找到的帖子</value>
+  </data>
+  <data name="Posts, videos" xml:space="preserve">
+    <value>帖子、视频</value>
+  </data>
+  <data name="Primary" xml:space="preserve">
+    <value>主要</value>
+  </data>
+  <data name="Primary blog cannot be deactivated" xml:space="preserve">
+    <value>主博客无法停用</value>
+  </data>
+  <data name="Primary blog cannot be deleted" xml:space="preserve">
+    <value>主博客无法删除</value>
+  </data>
+  <data name="Privacy policy" xml:space="preserve">
+    <value>隐私政策</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>个人资料</value>
+  </data>
+  <data name="Profile data was wiped out" xml:space="preserve">
+    <value>个人资料数据已被清除</value>
+  </data>
+  <data name="Profile Information" xml:space="preserve">
+    <value>简介信息</value>
+  </data>
+  <data name="Profile Not Found" xml:space="preserve">
+    <value>未找到个人资料</value>
+  </data>
+  <data name="Progress" xml:space="preserve">
+    <value>进度</value>
+  </data>
+  <data name="Promote to front-page" xml:space="preserve">
+    <value>提升至首页</value>
+  </data>
+  <data name="Promoting to front-page" xml:space="preserve">
+    <value>推广至首页</value>
+  </data>
+  <data name="Publish {0} item(s)" xml:space="preserve">
+    <value>发布 {0} 项目</value>
+  </data>
+  <data name="Publish message(s)" xml:space="preserve">
+    <value>发布消息</value>
+  </data>
+  <data name="Publish other quick notes" xml:space="preserve">
+    <value>发布其他快速笔记</value>
+  </data>
+  <data name="Publish other users messages" xml:space="preserve">
+    <value>发布其他用户的消息</value>
+  </data>
+  <data name="Publish other users pages" xml:space="preserve">
+    <value>发布其他用户页面</value>
+  </data>
+  <data name="Publish other users posts" xml:space="preserve">
+    <value>发布其他用户的帖子</value>
+  </data>
+  <data name="Publish other users special pages" xml:space="preserve">
+    <value>发布其他用户特殊页面</value>
+  </data>
+  <data name="Publish other users videos" xml:space="preserve">
+    <value>发布其他用户的视频</value>
+  </data>
+  <data name="Publish own messages" xml:space="preserve">
+    <value>发布自己的消息</value>
+  </data>
+  <data name="Publish own pages" xml:space="preserve">
+    <value>发布自己的页面</value>
+  </data>
+  <data name="Publish own posts" xml:space="preserve">
+    <value>发布自己的帖子</value>
+  </data>
+  <data name="Publish own quick notes" xml:space="preserve">
+    <value>发布自己的快速笔记</value>
+  </data>
+  <data name="Publish own special pages" xml:space="preserve">
+    <value>发布自己的专题页面</value>
+  </data>
+  <data name="Publish own videos" xml:space="preserve">
+    <value>发布自己的视频</value>
+  </data>
+  <data name="Publish page(s)" xml:space="preserve">
+    <value>发布页面</value>
+  </data>
+  <data name="Publish post(s)" xml:space="preserve">
+    <value>发布帖子</value>
+  </data>
+  <data name="Publish video(s)" xml:space="preserve">
+    <value>发布视频</value>
+  </data>
+  <data name="Published" xml:space="preserve">
+    <value>已发布</value>
+  </data>
+  <data name="Published pages" xml:space="preserve">
+    <value>已发布的页面</value>
+  </data>
+  <data name="Published posts" xml:space="preserve">
+    <value>发表的帖子</value>
+  </data>
+  <data name="Published special messages" xml:space="preserve">
+    <value>发布特别消息</value>
+  </data>
+  <data name="Published special pages" xml:space="preserve">
+    <value>已发布专题页面</value>
+  </data>
+  <data name="Published videos" xml:space="preserve">
+    <value>已发布的视频</value>
+  </data>
+  <data name="Purge blogs" xml:space="preserve">
+    <value>清除博客</value>
+  </data>
+  <data name="Purge categories" xml:space="preserve">
+    <value>清除类别</value>
+  </data>
+  <data name="Purge comments" xml:space="preserve">
+    <value>清除评论</value>
+  </data>
+  <data name="Purge instead" xml:space="preserve">
+    <value>改为清除</value>
+  </data>
+  <data name="Purge pages" xml:space="preserve">
+    <value>清除页面</value>
+  </data>
+  <data name="Purge posts" xml:space="preserve">
+    <value>清除帖子</value>
+  </data>
+  <data name="Purge quick notes" xml:space="preserve">
+    <value>清除快速笔记</value>
+  </data>
+  <data name="Purge roles" xml:space="preserve">
+    <value>清除角色</value>
+  </data>
+  <data name="Purge special messages" xml:space="preserve">
+    <value>清除特殊消息</value>
+  </data>
+  <data name="Purge special pages" xml:space="preserve">
+    <value>清除特殊页面</value>
+  </data>
+  <data name="Purge tags" xml:space="preserve">
+    <value>清除标签</value>
+  </data>
+  <data name="Purge users" xml:space="preserve">
+    <value>清除用户</value>
+  </data>
+  <data name="Purge videos" xml:space="preserve">
+    <value>清除视频</value>
+  </data>
+  <data name="Purging {0} Item(s)" xml:space="preserve">
+    <value>清除 {0} 项目</value>
+  </data>
+  <data name="Quick note" xml:space="preserve">
+    <value>快速说明</value>
+  </data>
+  <data name="Quick notes" xml:space="preserve">
+    <value>快速笔记</value>
+  </data>
+  <data name="Quick notes found in the search" xml:space="preserve">
+    <value>在搜索中找到的快速注释</value>
+  </data>
+  <data name="Quick reply" xml:space="preserve">
+    <value>快速回复</value>
+  </data>
+  <data name="Rated {0} on:" xml:space="preserve">
+    <value>额定为 {0}：</value>
+  </data>
+  <data name="Rating" xml:space="preserve">
+    <value>评分</value>
+  </data>
+  <data name="Rating 1 is not accounted for in the final rating" xml:space="preserve">
+    <value>评级 1 不计入最终评级</value>
+  </data>
+  <data name="Rating must be less than or equal to 5" xml:space="preserve">
+    <value>评级必须小于或等于 5</value>
+  </data>
+  <data name="Ratings" xml:space="preserve">
+    <value>评分</value>
+  </data>
+  <data name="Ratings on posts" xml:space="preserve">
+    <value>对帖子的评分</value>
+  </data>
+  <data name="Ratings on videos" xml:space="preserve">
+    <value>视频评分</value>
+  </data>
+  <data name="Reacted {0} on:" xml:space="preserve">
+    <value>反应 {0}：</value>
+  </data>
+  <data name="Reacted {0} to:" xml:space="preserve">
+    <value>{0} 反应为：</value>
+  </data>
+  <data name="Reaction needs one author" xml:space="preserve">
+    <value>反应需要一位作者</value>
+  </data>
+  <data name="Reactions" xml:space="preserve">
+    <value>反应</value>
+  </data>
+  <data name="Refresh your browser" xml:space="preserve">
+    <value>刷新您的浏览器</value>
+  </data>
+  <data name="Regenerate nano-ids" xml:space="preserve">
+    <value>再生纳米ID</value>
+  </data>
+  <data name="Regenerate recovery codes" xml:space="preserve">
+    <value>重新生成恢复代码</value>
+  </data>
+  <data name="Regenerate secret" xml:space="preserve">
+    <value>再生秘密</value>
+  </data>
+  <data name="Related content" xml:space="preserve">
+    <value>相关内容</value>
+  </data>
+  <data name="Related pages" xml:space="preserve">
+    <value>相关页面</value>
+  </data>
+  <data name="Related special pages" xml:space="preserve">
+    <value>相关专题页面</value>
+  </data>
+  <data name="Release date" xml:space="preserve">
+    <value>发售日期</value>
+  </data>
+  <data name="Reload" xml:space="preserve">
+    <value>重新加载</value>
+  </data>
+  <data name="Remove picture" xml:space="preserve">
+    <value>删除图片</value>
+  </data>
+  <data name="Repeat new password" xml:space="preserve">
+    <value>重复新密码</value>
+  </data>
+  <data name="Reply" xml:space="preserve">
+    <value>回复</value>
+  </data>
+  <data name="Reply comment" xml:space="preserve">
+    <value>回复评论</value>
+  </data>
+  <data name="Request date" xml:space="preserve">
+    <value>请求日期</value>
+  </data>
+  <data name="Requested by" xml:space="preserve">
+    <value>请求者</value>
+  </data>
+  <data name="Requests for information wipe-out" xml:space="preserve">
+    <value>要求删除信息</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>重置</value>
+  </data>
+  <data name="Reset 2FA" xml:space="preserve">
+    <value>重置2FA</value>
+  </data>
+  <data name="Reset other users 2FA" xml:space="preserve">
+    <value>重置其他用户 2FA</value>
+  </data>
+  <data name="Reset other users passwords" xml:space="preserve">
+    <value>重置其他用户密码</value>
+  </data>
+  <data name="Reset own 2FA" xml:space="preserve">
+    <value>重置自己的2FA</value>
+  </data>
+  <data name="Reset own password" xml:space="preserve">
+    <value>重置自己的密码</value>
+  </data>
+  <data name="Reset password" xml:space="preserve">
+    <value>重置密码</value>
+  </data>
+  <data name="Restore" xml:space="preserve">
+    <value>恢复</value>
+  </data>
+  <data name="Restore blogs" xml:space="preserve">
+    <value>恢复博客</value>
+  </data>
+  <data name="Restore categories" xml:space="preserve">
+    <value>恢复类别</value>
+  </data>
+  <data name="Restore comments" xml:space="preserve">
+    <value>恢复评论</value>
+  </data>
+  <data name="Restore files and database from a backup in the list below" xml:space="preserve">
+    <value>从下面列表中的备份恢复文件和数据库</value>
+  </data>
+  <data name="Restore files and database from a zip file" xml:space="preserve">
+    <value>从 zip 文件恢复文件和数据库</value>
+  </data>
+  <data name="Restore from a zip file" xml:space="preserve">
+    <value>从 zip 文件恢复</value>
+  </data>
+  <data name="Restore from list" xml:space="preserve">
+    <value>从列表中恢复</value>
+  </data>
+  <data name="Restore pages" xml:space="preserve">
+    <value>恢复页面</value>
+  </data>
+  <data name="Restore posts" xml:space="preserve">
+    <value>恢复帖子</value>
+  </data>
+  <data name="Restore quick notes" xml:space="preserve">
+    <value>恢复快速笔记</value>
+  </data>
+  <data name="Restore roles" xml:space="preserve">
+    <value>恢复角色</value>
+  </data>
+  <data name="Restore special messages" xml:space="preserve">
+    <value>恢复特殊消息</value>
+  </data>
+  <data name="Restore special pages" xml:space="preserve">
+    <value>恢复特殊页面</value>
+  </data>
+  <data name="Restore system" xml:space="preserve">
+    <value>恢复系统</value>
+  </data>
+  <data name="Restore users" xml:space="preserve">
+    <value>恢复用户</value>
+  </data>
+  <data name="Restore videos" xml:space="preserve">
+    <value>恢复视频</value>
+  </data>
+  <data name="Restoring {0} item(s)" xml:space="preserve">
+    <value>正在恢复 {0} 项目</value>
+  </data>
+  <data name="Revoke moderator from user" xml:space="preserve">
+    <value>撤销用户的版主</value>
+  </data>
+  <data name="Revoke moderator roles from social profiles" xml:space="preserve">
+    <value>撤销社交档案中的版主角色</value>
+  </data>
+  <data name="Role" xml:space="preserve">
+    <value>角色</value>
+  </data>
+  <data name="Roles" xml:space="preserve">
+    <value>角色</value>
+  </data>
+  <data name="Roles are up-to-date" xml:space="preserve">
+    <value>角色已更新</value>
+  </data>
+  <data name="Roles have been created" xml:space="preserve">
+    <value>角色已创建</value>
+  </data>
+  <data name="RSS feed" xml:space="preserve">
+    <value>RSS 提要</value>
+  </data>
+  <data name="RSS feed #1" xml:space="preserve">
+    <value>RSS 提要#1</value>
+  </data>
+  <data name="RSS feed #2" xml:space="preserve">
+    <value>RSS 提要 #2</value>
+  </data>
+  <data name="RSS feed #3" xml:space="preserve">
+    <value>RSS 提要#3</value>
+  </data>
+  <data name="RSS feed #4" xml:space="preserve">
+    <value>RSS 提要 #4</value>
+  </data>
+  <data name="RSS feed #5" xml:space="preserve">
+    <value>RSS 提要 #5</value>
+  </data>
+  <data name="RSS feed must be a valid website address" xml:space="preserve">
+    <value>RSS feed 必须是有效的网站地址</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="Save and publish" xml:space="preserve">
+    <value>保存并发布</value>
+  </data>
+  <data name="Save changes" xml:space="preserve">
+    <value>保存更改</value>
+  </data>
+  <data name="Save password" xml:space="preserve">
+    <value>保存密码</value>
+  </data>
+  <data name="Save reply" xml:space="preserve">
+    <value>保存回复</value>
+  </data>
+  <data name="Scan this QR code with your authenticator app" xml:space="preserve">
+    <value>使用您的身份验证器应用程序扫描此二维码</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>搜索</value>
+  </data>
+  <data name="See browser dev tools for details" xml:space="preserve">
+    <value>有关详细信息，请参阅浏览器开发工具</value>
+  </data>
+  <data name="See more comments" xml:space="preserve">
+    <value>查看更多评论</value>
+  </data>
+  <data name="See more contents" xml:space="preserve">
+    <value>查看更多内容</value>
+  </data>
+  <data name="See more notes" xml:space="preserve">
+    <value>查看更多笔记</value>
+  </data>
+  <data name="See more pages" xml:space="preserve">
+    <value>查看更多页面</value>
+  </data>
+  <data name="See more posts" xml:space="preserve">
+    <value>查看更多帖子</value>
+  </data>
+  <data name="See more ratings" xml:space="preserve">
+    <value>查看更多评分</value>
+  </data>
+  <data name="See more videos" xml:space="preserve">
+    <value>查看更多视频</value>
+  </data>
+  <data name="Select a comment" xml:space="preserve">
+    <value>选择评论</value>
+  </data>
+  <data name="Select a file" xml:space="preserve">
+    <value>选择一个文件</value>
+  </data>
+  <data name="Select a profile" xml:space="preserve">
+    <value>选择个人资料</value>
+  </data>
+  <data name="Select a tag" xml:space="preserve">
+    <value>选择一个标签</value>
+  </data>
+  <data name="Select all" xml:space="preserve">
+    <value>选择全部</value>
+  </data>
+  <data name="Select parent category" xml:space="preserve">
+    <value>选择父类别</value>
+  </data>
+  <data name="Select parent page" xml:space="preserve">
+    <value>选择父页面</value>
+  </data>
+  <data name="Select trash" xml:space="preserve">
+    <value>选择垃圾箱</value>
+  </data>
+  <data name="Send verification code" xml:space="preserve">
+    <value>发送验证码</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="Size" xml:space="preserve">
+    <value>大小</value>
+  </data>
+  <data name="Slow" xml:space="preserve">
+    <value>慢</value>
+  </data>
+  <data name="Slug" xml:space="preserve">
+    <value>Slug</value>
+  </data>
+  <data name="Slug cannot exceed {0} characters" xml:space="preserve">
+    <value>Slug 不能超过 {0} 个字符</value>
+  </data>
+  <data name="Slug is already in use" xml:space="preserve">
+    <value>Slug 已在使用中</value>
+  </data>
+  <data name="Small" xml:space="preserve">
+    <value>小</value>
+  </data>
+  <data name="SMTP password" xml:space="preserve">
+    <value>SMTP密码</value>
+  </data>
+  <data name="SMTP server" xml:space="preserve">
+    <value>SMTP服务器</value>
+  </data>
+  <data name="SMTP server port" xml:space="preserve">
+    <value>SMTP 服务器端口</value>
+  </data>
+  <data name="SMTP username" xml:space="preserve">
+    <value>SMTP 用户名</value>
+  </data>
+  <data name="Social network logins" xml:space="preserve">
+    <value>社交网络登录</value>
+  </data>
+  <data name="Social profile is not a subscriber" xml:space="preserve">
+    <value>社交资料不是订阅者</value>
+  </data>
+  <data name="Social profiles" xml:space="preserve">
+    <value>社交档案</value>
+  </data>
+  <data name="Social profiles found in the search" xml:space="preserve">
+    <value>搜索中找到的社交资料</value>
+  </data>
+  <data name="Source and destination images share the same location" xml:space="preserve">
+    <value>源图像和目标图像共享同一位置</value>
+  </data>
+  <data name="Spam" xml:space="preserve">
+    <value>垃圾信息</value>
+  </data>
+  <data name="Spam comments" xml:space="preserve">
+    <value>垃圾评论</value>
+  </data>
+  <data name="Special message" xml:space="preserve">
+    <value>特别留言</value>
+  </data>
+  <data name="Special messages" xml:space="preserve">
+    <value>特别讯息</value>
+  </data>
+  <data name="Special messages found in the search" xml:space="preserve">
+    <value>搜索中发现的特殊消息</value>
+  </data>
+  <data name="Special page" xml:space="preserve">
+    <value>特别页面</value>
+  </data>
+  <data name="Special pages" xml:space="preserve">
+    <value>特别页面</value>
+  </data>
+  <data name="Special pages found in the search" xml:space="preserve">
+    <value>搜索中发现的特殊页面</value>
+  </data>
+  <data name="Start date" xml:space="preserve">
+    <value>开始日期</value>
+  </data>
+  <data name="Start date cannot be later than end date" xml:space="preserve">
+    <value>开始日期不能晚于结束日期</value>
+  </data>
+  <data name="Stats" xml:space="preserve">
+    <value>统计</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>状态</value>
+  </data>
+  <data name="Still a draft?" xml:space="preserve">
+    <value>还是草稿？</value>
+  </data>
+  <data name="Stop" xml:space="preserve">
+    <value>停止</value>
+  </data>
+  <data name="Stops the timer" xml:space="preserve">
+    <value>停止计时器</value>
+  </data>
+  <data name="Subscribe" xml:space="preserve">
+    <value>订阅</value>
+  </data>
+  <data name="Subscribe to the website" xml:space="preserve">
+    <value>订阅网站</value>
+  </data>
+  <data name="Subscriber" xml:space="preserve">
+    <value>订阅者</value>
+  </data>
+  <data name="Subscriber(s)" xml:space="preserve">
+    <value>订户</value>
+  </data>
+  <data name="Success" xml:space="preserve">
+    <value>成功</value>
+  </data>
+  <data name="System role" xml:space="preserve">
+    <value>系统角色</value>
+  </data>
+  <data name="Tag" xml:space="preserve">
+    <value>标签</value>
+  </data>
+  <data name="Tag cannot exceed {0} characters" xml:space="preserve">
+    <value>标签不能超过 {0} 个字符</value>
+  </data>
+  <data name="Tags" xml:space="preserve">
+    <value>标签</value>
+  </data>
+  <data name="Tags found in the search" xml:space="preserve">
+    <value>搜索中找到的标签</value>
+  </data>
+  <data name="Tags must be unique" xml:space="preserve">
+    <value>标签必须是唯一的</value>
+  </data>
+  <data name="Talk to an administrator, if this is not correct" xml:space="preserve">
+    <value>如果这不正确，请与管理员联系</value>
+  </data>
+  <data name="Tenant id" xml:space="preserve">
+    <value>租户ID</value>
+  </data>
+  <data name="Terms and conditions" xml:space="preserve">
+    <value>条款和条件</value>
+  </data>
+  <data name="Terms of service" xml:space="preserve">
+    <value>服务条款</value>
+  </data>
+  <data name="Test connection" xml:space="preserve">
+    <value>测试连接</value>
+  </data>
+  <data name="The author marked this as draft" xml:space="preserve">
+    <value>作者将此标记为草稿</value>
+  </data>
+  <data name="The entity you are trying to access does not exist" xml:space="preserve">
+    <value>您尝试访问的实体不存在</value>
+  </data>
+  <data name="This application may no longer respond until reloaded" xml:space="preserve">
+    <value>该应用程序在重新加载之前可能不再响应</value>
+  </data>
+  <data name="This code is for the subscription process in the website" xml:space="preserve">
+    <value>此代码用于网站中的订阅过程</value>
+  </data>
+  <data name="This has already been restored." xml:space="preserve">
+    <value>这已经恢复了。</value>
+  </data>
+  <data name="this is a front-page" xml:space="preserve">
+    <value>这是首页</value>
+  </data>
+  <data name="Thumbnail" xml:space="preserve">
+    <value>缩略图</value>
+  </data>
+  <data name="Time period" xml:space="preserve">
+    <value>时间段</value>
+  </data>
+  <data name="Timezone" xml:space="preserve">
+    <value>时区</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>标题</value>
+  </data>
+  <data name="Title cannot exceed 255 characters" xml:space="preserve">
+    <value>标题不能超过 255 个字符</value>
+  </data>
+  <data name="Title is required" xml:space="preserve">
+    <value>标题为必填项</value>
+  </data>
+  <data name="To promote to front-page, that page must be top-level" xml:space="preserve">
+    <value>要提升到首页，该页面必须是顶级</value>
+  </data>
+  <data name="Trash" xml:space="preserve">
+    <value>垃圾桶</value>
+  </data>
+  <data name="Try again to solve this issue" xml:space="preserve">
+    <value>再次尝试解决此问题</value>
+  </data>
+  <data name="Turn social profiles into moderators" xml:space="preserve">
+    <value>将社交档案变成版主</value>
+  </data>
+  <data name="Type Here" xml:space="preserve">
+    <value>在此输入</value>
+  </data>
+  <data name="Type in here to search" xml:space="preserve">
+    <value>在此输入进行搜索</value>
+  </data>
+  <data name="Type is required for special messages" xml:space="preserve">
+    <value>特殊消息需要输入类型</value>
+  </data>
+  <data name="Type is required for special pages" xml:space="preserve">
+    <value>特殊页面需要输入类型</value>
+  </data>
+  <data name="Type must be a valid special message type" xml:space="preserve">
+    <value>类型必须是有效的特殊消息类型</value>
+  </data>
+  <data name="Type must be a valid special page type" xml:space="preserve">
+    <value>类型必须是有效的特殊页面类型</value>
+  </data>
+  <data name="Type your note here" xml:space="preserve">
+    <value>在此输入您的注释</value>
+  </data>
+  <data name="Unable to restore" xml:space="preserve">
+    <value>无法恢复</value>
+  </data>
+  <data name="Unable to restore trash" xml:space="preserve">
+    <value>无法恢复垃圾</value>
+  </data>
+  <data name="Unable to retrieve IP location" xml:space="preserve">
+    <value>无法检索 IP 位置</value>
+  </data>
+  <data name="Unapproved comments" xml:space="preserve">
+    <value>未批准的评论</value>
+  </data>
+  <data name="Unblock social profiles" xml:space="preserve">
+    <value>解锁社交档案</value>
+  </data>
+  <data name="Unblock user" xml:space="preserve">
+    <value>解锁用户</value>
+  </data>
+  <data name="Unblock users" xml:space="preserve">
+    <value>解锁用户</value>
+  </data>
+  <data name="Undo" xml:space="preserve">
+    <value>撤销</value>
+  </data>
+  <data name="Undo changes" xml:space="preserve">
+    <value>撤消更改</value>
+  </data>
+  <data name="Unpin comment" xml:space="preserve">
+    <value>取消评论</value>
+  </data>
+  <data name="Unpublish {0} item(s)" xml:space="preserve">
+    <value>取消发布 {0} 项目</value>
+  </data>
+  <data name="Unpublish message(s)" xml:space="preserve">
+    <value>取消发布消息</value>
+  </data>
+  <data name="Unpublish other users messages" xml:space="preserve">
+    <value>取消发布其他用户的消息</value>
+  </data>
+  <data name="Unpublish other users pages" xml:space="preserve">
+    <value>取消发布其他用户页面</value>
+  </data>
+  <data name="Unpublish other users posts" xml:space="preserve">
+    <value>取消发布其他用户的帖子</value>
+  </data>
+  <data name="Unpublish other users quick notes" xml:space="preserve">
+    <value>取消发布其他用户快速笔记</value>
+  </data>
+  <data name="Unpublish other users special pages" xml:space="preserve">
+    <value>取消发布其他用户特殊页面</value>
+  </data>
+  <data name="Unpublish other users videos" xml:space="preserve">
+    <value>取消发布其他用户的视频</value>
+  </data>
+  <data name="Unpublish own messages" xml:space="preserve">
+    <value>取消发布自己的消息</value>
+  </data>
+  <data name="Unpublish own pages" xml:space="preserve">
+    <value>取消发布自己的页面</value>
+  </data>
+  <data name="Unpublish own posts" xml:space="preserve">
+    <value>取消发布自己的帖子</value>
+  </data>
+  <data name="Unpublish own quick notes" xml:space="preserve">
+    <value>取消发布自己的快速笔记</value>
+  </data>
+  <data name="Unpublish own special pages" xml:space="preserve">
+    <value>取消发布自己的特殊页面</value>
+  </data>
+  <data name="Unpublish own videos" xml:space="preserve">
+    <value>取消发布自己的视频</value>
+  </data>
+  <data name="Unpublish page(s)" xml:space="preserve">
+    <value>取消发布页面</value>
+  </data>
+  <data name="Unpublish post(s)" xml:space="preserve">
+    <value>取消发布帖子</value>
+  </data>
+  <data name="Unpublish video(s)" xml:space="preserve">
+    <value>取消发布视频</value>
+  </data>
+  <data name="Unselect all" xml:space="preserve">
+    <value>取消选择全部</value>
+  </data>
+  <data name="Unsubscribe from the website" xml:space="preserve">
+    <value>从网站退订</value>
+  </data>
+  <data name="Unsubscribe social profiles" xml:space="preserve">
+    <value>取消订阅社交资料</value>
+  </data>
+  <data name="Unsubscribe user" xml:space="preserve">
+    <value>取消订阅用户</value>
+  </data>
+  <data name="Upload" xml:space="preserve">
+    <value>上传</value>
+  </data>
+  <data name="Upload files" xml:space="preserve">
+    <value>上传文件</value>
+  </data>
+  <data name="Upload picture" xml:space="preserve">
+    <value>上传图片</value>
+  </data>
+  <data name="Upload subtitle" xml:space="preserve">
+    <value>上传字幕</value>
+  </data>
+  <data name="Uploading a file" xml:space="preserve">
+    <value>上传文件</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>用户</value>
+  </data>
+  <data name="User actions" xml:space="preserve">
+    <value>用户操作</value>
+  </data>
+  <data name="User Activity" xml:space="preserve">
+    <value>用户活动</value>
+  </data>
+  <data name="User came from" xml:space="preserve">
+    <value>用户来自</value>
+  </data>
+  <data name="User did not share an e-mail address" xml:space="preserve">
+    <value>用户没有共享电子邮件地址</value>
+  </data>
+  <data name="User trashes" xml:space="preserve">
+    <value>用户垃圾</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>用户名</value>
+  </data>
+  <data name="Username (read-only)" xml:space="preserve">
+    <value>用户名（只读）</value>
+  </data>
+  <data name="Username and current password do NOT exist in the database" xml:space="preserve">
+    <value>用户名和当前密码在数据库中不存在</value>
+  </data>
+  <data name="Username cannot exceed {0} characters" xml:space="preserve">
+    <value>用户名不能超过{0}字符</value>
+  </data>
+  <data name="Username is required" xml:space="preserve">
+    <value>用户名是必需的</value>
+  </data>
+  <data name="Users" xml:space="preserve">
+    <value>用户</value>
+  </data>
+  <data name="Validate code and finish subscribing" xml:space="preserve">
+    <value>验证代码并完成订阅</value>
+  </data>
+  <data name="Validate the 2FA code and login" xml:space="preserve">
+    <value>验证 2FA 代码并登录</value>
+  </data>
+  <data name="Validate the TOTP code and proceed" xml:space="preserve">
+    <value>验证 TOTP 代码并继续</value>
+  </data>
+  <data name="Value" xml:space="preserve">
+    <value>值</value>
+  </data>
+  <data name="Version" xml:space="preserve">
+    <value>版本</value>
+  </data>
+  <data name="Video" xml:space="preserve">
+    <value>视频</value>
+  </data>
+  <data name="Video cannot be updated" xml:space="preserve">
+    <value>视频无法更新</value>
+  </data>
+  <data name="Videos" xml:space="preserve">
+    <value>视频</value>
+  </data>
+  <data name="Videos comments" xml:space="preserve">
+    <value>视频评论</value>
+  </data>
+  <data name="Videos found in the search" xml:space="preserve">
+    <value>搜索中找到的视频</value>
+  </data>
+  <data name="View backup and restore system" xml:space="preserve">
+    <value>查看备份和恢复系统</value>
+  </data>
+  <data name="View blogs" xml:space="preserve">
+    <value>查看博客</value>
+  </data>
+  <data name="View categories" xml:space="preserve">
+    <value>查看类别</value>
+  </data>
+  <data name="View comments" xml:space="preserve">
+    <value>查看评论</value>
+  </data>
+  <data name="View dashboard" xml:space="preserve">
+    <value>查看仪表板</value>
+  </data>
+  <data name="View messages" xml:space="preserve">
+    <value>查看消息</value>
+  </data>
+  <data name="View pages" xml:space="preserve">
+    <value>查看页面</value>
+  </data>
+  <data name="View posts" xml:space="preserve">
+    <value>查看帖子</value>
+  </data>
+  <data name="View quick notes" xml:space="preserve">
+    <value>查看快速笔记</value>
+  </data>
+  <data name="View roles" xml:space="preserve">
+    <value>查看角色</value>
+  </data>
+  <data name="View settings" xml:space="preserve">
+    <value>查看设置</value>
+  </data>
+  <data name="View social profiles" xml:space="preserve">
+    <value>查看社交档案</value>
+  </data>
+  <data name="View special pages" xml:space="preserve">
+    <value>查看特殊页面</value>
+  </data>
+  <data name="View tags" xml:space="preserve">
+    <value>查看标签</value>
+  </data>
+  <data name="View trashes" xml:space="preserve">
+    <value>查看垃圾箱</value>
+  </data>
+  <data name="View users" xml:space="preserve">
+    <value>查看用户</value>
+  </data>
+  <data name="View videos" xml:space="preserve">
+    <value>观看视频</value>
+  </data>
+  <data name="Warning" xml:space="preserve">
+    <value>警告</value>
+  </data>
+  <data name="We need a valid e-mail to subscribe" xml:space="preserve">
+    <value>我们需要一个有效的电子邮件来订阅</value>
+  </data>
+  <data name="We use cookies and similar technologies to enhance your browsing experience, analyze site traffic, personalize content, and serve targeted advertisements" xml:space="preserve">
+    <value>我们使用 cookie 和类似技术来增强您的浏览体验、分析网站流量、个性化内容并提供有针对性的广告</value>
+  </data>
+  <data name="Website" xml:space="preserve">
+    <value>网站</value>
+  </data>
+  <data name="What to see next" xml:space="preserve">
+    <value>接下来看什么</value>
+  </data>
+  <data name="Wipe all data from the website" xml:space="preserve">
+    <value>擦除网站上的所有数据</value>
+  </data>
+  <data name="Wipe data out from social profiles" xml:space="preserve">
+    <value>从社交档案中删除数据</value>
+  </data>
+  <data name="Wipe out user data" xml:space="preserve">
+    <value>清除用户数据</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>是</value>
+  </data>
+  <data name="Yes, since" xml:space="preserve">
+    <value>是的，自从</value>
+  </data>
+  <data name="You already reacted with this emoji" xml:space="preserve">
+    <value>您已经对这个表情符号做出了反应</value>
+  </data>
+  <data name="You are adding a new {0}" xml:space="preserve">
+    <value>您正在添加新的 {0}</value>
+  </data>
+  <data name="You are seeing this page, because &lt;b&gt;you denied access to your information from the Social Network&lt;/b&gt;" xml:space="preserve">
+    <value>您看到此页面是因为 &lt;b&gt;您拒绝从社交网络访问您的信息&lt;/b&gt;</value>
+  </data>
+  <data name="You are seeing this page, because &lt;b&gt;your access token is invalid/expired&lt;/b&gt;" xml:space="preserve">
+    <value>您看到此页面是因为 &lt;b&gt;您的访问令牌无效/已过期&lt;/b&gt;</value>
+  </data>
+  <data name="You are seeing this page, because &lt;b&gt;your user has been blocked&lt;/b&gt;" xml:space="preserve">
+    <value>您看到此页面是因为 &lt;b&gt;您的用户已被阻止&lt;/b&gt;</value>
+  </data>
+  <data name="You are viewing a deleted {0}" xml:space="preserve">
+    <value>您正在查看已删除的 {0}</value>
+  </data>
+  <data name="You are viewing an existing {0}" xml:space="preserve">
+    <value>您正在查看现有的 {0}</value>
+  </data>
+  <data name="You are viewing an existing trash" xml:space="preserve">
+    <value>您正在查看现有的垃圾箱</value>
+  </data>
+  <data name="You asked for a password reset and here's the link to paste in your browser" xml:space="preserve">
+    <value>您要求重置密码，这里是粘贴到您的浏览器中的链接</value>
+  </data>
+  <data name="You asked for a password reset and here's the link to paste in your browser: {0}" xml:space="preserve">
+    <value>您要求重置密码，以下是粘贴到您的浏览器中的链接：{0}</value>
+  </data>
+  <data name="You can change your display name at any time though" xml:space="preserve">
+    <value>您可以随时更改您的显示名称</value>
+  </data>
+  <data name="You can't modify a system role" xml:space="preserve">
+    <value>您无法修改系统角色</value>
+  </data>
+  <data name="You cannot edit this comment" xml:space="preserve">
+    <value>您无法编辑此评论</value>
+  </data>
+  <data name="You did NOT change passwords, current and new are the same" xml:space="preserve">
+    <value>您没有更改密码，当前密码和新密码相同</value>
+  </data>
+  <data name="You don't have access to any blogs" xml:space="preserve">
+    <value>您无权访问任何博客</value>
+  </data>
+  <data name="You don't have access to this feature" xml:space="preserve">
+    <value>您无权使用此功能</value>
+  </data>
+  <data name="You don't have permission to reset 2FA" xml:space="preserve">
+    <value>您无权重置 2FA</value>
+  </data>
+  <data name="You don't have permission to reset password" xml:space="preserve">
+    <value>您无权重置密码</value>
+  </data>
+  <data name="You don't have permission to reset your own password" xml:space="preserve">
+    <value>您无权重置自己的密码</value>
+  </data>
+  <data name="You must change your password" xml:space="preserve">
+    <value>您必须更改密码</value>
+  </data>
+  <data name="You must enable two-factor authentication" xml:space="preserve">
+    <value>您必须启用双因素身份验证</value>
+  </data>
+  <data name="You need to allow access to it when prompted to solve this issue" xml:space="preserve">
+    <value>当提示解决此问题时，您需要允许访问它</value>
+  </data>
+  <data name="You need to pick a video" xml:space="preserve">
+    <value>您需要选择一个视频</value>
+  </data>
+  <data name="You need to pick an image" xml:space="preserve">
+    <value>您需要选择一张图片</value>
+  </data>
+  <data name="You need to select one page" xml:space="preserve">
+    <value>您需要选择一页</value>
+  </data>
+  <data name="You rated this post: {0} star(s)" xml:space="preserve">
+    <value>您对这篇文章的评分：{0} 星</value>
+  </data>
+  <data name="You subscribed to this website" xml:space="preserve">
+    <value>您订阅了该网站</value>
+  </data>
+  <data name="You switched to a different blog" xml:space="preserve">
+    <value>您切换到了不同的博客</value>
+  </data>
+  <data name="Your comments" xml:space="preserve">
+    <value>您的评论</value>
+  </data>
+  <data name="Your temporary password: {0}" xml:space="preserve">
+    <value>您的临时密码：{0}</value>
+  </data>
+  <data name="ZIP file created successfully." xml:space="preserve">
+    <value>ZIP 文件创建成功。</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>类型</value>
+  </data>
+  <data name="Yay! Everything went smoothly" xml:space="preserve">
+    <value>耶！一切都很顺利</value>
+  </data>
+  <data name="Ah heck, something went wrong, try again" xml:space="preserve">
+    <value>哎呀，出了点问题，请重试</value>
+  </data>
+  <data name="You don't have permission for this feature" xml:space="preserve">
+    <value>您无权使用此功能</value>
+  </data>
+  <data name="Calm down, you made too many comments in 5 minutes" xml:space="preserve">
+    <value>冷静点，你5分钟内评论太多了</value>
+  </data>
+  <data name="Content created" xml:space="preserve">
+    <value>内容已创建</value>
+  </data>
+  <data name="Content deleted" xml:space="preserve">
+    <value>内容已删除</value>
+  </data>
+  <data name="Content restored" xml:space="preserve">
+    <value>内容已恢复</value>
+  </data>
+  <data name="Content saved" xml:space="preserve">
+    <value>内容已保存</value>
+  </data>
+  <data name="Content is already unpublished" xml:space="preserve">
+    <value>内容已是未发布状态</value>
+  </data>
+  <data name="Content is already restored" xml:space="preserve">
+    <value>内容已恢复</value>
+  </data>
+  <data name="Content is already published" xml:space="preserve">
+    <value>内容已发布</value>
+  </data>
+  <data name="Content is already deleted" xml:space="preserve">
+    <value>内容已删除</value>
+  </data>
+  <data name="Categories must be empty" xml:space="preserve">
+    <value>分类必须为空</value>
+  </data>
+  <data name="Tags must be empty" xml:space="preserve">
+    <value>标签必须为空</value>
+  </data>
+  <data name="Title is already in use" xml:space="preserve">
+    <value>标题已被使用</value>
+  </data>
+  <data name="Block" xml:space="preserve">
+    <value>屏蔽</value>
+  </data>
+  <data name="Unblock" xml:space="preserve">
+    <value>取消屏蔽</value>
+  </data>
+  <data name="This will block yourself" xml:space="preserve">
+    <value>此操作将屏蔽您自己。</value>
+  </data>
+  <data name="Yourself" xml:space="preserve">
+    <value>您自己</value>
+  </data>
+  <data name="Software release" xml:space="preserve">
+    <value>软件发布</value>
+  </data>
+  <data name="Software releases" xml:space="preserve">
+    <value>软件发布</value>
+  </data>
+  <data name="View software releases" xml:space="preserve">
+    <value>查看软件发布</value>
+  </data>
+  <data name="Create new software releases" xml:space="preserve">
+    <value>创建新的软件发布</value>
+  </data>
+  <data name="Edit own software releases" xml:space="preserve">
+    <value>编辑自己的软件发布</value>
+  </data>
+  <data name="Edit other users software releases" xml:space="preserve">
+    <value>编辑其他用户的软件发布</value>
+  </data>
+  <data name="Delete own software releases" xml:space="preserve">
+    <value>删除自己的软件发布</value>
+  </data>
+  <data name="Delete other users software releases" xml:space="preserve">
+    <value>删除其他用户的软件发布</value>
+  </data>
+  <data name="Publish own software releases" xml:space="preserve">
+    <value>发布自己的软件发布</value>
+  </data>
+  <data name="Publish other users software releases" xml:space="preserve">
+    <value>发布其他用户的软件发布</value>
+  </data>
+  <data name="Unpublish own software releases" xml:space="preserve">
+    <value>取消发布自己的软件发布</value>
+  </data>
+  <data name="Unpublish other users software releases" xml:space="preserve">
+    <value>取消发布其他用户的软件发布</value>
+  </data>
+  <data name="Purge software releases" xml:space="preserve">
+    <value>永久删除软件发布</value>
+  </data>
+  <data name="Restore software releases" xml:space="preserve">
+    <value>恢复软件发布</value>
+  </data>
+  <data name="Publish quick notes(s)" xml:space="preserve">
+    <value>发布快速笔记</value>
+  </data>
+  <data name="Unpublish quick notes(s)" xml:space="preserve">
+    <value>取消发布快速笔记</value>
+  </data>
+  <data name="Go to repository" xml:space="preserve">
+    <value>前往仓库</value>
+  </data>
+  <data name="Repository URL" xml:space="preserve">
+    <value>仓库 URL</value>
+  </data>
+  <data name="Hyperlink" xml:space="preserve">
+    <value>超链接</value>
+  </data>
+  <data name="File upload" xml:space="preserve">
+    <value>文件上传</value>
+  </data>
+  <data name="Uploading {0}" xml:space="preserve">
+    <value>正在上传 {0}</value>
+  </data>
+  <data name="Release date is required" xml:space="preserve">
+    <value>发布日期是必填项</value>
+  </data>
+  <data name="Release must have at least 1 file" xml:space="preserve">
+    <value>发布必须至少包含 1 个文件</value>
+  </data>
+  <data name="Software releases found in the search" xml:space="preserve">
+    <value>搜索中找到的软件发布</value>
+  </data>
+  <data name="Mark blog as primary" xml:space="preserve">
+    <value>将博客设为主要博客</value>
+  </data>
+  <data name="Make {0} blog primary" xml:space="preserve">
+    <value>将 {0} 博客设为主要博客</value>
+  </data>
+  <data name="User Id is required" xml:space="preserve">
+    <value>用户 ID 是必填项</value>
+  </data>
+  <data name="When provided, email must be valid" xml:space="preserve">
+    <value>如果提供，电子邮件必须有效</value>
+  </data>
+  <data name="When provided, email from social network must be valid" xml:space="preserve">
+    <value>如果提供，社交网络的电子邮件必须有效</value>
+  </data>
+  <data name="{0}: Base64 string must be a valid image" xml:space="preserve">
+    <value>{0}：Base64 字符串必须是有效的图像</value>
+  </data>
+  <data name="Profile cover url" xml:space="preserve">
+    <value>个人资料封面 URL</value>
+  </data>
+  <data name="Profile page url" xml:space="preserve">
+    <value>个人资料页面 URL</value>
+  </data>
+  <data name="Profile picture url" xml:space="preserve">
+    <value>个人资料图片 URL</value>
+  </data>
+  <data name="Profile cover image" xml:space="preserve">
+    <value>个人资料封面图片</value>
+  </data>
+  <data name="Profile picture image" xml:space="preserve">
+    <value>个人资料图片</value>
+  </data>
+  <data name="User has been blocked" xml:space="preserve">
+    <value>用户已被屏蔽</value>
+  </data>
+  <data name="Something went wrong with {0} login" xml:space="preserve">
+    <value>使用 {0} 登录时出现问题</value>
+  </data>
+  <data name="•• Not shared ••" xml:space="preserve">
+    <value>•• 未共享 ••</value>
+  </data>
+  <data name="Social profile is required" xml:space="preserve">
+    <value>社交资料为必填项</value>
+  </data>
+  <data name="User did not share a valid e-mail address" xml:space="preserve">
+    <value>用户未共享有效的电子邮件地址</value>
+  </data>
+  <data name="Logged in on website" xml:space="preserve">
+    <value>已登录网站</value>
+  </data>
+  <data name="Subscribed to website" xml:space="preserve">
+    <value>已订阅网站</value>
+  </data>
+  <data name="Unsubscribed from website" xml:space="preserve">
+    <value>已取消网站订阅</value>
+  </data>
+  <data name="Help me" xml:space="preserve">
+    <value>帮助我</value>
+  </data>
+  <data name="Master password doesn't match the system" xml:space="preserve">
+    <value>主密码与系统密码不匹配</value>
+  </data>
+  <data name="One-time master password" xml:space="preserve">
+    <value>一次性主密码</value>
+  </data>
+  <data name="One-time master password used" xml:space="preserve">
+    <value>一次性主密码已使用</value>
+  </data>
+  <data name="Are you ready to use the one-time master password and create a new admin user?" xml:space="preserve">
+    <value>您准备好使用一次性主密码并创建新的管理员用户了吗？</value>
+  </data>
+  <data name="Proceed" xml:space="preserve">
+    <value>继续</value>
+  </data>
+  <data name="Creating a user" xml:space="preserve">
+    <value>正在创建用户</value>
+  </data>
+  <data name="Get new random password" xml:space="preserve">
+    <value>生成新的随机密码</value>
+  </data>
+  <data name="New passwords must be valid and match each other" xml:space="preserve">
+    <value>新密码必须有效且彼此匹配</value>
+  </data>
+  <data name="A password has been created" xml:space="preserve">
+    <value>已创建密码</value>
+  </data>
+  <data name="Username is already in use" xml:space="preserve">
+    <value>用户名已被使用</value>
+  </data>
+  <data name="Display name is already in use" xml:space="preserve">
+    <value>显示名称已被使用</value>
+  </data>
+  <data name="BACPAC import failed: {0}" xml:space="preserve">
+    <value>BACPAC 导入失败：{0}</value>
+  </data>
+  <data name="BACPAC export failed: {0}" xml:space="preserve">
+    <value>BACPAC 导出失败：{0}</value>
+  </data>
+  <data name="BACPAC file not found" xml:space="preserve">
+    <value>未找到 BACPAC 文件</value>
+  </data>
+  <data name="Current process hasn't started yet" xml:space="preserve">
+    <value>当前进程尚未启动</value>
+  </data>
+  <data name="Blog is deactivated" xml:space="preserve">
+    <value>博客已停用</value>
+  </data>
+  <data name="Blog is deleted" xml:space="preserve">
+    <value>博客已删除</value>
+  </data>
+  <data name="Connectivity details" xml:space="preserve">
+    <value>连接详细信息</value>
+  </data>
+  <data name="Deactivated" xml:space="preserve">
+    <value>已停用</value>
+  </data>
+  <data name="{0} content(s)" xml:space="preserve">
+    <value>{0} 个内容</value>
+  </data>
+  <data name="Please inform a set of user credentials with elevated privileges to restore the backup" xml:space="preserve">
+    <value>请提供具有提升权限的用户凭据以还原备份</value>
+  </data>
+  <data name="And it must be a different user than current user accessing the database" xml:space="preserve">
+    <value>并且必须是与当前访问数据库的用户不同的用户</value>
+  </data>
+  <data name="Restore completed successfully. Please restart the application to apply the changes" xml:space="preserve">
+    <value>还原已成功完成。请重启应用程序以应用更改</value>
+  </data>
+  <data name="E-mail is already in use" xml:space="preserve">
+    <value>电子邮件地址已被使用</value>
+  </data>
+</root>

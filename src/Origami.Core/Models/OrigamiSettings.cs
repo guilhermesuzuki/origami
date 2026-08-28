@@ -11,7 +11,8 @@ namespace Origami.Core.Models
         IChanged,
         IId,
         INew,
-        IHeaderImage
+        IHeaderImage,
+        ILanguageWrittenOn
     {
         public OrigamiSettings() : base()
         {
@@ -112,11 +113,12 @@ namespace Origami.Core.Models
         private bool _isCommentNestingEnabled;
         private bool _isCommentsEnabled;
         private bool _keepTestingTheSmtpServerConnectivity = false;
-        private string _language = string.Empty;
+        private string _languageWrittenOn = string.Empty;
         private int _maxRemoteFileSize = _defaultMaxRemoteFileSize;
         private string _name = string.Empty;
         private int _numberOfReferrerDays;
         private OpenTelemetry _openTelemetry = new();
+        private Seq _seq = new();
         private bool _pageOptionsCustomFields;
         private bool _pageOptionsDescription;
         private bool _pageOptionsSlug;
@@ -156,6 +158,7 @@ namespace Origami.Core.Models
         private bool _useBlogNameInPageTitles;
 
         private bool _maintenanceMode = false;
+        private bool _safeMode = false;
 
         /// <summary>
         ///     Occurs when [changed].
@@ -1141,10 +1144,10 @@ namespace Origami.Core.Models
         /// <example>
         ///     en-US
         /// </example>
-        public string Language
+        public string LanguageWrittenOn
         {
-            get => _language;
-            set => this.Set(ref _language, value, Changed);
+            get => _languageWrittenOn;
+            set => this.Set(ref _languageWrittenOn, value, Changed);
         }
 
         #endregion
@@ -1452,6 +1455,11 @@ namespace Origami.Core.Models
         public string RssFeed5 { get; set; } = string.Empty;
 
         /// <summary>
+        /// Repository URL
+        /// </summary>
+        public string RepositoryURL { get; set; } = string.Empty;
+
+        /// <summary>
         /// Extracts all settings
         /// </summary>
         /// <returns></returns>
@@ -1479,6 +1487,7 @@ namespace Origami.Core.Models
 
             settings.Add(this.OpenTelemetry);
             settings.Add(this.SocialNetwork);
+            settings.Add(this.Seq);
 
             return settings;
         }
@@ -1610,6 +1619,24 @@ namespace Origami.Core.Models
         {
             get => _maintenanceMode;
             set => this.Set(ref _maintenanceMode, value, Changed);
+        }
+
+        /// <summary>
+        /// Seq settings
+        /// </summary>
+        public Seq Seq
+        {
+            get => _seq;
+            set => this.Set(ref _seq, value, Changed);
+        }
+
+        /// <summary>
+        /// Is the website in safe mode?
+        /// </summary>
+        public bool SafeMode
+        {
+            get => _safeMode;
+            set => this.Set(ref _safeMode, value, Changed);
         }
     }
 }

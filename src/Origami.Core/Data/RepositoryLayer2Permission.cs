@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Origami.Core.Models;
 
 namespace Origami.Core.Data
@@ -11,12 +10,12 @@ namespace Origami.Core.Data
         IUpdatePermission<T>,
         IDeletePermission<T>,
         IPublishPermission<T>
-        where T : class, IId, new()
+        where T : class, IId
     {
         protected RepositoryLayer2Permission(
             Text text,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
-            IMemoryCache memoryCache,
+            IMyMemoryCache memoryCache,
             IWebRootPath webRootPath)
             : base(text, dbContextFactory, memoryCache, webRootPath)
         {

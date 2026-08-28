@@ -1,6 +1,6 @@
 ﻿namespace Origami.Core.Models
 {
-    public interface IParentIdNull<T>
+    public interface IParentIdNull
     {
         /// <summary>
         /// Parent Id (FK)

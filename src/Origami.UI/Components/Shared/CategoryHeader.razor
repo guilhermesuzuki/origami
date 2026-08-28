@@ -1,43 +1,27 @@
 ﻿@inherits Basic
-@implements IHyperlink
 @implements IEntityNull<OrigamiCategory>
-@inject IPostCategoryRepository _postCategory
-@inject IVideoCategoryRepository _videoCategory
 
 @if (Entity != null)
 {
-    <div class="category-header p-2 text-center border shadow-sm @Class">
-        <a href="@this.Hyperlink">
-            <img src="@Entity.HeaderImage" height="45" onerror="this.onerror=null; this.src='@(OrigamiConstants.NoCategory)'" />
-            <div class="mt-1 text-uppercase fw-bold ellipsis name" title="@this.Entity.Name">@this.Entity.Name</div>
-            @if (ShowCounter)
-            {
-                <div class="mt-1 text-center post-video-counter">
-                    <span class="mx-1">@Text.Lower("{0} post(s)", this.PublishedPosts)</span>
-                    <span class="mx-1">@Text.Lower("{0} video(s)", this.PublishedVideos)</span>
-                </div>
-            }
-        </a>
+    <div class="category-header text-center cursor-pointer @Class" @onclick="this.Go">
+        <img src="@Entity.HeaderImage" height="45" onerror="this.onerror=null; this.src='@(OrigamiConstants.NoCategory)'" />
+        <div class="mt-1 text-uppercase fw-bold ellipsis name" title="@this.Entity.Name">@this.Entity.Name</div>
+        <div class="mt-1 text-center post-video-counter">
+            <span class="mx-1">@Text.Lower("{0} content(s)", this.PublishedContents)</span>
+        </div>
     </div>
 }
 
 @code {
     [Parameter] public OrigamiCategory? Entity { get; set; }
-    [Parameter] public bool ShowCounter { get; set; } = true;
 
-    private int PublishedPosts => this.Entity != null ? this.Super.GetPosts(this.Entity).Published().Count() : 0;
-    private int PublishedVideos => this.Entity != null ? this.Super.GetVideos(this.Entity).Published().Count() : 0;
+    private int PublishedContents => this.Entity != null ? this.Super.GetContents(this.Entity).Published().Count() : 0;
 
-    public string Hyperlink
+    protected void Go()
     {
-        get
+        if (Entity != null)
         {
-            if (Entity != null)
-            {
-                var blog = this.Super.Blogs.ReadFromCache().Id(Entity.BlogId)!;
-                return $"/blogs/{blog.Slug}/categories/{Entity.Slug}/#content-start";
-            }
-            return string.Empty;
-        }    
+            WhatHappensNext.WhenIClickHere(this, new() { Slug = Entity });
+        }
     }
 }

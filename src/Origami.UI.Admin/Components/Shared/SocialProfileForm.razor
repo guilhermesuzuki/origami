@@ -2,13 +2,9 @@
 
 @inject IUserActivityRepository _userActivity
 @inject ISocialProfileRepository _socialProfile
-@inject IPostCommentReactionRepository _postCommentReaction
-@inject IPostCommentRepository _postComment
-@inject IPostRatingRepository _postRating
-@inject IVideoCommentReactionRepository _videoCommentReaction
-@inject IVideoCommentRepository _videoComment
-@inject IVideoRatingRepository _videoRating
-
+@inject IContentCommentReactionRepository _postCommentReaction
+@inject IContentCommentRepository _postComment
+@inject IContentRatingRepository _postRating
 <div class="social-profile-form @Class">
     @if (this.Entity.New)
     {
@@ -29,7 +25,7 @@
         </div>
         <BasicHeader Class="mt-3" Entity="this.Entity"></BasicHeader>
         <MudTextField FullWidth="true"
-                      Text="@Entity.Name()"
+                      Text="@Entity.GetName()"
                       HelperText="@Text.Lower("Name")"
                       ReadOnly="true"
                       AdornmentIcon="@Entity.SocialNetwork.Icon().Value"
@@ -38,7 +34,7 @@
                       T="string"></MudTextField>
 
         <MudTextField FullWidth="true"
-                      Text="@Text.Lower(this.Entity.GetEmail())"
+                      Text="@this.Entity.GetEmail(Text)"
                       HelperText="@Text.Lower("E-mail")"
                       ReadOnly="true"
                       AdornmentIcon="@Icons.Material.Filled.AlternateEmail"
@@ -55,45 +51,33 @@
                       Class="social-profile subscriber mt-3"
                       T="string"></MudTextField>
 
+
         <div class="row mt-3">
-            <div class="col-12 col-xl-4">
+            <div class="col-12 col-xl-6">
                 <div class="fs-5">
                     @Text.Lower("Ratings")
                 </div>
-                <div>
-                    <i class="bi bi-file-earmark-text-fill"></i>
-                    @Text.Lower("{0} On Posts", _postRating.RatingsFromProfile(this.Entity).Count())
-                </div>
-                <div>
-                    <i class="bi bi-file-earmark-play-fill"></i>
-                    @Text.Lower("{0} On Videos", _videoRating.RatingsFromProfile(this.Entity).Count())
-                </div>
+                <span>
+                    @this.Super.ContentRatings.RatingsFromProfile(this.Entity).Count()
+                </span>
             </div>
-            <div class="col-12 col-xl-4">
-                <div class="fs-5">
-                    @Text.Lower("Comments")
-                </div>
-                <div>
-                    <i class="bi bi-file-earmark-text-fill"></i>
-                    @Text.Lower("{0} On Posts", _postComment.CommentsFromProfile(this.Entity, true).Count())
-                </div>
-                <div>
-                    <i class="bi bi-file-earmark-play-fill"></i>
-                    @Text.Lower("{0} On Videos", _videoComment.CommentsFromProfile(this.Entity, true).Count())
-                </div>
-            </div>
-            <div class="col-12 col-xl-4">
+            <div class="col-12 col-xl-6">
                 <div class="fs-5">
                     @Text.Lower("Reactions")
                 </div>
-                <div>
-                    <i class="bi bi-file-earmark-text-fill"></i>
-                    @Text.Lower("{0} On Post Comments", _postCommentReaction.ReactionsFromProfile(this.Entity).Count())
+                <span>
+                    @(this.Super.ContentCommentReactions.ReactionsFromProfile(this.Entity).Count() + this.Super.ContentReactions.ReactionsFromProfile(this.Entity).Count())
+                </span>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-12">
+                <div class="fs-5">
+                    @Text.Lower("Comments [including deleted]")
                 </div>
-                <div>
-                    <i class="bi bi-file-earmark-play-fill"></i>
-                    @Text.Lower("{0} On Video Comments", _videoCommentReaction.ReactionsFromProfile(this.Entity).Count())
-                </div>
+                <span>
+                    @this.Super.ContentComments.CommentsFromProfile(this.Entity, true).Count()
+                </span>
             </div>
         </div>
 
@@ -107,37 +91,41 @@
                     <Columns>
                         <TemplateColumn>
                             <CellTemplate>
-                                <div class="fw-bold text-center">
+                                <span class="fw-bold">
                                     <i class="fa-solid fa-calendar"></i>
                                     @context.Item.Date
-                                </div>
-                                @if (context.Item.Type.Like("PostCommentReaction") == true)
+                                </span>
+                                @if (context.Item.Type.Like("ContentCommentReaction") == true)
                                 {
-                                    <UserActivityPostCommentReaction Id="@context.Item.Id"></UserActivityPostCommentReaction>
+                                    <UserActivityContentCommentReaction Id="@context.Item.Id"></UserActivityContentCommentReaction>
                                 }
-                                else if (context.Item.Type.Like("PostComment") == true)
+                                else if (context.Item.Type.Like("ContentComment") == true)
                                 {
-                                    <UserActivityPostComment Id="@context.Item.Id"></UserActivityPostComment>
+                                    <UserActivityContentComment Id="@context.Item.Id"></UserActivityContentComment>
                                 }
-                                else if (context.Item.Type.Like("PostRating") == true)
+                                else if (context.Item.Type.Like("ContentRating") == true)
                                 {
-                                    <UserActivityPostRating Id="@context.Item.Id"></UserActivityPostRating>
+                                    <UserActivityContentRating Id="@context.Item.Id"></UserActivityContentRating>
                                 }
-                                else if (context.Item.Type.Like("VideoCommentReaction") == true)
+                                else if (context.Item.Type.Like("ContentReaction") == true)
                                 {
-                                    <UserActivityVideoCommentReaction Id="@context.Item.Id"></UserActivityVideoCommentReaction>
-                                }
-                                else if (context.Item.Type.Like("VideoComment") == true)
-                                {
-                                    <UserActivityVideoComment Id="@context.Item.Id"></UserActivityVideoComment>
-                                }
-                                else if (context.Item.Type.Like("VideoRating") == true)
-                                {
-                                    <UserActivityVideoRating Id="@context.Item.Id"></UserActivityVideoRating>
+                                    <UserActivityContentReaction Id="@context.Item.Id"></UserActivityContentReaction>
                                 }
                                 else if (context.Item.Type.Like("SocialProfileDelete") == true)
                                 {
                                     <UserActivitySocialProfileDelete Id="@context.Item.Id"></UserActivitySocialProfileDelete>
+                                }
+                                else if (context.Item.Type.Like("SocialProfileLogsIntoWebsiteEvent") == true)
+                                {
+                                    <UserActivitySocialProfileLogsIntoWebsite Id="@context.Item.Id"></UserActivitySocialProfileLogsIntoWebsite>
+                                }
+                                else if (context.Item.Type.Like("SocialProfileSubscribesToWebsiteEvent") == true)
+                                {
+                                    <UserActivitySocialProfileSubscribesToWebsite Id="@context.Item.Id"></UserActivitySocialProfileSubscribesToWebsite>
+                                }
+                                else if (context.Item.Type.Like("SocialProfileUnsubscribesFromWebsiteEvent") == true)
+                                {
+                                    <UserActivitySocialProfileUnsubscribesFromWebsite Id="@context.Item.Id"></UserActivitySocialProfileUnsubscribesFromWebsite>
                                 }
                             </CellTemplate>
                         </TemplateColumn>

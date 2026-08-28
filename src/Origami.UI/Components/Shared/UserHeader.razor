@@ -1,0 +1,48 @@
+﻿@inherits Basic
+@implements IEntityNull<OrigamiUser>
+
+@if (this.Entity != null)
+{
+    <div class="user-header @Class">
+        <span class="d-block">
+            <span class="fw-bold username" title="@Text.Lower("Username")">
+                <i class="bi bi-person-circle"></i>
+                <span>@Entity.Username</span>
+            </span>
+            <span class="display-name" title="@Text.Lower("Display name")">
+                (@Entity.DisplayName)
+                @if (this.UserFacade.User.Id == this.Entity.Id)
+                {
+                    <span class="bg-info text-white is-blocked px-1 fw-bold xx-small ms-1">
+                        @Text.Lower("Yourself")
+                    </span>
+                }
+                @if (this.Entity.IsBlocked == true)
+                {
+                    <span class="bg-danger text-white is-blocked px-1 fw-bold xx-small ms-1">
+                        @Text.Lower("Blocked")
+                    </span>
+                }
+            </span>
+        </span>
+        @if (this.Entity.FullName().Has() == true)
+        {
+            <span class="d-block full-name">
+                <i class="bi bi-person-vcard-fill"></i>
+                @Entity.FullName()
+            </span>
+        }
+        @if (this.Entity.Email.Has() == true)
+        {
+            <span class="d-block email-address">
+                <i class="bi bi-envelope-at-fill"></i>
+                @Entity.Email
+            </span>
+        }
+        <Id Class="d-block x-small" Entity="Entity"></Id>
+    </div>
+}
+
+@code {
+    [Parameter] public OrigamiUser? Entity { get; set; }
+}

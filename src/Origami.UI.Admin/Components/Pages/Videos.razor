@@ -1,5 +1,5 @@
 ﻿@page "/videos"
-@inherits BasicAdminGrid<OrigamiVideo>
+@inherits BasicAdminGridContent<OrigamiVideo, HubContentVideo>
 
 <style>
     .video-header-lite .language { display: none !important; }
@@ -42,13 +42,6 @@
                 </div>
             </div>
         </div>
-        <div class="p-3 border-bottom">
-            <div class="row">
-                <div class="col-12">
-                    <SearchLite T="OrigamiVideo" OnHitSelected="this.OnSearchResultSelected"></SearchLite>
-                </div>
-            </div>
-        </div>
     </HeaderTemplate>
     <ContentTemplate>
         <div class="p-3">
@@ -57,60 +50,50 @@
                     <DataGridOptions Deleted="this.IncludeDeletedEntitiesInDataGrid" DeletedChanged="this.OnIncludeDeletedEntitiesChanged"></DataGridOptions>
                 </div>
                 <div class="videos col-12">
-                    <MudDataGrid @ref="DataGrid" T="OrigamiVideo" ServerData="GetEntities" Filterable="false" SortMode="SortMode.None" Class="border selectable" SelectedItems="this.SelectedEntities" MultiSelection="true" SelectedItemsChanged="this.SelectedEntitiesChanged"
+                    <MudDataGrid @ref="DataGrid" T="HubContentVideo" ServerData="GetEntities" Filterable="false" SortMode="SortMode.None" Class="border selectable" SelectedItems="this.SelectedEntities" MultiSelection="true" SelectedItemsChanged="this.SelectedEntitiesChanged"
                                  RowClassFunc="this.RowClassFunc" Bordered="true" SelectOnRowClick="false">
                         <Columns>
-                            <SelectColumn T="OrigamiVideo"></SelectColumn>
+                            <SelectColumn T="HubContentVideo"></SelectColumn>
                             <TemplateColumn Title="@Text.Upper("Title")">
                                 <CellTemplate>
                                     <div class="cursor-pointer" @onclick="() => OnEdit(context.Item)">
-                                        <VideoRating Class="" Entity="context.Item" ShowLanguage="false"></VideoRating><br />
-                                        <VideoHeaderLite2 Entity="context.Item"></VideoHeaderLite2>
+                                        <ContentTitleColumn Entity="context.Item.Entity"></ContentTitleColumn>
                                     </div>
                                 </CellTemplate>
                             </TemplateColumn>
-                            <TemplateColumn Title="@Text.Upper("Header")" CellClass="col-1 text-center">
+                            <TemplateColumn Title="@Text.Upper("Header")" CellClass="col-3 text-center">
                                 <CellTemplate>
-                                    <img src="@context.Item.Get().HeaderImage" style="height: 200px; width: auto;" title="@context.Item.Get().HeaderImage" />
-                                    <div class="mt-1 p-1 border">
-                                        <ul class="inline-list text-center">
-                                            <li>
-                                                <i class="fa-solid fa-eye"></i>
-                                                @this.Super.PhysicalPageViews.GetViews(context.Item)
-                                            </li>
-                                            <li>
-                                                <i class="fa-solid fa-comment"></i>
-                                                @this.Super.VideoComments.GetComments(context.Item)
-                                            </li>
-                                        </ul>
-                                    </div>
+                                    <ContentHeader Entity="context.Item.Entity"></ContentHeader>
                                 </CellTemplate>
                             </TemplateColumn>
                             <TemplateColumn Title="@Text.Upper("Categories")" Sortable="false" Filterable="false" CellClass="col-2 categories">
                                 <CellTemplate>
-                                    @foreach (var category in this.Super.GetCategories(context.Item))
+                                    @foreach (var category in this.Super.GetCategories(context.Item.Entity))
                                     {
-                                        <CategoryHeaderLite Class="mb-1 p-2 shadow-sm border" Entity="category"></CategoryHeaderLite>
+                                        <div class="wrapper p-2 mb-1 me-1 shadow-sm border d-inline-block">
+                                            <CategoryHeaderInline Class="" Entity="category"></CategoryHeaderInline>
+                                        </div>
                                     }
                                 </CellTemplate>
                             </TemplateColumn>
                             <TemplateColumn Title="@Text.Upper("Published")" Sortable="false" Filterable="false" CellClass="col-1 text-center">
                                 <CellTemplate>
-                                    @if (context.Item.IsPublished)
+                                    @if (context.Item.Entity.IsPublished)
                                     {
                                         <i class="fa-solid fa-thumbs-up"></i>
+                                        <div class="small">@context.Item.Entity.DatePublished</div>
                                     }
                                 </CellTemplate>
                             </TemplateColumn>
                             <TemplateColumn Title="@Text.Upper("Date")" Sortable="false" Filterable="false" CellClass="col-1 text-center">
                                 <CellTemplate>
                                     <i class="fa-solid fa-calendar"></i>
-                                    <div class="small">@context.Item.GetDate()</div>
+                                    <div class="small">@context.Item.Entity.GetDate()</div>
                                 </CellTemplate>
                             </TemplateColumn>
                         </Columns>
                         <PagerContent>
-                            <MudDataGridPager T="OrigamiVideo" />
+                            <MudDataGridPager T="HubContentVideo" />
                         </PagerContent>
                         <NoRecordsContent>
                             <NoEntriesWereFound></NoEntriesWereFound>
@@ -125,55 +108,5 @@
     </ContentTemplate>
 </Root>
 @code {
-
     protected override string DefaultOrdering => $"{nameof(OrigamiVideo.Title)}";
-
-    protected virtual Result<OrigamiVideo> PublishEntity(OrigamiVideo entity)
-    {
-        var context = new DataOperationContext<OrigamiVideo>(this.UserFacade.User, DateTime.UtcNow, entity);
-        return this.Super.Videos.SmartPublish(context, true);
-    }
-
-    protected virtual Result<OrigamiVideo> UnpublishEntity(OrigamiVideo entity)
-    {
-        var context = new DataOperationContext<OrigamiVideo>(this.UserFacade.User, DateTime.UtcNow, entity);
-        return this.Super.Videos.SmartUnpublish(context, true);
-    }
-
-    protected async Task PublishSelectedEntities()
-    {
-        await ExecuteWithSelectedEntities(
-            async () =>
-            {
-                return await DialogService.ShowMessageBoxAsync(
-                    Text.Upper("Publish {0} item(s)", SelectedEntities.Count),
-                    Text.Original("Are you sure?"),
-                    yesText: Text.Lower("Yes"),
-                    noText: Text.Lower("No"));
-            },
-            this.PublishEntity
-        );
-    }
-
-    protected async Task UnpublishSelectedEntities()
-    {
-        await ExecuteWithSelectedEntities(
-            async () =>
-            {
-                return await DialogService.ShowMessageBoxAsync(
-                    Text.Upper("Unpublish {0} item(s)", SelectedEntities.Count),
-                    Text.Original("Are you sure?"),
-                    yesText: Text.Lower("Yes"),
-                    noText: Text.Lower("No"));
-            },
-            this.UnpublishEntity
-        );
-    }
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        var filter = this.NavigationManager!.Uri.QueryString("filter");
-        this.Filter = filter.Has() ? filter : this.Filter;
-    }
 }

@@ -2,7 +2,7 @@
 
 <style>
     .post-header-image, .video-header-image, .page-header-image { height: 200px; }
-    .mud-file-upload, .mud-file-upload > * { height:100%; }
+    .mud-file-upload, .mud-file-upload > * { height: 100%; }
 </style>
 <style>
     ul.expand { display: flex; list-style: none; padding: 0; margin: 0; }
@@ -24,9 +24,11 @@
                                 </span>
                                 <br />
                                 <span class="fw-bold">
-                                    @Text.Original("Be careful when choosing a username, you won't be able to change it later.")
+                                    @Text.Original("Be careful when choosing a username, you won't be able to change it later")
+                                    <span>.</span>
                                     <br />
-                                    @Text.Original("You can change your display name at any time though.")
+                                    @Text.Original("You can change your display name at any time though")
+                                    <span>.</span>
                                 </span>
                             </div>
                         </li>
@@ -38,31 +40,27 @@
                         {
                             <MudTextField @bind-Value="this.Entity.Username"
                                           HelperText="@Text.Lower("Username")"
-                                          Immediate="true"
-                                          Required="true"></MudTextField>
+                                          Immediate="true"></MudTextField>
                         }
                         else
                         {
                             <MudTextField @bind-Value="this.Entity.Username"
                                           HelperText="@Text.Lower("Username (read-only)")"
-                                          ReadOnly="true"
-                                          Required="true"></MudTextField>
+                                          ReadOnly="true"></MudTextField>
                         }
                     </li>
                     <li class="">
                         <MudTextField @bind-Value="this.Entity.DisplayName"
                                       Immediate="true"
-                                      Required="true"
                                       HelperText="@Text.Lower("Display name")"></MudTextField>
                     </li>
                 </ul>
                 <ul class="inline-list mt-3">
                     <li class="">
-                        <MudTextField @bind-Value="this.Entity.EmailAddress"
+                        <MudTextField @bind-Value="this.Entity.Email"
                                       HelperText="@Text.Lower("E-mail")"
                                       InputType="InputType.Email"
-                                      Immediate="true"
-                                      Required="true"></MudTextField>
+                                      Immediate="true"></MudTextField>
                     </li>
                     <li>
                         <Filler></Filler>
@@ -80,11 +78,42 @@
                                       HelperText="@Text.Lower("Last name")"></MudTextField>
                     </li>
                 </ul>
+                <div class="mt-6 p-2 border">
+                    <ul class="inline-list">
+                        <li>
+                            <MudTextField @bind-Value="this.Entity.NewPassword1"
+                                          Immediate="true"
+                                          HelperText="@Text.Lower("Password")"
+                                          InputType="InputType.Password"></MudTextField>
+                        </li>
+                        <li>
+                            <MudTextField @bind-Value="this.Entity.NewPassword2"
+                                          Immediate="true"
+                                          HelperText="@Text.Lower("Confirm password")"
+                                          InputType="InputType.Password"></MudTextField>
+                        </li>
+                    </ul>
+                    <ul class="inline-list mt-3">
+                        <li>
+                            <div class="btn-group w-100">
+                                <button class="btn btn-success fs-small w-100" @onclick="() => this.Entity.GenerateNewPasswordForNewUsers()">
+                                    @Text.Lower("New random password")
+                                </button>
+                                <button class="btn btn-secondary fs-small w-100" @onclick="() => this.Entity.ClearNewPasswords()">
+                                    @Text.Lower("Clear")
+                                </button>
+                                <button class="btn btn-info fs-small" style="width: 50px;" @onclick="() => this.CopyToClipboard(this.Entity.NewPassword1)">
+                                    <i class="fa-solid fa-copy"></i>
+                                </button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
             <div class="text-center p-3 mt-3">
                 <ul class="expand p-3 border">
                     <li>
-                        <HeaderImageLite Entity="this.Entity" ImgMaxWidth="256px" Footer="true"></HeaderImageLite>
+                        <HeaderImageCard Entity="this.Entity" ImgMaxWidth="256px" Footer="true"></HeaderImageCard>
                     </li>
                     <li class="position-relative ms-3">
                         <MudFileUpload T="IBrowserFile" FilesChanged="UploadHeaderBase64" Accept=".png, .jpg, .bmp, .tiff" MaximumFileCount="1">
@@ -93,7 +122,7 @@
                                     <button class="btn btn-light w-100" @onclick="context.OpenFilePickerAsync" style="height:34%;">
                                         <i class="fa-solid fa-cloud-arrow-up"></i>
                                         <div>@Text.Lower("Only image files")</div>
-                                        <div class="x-small">@Text.Original("{0} MB max.", 2)</div>
+                                        <div class="x-small">@Text.Original("{0}MB max.", 2)</div>
                                     </button>
                                     <button class="btn btn-light w-100" @onclick="() => this.FileManagerForImages = true" style="height:33%;">
                                         <i class="fa-solid fa-folder"></i>
@@ -166,14 +195,14 @@
                     <li>
                         <MudTextField ReadOnly="true"
                                       Immediate="true"
-                                      Value="@(Text.Lower(Entity.TOTPSecret.Has().YesNo()))"
+                                      Value="@(Text.Lower(Entity.TOTPSecret.Has().YesNo(Text)))"
                                       HelperText="@Text.Lower("2FA secret?")"
                                       Class="yes-no"></MudTextField>
                     </li>
                     <li>
                         <MudTextField ReadOnly="true"
                                       Immediate="true"
-                                      Value="@(Text.Lower(Entity.GetTOTPRecoveryCodes().Any().YesNo()))"
+                                      Value="@(Text.Lower(Entity.GetTOTPRecoveryCodes().Any().YesNo(Text)))"
                                       HelperText="@Text.Lower("2FA recovery codes?")"
                                       Class="yes-no"></MudTextField>
                     </li>
@@ -193,7 +222,7 @@
                         </TemplateColumn>
                         <TemplateColumn CellClass="w-100">
                             <CellTemplate>
-                                <BlogHeaderLite Entity="context.Item"></BlogHeaderLite>
+                                <BlogHeaderInline Entity="context.Item"></BlogHeaderInline>
                             </CellTemplate>
                         </TemplateColumn>
                         <TemplateColumn>
@@ -253,13 +282,24 @@
                         @Text.Lower("User actions")
                     </div>
                     <div class="btn-group w-100 mt-3">
-                        <button class="btn btn-danger text-white fw-bold w-100" @onclick="BlockUser" disabled="@this.Entity.IsBlocked">
-                            <i class="fa-solid fa-user-slash"></i>
-                            @Text.Lower("Block user")
-                        </button>
+                        @if (this.UserFacade.User.Id == this.Entity.Id)
+                        {
+                            <button class="btn btn-danger text-white fw-bold w-100" @onclick="BlockUserSelf" disabled="@this.Entity.IsBlocked" title="@Text.Original("This will block yourself")">
+                                <i class="fa-solid fa-user-slash"></i>
+                                @Text.Lower("Block")
+                                <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                            </button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-danger text-white fw-bold w-100" @onclick="BlockUser" disabled="@this.Entity.IsBlocked">
+                                <i class="fa-solid fa-user-slash"></i>
+                                @Text.Lower("Block")
+                            </button>
+                        }
                         <button class="btn btn-danger text-white fw-bold w-100" @onclick="UnblockUser" disabled="@(this.Entity.IsBlocked == false)">
                             <i class="fa-solid fa-user-check"></i>
-                            @Text.Lower("Unblock user")
+                            @Text.Lower("Unblock")
                         </button>
                         <button class="btn btn-warning text-white fw-bold w-100" @onclick="ResetPassword">
                             <i class="fa-solid fa-user-lock"></i>
@@ -292,7 +332,7 @@
                             <Columns>
                                 <TemplateColumn>
                                     <CellTemplate>
-                                        <PageHeader Entity="context.Item" ShowRelatedPages="false"></PageHeader>
+                                        <ContentHeader Entity="context.Item" ShowRelatedContent="false"></ContentHeader>
                                     </CellTemplate>
                                 </TemplateColumn>
                             </Columns>
@@ -312,7 +352,7 @@
                             <Columns>
                                 <TemplateColumn>
                                     <CellTemplate>
-                                        <PostHeader Entity="context.Item"></PostHeader>
+                                        <ContentHeader Entity="context.Item"></ContentHeader>
                                     </CellTemplate>
                                 </TemplateColumn>
                             </Columns>
@@ -332,7 +372,7 @@
                             <Columns>
                                 <TemplateColumn>
                                     <CellTemplate>
-                                        <VideoHeader Entity="context.Item"></VideoHeader>
+                                        <ContentHeader Entity="context.Item"></ContentHeader>
                                     </CellTemplate>
                                 </TemplateColumn>
                             </Columns>
@@ -345,17 +385,17 @@
             </div>
         </div>
     }
-    <div class="buttons mt-3 p-3 text-center">
+    <div class="buttons mt-3 p-3 text-center position-sticky" style="bottom:0;">
         <div class="btn-group">
-            <button class="btn btn-success text-white fw-bold" @onclick="Save" disabled="@this.DisableTheSaveButton">
+            <button class="btn btn-success text-white fw-bold btn-save" @onclick="Save" disabled="@this.DisableTheSaveButton">
                 <i class="fa-solid fa-floppy-disk"></i>
                 @Text.Lower("Save")
             </button>
-            <button class="btn btn-secondary text-white fw-bold" @onclick="UndoChanges" disabled="@this.Entity.New">
+            <button class="btn btn-secondary text-white fw-bold btn-undo-changes" @onclick="UndoChanges" disabled="@this.Entity.New">
                 <i class="fa-solid fa-rotate-left"></i>
                 @Text.Lower("Undo changes")
             </button>
-            <button class="btn btn-info text-white fw-bold" @onclick="CreateEntity">
+            <button class="btn btn-info text-white fw-bold btn-new" @onclick="CreateEntity">
                 <i class="fa-solid fa-square-plus"></i>
                 @Text.Lower("New")
             </button>
@@ -415,7 +455,7 @@
                                 <CellTemplate>
                                     <span class="fs-4">@context.Item.Key</span>
                                     <span class="fs-6 d-block">
-                                        @(this.NavigationManager.BaseUri.TrimEnd('/') + "/password/reset/" + context.Item.Key)
+                                        @(this.GhostOfTheNavigator.BaseUri.TrimEnd('/') + "/password/reset/" + context.Item.Key)
                                     </span>
                                 </CellTemplate>
                             </TemplateColumn>
@@ -439,10 +479,10 @@
                                         var author = this.Super.Users.ReadFromCache().Id(context.Item.AuthorId);
                                         <ul class="inline-list">
                                             <li class="pe-1" style="width:50px;">
-                                                <HeaderImageLite Entity="author"></HeaderImageLite>
+                                                <HeaderImageCard Entity="author"></HeaderImageCard>
                                             </li>
                                             <li>
-                                                <UserHeaderLite Entity="author"></UserHeaderLite>
+                                                <UserHeader Entity="author"></UserHeader>
                                             </li>
                                         </ul>
                                     }
@@ -472,34 +512,12 @@
 @code {
     private bool _showPasswordResetHistory = false;
 
-    /// <summary>
-    /// User roles associated with the user.
-    /// </summary>
-    protected List<OrigamiUserRole> UserRoles = [];
-
-    /// <summary>
-    /// User blogs associated with the user.
-    /// </summary>
-    protected List<OrigamiUserBlog> UserBlogs = [];
-
     [Parameter] public EventCallback<OrigamiUser> OnUserBlocked { get; set; }
     [Parameter] public EventCallback<OrigamiUser> OnUserUnblocked { get; set; }
 
-    protected override bool DisableTheSaveButton
-    {
-        get
-        {
-            if (this.Entity.Username.Has() == false) return true;
-            if (this.Entity.DisplayName.Has() == false) return true;
-            if (this.Entity.EmailAddress.Has() == false) return true;
-            if (this.Entity.EmailAddress.Email() == false) return true;
-            return false;
-        }
-    }
-
     protected bool IsBlogSelected(OrigamiBlog blog)
     {
-        return this.UserBlogs.Any(x => x.BlogId == blog.Id);
+        return this.Entity.UserBlogs.Any(x => x.BlogId == blog.Id);
     }
 
     protected bool NewBlog(OrigamiBlog blog)
@@ -510,7 +528,7 @@
 
     protected bool IsRoleSelected(OrigamiRole role)
     {
-        return this.UserRoles.Any(x => x.RoleId == role.Id);
+        return this.Entity.UserRoles.Any(x => x.RoleId == role.Id);
     }
 
     protected bool NewRole(OrigamiRole role)
@@ -535,11 +553,11 @@
     {
         if (IsBlogSelected(blog) == true)
         {
-            this.UserBlogs.RemoveAll(x => x.BlogId == blog.Id);
+            this.Entity.UserBlogs.RemoveAll(x => x.BlogId == blog.Id);
         }
         else
         {
-            this.UserBlogs.Add(new()
+            this.Entity.UserBlogs.Add(new()
             {
                 UserId = this.Entity.Id,
                 BlogId = blog.Id,
@@ -551,11 +569,11 @@
     {
         if (IsRoleSelected(role) == true)
         {
-            this.UserRoles.RemoveAll(x => x.RoleId == role.Id);
+            this.Entity.UserRoles.RemoveAll(x => x.RoleId == role.Id);
         }
         else
         {
-            this.UserRoles.Add(new()
+            this.Entity.UserRoles.Add(new()
             {
                 UserId = this.Entity.Id,
                 RoleId = role.Id,
@@ -565,17 +583,17 @@
 
     protected List<OrigamiPage> GetPages()
     {
-        return this.Super.GetPages().Author(this.Entity).ToList();
+        return this.Super.GetVisiblePages().Author(this.Entity).ToList();
     }
 
     protected List<OrigamiPost> GetPosts()
     {
-        return this.Super.Posts.ReadFromCache().Published().Author(this.Entity).ToList();
+        return this.Super.Contents.ReadFromCache().OfType<OrigamiPost>().Published().Author(this.Entity).ToList();
     }
 
     protected List<OrigamiVideo> GetVideos()
     {
-        return this.Super.Videos.ReadFromCache().Published().Author(this.Entity).ToList();
+        return this.Super.Contents.ReadFromCache().OfType<OrigamiVideo>().Published().Author(this.Entity).ToList();
     }
 
     protected List<OrigamiUserPasswordReset> GetPasswordResetHistory()
@@ -584,51 +602,26 @@
         return db.Set<OrigamiUserPasswordReset>().AsNoTracking().Where(x => x.UserId == this.Entity.Id).OrderByDescending(x => x.DateCreated).ToList();
     }
 
-    protected void LoadUserBlogs()
+    protected async Task BlockUserSelf()
     {
-        this.UserBlogs = [.. from x in this.Super.UserBlogs.ReadFromCache() where x.UserId == this.Entity.Id select x];
-    }
+        var yes = await this.DialogService.ShowMessageBoxAsync(
+            title: Text.Upper("Are you sure?"),
+            message: Text.Lower("This will block yourself out from the website"),
+            yesText: Text.Lower("Yes"),
+            noText: Text.Lower("No")) ?? false;
 
-    protected void LoadUserRoles()
-    {
-        this.UserRoles = [.. from x in this.Super.UserRoles.ReadFromCache() where x.UserId == this.Entity.Id select x];
-    }
-
-    protected override void OnParametersSet()
-    {
-        base.OnParametersSet();
-        this.LoadUserBlogs();
-        this.LoadUserRoles();
-    }
-
-    protected override Result<OrigamiUser> CreateOthers()
-    {
-        var hub = new Result<OrigamiUser>();
-        var ctx = new DataOperationContext<OrigamiUser>(this.UserFacade.User, this.Entity);
-        this.UserRoles.GetContexts(ctx).Each(x => this.Super.UserRoles.SmartSave(x, false).Push(hub));
-        this.UserBlogs.GetContexts(ctx).Each(x => this.Super.UserBlogs.SmartSave(x, false).Push(hub));
-        return hub;
-    }
-
-    protected override Result<OrigamiUser> UpdateOthers()
-    {
-        using var db = this.DbContextFactory.CreateDbContext();
-        var hub = new Result<OrigamiUser>();
-        var ctx = new DataOperationContext<OrigamiUser>(this.UserFacade.User, this.Entity);
-        var dbo1 = db.Set<OrigamiUserRole>().AsNoTracking().Where(x => x.UserId == this.Entity.Id).ToList();
-        var merge1 = dbo1.GetMerge(this.UserRoles);
-        hub.OnSuccess(() => this.Super.UserRoles.Merge(ctx, merge1));
-        var dbo2 = db.Set<OrigamiUserBlog>().AsNoTracking().Where(x => x.UserId == this.Entity.Id).ToList();
-        var merge2 = dbo2.GetMerge(this.UserBlogs);
-        hub.OnSuccess(() => this.Super.UserBlogs.Merge(ctx, merge2));
-        return hub;
-    }
-
-    public override void UndoChanges()
-    {
-        base.UndoChanges();
-        this.LoadUserRoles();
-        this.LoadUserBlogs();
+        if (yes == true)
+        {
+            using var transaction = new TransactionScope();
+            var ctx = new DataOperationContext<OrigamiUser>(this.UserFacade.User, this.Entity);
+            var hub = this.Super.Users.Block(ctx, true);
+            if (hub.Ok)
+            {
+                transaction.Complete();
+                await this.OnUserBlocked.InvokeAsync(this.Entity);
+            }
+            this.UserFacade.Result = hub;
+        }
     }
 
     protected async Task BlockUser()
@@ -739,7 +732,7 @@
                     //reads the response content
                     var html = await response.Content.ReadAsStringAsync();
                     //send the email
-                    this.UserFacade.Result = this.Super.Emails.Send(Text.Original("Password reset link"), new() { HtmlBody = html }, [this.Entity.EmailAddress]);
+                    this.UserFacade.Result = this.Super.Emails.Send(Text.Original("Password reset link"), new() { HtmlBody = html }, [this.Entity.Email]);
                 }
             }
         }

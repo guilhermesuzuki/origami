@@ -8,7 +8,6 @@ using Origami.Core;
 using Origami.Core.Data;
 using Origami.Core.Models;
 using System.Security.Claims;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Origami.UI
 {
@@ -43,20 +42,6 @@ namespace Origami.UI
             this.UserFacade.IncognitoMode = new[] { "1", "true", }.Contains(cookie);
         }
 
-        /// <summary>
-        /// Loads the incognito mode from cookies
-        /// </summary>
-        /// <param name="firstRender"></param>
-        /// <returns></returns>
-        protected async Task LoadIncognitoModeAsync(bool firstRender)
-        {
-            if (firstRender)
-            {
-                this.UserFacade.IncognitoMode = await JSRuntime.IncognitoModeAsync();
-                this.StateHasChanged();
-            }
-        }
-
         protected virtual async Task LoadUserAsync()
         {
             var state = await this.AuthenticationStateProvider.GetAuthenticationStateAsync();
@@ -77,7 +62,7 @@ namespace Origami.UI
                         .Where(x => x.UserId == id)
                         .FirstOrDefault();
 
-                    this.UserFacade.SocialProfile = socialProfile ?? new();
+                    this.UserFacade.SocialProfileId = socialProfile?.Id ?? Guid.Empty;
                 }
                 else if (method.Like("OpenIdConnect") == true)
                 {
@@ -86,7 +71,7 @@ namespace Origami.UI
                         .Where(x => x.UserId == id)
                         .FirstOrDefault();
 
-                    this.UserFacade.SocialProfile = socialProfile ?? new();
+                    this.UserFacade.SocialProfileId = socialProfile?.Id ?? Guid.Empty;
                 }
             }
         }
@@ -94,7 +79,8 @@ namespace Origami.UI
         protected override async Task OnInitializedAsync()
         {
             await this.LoadUserAsync();
-            Task.WaitAll(this.LoadIncognitoModeAsync(), this.CookieConsentAsync());
+            await this.LoadIncognitoModeAsync();
+            await this.CookieConsentAsync();
             await base.OnInitializedAsync();
         }
     }

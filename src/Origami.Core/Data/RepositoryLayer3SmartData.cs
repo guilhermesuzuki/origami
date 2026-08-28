@@ -1,26 +1,24 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Origami.Core.Models;
-using System.Diagnostics;
 
 namespace Origami.Core.Data
 {
     public abstract class RepositoryLayer3SmartData<T> :
         RepositoryLayer2Permission<T>,
         IMerge<T>
-        where T : class, IId, new()
+        where T : class, IId
     {
         protected RepositoryLayer3SmartData(
             Text text,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
-            IMemoryCache memoryCache,
+            IMyMemoryCache memoryCache,
             IWebRootPath webRootPath)
             : base(text, dbContextFactory, memoryCache, webRootPath)
         {
 
         }
 
-        public Result Merge(DataOperationContext main, (IEnumerable<T> Purge, IEnumerable<T> Update, IEnumerable<T> Create) merge)
+        public Result Merge(DataOperationContext main, Merge<T> merge)
         {
             var hub = new Result();
 
@@ -31,7 +29,7 @@ namespace Origami.Core.Data
             return hub;
         }
 
-        public Result MergeCache((IEnumerable<T> Purge, IEnumerable<T> Update, IEnumerable<T> Create) merge)
+        public Result MergeCache(Merge<T> merge)
         {
             merge.Purge.Each(this.PurgeCache);
             merge.Update.Each(this.UpdateCache);
@@ -72,37 +70,7 @@ namespace Origami.Core.Data
 
         public virtual List<T> ReadFromCache()
         {
-            return this.ReadFromCache<T>();
-        }
-
-        public virtual List<X> ReadFromCache<X>() where X : class, new()
-        {
-            var key = typeof(X).KeyForCaching();
-            var timestamp = Stopwatch.GetTimestamp();
-
-            try
-            {
-                //race condition
-                if (MemoryCache.Get(key) == null)
-                {
-                    lock (OrigamiConstants.SyncRoot)
-                    {
-                        if (MemoryCache.Get(key) == null)
-                        {
-                            using var db = DbContextFactory.CreateDbContext();
-                            var list = db.Set<X>().AsNoTracking().ToList();
-                            MemoryCache.Set(key, list);
-                        }
-                    }
-                }
-                return MemoryCache.GetList<X>(key) ?? [];
-            }
-            finally
-            {
-                var elapsedTime = Stopwatch.GetElapsedTime(timestamp);
-                Console.ForegroundColor = elapsedTime.Milliseconds >= 200 ? ConsoleColor.Red : ConsoleColor.White;
-                Console.WriteLine($"{key} obtained in {elapsedTime}");
-            }
+            return this.MemoryCache.Read<T>();
         }
 
         public Result<T> SmartCreate(DataOperationContext<T> ctx, bool checkPermission)
@@ -113,10 +81,10 @@ namespace Origami.Core.Data
                 if (permission is { Ok: false }) return permission;
             }
 
+            ctx.Entity.SetSlug();
+
             var validation = this.CreateValidation(ctx);
             if (validation.Ok == false) return validation;
-
-            ctx.Entity.SetDateCreated(DateTime.UtcNow);
 
             return Create(ctx).OnSuccess(() => CreateCache(ctx.Entity));
         }
@@ -287,10 +255,10 @@ namespace Origami.Core.Data
                 if (permission is { Ok: false }) return permission;
             }
 
+            ctx.Entity.SetSlug();
+
             var validation = this.UpdateValidation(ctx);
             if (validation.Ok == false) return validation;
-
-            ctx.Entity.SetDateModified(DateTime.UtcNow);
 
             return Update(ctx).OnSuccess(() => UpdateCache(ctx.Entity));
         }

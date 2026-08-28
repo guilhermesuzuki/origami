@@ -1,0 +1,450 @@
+﻿@inherits Basic
+@implements IEntityNull<OrigamiContent>
+
+@if (this.Entity != null)
+{
+    var header = this.Entity.Get().HeaderImage.NoHeader();
+    var views = this.Super.PhysicalPageViews.GetViews(Entity);
+    var comments = this.Super.ContentComments.GetComments(Entity);
+
+    var rating = Math.Round(this.Super.ContentRatings.CalculateRating(this.Entity), 1, MidpointRounding.ToEven);
+    var ratings = this.Super.ContentRatings.Ratings(Entity).Count();
+
+    <AuthorHeaderLite Entity="this.Entity"></AuthorHeaderLite>
+    <div class="content-header position-relative shadow-sm cursor-pointer @Class" @onclick="this.Go" lang="@Entity.LanguageWrittenOn">
+        @if (this.Entity is OrigamiQuickNote quickNote)
+        {
+            <div class="content-header-image content-header-background" style="background: @quickNote.Background;"></div>
+        }
+        else
+        {
+            <div class="content-header-image" style="background-image: url(@header.QueryString("size", HeaderImageSize.ToString()));"></div>
+        }
+        <div class="content-header-title position-absolute overflow-auto zeroes">
+            <ul class="inline-list position-absolute w-100 z-index-middle cursor-pointer p-2" style="top:0;">
+                <li class="text-left" style="width: 50px;">
+                    <ContentIcon Entity="Entity"></ContentIcon>
+                </li>
+                <li class="text-center">
+                    <Draft Entity="this.Entity"></Draft>
+                </li>
+                <li class="text-right focusable" style="width: 50px;">
+                    <i class="fa-solid fa-image" @onclick="() => _showHeaderImage = true" @onclick:stopPropagation="true"></i>
+                </li>
+            </ul>
+            <div class="p-3">
+                <div class="content-header-title-tinyheader small d-inline-flex align-items-center">
+                    <span class="language d-inline-block @Entity.Get().LanguageWrittenOn mx-1"></span>
+                </div>
+                <div class="dummy" style="margin-bottom: -8px;"></div>
+                <ContentRating Entity="this.Entity" OnUserHasRated="OnUserHasRated"></ContentRating>
+                <span class="title fw-bold text-uppercase focusable ellipsis" style="-webkit-line-clamp:5!important;" title="@Entity.Title">@Entity.Title</span>
+                <div>
+                    <span class="content-date-published pe-1" title="@Text.Original("Date published")">
+                        <i class="fa-solid fa-calendar-day"></i>
+                        @Entity.DatePublished.Humanize()
+                    </span>
+                    @if (Entity.DateReleased.HasValue == true)
+                    {
+                        <span class="content-date-released pe-1" title="@Text.Original("Date released")">
+                            <i class="fa-solid fa-calendar-check"></i>
+                            @Entity.DateReleased.Humanize()
+                        </span>
+                    }
+                    <span class="content-views pe-1 @(views > 0 ? null : "d-none")">
+                        <i class="fa-solid fa-eye"></i>
+                        @views
+                    </span>
+                    <span class="content-views pe-1 @(comments > 0 ? null : "d-none")">
+                        <i class="fa-solid fa-comment"></i>
+                        @comments
+                    </span>
+                </div>
+                <div class="content-tags mt-2 text-center">
+                    @foreach (var tag in this.Super.GetTags(Entity).OrderBy(x => x.Tag))
+                    {
+                        <ContentTag Entity="tag"></ContentTag>
+                    }
+                </div>
+            </div>
+            <ul class="inline-list position-absolute w-100 z-index-middle p-2" style="bottom:0;align-items: end;">
+                <li class="text-left" style="width: 50px;">
+                    @if (Entity.IsCommentEnabled)
+                    {
+                        <AuthorizeView>
+                            <Authorized>
+                                <i class="bi bi-chat-left-dots-fill cursor-pointer focusable" title="@Text.Original("Quick reply")" @onclick="_quickReplies" @onclick:stopPropagation="true"></i>
+                            </Authorized>
+                            <NotAuthorized>
+                                <i class="bi bi-chat-left-dots-fill" title="@Text.Original("Login to quick reply")"></i>
+                            </NotAuthorized>
+                        </AuthorizeView>
+                    }
+                </li>
+                <li class="text-center">
+                    <MudAvatarGroup Max="5" Spacing="1" MaxSize="Size.Small" Outlined="false" Style="justify-content:center;">
+                        @foreach (var reaction in _getReactions().GroupBy(x => x.Reaction).OrderByDescending(x => x.Count()).ThenBy(x => x.Key))
+                        {
+                            <MudAvatar Size="Size.Small">
+                                <span>@reaction.Key</span>
+                            </MudAvatar>
+                        }
+                    </MudAvatarGroup>
+                </li>
+                <li class="text-right" style="width: 50px;">
+                    <i class="bi bi-emoji-laughing-fill cursor-pointer focusable" @onclick="() => _showEmojis = !_showEmojis" @onclick:stopPropagation="true"></i>
+                    <MudDialog @bind-Visible="_showEmojis" Options="_dialogOptions" TitleClass="border-bottom" Style="min-width: 400px; max-width:600px;">
+                        <TitleContent>
+                            <span class="fs-3">@Text.Lower("Reactions")</span>
+                        </TitleContent>
+                        <DialogContent>
+                            <AuthorizeView>
+                                <Authorized>
+                                    <div class="emoji-wrapper border p-3 mb-2">
+                                        <EmojiPickerElement Class="m-auto" OnEmojiSelected="this._onEmojiSelected"></EmojiPickerElement>
+                                    </div>
+                                    @if (this._getReactionsFromUser().Any() == true)
+                                    {
+                                        <div class="mt-2 mb-2 border-bottom">
+                                            @foreach (var reaction in _getReactionsFromUser())
+                                            {
+                                                var user = this.Super.Users.ReadFromCache().Id(reaction.UserId);
+                                                <div class="border mb-2 shadow-sm">
+                                                    <ul class="inline-list p-2">
+                                                        <li>
+                                                            <UserHeaderInline Entity="user"></UserHeaderInline>
+                                                        </li>
+                                                        <li class="w-25 text-right">
+                                                            <span>@reaction.Reaction</span>
+                                                            <button class="cursor-pointer" @onclick="() => this.PurgeReaction(reaction)">
+                                                                <i class="bi bi-trash-fill"></i>
+                                                            </button>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                    @if (this._getReactionsFromSocialProfile().Any() == true)
+                                    {
+                                        <div class="mt-3">
+                                            @foreach (var reaction in _getReactionsFromSocialProfile())
+                                            {
+                                                var socialProfile = this.Super.SocialProfiles.ReadFromCache().Id(reaction.SocialProfileId);
+                                                <div class="border mb-2 shadow-sm">
+                                                    <ul class="inline-list p-2">
+                                                        <li>
+                                                            <SocialProfileHeaderInline Entity="socialProfile"></SocialProfileHeaderInline>
+                                                        </li>
+                                                        <li class="w-25 text-right">
+                                                            <span>@reaction.Reaction</span>
+                                                            <button class="cursor-pointer" @onclick="() => this.PurgeReaction(reaction)">
+                                                                <i class="bi bi-trash-fill"></i>
+                                                            </button>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                </Authorized>
+                            </AuthorizeView>
+                            @foreach (var id in _getReactions().Select(x => x.UserId ?? x.SocialProfileId ?? Guid.Empty).Distinct())
+                            {
+                                var user = this.Super.Users.ReadFromCache().Id(id);
+                                var socialProfile = this.Super.SocialProfiles.ReadFromCache().Id(id);
+                                <div class="border mb-2 shadow-sm">
+                                    <ul class="inline-list p-2">
+                                        @if (user != null)
+                                        {
+                                            <li>
+                                                <UserHeaderInline Entity="user"></UserHeaderInline>
+                                            </li>
+                                            <li class="w-50 text-right">
+                                                @foreach (var reaction in _getReactions().Where(x => x.UserId == user.Id).OrderBy(x => x.Reaction))
+                                                {
+                                                    <span>@reaction.Reaction</span>
+                                                }
+                                            </li>
+                                        }
+                                        else if (socialProfile != null)
+                                        {
+                                            <li>
+                                                <SocialProfileHeaderInline Entity="socialProfile"></SocialProfileHeaderInline>
+                                            </li>
+                                            <li class="w-50 text-right">
+                                                @foreach (var reaction in _getReactions().Where(x => x.SocialProfileId == socialProfile.Id).OrderBy(x => x.Reaction))
+                                                {
+                                                    <span>@reaction.Reaction</span>
+                                                }
+                                            </li>
+                                        }
+                                        else
+                                        {
+                                            <li>
+                                                <span>@Text.Original("Anonymous user")</span>
+                                            </li>
+                                            <li class="w-50 text-right">
+                                                @foreach (var reaction in _getReactions().Where(x => x.UserId == null && x.SocialProfileId == null).OrderBy(x => x.Reaction))
+                                                {
+                                                    <span>@reaction.Reaction</span>
+                                                }
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            }
+                        </DialogContent>
+                    </MudDialog>
+                </li>
+            </ul>
+        </div>
+    </div>
+    @if (this.ShowRelatedContent == true && this.RelatedContent.Any() == true)
+    {
+        <div class="related-content mt-3">
+            <label class="w-100 text-center p-1 bg-light border">
+                <i class="fa-solid fa-earth-americas"></i>
+                @Text.Lower("Related content")
+            </label>
+            <div class="content-header content-header-children shadow-sm border cursor-pointer text-center @Class">
+                <div class="workaround overflow-hidden">
+                    <div class="row">
+                        @foreach (var child in this.RelatedContent)
+                        {
+                            <div class="related-content-header-title col-12 col-xxl-4 mh-100 overflow-auto m-auto">
+                                <div class="p-2">
+                                    <ContentHeaderLite Entity="child"></ContentHeaderLite>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    @if (_showHeaderImage)
+    {
+        <div class="position-fixed popup-container z-index-front">
+            <div class="border shadow-lg position-relative" style="width: 90%; height: 90%;">
+                <div class="overflow-auto text-center h-100 w-100" style="padding-bottom: 70px;">
+                    <img class="mw-100 mh-100 position-absolute" src="@header" style="top:50%;left:50%;transform:translate(-50%,-50%)" />
+                </div>
+                <ul class="inline-list position-absolute w-100 border bg-white" style="bottom:0;">
+                    <li></li>
+                    <li class="text-right">
+                        <div class="btn-group p-3">
+                            <button class="btn btn-secondary" @onclick="() => this._showHeaderImage = false">
+                                <i class="fa-solid fa-circle-xmark"></i>
+                                @Text.Lower("Close window")
+                            </button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    }
+    @if (_showQuickReply)
+    {
+        <div class="position-fixed popup-container z-index-front">
+            <div class="border shadow-lg position-relative" style="width: 90%; height: 90%;">
+                <div class="overflow-auto text-center h-100 w-100" style="padding-bottom: 70px;">
+                    <div class="mw-100 mh-100 position-absolute" style="top:50%;left:50%;transform:translate(-50%,-50%)">
+                        <ContentHeaderLite Entity="this.Entity"></ContentHeaderLite>
+                        <ContentCommentAuthor Class="mt-3" Entity="this._quickReply"></ContentCommentAuthor>
+                        <TinyMCEComment Class="mt-3" Entity="this._quickReply"></TinyMCEComment>
+                        <div class="mt-3 text-right">
+                            <button class="btn btn-light border" @onclick="this.SaveReplyToComment">
+                                <i class="fa-solid fa-paper-plane"></i>
+                                @Text.Lower("Reply")
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <ul class="inline-list position-absolute w-100 border bg-white" style="bottom:0;">
+                    <li></li>
+                    <li class="text-right">
+                        <div class="btn-group p-3">
+                            <button class="btn btn-secondary" @onclick="this.CancelReplyToComment">
+                                <i class="fa-solid fa-circle-xmark"></i>
+                                @Text.Lower("Close window")
+                            </button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    }
+}
+
+@code {
+
+    private readonly DialogOptions _dialogOptions = new() { CloseOnEscapeKey = true, CloseButton = false, CloseOnNavigation = false, };
+
+    private bool _showHeaderImage = false;
+    private bool _showEmojis = false;
+    private bool _showQuickReply = false;
+
+    private OrigamiContentComment _quickReply = new();
+
+    [Parameter] public ISlug? Slug { get; set; }
+    [Parameter] public OrigamiContent? Entity { get; set; }
+    [Parameter] public bool ShowRelatedContent { get; set; } = false;
+    [Parameter] public ePictureSizes HeaderImageSize { get; set; } = ePictureSizes.original;
+
+    /// <summary>
+    /// Children pages
+    /// </summary>
+    protected List<OrigamiContent> RelatedContent { get; set; } = new();
+
+    /// <summary>
+    /// Event triggered when the user rates the post (or unrates it)
+    /// </summary>
+    [Parameter] public EventCallback<OrigamiContentRating?> OnUserHasRated { get; set; }
+
+    /// <summary>
+    /// Browses to the Post Details
+    /// </summary>
+    protected void Go()
+    {
+        if (Entity != null)
+        {
+            this.WhatHappensNext.WhenIClickHere(this, new() { Slug = this.Slug, Entity = this.Entity });
+        }
+    }
+
+    /// <summary>
+    /// Loads all related content
+    /// </summary>
+    protected void LoadRelatedContent()
+    {
+        if (this.Entity == null) return;
+        this.RelatedContent = new();
+        this.RelatedContent.AddRange(this.Super.Contents.ReadFromCache().Published().Where(x => x.Id == this.Entity.ParentId));
+        this.RelatedContent.AddRange(this.Super.Contents.ReadFromCache().Published().Where(x => x.ParentId == this.Entity.Id));
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        this.LoadRelatedContent();
+    }
+
+    private void _onEmojiSelected(string reaction)
+    {
+        if (this.UserFacade.SocialProfile.New == false)
+        {
+            var contentReaction = new Core.Models.OrigamiContentReaction
+            {
+                Id = Guid.NewGuid(),
+                ContentId = Entity!.Id,
+                SocialProfileId = UserFacade.SocialProfile.Id,
+                Reaction = reaction,
+            };
+
+            var context = new DataOperationContextFrontEnd<OrigamiContentReaction>(UserFacade.SocialProfile, DateTime.UtcNow, contentReaction);
+            var hub = this.Super.ContentReactions.SmartCreate(context).OnSuccess(this.StateHasChanged);
+
+            return;
+        }
+
+        if (this.UserFacade.User.New == false)
+        {
+            var contentReaction = new Core.Models.OrigamiContentReaction
+            {
+                Id = Guid.NewGuid(),
+                ContentId = Entity!.Id,
+                UserId = UserFacade.User.Id,
+                Reaction = reaction,
+            };
+
+            var context = new DataOperationContext<OrigamiContentReaction>(UserFacade.User, contentReaction);
+            var hub = this.Super.ContentReactions.SmartSave(context, false).OnSuccess(this.StateHasChanged);
+
+            return;
+        }
+
+        throw new InvalidOperationException("Reaction author could not be found");
+    }
+
+    private IEnumerable<OrigamiContentReaction> _getReactions()
+    {
+        if (Entity != null)
+        {
+            return this.Super.ContentReactions.Reactions(Entity);
+        }
+        return [];
+    }
+
+    private IEnumerable<OrigamiContentReaction> _getReactionsFromSocialProfile()
+    {
+        if (this.UserFacade.SocialProfile is { New: false })
+        {
+            return _getReactions().Where(x => x.SocialProfileId == this.UserFacade.SocialProfile.Id).OrderBy(x => x.Reaction);
+        }
+        return [];
+    }
+
+    private IEnumerable<OrigamiContentReaction> _getReactionsFromUser()
+    {
+        if (this.UserFacade.User is { New : false })
+        {
+            return _getReactions().Where(x => x.UserId == this.UserFacade.User.Id).OrderBy(x => x.Reaction);
+        }
+        return [];
+    }
+
+    private void PurgeReaction(OrigamiContentReaction reaction)
+    {
+        if (this.UserFacade.SocialProfile.New == false)
+        {
+            var context = new DataOperationContextFrontEnd<OrigamiContentReaction>(UserFacade.SocialProfile, DateTime.UtcNow, reaction);
+            this.Super.ContentReactions.SmartPurge(context);
+            return;
+        }
+
+        if (this.UserFacade.User.New == false)
+        {
+            var context = new DataOperationContext<OrigamiContentReaction>(UserFacade.User, reaction);
+            this.Super.ContentReactions.SmartPurge(context, false);
+            return;
+        }
+
+        throw new InvalidOperationException("Reaction author could not be found");
+    }
+
+    private void _quickReplies()
+    {
+        this._quickReply = new()
+        {
+            ContentId = this.Entity != null ? this.Entity.Id : throw new InvalidOperationException("Entity is null"),
+            UserId = this.UserFacade.User.New ? null : this.UserFacade.User.Id,
+            SocialProfileId = this.UserFacade.SocialProfile.New ? null : this.UserFacade.SocialProfile.Id,
+        };
+        this._showQuickReply = true;
+    }
+
+    protected void SaveReplyToComment()
+    {
+        if (this.UserFacade.User.New == false)
+        {
+            var context = new DataOperationContext<OrigamiContentComment>(UserFacade.User, this._quickReply);
+            this.Super.ContentComments.SmartSave(context, true);
+            this._showQuickReply = false;
+            return;
+        }
+
+        if (this.UserFacade.SocialProfile.New == false)
+        {
+            var context = new DataOperationContextFrontEnd<OrigamiContentComment>(UserFacade.SocialProfile, DateTime.UtcNow, this._quickReply);
+            this.Super.ContentComments.SmartCreate(context);
+            this._showQuickReply = false;
+            return;
+        }
+    }
+
+    protected void CancelReplyToComment()
+    {
+        this._showQuickReply = false;
+    }
+}

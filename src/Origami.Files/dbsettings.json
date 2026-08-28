@@ -1,5 +1,5 @@
 {
   "ConnectionStrings": {
-	"origami": "Server=localhost;Database=origami-development;User Id=origami;Password=123@Origami;TrustServerCertificate=True;"
+    "origami": "Server=localhost;Database=origami-development;User Id=origami;Password=CHANGEME;TrustServerCertificate=True;"
   }
 }

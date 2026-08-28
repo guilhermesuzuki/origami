@@ -1,0 +1,37 @@
+﻿.content-header { }
+.content-header a:hover, .content-header a:hover span { color: var(--site-highlight) !important; }
+.content-header-image { height: calc(250px / 0.65); background-repeat: no-repeat; background-position: center; background-size: cover; }
+.content-header-title { text-align: center; bottom: 0px; top: 0; background-color: #00000077; display: inline-grid; align-items: center; border-top: none !important; }
+.content-header-title * { color: white; border-color: white !important; }
+
+.content-header-title .title { font-size: 14pt; }
+.content-html img { max-width: 100% !important; height: auto !important; border: 1px solid #dee2e6; }
+
+.content-html > video, .content-html > p > video { width: 600px; max-width: 100%; height: auto; }
+.content-html > * { margin-bottom: 1rem !important; }
+.content-html > *:last-child { margin-bottom: 0 !important; }
+.content-html > ul { padding-left: 1rem; }
+.content-html iframe { min-height: 500px !important; }
+.content-html a { border-bottom: 1px solid var(--site-highlight); }
+
+.content-category table .content-header-title .title { font-size: 14pt; }
+.content-tag table .content-header-title .title { font-size: 14pt; }
+.content-most-popular table .content-header-title .title { font-size: 14pt; }
+
+.content-category table .language { width: 13px; height: 13px; }
+.content-tag table .language { width: 13px; height: 13px; }
+.content-most-popular table .language { width: 13px; height: 13px; }
+
+.content-comment-in-reply-to { border: 1px dotted var(--site-highlight) !important; border-left: 5px solid var(--site-highlight) !important; }
+.content-comment-in-reply-to a { display: inline-flex; align-items:center; }
+.content-comment-in-reply-to .logo { display: none !important; }
+.content-comment-in-reply-to .social-profile-header { text-align: left !important; }
+.content-comment-in-reply-to .social-profile-header * { font-size: 11pt !important; font-weight: bold; }
+
+.content-comment-text p:first-child { margin-top: 0px !important; }
+.content-comment-text p { margin-top: 7px !important; margin-bottom: 0 !important; }
+
+ul.content-rating, .content-rating ul { margin-bottom: 0; }
+/*.content-ratings .logo { height: 29px!important; width:29px!important; }*/
+
+table .front-page { background-color: #9cef0010 !important; }

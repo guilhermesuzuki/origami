@@ -7,10 +7,10 @@ namespace Origami.Core.Data
         /// <summary>
         /// Subscribes the <paramref name="ctx"/> in the <paramref name="blog"/>
         /// </summary>
-        /// <param name="blog"></param>
         /// <param name="ctx"></param>
+        /// <param name="email"></param>
         /// <returns></returns>
-        Result<OrigamiSubscriber> Subscribe(DataOperationContext<OrigamiSocialProfile> ctx);
+        Result<OrigamiSubscriber> Subscribe(DataOperationContext<OrigamiSocialProfile> ctx, string email);
 
         /// <summary>
         /// Unsubscribes a user from the specified social profile.

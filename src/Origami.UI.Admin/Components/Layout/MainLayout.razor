@@ -1,6 +1,4 @@
-﻿@using Microsoft.AspNetCore.Identity
-@using System.Security.Claims
-@inherits BasicLayout
+﻿@inherits BasicLayoutAdmin
 
 <CustomHeadContent>
     <link rel="stylesheet" href="_content/Origami.UI/lib/css/style-site-admin.css" />
@@ -32,22 +30,5 @@ else
 <BlazorErrorUi></BlazorErrorUi>
 
 @code {
-
-    /// <summary>
-    /// Loads the authenticated user
-    /// </summary>
-    /// <returns></returns>
-    protected override async Task LoadUserAsync()
-    {
-        var state = await this.AuthenticationStateProvider.GetAuthenticationStateAsync();
-        if (state == null) return;
-        if (state.User.Identity == null) return;
-        if (state.User.Identity.IsAuthenticated == false) return;
-
-        var nameId = state.User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (nameId != null && Guid.TryParse(nameId, out var id) == true)
-        {
-            this.UserFacade.User = this.Super.Users.ReadFromCache().Id(id) ?? new();
-        }
-    }
+    
 }

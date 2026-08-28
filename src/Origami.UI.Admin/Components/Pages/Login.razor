@@ -1,7 +1,4 @@
 ﻿@page "/login"
-@using BootstrapBlazor.Components
-@using Microsoft.AspNetCore.Authentication
-@using Microsoft.AspNetCore.Identity
 @using System.Security.Claims
 @using Microsoft.Extensions.Options
 @using Microsoft.IdentityModel.Tokens
@@ -10,228 +7,205 @@
 @inherits BasicPage
 @layout CleanLayout
 
-@inject AuthenticationStateProvider myAuthenticationStateProvider
-@inject IUserRepository userRepository
-@inject IUserRoleRepository userRoleRepository
 @inject IOptions<JwtConfiguration> jwtConfiguration
-@inject ILoginRepository loginRepository
+@inject ILoginRules loginRules
 
 @if (SyncRoot != null)
 {
-    <div class="login-wrapper mt-3">
-        @if (loginRepository.GetCurrentStep() == ILoginRepository.Steps.Step1_ValidateCredentials)
-        {
-            <ul class="inline-list mt-3">
-                <li>
-                    <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("Username")" @bind-Value="loginRepository.Username" OnKeyUp="this._onLogin"></MudTextField>
-                </li>
-                <li>
-                    <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("Password")" InputType="InputType.Password" @bind-Value="loginRepository.Password" OnKeyUp="this._onLogin"></MudTextField>
-                </li>
-            </ul>
-            <div class="btn-group mt-3 w-100">
-                <button class="btn btn-success text-white w-100" disabled="@loginRepository.ShouldDisableLogin" @onclick="loginRepository.GoNextAsync" type="submit">
-                    <i class="fa-solid fa-right-to-bracket"></i>
-                    @Text.Lower("Login")
-                </button>
-                <button class="btn btn-warning text-white w-100" @onclick="loginRepository.ClearCredentials">
-                    <i class="fa-solid fa-broom"></i>
-                    @Text.Lower("Clear")
-                </button>
-                <button class="btn btn-danger text-white w-100" @onclick="_forgotPassword">
-                    <i class="fa-solid fa-user-lock"></i>
-                    @Text.Lower("Forgot password")
-                </button>
-            </div>
-        }
-        else if (loginRepository.GetCurrentStep() == ILoginRepository.Steps.Step2_MustChangePassword)
-        {
-            <div class="step2 must-change-password-header">
-                <div class="pb-1 fs-4 text-center">@Text.Original("You must change your password")</div>
-            </div>
-            <ul class="inline-list">
-                <li>
-                    <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("New password")" InputType="InputType.Password" @bind-Value="loginRepository.NewPassword1"></MudTextField>
-                </li>
-                <li>
-                    <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("Confirm password")" InputType="InputType.Password" @bind-Value="loginRepository.NewPassword2"></MudTextField>
-                </li>
-            </ul>
-            <div class="btn-group mt-3 w-100">
-                <button class="btn btn-success text-white" disabled="@loginRepository.ShouldDisablePasswordChange" @onclick="loginRepository.GoNextAsync">
-                    <i class="fa-solid fa-floppy-disk"></i>
-                    @Text.Lower("Change password")
-                </button>
-                <button class="btn btn-warning text-white" @onclick="loginRepository.ClearChangePassword">
-                    <i class="fa-solid fa-broom"></i>
-                    @Text.Lower("Clear")
-                </button>
-                <button class="btn btn-secondary text-white" @onclick="loginRepository.GoBackAsync">
-                    <i class="fa-solid fa-circle-chevron-left"></i>
-                    @Text.Lower("Go back")
-                </button>
-            </div>
-        }
-        else if (loginRepository.GetCurrentStep() == ILoginRepository.Steps.Step3_MustEnable2MFA)
-        {
-            <div class="step3 must-enable-2fa-header">
-                <div class="pb-1 fs-4 text-center">@Text.Original("2FA setup")</div>
-                <ul class="inline-list">
-                    <li class="text-center">
-                        <div class="border-bottom pb-1">@Text.Original("Scan this QR code with your authenticator app")</div>
-                    </li>
-                    <li class="text-center">
-                        <div class="border-bottom pb-1">@Text.Original("Keep these recovery codes somewhere safe")</div>
-                    </li>
-                </ul>
-            </div>
-            <ul class="inline-list step3 must-enable-2fa p-3">
-                <li class="text-center">
-                    <div class="qr-code-wrapper">
-                        <img class="qr-code w-100" src="data:image/png;base64,@this.loginRepository.User.GetTOTPQrCode()" />
-                    </div>
-                    <div class="uri-wrapper mt-3">
-                        <div>@Text.Original("Or paste this URI")</div>
-                        <span class="uri">@this.loginRepository.User.GetTOTPUri()</span>
-                    </div>
-                </li>
-                <li class="text-center">
-                    <div class="recovery-codes row">
-                        @foreach (var recoveryCode in this.loginRepository.TOTPRecoveryCodes)
+    <Root Access="new()">
+        <ContentTemplate>
+            <div class="login-wrapper mt-3">
+                @if (loginRules.GetCurrentStep() == ILoginRules.Steps.Step1_ValidateCredentials)
+                {
+                    <ul class="inline-list mt-3">
+                        <li>
+                            <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("Username")" @bind-Value="loginRules.Username" OnKeyUp="this._onLogin"></MudTextField>
+                        </li>
+                        <li>
+                            <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("Password")" InputType="InputType.Password" @bind-Value="loginRules.Password" OnKeyUp="this._onLogin"></MudTextField>
+                        </li>
+                    </ul>
+                    <div class="btn-group mt-3 w-100">
+                        <button class="btn btn-success text-white w-100" disabled="@loginRules.ShouldDisableLogin" @onclick="loginRules.GoNextAsync" type="submit">
+                            <i class="fa-solid fa-right-to-bracket"></i>
+                            @Text.Lower("Login")
+                        </button>
+                        <button class="btn btn-warning text-white w-100" @onclick="loginRules.ClearCredentials">
+                            <i class="fa-solid fa-broom"></i>
+                            @Text.Lower("Clear")
+                        </button>
+                        <button class="btn btn-danger text-white w-100" @onclick="_forgotPassword">
+                            <i class="fa-solid fa-user-lock"></i>
+                            @Text.Lower("Forgot password")
+                        </button>
+                        @if (this.AppFacade.OneTimeMasterPasswordInSHA256.Has() == true)
                         {
-                            <div class="recovery-code col-6">
-                                <span class="fs-5">@recoveryCode</span>
-                            </div>
+                            <button class="btn btn-secondary text-white w-100" @onclick="_helpMe">
+                                <i class="fa-solid fa-circle-info"></i>
+                                @Text.Lower("help me")
+                            </button>
                         }
                     </div>
-                </li>
-            </ul>
-            <ul class="inline-list step3 must-enable-2fa-actions mt-3">
-                <li class="text-center">
-                    <div class="btn-group w-100">
-                        <button class="btn btn-secondary text-white w-50" @onclick="loginRepository.Regenerate2FASecret">
-                            <i class="fa-solid fa-arrows-rotate"></i>
-                            @Text.Lower("Regenerate secret")
+                }
+                else if (loginRules.GetCurrentStep() == ILoginRules.Steps.Step2_MustChangePassword)
+                {
+                    <div class="step2 must-change-password-header">
+                        <div class="pb-1 fs-4 text-center">@Text.Original("You must change your password")</div>
+                    </div>
+                    <ul class="inline-list">
+                        <li>
+                            <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("New password")" InputType="InputType.Password" @bind-Value="loginRules.User.NewPassword1"></MudTextField>
+                        </li>
+                        <li>
+                            <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("Confirm password")" InputType="InputType.Password" @bind-Value="loginRules.User.NewPassword2"></MudTextField>
+                        </li>
+                    </ul>
+                    <div class="btn-group mt-3 w-100">
+                        <button class="btn btn-success text-white" disabled="@loginRules.ShouldDisablePasswordChange" @onclick="loginRules.GoNextAsync">
+                            <i class="fa-solid fa-floppy-disk"></i>
+                            @Text.Lower("Change password")
                         </button>
-                        <button class="btn btn-secondary text-white w-50" @onclick="loginRepository.Regenerate2FARecoveryCodes">
-                            <i class="fa-solid fa-arrows-rotate"></i>
-                            @Text.Lower("Regenerate recovery codes")
+                        <button class="btn btn-warning text-white" @onclick="loginRules.ClearChangePassword">
+                            <i class="fa-solid fa-broom"></i>
+                            @Text.Lower("Clear")
+                        </button>
+                        <button class="btn btn-secondary text-white" @onclick="loginRules.GoBackAsync">
+                            <i class="fa-solid fa-circle-chevron-left"></i>
+                            @Text.Lower("Go back")
                         </button>
                     </div>
-                </li>
-            </ul>
-            <div class="step3 validate-code mt-3">
-                <ul class="inline-list">
-                    <li>
-                        <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("Enter the TOTP code here")" InputType="InputType.Password" @bind-Value="loginRepository.TOTPCodeForEnablement"></MudTextField>
-                    </li>
-                </ul>
+                }
+                else if (loginRules.GetCurrentStep() == ILoginRules.Steps.Step3_MustEnable2MFA)
+                {
+                    <div class="step3 must-enable-2fa-header">
+                        <div class="pb-1 fs-4 text-center">@Text.Original("2FA setup")</div>
+                        <ul class="inline-list">
+                            <li class="text-center">
+                                <div class="border-bottom pb-1">@Text.Original("Scan this QR code with your authenticator app")</div>
+                            </li>
+                            <li class="text-center">
+                                <div class="border-bottom pb-1">@Text.Original("Keep these recovery codes somewhere safe")</div>
+                            </li>
+                        </ul>
+                    </div>
+                    <ul class="inline-list step3 must-enable-2fa p-3">
+                        <li class="text-center">
+                            <div class="qr-code-wrapper">
+                                <img class="qr-code w-100" src="data:image/png;base64,@this.loginRules.User.GetTOTPQrCode()" />
+                            </div>
+                            <div class="uri-wrapper mt-3">
+                                <div>@Text.Original("Or paste this URI")</div>
+                                <span class="uri">@this.loginRules.User.GetTOTPUri()</span>
+                            </div>
+                        </li>
+                        <li class="text-center">
+                            <div class="recovery-codes row">
+                                @foreach (var recoveryCode in this.loginRules.TOTPRecoveryCodes)
+                                {
+                                    <div class="recovery-code col-6">
+                                        <span class="fs-5">@recoveryCode</span>
+                                    </div>
+                                }
+                            </div>
+                        </li>
+                    </ul>
+                    <ul class="inline-list step3 must-enable-2fa-actions mt-3">
+                        <li class="text-center">
+                            <div class="btn-group w-100">
+                                <button class="btn btn-secondary text-white w-50" @onclick="loginRules.Regenerate2FASecret">
+                                    <i class="fa-solid fa-arrows-rotate"></i>
+                                    @Text.Lower("Regenerate secret")
+                                </button>
+                                <button class="btn btn-secondary text-white w-50" @onclick="loginRules.Regenerate2FARecoveryCodes">
+                                    <i class="fa-solid fa-arrows-rotate"></i>
+                                    @Text.Lower("Regenerate recovery codes")
+                                </button>
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="step3 validate-code mt-3">
+                        <ul class="inline-list">
+                            <li>
+                                <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("Enter the TOTP code here")" InputType="InputType.Password" @bind-Value="loginRules.TOTPCodeForEnablement"></MudTextField>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="btn-group mt-3 w-100">
+                        <button class="btn btn-success text-white" disabled="@loginRules.ShouldDisable2FAEnablement" @onclick="loginRules.GoNextAsync">
+                            <i class="fa-solid fa-clipboard-check"></i>
+                            @Text.Lower("Validate the TOTP code and proceed")
+                        </button>
+                        <button class="btn btn-warning text-white" @onclick="loginRules.ClearEnable2FA">
+                            <i class="fa-solid fa-broom"></i>
+                            @Text.Lower("Clear")
+                        </button>
+                        <button class="btn btn-secondary text-white" @onclick="loginRules.GoBackAsync">
+                            <i class="fa-solid fa-circle-chevron-left"></i>
+                            @Text.Lower("Go back")
+                        </button>
+                    </div>
+                }
+                else if (loginRules.GetCurrentStep() == ILoginRules.Steps.Step4_Validate2FA)
+                {
+                    <div class="step4 validate-2fa">
+                        <ul class="inline-list">
+                            <li>
+                                <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("2FA code")" InputType="InputType.Password" @bind-Value="loginRules.TOTPCodeForValidation"></MudTextField>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="btn-group mt-3 w-100">
+                        <button class="btn btn-success text-white" disabled="@loginRules.ShouldDisable2FAValidation" @onclick="loginRules.GoNextAsync">
+                            <i class="fa-solid fa-check-to-slot"></i>
+                            @Text.Lower("Validate the 2FA code and login")
+                        </button>
+                        <button class="btn btn-warning text-white" @onclick="loginRules.Clear2FA">
+                            <i class="fa-solid fa-broom"></i>
+                            @Text.Lower("Clear")
+                        </button>
+                        <button class="btn btn-secondary text-white" @onclick="loginRules.GoBackAsync">
+                            <i class="fa-solid fa-circle-chevron-left"></i>
+                            @Text.Lower("Go back")
+                        </button>
+                    </div>
+                }
             </div>
-            <div class="btn-group mt-3 w-100">
-                <button class="btn btn-success text-white" disabled="@loginRepository.ShouldDisable2FAEnablement" @onclick="loginRepository.GoNextAsync">
-                    <i class="fa-solid fa-clipboard-check"></i>
-                    @Text.Lower("Validate the TOTP code and proceed")
-                </button>
-                <button class="btn btn-warning text-white" @onclick="loginRepository.ClearEnable2FA">
-                    <i class="fa-solid fa-broom"></i>
-                    @Text.Lower("Clear")
-                </button>
-                <button class="btn btn-secondary text-white" @onclick="loginRepository.GoBackAsync">
-                    <i class="fa-solid fa-circle-chevron-left"></i>
-                    @Text.Lower("Go back")
-                </button>
-            </div>
-        }
-        else if (loginRepository.GetCurrentStep() == ILoginRepository.Steps.Step4_Validate2FA)
-        {
-            <div class="step4 validate-2fa">
-                <ul class="inline-list">
-                    <li>
-                        <MudTextField FullWidth="true" T="string" Immediate="true" HelperText="@Text.Lower("2FA code")" InputType="InputType.Password" @bind-Value="loginRepository.TOTPCodeForValidation"></MudTextField>
-                    </li>
-                </ul>
-            </div>
-            <div class="btn-group mt-3 w-100">
-                <button class="btn btn-success text-white" disabled="@loginRepository.ShouldDisable2FAValidation" @onclick="loginRepository.GoNextAsync">
-                    <i class="fa-solid fa-check-to-slot"></i>
-                    @Text.Lower("Validate the 2FA code and login")
-                </button>
-                <button class="btn btn-warning text-white" @onclick="loginRepository.Clear2FA">
-                    <i class="fa-solid fa-broom"></i>
-                    @Text.Lower("Clear")
-                </button>
-                <button class="btn btn-secondary text-white" @onclick="loginRepository.GoBackAsync">
-                    <i class="fa-solid fa-circle-chevron-left"></i>
-                    @Text.Lower("Go back")
-                </button>
-            </div>
-        }
-    </div>
+        </ContentTemplate>
+    </Root>
 }
 
 @code {
 
     private void _forgotPassword()
     {
-        this.NavigationManager.NavigateTo("/password/forgot", false);
+        this.GhostOfTheNavigator.NavigateTo("/password/forgot", false);
     }
 
-    private string _generateJwtToken(OrigamiUser user)
+    private void _helpMe()
     {
-        //starts generating the JWT token
-        var issuer = jwtConfiguration.Value.Issuer;
-        var audience = jwtConfiguration.Value.Audience;
-        var key = Encoding.ASCII.GetBytes(jwtConfiguration.Value.Key);
-
-        var tokenDescriptor = new SecurityTokenDescriptor
-        {
-            Subject = new ClaimsIdentity(
-                    [
-                        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                        new Claim(JwtRegisteredClaimNames.Email, user.EmailAddress),
-                    ]),
-            Expires = DateTime.UtcNow.AddMonths(6),
-            Issuer = issuer,
-            Audience = audience,
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
-        };
-
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var token = tokenHandler.CreateToken(tokenDescriptor);
-        var jwtToken = tokenHandler.WriteToken(token);
-        return jwtToken;
+        this.GhostOfTheNavigator.NavigateTo("/login/helpme", false);
     }
+
 
     private void _onLogin(KeyboardEventArgs args)
     {
-        if (args.Key == "Enter" && loginRepository.ShouldDisableLogin == false)
+        if (args.Key == "Enter" && loginRules.ShouldDisableLogin == false)
         {
-            loginRepository.GoNextAsync().Wait();
+            loginRules.GoNextAsync().Wait();
         }
     }
 
-    private async Task _welcomeToTheApplication(object? sender, EventArgs e)
-    {
-        this.UserFacade.User = this.loginRepository.User;
-        this.Super.Users.UpdateCache(this.UserFacade.User);
-
-        var token = this._generateJwtToken(this.UserFacade.User);
-        await this.JSRuntime.InvokeVoidAsync("$.cookie", this.Configuration.GetUserCookieKey(), token, new { path = "/", expires = 365, });
-
-        var returnUrl = this.NavigationManager!.Uri.QueryString("ReturnUrl");
-        this.NavigationManager!.NavigateTo(returnUrl.Has() ? returnUrl : "/", true);
-    }
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        await this.loginRepository.ResetAsync();
+        await this.loginRules.ResetAsync();
     }
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        this.loginRepository.RefreshUI += async (sender, e) => await this.InvokeAsync(this.StateHasChanged);
-        this.loginRepository.WelcomeToTheApplication += async (sender, e) => await this._welcomeToTheApplication(sender, e);
+        this.loginRules.CurrentStepChanged += async (sender, e) => await this.InvokeAsync(this.StateHasChanged);
+        this.loginRules.RefreshUI += async (sender, e) => await this.InvokeAsync(this.StateHasChanged);
     }
 }

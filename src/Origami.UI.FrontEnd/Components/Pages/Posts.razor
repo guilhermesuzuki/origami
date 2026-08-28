@@ -2,8 +2,8 @@
 @inherits BasicPage
 
 <Root>
-    <BlogHeaderLite2 Class="text-center fs-1" Entity="this.GetBlogFromSlug()" DisplayBlogNameEvenWithoutHeaderImage="false"></BlogHeaderLite2>
-    <PostList Class="mt-3" BlogId="@BlogId" Page="@Page" ShowFakes="true"></PostList>
+    <BlogHeader Class="text-center fs-1" Entity="this.GetBlogFromSlug()"></BlogHeader>
+    <PostList Class="mt-3" BlogId="@BlogId" Page="@Page"></PostList>
 </Root>
 
 @code {

@@ -1,9 +1,6 @@
 ﻿@page "/categories"
 @inherits BasicAdminGrid<OrigamiCategory>
-<style>
-    .parent-category .id { display: none !important; }
-    .child-categories .id { display: none !important; }
-</style>
+
 <Root Access="this.CanAccess()">
     <HeaderTemplate>
         <div class="p-3 border-bottom">
@@ -17,13 +14,6 @@
                 </div>
                 <div class="col-12 col-xxl-4">
                     <BlogSelect></BlogSelect>
-                </div>
-            </div>
-        </div>
-        <div class="p-3 border-bottom">
-            <div class="row">
-                <div class="col-12">
-                    <SearchLite T="OrigamiCategory" OnHitSelected="this.OnSearchResultSelected"></SearchLite>
                 </div>
             </div>
         </div>
@@ -42,24 +32,26 @@
                             <TemplateColumn Title="@Text.Upper("Name")" Sortable="false" Filterable="false" CellClass="col-6" SortBy="x => nameof(x.Name)">
                                 <CellTemplate>
                                     <div class="cursor-pointer" @onclick="() => OnEdit(context.Item)">
-                                        <CategoryHeaderLite Class="" Entity="context.Item"></CategoryHeaderLite>
+                                        <CategoryHeaderInline Class="" Entity="context.Item"></CategoryHeaderInline>
                                         <div class="x-small">@context.Item.Description</div>
                                     </div>
                                 </CellTemplate>
                             </TemplateColumn>
-                            <TemplateColumn Title="@Text.Upper("Parent Category")" Sortable="false" Filterable="false" CellClass="col-3 parent-category">
+                            <TemplateColumn Title="@Text.Upper("Parent category")" Sortable="false" Filterable="false" CellClass="col-3 parent-category">
                                 <CellTemplate>
                                     @if (context.Item.ParentId != null)
                                     {
                                         var parent = this.Repository.ReadFromCache().Id(context.Item.ParentId.Value);
                                         @if (parent != null)
                                         {
-                                            <CategoryHeaderLite Class="shadow-sm border p-2" Entity="parent"></CategoryHeaderLite>
+                                            <div class="category-parent mb-1 me-1 shadow-sm border p-2 d-inline-block @(parent.IsDeleted ? "deleted" : null)">
+                                                <CategoryHeaderInline Entity="parent"></CategoryHeaderInline>
+                                            </div>
                                         }
                                     }
                                 </CellTemplate>
                             </TemplateColumn>
-                            <TemplateColumn Title="@Text.Upper("Child Categories")" Sortable="false" Filterable="false" CellClass="col-3 child-categories">
+                            <TemplateColumn Title="@Text.Upper("Child categories")" Sortable="false" Filterable="false" CellClass="col-3 child-categories">
                                 <CellTemplate>
                                     @foreach (var category in this.Repository.ReadFromCache().GetChildren(context.Item).OrderBy(x => x.Name))
                                     {
@@ -67,8 +59,8 @@
                                         {
                                             continue;
                                         }
-                                        <div class="category-child mt-1 @(category.IsDeleted ? "deleted" : null)">
-                                            <CategoryHeaderLite Class="shadow-sm border p-2" Entity="category"></CategoryHeaderLite>
+                                        <div class="category-child mb-1 me-1 shadow-sm border p-2 d-inline-block @(category.IsDeleted ? "deleted" : null)">
+                                            <CategoryHeaderInline Entity="category"></CategoryHeaderInline>
                                         </div>
                                     }
                                 </CellTemplate>
@@ -98,6 +90,10 @@
         {
             return base.GetItems();
         }
-        return from x in base.GetItems() where this.Super.IsParentDeleted(x) == false select x;
+
+        return from x in base.GetItems() 
+               where x.IsDeleted == false
+               where this.Super.IsParentDeleted(x) == false 
+               select x;
     }
 }

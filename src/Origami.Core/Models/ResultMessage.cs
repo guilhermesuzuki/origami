@@ -11,11 +11,12 @@ namespace Origami.Core.Models
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public enum MessageTypes : byte
         {
+            Error = 2,
+            Info = 4,
+            Password = 5,
             Simple = 0,
-            Success,
-            Error,
-            Warning,
-            Info,
+            Success = 1,
+            Warning = 3,
         }
 
         private MessageTypes _messageType;

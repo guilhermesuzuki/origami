@@ -1,0 +1,20 @@
+﻿@inherits Basic
+@implements IId
+@inject IContentRatingRepository _contentRating
+
+@if (Id != Guid.Empty)
+{
+    var rating = _contentRating.ReadFromCache().Id(Id);
+    if (rating != null)
+    {
+        var content = this.Super.Contents.ReadFromCache().Id(rating.ContentId)!;
+        <div class="user-activity-content-rating @Class">
+            <span class="fw-bold">@Text.Lower("Rated {0} on:", rating.Rating)</span>
+            <ContentHeaderLite Entity="content"></ContentHeaderLite>
+        </div>
+    }
+}
+
+@code {
+    [Parameter] public override Guid Id { get; set; }
+}

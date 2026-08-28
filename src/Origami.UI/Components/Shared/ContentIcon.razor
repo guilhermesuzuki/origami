@@ -1,0 +1,42 @@
+﻿@inherits Basic
+@implements IEntityNull<OrigamiContent>
+
+@if (Entity is OrigamiPage page)
+{
+    if (page.IsFrontPage)
+    {
+        <i class="bi bi-globe fw-bold text-success" title="@Text.Lower("Front-page")"></i>
+    }
+    else
+    {
+        <i class="bi bi-globe" title="@Text.Lower("Page")"></i>
+    }
+}
+else if (Entity is OrigamiPost)
+{
+    <i class="bi bi-file-earmark-text-fill" title="@Text.Lower("Post")" style="margin-left: -2px;"></i>
+}
+else if (Entity is OrigamiSpecialMessage)
+{
+    <i class="bi bi-megaphone-fill" title="@Text.Lower("Special message")"></i>
+}
+else if (Entity is OrigamiSpecialPage)
+{
+    <i class="bi bi-file-earmark-text-fill" title="@Text.Lower("Special page")" style="margin-left: -2px;"></i>
+}
+else if (Entity is OrigamiVideo)
+{
+    <i class="bi bi-file-earmark-play-fill" title="@Text.Lower("Video")" style="margin-left: -2px;"></i>
+}
+else if (Entity is OrigamiQuickNote)
+{
+    <i class="bi bi-lightning-fill" title="@Text.Lower("Quick note")" style="margin-left: -2px;"></i>
+}
+else if (Entity is OrigamiSoftwareRelease)
+{
+    <i class="fa-solid fa-file-zipper" title="@Text.Lower("Software release")" style="margin-left: -2px;"></i>
+}
+
+@code {
+    [Parameter] public OrigamiContent? Entity { get; set; }
+}

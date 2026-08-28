@@ -26,6 +26,22 @@
                 {
                     <i class="fa-solid fa-video"></i>
                 }
+                else if (category.Name.Like("QuickNote"))
+                {
+                    <i class="bi bi-lightning-fill"></i>
+                }
+                else if (category.Name.Like("SpecialMessage"))
+                {
+                    <i class="bi bi-megaphone-fill"></i>
+                }
+                else if (category.Name.Like("SpecialPage"))
+                {
+                    <i class="bi bi-file-earmark-text-fill"></i>
+                }
+                else if (category.Name.Like("SoftwareRelease"))
+                {
+                    <i class="fa-solid fa-file-zipper"></i>
+                }
             }
             <span class="ps-1">@Entity.Title.Text</span>
         </span>

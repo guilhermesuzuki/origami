@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Origami.Core.Models;
+using Origami.Core.Models.Events;
 
 namespace Origami.Core.Data
 {
@@ -23,11 +24,6 @@ namespace Origami.Core.Data
         public DbSet<OrigamiBackup> Backups { get; set; }
 
         /// <summary>
-        /// Blog Rolls
-        /// </summary>
-        public DbSet<OrigamiBlogRoll> BlogRolls { get; set; }
-
-        /// <summary>
         /// Blogs
         /// </summary>
         public DbSet<OrigamiBlog> Blogs { get; set; }
@@ -38,53 +34,54 @@ namespace Origami.Core.Data
         public DbSet<OrigamiCategory> Categories { get; set; }
 
         /// <summary>
-        /// Custom Fields
+        /// Content Categories
         /// </summary>
-        public DbSet<OrigamiCustomField> CustomFields { get; set; }
+        public DbSet<OrigamiContentCategory> ContentCategories { get; set; }
 
         /// <summary>
-        /// Data Store Settings
+        /// Content Comment Ratings
         /// </summary>
-        public DbSet<OrigamiDataStoreSetting> DataStoreSettings { get; set; }
+        public DbSet<OrigamiContentCommentReaction> ContentCommentReactions { get; set; }
 
         /// <summary>
-        /// File Store Directories
+        /// Content Comments
         /// </summary>
-        public DbSet<OrigamiFileStoreDirectory> FileStoreDirectories { get; set; }
+        public DbSet<OrigamiContentComment> ContentComments { get; set; }
 
         /// <summary>
-        /// File Store Files
+        /// Content Histories
         /// </summary>
-        public DbSet<OrigamiFileStoreFile> FileStoreFiles { get; set; }
+        public DbSet<OrigamiContentHistory> ContentHistories { get; set; }
 
         /// <summary>
-        /// File Store File Thumbs
+        /// Content Ratings
         /// </summary>
-        public DbSet<OrigamiFileStoreFileThumb> FileStoreFileThumbs { get; set; }
-        /// <summary>
-        /// Package Files
-        /// </summary>
-        public DbSet<OrigamiPackageFile> PackageFiles { get; set; }
+        public DbSet<OrigamiContentRating> ContentRatings { get; set; }
 
         /// <summary>
-        /// Packages
+        /// Content Reactions
         /// </summary>
-        public DbSet<OrigamiPackage> Packages { get; set; }
+        public DbSet<OrigamiContentReaction> ContentReactions { get; set; }
+
+        /// <summary>
+        /// Contents
+        /// </summary>
+        public DbSet<OrigamiContent> Contents { get; set; }
+
+        /// <summary>
+        /// Content Tags
+        /// </summary>
+        public DbSet<OrigamiContentTag> ContentTags { get; set; }
+
+        /// <summary>
+        /// Events
+        /// </summary>
+        public DbSet<OrigamiEvent> Events { get; set; }
 
         /// <summary>
         /// Pages
         /// </summary>
         public DbSet<OrigamiPage> Pages { get; set; }
-
-        /// <summary>
-        /// Ping Services
-        /// </summary>
-        public DbSet<OrigamiPingService> PageServices { get; set; }
-
-        /// <summary>
-        /// Page Views
-        /// </summary>
-        public DbSet<OrigamiPageView> PageViews { get; set; }
 
         /// <summary>
         /// Physical Page Reactions
@@ -102,44 +99,9 @@ namespace Origami.Core.Data
         public DbSet<OrigamiPhysicalPageView> PhysicalPageViews { get; set; }
 
         /// <summary>
-        /// Post Categories
-        /// </summary>
-        public DbSet<OrigamiPostCategory> PostCategories { get; set; }
-
-        /// <summary>
-        /// Post Comment Ratings
-        /// </summary>
-        public DbSet<OrigamiPostCommentReaction> PostCommentReactions { get; set; }
-
-        /// <summary>
-        /// Post Comments
-        /// </summary>
-        public DbSet<OrigamiPostComment> PostComments { get; set; }
-
-        /// <summary>
-        /// Post Notifications
-        /// </summary>
-        public DbSet<OrigamiPostNotification> PostNotifications { get; set; }
-
-        /// <summary>
-        /// Post Ratings
-        /// </summary>
-        public DbSet<OrigamiPostRating> PostRatings { get; set; }
-
-        /// <summary>
         /// Posts
         /// </summary>
         public DbSet<OrigamiPost> Posts { get; set; }
-
-        /// <summary>
-        /// Post Tags
-        /// </summary>
-        public DbSet<OrigamiPostTag> PostTags { get; set; }
-
-        /// <summary>
-        /// Post Views
-        /// </summary>
-        public DbSet<OrigamiPostView> PostViews { get; set; }
 
         /// <summary>
         /// Processed User Views for Histories
@@ -155,16 +117,6 @@ namespace Origami.Core.Data
         /// Quick Notes
         /// </summary>
         public DbSet<OrigamiQuickNote> QuickNotes { get; set; }
-
-        /// <summary>
-        /// Quick Settings
-        /// </summary>
-        public DbSet<OrigamiQuickSetting> QuickSettings { get; set; }
-
-        /// <summary>
-        /// Referrers
-        /// </summary>
-        public DbSet<OrigamiReferrer> Referrers { get; set; }
 
         /// <summary>
         /// Right Roles
@@ -186,6 +138,25 @@ namespace Origami.Core.Data
         /// </summary>
         public DbSet<OrigamiSetting> Settings { get; set; }
 
+        public DbSet<SocialProfileCancelsReactionToCommentEvent> SocialProfileCancelsReactionToCommentEvents { get; set; }
+
+        public DbSet<SocialProfileCancelsReactionToContentEvent> SocialProfileCancelsReactionToContentEvents { get; set; }
+
+        public DbSet<SocialProfileDeletesCommentEvent> SocialProfileDeletesCommentEvents { get; set; }
+
+        public DbSet<SocialProfileEditsCommentEvent> SocialProfileEditsCommentEvents { get; set; }
+
+        public DbSet<SocialProfileLogsIntoWebsiteEvent> SocialProfileLogsIntoWebsiteEvents { get; set; }
+
+        public DbSet<SocialProfilePinsCommentEvent> SocialProfilePinsCommentEvents { get; set; }
+
+        public DbSet<SocialProfileReactsToCommentEvent> SocialProfileReactsToCommentEvents { get; set; }
+
+        public DbSet<SocialProfileReactsToContentEvent> SocialProfileReactsToContentEvents { get; set; }
+
+        public DbSet<SocialProfileRepliesToCommentEvent> SocialProfileRepliesToCommentEvents { get; set; }
+
+        public DbSet<SocialProfileRepliesToContentEvent> SocialProfileRepliesToContentEvents { get; set; }
         /// <summary>
         /// Social Profiles
         /// </summary>
@@ -195,6 +166,12 @@ namespace Origami.Core.Data
         /// Social Profiles for Deletion
         /// </summary>
         public DbSet<OrigamiSocialProfileDelete> SocialProfilesForDeletion { get; set; }
+
+        public DbSet<SocialProfileSubscribesToWebsiteEvent> SocialProfileSubscribesToWebsiteEvents { get; set; }
+        public DbSet<SocialProfileUnpinsCommentEvent> SocialProfileUnpinsCommentEvents { get; set; }
+        public DbSet<SocialProfileUnsubscribesFromWebsiteEvent> SocialProfileUnsubscribesFromWebsiteEvents { get; set; }
+
+        public DbSet<OrigamiSoftwareRelease> SoftwareReleases { get; set; }
 
         /// <summary>
         /// Special messages
@@ -207,24 +184,9 @@ namespace Origami.Core.Data
         public DbSet<OrigamiSpecialPage> SpecialPages { get; set; }
 
         /// <summary>
-        /// Stop Words
-        /// </summary>
-        public DbSet<OrigamiStopWord> StopWords { get; set; }
-
-        /// <summary>
         /// Subscribers
         /// </summary>
         public DbSet<OrigamiSubscriber> Subscribers { get; set; }
-
-        /// <summary>
-        /// Tags
-        /// </summary>
-        public DbSet<OrigamiTag> Tags { get; set; }
-
-        /// <summary>
-        /// Trashes
-        /// </summary>
-        public DbSet<OrigamiTrash> Trashes { get; set; }
 
         /// <summary>
         /// User Activities
@@ -235,12 +197,10 @@ namespace Origami.Core.Data
         /// User blogs
         /// </summary>
         public DbSet<OrigamiUserBlog> UserBlogs { get; set; }
-
         /// <summary>
         /// User password resets
         /// </summary>
         public DbSet<OrigamiUserPasswordReset> UserPasswordResets { get; set; }
-
         /// <summary>
         /// User Roles
         /// </summary>
@@ -254,124 +214,26 @@ namespace Origami.Core.Data
         /// User Trashes
         /// </summary>
         public DbSet<OrigamiUserTrash> UserTrashes { get; set; }
-
-        /// <summary>
-        /// Video Categories
-        /// </summary>
-        public DbSet<OrigamiVideoCategory> VideoCategories { get; set; }
-
-        /// <summary>
-        /// Video Comment Ratings
-        /// </summary>
-        public DbSet<OrigamiVideoCommentReaction> VideoCommentReactions { get; set; }
-
-        /// <summary>
-        /// Video Comments
-        /// </summary>
-        public DbSet<OrigamiVideoComment> VideoComments { get; set; }
-
-        /// <summary>
-        /// Video Notifications
-        /// </summary>
-        public DbSet<OrigamiVideoNotification> VideoNotifications { get; set; }
-
-        /// <summary>
-        /// Video Ratings
-        /// </summary>
-        public DbSet<OrigamiVideoRating> VideoRatings { get; set; }
-
         /// <summary>
         /// Videos
         /// </summary>
         public DbSet<OrigamiVideo> Videos { get; set; }
-
-        /// <summary>
-        /// Video Tags
-        /// </summary>
-        public DbSet<OrigamiVideoTag> VideoTags { get; set; }
-
-        /// <summary>
-        /// Video Views
-        /// </summary>
-        public DbSet<OrigamiVideoView> VideoViews { get; set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Owned<Location>();
             modelBuilder.Owned<OrigamiFile>();
-            modelBuilder.Owned<Content>();
 
-            modelBuilder.Entity<OrigamiCategory>()
-                .HasOne<OrigamiCategory>()
-                .WithMany()
-                .HasForeignKey(x => x.ParentId);
-
-            modelBuilder.Entity<OrigamiPage>()
-                .HasOne<OrigamiPage>()
-                .WithMany()
-                .HasForeignKey(x => x.ParentId);
-
-            modelBuilder.Entity<OrigamiPostComment>()
-                .HasOne<OrigamiPostComment>()
-                .WithMany()
-                .HasForeignKey(x => x.ParentId);
-
-            modelBuilder.Entity<OrigamiVideoComment>()
-                .HasOne<OrigamiVideoComment>()
-                .WithMany()
-                .HasForeignKey(x => x.ParentId);
-
-            modelBuilder.Entity<OrigamiCategory>()
-                .HasOne<OrigamiBlog>()
-                .WithMany()
-                .HasForeignKey(x => x.BlogId);
-
-            modelBuilder.Entity<OrigamiPage>()
-                .HasOne<OrigamiBlog>()
-                .WithMany()
-                .HasForeignKey(x => x.BlogId);
-
-            modelBuilder.Entity<OrigamiPost>()
-                .HasOne<OrigamiBlog>()
-                .WithMany()
-                .HasForeignKey(x => x.BlogId);
-
-            modelBuilder.Entity<OrigamiVideo>()
-                .HasOne<OrigamiBlog>()
-                .WithMany()
-                .HasForeignKey(x => x.BlogId);
-
-            modelBuilder.Entity<OrigamiQuickSetting>()
-                .HasOne<OrigamiBlog>()
-                .WithMany()
-                .HasForeignKey(x => x.BlogId);
-
-            modelBuilder.Entity<OrigamiPageView>()
-                .HasOne<OrigamiPage>()
-                .WithMany()
-                .HasForeignKey(x => x.PageId);
-
-            modelBuilder.Entity<OrigamiPhysicalPageView>()
-                .HasOne<OrigamiPhysicalPage>()
-                .WithMany()
-                .HasForeignKey(x => x.PhysicalPageId);
-
-            modelBuilder.Entity<OrigamiPostView>()
-                .HasOne<OrigamiPost>()
-                .WithMany()
-                .HasForeignKey(x => x.PostId);
-
-            modelBuilder.Entity<OrigamiVideoView>()
-                .HasOne<OrigamiVideo>()
-                .WithMany()
-                .HasForeignKey(x => x.VideoId);
-
-            modelBuilder.Entity<OrigamiPhysicalPageReaction>()
-                .HasOne<OrigamiPhysicalPage>()
-                .WithMany()
-                .HasForeignKey(x => x.PhysicalPageId);
+            modelBuilder.Entity<OrigamiContent>()
+                .HasDiscriminator(x => x.Type)
+                .HasValue<OrigamiPage>(nameof(OrigamiPage))
+                .HasValue<OrigamiPost>(nameof(OrigamiPost))
+                .HasValue<OrigamiSoftwareRelease>(nameof(OrigamiSoftwareRelease))
+                .HasValue<OrigamiSpecialPage>(nameof(OrigamiSpecialPage))
+                .HasValue<OrigamiQuickNote>(nameof(OrigamiQuickNote))
+                .HasValue<OrigamiVideo>(nameof(OrigamiVideo))
+                ;
 
             //social-network as string
             modelBuilder
@@ -381,144 +243,34 @@ namespace Origami.Core.Data
                     v => v.ToString(),
                     v => Enum.Parse<SocialNetworks>(v));
 
-            modelBuilder.Entity<OrigamiPost>()
-                .HasOne<OrigamiUser>()
-                .WithMany()
-                .HasForeignKey(x => x.AuthorId)
-                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<OrigamiContent>().HasOne<OrigamiContent>().WithMany().HasForeignKey(x => x.ParentId);
+            modelBuilder.Entity<OrigamiContent>().HasOne<OrigamiBlog>().WithMany().HasForeignKey(x => x.BlogId);
+            modelBuilder.Entity<OrigamiContent>().HasOne<OrigamiUser>().WithMany().HasForeignKey(x => x.AuthorId);
 
-            modelBuilder.Entity<OrigamiPostCategory>()
-                .HasOne<OrigamiCategory>()
-                .WithMany()
-                .HasForeignKey(x => x.CategoryId);
+            modelBuilder.Entity<OrigamiContentCategory>().HasOne<OrigamiContent>().WithMany().HasForeignKey(x => x.ContentId);
+            modelBuilder.Entity<OrigamiContentCategory>().HasOne<OrigamiContentCategory>().WithMany().HasForeignKey(x => x.CategoryId);
 
-            modelBuilder.Entity<OrigamiPostCategory>()
-                .HasOne(x => x.Post)
-                .WithMany()
-                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<OrigamiContentComment>().HasOne<OrigamiContent>().WithMany().HasForeignKey(x => x.ContentId);
+            modelBuilder.Entity<OrigamiContentComment>().HasOne<OrigamiContentComment>().WithMany().HasForeignKey(x => x.ParentId);
+            modelBuilder.Entity<OrigamiContentComment>().HasOne<OrigamiSocialProfile>().WithMany().HasForeignKey(x => x.ModeratedById);
+            modelBuilder.Entity<OrigamiContentComment>().HasOne<OrigamiSocialProfile>().WithMany().HasForeignKey(x => x.PinnedById);
+            modelBuilder.Entity<OrigamiContentComment>().HasOne<OrigamiSocialProfile>().WithMany().HasForeignKey(x => x.SocialProfileId);
 
-            modelBuilder.Entity<OrigamiVideo>()
-                .HasOne<OrigamiUser>()
-                .WithMany()
-                .HasForeignKey(x => x.AuthorId)
-                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<OrigamiCategory>().HasOne<OrigamiCategory>().WithMany().HasForeignKey(x => x.ParentId);
+            modelBuilder.Entity<OrigamiCategory>().HasOne<OrigamiBlog>().WithMany().HasForeignKey(x => x.BlogId);
+            modelBuilder.Entity<OrigamiPhysicalPageView>().HasOne<OrigamiPhysicalPage>().WithMany().HasForeignKey(x => x.PhysicalPageId);
+            modelBuilder.Entity<OrigamiPhysicalPageReaction>().HasOne<OrigamiPhysicalPage>().WithMany().HasForeignKey(x => x.PhysicalPageId);
+            modelBuilder.Entity<OrigamiRightRole>().HasOne<OrigamiRole>().WithMany().HasForeignKey(x => x.RoleId);
+            modelBuilder.Entity<OrigamiRightRole>().HasOne<OrigamiRight>().WithMany().HasForeignKey(x => x.RightId);
 
-            modelBuilder.Entity<OrigamiVideoCategory>()
-                .HasOne<OrigamiCategory>()
-                .WithMany()
-                .HasForeignKey(x => x.CategoryId);
+            modelBuilder.Entity<OrigamiUserPasswordReset>().HasOne<OrigamiUser>().WithMany().HasForeignKey(x => x.AuthorId);
+            modelBuilder.Entity<OrigamiUserPasswordReset>().HasOne<OrigamiUser>().WithMany().HasForeignKey(x => x.UserId);
 
-            modelBuilder.Entity<OrigamiVideoCategory>()
-                .HasOne(x => x.Video)
-                .WithMany()
-                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<OrigamiUserRole>().HasOne<OrigamiUser>().WithMany().HasForeignKey(x => x.UserId);
+            modelBuilder.Entity<OrigamiUserRole>().HasOne<OrigamiRole>().WithMany().HasForeignKey(x => x.RoleId);
 
-            //role FK for right-role
-            modelBuilder.Entity<OrigamiRightRole>()
-                .HasOne<OrigamiRole>()
-                .WithMany()
-                .HasForeignKey(x => x.RoleId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            //right FK for right-role
-            modelBuilder.Entity<OrigamiRightRole>()
-                .HasOne<OrigamiRight>()
-                .WithMany()
-                .HasForeignKey(x => x.RightId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<OrigamiPage>()
-                .HasOne<OrigamiUser>()
-                .WithMany()
-                .HasForeignKey(x => x.AuthorId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<OrigamiUserPasswordReset>()
-                .HasOne<OrigamiUser>()
-                .WithMany()
-                .HasForeignKey(x => x.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<OrigamiCustomField>()
-                .HasOne<OrigamiBlog>()
-                .WithMany()
-                .HasForeignKey(x => x.BlogId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<OrigamiUserPasswordReset>()
-                .HasOne<OrigamiUser>()
-                .WithMany()
-                .HasForeignKey(x => x.AuthorId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<OrigamiSpecialPageView>()
-                .HasOne<OrigamiSpecialPage>()
-                .WithMany()
-                .HasForeignKey(x => x.SpecialPageId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<OrigamiPostComment>()
-                .HasOne<OrigamiPost>()
-                .WithMany()
-                .HasForeignKey(x => x.PostId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<OrigamiPostComment>()
-                .HasOne<OrigamiSocialProfile>()
-                .WithMany()
-                .HasForeignKey(x => x.SocialProfileId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<OrigamiPostComment>()
-                .HasOne<OrigamiSocialProfile>()
-                .WithMany()
-                .HasForeignKey(x => x.PinnedById)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<OrigamiPostComment>()
-                .HasOne<OrigamiSocialProfile>()
-                .WithMany()
-                .HasForeignKey(x => x.ModeratedById)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<OrigamiVideoComment>()
-                .HasOne<OrigamiVideo>()
-                .WithMany()
-                .HasForeignKey(x => x.VideoId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<OrigamiVideoComment>()
-                .HasOne<OrigamiSocialProfile>()
-                .WithMany()
-                .HasForeignKey(x => x.SocialProfileId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<OrigamiVideoComment>()
-                .HasOne<OrigamiSocialProfile>()
-                .WithMany()
-                .HasForeignKey(x => x.PinnedById)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<OrigamiVideoComment>()
-                .HasOne<OrigamiSocialProfile>()
-                .WithMany()
-                .HasForeignKey(x => x.ModeratedById)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<OrigamiUserRole>()
-                .HasOne<OrigamiUser>()
-                .WithMany()
-                .HasForeignKey(x => x.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<OrigamiUserRole>()
-                .HasOne<OrigamiRole>()
-                .WithMany()
-                .HasForeignKey(x => x.RoleId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<OrigamiPostCommentReaction>().Property(c => c.Reaction).UseCollation("Latin1_General_BIN2");
-            modelBuilder.Entity<OrigamiVideoCommentReaction>().Property(c => c.Reaction).UseCollation("Latin1_General_BIN2");
+            modelBuilder.Entity<OrigamiContentCommentReaction>().Property(c => c.Reaction).UseCollation("Latin1_General_BIN2");
+            modelBuilder.Entity<OrigamiContentReaction>().Property(c => c.Reaction).UseCollation("Latin1_General_BIN2");
             modelBuilder.Entity<OrigamiPhysicalPageReaction>().Property(c => c.Reaction).UseCollation("Latin1_General_BIN2");
 
             // Map the entity to the view
@@ -530,20 +282,8 @@ namespace Origami.Core.Data
             modelBuilder.Entity<OrigamiUserView>().Metadata.SetIsTableExcludedFromMigrations(true);
 
             // Map the entity to the view
-            modelBuilder.Entity<OrigamiUserContent>().ToView("oi_vw_UserContents");
-            modelBuilder.Entity<OrigamiUserContent>().Metadata.SetIsTableExcludedFromMigrations(true);
-
-            // Map the entity to the view
             modelBuilder.Entity<OrigamiUserTrash>().ToView("oi_vw_UserTrashes");
             modelBuilder.Entity<OrigamiUserTrash>().Metadata.SetIsTableExcludedFromMigrations(true);
-
-            // Map the entity to the view
-            modelBuilder.Entity<OrigamiTag>().ToView("oi_vw_Tags");
-            modelBuilder.Entity<OrigamiTag>().Metadata.SetIsTableExcludedFromMigrations(true);
-
-            // Map the entity to the view
-            modelBuilder.Entity<OrigamiTrash>().ToView("oi_vw_Trashes");
-            modelBuilder.Entity<OrigamiTrash>().Metadata.SetIsTableExcludedFromMigrations(true);
 
             modelBuilder.Entity<ProcessedUserView>().HasNoKey();
             modelBuilder.Entity<ProcessedUserViewForHistory>().HasNoKey();
@@ -555,35 +295,58 @@ namespace Origami.Core.Data
                 .HasValue<OrigamiBackup>(true)
                 .HasValue<OrigamiBackupRestore>(false);
 
-            modelBuilder.Entity<OrigamiUserBlog>()
-                .HasOne<OrigamiBlog>()
-                .WithMany()
-                .HasForeignKey(x => x.BlogId)
-                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<OrigamiUserBlog>().HasOne<OrigamiBlog>().WithMany().HasForeignKey(x => x.BlogId);
+            modelBuilder.Entity<OrigamiUserBlog>().HasOne<OrigamiUser>().WithMany().HasForeignKey(x => x.UserId);
+            modelBuilder.Entity<OrigamiQuickNote>().HasOne<OrigamiBlog>().WithMany().HasForeignKey(x => x.BlogId);
+            modelBuilder.Entity<OrigamiQuickNote>().HasOne<OrigamiUser>().WithMany().HasForeignKey(x => x.AuthorId);
 
-            modelBuilder.Entity<OrigamiUserBlog>()
-                .HasOne<OrigamiUser>()
-                .WithMany()
-                .HasForeignKey(x => x.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
+            /*backup and restore mapping*/
+            modelBuilder.Entity<OrigamiEvent>()
+                .ToTable("oi_Events")
+                .HasDiscriminator<string>("Type")
+                .HasValue<AdminUserActivatesBlog>(nameof(AdminUserActivatesBlog))
+                .HasValue<AdminUserCreatesBlog>(nameof(AdminUserCreatesBlog))
+                .HasValue<AdminUserDeactivatesBlog>(nameof(AdminUserDeactivatesBlog))
+                .HasValue<AdminUserDeletesBlog>(nameof(AdminUserDeletesBlog))
+                .HasValue<AdminUserPurgesBlog>(nameof(AdminUserPurgesBlog))
+                .HasValue<AdminUserRestoresBlog>(nameof(AdminUserRestoresBlog))
+                .HasValue<SocialProfileDeletesCommentEvent>(nameof(SocialProfileDeletesCommentEvent))
+                .HasValue<SocialProfileEditsCommentEvent>(nameof(SocialProfileEditsCommentEvent))
+                .HasValue<SocialProfileLogsIntoWebsiteEvent>(nameof(SocialProfileLogsIntoWebsiteEvent))
+                .HasValue<SocialProfilePinsCommentEvent>(nameof(SocialProfilePinsCommentEvent))
+                .HasValue<SocialProfileReactsToCommentEvent>(nameof(SocialProfileReactsToCommentEvent))
+                .HasValue<SocialProfileReactsToContentEvent>(nameof(SocialProfileReactsToContentEvent))
+                .HasValue<SocialProfileRepliesToCommentEvent>(nameof(SocialProfileRepliesToCommentEvent))
+                .HasValue<SocialProfileRepliesToContentEvent>(nameof(SocialProfileRepliesToContentEvent))
+                .HasValue<SocialProfileSubscribesToWebsiteEvent>(nameof(SocialProfileSubscribesToWebsiteEvent))
+                .HasValue<SocialProfileUnpinsCommentEvent>(nameof(SocialProfileUnpinsCommentEvent))
+                .HasValue<SocialProfileUnsubscribesFromWebsiteEvent>(nameof(SocialProfileUnsubscribesFromWebsiteEvent))
+                ;
 
-            modelBuilder.Entity<OrigamiTag>()
-                .HasOne<OrigamiBlog>()
-                .WithMany()
-                .HasForeignKey(x => x.BlogId)
-                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<OrigamiSubscriber>().HasOne<OrigamiSocialProfile>().WithMany().HasForeignKey(x => x.SocialProfileId);
+            modelBuilder.Entity<OrigamiSocialProfileDelete>().HasOne<OrigamiSocialProfile>().WithMany().HasForeignKey(x => x.SocialProfileId);
 
-            modelBuilder.Entity<OrigamiQuickNote>()
-                .HasOne<OrigamiBlog>()
-                .WithMany()
-                .HasForeignKey(x => x.BlogId)
-                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<OrigamiEvent>().HasOne<OrigamiUser>().WithMany().HasForeignKey(x => x.UserId);
+            modelBuilder.Entity<OrigamiEvent>().HasOne<OrigamiSocialProfile>().WithMany().HasForeignKey(x => x.SocialProfileId);
 
-            modelBuilder.Entity<OrigamiQuickNote>()
-                .HasOne<OrigamiUser>()
-                .WithMany()
-                .HasForeignKey(x => x.AuthorId)
-                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<SocialProfileDeletesCommentEvent>().HasOne<OrigamiContentComment>().WithMany().HasForeignKey(x => x.CommentId);
+            modelBuilder.Entity<SocialProfileEditsCommentEvent>().HasOne<OrigamiContentComment>().WithMany().HasForeignKey(x => x.CommentId);
+            modelBuilder.Entity<SocialProfileReactsToCommentEvent>().HasOne<OrigamiContentCommentReaction>().WithMany().HasForeignKey(x => x.ReactionId);
+            modelBuilder.Entity<SocialProfileReactsToContentEvent>().HasOne<OrigamiContentReaction>().WithMany().HasForeignKey(x => x.ReactionId);
+            modelBuilder.Entity<SocialProfileRepliesToCommentEvent>().HasOne<OrigamiContentComment>().WithMany().HasForeignKey(x => x.CommentId);
+            modelBuilder.Entity<SocialProfileRepliesToContentEvent>().HasOne<OrigamiContent>().WithMany().HasForeignKey(x => x.ContentId);
+
+            modelBuilder.Entity<AdminUserActivatesBlog>().HasOne<OrigamiBlog>().WithMany().HasForeignKey(x => x.BlogId);
+            modelBuilder.Entity<AdminUserCreatesBlog>().HasOne<OrigamiBlog>().WithMany().HasForeignKey(x => x.BlogId);
+            modelBuilder.Entity<AdminUserDeactivatesBlog>().HasOne<OrigamiBlog>().WithMany().HasForeignKey(x => x.BlogId);
+            modelBuilder.Entity<AdminUserDeletesBlog>().HasOne<OrigamiBlog>().WithMany().HasForeignKey(x => x.BlogId);
+            modelBuilder.Entity<AdminUserPurgesBlog>().HasOne<OrigamiBlog>().WithMany().HasForeignKey(x => x.BlogId);
+            modelBuilder.Entity<AdminUserRestoresBlog>().HasOne<OrigamiBlog>().WithMany().HasForeignKey(x => x.BlogId);
+
+            modelBuilder.Entity<OrigamiUser>().HasMany(x => x.UserBlogs).WithOne().HasForeignKey(x => x.UserId);
+            modelBuilder.Entity<OrigamiUser>().HasMany(x => x.UserRoles).WithOne().HasForeignKey(x => x.UserId);
+            modelBuilder.Entity<OrigamiUser>().Navigation(x => x.UserBlogs).AutoInclude();
+            modelBuilder.Entity<OrigamiUser>().Navigation(x => x.UserRoles).AutoInclude();
         }
     }
 }

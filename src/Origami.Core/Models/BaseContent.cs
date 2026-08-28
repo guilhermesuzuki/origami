@@ -1,13 +1,12 @@
-﻿using NanoidDotNet;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Origami.Core.Models
 {
     public abstract class BaseContent :
         BaseModel,
-        IModel,
         IChanged,
+        IModel,
         ITitle,
         IDescriptionNull,
         IContent,
@@ -20,12 +19,14 @@ namespace Origami.Core.Models
         IAuthorId,
         IHyperlink,
         IDraft,
-        IVersion
+        IVersion,
+        IBlogIdNull
     {
         protected string? _additionalInfo = string.Empty;
         protected Guid _authorId;
+        protected Guid? _blogId;
         protected string _content = string.Empty;
-        protected DateTime _dateCreated;
+        protected DateTime _dateCreated = DateTime.UtcNow;
         protected DateTime? _dateModified;
         protected DateTime? _datePublished;
         protected string? _description = string.Empty;
@@ -42,7 +43,6 @@ namespace Origami.Core.Models
         /// </summary>
         public BaseContent() : base()
         {
-            NanoId = Nanoid.Generate(Nanoid.Alphabets.LettersAndDigits, 6);
             IsDraft = true;
             IsDeleted = false;
         }
@@ -64,6 +64,12 @@ namespace Origami.Core.Models
             set => this.Set(ref _authorId, value, Changed);
         }
 
+        public virtual Guid? BlogId
+        {
+            get => _blogId;
+            set => this.Set(ref _blogId, value, Changed);
+        }
+
         /// <summary>
         /// Content (nvarchar[max])
         /// </summary>
@@ -74,7 +80,7 @@ namespace Origami.Core.Models
         }
 
         /// <summary>
-        /// Date/Time this Content was Created
+        /// Date/Time this content was created
         /// </summary>
         public DateTime DateCreated
         {
@@ -83,7 +89,7 @@ namespace Origami.Core.Models
         }
 
         /// <summary>
-        /// Date/Time this Page was Modified
+        /// Date/Time this Content was modified
         /// </summary>
         public DateTime? DateModified
         {
@@ -91,6 +97,9 @@ namespace Origami.Core.Models
             set => this.Set(ref _dateModified, value, Changed);
         }
 
+        /// <summary>
+        /// Date/Time this content was published
+        /// </summary>
         public DateTime? DatePublished
         {
             get => _datePublished;

@@ -11,14 +11,6 @@ namespace Origami.Core.Data
         /// <param name="entity"></param>
         /// <returns></returns>
         long GetComments(T entity);
-
-        /// <summary>
-        /// Sets the total number of views from a <paramref name="entity"/>
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <param name="count">total view count</param>
-        /// <returns></returns>
-        void SetComments(T entity, long count);
     }
 
     public interface IComments<T, TComment> :
@@ -75,6 +67,8 @@ namespace Origami.Core.Data
         /// the pinned comment if the operation is successful.</returns>
         Result<TComment> Pin(DataOperationContextFrontEnd<TComment> ctx);
 
+        Result<TComment> Pin(DataOperationContext<TComment> ctx, bool checkPermission);
+
         /// <summary>
         /// Removes the pinned status from a comment in the specified ctx.
         /// </summary>
@@ -84,6 +78,8 @@ namespace Origami.Core.Data
         /// <returns>A <see cref="Result{TComment}"/> representing the outcome of the operation.  If successful, the result
         /// contains the updated comment with its pinned status removed.</returns>
         Result<TComment> Unpin(DataOperationContextFrontEnd<TComment> ctx);
+
+        Result<TComment> Unpin(DataOperationContext<TComment> ctx, bool checkPermission);
 
         /// <summary>
         /// Updates an existing comment in the data store based on the provided ctx.

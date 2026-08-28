@@ -28,47 +28,62 @@
                         @if (hit.Type.Like("Blog") == true)
                         {
                             var blog = this.Super.Blogs.ReadFromCache().Id(hit.Id);
-                            <BlogHeaderLite Entity="blog"></BlogHeaderLite>
+                            <BlogHeaderInline Entity="blog"></BlogHeaderInline>
                         }
-                        else if (hit.Type.Like("Page") == true)
+                        else if (hit.Type.Like("OrigamiPage") == true)
                         {
-                            var page = this.Super.Pages.ReadFromCache().Id(hit.Id);
-                            <PageHeaderLite2 Entity="page"></PageHeaderLite2>
+                            var page = this.Super.Contents.ReadFromCache().Id(hit.Id);
+                            <ContentHeaderInline Entity="page"></ContentHeaderInline>
                         }
-                        else if (hit.Type.Like("Post") == true)
+                        else if (hit.Type.Like("OrigamiPost") == true)
                         {
-                            var post = this.Super.Posts.ReadFromCache().Id(hit.Id);
-                            <PostHeaderLite2 Entity="post"></PostHeaderLite2>
+                            var post = this.Super.Contents.ReadFromCache().Id(hit.Id);
+                            <ContentHeaderInline Entity="post"></ContentHeaderInline>
                         }
-                        else if (hit.Type.Like("Video") == true)
+                        else if (hit.Type.Like("OrigamiVideo") == true)
                         {
-                            var video = this.Super.Videos.ReadFromCache().Id(hit.Id);
-                            <VideoHeaderLite2 Entity="video"></VideoHeaderLite2>
+                            var video = this.Super.Contents.ReadFromCache().Id(hit.Id);
+                            <ContentHeaderInline Entity="video"></ContentHeaderInline>
                         }
-                        else if (hit.Type.Like("PostComment") == true)
+                        else if (hit.Type.Like("OrigamiSpecialPage") == true)
                         {
-                            var comment = this.Super.PostComments.ReadFromCache().Id(hit.Id);
-                            <CommentLite Entity="comment"></CommentLite>
+                            var specialPage = this.Super.Contents.ReadFromCache().Id(hit.Id);
+                            <ContentHeaderInline Entity="specialPage"></ContentHeaderInline>
                         }
-                        else if (hit.Type.Like("VideoComment") == true)
+                        else if (hit.Type.Like("OrigamiSpecialMessage") == true)
                         {
-                            var comment = this.Super.VideoComments.ReadFromCache().Id(hit.Id);
-                            <CommentLite Entity="comment"></CommentLite>
+                            var specialMessage = this.Super.Contents.ReadFromCache().Id(hit.Id);
+                            <ContentHeaderInline Entity="specialMessage"></ContentHeaderInline>
+                        }
+                        else if (hit.Type.Like("ContentComment") == true)
+                        {
+                            var comment = this.Super.ContentComments.ReadFromCache().Id(hit.Id);
+                            <CommentLite Entity="comment" ShowParentHeader="true"></CommentLite>
                         }
                         else if (hit.Type.Like("Category") == true)
                         {
                             var category = this.Super.Categories.ReadFromCache().Id(hit.Id);
-                            <CategoryHeaderLite Entity="category"></CategoryHeaderLite>
+                            <CategoryHeaderInline Entity="category"></CategoryHeaderInline>
                         }
                         else if (hit.Type.Like("User") == true)
                         {
                             var user = this.Super.Users.ReadFromCache().Id(hit.Id);
-                            <UserHeaderLite Entity="user"></UserHeaderLite>
+                            <UserHeader Entity="user"></UserHeader>
                         }
                         else if (hit.Type.Like("Role") == true)
                         {
                             var role = this.Super.Roles.ReadFromCache().Id(hit.Id);
                             <RoleHeaderLite Entity="role"></RoleHeaderLite>
+                        }
+                        else if (hit.Type.Like("OrigamiQuickNote") == true)
+                        {
+                            var quickNote = this.Super.Contents.ReadFromCache().OfType<OrigamiQuickNote>().Id(hit.Id);
+                            <QuickNoteHeaderLite Entity="quickNote"></QuickNoteHeaderLite>
+                        }
+                        else if (hit.Type.Like("OrigamiSoftwareRelease") == true)
+                        {
+                            var softwareRelease = this.Super.Contents.ReadFromCache().OfType<OrigamiSoftwareRelease>().Id(hit.Id);
+                            <ContentHeaderInline Entity="softwareRelease"></ContentHeaderInline>
                         }
                     </div>
                 }

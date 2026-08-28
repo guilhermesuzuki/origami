@@ -1,6 +1,6 @@
 ﻿namespace Origami.Core.Models.Settings
 {
-    public class OpenTelemetry : IEnabled
+    public class OpenTelemetry : IEnabled, IEndpoint
     {
         public bool Enabled { get; set; }
 

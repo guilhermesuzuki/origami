@@ -19,13 +19,14 @@ public class SettingsRepository :
     /// <param name="dbContext"></param>
     /// <param name="distributedCache"></param>
     public SettingsRepository(
+        IAppFacade appFacade,
         IDbContextFactory<OrigamiDbContext> dbContextFactory,
-        IMemoryCache memoryCache,
+        IMyMemoryCache memoryCache,
         ISettingRepository settingRepository,
         IValidator<OrigamiSettings> validator,
         Text text,
         IWebRootPath wwwRoot)
-        : base(text, dbContextFactory, memoryCache, wwwRoot)
+        : base(text, dbContextFactory, memoryCache, wwwRoot, appFacade)
     {
         _settingRepository = settingRepository;
         _validator = validator;
@@ -58,27 +59,50 @@ public class SettingsRepository :
 
     public override Result<OrigamiSettings> CreateValidation(DataOperationContext<OrigamiSettings> ctx)
     {
-        return new Result<OrigamiSettings>(ctx.Entity, _validator);
+        return new(ctx.Entity, _validator);
+    }
+
+    public bool GetMaintenanceMode()
+    {
+        using var db = DbContextFactory.CreateDbContext();
+
+        var value = db.Settings
+            .Where(a => a.Name == nameof(OrigamiSettings.MaintenanceMode))
+            .Select(a => a.Value)
+            .FirstOrDefault();
+
+        return bool.TryParse(value, out var enabled) && enabled;
+    }
+
+    public bool GetSafeMode()
+    {
+        using var db = DbContextFactory.CreateDbContext();
+
+        var value = db.Settings
+            .Where(a => a.Name == nameof(OrigamiSettings.SafeMode))
+            .Select(a => a.Value)
+            .FirstOrDefault();
+
+        if (value == null) return true;
+        return bool.TryParse(value, out var enabled) && enabled;
     }
 
     public OrigamiSettings GetSettings()
     {
-        return this.ExtractSettings() ?? throw new InvalidOperationException();
-    }
+        var key = $"entity-{typeof(OrigamiSettings).FullName}";
 
-    public override IQueryable<OrigamiSettings> ReadFromDatabase()
-    {
-        return new List<OrigamiSettings>(1) { this.ExtractSettings() }.AsQueryable();
-    }
-
-    public override IQueryable<X> ReadFromDatabase<X>()
-    {
-        var x = Activator.CreateInstance<X>();
-        if (x is OrigamiSettings)
+        if (MemoryCache.Get(key) == null)
         {
-            return new List<X>(1) { (X)(object)this.ExtractSettings() }.AsQueryable();
+            lock (OrigamiConstants.SyncRoot)
+            {
+                if (MemoryCache.Get(key) == null)
+                {
+                    return MemoryCache.Set(key, ExtractSettings(), new MemoryCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(2) });
+                }
+            }
         }
-        return base.ReadFromDatabase<X>();
+
+        return MemoryCache.Get<OrigamiSettings>(key)!;
     }
 
     public override Result<OrigamiSettings> Update(DataOperationContext<OrigamiSettings> ctx)
@@ -116,7 +140,7 @@ public class SettingsRepository :
 
     public override Result<OrigamiSettings> UpdateValidation(DataOperationContext<OrigamiSettings> ctx)
     {
-        return new Result<OrigamiSettings>(ctx.Entity, _validator);
+        return new(ctx.Entity, _validator);
     }
 
     protected OrigamiSettings ExtractSettings()
@@ -133,6 +157,7 @@ public class SettingsRepository :
             if (property.Name.Like(nameof(OrigamiSettings.Id)) == true) continue;
             if (property.Name.Like(nameof(OrigamiSettings.OpenTelemetry)) == true) continue;
             if (property.Name.Like(nameof(OrigamiSettings.SocialNetwork)) == true) continue;
+            if (property.Name.Like(nameof(OrigamiSettings.Seq)) == true) continue;
 
             var name = property.Name.ToLower();
             var setting = dbSettings.FirstOrDefault(x => x.Name == name);
@@ -210,6 +235,15 @@ public class SettingsRepository :
             settings.SocialNetwork.Microsoft.ClientId = microsoftClientId?.Value ?? string.Empty;
             settings.SocialNetwork.Microsoft.ClientSecret = microsoftClientSecret?.Value ?? string.Empty;
             settings.SocialNetwork.Microsoft.TenantId = microsoftTenantId?.Value ?? string.Empty;
+        }
+
+        if (settings.Seq != null)
+        {
+            var prefix = "seq";
+            var seqEnabled = dbSettings.FirstOrDefault(x => x.Name.Like($"{prefix}-enabled"));
+            var seqEndpoint = dbSettings.FirstOrDefault(x => x.Name.Like($"{prefix}-endpoint"));
+            settings.Seq.Enabled = bool.Parse(seqEnabled?.Value ?? "false");
+            settings.Seq.Endpoint = seqEndpoint?.Value ?? string.Empty;
         }
 
         return settings;

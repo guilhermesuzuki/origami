@@ -1,5 +1,6 @@
 ﻿using CloneExtensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
@@ -16,7 +17,7 @@ namespace Origami.Core
     public static class DataExtensions
     {
         /// <summary>
-        /// TODO: comment this
+        /// 
         /// </summary>
         /// <param name="blogs"></param>
         /// <returns></returns>
@@ -42,22 +43,16 @@ namespace Origami.Core
             return entities.Where(x => x.AuthorId == author.Id);
         }
 
-        /// <summary>
-        /// TODO: comment this
-        /// </summary>
-        /// <typeparam name="TComment"></typeparam>
-        /// <param name="read"></param>
-        /// <param name="parent"></param>
-        /// <param name="count"></param>
-        /// <returns></returns>
-        public static long Comments<TComment>(this IRepository<TComment> read, IId parent, long count = -1)
-            where TComment : class, IId
+        public static void CreateCache<T>(this IMemoryCache memoryCache, T entity)
+                    where T : class
         {
-            var key = parent.KeyForCachingComments();
-
-            if (count >= 0) read.MemoryCache.Set(key, count);
-
-            return read.MemoryCache.Get<long>(key);
+            var key = typeof(T).KeyForCaching();
+            lock (OrigamiConstants.SyncRoot)
+            {
+                var list = memoryCache.GetList<T>(key) ?? throw new InvalidOperationException("Cache list not found");
+                list.Add(entity);
+                memoryCache.Set(key, list);
+            }
         }
 
         /// <summary>
@@ -77,12 +72,6 @@ namespace Origami.Core
             where T : IDraft
         {
             return entities.Where(x => x.IsDraft.GetValueOrDefault() == true).NonDeleted();
-        }
-
-        public static IEnumerable<T> Drafts<T>(this IEnumerable<T> entities, Guid blog)
-            where T : IDraft, IBlogId
-        {
-            return entities.Blog(blog).Drafts();
         }
 
         /// <summary>
@@ -117,25 +106,25 @@ namespace Origami.Core
             {
                 codes.Add(NanoidDotNet.Nanoid.Generate(NanoidDotNet.Nanoid.Alphabets.Digits, 6));
             }
-            return codes.Distinct().Take(10).OrderBy(x => x).ToArray();
+            return [.. codes.Distinct().Take(10).OrderBy(x => x)];
         }
 
         public static IEnumerable<T> GetAllChildren<T>(this IEnumerable<T>? source, T entity)
-                    where T : class, IId, new()
+                    where T : class, IId
         {
             return source.GetAllChildren([entity]);
         }
 
         public static IEnumerable<T> GetAllChildren<T>(this IEnumerable<T>? source, IEnumerable<T> entities)
-            where T : class, IId, new()
+            where T : class, IId
         {
             if (source == null) return [];
-            if (typeof(T).Implements<IParentIdNull<T>>() == false) return [];
+            if (typeof(T).Implements<IParentIdNull>() == false) return [];
 
             var list = new List<T>();
             foreach (var entity in entities)
             {
-                var children = source.Cast<IParentIdNull<T>>().Where(x => x.ParentId == entity.Id).Cast<T>().ToList();
+                var children = source.Cast<IParentIdNull>().Where(x => x.ParentId == entity.Id).Cast<T>().ToList();
                 foreach (var child in children)
                 {
                     list.AddRange(source.GetAllChildren(child));
@@ -147,13 +136,12 @@ namespace Origami.Core
         }
 
         public static IEnumerable<Guid> GetAllChildren<T>(this IEnumerable<T>? source, Guid id)
-            where T : class, IId, new()
+            where T : class, IId
         {
             if (source == null) return [];
-            if (id is not IParentIdNull<T>) return [];
 
             var list = new List<Guid>();
-            var children = source.Cast<IParentIdNull<T>>().Where(x => x.ParentId == id).Cast<T>().Select(x => x.Id).ToList();
+            var children = source.Cast<IParentIdNull>().Where(x => x.ParentId == id).Cast<T>().Select(x => x.Id).ToList();
             foreach (var child in children)
             {
                 list.AddRange(source.GetAllChildren(child));
@@ -167,12 +155,12 @@ namespace Origami.Core
         /// Privacy policy (for the current language)
         /// </summary>
         /// <returns></returns>
-        public static IEnumerable<OrigamiSpecialPage> GetByType(this IEnumerable<OrigamiSpecialPage> pages, OrigamiSpecialPageTypes type)
+        public static IEnumerable<OrigamiSpecialPage> GetBySubType(this IEnumerable<OrigamiSpecialPage> pages, OrigamiSpecialPageTypes type)
         {
             return pages
                 .NonDeleted()
                 .Published()
-                .Where(x => x.Type == type.ToString())
+                .Where(x => x.Subtype == type.ToString())
                 .ToList()
                 .OrderBy(x => x.LanguageWrittenOn.Like(CultureInfo.CurrentUICulture.Name) == true ? 0 : 1)
                 .ThenBy(x => x.LanguageWrittenOn.StartsWith(_getLanguage()) == true ? 2 : 3)
@@ -188,9 +176,9 @@ namespace Origami.Core
         /// <param name="entity">The parent entity whose children are to be retrieved.</param>
         /// <returns>A collection of child entities of the given parent entity.</returns>
         public static IEnumerable<T> GetChildren<T, T2>(this IEnumerable<T> entities, T2 entity)
-            where T2 : IParentIdNull<T>, T, IId
+            where T2 : IParentIdNull, T, IId
         {
-            return entities.Cast<T2>().Where(x => x.ParentId == entity.Id).Cast<T>().ToList();
+            return [.. entities.Cast<T2>().Where(x => x.ParentId == entity.Id).Cast<T>()];
         }
 
         /// <summary>
@@ -241,10 +229,9 @@ namespace Origami.Core
         /// <param name="key"></param>
         /// <returns></returns>
         public static List<T>? GetList<T>(this IMemoryCache memoryCache, string key)
-            where T : class, new()
+            where T : class
         {
-            var value = memoryCache.Get(key);
-            return value is List<T> list ? list : null;
+            return memoryCache.TryGetValue(key, out List<T>? value) == true ? value : null;
         }
 
         /// <summary>
@@ -257,13 +244,33 @@ namespace Origami.Core
         {
             var words = new List<string> { "origami", "Origami", "oriGami", "ORIGAMI", };
 
-            foreach (var word in words)
+            foreach (var origami in words)
             {
-                var connection = configuration.GetConnectionString(word);
+                var connection = configuration.GetConnectionString(origami);
                 if (connection != null) return connection;
             }
 
             throw new Exception("The Origami connection string does NOT exist in the appsettings file");
+        }
+
+        public static List<OrigamiRole> GetRolesFromDatabase(this DbContext db)
+        {
+            var roles = db.Set<OrigamiRole>().AsNoTracking().ToList();
+
+            foreach (var role in roles)
+            {
+                var rightRoles = db.Set<OrigamiRightRole>().AsNoTracking().Where(x => x.RoleId == role.Id).ToList();
+
+                var match = from property in role.GetType().GetProperties()
+                            join rt in db.Set<OrigamiRight>().AsNoTracking() on property.Name equals rt.Name
+                            join rr in rightRoles on rt.Id equals rr.RightId
+                            where property.CanWrite == true
+                            select property;
+
+                match.Each(x => x.SetValue(role, true));
+            }
+
+            return roles;
         }
 
         /// <summary>
@@ -324,7 +331,7 @@ namespace Origami.Core
         /// <param name="blog"></param>
         /// <returns></returns>
         public static IEnumerable<T> Published<T>(this IEnumerable<T> entities, Guid blog)
-            where T : IPublished, IDraft, IBlogId
+            where T : IPublished, IDraft, IBlogIdNull
         {
             return entities.Blog(blog).Published();
         }
@@ -340,9 +347,12 @@ namespace Origami.Core
         /// </summary>
         /// <returns></returns>
         public static IEnumerable<T> Published<T>(this IEnumerable<T> entities)
-            where T : IPublished, IDraft
+            where T : IPublished
         {
-            return entities.Where(x => x.IsPublished == true).NonDeleted();
+            return from a in entities.NonDeleted()
+                   where a.IsPublished
+                   where a.DatePublished <= DateTime.UtcNow
+                   select a;
         }
 
         /// <summary>
@@ -378,6 +388,20 @@ namespace Origami.Core
             return (rowNumber.Count(), query.ToList());
         }
 
+        public static List<T> Read<T>(this DbContext db) where T : class
+        {
+            if (typeof(T).IsAbstract == false)
+            {
+                var t = Activator.CreateInstance<T>();
+                return t switch
+                {
+                    OrigamiRole => [.. db.GetRolesFromDatabase().Cast<T>()],
+                    _ => [.. db.Set<T>().AsNoTracking()],
+                };
+            }
+
+            return [.. db.Set<T>().AsNoTracking()];
+        }
         /// <summary>
         /// Tries to retrieve a blog by its slug. Returns null if not found or if the blog is deleted or inactive.
         /// </summary>
@@ -431,15 +455,6 @@ namespace Origami.Core
             if (views >= 0) read.MemoryCache.Set(key, views);
 
             return read.MemoryCache.Get<long>(key);
-        }
-
-        public static IEnumerable<T> WithOnlyIds<T>(this IQueryable<T> entities)
-            where T : class, IId, new()
-        {
-            foreach (var id in entities.Select(x => x.Id))
-            {
-                yield return new T { Id = id };
-            }
         }
 
         /// <summary>

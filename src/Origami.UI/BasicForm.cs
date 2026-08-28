@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using MudBlazor;
 using NanoidDotNet;
 using Origami.Core;
 using Origami.Core.Models;
@@ -17,7 +16,7 @@ namespace Origami.UI
         IEntity<T>,
         ICreateEntityVoid<T>,
         ISave
-        where T : class, IId, INew, new()
+        where T : class, IId, new()
     {
         /// <summary>
         /// Should show or hide the file manager for picking images
@@ -37,6 +36,11 @@ namespace Origami.UI
         protected bool FileUploading = false;
 
         /// <summary>
+        /// The name of the file currently being uploaded. This field is intended for use within derived classes to track the name of the file being uploaded.
+        /// </summary>
+        protected string FileUploadingName = string.Empty;
+
+        /// <summary>
         /// Video uploading progress
         /// </summary>
         protected int FileUploadingProgress;
@@ -48,21 +52,21 @@ namespace Origami.UI
 
         [Parameter] public EventCallback<T> Cancelled { get; set; }
         [Parameter] public EventCallback<T> Created { get; set; }
-        [Parameter] public T Entity { get; set; } = new();
+        [Parameter] public T Entity { get; set; } = Activator.CreateInstance<T>();
         [Parameter] public EventCallback<T> Saved { get; set; }
 
         /// <summary>
         /// Author from the Entity (when available)
         /// </summary>
-        protected OrigamiUser Author
+        protected virtual OrigamiUser Author
         {
             get
             {
                 if (Entity is IAuthorId author)
                 {
-                    return Super.Users.ReadFromCache().Id(author.AuthorId) ?? new();
+                    return Super.Users.ReadFromCache().Id(author.AuthorId) ?? new() { Username = "Unknown" };
                 }
-                return new();
+                return new() { Username = "Unknown" };
             }
         }
 
@@ -79,7 +83,7 @@ namespace Origami.UI
         /// <summary>
         /// Shows or hides the parent selector
         /// </summary>
-        protected bool ParentSelector { get; set; }
+        protected bool ShowParentSelector { get; set; }
 
         /// <summary>
         /// Instantiates a new <see cref="Entity"/>
@@ -88,27 +92,13 @@ namespace Origami.UI
         {
             try
             {
-                var blog = GetBlogFromUserFacade();
-                Entity = new T();
-                Entity.SetBlog(blog);
-                Entity.SetAuthor(UserFacade.User);
-                CreateEntityBeforeEvent(Entity);
+                Entity = TheCreator.Create<T>();
                 await Created.InvokeAsync(Entity);
             }
             finally
             {
-                ParentSelector = false;
+                ShowParentSelector = false;
             }
-        }
-
-        public void Parent(T entity)
-        {
-            if (Entity is IParentIdNull<T> fkParent)
-            {
-                fkParent.ParentId = entity.Id;
-                return;
-            }
-            throw new NotImplementedException("Entity does not support parent");
         }
 
         /// <summary>
@@ -116,20 +106,19 @@ namespace Origami.UI
         /// </summary>
         public virtual void Save() { }
 
+        public virtual void SetParent(IId entity)
+        {
+            if (Entity is IParentIdNull parent)
+            {
+                parent.ParentId = entity.Id;
+                return;
+            }
+            throw new NotImplementedException("Entity does not support parent");
+        }
         /// <summary>
         /// Cancels the edit
         /// </summary>
         public virtual void UndoChanges() { }
-
-        /// <summary>
-        /// Executes before the save process
-        /// </summary>
-        /// <returns></returns>
-        protected virtual Result<T> BeforeSaving()
-        {
-            ParentSelector = false;
-            return new(Entity);
-        }
 
         /// <summary>
         /// Clears the header image, setting it to a default value
@@ -165,14 +154,6 @@ namespace Origami.UI
                 return;
             }
             throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// TODO: comment this
-        /// </summary>
-        protected virtual void CreateEntityBeforeEvent(T entity)
-        {
-
         }
 
         /// <summary>
@@ -271,9 +252,9 @@ namespace Origami.UI
             this.FileManagerForImages = false;
         }
 
-        protected override void OnParametersSet()
+        protected override void OnInitialized()
         {
-            base.OnParametersSet();
+            base.OnInitialized();
             Entity.SetAuthor(UserFacade.User);
             Entity.SetBlog(GetBlogFromUserFacade());
         }
@@ -294,14 +275,15 @@ namespace Origami.UI
         /// upload failed.</description></item> <item><term><c>WebPath</c></term><description>The web-accessible path
         /// for the uploaded file. Empty if the upload failed.</description></item> </list></returns>
         /// <exception cref="InvalidOperationException">Thrown if the file size exceeds <paramref name="fileLimit"/>.</exception>
-        protected async Task<(bool Ok, string LocalPath, string WebPath)> UploadFile(IBrowserFile file, long fileLimit, string? filename = null)
+        protected async Task<(bool Ok, string LocalPath, string WebPath)> UploadFile(IBrowserFile file, long fileLimit, string? filename = null, string? subDirectoryName = null)
         {
             if (file.Size > fileLimit)
             {
                 throw new InvalidOperationException(Text.Get("File is too large"));
             }
 
-            FileUploading = true;
+            this.FileUploading = true;
+            this.FileUploadingName = file.Name;
 
             // Set up timer for UI updates
             using var timer = new Timer(_ => InvokeAsync(StateHasChanged));
@@ -310,6 +292,12 @@ namespace Origami.UI
             filename = filename ?? file.Name;
 
             string basePath = Super.Directories.LocalPathForFiles(Entity);
+
+            if (subDirectoryName.Has() == true)
+            {
+                basePath = Path.Combine(basePath, subDirectoryName);
+            }
+
             string tempPath = Path.Combine(basePath, $"{Guid.NewGuid()}.tmp");
             string finalPath = Path.Combine(basePath, filename);
 
@@ -335,7 +323,7 @@ namespace Origami.UI
                 UserFacade.Result = new(ex);
                 return (false, string.Empty, string.Empty);
             }
-            
+
             await using Stream stream = file.OpenReadStream(file.Size, FileUploadingToken.Token);
 
             const int bufferSize = 1024 * 1024; // 1 MB
@@ -546,13 +534,13 @@ namespace Origami.UI
                     {
                         var filename = Path.GetFileName(sourcePath);
                         var destinationPath = Super.Files.LocalPath($"{webPath}{filename}");
-                        if (System.IO.File.Exists(destinationPath) == true)
+                        if (File.Exists(destinationPath) == true)
                         {
                             var extension = Path.GetExtension(destinationPath);
                             var newfilename = $"{Path.GetFileNameWithoutExtension(destinationPath)}.{Nanoid.Generate(Nanoid.Alphabets.UppercaseLettersAndDigits, 4)}{extension}";
                             destinationPath = Super.Files.LocalPath($"{webPath}{newfilename}");
                         }
-                        if (System.IO.File.Exists(destinationPath) == true)
+                        if (File.Exists(destinationPath) == true)
                         {
                             throw new InvalidOperationException("File with the same name exists. Please, try again");
                         }
@@ -562,7 +550,7 @@ namespace Origami.UI
                         {
                             Directory.CreateDirectory(destinationDirectory);
                         }
-                        System.IO.File.Copy(sourcePath, destinationPath, true);
+                        File.Copy(sourcePath, destinationPath, true);
                     }
                     catch (Exception ex)
                     {

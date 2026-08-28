@@ -4,7 +4,7 @@
 {
     <div class="trash-form-video @Class">
         <BasicHeaderNotes Entity="Entity"></BasicHeaderNotes>
-        <VideoHeaderLite Class="mt-3" Entity="Entity"></VideoHeaderLite>
+        <ContentHeaderLite Class="mt-3" Entity="Entity"></ContentHeaderLite>
         <VideoMediaFile Class="mt-3" Entity="Entity"></VideoMediaFile>
         <BasicHeader Class="mt-3" Entity="Entity"></BasicHeader>
         <ul class="inline-list mt-3">
@@ -29,7 +29,7 @@
                               AdornmentIcon="@Icons.Material.Filled.CalendarMonth"
                               Adornment="Adornment.Start"
                               @bind-Value="@Entity.DateReleased"
-                              HelperText="@Text.Lower("Date Released")"></MudTextField>
+                              HelperText="@Text.Lower("Date released")"></MudTextField>
             </li>
             <li>
                 <MudTextField ReadOnly="true"

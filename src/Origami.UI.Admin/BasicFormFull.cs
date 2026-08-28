@@ -47,7 +47,7 @@ namespace Origami.UI.Admin
                         transaction.Complete();
                     }
                 }
-                Saved.InvokeAsync(hub.Entity).Wait();
+                hub.OnSuccess(() => Saved.InvokeAsync(hub.Entity));
             }
             catch (Exception ex)
             {
@@ -61,21 +61,13 @@ namespace Origami.UI.Admin
 
         public override void UndoChanges()
         {
-            this.ParentSelector = false;
+            this.ShowParentSelector = false;
             this.Entity = Repository.ReadFromCache().Id(this.Entity.Id).Clone() ?? new();
         }
 
-        protected override Result<T> BeforeSaving()
+        protected virtual Result<T> BeforeSaving()
         {
-            this.ParentSelector = false;
-
-            //sets the FK Blog (or the save process will fail)
-            if (Entity is IFKBlog fkBlog && fkBlog.BlogId == Guid.Empty)
-            {
-                fkBlog.BlogId = this.UserFacade.BlogId;
-                if (fkBlog.BlogId == Guid.Empty) throw new InvalidOperationException("BlogId is empty");
-            }
-
+            this.ShowParentSelector = false;
             return new(Entity);
         }
 

@@ -1,44 +1,39 @@
-﻿@inherits BasicFormFullContent<OrigamiPost, OrigamiPostCategory, OrigamiPostTag>
-@inject ICategoryRepository _category
-@inject IPostCategoryRepository _postCategory
-@inject IPostTagRepository _postTag
-@inject IVideoTagRepository _videoTag
-@inject IFileRepository _fileRepository
-
+﻿@inherits BasicFormFullContent<OrigamiPost, HubContentPost>
 
 <div class="post-form @Class">
+    <ContentHistories Class="p-3" Entity="this.Entity.Entity"></ContentHistories>
     <div class="row">
         <div class="col-12">
             <div class="p-3">
                 <MudTextField ReadOnly="true"
                               Immediate="true"
-                              Value="@(Text.Lower(Entity.IsDraft.YesNo()))"
+                              Value="@(Text.Lower(Entity.Entity.IsDraft.YesNo()))"
                               HelperText="@Text.Lower("Still a draft?")"
                               Class="cursor-pointer yes-no"
                               title="@Text.Lower("Click here to change it")"
-                              @onclick="() => this.Entity.IsDraft = !this.Entity.IsDraft.GetValueOrDefault()"></MudTextField>
+                              @onclick="() => this.Entity.Entity.IsDraft = !this.Entity.Entity.IsDraft.GetValueOrDefault()"></MudTextField>
             </div>
         </div>
     </div>
     <div class="row">
         <div class="col-12 col-xxl-6">
             <div class="p-3">
-                <BasicHeaderNotes Entity="this.Entity"></BasicHeaderNotes>
-                <BasicHeader Class="mt-3" Entity="this.Entity"></BasicHeader>
+                <BasicHeaderNotes Entity="this.Entity.Entity"></BasicHeaderNotes>
+                <BasicHeader Class="mt-3" Entity="this.Entity.Entity"></BasicHeader>
                 <ul class="inline-list mt-3">
                     <li>
-                        <LanguageWrittenOn Entity="this.Entity"></LanguageWrittenOn>
+                        <LanguageWrittenOn Entity="this.Entity.Entity"></LanguageWrittenOn>
                     </li>
                     <li>
                         <MudTextField ReadOnly="true"
                                       Immediate="true"
                                       AdornmentIcon="@Icons.Material.Filled.Comment"
                                       Adornment="Adornment.Start"
-                                      Value="@(Text.Lower(Entity.IsCommentEnabled.YesNo()))"
+                                      Value="@(Text.Lower(Entity.Entity.IsCommentEnabled.YesNo()))"
                                       HelperText="@Text.Lower("Are comments enabled?")"
                                       Class="cursor-pointer"
                                       title="@Text.Lower("Click here to change it")"
-                                      @onclick="() => this.Entity.IsCommentEnabled = !this.Entity.IsCommentEnabled"></MudTextField>
+                                      @onclick="() => this.Entity.Entity.IsCommentEnabled = !this.Entity.Entity.IsCommentEnabled"></MudTextField>
                     </li>
                 </ul>
                 <ul class="inline-list mt-3">
@@ -46,9 +41,9 @@
                         <MudTextField Immediate="true"
                                       AdornmentIcon="@Icons.Material.Filled.Description"
                                       Adornment="Adornment.Start"
-                                      @bind-Value="@Entity.Title"
-                                      HelperText="@Text.Lower("Title")"
-                                      Required="true"></MudTextField>
+                                      @bind-Value="@Entity.Entity.Title"
+                                      HelperText="@Text.Lower("Title")" 
+                                      MaxLength="255"></MudTextField>
                     </li>
                 </ul>
                 <ul class="inline-list mt-3">
@@ -56,11 +51,12 @@
                         <MudTextField Immediate="true"
                                       AdornmentIcon="@Icons.Material.Filled.Link"
                                       Adornment="Adornment.Start"
-                                      @bind-Value="@Entity.Slug"
-                                      HelperText="@Text.Lower("Slug")"></MudTextField>
+                                      @bind-Value="@Entity.Entity.Slug"
+                                      HelperText="@Text.Lower("Slug")" 
+                                      MaxLength="255"></MudTextField>
                     </li>
                     <li style="width:140px;">
-                        <button class="btn btn-secondary" @onclick="() => Entity.Slug = Entity.Title.GetSlug()" style="line-height: 15px;">
+                        <button class="btn btn-secondary" @onclick="() => Entity.Entity.Slug = Entity.Entity.Title.GetSlug()" style="line-height: 15px;">
                             @Text.Lower("Create slug")
                             <span class="x-small">@Text.Lower("Based on title")</span>
                         </button>
@@ -70,14 +66,15 @@
         </div>
         <div class="col-12 col-xxl-6">
             <div class="text-center p-3">
-                <HeaderImageLite Entity="@Entity"></HeaderImageLite>
+                <HeaderImageCard Entity="@Entity.Entity"></HeaderImageCard>
                 <MudFileUpload T="IBrowserFile" FilesChanged="UploadHeader" Accept=".png, .jpg, .bmp, .tiff" MaximumFileCount="1">
+                    <SelectedTemplate></SelectedTemplate>
                     <CustomContent>
                         <div class="btn-group mt-2 w-100">
                             <button class="btn btn-light" @onclick="context.OpenFilePickerAsync">
                                 <i class="fa-solid fa-cloud-arrow-up"></i>
                                 <div>@Text.Lower("Only image files")</div>
-                                <div class="x-small">@Text.Original("{0} MB max.", 6)</div>
+                                <div class="x-small">@Text.Original("{0}MB max.", 6)</div>
                             </button>
                             <button class="btn btn-light" @onclick="() => this.FileManagerForImages = true">
                                 <i class="fa-solid fa-folder"></i>
@@ -101,24 +98,49 @@
                     <i class="fa-solid fa-layer-group"></i>
                     @Text.Lower("Categories")
                 </div>
-                <MudDataGrid T="OrigamiCategory" Class="border mt-3" Items="this.GetAllCategories()" SortMode="SortMode.None" Filterable="false">
+                <div class="picked-categories mt-3">
+                    @foreach (var content in Entity.Categories)
+                    {
+                        var category = this.Get<OrigamiCategory>().Id(content.CategoryId);
+                        <div class="d-inline-flex align-items-center p-1 border shadow-sm me-1">
+                            <CategoryHeaderInline Entity="category" Class="me-1"></CategoryHeaderInline>
+                            <button class="cursor-pointer" @onclick="() => this.Entity.Categories.Remove(content)">
+                                <i class="bi bi-trash-fill"></i>
+                            </button>
+                        </div>
+                    }
+                    @if (Entity.Categories.Any() == false)
+                    {
+                        <span class="">
+                            <i class="bi bi-info-circle-fill"></i>
+                            @Text.Lower("Pick your categories")
+                        </span>
+                    }
+                </div>
+                <ul class="inline-list mt-3">
+                    <li>
+                        <MudTextField T="string"
+                                      FullWidth="true"
+                                      Immediate="true"
+                                      AdornmentIcon="@Icons.Material.Filled.Search"
+                                      Adornment="Adornment.Start"
+                                      @bind-Value="CategoriesSearch"
+                                      OnKeyUp="SearchCategory"
+                                      HelperText="@Text.Lower("Search")"></MudTextField>
+                    </li>
+                </ul>
+                <MudDataGrid T="OrigamiCategory" Class="border mt-3" Items="Categories" SortMode="SortMode.None" Filterable="false">
                     <Columns>
-                        <TemplateColumn>
-                            <CellTemplate>
-                                <MudCheckBox T="bool" Value="@IsCategorySelected(context.Item.Id)" @onclick="() => SelectCategory(context.Item)"></MudCheckBox>
-                            </CellTemplate>
-                        </TemplateColumn>
                         <TemplateColumn CellClass="w-100">
                             <CellTemplate>
-                                <CategoryHeaderLite Entity="@context.Item"></CategoryHeaderLite>
+                                <CategoryHeaderInline Entity="@context.Item"></CategoryHeaderInline>
                             </CellTemplate>
                         </TemplateColumn>
                         <TemplateColumn>
                             <CellTemplate>
-                                @if (NewCategory(context.Item.Id) == true)
-                                {
-                                    <i class="fa-solid fa-circle-plus"></i>
-                                }
+                                <button class="cursor-pointer" @onclick="() => this.Add(context.Item)">
+                                    <i class="bi bi-plus-square-fill"></i>
+                                </button>
                             </CellTemplate>
                         </TemplateColumn>
                     </Columns>
@@ -134,26 +156,56 @@
                     <i class="fa-solid fa-tag"></i>
                     @Text.Lower("Tags")
                 </div>
-                <MudDataGrid T="OrigamiPostTag" Class="border mt-3" Items="this.Tags" SortMode="SortMode.None" Filterable="false">
+                <div class="selected-tags mt-3">
+                    @foreach (var content in Entity.Tags)
+                    {
+                        var tag = new OrigamiContentTag { ContentId = Entity.Entity.Id, Tag = content.Tag };
+                        <div class="d-inline-flex align-items-center p-1 border shadow-sm me-1">
+                            <ContentTagHeaderInline Entity="tag" Class="me-1"></ContentTagHeaderInline>
+                            <button class="cursor-pointer" @onclick="() => this.Entity.Tags.Remove(content)">
+                                <i class="bi bi-trash-fill"></i>
+                            </button>
+                        </div>
+                    }
+                    @if (Entity.Tags.Any() == false)
+                    {
+                        <span class="">
+                            <i class="bi bi-info-circle-fill"></i>
+                            @Text.Lower("Pick your tags")
+                        </span>
+                    }
+                </div>
+                <ul class="inline-list mt-3">
+                    <li>
+                        <MudTextField T="string"
+                                      FullWidth="true"
+                                      Immediate="true"
+                                      AdornmentIcon="@Icons.Material.Filled.Search"
+                                      Adornment="Adornment.Start"
+                                      @bind-Value="TagsSearch"
+                                      OnKeyUp="SearchTag"
+                                      HelperText="@Text.Lower("Search")"></MudTextField>
+                    </li>
+                </ul>
+                <MudDataGrid T="OrigamiContentTag" Class="border mt-3" Items="Tags" SortMode="SortMode.None" Filterable="false">
                     <Columns>
                         <TemplateColumn CellClass="w-100">
                             <CellTemplate>
-                                <i class="fa-solid fa-tag"></i>
-                                <span class="pe-1">@context.Item.Tag</span>
-                                <span class="pe-1 x-small">[@context.Item.Slug]</span>
+                                <ContentTagHeaderInline Entity="context.Item"></ContentTagHeaderInline>
                             </CellTemplate>
                         </TemplateColumn>
                         <TemplateColumn>
                             <CellTemplate>
-                                <i class="fa-solid fa-trash cursor-pointer" @onclick="() => RemoveTag(context.Item)"></i>
+                                <button class="cursor-pointer" @onclick="() => this.Add(context.Item)">
+                                    <i class="bi bi-plus-square-fill"></i>
+                                </button>
                             </CellTemplate>
                         </TemplateColumn>
                     </Columns>
                     <PagerContent>
-                        <MudDataGridPager T="OrigamiPostTag" PageSizeOptions="[10,25,50,100]" />
+                        <MudDataGridPager T="OrigamiContentTag" PageSizeOptions="[10, 25, 50, 100]" />
                     </PagerContent>
                 </MudDataGrid>
-                <TagAutoComplete @ref="_tagAutoComplete" Class="border p-3 mt-3" TagEntered="this.TagEntered"></TagAutoComplete>
             </div>
         </div>
     </div>
@@ -162,22 +214,23 @@
             <div class="p-3">
                 <MudTextField FullWidth="true"
                               Immediate="true"
-                              @bind-Value="@Entity.Description"
-                              AutoGrow="true"
-                              HelperText="@Text.Lower("Description")"></MudTextField>
+                              @bind-Value="@Entity.Entity.Description"
+                              HelperText="@Text.Lower("Description")" 
+                              MaxLength="2048" 
+                              MaxLines="16"></MudTextField>
             </div>
             <div class="p-3">
-                <TinyMCEContent Entity="Entity" Title="@Text.Lower("Content")"></TinyMCEContent>
+                <TinyMCEContent Entity="Entity.Entity" Title="@Text.Lower("Content")"></TinyMCEContent>
             </div>
         </div>
     </div>
-    <div class="buttons mt-3 p-3 text-center">
+    <div class="buttons mt-3 p-3 text-center z-index-front position-sticky" style="bottom: 0;">
         <div class="btn-group">
             <button class="btn btn-success text-white fw-bold" @onclick="Save" disabled="@this.DisableTheSaveButton">
                 <i class="fa-solid fa-floppy-disk"></i>
                 @Text.Lower("Save")
             </button>
-            <button class="btn btn-secondary text-white fw-bold" @onclick="UndoChanges" disabled="@this.Entity.New">
+            <button class="btn btn-secondary text-white fw-bold" @onclick="UndoChanges" disabled="@this.Entity.Entity.New">
                 <i class="fa-solid fa-rotate-left"></i>
                 @Text.Lower("Undo changes")
             </button>
@@ -230,10 +283,5 @@
     </div>
 }
 @code {
-    private TagAutoComplete? _tagAutoComplete;
-
-    protected override void CreateEntityBeforeEvent(OrigamiPost entity)
-    {
-        this._tagAutoComplete!.Clear();
-    }
+    
 }

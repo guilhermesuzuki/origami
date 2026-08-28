@@ -1,0 +1,23 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/misc/">
+    <Project Path="src/Origami.LocalizationFixer/Origami.LocalizationFixer.csproj" />
+    <Project Path="src/Origami.LocalizationScanner/Origami.LocalizationScanner.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path="README.md" />
+    <File Path="src/Directory.Build.props" />
+    <File Path="src/Origami.Files/dbsettings.Development.json" />
+    <File Path="src/Origami.Files/dbsettings.json" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Origami.UI.Admin.IntegrationTests/Origami.UI.Admin.IntegrationTests.csproj" />
+  </Folder>
+  <Project Path="src/Origami.Core/Origami.Core.csproj" />
+  <Project Path="src/Origami.UI.Admin/Origami.UI.Admin.csproj" />
+  <Project Path="src/Origami.UI.FrontEnd/Origami.UI.FrontEnd.csproj" />
+  <Project Path="src/Origami.UI/Origami.UI.csproj" />
+</Solution>

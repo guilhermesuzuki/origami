@@ -11,8 +11,8 @@ namespace Origami.Core.Models
     {
         private DateTime _date;
         private Guid _id = Guid.NewGuid();
-        private OrigamiSocialProfile? _socialProfile;
         private Guid? _socialProfileId;
+        private Guid? _userId;
         private string _type = string.Empty;
 
         public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) => { };
@@ -37,15 +37,6 @@ namespace Origami.Core.Models
             get => _id;
             set => this.Set(ref _id, value, Changed);
         }
-        /// <summary>
-        /// Social Profile (FK)
-        /// </summary>
-        [ForeignKey(nameof(SocialProfileId))]
-        public OrigamiSocialProfile? SocialProfile
-        {
-            get => _socialProfile;
-            set => this.Set(ref _socialProfile, value, Changed);
-        }
 
         /// <summary>
         /// Social Profile Id
@@ -54,6 +45,15 @@ namespace Origami.Core.Models
         {
             get => _socialProfileId;
             set => this.Set(ref _socialProfileId, value, Changed);
+        }
+
+        /// <summary>
+        /// User Id
+        /// </summary>
+        public Guid? UserId
+        {
+            get => _userId;
+            set => this.Set(ref _userId, value, Changed);
         }
 
         /// <summary>

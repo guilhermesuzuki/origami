@@ -1,13 +1,11 @@
-﻿using Origami.Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using FluentValidation;
+using Origami.Core.Models;
 
 namespace Origami.Core.Validators;
 
-public class OrigamiSettingsValidator : BaseValidator<OrigamiSettings>
+public class OrigamiSettingsValidator : AbstractValidator<OrigamiSettings>
 {
-    public OrigamiSettingsValidator(Text text, IWebRootPath webRootPath) : base(text, webRootPath)
+    public OrigamiSettingsValidator(Text text, IWebRootPath webRootPath) : base()
     {
         RuleFor(x => x.Name).Name(text);
         RuleFor(x => x.Description).Description(text);
@@ -19,5 +17,6 @@ public class OrigamiSettingsValidator : BaseValidator<OrigamiSettings>
         RuleFor(x => x.RssFeed5).RssFeed(text);
         RuleFor(x => x.OpenTelemetry.Endpoint).Website(text, field: "Open telemetry endpoint");
         RuleFor(x => x.SmtpServer).Domain(text, field: "SMTP server");
+        RuleFor(x => x.RepositoryURL).Website(text, field: "Repository URL");
     }
 }

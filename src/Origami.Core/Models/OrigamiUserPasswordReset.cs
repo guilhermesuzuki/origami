@@ -19,11 +19,11 @@ namespace Origami.Core.Models
         protected DateTime _dateCreated;
         protected Guid _id = Guid.NewGuid();
         protected bool _isDeleted;
+        protected string _key = string.Empty;
         protected Guid _userId = Guid.NewGuid();
-
         public OrigamiUserPasswordReset() : base()
         {
-            this.Key = Nanoid.Generate(size: 16);
+            this._key = Nanoid.Generate(size: 16);
         }
 
         public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) => { };
@@ -54,7 +54,11 @@ namespace Origami.Core.Models
         }
 
         [StringLength(16)]
-        public string Key { get; }
+        public string Key
+        {
+            get => _key;
+            set => this.Set(ref _key, value, Changed);
+        }
 
         public Guid UserId
         {

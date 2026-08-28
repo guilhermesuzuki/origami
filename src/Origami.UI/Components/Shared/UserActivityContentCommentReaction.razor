@@ -1,0 +1,29 @@
+﻿@inherits Basic
+@implements IId
+@inject IContentCommentReactionRepository _contentCommentReaction
+@inject IContentCommentRepository _contentComment
+
+@if (Id != Guid.Empty)
+{
+    var reaction = _contentCommentReaction.ReadFromCache().Id(Id);
+    if (reaction != null)
+    {
+        var comment = _contentComment.ReadFromCache().Id(reaction.CommentId);
+        if (comment != null)
+        {
+            var content = this.Super.Contents.ReadFromCache().Id(comment.ContentId);
+            if (content != null)
+            {
+                <div class="user-activity-content-comment-reaction @Class">
+                    <span class="fw-bold">@Text.Lower("Reacted {0} to:", reaction.Reaction)</span>
+                    <ContentHeaderLite Entity="content"></ContentHeaderLite>
+                    <CommentLite Class="mt-2 p-2 frame-purple" Entity="comment"></CommentLite>
+                </div>
+            }
+        }
+    }
+}
+
+@code {
+    [Parameter] public override Guid Id { get; set; }
+}

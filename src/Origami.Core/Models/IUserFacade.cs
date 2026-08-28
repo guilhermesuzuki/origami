@@ -13,7 +13,7 @@
         /// <summary>
         /// Blogs the user has access to. This is used for the blog switcher in the admin area and for filtering content in the front-end. It should be set when the user logs in and whenever their permissions change.
         /// </summary>
-        IEnumerable<OrigamiBlog> BlogsTheUserHasAccessTo { get; set; }
+        IEnumerable<OrigamiBlog> BlogsTheUserHasAccessTo { get; }
 
         /// <summary>
         /// Is the application in incognito mode?
@@ -33,7 +33,7 @@
         /// <summary>
         /// Gets or sets the search query string used to filter or locate specific items.
         /// </summary>
-        string Search { get; set; }
+        string SearchTerm { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the cookie consent banner should be displayed to the user.
@@ -43,12 +43,22 @@
         /// <summary>
         /// Current logged-in user (front-end)
         /// </summary>
-        OrigamiSocialProfile SocialProfile { get; set; }
+        OrigamiSocialProfile SocialProfile { get; }
+
+        /// <summary>
+        /// Gets or sets the unique identifier of the social profile associated with the current logged-in user.
+        /// </summary>
+        Guid SocialProfileId { get; set; }
 
         /// <summary>
         /// Current logged-in user (admin)
         /// </summary>
-        OrigamiUser User { get; set; }
+        OrigamiUser User { get; }
+
+        /// <summary>
+        /// Gets or sets the unique identifier of the user associated with the current logged-in user.
+        /// </summary>
+        Guid UserId { get; set; }
 
         /// <summary>
         /// Method that calls <see cref="EntityHasChanged"/> event

@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Origami.Core.Models;
 
 namespace Origami.Core.Data
@@ -8,122 +7,91 @@ namespace Origami.Core.Data
         RepositoryOuterLayer<OrigamiUserTrash>,
         IUserTrashRepository
     {
+        protected readonly IContentCommentRepository _contentCommentRepository;
+        protected readonly IHubContentRepository<HubContentPage> _hubContentPageRepository;
+        protected readonly IHubContentRepository<HubContentPost> _hubContentPostRepository;
+        protected readonly IHubContentRepository<HubContentQuickNote> _hubContentQuickNoteRepository;
+        protected readonly IHubContentRepository<HubContentSoftwareRelease> _hubContentSoftwareReleaseRepository;
+        protected readonly IHubContentRepository<HubContentSpecialMessage> _hubContentSpecialMessageRepository;
+        protected readonly IHubContentRepository<HubContentSpecialPage> _hubContentSpecialPageRepository;
+        protected readonly IHubContentRepository<HubContentVideo> _hubContentVideoRepository;
+
         private readonly IBlogRepository _blogRepository;
+        private readonly ISettingsRepository _blogSettingsRepository;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IContentRepository _contentRepository;
         private readonly IDirectoryRepository _directoryRepository;
         private readonly IFileRepository _fileRepository;
-        private readonly IPageRepository _pageRepository;
-        private readonly IPageViewRepository _pageViewRepository;
         private readonly IPhysicalPageRepository _physicalPageRepository;
         private readonly IPhysicalPageViewRepository _physicalPageViewRepository;
-        private readonly IPostCategoryRepository _postCategoryRepository;
-        private readonly IPostCommentReactionRepository _postCommentReactionRepository;
-        private readonly IPostCommentRepository _postCommentRepository;
-        private readonly IPostRatingRepository _postRatingRepository;
-        private readonly IPostRepository _postRepository;
-        private readonly IPostTagRepository _postTagRepository;
-        private readonly IPostViewRepository _postViewRepository;
-        private readonly IQuickNoteRepository _quickNoteRepository;
         private readonly IRoleRepository _roleRepository;
-        private readonly ISettingsRepository _blogSettingsRepository;
         private readonly ISocialProfileRepository _socialProfileRepository;
-        private readonly ISpecialMessageRepository _specialMessageRepository;
-        private readonly ISpecialPageRepository _specialPageRepository;
         private readonly ISubscriberRepository _subscriberRepository;
-        private readonly ITagRepository _tagRepository;
         private readonly IUserActivityRepository _userActivityRepository;
-        private readonly IUserContentRepository _userContentRepository;
         private readonly IUserRepository _userRepository;
         private readonly IUserRoleRepository _userRoleRepository;
         private readonly IUserViewRepository _userViewRepository;
-        private readonly IVideoCategoryRepository _videoCategoryRepository;
-        private readonly IVideoCommentReactionRepository _videoCommentReactionRepository;
-        private readonly IVideoCommentRepository _videoCommentRepository;
-        private readonly IVideoRatingRepository _videoRatingRepository;
-        private readonly IVideoRepository _videoRepository;
-        private readonly IVideoTagRepository _videoTagRepository;
-        private readonly IVideoViewRepository _videoViewRepository;
         private readonly IWhatToSeeNextRepository _whatToSeeNextRepository;
 
         public UserTrashRepository(
+            IAppFacade appFacade,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
-            IMemoryCache memoryCache,
+            IMyMemoryCache memoryCache,
             IBlogRepository blogRepository,
             ICategoryRepository categoryRepository,
+            IContentRepository contentRepository,
             IDirectoryRepository directoryRepository,
             IFileRepository fileRepository,
-            IPageRepository pageRepository,
-            IPageViewRepository pageViewRepository,
             IPhysicalPageRepository physicalPageRepository,
             IPhysicalPageViewRepository physicalPageViewRepository,
-            IPostCategoryRepository postCategoryRepository,
-            IPostCommentReactionRepository postCommentReactionRepository,
-            IPostCommentRepository postCommentRepository,
-            IPostRatingRepository postRatingRepository,
-            IPostRepository postRepository,
-            IPostTagRepository postTagRepository,
-            IPostViewRepository postViewRepository,
-            IQuickNoteRepository quickNoteRepository,
             IRoleRepository roleRepository,
             ISettingsRepository blogSettingsRepository,
             ISocialProfileRepository socialProfileRepository,
-            ISpecialMessageRepository specialMessageRepository,
-            ISpecialPageRepository specialPageRepository,
             ISubscriberRepository subscriberRepository,
-            ITagRepository tagRepository,
             IUserActivityRepository userActivityRepository,
-            IUserContentRepository userContentRepository,
             IUserRepository userRepository,
             IUserRoleRepository userRoleRepository,
             IUserViewRepository userViewRepository,
-            IVideoCategoryRepository videoCategoryRepository,
-            IVideoCommentReactionRepository videoCommentReactionRepository,
-            IVideoCommentRepository videoCommentRepository,
-            IVideoRatingRepository videoRatingRepository,
-            IVideoRepository videoRepository,
-            IVideoTagRepository videoTagRepository,
-            IVideoViewRepository videoViewRepository,
             IWhatToSeeNextRepository whatToSeeNextRepository,
+
+            IContentCommentRepository contentCommentRepository,
+            IHubContentRepository<HubContentPage> hubContentPageRepository,
+            IHubContentRepository<HubContentPost> hubContentPostRepository,
+            IHubContentRepository<HubContentQuickNote> hubContentQuickNoteRepository,
+            IHubContentRepository<HubContentSoftwareRelease> hubContentSoftwareReleaseRepository,
+            IHubContentRepository<HubContentSpecialMessage> hubContentSpecialMessageRepository,
+            IHubContentRepository<HubContentSpecialPage> hubContentSpecialPageRepository,
+            IHubContentRepository<HubContentVideo> hubContentVideoRepository,
+
             Text text,
             IWebRootPath wwwRoot)
-            : base(text, dbContextFactory, memoryCache, wwwRoot)
+            : base(text, dbContextFactory, memoryCache, wwwRoot, appFacade)
         {
             _blogRepository = blogRepository;
             _blogSettingsRepository = blogSettingsRepository;
             _categoryRepository = categoryRepository;
+            _contentRepository = contentRepository;
             _directoryRepository = directoryRepository;
             _fileRepository = fileRepository;
-            _pageRepository = pageRepository;
-            _pageViewRepository = pageViewRepository;
             _physicalPageRepository = physicalPageRepository;
             _physicalPageViewRepository = physicalPageViewRepository;
-            _postCategoryRepository = postCategoryRepository;
-            _postCommentReactionRepository = postCommentReactionRepository;
-            _postCommentRepository = postCommentRepository;
-            _postRatingRepository = postRatingRepository;
-            _postRepository = postRepository;
-            _postTagRepository = postTagRepository;
-            _postViewRepository = postViewRepository;
-            _quickNoteRepository = quickNoteRepository;
             _roleRepository = roleRepository;
             _socialProfileRepository = socialProfileRepository;
-            _specialMessageRepository = specialMessageRepository;
-            _specialPageRepository = specialPageRepository;
             _subscriberRepository = subscriberRepository;
-            _tagRepository = tagRepository;
             _userActivityRepository = userActivityRepository;
-            _userContentRepository = userContentRepository;
             _userRepository = userRepository;
             _userRoleRepository = userRoleRepository;
             _userViewRepository = userViewRepository;
-            _videoCategoryRepository = videoCategoryRepository;
-            _videoCommentReactionRepository = videoCommentReactionRepository;
-            _videoCommentRepository = videoCommentRepository;
-            _videoRatingRepository = videoRatingRepository;
-            _videoRepository = videoRepository;
-            _videoTagRepository = videoTagRepository;
-            _videoViewRepository = videoViewRepository;
             _whatToSeeNextRepository = whatToSeeNextRepository;
+
+            _contentCommentRepository = contentCommentRepository;
+            _hubContentPageRepository = hubContentPageRepository;
+            _hubContentPostRepository = hubContentPostRepository;
+            _hubContentQuickNoteRepository = hubContentQuickNoteRepository;
+            _hubContentSoftwareReleaseRepository = hubContentSoftwareReleaseRepository;
+            _hubContentSpecialMessageRepository = hubContentSpecialMessageRepository;
+            _hubContentSpecialPageRepository = hubContentSpecialPageRepository;
+            _hubContentVideoRepository = hubContentVideoRepository;
         }
 
         public override string ReadPermission => nameof(OrigamiRole.ViewTrashes);
@@ -150,29 +118,34 @@ namespace Origami.Core.Data
                 return _purge(_blogRepository, ctx);
             }
 
-            if (ctx.Entity.Type.Like("Page") == true)
+            if (ctx.Entity.Type.Like("OrigamiPage") == true)
             {
-                return _purge(_pageRepository, ctx);
+                return _purge(_hubContentPageRepository, ctx);
             }
 
-            if (ctx.Entity.Type.Like("Post") == true)
+            if (ctx.Entity.Type.Like("OrigamiPost") == true)
             {
-                return _purge(_postRepository, ctx);
+                return _purge(_hubContentPostRepository, ctx);
             }
 
-            if (ctx.Entity.Type.Like("Video") == true)
+            if (ctx.Entity.Type.Like("OrigamiSpecialMessage") == true)
             {
-                return _purge(_videoRepository, ctx);
+                return _purge(_hubContentSpecialMessageRepository, ctx);
             }
 
-            if (ctx.Entity.Type.Like("PostComment") == true)
+            if (ctx.Entity.Type.Like("OrigamiSpecialPage") == true)
             {
-                return _purge(_postCommentRepository, ctx);
+                return _purge(_hubContentSpecialPageRepository, ctx);
             }
 
-            if (ctx.Entity.Type.Like("VideoComment") == true)
+            if (ctx.Entity.Type.Like("OrigamiVideo") == true)
             {
-                return _purge(_videoCommentRepository, ctx);
+                return _purge(_hubContentVideoRepository, ctx);
+            }
+
+            if (ctx.Entity.Type.Like("ContentComment") == true)
+            {
+                return _purge(_contentCommentRepository, ctx);
             }
 
             if (ctx.Entity.Type.Like("Category") == true)
@@ -190,19 +163,14 @@ namespace Origami.Core.Data
                 return _purge(_roleRepository, ctx);
             }
 
-            if (ctx.Entity.Type.Like("QuickNote") == true)
+            if (ctx.Entity.Type.Like("OrigamiQuickNote") == true)
             {
-                return _purge(_quickNoteRepository, ctx);
+                return _purge(_hubContentQuickNoteRepository, ctx);
             }
 
-            if (ctx.Entity.Type.Like("SpecialPage") == true)
+            if (ctx.Entity.Type.Like("OrigamiSoftwareRelease") == true)
             {
-                return _purge(_specialPageRepository, ctx);
-            }
-
-            if (ctx.Entity.Type.Like("SpecialMessage") == true)
-            {
-                return _purge(_specialMessageRepository, ctx);
+                return _purge(_hubContentSoftwareReleaseRepository, ctx);
             }
 
             throw new NotImplementedException();
@@ -215,29 +183,34 @@ namespace Origami.Core.Data
                 return _restore(_blogRepository, ctx);
             }
 
-            if (ctx.Entity.Type.Like("Page") == true)
+            if (ctx.Entity.Type.Like("OrigamiPage") == true)
             {
-                return _restore(_pageRepository, ctx);
+                return _restore(_hubContentPageRepository, ctx);
             }
 
-            if (ctx.Entity.Type.Like("Post") == true)
+            if (ctx.Entity.Type.Like("OrigamiPost") == true)
             {
-                return _restore(_postRepository, ctx);
+                return _restore(_hubContentPostRepository, ctx);
             }
 
-            if (ctx.Entity.Type.Like("Video") == true)
+            if (ctx.Entity.Type.Like("OrigamiSpecialMessage") == true)
             {
-                return _restore(_videoRepository, ctx);
+                return _restore(_hubContentSpecialMessageRepository, ctx);
             }
 
-            if (ctx.Entity.Type.Like("Post") == true)
+            if (ctx.Entity.Type.Like("OrigamiSpecialPage") == true)
             {
-                return _restore(_postCommentRepository, ctx);
+                return _restore(_hubContentSpecialPageRepository, ctx);
             }
 
-            if (ctx.Entity.Type.Like("VideoComment") == true)
+            if (ctx.Entity.Type.Like("OrigamiVideo") == true)
             {
-                return _restore(_videoCommentRepository, ctx);
+                return _restore(_hubContentVideoRepository, ctx);
+            }
+
+            if (ctx.Entity.Type.Like("ContentComment") == true)
+            {
+                return _restore(_contentCommentRepository, ctx);
             }
 
             if (ctx.Entity.Type.Like("Category") == true)
@@ -255,44 +228,57 @@ namespace Origami.Core.Data
                 return _restore(_roleRepository, ctx);
             }
 
-            if (ctx.Entity.Type.Like("QuickNote") == true)
+            if (ctx.Entity.Type.Like("OrigamiQuickNote") == true)
             {
-                return _restore(_quickNoteRepository, ctx);
+                return _restore(_hubContentQuickNoteRepository, ctx);
             }
 
-            if (ctx.Entity.Type.Like("SpecialPage") == true)
+            if (ctx.Entity.Type.Like("OrigamiSoftwareRelease") == true)
             {
-                return _restore(_specialPageRepository, ctx);
-            }
-
-            if (ctx.Entity.Type.Like("SpecialMessage") == true)
-            {
-                return _restore(_specialMessageRepository, ctx);
+                return _restore(_hubContentSoftwareReleaseRepository, ctx);
             }
 
             throw new NotImplementedException();
         }
 
         private Result<OrigamiUserTrash> _purge<T>(IRepository<T> repo, DataOperationContext<OrigamiUserTrash> trash)
-            where T : class, IId, new()
+            where T : class, IId
         {
             var hub = new Result<OrigamiUserTrash>(trash.Entity);
             var entity = repo.ReadFromDatabase(trash.Entity);
-            var ctx = new DataOperationContext<T>(trash.User, trash.DateTime, entity ?? new());
+            var ctx = new DataOperationContext<T>(trash.User, trash.DateTime, entity ?? Activator.CreateInstance<T>());
             return repo.SmartPurge(ctx, true).Push(hub);
         }
 
+        private Result<OrigamiUserTrash> _purge<T>(IHubContentRepository<T> repo, DataOperationContext<OrigamiUserTrash> trash)
+            where T : class, IId
+        {
+            var hub = new Result<OrigamiUserTrash>(trash.Entity);
+            var entity = repo.Get(trash.Entity);
+            if (entity != null) repo.Purge(entity, trash.User).Push(hub);
+            return hub;
+        }
+
         private Result<OrigamiUserTrash> _restore<T>(IRepository<T> repo, DataOperationContext<OrigamiUserTrash> trash)
-            where T : class, IId, new()
+            where T : class, IId
         {
             var hub = new Result<OrigamiUserTrash>(trash.Entity);
             var entity = repo.ReadFromDatabase(trash.Entity);
-            var ctx = new DataOperationContext<T>(trash.User, trash.DateTime, entity ?? new());
+            var ctx = new DataOperationContext<T>(trash.User, trash.DateTime, entity ?? Activator.CreateInstance<T>());
             if (entity != null)
             {
                 return repo.SmartRestore(ctx, true).Push(hub);
             }
             return new(trash.Entity) { Error = Text.Original("Unable to restore trash") };
+        }
+
+        private Result<OrigamiUserTrash> _restore<T>(IHubContentRepository<T> repo, DataOperationContext<OrigamiUserTrash> trash)
+            where T : class, IId
+        {
+            var hub = new Result<OrigamiUserTrash>(trash.Entity);
+            var entity = repo.Get(trash.Entity);
+            if (entity != null) repo.Restore(entity, trash.User).Push(hub);
+            return hub;
         }
     }
 }

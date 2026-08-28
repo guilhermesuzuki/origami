@@ -3,10 +3,10 @@
 
 @if (this.Entity != null)
 {
-    var bg = this.Entity.Type switch
+    var bg = this.Entity.Subtype switch
     {
-        "None" => string.Empty,
-        _ => $"bg-{this.Entity.Type.ToLower()}",
+        "None" or null => string.Empty,
+        _ => $"bg-{this.Entity.Subtype.ToLower()}",
     };
     <div class="p-3 position-relative text-center text-white @bg @Class">
         <Draft Entity="this.Entity"></Draft>

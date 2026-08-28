@@ -18,13 +18,10 @@
                     }
                 </li>
                 <li class="x-small">
-                    @if (entity != null) 
+                    @if (entity is IId id)
                     {
-                        @if (entity is IId id)
-                        {
-                            <HeaderLite Class="d-block" Entity="id"></HeaderLite>
-                            <Id Class="d-block" Entity="id"></Id>
-                        }
+                        <HeaderLite Class="d-block" Entity="id"></HeaderLite>
+                        <Id Class="d-block" Entity="id"></Id>
                     }
                     else 
                     {

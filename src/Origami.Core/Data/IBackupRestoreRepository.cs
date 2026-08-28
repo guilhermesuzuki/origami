@@ -1,7 +1,4 @@
 ﻿using Origami.Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Origami.Core.Data
 {
@@ -20,7 +17,7 @@ namespace Origami.Core.Data
         /// <summary>
         /// Starts a backup for the specified user
         /// </summary>
-        /// <param name="userId"></param>
+        /// <param name="user"></param>
         /// <returns></returns>
         Task<Result<OrigamiBackup>> BackupAsync(OrigamiUser user);
 
@@ -31,6 +28,6 @@ namespace Origami.Core.Data
         /// <param name="backup"></param>
         /// <param name="filepathOverride"></param>
         /// <returns></returns>
-        Task<Result<OrigamiBackupRestore>> RestoreAsync(OrigamiUser user, OrigamiBackup backup, string? filepathOverride = null);
+        Task<Result<OrigamiBackupRestore>> RestoreAsync(OrigamiUser user, OrigamiBackup backup, string connectionString, string? filepathOverride = null);
     }
 }

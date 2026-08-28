@@ -1,7 +1,5 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Configuration;
 using Origami.Core.Models;
 using System.Linq.Dynamic.Core;
 
@@ -11,44 +9,36 @@ namespace Origami.Core.Data
         RepositoryOuterLayer<OrigamiBlog>,
         IBlogRepository
     {
-        protected readonly IValidator<OrigamiBlog> _validator;
-        protected readonly IBlogRollRepository _blogRollRepository;
         protected readonly ICategoryRepository _categoryRepository;
-        protected readonly IConfiguration _configuration;
-        protected readonly IPageRepository _pageRepository;
-        protected readonly IPingServiceRepository _pingServiceRepository;
-        protected readonly IPostRepository _postRepository;
-        protected readonly IRoleRepository _roleRepository;
-        protected readonly IUserRepository _userRepository;
-        protected readonly IVideoRepository _videoRepository;
+        protected readonly IHubContentRepository<HubContentPage> _hubPageRepository;
+        protected readonly IHubContentRepository<HubContentPost> _hubPostRepository;
+        protected readonly IHubContentRepository<HubContentQuickNote> _hubQuickNoteRepository;
+        protected readonly IHubContentRepository<HubContentSoftwareRelease> _hubSoftwareReleaseRepository;
+        protected readonly IHubContentRepository<HubContentVideo> _hubVideoRepository;
+        protected readonly IValidator<OrigamiBlog> _validator;
 
         public BlogRepository(
+            IAppFacade appFacade,
             IValidator<OrigamiBlog> validator,
-            IBlogRollRepository blogRollRepository,
             ICategoryRepository categoryRepository,
-            IConfiguration configuration,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
-            IMemoryCache memoryCache,
-            IPageRepository pageRepository,
-            IPingServiceRepository pingServiceRepository,
-            IPostRepository postRepository,
-            IRoleRepository roleRepository,
-            IUserRepository userRepository,
-            IVideoRepository videoRepository,
+            IMyMemoryCache memoryCache,
+            IHubContentRepository<HubContentPage> hubPageRepository,
+            IHubContentRepository<HubContentPost> hubPostRepository,
+            IHubContentRepository<HubContentQuickNote> hubQuickNoteRepository,
+            IHubContentRepository<HubContentSoftwareRelease> hubSoftwareReleaseRepository,
+            IHubContentRepository<HubContentVideo> hubVideoRepository,
             IWebRootPath wwwRoot,
             Text text)
-            : base(text, dbContextFactory, memoryCache, wwwRoot)
+            : base(text, dbContextFactory, memoryCache, wwwRoot, appFacade)
         {
             _validator = validator;
-            _configuration = configuration;
-            _blogRollRepository = blogRollRepository;
             _categoryRepository = categoryRepository;
-            _pageRepository = pageRepository;
-            _pingServiceRepository = pingServiceRepository;
-            _postRepository = postRepository;
-            _roleRepository = roleRepository;
-            _userRepository = userRepository;
-            _videoRepository = videoRepository;
+            _hubPageRepository = hubPageRepository;
+            _hubPostRepository = hubPostRepository;
+            _hubQuickNoteRepository = hubQuickNoteRepository;
+            _hubSoftwareReleaseRepository = hubSoftwareReleaseRepository;
+            _hubVideoRepository = hubVideoRepository;
         }
 
         public override string CreatePermission => nameof(OrigamiRole.CreateNewBlogs);
@@ -82,9 +72,7 @@ namespace Origami.Core.Data
 
         public override Result<OrigamiBlog> CreateValidation(DataOperationContext<OrigamiBlog> ctx)
         {
-            var validation = new Result<OrigamiBlog>(ctx.Entity, _validator);
-            this.ValidateSlug(ctx).Push(validation);
-            return validation;
+            return new(ctx.Entity, _validator);
         }
 
         public Result<OrigamiBlog> Deactivate(DataOperationContext<OrigamiBlog> ctx, bool checkPermission)
@@ -134,13 +122,52 @@ namespace Origami.Core.Data
 
         public string DirectoryForScalingImages()
         {
-            return $"/files/{typeof(OrigamiBlog).GetPlural().ToLower()}/scaling/";
+            return $"/scaling/";
         }
 
         public OrigamiBlog GetPrimary()
         {
+            return this.ReadFromCache().Single(x => x.IsPrimary);
+        }
+
+        public override Result<OrigamiBlog> Purge(DataOperationContext<OrigamiBlog> ctx)
+        {
+            var hub = new Result<OrigamiBlog>();
+
             using var db = DbContextFactory.CreateDbContext();
-            return db.Blogs.Single(x => x.IsPrimary);
+
+            this._purgeCategories(db, ctx).Push(hub);
+            this._purgePages(db, ctx).Push(hub);
+            this._purgePosts(db, ctx).Push(hub);
+            this._purgeQuickNotes(db, ctx).Push(hub);
+            this._purgeSoftwareReleases(db, ctx).Push(hub);
+            this._purgeVideos(db, ctx).Push(hub);
+
+            // blogs the users have access to
+            db.UserBlogs.AsNoTracking().Where(x => x.BlogId == ctx.Entity.Id).ExecuteDelete();
+
+            // blog is purged at last to prevent foreign key constraint issues
+            base.Purge(ctx);
+
+            return hub;
+        }
+
+        public override Result<OrigamiBlog> PurgeValidation(DataOperationContext<OrigamiBlog> ctx)
+        {
+            var hub = base.DeleteValidation(ctx);
+            if (hub.Ok)
+            {
+                var fresh = ReadFromDatabase(ctx.Entity);
+                if (fresh == null)
+                {
+                    hub.Error = Text.Original("Blog could not be found");
+                }
+                else if (fresh is { IsPrimary: true })
+                {
+                    hub.Error = Text.Original("Primary blog cannot be purged");
+                }
+            }
+            return hub;
         }
 
         public Result<OrigamiBlog> SetPrimary(DataOperationContext<OrigamiBlog> ctx, bool checkPermission)
@@ -151,6 +178,21 @@ namespace Origami.Core.Data
                 if (permission.Ok == false) return permission;
             }
 
+            var blog = this.ReadFromDatabase(ctx.Entity);
+
+            if (blog == null)
+            {
+                return new() { Error = Text.Original("Blog could not be found") };
+            }
+            if (blog.IsDeleted)
+            {
+                return new() { Error = Text.Original("Blog is deleted") };
+            }
+            if (blog.IsActive == false)
+            {
+                return new() { Error = Text.Original("Blog is deactivated") };
+            }
+
             using var db = DbContextFactory.CreateDbContext();
 
             db.Blogs.Where(x => x.IsPrimary).ExecuteUpdate(setters => setters.SetProperty(x => x.IsPrimary, false));
@@ -159,8 +201,14 @@ namespace Origami.Core.Data
             //sets the IsPrimary property to true for the current blog
             ctx.Entity.IsPrimary = true;
 
+            //fresh from the oven
+            var fresh = this.ReadFromDatabase(ctx.Entity)!;
+
+            //pulls the latest version of the blog entity from the database to ensure the cache is updated with the correct version
+            ctx.Entity.Version(fresh);
+
             //refreshes the cache
-            RefreshCache();
+            this.RefreshCache();
 
             //returns the updated blog entity
             return new(ctx.Entity);
@@ -240,52 +288,85 @@ namespace Origami.Core.Data
 
         public override Result<OrigamiBlog> UpdateValidation(DataOperationContext<OrigamiBlog> ctx)
         {
-            var validation = new Result<OrigamiBlog>(ctx.Entity, _validator);
-            this.ValidateSlug(ctx).Push(validation);
-            return validation;
+            return new(ctx.Entity, _validator);
         }
 
-        public override void PurgeRelationshipsFromCache(OrigamiBlog entity)
+        private Result _purgeCategories(OrigamiDbContext db, DataOperationContext<OrigamiBlog> ctx)
         {
-            var categories = _categoryRepository.ReadFromCache().Blog(entity.Id).ToList();
-            var pages = _pageRepository.ReadFromCache().Blog(entity.Id).ToList();
-            var pingServices = _pingServiceRepository.ReadFromCache().Blog(entity.Id).ToList();
-            var posts = _postRepository.ReadFromCache().Blog(entity.Id).ToList();
-            var videos = _videoRepository.ReadFromCache().Blog(entity.Id).ToList();
+            var categories = from a in db.Categories.AsNoTracking().Blog(ctx.Entity.Id)
+                             select new OrigamiCategory { Id = a.Id, NanoId = a.NanoId };
 
-            categories.Each(_categoryRepository.PurgeCache);
-            pages.Each(_pageRepository.PurgeCache);
-            pingServices.Each(_pingServiceRepository.PurgeCache);
-            posts.Each(_postRepository.PurgeCache);
-            videos.Each(_videoRepository.PurgeCache);
-        }
-
-        public override Result<OrigamiBlog> PurgeRelationshipsFromDatabase(DataOperationContext<OrigamiBlog> ctx)
-        {
-            var hub = base.PurgeRelationshipsFromDatabase(ctx);
-
-            using (var db = DbContextFactory.CreateDbContext())
+            if (categories.Any() == true)
             {
-                var categories = db.Set<OrigamiCategory>().AsNoTracking().Blog(ctx.Entity.Id).ToList();
-                var pages = db.Set<OrigamiPage>().AsNoTracking().Blog(ctx.Entity.Id).ToList();
-                var pingServices = db.Set<OrigamiPingService>().AsNoTracking().Blog(ctx.Entity.Id).ToList();
-                var posts = db.Set<OrigamiPost>().AsNoTracking().Blog(ctx.Entity.Id).ToList();
-                var videos = db.Set<OrigamiVideo>().AsNoTracking().Blog(ctx.Entity.Id).ToList();
-
-                categories.GetContexts(ctx).Call(_categoryRepository.SmartPurge, false).Push(hub);
-                pages.GetContexts(ctx).Call(_pageRepository.SmartPurge, false).Push(hub);
-                pingServices.GetContexts(ctx).Call(_pingServiceRepository.SmartPurge, false).Push(hub);
-                posts.GetContexts(ctx).Call(_postRepository.SmartPurge, false).Push(hub);
-                videos.GetContexts(ctx).Call(_videoRepository.SmartPurge, false).Push(hub);
-
-                hub.RowsAffected += db.CustomFields.Where(x => x.BlogId == ctx.Entity.Id).ExecuteDelete();
-                hub.RowsAffected += db.DataStoreSettings.Where(x => x.BlogId == ctx.Entity.Id).ExecuteDelete();
-                hub.RowsAffected += db.QuickNotes.Where(x => x.BlogId == ctx.Entity.Id).ExecuteDelete();
-                hub.RowsAffected += db.QuickSettings.Where(x => x.BlogId == ctx.Entity.Id).ExecuteDelete();
-                hub.RowsAffected += db.StopWords.Where(x => x.BlogId == ctx.Entity.Id).ExecuteDelete();
+                categories.GetContexts(ctx).Each(_categoryRepository.Purge);
             }
 
-            return hub;
+            return new();
+        }
+
+        private Result _purgePages(OrigamiDbContext db, DataOperationContext<OrigamiBlog> ctx)
+        {
+            var entities = from p in db.Pages.AsNoTracking().Blog(ctx.Entity.Id)
+                           select new OrigamiPage { Id = p.Id, NanoId = p.NanoId };
+
+            if (entities.Any() == true)
+            {
+                entities.Select(x => _hubPageRepository.Get(x)).Each(x => _hubPageRepository.Purge(x, ctx.User, false));
+            }
+
+            return new();
+        }
+
+        private Result _purgePosts(OrigamiDbContext db, DataOperationContext<OrigamiBlog> ctx)
+        {
+            var entities = from p in db.Posts.AsNoTracking().Blog(ctx.Entity.Id)
+                           select new OrigamiPost { Id = p.Id, NanoId = p.NanoId };
+
+            if (entities.Any() == true)
+            {
+                entities.Select(x => _hubPostRepository.Get(x)).Each(x => _hubPostRepository.Purge(x, ctx.User, false));
+            }
+
+            return new();
+        }
+
+        private Result _purgeQuickNotes(OrigamiDbContext db, DataOperationContext<OrigamiBlog> ctx)
+        {
+            var entities = from qn in db.QuickNotes.AsNoTracking().Blog(ctx.Entity.Id)
+                           select new OrigamiQuickNote { Id = qn.Id, NanoId = qn.NanoId };
+
+            if (entities.Any() == true)
+            {
+                entities.Select(x => _hubQuickNoteRepository.Get(x)).Each(x => _hubQuickNoteRepository.Purge(x, ctx.User, false));
+            }
+
+            return new();
+        }
+
+        private Result _purgeSoftwareReleases(OrigamiDbContext db, DataOperationContext<OrigamiBlog> ctx)
+        {
+            var entities = from v in db.SoftwareReleases.AsNoTracking().Blog(ctx.Entity.Id)
+                           select new OrigamiSoftwareRelease { Id = v.Id, NanoId = v.NanoId };
+
+            if (entities.Any() == true)
+            {
+                entities.Select(x => _hubSoftwareReleaseRepository.Get(x)).Each(x => _hubSoftwareReleaseRepository.Purge(x, ctx.User, false));
+            }
+
+            return new();
+        }
+
+        private Result _purgeVideos(OrigamiDbContext db, DataOperationContext<OrigamiBlog> ctx)
+        {
+            var entities = from v in db.Videos.AsNoTracking().Blog(ctx.Entity.Id)
+                           select new OrigamiVideo { Id = v.Id, NanoId = v.NanoId };
+
+            if (entities.Any() == true)
+            {
+                entities.Select(x => _hubVideoRepository.Get(x)).Each(x => _hubVideoRepository.Purge(x, ctx.User, false));
+            }
+
+            return new();
         }
     }
 }

@@ -6,9 +6,9 @@ namespace Origami.Core.Data
 {
     public abstract class RepositoryBaseLayer<T> :
         ICache<T>
-        where T : class, IId, new()
+        where T : class, IId
     {
-        protected RepositoryBaseLayer(Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory, IMemoryCache memoryCache, IWebRootPath webRootPath) : base()
+        protected RepositoryBaseLayer(Text text, IDbContextFactory<OrigamiDbContext> dbContextFactory, IMyMemoryCache memoryCache, IWebRootPath webRootPath) : base()
         {
             DbContextFactory = dbContextFactory;
             MemoryCache = memoryCache;
@@ -18,16 +18,22 @@ namespace Origami.Core.Data
 
         public IDbContextFactory<OrigamiDbContext> DbContextFactory { get; }
         public string KeyForCaching => typeof(T).KeyForCaching();
-        public IMemoryCache MemoryCache { get; }
+        public IMyMemoryCache MemoryCache { get; }
         public Text Text { get; }
         public IWebRootPath WebRootPath { get; }
 
         public virtual void CreateCache(T entity)
         {
+            var clone = entity.Clone();
             lock (OrigamiConstants.SyncRoot)
             {
                 var value = MemoryCache.GetList<T>(KeyForCaching);
-                if (value != null) value.Add(entity); else value = [entity];
+                if (value != null)
+                {
+                    value.RemoveAll(x => x.Id == entity.Id);
+                    value.Add(clone);
+                }
+                else value = [clone];
                 MemoryCache.Set(KeyForCaching, value);
             }
         }
@@ -47,17 +53,7 @@ namespace Origami.Core.Data
 
         public virtual void UpdateCache(T entity)
         {
-            lock (OrigamiConstants.SyncRoot)
-            {
-                var value = MemoryCache.GetList<T>(KeyForCaching);
-                if (value != null)
-                {
-                    value.RemoveAll(x => x.Id == entity.Id);
-                    value.Add(entity);
-                }
-                else value = [entity];
-                MemoryCache.Set(KeyForCaching, value);
-            }
+            this.CreateCache(entity);
         }
     }
 }

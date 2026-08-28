@@ -10,7 +10,7 @@
         type = type[7..];
     }
 
-    if (this.Entity is OrigamiPostComment || this.Entity is OrigamiVideoComment)
+    if (this.Entity is OrigamiContentComment)
     {
         type = "Comment";
     }
@@ -29,6 +29,10 @@
     else if (this.Entity is OrigamiQuickNote)
     {
         type = "Quick note";
+    }
+    else if (this.Entity is OrigamiSoftwareRelease)
+    {
+        type = "Software release";
     }
 
     <div class="@Class basic-header-notes">

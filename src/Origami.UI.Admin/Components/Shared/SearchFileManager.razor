@@ -1,0 +1,223 @@
+﻿@using Origami.Core.Models.FileSystem
+@inherits Basic
+
+<div class="search-filemanager-lite @Class">
+    <div class="search-field position-relative expand-size p-3 border shadow-sm">
+        <ul class="expand-size">
+            <li>
+                <MudTextField T="string"
+                              FullWidth="true"
+                              Immediate="true"
+                              HelperText="@Text.Lower("Type in here to search")"
+                              @bind-Value:get="@_search"
+                              @bind-Value:set="@_startQuery"></MudTextField>
+            </li>
+            <li class="position-relative ms-2" style="flex:none;">
+                <button class="m-auto" @onclick="() => this._startQuery(string.Empty)" disabled="@(this._search.Has() ? false : true)">
+                    <i class="fa-solid fa-broom"></i>
+                </button>
+            </li>
+        </ul>
+    </div>
+    @if (this._hits != null)
+    {
+        <div class="search-results mt-3 border shadow-lg p-3">
+            <div class="row search-hits">
+                @if (this._hits.Any() == true)
+                {
+                    @foreach (var hit in this._hits)
+                    {
+                        @if (hit is DirectoryContext directory)
+                        {
+                            <div class="mb-3 cursor-pointer col-12 col-xxl-6" @onclick="async () => await OnOpenFolder.InvokeAsync(directory.Directory.WebPath)">
+                                <div class="p-2 border directory position-relative">
+                                    <div class="d-inline-flex align-items-center" title="@directory.Directory.Name" style="height: 100px;">
+                                        <i class="fa-solid fa-folder d-block fs-1"></i>
+                                        <div class="ms-3">
+                                            <FileManagerPath Class="x-small" VirtualPath="@directory.Directory.WebPath" OnPathClicked="async (path) => await this.OnOpenFolder.InvokeAsync(path)"></FileManagerPath>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        @if (hit is OrigamiSystemFile file)
+                        {
+                            <div class="mb-3 cursor-pointer col-12 col-xxl-6 @(this._selectedFile != null && this._selectedFile.WebPath == file.WebPath ? "selected-file" : null) dummy" @onclick="() => _selectFile(file)">
+                                <div class="p-2 border file position-relative">
+                                    <div class="d-inline-flex align-items-center" style="height:100px;" title="@file.Name">
+                                        @if (file.IsImage)
+                                        {
+                                            <img src="@file.WebPath.QueryString("size", "small")" width="50" />
+                                        }
+                                        else
+                                        {
+                                            <HeaderIcon Entity="file" Class="fs-1"></HeaderIcon>
+                                        }
+                                        <div class="ms-3">
+                                            <span class="ellipsis">
+                                                @file.Name
+                                                <span class="x-small">@file.FileSize.SizeInBytes()</span>
+                                            </span>
+                                            <FileManagerPath Class="x-small" VirtualPath="@file.WebPathDirectory" OnPathClicked="async (path) => await this.OnOpenFolder.InvokeAsync(path)"></FileManagerPath>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                }
+                else
+                {
+                    <NothingToSeeHere Class="col-12"></NothingToSeeHere>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    /// <summary>
+    /// Search term
+    /// </summary>
+    private string _search = string.Empty;
+
+    /// <summary>
+    /// Search timer
+    /// </summary>
+    private System.Timers.Timer? _searchTimer;
+
+    /// <summary>
+    /// Selected file, if any. This is used to highlight the file in the UI and also to return it when clicked again
+    /// </summary>
+    private OrigamiSystemFile? _selectedFile;
+
+    /// <summary>
+    /// This event happens when a file is selected/clicked in the UI
+    /// </summary>
+    [Parameter] public EventCallback<OrigamiSystemFile> OnFileClicked { get; set; }
+
+    [Parameter] public EventCallback<string> OnOpenFolder { get; set; }
+
+    /// <summary>
+    /// Current virtual path
+    /// </summary>
+    [Parameter] public string VirtualPath { get; set; } = string.Empty;
+
+    /// <summary>
+    /// All hits from the search, if any
+    /// </summary>
+    private IList<IId>? _hits;
+
+    /// <summary>
+    /// User has typed-in and will start the timer
+    /// </summary>
+    /// <param name="queryTerm"></param>
+    private void _startQuery(string queryTerm)
+    {
+        this._search = queryTerm;
+
+        if (_searchTimer != null)
+        {
+            _searchTimer.Stop();
+            _searchTimer = null;
+        }
+
+        _searchTimer = new();
+        _searchTimer.Enabled = true;
+        _searchTimer.AutoReset = false;
+        _searchTimer.Interval = 750;
+        _searchTimer.Elapsed += (o, e) =>
+        {
+            this.InvokeAsync(() =>
+            {
+                this.OnSearch(queryTerm);
+                this.StateHasChanged();
+            });
+        };
+
+        _searchTimer.Start();
+    }
+
+    private async Task _selectFile(OrigamiSystemFile file)
+    {
+        this._selectedFile = this._selectedFile == file ? null : file;
+        await this.OnFileClicked.InvokeAsync(file);
+    }
+
+    /// <summary>
+    /// Clears the search
+    /// </summary>
+    public void Clear()
+    {
+        this._startQuery(string.Empty);
+    }
+
+    protected virtual void OnSearch(string query)
+    {
+        try
+        {
+            if (query.Has() == false)
+            {
+                this._hits = null;
+                return;
+            }
+
+            this._hits = [];
+
+            var rootPath = this.Super.Directories.LocalPath(this.VirtualPath);
+            var directories = Directory.GetDirectories(rootPath, "*", SearchOption.AllDirectories);
+            var files = Directory.GetFiles(rootPath, $"*{query}*", SearchOption.AllDirectories);
+
+            foreach (var file in files)
+            {
+                var info = new FileInfo(file);
+                var webpath = $"/{file.Split("Origami.Files")[1].Replace("\\", "/").TrimStart('/')}";
+                var origamiFile = new OrigamiSystemFile(info.FullName, webpath);
+                this._hits.Add(origamiFile);
+            }
+
+            foreach (var directory in directories)
+            {
+                var info = new DirectoryInfo(directory);
+                var webpath = $"/{directory.Split("Origami.Files")[1].Replace("\\", "/").TrimStart('/')}";
+                var origamiDirectory = new OrigamiSystemDirectory(info.FullName, webpath);
+                var context = new DirectoryContext(origamiDirectory) { Context = this.Super.GuessWho(info.Name) };
+
+                if (info.Name.Contains(query, StringComparison.CurrentCultureIgnoreCase) == true)
+                {
+                    this._hits.Add(context);
+                    continue;
+                }
+
+                if (context.Name.Contains(query, StringComparison.CurrentCultureIgnoreCase) == true)
+                {
+                    this._hits.Add(context);
+                    continue;
+                }
+            }
+
+            this._hits = this._hits
+            .OrderBy(x =>
+            {
+                return x switch
+                {
+                    DirectoryContext context => 2,
+                    OrigamiSystemFile file => 1,
+                    _ => 3
+                };
+            }).OrderBy(x =>
+            {
+                return x switch
+                {
+                    DirectoryContext context => context.Name.Has() ? context.Name : context.Directory.Name,
+                    OrigamiSystemFile file => file.Name,
+                    _ => string.Empty
+                };
+            }).ToList();
+        }
+        catch (Exception ex)
+        {
+            this.UserFacade.Result = new() { Error = ex.GetMessage() };
+        }
+    }
+}

@@ -1,20 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Origami.Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Origami.Core.Data
 {
     public abstract class RepositoryLayer0Data<T> : RepositoryBaseLayer<T>,
         ICrud<T>
-        where T : class, IId, new()
+        where T : class, IId
     {
         protected RepositoryLayer0Data(
             Text text,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
-            IMemoryCache memoryCache,
+            IMyMemoryCache memoryCache,
             IWebRootPath webRootPath)
             : base(text, dbContextFactory, memoryCache, webRootPath)
         {
@@ -25,15 +21,16 @@ namespace Origami.Core.Data
         {
             try
             {
-                var clone = ctx.Entity.Clone();
+                var clone = ctx.Entity.Clone().NullFKObjectsForPersistence();
 
-                using (var dbContext = DbContextFactory.CreateDbContext())
+                using (var db = DbContextFactory.CreateDbContext())
                 {
-                    clone = dbContext.Add(clone).Entity;
-                    dbContext.SaveChanges();
+                    clone = db.Add(clone).Entity;
+                    db.SaveChanges();
                 }
 
                 ctx.Entity.Version(clone);
+                ctx.Entity.CreationDate(clone);
 
                 return new(ctx.Entity);
             }
@@ -98,20 +95,7 @@ namespace Origami.Core.Data
         public virtual T? ReadFromDatabase(IId id)
         {
             using var db = DbContextFactory.CreateDbContext();
-            return db.Set<T>().AsNoTracking().FirstOrDefault(x => x.Id == id.Id);
-        }
-
-        [Obsolete("This method has a memory leak")]
-        public virtual IQueryable<T> ReadFromDatabase()
-        {
-            return this.ReadFromDatabase<T>();
-        }
-
-        [Obsolete("This method has a memory leak")]
-        public virtual IQueryable<X> ReadFromDatabase<X>()
-            where X : class
-        {
-            return DbContextFactory.CreateDbContext().Set<X>().AsNoTracking();
+            return db.Set<T>().AsNoTracking().Id(id.Id);
         }
 
         public virtual Result<T> Restore(DataOperationContext<T> ctx)
@@ -156,6 +140,7 @@ namespace Origami.Core.Data
                     db.SaveChanges();
                 }
                 ctx.Entity.Version(clone);
+                ctx.Entity.ModificationDate(clone);
                 return new(ctx.Entity);
             }
             catch (Exception ex)

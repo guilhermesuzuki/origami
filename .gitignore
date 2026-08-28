@@ -422,3 +422,4 @@ FodyWeavers.xsd
 /src/Origami.Files/files-restore
 /src/Origami.Files/files-old*
 /src/Origami.Files/files-previous*
+/src/Origami.Files/scaling

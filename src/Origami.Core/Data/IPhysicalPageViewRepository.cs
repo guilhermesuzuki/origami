@@ -4,9 +4,8 @@ namespace Origami.Core.Data
 {
     public interface IPhysicalPageViewRepository :
         IRepository<OrigamiPhysicalPageView>,
-        IViews<OrigamiPhysicalPage>,
-        IFastRead<PhysicalPageViewTotal>
+        IViews<OrigamiPhysicalPage>
     {
-        long GetViews<T>(T entity) where T: IId;
+        long GetViews<T>(T entity) where T : IId;
     }
 }

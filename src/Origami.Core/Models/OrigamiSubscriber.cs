@@ -15,7 +15,6 @@ namespace Origami.Core.Models
         IDateModified,
         IDeleted,
         IVersion,
-        IFKSocialProfile,
         INew
     {
         private DateTime _dateCreated;
@@ -24,7 +23,6 @@ namespace Origami.Core.Models
         private Guid _id = Guid.NewGuid();
         private bool _isDeleted;
         private bool _isVerified;
-        private OrigamiSocialProfile? _socialProfile;
         private Guid _socialProfileId;
         private string? _verificationCode;
         private byte[] _version = [];
@@ -80,13 +78,6 @@ namespace Origami.Core.Models
         }
 
         public bool New => Version.SequenceEqual([]);
-
-        [ForeignKey(nameof(SocialProfileId))]
-        public OrigamiSocialProfile? SocialProfile
-        {
-            get { return _socialProfile; }
-            set { this.Set(ref _socialProfile, value, Changed); }
-        }
 
         public Guid SocialProfileId
         {

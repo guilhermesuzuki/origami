@@ -1,13 +1,15 @@
 ﻿using AngleSharp;
 using CloneExtensions;
+using FluentValidation;
 using Origami.Core.Models;
 using Origami.Core.Models.Settings;
+using SixLabors.ImageSharp;
+using System.Collections;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Net;
 using System.Net.Mail;
 using System.Reflection;
 using System.Security.Cryptography;
@@ -71,12 +73,22 @@ namespace Origami.Core
             return settings;
         }
 
-        public static IList<OrigamiSetting> Add(this IList<OrigamiSetting> settings, OpenTelemetry socialNetwork)
+        public static IList<OrigamiSetting> Add(this IList<OrigamiSetting> settings, OpenTelemetry openTelemetry)
         {
             var prefix = "opentelemetry";
 
-            settings.Add(new() { Name = $"{prefix}-enabled", Value = socialNetwork.Enabled.ToString(), });
-            settings.Add(new() { Name = $"{prefix}-endpoint", Value = socialNetwork.Endpoint });
+            settings.Add(new() { Name = $"{prefix}-enabled", Value = openTelemetry.Enabled.ToString(), });
+            settings.Add(new() { Name = $"{prefix}-endpoint", Value = openTelemetry.Endpoint });
+
+            return settings;
+        }
+
+        public static IList<OrigamiSetting> Add(this IList<OrigamiSetting> settings, Seq seq)
+        {
+            var prefix = "seq";
+
+            settings.Add(new() { Name = $"{prefix}-enabled", Value = seq.Enabled.ToString(), });
+            settings.Add(new() { Name = $"{prefix}-endpoint", Value = seq.Endpoint });
 
             return settings;
         }
@@ -93,6 +105,14 @@ namespace Origami.Core
             // because we start at year 1 for the Gregorian 
             // calendar, we must subtract a year here.
             return (zeroTime + span).Year - 1;
+        }
+
+        public static StringBuilder Append(this StringBuilder builder, string value, bool condition)
+        {
+            if (condition == false) return builder;
+
+            builder.Append(value);
+            return builder;
         }
 
         /// <summary>
@@ -121,8 +141,8 @@ namespace Origami.Core
         /// <param name="entities"></param>
         /// <param name="blog"></param>
         /// <returns></returns>
-        public static IEnumerable<T> Blog<T>(this IEnumerable<T> entities, Guid blog)
-            where T : IBlogId
+        public static IEnumerable<T> Blog<T>(this IEnumerable<T> entities, Guid? blog)
+            where T : IBlogIdNull
         {
             return entities.Where(x => x.BlogId == blog);
         }
@@ -143,21 +163,60 @@ namespace Origami.Core
             return result;
         }
 
+        public static bool CanBeRated(this OrigamiContent? origamiContent)
+        {
+            if (origamiContent != null)
+            {
+                return origamiContent switch
+                {
+                    OrigamiPage => true,
+                    OrigamiPost => true,
+                    OrigamiSoftwareRelease => true,
+                    OrigamiVideo => true,
+                    _ => false,
+                };
+            }
+            return false;
+        }
+
         /// <summary>
         /// Clones the <paramref name="entity"/>, returning a brand new instance of <typeparamref name="T"/>
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public static T Clone<T>(this T? entity)
-            where T : class, new()
+        public static T Clone<T>(this T? entity) where T : class
         {
             //TODO: workaround for OrigamiBackupRestore, find a better way to do this
             if (entity is OrigamiBackupRestore restore)
             {
-                return restore.GetClone() as T ?? new T();
+                return restore.GetClone() as T ?? Activator.CreateInstance<T>();
             }
-            return entity != null ? entity.GetClone() : new();
+
+            if (entity is OrigamiContent content)
+            {
+                return content switch
+                {
+                    OrigamiPage page => page.GetClone() as T ?? Activator.CreateInstance<T>(),
+                    OrigamiPost post => post.GetClone() as T ?? Activator.CreateInstance<T>(),
+                    OrigamiQuickNote note => note.GetClone() as T ?? Activator.CreateInstance<T>(),
+                    OrigamiSoftwareRelease softwareRelease => softwareRelease.GetClone() as T ?? Activator.CreateInstance<T>(),
+                    OrigamiSpecialMessage specialMessage => specialMessage.GetClone() as T ?? Activator.CreateInstance<T>(),
+                    OrigamiSpecialPage specialPage => specialPage.GetClone() as T ?? Activator.CreateInstance<T>(),
+                    OrigamiVideo video => video.GetClone() as T ?? Activator.CreateInstance<T>(),
+                    _ => throw new NotImplementedException($"Unsupported entity type: {content.GetType().FullName}"),
+                };
+            }
+
+            return entity != null ? entity.GetClone() : Activator.CreateInstance<T>();
+        }
+
+        public static void CreationDate<T>(this T to, T from)
+        {
+            if (from is IDateCreated fromDateCreated && to is IDateCreated toDateCreated)
+            {
+                toDateCreated.DateCreated = fromDateCreated.DateCreated;
+            }
         }
 
         /// <summary>
@@ -356,6 +415,7 @@ namespace Origami.Core
 
         /// <summary>
         /// Converts the <paramref name="entity"/> back into an XML in string form
+        /// TODO: rename this method, it's really bad
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="entity"></param>
@@ -412,6 +472,14 @@ namespace Origami.Core
             return names.Count == 1 ? names[0] : string.Empty;
         }
 
+        public static void GenerateTimestamp(this IId entity)
+        {
+            if (entity is IVersion version)
+            {
+                version.Version = BitConverter.GetBytes(DateTime.UtcNow.Ticks);
+            }
+        }
+
         public static DataOperationContext<T> GetContext<T>(this T entity)
         {
             return new(entity is OrigamiUser user ? user : OrigamiUser.AnonymousUser, entity);
@@ -431,16 +499,10 @@ namespace Origami.Core
         public static DateTime GetDate<T>(this T entity)
             where T : IDateCreated
         {
-            if (entity is IPublished published && published.DatePublished != null)
-            {
-                return published.DatePublished.Value;
-            }
-
             if (entity is IDateModified modified && modified.DateModified != null)
             {
                 return modified.DateModified.Value;
             }
-
             return entity.DateCreated;
         }
 
@@ -451,21 +513,10 @@ namespace Origami.Core
         /// <returns></returns>
         public static string GetHexString(this byte[] bytes)
         {
-            int j = bytes.Length;
-
-            char[] chars = new char[j * 2];
-
-            for (int i = 0; i < j; i++)
-            {
-                int b = bytes[i];
-                chars[i * 2] = _hexDigits[b >> 4];
-                chars[i * 2 + 1] = _hexDigits[b & 0xF];
-            }
-
-            return new string(chars);
+            return BitConverter.ToString(bytes).Replace("-", string.Empty).TrimStart('0');
         }
 
-        public static string GetHyperlink(this OrigamiBlog blog, OrigamiTag tag, INanoId? entity = null)
+        public static string GetHyperlink(this OrigamiBlog blog, OrigamiContentTag tag, INanoId? entity = null)
         {
             return $"/blogs/{blog.Slug}/tags/{tag.Slug}/{entity?.NanoId}";
         }
@@ -473,6 +524,17 @@ namespace Origami.Core
         public static string GetHyperlink(this OrigamiBlog blog, OrigamiCategory category, INanoId? entity = null)
         {
             return $"/blogs/{blog.Slug}/categories/{category.Slug}/{entity?.NanoId}";
+        }
+
+        public static (string Extension, string MimeType) GetImageFormat(this byte[] imageBytes)
+        {
+            using var stream = new MemoryStream(imageBytes);
+            using var image = Image.Load(stream);
+
+            var format = image.Metadata.DecodedImageFormat
+                ?? throw new InvalidOperationException("Unable to determine image format.");
+
+            return (format.Name, format.DefaultMimeType);
         }
 
         /// <summary>
@@ -486,6 +548,18 @@ namespace Origami.Core
         }
 
         /// <summary>
+        /// Name or FirstName and LastName
+        /// </summary>
+        /// <param name="socialProfile"></param>
+        /// <returns></returns>
+        public static string GetName(this OrigamiSocialProfile? socialProfile)
+        {
+            if (socialProfile == null) return string.Empty;
+            if (socialProfile.Name.Has() == true) return $"{socialProfile.Name}";
+            return $"{socialProfile.FirstName} {socialProfile.LastName}";
+        }
+
+        /// <summary>
         /// Gets the plural from a <paramref name="type"/>'s name
         /// </summary>
         /// <param name="type"></param>
@@ -493,15 +567,44 @@ namespace Origami.Core
         public static string GetPlural(this Type type)
         {
             var name = type.Name;
+
+            switch (name)
+            {
+                case "HubContentSoftwareRelease": return "Software releases";
+                case "HubContentSpecialMessage": return "Special messages";
+                case "HubContentSpecialPage": return "Special pages";
+                case "OrigamiContent": return "Contents";
+                case "OrigamiQuickNote": return "Quick notes";
+                case "OrigamiSocialProfile": return "Social profiles";
+                case "OrigamiSoftwareRelease": return "Software releases";
+                case "OrigamiUserTrash": return "User trashes";
+                default: break;
+            }
+
+            if (name.StartsWith("HubContent") == true)
+            {
+                name = name[10..];
+            }
             if (name.StartsWith("Origami") == true)
             {
                 name = name[7..];
             }
+            if (name.StartsWith("Content") == true)
+            {
+                name = name[7..];
+            }
+
             if (name.EndsWith("y") == true)
             {
                 name = name.TrimEnd('y') + "ies";
                 return name;
             }
+            if (name.EndsWith("sh") == true)
+            {
+                name = name + "es";
+                return name;
+            }
+
             switch (name)
             {
                 case "Settings": return "Settings";
@@ -564,32 +667,12 @@ namespace Origami.Core
 
         public static string GetSlug(this string text)
         {
-            if (text.Has() == false) return string.Empty;
-
-            // Normalize text to remove diacritics (e.g., accents)
-            text = text.Normalize(NormalizationForm.FormD);
-
-            var sb = new StringBuilder();
-            foreach (char c in text)
+            if (text.Has() == true)
             {
-                if (CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
-                {
-                    sb.Append(c);
-                }
+                text = text.Trim();
+                return SlugGenerator.Generate(text, maxLength: text.Length);
             }
-
-            text = sb.ToString().Normalize(NormalizationForm.FormC);
-
-            // Convert to lowercase
-            text = text.ToLowerInvariant();
-
-            // Replace invalid characters with hyphens
-            text = Regex.Replace(text, @"[^a-z0-9\s-]", string.Empty);
-
-            // Replace multiple spaces or hyphens with a single hyphen
-            text = Regex.Replace(text, @"[\s-]+", "-").Trim('-');
-
-            return text;
+            return string.Empty;
         }
 
         /// <summary>
@@ -628,17 +711,9 @@ namespace Origami.Core
             return string.IsNullOrWhiteSpace(@string) == false;
         }
 
-        public static bool Has<T>(this T? entity)
-            where T : class, INew
+        public static bool Has<T>([NotNullWhen(true)] this T? entity) where T : class, INew
         {
-            if (entity == null) return false;
-            if (entity.New) return false;
-            return true;
-        }
-
-        public static string HexString(this byte[] byteArray)
-        {
-            return BitConverter.ToString(byteArray).Replace("-", string.Empty).TrimStart('0');
+            return entity is { New: false };
         }
 
         /// <summary>
@@ -650,7 +725,7 @@ namespace Origami.Core
         /// <returns>The first entity in the collection with a matching identifier, or <see langword="null"/> if no match is
         /// found or if <paramref name="id"/> is <see langword="null"/>.</returns>
         public static T? Id<T>(this IEnumerable<T> entities, Guid? id)
-            where T : class, IId, new()
+            where T : class, IId
         {
             return entities.FirstOrDefault(x => x.Id == id.GetValueOrDefault());
         }
@@ -688,20 +763,14 @@ namespace Origami.Core
             {
                 if (iframeRegex.IsMatch(html) == false) return false;
 
-                var context = BrowsingContext.New(Configuration.Default);
+                var context = BrowsingContext.New(AngleSharp.Configuration.Default);
                 var doc = context.OpenAsync(req => req.Content(html)).Result;
 
                 var iframe = doc.QuerySelector("iframe");
                 if (iframe == null) return false;
                 if (iframe.Attributes["src"] == null) return false;
 
-                var src = iframe.Attributes["src"]!.Value;
-                if (Uri.TryCreate(src, UriKind.Absolute, out var uri) == false || (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
-                {
-                    return false;
-                }
-
-                return true;
+                return iframe.Attributes["src"]!.Value.IsValidUrl();
             }
             return false;
         }
@@ -717,23 +786,71 @@ namespace Origami.Core
         /// </summary>
         /// <param name="password"></param>
         /// <returns></returns>
-        public static Result IsPasswordStrong(this string password)
+        public static Result IsPasswordStrong(this string password, Text text)
         {
             var result = new Result();
 
             if (password.Has() == false)
             {
-                result.Error = "Password is empty";
+                result.Error = text.Original("Password is empty");
             }
             else
             {
-                if (password.Length < 5) result.Error = "Password too short";
-                if (Regex.IsMatch(password, "[0-9]+") == false) result.Error = "Number was not found in password";
-                if (Regex.IsMatch(password, "[a-zA-Z]+") == false) result.Error = "Character was not found in password";
-                if (Regex.IsMatch(password, @"[!@#$%^&*()_\-+=\[\]{}|\\:;\""<>,.?/~`]") == false) result.Error = "Special character was not found in password";
+                if (password.Length < 5) result.Error = text.Original("Password too short");
+                if (Regex.IsMatch(password, "[0-9]+") == false) result.Error = text.Original("Number was not found in password");
+                if (Regex.IsMatch(password, "[a-zA-Z]+") == false) result.Error = text.Original("Character was not found in password");
+                if (Regex.IsMatch(password, @"[!@#$%^&*()_\-+=\[\]{}|\\:;\""<>,.?/~`]") == false) result.Error = text.Original("Special character was not found in password");
             }
 
-            return result.Ok ? new() { Success = "Password is strong" } : result;
+            return result.Ok ? new() { Success = text.Original("Password is strong") } : result;
+        }
+
+        public static bool IsValidBase64Image(this string base64)
+        {
+            if (string.IsNullOrWhiteSpace(base64)) return false;
+
+            // Remove data URI prefix if present
+            int commaIndex = base64.IndexOf(',');
+            if (commaIndex >= 0 &&
+                base64.StartsWith("data:", StringComparison.OrdinalIgnoreCase))
+            {
+                base64 = base64[(commaIndex + 1)..];
+            }
+
+            byte[] imageBytes;
+
+            try
+            {
+                imageBytes = Convert.FromBase64String(base64);
+            }
+            catch (FormatException)
+            {
+                return false;
+            }
+
+            try
+            {
+                using var image = Image.Load(imageBytes);
+                return true;
+            }
+            catch (UnknownImageFormatException)
+            {
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Is the input a valid URL?
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static bool IsValidUrl(this string? input)
+        {
+            return Uri.TryCreate(input, UriKind.Absolute, out var uri) && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps);
         }
 
         /// <summary>
@@ -747,23 +864,13 @@ namespace Origami.Core
         }
 
         /// <summary>
-        /// Generates a unique cache key for storing or retrieving comment counts associated with the specified entity.
-        /// </summary>
-        /// <param name="parent">The entity for which the cache key is generated. Must implement <see cref="IId"/>.</param>
-        /// <returns>A string representing the cache key, formatted to include the entity's type and ID.</returns>
-        public static string KeyForCachingComments(this IId parent)
-        {
-            return $"entities-comments-count-{parent.GetType().FullName}[{parent.Id}]";
-        }
-
-        /// <summary>
         /// TODO: comment this
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public static string KeyForCachingViews(this IId parent)
+        public static string KeyForCachingViews(this IId entity)
         {
-            return $"entities-views-count-{parent.GetType().FullName}[{parent.Id}]";
+            return $"entities-views-count-{entity.GetType().FullName}[{entity.Id}]";
         }
 
         /// <summary>
@@ -775,14 +882,14 @@ namespace Origami.Core
         {
             if (value.Has() == true)
             {
-                var language1 = OrigamiConstants.ContentLanguages().FirstOrDefault(x => x.Language == value).Language;
+                var language1 = OrigamiConstants.AllLanguages().FirstOrDefault(x => x.Name == value)?.Name;
                 if (language1.Has() == true) return language1;
 
                 var split = value.Split('-')[0];
-                var language2 = OrigamiConstants.ContentLanguages().FirstOrDefault(x => x.Language == split).Language;
+                var language2 = OrigamiConstants.AllLanguages().FirstOrDefault(x => x.Name == split)?.Name;
                 if (language2.Has() == true) return language2;
             }
-            return OrigamiConstants.ContentLanguages().First().Name;
+            return OrigamiConstants.AllLanguages().First().Name;
         }
 
         /// <summary>
@@ -796,17 +903,12 @@ namespace Origami.Core
         {
             return string.Equals(a, b, comparison);
         }
-
-        /// <summary>
-        /// Name or FirstName and LastName
-        /// </summary>
-        /// <param name="socialProfile"></param>
-        /// <returns></returns>
-        public static string Name(this OrigamiSocialProfile? socialProfile)
+        public static void ModificationDate<T>(this T to, T from)
         {
-            if (socialProfile == null) return string.Empty;
-            if (socialProfile.Name.Has() == true) return $"{socialProfile.Name}";
-            return $"{socialProfile.FirstName} {socialProfile.LastName}";
+            if (from is IDateModified fromDateModified && to is IDateModified toDateModified)
+            {
+                toDateModified.DateModified = fromDateModified.DateModified;
+            }
         }
 
         /// <summary>
@@ -822,6 +924,17 @@ namespace Origami.Core
         {
             if (nanoId == null) return null;
             return entities.FirstOrDefault(x => x.NanoId == nanoId);
+        }
+
+        /// <summary>
+        /// Returns no image, if necessary
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="noImage"></param>
+        /// <returns></returns>
+        public static string NoCategoryHeader(this string? source)
+        {
+            return source.Has() ? source : OrigamiConstants.NoCategory;
         }
 
         /// <summary>
@@ -869,12 +982,10 @@ namespace Origami.Core
         {
             const string noIcon = OrigamiConstants.NoUser;
             if (socialProfile == null) return noIcon;
+            if (socialProfile.ProfilePicture.Has() == true && socialProfile.ProfilePicture.IsValidBase64Image() == true) return socialProfile.ProfilePicture;
             if (socialProfile.ProfilePictureUrl.Has() == true) return socialProfile.ProfilePictureUrl;
-            if (socialProfile.ProfilePicture.Has() == true) return socialProfile.ProfilePicture;
             return noIcon;
         }
-
-
 
         /// <summary>
         /// Copies all the information <paramref name="entity"/> <paramref name="from"/>
@@ -889,6 +1000,15 @@ namespace Origami.Core
         {
             if (from != null) from.Push(entity);
             return entity;
+        }
+
+        public static T Pull<T>(this T hub, ValidationException validationException) where T : Result
+        {
+            foreach (var error in validationException.Errors)
+            {
+                hub.Error = error.ErrorMessage;
+            }
+            return hub;
         }
 
         /// <summary>
@@ -943,7 +1063,6 @@ namespace Origami.Core
                 }
             }
         }
-
         /// <summary>
         /// Adds a query string to <paramref name="url"/>
         /// </summary>
@@ -955,6 +1074,8 @@ namespace Origami.Core
         {
             if (url.Has() == true)
             {
+                if (url.IsValidBase64Image() == true) return url;
+
                 if (url.Contains($"?{key}=", StringComparison.InvariantCultureIgnoreCase) == true)
                 {
                     var split1 = url.Split('?', StringSplitOptions.RemoveEmptyEntries);
@@ -1123,9 +1244,9 @@ namespace Origami.Core
         public static T? SetAuthor<T>(this T? entity, OrigamiUser? author)
         {
             if (author == null) return entity;
-            if (entity is IAuthorId fKAuthor && fKAuthor.AuthorId == Guid.Empty)
+            if (entity is IAuthorId authorId && authorId.AuthorId == Guid.Empty)
             {
-                fKAuthor.AuthorId = author.Id;
+                authorId.AuthorId = author.Id;
             }
             return entity;
         }
@@ -1133,28 +1254,17 @@ namespace Origami.Core
         public static T? SetBlog<T>(this T? entity, OrigamiBlog? blog)
         {
             if (blog == null) return entity;
-            if (entity is IBlogId fkBlog && fkBlog.BlogId == Guid.Empty)
-            {
-                fkBlog.BlogId = blog.Id;
-            }
-            return entity;
-        }
 
-        public static T? SetDateCreated<T>(this T? entity, DateTime dateTime)
-        {
-            if (entity is IDateCreated dateCreated)
+            if (entity is IBlogId blogId && blogId.BlogId == Guid.Empty)
             {
-                dateCreated.DateCreated = dateTime;
+                blogId.BlogId = blog.Id;
             }
-            return entity;
-        }
 
-        public static T? SetDateModified<T>(this T? entity, DateTime dateTime)
-        {
-            if (entity is IDateModified dateModified)
+            if (entity is IBlogIdNull blogIdNull && blogIdNull.BlogId.GetValueOrDefault() == Guid.Empty)
             {
-                dateModified.DateModified = dateTime;
+                blogIdNull.BlogId = blog.Id;
             }
+
             return entity;
         }
 
@@ -1171,6 +1281,37 @@ namespace Origami.Core
                 id.Id = Guid.NewGuid();
             }
             return entity;
+        }
+
+        public static T SetSlug<T>(this T entity)
+            where T : IId
+        {
+            if (entity is ISlug slugger)
+            {
+                slugger.Slug = entity switch
+                {
+                    ITitle title => title.Title.GetSlug(),
+                    IName name => name.Name.GetSlug(),
+                    ITag tag => tag.Tag.GetSlug(),
+                    _ => string.Empty,
+                };
+            }
+
+            return entity;
+        }
+
+        public static T2 SetSlug<T1, T2>(this T2 root)
+            where T1 : OrigamiContent
+            where T2 : IHubContent<T1>
+        {
+            root.Entity.Slug = root.Entity.Title.GetSlug();
+
+            foreach (var tag in root.Tags)
+            {
+                tag.Slug = tag.Tag.GetSlug();
+            }
+
+            return root;
         }
 
         /// <summary>
@@ -1314,13 +1455,12 @@ namespace Origami.Core
         {
             return Uri.UnescapeDataString(value ?? string.Empty);
         }
+
         public static T Version<T>(this T entity, T version)
         {
-            var version1 = entity as IVersion;
-            var version2 = version as IVersion;
-
-            if (version1 != null) version1.Version = version2!.Version;
-
+            var to = entity as IVersion;
+            var from = version as IVersion;
+            if (to != null) to.Version = from!.Version;
             return entity;
         }
 
@@ -1335,6 +1475,19 @@ namespace Origami.Core
         }
 
         /// <summary>
+        /// Returns "Yes" or "No" based on the boolean value, using the provided Text instance for localization.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public static string YesNo(this bool value, Text text)
+        {
+            return value 
+                ? text.Original("Yes") 
+                : text.Original("No");
+        }
+
+        /// <summary>
         /// TODO: comment this
         /// </summary>
         /// <param name="value"></param>
@@ -1344,7 +1497,6 @@ namespace Origami.Core
             if (value != null) return value.GetValueOrDefault().YesNo();
             return "Empty (Null)";
         }
-
         /// <summary>
         /// Extracts the message.
         /// </summary>

@@ -14,10 +14,11 @@ namespace Origami.Core.Models
         protected Guid _id = Guid.NewGuid();
         protected bool _incognitoMode = false;
         protected ObservableCollection<Result> _results = new();
-        protected string _search = string.Empty;
+        protected string _searchTerm = string.Empty;
         protected bool _showCookieConsent = false;
-        protected OrigamiSocialProfile _socialProfile = new();
-        protected OrigamiUser _user = OrigamiUser.AnonymousUser;
+        protected Guid _socialProfileId = Guid.Empty;
+        protected Guid _userId = Guid.Empty;
+
         /// <summary>
         /// Default constructor
         /// </summary>
@@ -31,9 +32,9 @@ namespace Origami.Core.Models
             };
             this.Changed += (sender, e) =>
             {
-                if (e.PropertyName == nameof(IUserFacade.User))
+                if (e.PropertyName == nameof(IUserFacade.UserId))
                 {
-                    this.LoadBlogsTheUserHasAccessTo();
+                    this.BlogId = this.BlogsTheUserHasAccessTo.FirstOrDefault()?.Id ?? Guid.Empty;
                 }
             };
         }
@@ -49,8 +50,22 @@ namespace Origami.Core.Models
 
         public IEnumerable<OrigamiBlog> BlogsTheUserHasAccessTo
         {
-            get => _blogsTheUserHasAccessTo;
-            set => this.Set(ref _blogsTheUserHasAccessTo, value, Changed);
+            get
+            {
+                var query = from b in _super.Blogs.ReadFromCache()
+                            join u in _super.UserBlogs.ReadFromCache() on b.Id equals u.BlogId
+                            where u.UserId == User.Id
+                            orderby b.IsPrimary ? 0 : 1, b.Name
+                            select b;
+
+                var blogs = query.ToList();
+                if (blogs.Any(x => x.Id == this.BlogId) == false)
+                {
+                    this.BlogId = blogs.FirstOrDefault()?.Id ?? Guid.Empty;
+                }
+
+                return blogs;
+            }
         }
 
         public Guid Id
@@ -76,56 +91,46 @@ namespace Origami.Core.Models
 
         public IList<Result> Results => _results;
 
-        public string Search
+        public string SearchTerm
         {
-            get => _search;
+            get => _searchTerm;
             set
             {
-                this.Set(ref _search, value, Changed);
+                this.Set(ref _searchTerm, value, Changed);
             }
         }
 
         public bool ShowCookieConsent
         {
-            get => _showCookieConsent; 
+            get => _showCookieConsent;
             set => this.Set(ref _showCookieConsent, value, Changed);
         }
 
         public OrigamiSocialProfile SocialProfile
         {
-            get => _socialProfile;
-            set
-            {
-                this.Set(ref _socialProfile, value, Changed);
-            }
+            get => this._super.SocialProfiles.ReadFromCache().Id(this.SocialProfileId) ?? OrigamiSocialProfile.AnonymousUser;
+        }
+
+        public Guid SocialProfileId
+        {
+            get => _socialProfileId;
+            set => this.Set(ref _socialProfileId, value, Changed);
         }
 
         public OrigamiUser User
         {
-            get => _user;
-            set => this.Set(ref _user, value, Changed);
+            get => this._super.Users.ReadFromCache().Id(this.UserId) ?? OrigamiUser.AnonymousUser;
         }
+
+        public Guid UserId
+        {
+            get => _userId;
+            set => this.Set(ref _userId, value, Changed);
+        }
+
         public void EntityChanged(object sender, EntityOperation operation)
         {
             EntityHasChanged?.Invoke(sender, operation);
-        }
-
-        protected void LoadBlogsTheUserHasAccessTo()
-        {
-            var query = from b in _super.Blogs.ReadFromCache()
-                        join u in _super.UserBlogs.ReadFromCache() on b.Id equals u.BlogId
-                        where u.UserId == User.Id
-                        orderby b.IsPrimary ? 0 : 1, b.Name
-                        select b;
-
-            this.BlogsTheUserHasAccessTo = query.ToList();
-
-            var blog = this.BlogsTheUserHasAccessTo.FirstOrDefault(x => x.Id == BlogId);
-
-            if (blog == null)
-            {
-                this.BlogId = BlogsTheUserHasAccessTo.FirstOrDefault()?.Id ?? Guid.Empty;
-            }
         }
     }
 }

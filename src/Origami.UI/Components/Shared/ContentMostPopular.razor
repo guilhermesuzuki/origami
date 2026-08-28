@@ -1,0 +1,45 @@
+﻿@inherits Basic
+@implements IBlogId
+
+@if (MostPopular.Count > 0)
+{
+    <div class="content-most-popular @Class overflow-auto">
+        <label class="w-100 text-center text-danger fs-1">
+            <i class="fa-solid fa-fire"></i>
+            <span>@Text.Lower("Most popular")</span>
+        </label>
+        <div class="d-inline-flex mt-3 pb-2 position-relative">
+            @foreach (var post in MostPopular)
+            {
+                <div class="pe-1" style="width:300px;">
+                    <ContentHeader Entity="post" HeaderImageSize="ePictureSizes.medium"></ContentHeader>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@code {
+    protected List<OrigamiContent> MostPopular { get; set; } = new();
+
+    protected override void OnParametersSet()
+    {
+        base.OnInitialized();
+        this.LoadPosts();
+    }
+
+    protected void LoadPosts()
+    {
+        this.MostPopular = this.Super.Contents.ReadFromCache()
+            .NonDeleted()
+            .Published()
+            .Blog(this.BlogId)
+            .Where(x => x is not OrigamiSpecialMessage)
+            .Where(x => x is not OrigamiSpecialPage)
+            .Where(x => x is not OrigamiQuickNote)
+            .OrderByDescending(x => Super.PhysicalPageViews.GetViews(x))
+            .ThenBy(x => x.Title)
+            .Take(10)
+            .ToList();
+    }
+}

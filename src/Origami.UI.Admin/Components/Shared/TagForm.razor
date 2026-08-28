@@ -1,14 +1,10 @@
-﻿@using System.Transactions
-@inherits BasicFormFull<OrigamiTag>
-@inject IBlogRepository _blog
-@inject IPostTagRepository _postTag
-@inject IVideoTagRepository _videoTag
+﻿@inherits BasicFormFull<OrigamiContentTag>
 
 <div class="tag-form @Class">
     @if (this.Entity.New)
     {
         <div class="w-100 text-white bg-secondary text-center">
-            @Text.Lower("Select a Tag")
+            @Text.Lower("Select a tag")
         </div>
     }
     else
@@ -19,8 +15,8 @@
             <li>
                 <MudTextField Immediate="true"
                               FullWidth="true"
-                              @bind-Value="@Entity.Name"
-                              HelperText="@Text.Lower("Name")"></MudTextField>
+                              @bind-Value="@Entity.Tag"
+                              HelperText="@Text.Lower("Tag")"></MudTextField>
             </li>
             <li>
                 <MudTextField Immediate="true"

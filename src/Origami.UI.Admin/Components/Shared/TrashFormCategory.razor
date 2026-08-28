@@ -10,7 +10,7 @@
             var parent = this.Super.Categories.ReadFromCache().Id(this.Entity.ParentId.Value);
             <div class="category-parent mt-3">
                 <div class="xx-small">@Text.Lower("Parent")</div>
-                <CategoryHeaderLite Class="fw-bold shadow-sm border p-2" Entity="parent"></CategoryHeaderLite>
+                <CategoryHeaderInline Class="fw-bold shadow-sm border p-2" Entity="parent"></CategoryHeaderInline>
             </div>
         }
         <div class="mt-3 text-center p-3 border">
@@ -35,7 +35,6 @@
                       FullWidth="true"
                       ReadOnly="true"
                       @bind-Value="@Entity.Description"
-                      AutoGrow="true"
                       HelperText="@Text.Lower("Description")"></MudTextField>
 
         @if (this.Entity != null)
@@ -48,7 +47,7 @@
                     @foreach (var child in children)
                     {
                         <div class="shadow-sm border p-2 mt-1">
-                            <CategoryHeaderLite Entity="child"></CategoryHeaderLite>
+                            <CategoryHeaderInline Entity="child"></CategoryHeaderInline>
                         </div>
                     }
                 </div>

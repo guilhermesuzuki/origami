@@ -6,6 +6,7 @@
 <style>
     .physical-page-header-lite-3 .id { display: none !important; }
     .rss-feeds thead { display: none !important; }
+    .dashboard-analytics .search-wrapper { display: none !important; }
 </style>
 <HeadContent>
     <meta property="og:title" content="@PageTitle.GetTitle()" />
@@ -48,61 +49,61 @@
                             <ul class="inline-list p-3 border-bottom">
                                 <li>@Text.Original("Published posts")</li>
                                 <li class="text-right" style="width:20px;">
-                                    <span class="">@this.Super.Posts.ReadFromCache().Published(this.UserFacade.BlogId).Count()</span>
+                                    <span class="">@this.Super.GetPosts(this.UserFacade.BlogId).Published().Count()</span>
                                 </li>
                             </ul>
                             <ul class="inline-list p-3 border-bottom">
                                 <li>@Text.Original("Published videos")</li>
                                 <li class="text-right" style="width:20px;">
-                                    <span class="">@this.Super.Videos.ReadFromCache().Published(this.UserFacade.BlogId).Count()</span>
+                                    <span class="">@this.Super.GetVideos(this.UserFacade.BlogId).Published().Count()</span>
                                 </li>
                             </ul>
                             <ul class="inline-list p-3 border-bottom">
                                 <li>@Text.Original("Published pages")</li>
                                 <li class="text-right" style="width:20px;">
-                                    <span class="">@this.Super.Pages.ReadFromCache().Published(this.UserFacade.BlogId).Count()</span>
+                                    <span class="">@this.Super.GetPages(this.UserFacade.BlogId).Published().Count()</span>
                                 </li>
                             </ul>
                             <ul class="inline-list p-3 border-bottom">
                                 <li>@Text.Original("Published special pages")</li>
                                 <li class="text-right" style="width:20px;">
-                                    <span class="">@this.Super.SpecialPages.ReadFromCache().Published().Count()</span>
+                                    <span class="">@this.Super.GetSpecialPages().Published().Count()</span>
                                 </li>
                             </ul>
                             <ul class="inline-list p-3 border-bottom">
                                 <li>@Text.Original("Published special messages")</li>
                                 <li class="text-right" style="width:20px;">
-                                    <span class="">@this.Super.SpecialMessages.ReadFromCache().Published().Count()</span>
+                                    <span class="">@this.Super.GetSpecialMessages().Published().Count()</span>
                                 </li>
                             </ul>
                             <ul class="inline-list p-3 border-bottom">
                                 <li>@Text.Original("Draft posts")</li>
                                 <li class="text-right" style="width:20px;">
-                                    <span class="">@this.DraftPosts().Count()</span>
+                                    <span class="">@this.Super.GetDraftPosts(this.UserFacade.BlogId).Count()</span>
                                 </li>
                             </ul>
                             <ul class="inline-list p-3 border-bottom">
                                 <li>@Text.Original("Draft videos")</li>
                                 <li class="text-right" style="width:20px;">
-                                    <span class="">@this.DraftVideos().Count()</span>
+                                    <span class="">@this.Super.GetDraftVideos(this.UserFacade.BlogId).Count()</span>
                                 </li>
                             </ul>
                             <ul class="inline-list p-3 border-bottom">
                                 <li>@Text.Original("Draft pages")</li>
                                 <li class="text-right" style="width:20px;">
-                                    <span class="">@this.DraftPages().Count()</span>
+                                    <span class="">@this.Super.GetDraftPages(this.UserFacade.BlogId).Count()</span>
                                 </li>
                             </ul>
                             <ul class="inline-list p-3 border-bottom">
                                 <li>@Text.Original("Draft special pages")</li>
                                 <li class="text-right" style="width:20px;">
-                                    <span class="">@this.DraftSpecialPages().Count()</span>
+                                    <span class="">@this.Super.GetDraftSpecialPages().Count()</span>
                                 </li>
                             </ul>
                             <ul class="inline-list p-3 border-bottom">
                                 <li>@Text.Original("Draft special messages")</li>
                                 <li class="text-right" style="width:20px;">
-                                    <span class="">@this.DraftSpecialMessages().Count()</span>
+                                    <span class="">@this.Super.GetDraftSpecialMessages().Count()</span>
                                 </li>
                             </ul>
                             <ul class="inline-list p-3 border-bottom">
@@ -154,7 +155,7 @@
                             @foreach (var page in this.DraftPages())
                             {
                                 <div class="p-3 border-bottom">
-                                    <PageHeaderLite2 Class="" Entity="page"></PageHeaderLite2>
+                                    <ContentHeaderInline Class="" Entity="page"></ContentHeaderInline>
                                 </div>
                             }
                         </div>
@@ -165,7 +166,7 @@
                             @foreach (var post in this.DraftPosts())
                             {
                                 <div class="p-3 border-bottom">
-                                    <PostHeaderLite2 Class="" Entity="post"></PostHeaderLite2>
+                                    <ContentHeaderInline Class="" Entity="post"></ContentHeaderInline>
                                 </div>
                             }
                         </div>
@@ -176,7 +177,7 @@
                             @foreach (var video in this.DraftVideos())
                             {
                                 <div class="p-3 border-bottom">
-                                    <VideoHeaderLite2 Class="" Entity="video"></VideoHeaderLite2>
+                                    <ContentHeaderInline Class="" Entity="video"></ContentHeaderInline>
                                 </div>
                             }
                         </div>
@@ -187,7 +188,7 @@
                             @foreach (var page in this.DraftSpecialPages())
                             {
                                 <div class="p-3 border-bottom">
-                                    <SpecialPageHeaderLite2 Class="" Entity="page"></SpecialPageHeaderLite2>
+                                    <ContentHeaderInline Class="" Entity="page"></ContentHeaderInline>
                                 </div>
                             }
                         </div>
@@ -198,7 +199,7 @@
                             @foreach (var message in this.DraftSpecialMessages())
                             {
                                 <div class="p-3 border-bottom">
-                                    <SpecialMessageHeaderLite Class="" Entity="message"></SpecialMessageHeaderLite>
+                                    <ContentHeaderInline Class="" Entity="message"></ContentHeaderInline>
                                 </div>
                             }
                         </div>
@@ -216,7 +217,7 @@
         </div>
     </ContentTemplate>
 </Root>
-<Root Access="this.CanAccess()" Class="min-vh-100">
+<Root Access="this.CanAccess()" Class="min-vh-100 dashboard-analytics">
     <HeaderTemplate>
         <div class="sub-header p-3 border-bottom border-top">
             <ul class="inline-list align-items-center">
@@ -301,32 +302,32 @@
                                 @if (context.Item.Type.Like("PhysicalPageView") == true)
                                 {
                                     var page = this.Super.PhysicalPages.ReadFromCache().Id(context.Item.Id);
-                                    <PhysicalPageHeaderLite3 Entity="page"></PhysicalPageHeaderLite3>
+                                    <PhysicalPageHeaderInline Entity="page"></PhysicalPageHeaderInline>
                                 }
                                 else if (context.Item.Type.Like("PageView") == true)
                                 {
-                                    var page = this.Super.Pages.ReadFromCache().Id(context.Item.Id);
-                                    <PageHeaderLite2 Entity="page"></PageHeaderLite2>
+                                    var page = this.Super.Contents.ReadFromCache().Id(context.Item.Id);
+                                    <ContentHeaderInline Entity="page"></ContentHeaderInline>
                                 }
                                 else if (context.Item.Type.Like("PostView") == true)
                                 {
-                                    var post = this.Super.Posts.ReadFromCache().Id(context.Item.Id);
-                                    <PostHeaderLite2 Entity="post"></PostHeaderLite2>
+                                    var post = this.Super.Contents.ReadFromCache().Id(context.Item.Id);
+                                    <ContentHeaderInline Entity="post"></ContentHeaderInline>
                                 }
                                 else if (context.Item.Type.Like("VideoView") == true)
                                 {
-                                    var video = this.Super.Videos.ReadFromCache().Id(context.Item.Id);
-                                    <VideoHeaderLite2 Entity="video"></VideoHeaderLite2>
+                                    var video = this.Super.Contents.ReadFromCache().Id(context.Item.Id);
+                                    <ContentHeaderInline Entity="video"></ContentHeaderInline>
                                 }
                                 else if (context.Item.Type.Like("SpecialPageView") == true)
                                 {
-                                    var specialpage = this.Super.SpecialPages.ReadFromCache().Id(context.Item.Id);
-                                    <SpecialPageHeaderLite2 Entity="specialpage"></SpecialPageHeaderLite2>
+                                    var specialpage = this.Super.Contents.ReadFromCache().OfType<OrigamiSpecialPage>().Id(context.Item.Id);
+                                    <ContentHeaderInline Entity="specialpage"></ContentHeaderInline>
                                 }
                                 @if (context.Item.SocialProfileId != null)
                                 {
                                     var socialProfile = this.Super.SocialProfiles.ReadFromCache().Id(context.Item.SocialProfileId);
-                                    <SocialProfileHeaderLite Class="p-1 border mt-1" Entity="socialProfile"></SocialProfileHeaderLite>
+                                    <SocialProfileHeaderInline Class="p-1 border mt-1" Entity="socialProfile"></SocialProfileHeaderInline>
                                 }
                             </div>
                         </CellTemplate>
@@ -444,7 +445,8 @@
     /// <returns></returns>
     protected IEnumerable<OrigamiPage> DraftPages()
     {
-        return this.Super.Pages.ReadFromCache()
+        return this.Super.Contents.ReadFromCache()
+            .OfType<OrigamiPage>()
             .Drafts()
             .Blog(UserFacade.BlogId)
             .Where(x => this.Super.IsParentDeleted(x) == false)
@@ -458,7 +460,8 @@
     /// <returns></returns>
     protected IEnumerable<OrigamiPost> DraftPosts()
     {
-        return this.Super.Posts.ReadFromCache()
+        return this.Super.Contents.ReadFromCache()
+            .OfType<OrigamiPost>()
             .Drafts()
             .Blog(UserFacade.BlogId)
             .OrderByDescending(x => x.DateCreated)
@@ -471,7 +474,8 @@
     /// <returns></returns>
     protected IEnumerable<OrigamiVideo> DraftVideos()
     {
-        return this.Super.Videos.ReadFromCache()
+        return this.Super.Contents.ReadFromCache()
+            .OfType<OrigamiVideo>()
             .Drafts()
             .Blog(UserFacade.BlogId)
             .OrderByDescending(x => x.DateCreated)
@@ -484,7 +488,8 @@
     /// <returns></returns>
     protected IEnumerable<OrigamiSpecialPage> DraftSpecialPages()
     {
-        return this.Super.SpecialPages.ReadFromCache()
+        return this.Super.Contents.ReadFromCache()
+            .OfType<OrigamiSpecialPage>()
             .Drafts()
             .OrderByDescending(x => x.DateCreated)
             .Take(5);
@@ -496,7 +501,8 @@
     /// <returns></returns>
     protected IEnumerable<OrigamiSpecialMessage> DraftSpecialMessages()
     {
-        return this.Super.SpecialMessages.ReadFromCache()
+        return this.Super.Contents.ReadFromCache()
+            .OfType<OrigamiSpecialMessage>()
             .Drafts()
             .OrderByDescending(x => x.DateCreated)
             .Take(5);
@@ -520,11 +526,12 @@
                 definition.Descending ? "DESC" : "ASC");
         }
 
+        var enUS = new CultureInfo("en-US");
         var range = this.TimePeriod.GetRange();
         var filters = new StringBuilder($"({nameof(OrigamiUserView.BlogId)} == \"{this.UserFacade.BlogId}\")");
 
-        filters.AppendLine($" && {nameof(OrigamiUserView.DateCreated)} >= \"{range.Start}\"");
-        filters.AppendLine($" && {nameof(OrigamiUserView.DateCreated)} <= \"{range.End}\"");
+        filters.AppendLine($" && {nameof(OrigamiUserView.DateCreated)} >= \"{range.Start.ToString(enUS.DateTimeFormat)}\"");
+        filters.AppendLine($" && {nameof(OrigamiUserView.DateCreated)} <= \"{range.End.ToString(enUS.DateTimeFormat)}\"");
 
         //iterates through every filter definition
         foreach (var definition in state.FilterDefinitions)
@@ -707,5 +714,10 @@
                 if (hub.Ok) transaction.Complete();
             }
         }
+    }
+
+    protected override void SetPageTitle()
+    {
+        this.PageTitle.SetTitle(Text.Original("Dashboard"));
     }
 }

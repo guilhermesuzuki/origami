@@ -1,11 +1,13 @@
 ﻿using FluentValidation;
+using Microsoft.EntityFrameworkCore;
+using Origami.Core.Data;
 using Origami.Core.Models;
 
 namespace Origami.Core.Validators
 {
-    public class OrigamiSpecialMessageValidator : BaseValidator<OrigamiSpecialMessage>
+    public class OrigamiSpecialMessageValidator : AbstractValidator<OrigamiSpecialMessage>
     {
-        public OrigamiSpecialMessageValidator(Text text, IWebRootPath webRootPath) : base(text, webRootPath)
+        public OrigamiSpecialMessageValidator(Text text, IWebRootPath webRootPath, IDbContextFactory<OrigamiDbContext> dbContextFactory) : base()
         {
             RuleFor(x => x.Id).Id(text);
             RuleFor(x => x.NanoId).NanoId(text);
@@ -31,7 +33,9 @@ namespace Origami.Core.Validators
 
             RuleFor(x => x)
                 .Must(x => x.StartDate <= x.EndDate)
-                .WithMessage(text.Original("Start Date cannot be later than End Date"));
+                .WithMessage(text.Original("Start date cannot be later than end date"));
+
+            RuleFor(x => x).SlugMustBeUnique(text, dbContextFactory);
         }
     }
 }

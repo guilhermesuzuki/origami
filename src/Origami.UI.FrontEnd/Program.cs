@@ -1,15 +1,16 @@
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Validators;
 using Origami.Core;
 using Origami.UI;
+using Origami.UI.FrontEnd.Components;
 using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var app = builder.FoldTheOrigami<Origami.UI.FrontEnd.Components.App>(
+var app = builder.FoldTheOrigami<App>(
     args,
     admin: false,
-    inject: () =>
+    injectServices: () =>
     {
         builder.Services
             .AddAuthentication()
@@ -60,17 +61,23 @@ var app = builder.FoldTheOrigami<Origami.UI.FrontEnd.Components.App>(
             {
                 builder.Configuration.Bind("SocialNetwork:Microsoft", options);
                 options.AccessDeniedPath = "/oops/microsoft";
-                options.Authority = $"https://login.microsoftonline.com/{builder.Configuration["SocialNetwork:Microsoft:TenantId"]}/v2.0";
+                options.Authority = "https://login.microsoftonline.com/common/v2.0";
                 options.CallbackPath = builder.Configuration["SocialNetwork:Microsoft:CallbackPath"]!;
-                options.ResponseType = "code id_token";
+                options.ResponseType = "code";
                 options.UseTokenLifetime = false;
 
-                var scopes = "email profile user.read user.read.all".Split(' ');
+                var scopes = "openid profile email User.Read".Split(' ');
                 scopes.Each(options.Scope.Add);
 
                 options.GetClaimsFromUserInfoEndpoint = true;
                 options.SaveTokens = true;
                 options.TokenValidationParameters.SaveSigninToken = true;
+
+                // IMPORTANT: /common is not an issuer.
+                options.TokenValidationParameters.ValidIssuer = null;
+                options.TokenValidationParameters.ValidIssuers = null;
+
+                options.TokenValidationParameters.IssuerValidator = AadIssuerValidator.GetAadIssuerValidator(options.Authority).Validate;
             });
     });
 

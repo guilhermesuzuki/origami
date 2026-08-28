@@ -11,9 +11,11 @@
         {
             var parent = this.Repository.ReadFromCache().Id(this.Entity.ParentId.Value);
             <div class="p-3 border">
-                <CategoryHeaderLite Class="p-3 border" Entity="parent"></CategoryHeaderLite>
+                <div class="wrapper p-3 border">
+                    <CategoryHeaderInline Class="" Entity="parent"></CategoryHeaderInline>
+                </div>
                 <div class="btn-group mt-2 w-100">
-                    <button class="btn btn-light w-100" @onclick="() => this.ParentSelector = !this.ParentSelector">
+                    <button class="btn btn-light w-100" @onclick="() => this.ShowParentSelector = !this.ShowParentSelector">
                         <i class="fa-solid fa-square-check"></i>
                         @Text.Lower("Select parent category")
                     </button>
@@ -28,26 +30,26 @@
         {
             <div class="p-3 border">
                 <div class="btn-group w-100">
-                    <button class="btn btn-light w-100" @onclick="() => this.ParentSelector = !this.ParentSelector">
+                    <button class="btn btn-light w-100" @onclick="() => this.ShowParentSelector = !this.ShowParentSelector">
                         <i class="fa-solid fa-square-check"></i>
                         @Text.Lower("Select parent category")
                     </button>
                 </div>
             </div>
         }
-        @if (ParentSelector)
+        @if (ShowParentSelector)
         {
             <div class="mt-3">
                 <MudDataGrid T="OrigamiCategory" Items="this.GetParents()" Filterable="false" SortMode="SortMode.Single" Class="border" Bordered="true" SelectOnRowClick="false">
                     <Columns>
                         <TemplateColumn Title="@Text.Upper("Name")" Sortable="true" Filterable="false" CellClass="col-8" SortBy="x => x.Name">
                             <CellTemplate>
-                                <CategoryHeaderLite Class="" Entity="context.Item"></CategoryHeaderLite>
+                                <CategoryHeaderInline Class="" Entity="context.Item"></CategoryHeaderInline>
                             </CellTemplate>
                         </TemplateColumn>
                         <TemplateColumn Sortable="false" Filterable="false" CellClass="col-1 text-center">
                             <CellTemplate>
-                                <button class="cursor-pointer p-2" @onclick="() => { this.Parent(context.Item); this.ParentSelector = false; }"><i class="bi bi-check-square-fill"></i></button>
+                                <button class="cursor-pointer p-2" @onclick="() => { this.SetParent(context.Item); this.ShowParentSelector = false; }"><i class="bi bi-check-square-fill"></i></button>
                             </CellTemplate>
                         </TemplateColumn>
                     </Columns>
@@ -63,7 +65,7 @@
     </div>
     <div class="mt-3 text-center p-3 border">
         <div>
-            <HeaderImageLite Entity="this.Entity" Footer="true" ImgMaxWidth="120px;"></HeaderImageLite>
+            <HeaderImageCard Entity="this.Entity" Footer="true" ImgMaxWidth="120px;"></HeaderImageCard>
         </div>
         <MudFileUpload T="IBrowserFile" FilesChanged="UploadHeaderBase64" Accept=".png, .jpg, .bmp, .tiff, .gif" MaximumFileCount="1">
             <CustomContent>
@@ -107,7 +109,6 @@
                   FullWidth="true"
                   Immediate="true"
                   @bind-Value="@Entity.Description"
-                  AutoGrow="true"
                   HelperText="@Text.Lower("Description")"></MudTextField>
 
     <div class="buttons btn-group mt-3 w-100">

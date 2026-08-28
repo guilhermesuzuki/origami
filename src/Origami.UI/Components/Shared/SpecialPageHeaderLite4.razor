@@ -34,7 +34,7 @@
     {
         if (this.Entity != null)
         {
-            var result = this.Super.SpecialPages.ReadFromCache().GetByType(Enum.Parse<OrigamiSpecialPageTypes>(this.Entity.Type));
+            var result = this.Super.GetSpecialPages().GetBySubType(Enum.Parse<OrigamiSpecialPageTypes>(this.Entity.Subtype!));
             return result.Where(x => x.Id != this.Entity.Id).OrderBy(x => x.LanguageWrittenOn);
         }
         return [];

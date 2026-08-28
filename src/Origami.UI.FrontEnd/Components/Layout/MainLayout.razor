@@ -1,6 +1,4 @@
-﻿@using Microsoft.AspNetCore.Identity
-@using System.Security.Claims
-@inherits BasicLayout
+﻿@inherits BasicLayout
 
 <CustomHeadContent>
     <AppLinks></AppLinks>
@@ -8,10 +6,10 @@
 <PageTitle>@Super.Settings.GetSettings().Name.ToLower()</PageTitle>
 <ProcessResult></ProcessResult>
 <main class="overflow-x-hidden">
-    <Root>
+    <Root Class="master-root">
         <a id="top"></a>
         <IncognitoMode></IncognitoMode>
-        @foreach (var message in this.Super.SpecialMessages.GetSiteMessages())
+        @foreach (var message in this.Super.SpecialMessages.GetVisibleMessages())
         {
             <SpecialMessageHeader Entity="message" Class="border-bottom border-light-subtle"></SpecialMessageHeader>
         }
@@ -30,7 +28,7 @@
                 @if (this.UserFacade.SocialProfile.New == false)
                 {
                     <div class="w-100 p-3 pb-0 text-center">
-                        <SocialProfileHeaderLite Class="shadow-sm border-light border border-2" Entity="this.UserFacade.SocialProfile" Actions="true"></SocialProfileHeaderLite>
+                        <SocialProfileHeaderInline Class="shadow-sm border-light border border-2" Entity="this.UserFacade.SocialProfile" Actions="true"></SocialProfileHeaderInline>
                     </div>
                 }
             </Authorized>
@@ -60,17 +58,6 @@
 <BlazorErrorUi></BlazorErrorUi>
 
 @code {
-    private string _searchQuery = string.Empty;
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-
-        this._searchQuery = this.NavigationManager.Uri.Split("query=").Length > 1
-            ? Uri.UnescapeDataString(this.NavigationManager.Uri.Split("query=")[1])
-            : string.Empty;
-    }
-
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await base.OnAfterRenderAsync(firstRender);

@@ -6,17 +6,16 @@ namespace Origami.Core.Models
 {
     [Table("oi_PhysicalPageViews")]
     public class OrigamiPhysicalPageView :
-        BaseView,
+        BaseTracking,
         IViewChanged,
         IId,
         IPhysicalPageId,
         IAdmin
     {
         protected bool? _admin;
+        protected Guid? _content;
         protected Guid _id = Guid.NewGuid();
         protected Guid _physicalPageId = Guid.Empty;
-        protected Guid? _userId;
-        private Content? _content;
 
         public event EventHandler<PropertyChangedEventArgs> ViewChanged = (sender, e) => { };
 
@@ -32,7 +31,7 @@ namespace Origami.Core.Models
         /// <summary>
         /// Sometimes a physical page view is tied to a page, post, video, etc.
         /// </summary>
-        public Content? Content
+        public Guid? ContentId
         {
             get => _content;
             set => this.Set(ref _content, value, ViewChanged);
@@ -49,15 +48,6 @@ namespace Origami.Core.Models
         {
             get => _physicalPageId;
             set => this.Set(ref _physicalPageId, value, ViewChanged);
-        }
-
-        /// <summary>
-        /// Gets or sets the unique identifier of the user associated with this instance.
-        /// </summary>
-        public Guid? UserId
-        {
-            get => _userId;
-            set => this.Set(ref _userId, value, ViewChanged);
         }
     }
 }

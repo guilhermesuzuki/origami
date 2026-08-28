@@ -12,7 +12,7 @@ using SixLabors.ImageSharp.Processing;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Origami.UI.FrontEnd.Controllers
+namespace Origami.UI.Controllers
 {
     [ApiController]
     public class FilesController :
@@ -39,33 +39,6 @@ namespace Origami.UI.FrontEnd.Controllers
             _directoryRepository = directoryRepository;
             _fileRepository = fileRepository;
             _blogRepository = blogRepository;
-        }
-
-        /// <summary>
-        /// file sizes
-        /// </summary>
-        protected enum ePictureSizes : short
-        {
-            /// <summary>
-            /// original (does not scale)
-            /// </summary>
-            original = 0,
-            /// <summary>
-            /// thumbnail (width: 50px)
-            /// </summary>
-            thumbnail = 50,
-            /// <summary>
-            /// small (width: 200px)
-            /// </summary>
-            small = 200,
-            /// <summary>
-            /// medium (width: 600px)
-            /// </summary>
-            medium = 600,
-            /// <summary>
-            /// large (width: 900px)
-            /// </summary>
-            large = 900,
         }
 
         [HttpGet]

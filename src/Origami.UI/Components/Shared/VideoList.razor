@@ -1,11 +1,6 @@
 ﻿@inherits Basic
-@implements IBlogId
-@implements IShowFakes
-@inject IBlogRepository _blogRepository
-@inject IVideoRepository _videoRepository
-@inject Text _text
 
-@if (Videos.Count() > 0)
+@if (this.Videos.Count > 0)
 {
     <div class="video-list @Class position-relative">
         <div class="row">
@@ -27,55 +22,39 @@
         <div class="row mt-3">
             @for (int i = 0; i < this.Page * this.PageSize; i++)
             {
-                @if (Videos.Count() > i)
+                @if (Videos.Count > i)
                 {
                     <div class="col-12 col-xl-4 mb-3">
-                        <VideoHeader Entity="Videos.ElementAt(i)"></VideoHeader>
+                        <ContentHeader Entity="Videos[i]" ShowRelatedContent="false"></ContentHeader>
                     </div>
                 }
             }
         </div>
         <div class="text-center">
-            <button class="text-center btn btn-light border" style="min-width: 250px; max-width: 100%" disabled="@_disableLoadMoreVideos" @onclick="() => { this.Page += 1; this.LoadVideos(); }">
-                <div>
-                    <i class="fa-solid fa-file-video fs-2"></i>
-                </div>
-                @_text.Lower("See more videos")
-            </button>
-        </div>
-    </div>
-}
-else if (this.ShowFakes == true)
-{
-    <div class="video-list fakes @Class position-relative">
-        <div class="row">
-            @foreach (var Video in OrigamiVideo.GetFakes())
-            {
-                <div class="col-12 col-xl-4 mb-3">
-                    <VideoHeader Class="fake" Entity="Video"></VideoHeader>
-                </div>
-            }
-        </div>
-        <div class="text-center">
-            <button class="text-center btn btn-light border" style="min-width: 250px; max-width: 100%" disabled="disabled">
+            <button class="text-center btn btn-light border" style="min-width: 250px; max-width: 100%" disabled="@_disableLoadMore" @onclick="() => { this.Page += 1; this.LoadVideos(); }">
                 <div><i class="fa-solid fa-file-lines fs-2"></i></div>
                 @Text.Lower("See more videos")
             </button>
         </div>
-        <div class="position-absolute zeroes bg-white bg-opacity-75"></div>
     </div>
 }
+else
+{
+    <div class="col-12">
+        <NothingToSeeHere Class="p-3 border shadow-sm" Subtitle="@Text.Lower("No videos whatsoever")"></NothingToSeeHere>
+    </div>
+}
+
 @code {
     [Parameter] public int Page { get; set; } = 1;
     [Parameter] public int PageSize { get; set; } = 9;
     [Parameter] public int OrderBy { get; set; } = 1;
-    [Parameter] public bool ShowFakes { get; set; } = false;
 
-    protected IEnumerable<OrigamiVideo> Videos = [];
+    protected List<OrigamiVideo> Videos = [];
 
-    private bool _disableLoadMoreVideos
+    private bool _disableLoadMore
     {
-        get => _videoRepository.ReadFromCache()
+        get => Super.Contents.ReadFromCache().OfType<Core.Models.OrigamiVideo>()
             .NonDeleted()
             .Published()
             .Blog(this.BlogId)
@@ -83,12 +62,11 @@ else if (this.ShowFakes == true)
     }
 
     /// <summary>
-    /// Loads the Videos from the repository
+    /// Loads the videos from the repository
     /// </summary>
     protected void LoadVideos()
     {
-        var videos = _videoRepository
-            .ReadFromCache()
+        var videos = Super.Contents.ReadFromCache().OfType<Core.Models.OrigamiVideo>()
             .NonDeleted()
             .Published()
             .Blog(this.BlogId);

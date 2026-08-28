@@ -2,10 +2,6 @@
 @using Microsoft.EntityFrameworkCore
 @inherits BasicPage
 @inject IUserRepository _users
-@inject IUserContentRepository _userContents
-@inject IPageRepository _pages
-@inject IPostRepository _posts
-@inject IVideoRepository _videos
 
 <Root>
     <MudDataGrid T="OrigamiUser" ServerData="this.GetEntities" SortMode="SortMode.None" Filterable="false">
@@ -20,7 +16,7 @@
                             <div class="cursor-pointer" @onclick="() => _goToDetails(context.Item)">
                                 <ul class="inline-list">
                                     <li style="width:25px;">
-                                        <HeaderImageLite Entity="user"></HeaderImageLite>
+                                        <HeaderImageCard Entity="user"></HeaderImageCard>
                                     </li>
                                     <li class="ps-2">
                                         <div title="@Text.Lower("Display name")">@user.DisplayName</div>
@@ -83,6 +79,6 @@
 
     private void _goToDetails(OrigamiUser user)
     {
-        this.NavigationManager!.NavigateTo($"/users/{user.Id}");
+        this.WhatHappensNext.WhenIClickHere(this, new() { Entity = user });
     }
 }

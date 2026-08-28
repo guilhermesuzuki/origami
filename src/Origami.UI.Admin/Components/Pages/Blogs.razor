@@ -39,13 +39,6 @@
                 </div>
             </div>
         </div>
-        <div class="p-3 border-bottom">
-            <div class="row">
-                <div class="col-12">
-                    <SearchLite T="OrigamiBlog" OnHitSelected="this.OnSearchResultSelected"></SearchLite>
-                </div>
-            </div>
-        </div>
     </HeaderTemplate>
     <ContentTemplate>
         <div class="p-3">
@@ -63,7 +56,7 @@
                                     <div class="cursor-pointer" @onclick="() => OnEdit(context.Item)">
                                         <ul class="inline-list">
                                             <li>
-                                                <BlogHeaderLite Entity="context.Item"></BlogHeaderLite>
+                                                <BlogHeaderInline Entity="context.Item"></BlogHeaderInline>
                                                 <Id Class="d-block x-small" Entity="context.Item"></Id>
                                             </li>
                                         </ul>
@@ -76,7 +69,7 @@
                                     {
                                         <i class="fa-solid fa-thumbs-up"></i>
                                     }
-                                    else
+                                    else if (context.Item.IsDeleted == false && context.Item.IsActive == true)
                                     {
                                         <button class="border x-small p-2 btn btn-dark text-white fw-bold" @onclick="() => this.SetPrimary(context.Item)">@Text.Lower("Make primary")</button>
                                     }

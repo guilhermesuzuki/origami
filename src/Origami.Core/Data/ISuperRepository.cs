@@ -5,17 +5,42 @@ using Origami.Core.Models;
 namespace Origami.Core.Data
 {
     public interface ISuperRepository :
-        ICategories<OrigamiCategory, OrigamiPost>,
-        ICategories<OrigamiCategory, OrigamiVideo>
+        ICategories<OrigamiCategory, OrigamiContent>
     {
         IAppFacade AppFacade { get; }
+
         IBackupRestoreRepository BackupAndRestores { get; }
+
         IBlogRepository Blogs { get; }
+
         ICategoryRepository Categories { get; }
+
         IConfiguration Configurations { get; }
+
+        IContentCategoryRepository ContentCategories { get; }
+
+        IContentCommentReactionRepository ContentCommentReactions { get; }
+
+        IContentCommentRepository ContentComments { get; }
+
+        IContentHistoryRepository ContentHistories { get; }
+
+        IContentRatingRepository ContentRatings { get; }
+
+        IContentReactionRepository ContentReactions { get; }
+
+        IContentRepository Contents { get; }
+
+        IContentTagRepository ContentTags { get; }
+
         IDbContextFactory<OrigamiDbContext> DbContextFactory { get; }
+
         IDirectoryRepository Directories { get; }
+
         IEmailRepository Emails { get; }
+
+        IEventRepository Events { get; }
+
         IFileRepository Files { get; }
 
         /// <summary>
@@ -23,48 +48,33 @@ namespace Origami.Core.Data
         /// </summary>
         bool MaintenanceLockout { get; }
 
-        IPageRepository Pages { get; }
-        IPageViewRepository PageViews { get; }
+        IMyMemoryCache MyMemoryCache { get; }
         IPhysicalPageRepository PhysicalPages { get; }
         IPhysicalPageViewRepository PhysicalPageViews { get; }
-        IPostCategoryRepository PostCategories { get; }
-        IPostCommentReactionRepository PostCommentReactions { get; }
-        IPostCommentRepository PostComments { get; }
-        IPostRatingRepository PostRatings { get; }
-        IPostRepository Posts { get; }
-        IPostTagRepository PostTags { get; }
-        IPostViewRepository PostViews { get; }
-        IQuickNoteRepository QuickNotes { get; }
-        IResumeRepository Resumes { get; }
         IRightRepository Rights { get; }
         IRoleRepository Roles { get; }
         ISettingsRepository Settings { get; }
         ISocialProfileRepository SocialProfiles { get; }
         ISpecialMessageRepository SpecialMessages { get; }
         ISpecialPageRepository SpecialPages { get; }
-        ISpecialPageViewRepository SpecialPageViews { get; }
         ISubscriberRepository Subscribers { get; }
-        ITagRepository Tags { get; }
-        ITrashRepository Trashes { get; }
         IUserActivityRepository UserActivities { get; }
         IUserBlogRepository UserBlogs { get; }
-        IUserContentRepository UserContents { get; }
         IUserPasswordResetRepository UserPasswordResets { get; }
         IUserRoleRepository UserRoles { get; }
         IUserRepository Users { get; }
         IUserTrashRepository UserTrashes { get; }
         IUserViewRepository UserViews { get; }
-        IVideoCategoryRepository VideoCategories { get; }
-        IVideoCommentReactionRepository VideoCommentReactions { get; }
-        IVideoCommentRepository VideoComments { get; }
-        IVideoRatingRepository VideoRatings { get; }
-        IVideoRepository Videos { get; }
-        IVideoTagRepository VideoTags { get; }
-        IVideoViewRepository VideoViews { get; }
         IWhatToSeeNextRepository WhatToSeeNext { get; }
 
         bool EmptyHome(Guid blogId);
 
+        /// <summary>
+        /// Retrieves the author associated with the specified author identifier.
+        /// </summary>
+        /// <param name="authorId">An object that uniquely identifies the author to retrieve. Cannot be null.</param>
+        /// <returns>An instance of OrigamiUser representing the author associated with the given identifier. Returns null if no
+        /// matching author is found.</returns>
         OrigamiUser GetAuthor(IAuthorId authorId);
 
         /// <summary>
@@ -74,11 +84,52 @@ namespace Origami.Core.Data
         IEnumerable<OrigamiCategory> GetCategories();
 
         /// <summary>
+        /// Gets all categories that are children of the specified parent category.
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <returns></returns>
+        IEnumerable<OrigamiCategory> GetCategories(OrigamiCategory parent);
+
+        /// <summary>
         /// Gets all comments for a specific blog
         /// </summary>
         /// <param name="blogId"></param>
         /// <returns></returns>
-        IEnumerable<BaseComment> GetComments(Guid blogId);
+        IEnumerable<OrigamiContentComment> GetComments(Guid blogId);
+
+        IEnumerable<OrigamiContent> GetContents(OrigamiContentTag tag, Guid blogId);
+
+        IEnumerable<OrigamiContent> GetContents(OrigamiCategory category);
+
+        /// <summary>
+        /// Draft pages
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<OrigamiPage> GetDraftPages(Guid blog);
+
+        /// <summary>
+        /// Draft posts
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<OrigamiPost> GetDraftPosts(Guid blog);
+
+        /// <summary>
+        /// Draft special messages
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<OrigamiSpecialMessage> GetDraftSpecialMessages();
+
+        /// <summary>
+        /// Draft special pages
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<OrigamiSpecialPage> GetDraftSpecialPages();
+
+        /// <summary>
+        /// Draft videos
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<OrigamiVideo> GetDraftVideos(Guid blog);
 
         /// <summary>
         /// Gets all published maintenance pages
@@ -87,23 +138,28 @@ namespace Origami.Core.Data
         IEnumerable<OrigamiSpecialPage> GetMaintenancePages();
 
         /// <summary>
-        /// Get active pages
+        /// Retrieves all pages associated with the specified blog.
         /// </summary>
-        /// <returns>non-deleted and published pages, sorted by title</returns>
-        IEnumerable<OrigamiPage> GetPages();
+        /// <param name="blog">The unique identifier of the blog for which to retrieve pages.</param>
+        /// <returns>An enumerable collection of pages belonging to the specified blog. The collection is empty if the blog
+        /// contains no pages.</returns>
+        IEnumerable<OrigamiPage> GetPages(Guid blog);
+
         /// <summary>
-        /// Retrieves a collection of posts associated with the specified tag.
+        /// Retrieves all posts associated with the specified blog.
         /// </summary>
-        /// <param name="tag">The tag used to filter posts. Must not be <see langword="null"/>.</param>
-        /// <returns>An enumerable collection of <see cref="OrigamiPost"/> objects that are associated with the specified tag. If
-        /// no posts match the tag, the collection will be empty.</returns>
-        IEnumerable<OrigamiPost> GetPosts(OrigamiTag tag);
+        /// <param name="blog">The unique identifier of the blog for which to retrieve posts.</param>
+        /// <returns>An enumerable collection of posts belonging to the specified blog. The collection is empty if the blog
+        /// contains no posts.</returns>
+        IEnumerable<OrigamiPost> GetPosts(Guid blog);
+
         /// <summary>
         /// Returns all posts associated with a category
         /// </summary>
         /// <param name="category"></param>
         /// <returns></returns>
         IEnumerable<OrigamiPost> GetPosts(OrigamiCategory category);
+
         /// <summary>
         /// Retrieves a collection of pages that are related to the specified page by its type.
         /// </summary>
@@ -111,31 +167,74 @@ namespace Origami.Core.Data
         /// <returns>An enumerable collection of <see cref="OrigamiSpecialPage"/> objects representing the related pages. If no
         /// related pages are found, the collection will be empty.</returns>
         IEnumerable<OrigamiSpecialPage> GetRelatedPages(OrigamiSpecialPage page);
+
         /// <summary>
         /// Get direct replies to a comment
         /// </summary>
         /// <param name="comment"></param>
         /// <returns></returns>
-        IEnumerable<BaseComment> GetReplies(BaseComment comment);
+        IEnumerable<OrigamiContentComment> GetReplies(OrigamiContentComment comment);
+
+        /// <summary>
+        /// Retrieves a collection of software releases available in the system.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<OrigamiSoftwareRelease> GetSoftwareReleases(Guid blog);
+
+        /// <summary>
+        /// Retrieves a collection of special messages available in the system.
+        /// </summary>
+        /// <returns>An enumerable collection of <see cref="OrigamiSpecialMessage"/> objects representing the special messages.
+        /// The collection will be empty if no special messages are available.</returns>
+        IEnumerable<OrigamiSpecialMessage> GetSpecialMessages();
+
+        /// <summary>
+        /// Retrieves a collection of special pages available in the system.
+        /// </summary>
+        /// <returns>An enumerable collection of <see cref="OrigamiSpecialPage"/> objects representing the special pages. The
+        /// collection will be empty if no special pages are available.</returns>
+        IEnumerable<OrigamiSpecialPage> GetSpecialPages();
+
         /// <summary>
         /// Gets a subscriber by its social profile, when the subscriber is not deleted and verified.
         /// </summary>
         /// <param name="socialProfile"></param>
         /// <returns></returns>
         OrigamiSubscriber? GetSubscriber(OrigamiSocialProfile socialProfile);
-        IEnumerable<OrigamiPostTag> GetTags(OrigamiPost post);
-        IEnumerable<OrigamiVideoTag> GetTags(OrigamiVideo video);
-        IEnumerable<OrigamiVideo> GetVideos(OrigamiTag tag);
+
+        /// <summary>
+        /// Retrieves the collection of tags associated with the specified content item.
+        /// </summary>
+        /// <param name="content">The content item for which to retrieve tags. Cannot be null.</param>
+        /// <returns>An enumerable collection of tags linked to the specified content. The collection is empty if the content has
+        /// no tags.</returns>
+        IEnumerable<OrigamiContentTag> GetTags(OrigamiContent content);
+
+        /// <summary>
+        /// Retrieves a collection of videos associated with the specified blog.
+        /// </summary>
+        /// <param name="blog">The unique identifier of the blog for which to retrieve videos.</param>
+        /// <returns>An enumerable collection of videos belonging to the specified blog. The collection is empty if the blog
+        /// contains no videos.</returns>
+        IEnumerable<OrigamiVideo> GetVideos(Guid blog);
+
         /// <summary>
         /// Returns all Videos associated with a category
         /// </summary>
         /// <param name="category"></param>
         /// <returns></returns>
         IEnumerable<OrigamiVideo> GetVideos(OrigamiCategory category);
+
+        /// <summary>
+        /// Get active pages
+        /// </summary>
+        /// <returns>non-deleted and published pages, sorted by title</returns>
+        IEnumerable<OrigamiPage> GetVisiblePages();
+
         object? GuessWho(string text);
-        bool IsParentDeleted(OrigamiCategory category);
-        bool IsParentDeleted(BaseComment comment);
-        bool IsParentDeleted(OrigamiPage page);
+
+        bool IsParentDeleted<T>(T entity) where T : class, IId, IParentIdNull, IDeleted;
+
         Result RefreshAllRepositories();
         Result RefreshAllSearchIndexes();
         Result RegenerateNanoIds();

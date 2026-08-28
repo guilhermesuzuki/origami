@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Origami.Core.Models;
 
 namespace Origami.Core.Data
@@ -20,15 +19,16 @@ namespace Origami.Core.Data
         /// <param name="dbContext"></param>
         /// <param name="distributedCache"></param>
         public RoleRepository(
+            IAppFacade appFacade,
             IValidator<OrigamiRole> validator,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
-            IMemoryCache memoryCache,
+            IMyMemoryCache memoryCache,
             IRightRepository rightRepository,
             IRightRoleRepository rightRoleRepository,
             IUserRoleRepository userRoleRepository,
             Text text,
             IWebRootPath wwwRoot)
-            : base(text, dbContextFactory, memoryCache, wwwRoot)
+            : base(text, dbContextFactory, memoryCache, wwwRoot, appFacade)
         {
             _validator = validator;
             _rightRepository = rightRepository;
@@ -42,6 +42,16 @@ namespace Origami.Core.Data
         public override string ReadPermission => nameof(OrigamiRole.ViewRoles);
         public override string RestorePermission => nameof(OrigamiRole.RestoreRoles);
         public override string UpdatePermission => nameof(OrigamiRole.EditRoles);
+
+        public bool CanTheUserViewTheConnectivityDetails(OrigamiUser user)
+        {
+            if (user != null)
+            {
+                return this.UserHasPermission(user.Id, nameof(OrigamiRole.ViewConnectivityDetails));
+            }
+
+            return false;
+        }
 
         public override Result<OrigamiRole> Create(DataOperationContext<OrigamiRole> ctx)
         {
@@ -101,29 +111,6 @@ namespace Origami.Core.Data
             return hub;
         }
 
-        public override IQueryable<OrigamiRole> ReadFromDatabase()
-        {
-            using (var db = this.DbContextFactory.CreateDbContext())
-            {
-                var roles = db.Roles.ToList();
-
-                foreach (var role in roles)
-                {
-                    var rightRoles = db.Set<OrigamiRightRole>().AsNoTracking().Where(x => x.RoleId == role.Id).ToList();
-
-                    var match = from property in role.GetType().GetProperties()
-                                join rt in db.Rights.AsNoTracking() on property.Name equals rt.Name
-                                join rr in rightRoles on rt.Id equals rr.RightId
-                                where property.CanWrite == true
-                                select property;
-
-                    match.Each(x => x.SetValue(role, true));
-                }
-
-                return roles.AsQueryable();
-            }
-        }
-
         public override Result<OrigamiRole> Update(DataOperationContext<OrigamiRole> ctx)
         {
             using var db = DbContextFactory.CreateDbContext();
@@ -153,7 +140,7 @@ namespace Origami.Core.Data
         }
         public override Result<OrigamiRole> UpdateValidation(DataOperationContext<OrigamiRole> ctx)
         {
-            return new Result<OrigamiRole>(ctx.Entity, _validator);
+            return new(ctx.Entity, _validator);
         }
     }
 }

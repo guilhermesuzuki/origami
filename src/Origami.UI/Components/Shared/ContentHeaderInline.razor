@@ -1,0 +1,15 @@
+﻿@inherits Basic
+@implements IEntityNull<OrigamiContent>
+
+@if (this.Entity != null)
+{
+    <span class="content-header-inline d-flex align-items-center position-relative @Class" lang="@Entity.LanguageWrittenOn">
+        <ContentIcon Entity="Entity"></ContentIcon>
+        <span class="ms-1 language d-inline-block @Entity.LanguageWrittenOn"></span>
+        <span class="ms-1 ellipsis" title="@Entity.Title">@Entity.Title</span>
+    </span>
+}
+
+@code {
+    [Parameter] public OrigamiContent? Entity { get; set; }
+}
