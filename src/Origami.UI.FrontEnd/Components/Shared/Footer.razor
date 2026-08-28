@@ -31,10 +31,8 @@
 @code {
     protected string GetCurrentVersion()
     {
-        return Assembly.GetEntryAssembly()?
-            .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
-            .InformationalVersion
-            ?? "Unknown";
+        return Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
+            ?? "WTH, Unknown?";
     }
     protected OrigamiSpecialPage CookiePolicy()
     {
