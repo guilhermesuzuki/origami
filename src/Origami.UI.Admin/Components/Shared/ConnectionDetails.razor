@@ -23,12 +23,13 @@
     </ul>
     @if (_expand)
     {
+        var cstring = DatabaseUser();
         <ul class="inline-list text-info">
             <li style="width: 25px;">
                 <i class="fa-solid fa-server"></i>
             </li>
             <li>
-                @DatabaseUser().DataSource
+                @cstring.DataSource
             </li>
         </ul>
         <ul class="inline-list text-warning">
@@ -36,7 +37,7 @@
                 <i class="fa-solid fa-database"></i>
             </li>
             <li>
-                @DatabaseUser().InitialCatalog
+                @cstring.InitialCatalog
             </li>
         </ul>
         <ul class="inline-list text-danger">
@@ -44,7 +45,7 @@
                 <i class="fa-solid fa-user-secret"></i>
             </li>
             <li>
-                @DatabaseUser().UserID
+                @cstring.UserID
             </li>
         </ul>
     }
