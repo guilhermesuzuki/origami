@@ -7,7 +7,7 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<Version>2.0.0.0-beta</Version>
+		<Version>2.0.0-beta</Version>
 	</PropertyGroup>
 
 	<ItemGroup>

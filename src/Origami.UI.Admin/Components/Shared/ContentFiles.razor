@@ -1,0 +1,30 @@
+﻿@inherits Basic
+@implements IEntityNull<TEntity>
+@typeparam TEntity where TEntity : OrigamiContent
+
+
+<div class="content-files @Class">
+    <FileManager Mode="TinyMCE" RootPath="@RootPath" VirtualPath="@VirtualPath"></FileManager>
+</div>
+
+@code {
+    [Parameter] public TEntity? Entity { get; set; }
+
+    protected string RootPath { get; set; } = "/files/";
+    protected string VirtualPath { get; set; } = "/files/";
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+
+        if (Entity == null)
+        {
+            this.VirtualPath = this.RootPath;
+            return;
+        }
+
+        var directory = this.Super.Directories.WebPathForFiles(this.Entity);
+        this.VirtualPath = $"{directory}";
+        this.Super.Directories.Create(directory);
+    }
+}
