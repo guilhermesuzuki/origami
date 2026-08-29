@@ -655,11 +655,11 @@
         return this.fileManagerRepository.CanRead(this.UserFacade.User.Id);
     }
 
-    protected override void OnInitialized()
+    protected override void OnParametersSet()
     {
-        base.OnInitialized();
-        this._loadFiles();
-        this._loadDirectories();
+        base.OnParametersSet();
+        this._loadFiles(true);
+        this._loadDirectories(true);
     }
 
     protected virtual void OnSearch(string query)
