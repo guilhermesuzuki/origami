@@ -1,0 +1,10 @@
+﻿@inherits Basic
+@implements IEntityNull<OrigamiContent>
+
+<div class="content-files @Class">
+
+</div>
+
+@code {
+    [Parameter] public OrigamiContent? Entity { get; set; }
+}

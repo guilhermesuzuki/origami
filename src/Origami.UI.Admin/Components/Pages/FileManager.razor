@@ -314,7 +314,7 @@
     /// <summary>
     /// root path
     /// </summary>
-    public const string RootPath = "/files/";
+    [Parameter] public string RootPath { get; set; } = "/files/";
 
     private bool _addingFolder = false;
     private bool _uploadingFiles = false;
@@ -330,7 +330,7 @@
     /// <summary>
     /// Current virtual path
     /// </summary>
-    [Parameter] public string VirtualPath { get; set; } = RootPath;
+    [Parameter] public string VirtualPath { get; set; } = "/files/";
 
     /// <summary>
     /// Indicates whether the File Manager is in tinyMCE mode

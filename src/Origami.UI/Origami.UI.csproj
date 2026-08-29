@@ -51,4 +51,8 @@
 		<ProjectReference Include="..\Origami.Core\Origami.Core.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Components\Pages\" />
+	</ItemGroup>
+
 </Project>
