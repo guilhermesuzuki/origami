@@ -1,27 +1,29 @@
 ﻿@inherits Basic
 
-<MudSelect Class="blog-select"
-           FullWidth="true"
-           Immediate="true"
-           MultiSelection="false"
-           Disabled="@Disabled"
-           @bind-Value="this.UserFacade.BlogId"
-           Style="@Style"
-           HelperText="@Text.Lower("Blog")">
-    @foreach (var blog in this.UserFacade.BlogsTheUserHasAccessTo)
-    {
-        <MudSelectItem Value="@blog.Id">
-            <BlogHeaderInline Entity="blog"></BlogHeaderInline>
-        </MudSelectItem>
-    }
-    @if (this.UserFacade.BlogsTheUserHasAccessTo.Any() == false)
-    {
-        <MudSelectItem Value="@Guid.Empty" Disabled="true">
-            <i class="fa-solid fa-triangle-exclamation"></i>
-            @Text.Original("You don't have access to any blogs")
-        </MudSelectItem>
-    }
-</MudSelect>
+<div class="blog-select-wrapper @Class">
+    <MudSelect Class="blog-select"
+               FullWidth="true"
+               Immediate="true"
+               MultiSelection="false"
+               Disabled="@Disabled"
+               @bind-Value="this.UserFacade.BlogId"
+               Style="@Style"
+               HelperText="@Text.Lower("Blog")">
+        @foreach (var blog in this.UserFacade.BlogsTheUserHasAccessTo)
+        {
+            <MudSelectItem Value="@blog.Id">
+                <BlogHeaderInline Entity="blog"></BlogHeaderInline>
+            </MudSelectItem>
+        }
+        @if (this.UserFacade.BlogsTheUserHasAccessTo.Any() == false)
+        {
+            <MudSelectItem Value="@Guid.Empty" Disabled="true">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                @Text.Original("You don't have access to any blogs")
+            </MudSelectItem>
+        }
+    </MudSelect>
+</div>
 
 @code {
     [Parameter] public bool Disabled { get; set; }
