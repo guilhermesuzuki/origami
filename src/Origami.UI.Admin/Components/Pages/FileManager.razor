@@ -526,12 +526,12 @@
         }
     }
 
-    private void _needsToRenameDirectory(OrigamiSystemDirectory directory)
-    {
-        _directory = directory;
-        _nameDirectory = string.Empty;
-        _renamingDirectory = true;
-    }
+private void _needsToRenameDirectory(OrigamiSystemDirectory directory)
+{
+    _directory = directory;
+    _nameDirectory = directory.Name;
+    _renamingDirectory = true;
+}
 
     private void _needsToRenameFile(OrigamiSystemFile file)
     {
