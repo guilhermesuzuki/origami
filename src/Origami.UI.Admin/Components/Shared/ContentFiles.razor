@@ -1,12 +1,14 @@
 ﻿@inherits Basic
-@implements IEntityNull<OrigamiContent>
+@implements IEntityNull<TEntity>
+@typeparam TEntity where TEntity : OrigamiContent
+
 
 <div class="content-files @Class">
     <FileManager Mode="TinyMCE" RootPath="@RootPath" VirtualPath="@VirtualPath"></FileManager>
 </div>
 
 @code {
-    [Parameter] public OrigamiContent? Entity { get; set; }
+    [Parameter] public TEntity? Entity { get; set; }
 
     protected string RootPath { get; set; } = "/files/";
     protected string VirtualPath { get; set; } = "/files/";
