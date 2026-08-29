@@ -13,27 +13,6 @@
     .filemanager-wrapper .selected-file { border-color: #202020 !important; }
     .search-wrapper { display: none !important; }
 </style>
-@if (Mode.Has() == true)
-{
-    @if (Mode.Like("tinymce") == true)
-    {
-        <style>
-            .sidebar { display: none !important; visibility: hidden !important; }
-        </style>
-    }
-    else if (Mode.Like("image") == true)
-    {
-        <style>
-            .sidebar { display: none !important; visibility: hidden !important; }
-        </style>
-    }
-    else if (Mode.Like("video") == true)
-    {
-        <style>
-            .sidebar { display: none !important; visibility: hidden !important; }
-        </style>
-    }
-}
 <Root Access="this.CanAccess()" Class="@Class">
     <HeaderTemplate>
         <div class="header p-3 border-bottom">
