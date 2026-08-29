@@ -11,29 +11,8 @@
     .filemanager-wrapper .directory { height: 200px; }
     .filemanager-wrapper .file { height: 200px; }
     .filemanager-wrapper .selected-file { border-color: #202020 !important; }
-    .search-wrapper { display: none!important; }
+    .search-wrapper { display: none !important; }
 </style>
-@if (Mode.Has() == true)
-{
-    @if (Mode.Like("tinymce") == true)
-    {
-        <style>
-            .sidebar { display: none !important; visibility: hidden !important; }
-        </style>
-    }
-    else if (Mode.Like("image") == true)
-    {
-        <style>
-            .sidebar { display: none !important; visibility: hidden !important; }
-        </style>
-    }
-    else if (Mode.Like("video") == true)
-    {
-        <style>
-            .sidebar { display: none !important; visibility: hidden !important; }
-        </style>
-    }
-}
 <Root Access="this.CanAccess()" Class="@Class">
     <HeaderTemplate>
         <div class="header p-3 border-bottom">
@@ -60,14 +39,8 @@
                 <div class="col-12 col-xxl-8">
                     <FileManagerPath VirtualPath="@this.VirtualPath" OnPathClicked="(virtualPath) => this._openFolder(virtualPath)"></FileManagerPath>
                     <span class="d-block fs-6">
-                        @if (this._directories?.Any() == true)
-                        {
-                            <span class="me-2">@(this._directories.Count() == 1 ? Text.Lower("{0} directory", _directories.Count()) : Text.Lower("{0} directories", _directories.Count()))</span>
-                        }
-                        @if (this._files?.Any() == true)
-                        {
-                            <span class="me-2">@(this._files.Count() == 1 ? Text.Lower("{0} file", this._files.Count()) : Text.Lower("{0} files", this._files.Count()))</span>
-                        }
+                        <span class="me-2">@(this._directories?.Count() == 1 ? Text.Lower("{0} directory", _directories.Count()) : Text.Lower("{0} directories", _directories?.Count() ?? 0))</span>
+                        <span class="me-2">@(this._files?.Count() == 1 ? Text.Lower("{0} file", this._files.Count()) : Text.Lower("{0} files", this._files?.Count() ?? 0))</span>
                     </span>
                 </div>
                 <div class="col-12 col-xxl-4">
@@ -137,7 +110,7 @@
                                         <div class="position-absolute p-2 border-top" style="bottom:0;left:0;right:0;z-index:5;">
                                             <ul class="inline-list">
                                                 <li>
-                                                    <button @onclick="() => _renamingDirectory = dir.Directory" @onclick:stopPropagation="true">
+                                                    <button @onclick="() => _needsToRenameDirectory(dir.Directory)" @onclick:stopPropagation="true">
                                                         <i class="fa-solid fa-pen-to-square"></i>
                                                     </button>
                                                 </li>
@@ -186,7 +159,7 @@
                                         <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
                                             @if (file.IsImage)
                                             {
-                                                <div class="position-absolute w-100 h-100" style="opacity:0.25; background-image:url(@(file.WebPath.QueryString("size", "small").QueryString("v", _version.ToString())));background-repeat:no-repeat;background-position:center;background-size:cover;"></div>
+                                                <div class="position-absolute w-100 h-100" style="opacity:0.25; background-image:url(@(file.WebPath.Replace(" ", "%20").QueryString("size", "small").QueryString("v", _version.ToString())));background-repeat:no-repeat;background-position:center;background-size:cover;"></div>
                                             }
                                             <div class="mw-100" style="z-index:5;" title="@file.Name">
                                                 @if (file.IsImage)
@@ -237,9 +210,8 @@
         </div>
     </ContentTemplate>
 </Root>
-@if (_addingFolder)
-{
-    <div class="position-absolute popup-container">
+<MudDialog @bind-Visible="_addingFolder" Options="_dialogOptions" TitleClass="d-none" ContentClass="p-2">
+    <DialogContent>
         <div class="border p-3 shadow-lg" style="width: 500px;">
             <div>
                 <MudTextField T="string" HelperText="@Text.Lower("New folder")" FullWidth="true" @bind-Value="_nameFolder">
@@ -250,31 +222,34 @@
                 <button class="btn btn-secondary" @onclick="() => _addingFolder = false">@Text.Lower("Cancel")</button>
             </div>
         </div>
-    </div>
-}
-@if (_renamingDirectory != null)
-{
-    <div class="position-absolute popup-container">
+    </DialogContent>
+</MudDialog>
+<MudDialog @bind-Visible="_uploadingFiles" Options="_dialogOptions" Style="width: 80%;" TitleClass="d-none" ContentClass="p-2">
+    <DialogContent>
+        <div class="border p-3 shadow-lg">
+            <FileUpload VirtualPath="@this.VirtualPath" OnCloseWindow="() => { this._loadFiles(true); _uploadingFiles = false; }"></FileUpload>
+        </div>
+    </DialogContent>
+</MudDialog>
+<MudDialog @bind-Visible="_renamingDirectory" Options="_dialogOptions" TitleClass="d-none" ContentClass="p-2">
+    <DialogContent>
         <div class="border p-3 shadow-lg" style="width: 500px;">
             <div>
-                <MudTextField T="string" HelperText="@Text.Lower("Original name")" Text="@_renamingDirectory.Name" FullWidth="true" ReadOnly="true">
-                </MudTextField>
-                <MudTextField T="string" HelperText="@Text.Lower("New name")" FullWidth="true" @bind-Value="_nameDirectory">
-                </MudTextField>
+                <MudTextField T="string" HelperText="@Text.Lower("Original name")" Text="@_directory?.Name" FullWidth="true" ReadOnly="true"></MudTextField>
+                <MudTextField T="string" HelperText="@Text.Lower("New name")" FullWidth="true" @bind-Value="_nameDirectory"></MudTextField>
             </div>
             <div class="btn-group w-100 mt-3">
                 <button class="btn btn-success" @onclick="_renameDirectory">@Text.Lower("Save")</button>
-                <button class="btn btn-secondary" @onclick="() => _renamingDirectory = null">@Text.Lower("Cancel")</button>
+                <button class="btn btn-secondary" @onclick="() => _renamingDirectory = false">@Text.Lower("Cancel")</button>
             </div>
         </div>
-    </div>
-}
-@if (_renamingFile != null)
-{
-    <div class="position-absolute popup-container">
+    </DialogContent>
+</MudDialog>
+<MudDialog @bind-Visible="_renamingFile" Options="_dialogOptions" TitleClass="d-none" ContentClass="p-2">
+    <DialogContent>
         <div class="border p-3 shadow-lg" style="width: 500px;">
             <div>
-                <MudTextField T="string" HelperText="@Text.Lower("Original name")" Text="@_renamingFile.Name" FullWidth="true" ReadOnly="true">
+                <MudTextField T="string" HelperText="@Text.Lower("Original name")" Text="@_file?.Name" FullWidth="true" ReadOnly="true">
                 </MudTextField>
                 <ul class="inline-list">
                     <li class="w-75">
@@ -289,22 +264,15 @@
             </div>
             <div class="btn-group w-100 mt-3">
                 <button class="btn btn-success" @onclick="_renameFile">@Text.Lower("Save")</button>
-                <button class="btn btn-secondary" @onclick="() => _renamingFile = null">@Text.Lower("Cancel")</button>
+                <button class="btn btn-secondary" @onclick="() => _renamingFile = false">@Text.Lower("Cancel")</button>
             </div>
         </div>
-    </div>
-}
-@if (_uploadingFiles == true)
-{
-    <div class="position-absolute popup-container">
-        <div class="border p-3 shadow-lg" style="width: 50%;">
-            <FileUpload VirtualPath="@this.VirtualPath" OnCloseWindow="() => { this._loadFiles(true); _uploadingFiles = false; }"></FileUpload>
-        </div>
-    </div>
-}
+    </DialogContent>
+</MudDialog>
 
 @code {
     private Guid _version = Guid.NewGuid();
+    private readonly DialogOptions _dialogOptions = new() { CloseOnEscapeKey = true, CloseButton = false, CloseOnNavigation = true, MaxWidth = MaxWidth.Large, };
 
     /// <summary>
     /// This event happens when a file is selected/clicked in the UI
@@ -314,12 +282,16 @@
     /// <summary>
     /// root path
     /// </summary>
-    public const string RootPath = "/files/";
+    [Parameter] public string RootPath { get; set; } = "/files/";
 
     private bool _addingFolder = false;
     private bool _uploadingFiles = false;
-    private OrigamiSystemDirectory? _renamingDirectory;
-    private OrigamiSystemFile? _renamingFile;
+
+    private bool _renamingDirectory = false;
+    private bool _renamingFile = false;
+
+    private OrigamiSystemDirectory? _directory;
+    private OrigamiSystemFile? _file;
     private OrigamiSystemFile? _selectedFile;
     private string _nameDirectory = string.Empty;
     private string _nameExtension = string.Empty;
@@ -330,7 +302,7 @@
     /// <summary>
     /// Current virtual path
     /// </summary>
-    [Parameter] public string VirtualPath { get; set; } = RootPath;
+    [Parameter] public string VirtualPath { get; set; } = "/files/";
 
     /// <summary>
     /// Indicates whether the File Manager is in tinyMCE mode
@@ -550,11 +522,19 @@
         }
     }
 
+    private void _needsToRenameDirectory(OrigamiSystemDirectory directory)
+    {
+        _directory = directory;
+        _nameDirectory = directory.Name;
+        _renamingDirectory = true;
+    }
+
     private void _needsToRenameFile(OrigamiSystemFile file)
     {
-        _renamingFile = file;
+        _file = file;
         _nameFile = file.Name[0..(file.Name.Length - file.Extension.Length)];
         _nameExtension = file.Extension;
+        _renamingFile = true;
     }
 
     private void _openFolder(string webPath)
@@ -574,44 +554,52 @@
 
     private void _renameDirectory()
     {
-        var split = _renamingDirectory!.LocalPath.Split(Path.DirectorySeparatorChar);
-        var newpath = Path.Combine(string.Join(Path.DirectorySeparatorChar, split[0..(split.Length - 1)]), _nameDirectory);
-        try
+        if (this._directory != null)
         {
-            Directory.Move(_renamingDirectory!.LocalPath, newpath);
+            var split = _directory!.LocalPath.Split(Path.DirectorySeparatorChar);
+            var newpath = Path.Combine(string.Join(Path.DirectorySeparatorChar, split[0..(split.Length - 1)]), _nameDirectory);
+            try
+            {
+                Directory.Move(_directory.LocalPath, newpath);
 
-            this._nameDirectory = string.Empty;
-            this._renamingDirectory = null;
+                this._nameDirectory = string.Empty;
+                this._directory = null;
+                this._renamingDirectory = false;
 
-            this._loadDirectories(true);
+                this._loadDirectories(true);
 
-            this.UserFacade.Result = new();
-        }
-        catch (Exception ex)
-        {
-            this.UserFacade.Result = new() { Error = ex.GetMessage(), };
+                this.UserFacade.Result = new();
+            }
+            catch (Exception ex)
+            {
+                this.UserFacade.Result = new() { Error = ex.GetMessage(), };
+            }
         }
     }
 
     private void _renameFile()
     {
-        var split = _renamingFile!.LocalPath.Split(Path.DirectorySeparatorChar);
-        var newname = Path.Combine(string.Join(Path.DirectorySeparatorChar, split[0..(split.Length - 1)]), _nameFile + _nameExtension);
-
-        try
+        if (this._file != null)
         {
-            System.IO.File.Move(_renamingFile!.LocalPath, newname);
+            var split = _file.LocalPath.Split(Path.DirectorySeparatorChar);
+            var newname = Path.Combine(string.Join(Path.DirectorySeparatorChar, split[0..(split.Length - 1)]), _nameFile + _nameExtension);
 
-            this._nameFile = string.Empty;
-            this._renamingFile = null;
+            try
+            {
+                System.IO.File.Move(_file.LocalPath, newname);
 
-            this._loadFiles(true);
+                this._nameFile = string.Empty;
+                this._file = null;
+                this._renamingFile = false;
 
-            this.UserFacade.Result = new();
-        }
-        catch (Exception ex)
-        {
-            this.UserFacade.Result = new() { Error = ex.GetMessage(), };
+                this._loadFiles(true);
+
+                this.UserFacade.Result = new();
+            }
+            catch (Exception ex)
+            {
+                this.UserFacade.Result = new() { Error = ex.GetMessage(), };
+            }
         }
     }
 
