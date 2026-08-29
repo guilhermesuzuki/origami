@@ -210,7 +210,6 @@
         </div>
     </ContentTemplate>
 </Root>
-
 <MudDialog @bind-Visible="_addingFolder" Options="_dialogOptions" TitleClass="d-none" ContentClass="p-2">
     <DialogContent>
         <div class="border p-3 shadow-lg" style="width: 500px;">
@@ -225,7 +224,6 @@
         </div>
     </DialogContent>
 </MudDialog>
-
 <MudDialog @bind-Visible="_uploadingFiles" Options="_dialogOptions" Style="width: 80%;" TitleClass="d-none" ContentClass="p-2">
     <DialogContent>
         <div class="border p-3 shadow-lg">
@@ -233,7 +231,6 @@
         </div>
     </DialogContent>
 </MudDialog>
-
 <MudDialog @bind-Visible="_renamingDirectory" Options="_dialogOptions" TitleClass="d-none" ContentClass="p-2">
     <DialogContent>
         <div class="border p-3 shadow-lg" style="width: 500px;">
@@ -248,7 +245,6 @@
         </div>
     </DialogContent>
 </MudDialog>
-
 <MudDialog @bind-Visible="_renamingFile" Options="_dialogOptions" TitleClass="d-none" ContentClass="p-2">
     <DialogContent>
         <div class="border p-3 shadow-lg" style="width: 500px;">
@@ -526,12 +522,12 @@
         }
     }
 
-private void _needsToRenameDirectory(OrigamiSystemDirectory directory)
-{
-    _directory = directory;
-    _nameDirectory = directory.Name;
-    _renamingDirectory = true;
-}
+    private void _needsToRenameDirectory(OrigamiSystemDirectory directory)
+    {
+        _directory = directory;
+        _nameDirectory = directory.Name;
+        _renamingDirectory = true;
+    }
 
     private void _needsToRenameFile(OrigamiSystemFile file)
     {
