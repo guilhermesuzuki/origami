@@ -159,7 +159,7 @@
                                         <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
                                             @if (file.IsImage)
                                             {
-                                                <div class="position-absolute w-100 h-100" style="opacity:0.25; background-image:url(@(file.WebPath.QueryString("size", "small").QueryString("v", _version.ToString())));background-repeat:no-repeat;background-position:center;background-size:cover;"></div>
+                                                <div class="position-absolute w-100 h-100" style="opacity:0.25; background-image:url(@(file.WebPath.Replace(" ", "%20").QueryString("size", "small").QueryString("v", _version.ToString())));background-repeat:no-repeat;background-position:center;background-size:cover;"></div>
                                             }
                                             <div class="mw-100" style="z-index:5;" title="@file.Name">
                                                 @if (file.IsImage)

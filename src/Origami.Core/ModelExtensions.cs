@@ -577,6 +577,8 @@ namespace Origami.Core
                 case "OrigamiQuickNote": return "Quick notes";
                 case "OrigamiSocialProfile": return "Social profiles";
                 case "OrigamiSoftwareRelease": return "Software releases";
+                case "OrigamiSpecialMessage": return "Special messages";
+                case "OrigamiSpecialPage": return "Special pages";
                 case "OrigamiUserTrash": return "User trashes";
                 default: break;
             }
