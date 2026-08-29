@@ -16,11 +16,15 @@
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        if (Entity != null)
+
+        if (Entity == null)
         {
-            var directory = this.Super.Directories.WebPathForFiles(this.Entity);
-            this.VirtualPath = $"{directory}";
-            this.Super.Directories.Create(directory);
+            this.VirtualPath = this.RootPath;
+            return;
         }
+
+        var directory = this.Super.Directories.WebPathForFiles(this.Entity);
+        this.VirtualPath = $"{directory}";
+        this.Super.Directories.Create(directory);
     }
 }
