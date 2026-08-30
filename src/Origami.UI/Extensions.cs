@@ -258,12 +258,11 @@ namespace Origami.UI
                 options.Level = System.IO.Compression.CompressionLevel.Optimal;
             });
 
-            /**/
             builder.Services.Configure<ForwardedHeadersOptions>(options =>
             {
                 options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
-                options.KnownProxies.Clear();
-                options.KnownIPNetworks.Clear();
+                options.KnownProxies.Add(System.Net.IPAddress.Loopback); // 127.0.0.1
+                options.KnownProxies.Add(System.Net.IPAddress.IPv6Loopback); // ::1
             });
 
             /*rate limiting*/
@@ -573,8 +572,8 @@ namespace Origami.UI
 
         public static WebApplication UseOrigami(this WebApplication app, bool admin = false)
         {
-            app.UseAuthentication();
             app.UseForwardedHeaders();
+            app.UseAuthentication();
 
             var supportedCultures = OrigamiConstants.AllLanguages().Select(x => x.Name).ToArray();
             var localizationOptions = new RequestLocalizationOptions()
@@ -596,7 +595,11 @@ namespace Origami.UI
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            if (app.Environment.IsDevelopment() == true)
+            {
+                app.UseDeveloperExceptionPage();
+                app.UseHttpsRedirection();
+            }
 
             app.UseCookiePolicy();
             app.UseSession();
