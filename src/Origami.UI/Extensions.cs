@@ -598,9 +598,8 @@ namespace Origami.UI
             if (app.Environment.IsDevelopment() == true)
             {
                 app.UseDeveloperExceptionPage();
+                app.UseHttpsRedirection();
             }
-
-            app.UseHttpsRedirection();
 
             app.UseCookiePolicy();
             app.UseSession();
