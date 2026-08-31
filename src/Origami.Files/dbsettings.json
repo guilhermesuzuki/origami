@@ -19,7 +19,7 @@
         "Args": {
           "path": "Logs/log-.txt",
           "rollingInterval": "Day",
-          "retainedFileCountLimit": 30,
+          "retainedFileCountLimit": 90,
           "fileSizeLimitBytes": 10485760,
           "rollOnFileSizeLimit": true,
           "shared": true,
