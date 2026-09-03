@@ -24,7 +24,7 @@ namespace Origami.UI.Admin
         public string Filter { get; set; } = "all";
 
         [Inject] public IHubContentRepository<T2> HubContentRepository { get; set; } = null!;
-        
+
         public string NanoId { get; set; } = string.Empty;
 
         /// <summary>

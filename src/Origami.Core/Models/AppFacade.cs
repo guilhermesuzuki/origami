@@ -1,8 +1,4 @@
-﻿
-using Microsoft.Extensions.Logging;
-using NanoidDotNet;
-
-namespace Origami.Core.Models
+﻿namespace Origami.Core.Models
 {
     public class AppFacade : IAppFacade
     {

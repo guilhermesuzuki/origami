@@ -4,12 +4,10 @@ using FluentValidation;
 using Origami.Core.Models;
 using Origami.Core.Models.Settings;
 using SixLabors.ImageSharp;
-using System.Collections;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.Net.Mail;
 using System.Reflection;
 using System.Security.Cryptography;
@@ -1484,8 +1482,8 @@ namespace Origami.Core
         /// <returns></returns>
         public static string YesNo(this bool value, Text text)
         {
-            return value 
-                ? text.Original("Yes") 
+            return value
+                ? text.Original("Yes")
                 : text.Original("No");
         }
 

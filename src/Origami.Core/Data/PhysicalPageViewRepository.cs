@@ -29,13 +29,18 @@ namespace Origami.Core.Data
             return new(ctx.Entity);
         }
 
-        /// <summary>
-        /// Does nothing, views shouldn't be added to cache
-        /// </summary>
-        /// <param name="entity"></param>
         public override void CreateCache(OrigamiPhysicalPageView entity)
         {
-            return;
+            var content = this.MemoryCache.Read<OrigamiContent>().Id(entity.ContentId);
+            if (content != null)
+            {
+                lock (OrigamiConstants.SyncRoot)
+                {
+                    var key = content.KeyForCachingViews();
+                    var count = this.MemoryCache.TryGetValue(key, out long x) ? x : 0;
+                    this.MemoryCache.Set(key, count + 1);
+                }
+            }
         }
 
         /// <summary>
