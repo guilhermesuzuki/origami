@@ -27,10 +27,10 @@ namespace Origami.UI
             IConfiguration configuration,
             IJSRuntime jsRuntime,
             NavigationManager navigationManager,
-            IOptions<JwtConfiguration> jwtConfiguration, 
-            ISuperRepository superRepository, 
-            IUserFacade userFacade, 
-            Text text 
+            IOptions<JwtConfiguration> jwtConfiguration,
+            ISuperRepository superRepository,
+            IUserFacade userFacade,
+            Text text
             )
         {
             _configuration = configuration;

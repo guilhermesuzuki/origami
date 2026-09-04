@@ -192,7 +192,7 @@ namespace Origami.UI.Admin
                 }
             }
 
-            await ReloadDataGrid();
+            await ReloadDataGridAsync();
         }
 
         /// <summary>
@@ -316,7 +316,7 @@ namespace Origami.UI.Admin
             {
                 if (p.PropertyName.Like(nameof(IUserFacade.BlogId)) == true)
                 {
-                    await ReloadDataGrid();
+                    await ReloadDataGridAsync();
                     await this.InvokeAsync(this.StateHasChanged);
                 }
             };
@@ -344,7 +344,7 @@ namespace Origami.UI.Admin
         protected virtual async Task OnIncludeDeletedEntitiesChanged(bool newValue)
         {
             IncludeDeletedEntitiesInDataGrid = newValue;
-            await ReloadDataGrid();
+            await ReloadDataGridAsync();
         }
 
         protected override void OnInitialized()
@@ -393,7 +393,7 @@ namespace Origami.UI.Admin
         /// Reloads the data-grid
         /// </summary>
         /// <returns></returns>
-        protected virtual async Task ReloadDataGrid()
+        protected virtual async Task ReloadDataGridAsync()
         {
             SelectedEntity = TheCreator.Create<T>();
             SelectedEntities = new();

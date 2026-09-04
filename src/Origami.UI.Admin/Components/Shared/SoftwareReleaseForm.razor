@@ -9,13 +9,31 @@
     <div class="row">
         <div class="col-12">
             <div class="p-3">
-                <MudTextField ReadOnly="true"
-                              Immediate="true"
-                              Value="@(Text.Lower(Entity.Entity.IsDraft.YesNo()))"
-                              HelperText="@Text.Lower("Still a draft?")"
-                              Class="cursor-pointer yes-no"
-                              title="@Text.Lower("Click here to change it")"
-                              @onclick="() => this.Entity.Entity.IsDraft = !this.Entity.Entity.IsDraft.GetValueOrDefault()"></MudTextField>
+                <ul class="inline-list mt-3">
+                    <li>
+                        <LanguageWrittenOn Entity="this.Entity.Entity"></LanguageWrittenOn>
+                    </li>
+                    <li>
+                        <MudTextField ReadOnly="true"
+                                      Immediate="true"
+                                      AdornmentIcon="@Icons.Material.Filled.Comment"
+                                      Adornment="Adornment.Start"
+                                      Value="@(Text.Lower(Entity.Entity.IsCommentEnabled.YesNo()))"
+                                      HelperText="@Text.Lower("Are comments enabled?")"
+                                      Class="cursor-pointer ms-2"
+                                      title="@Text.Lower("Click here to change it")"
+                                      @onclick="() => this.Entity.Entity.IsCommentEnabled = !this.Entity.Entity.IsCommentEnabled"></MudTextField>
+                    </li>
+                    <li>
+                        <MudTextField ReadOnly="true"
+                                      Immediate="true"
+                                      Value="@(Text.Lower(Entity.Entity.IsDraft.YesNo()))"
+                                      HelperText="@Text.Lower("Still a draft?")"
+                                      Class="cursor-pointer yes-no ms-2"
+                                      title="@Text.Lower("Click here to change it")"
+                                      @onclick="() => this.Entity.Entity.IsDraft = !this.Entity.Entity.IsDraft.GetValueOrDefault()"></MudTextField>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
@@ -24,22 +42,6 @@
             <div class="p-3">
                 <BasicHeaderNotes Entity="this.Entity.Entity"></BasicHeaderNotes>
                 <BasicHeader Class="mt-3" Entity="this.Entity.Entity"></BasicHeader>
-                <ul class="inline-list mt-3">
-                    <li>
-                        <LanguageWrittenOn Entity="this.Entity.Entity"></LanguageWrittenOn>
-                    </li>
-                    <li>
-                        <MudTextField ReadOnly="true"
-                                      AdornmentIcon="@Icons.Material.Filled.Comment"
-                                      Adornment="Adornment.Start"
-                                      Immediate="true"
-                                      Value="@(Text.Lower(Entity.Entity.IsCommentEnabled.YesNo()))"
-                                      HelperText="@Text.Lower("Are comments enabled?")"
-                                      Class="cursor-pointer"
-                                      title="@Text.Lower("Click here to change it")"
-                                      @onclick="() => this.Entity.Entity.IsCommentEnabled = !this.Entity.Entity.IsCommentEnabled"></MudTextField>
-                    </li>
-                </ul>
                 <ul class="inline-list mt-3">
                     <li>
                         <MudTextField Immediate="true"
@@ -78,8 +80,6 @@
                 </ul>
             </div>
         </div>
-    </div>
-    <div class="row">
         <div class="col-12 col-xxl-6">
             <div class="text-center p-3">
                 <HeaderImageCard Entity="@Entity.Entity"></HeaderImageCard>

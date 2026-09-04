@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Origami.Core.Models;
 
 namespace Origami.Core.Data
@@ -74,7 +73,7 @@ namespace Origami.Core.Data
             var query = from a in this.ReadFromCache().NonDeleted()
                         where a.ContentId == entity.Id
                         select a;
-            
+
             return query.LongCount();
         }
 

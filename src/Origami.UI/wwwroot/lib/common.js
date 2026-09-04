@@ -53,21 +53,7 @@ var origami = {
 
         title: (title) => document.title = title,
     },
-    specialpages: {
-        view: (id) => {
-            var url = encodeURIComponent(location.href);
-            var referrer = encodeURIComponent(document.referrer);
-            var view = `/views/specialpages/${id}?url=${url}&referrer=${referrer}&v=${Math.random()}`;
-            $.get(view);
-        },
-    },
     physicalpages: {
-        view: (id) => {
-            var url = encodeURIComponent(location.href);
-            var referrer = encodeURIComponent(document.referrer);
-            var view = `/views/physicalpages/${id}?url=${url}&referrer=${referrer}&v=${Math.random()}`;
-            $.get(view);
-        },
         viewByPath: (path) => {
             var url = encodeURIComponent(location.href);
             var referrer = encodeURIComponent(document.referrer);
@@ -78,30 +64,6 @@ var origami = {
             var url = encodeURIComponent(location.href);
             var referrer = encodeURIComponent(document.referrer);
             var view = `/views/physicalpages/bycontent/?path=${path}&type=${type}&id=${id}&url=${url}&referrer=${referrer}&v=${Math.random()}`;
-            $.get(view);
-        },
-    },
-    pages: {
-        view: (id) => {
-            var url = encodeURIComponent(location.href);
-            var referrer = encodeURIComponent(document.referrer);
-            var view = `/views/pages/${id}?url=${url}&referrer=${referrer}&v=${Math.random()}`;
-            $.get(view);
-        },
-    },
-    posts: {
-        view: (id) => {
-            var url = encodeURIComponent(location.href);
-            var referrer = encodeURIComponent(document.referrer);
-            var view = `/views/posts/${id}?url=${url}&referrer=${referrer}&v=${Math.random()}`;
-            $.get(view); 
-        },
-    },
-    videos: {
-        view: (id) => {
-            var url = encodeURIComponent(location.href);
-            var referrer = encodeURIComponent(document.referrer);
-            var view = `/views/videos/${id}?url=${url}&referrer=${referrer}&v=${Math.random()}`;
             $.get(view);
         },
     },

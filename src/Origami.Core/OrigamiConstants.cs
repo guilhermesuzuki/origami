@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Caching.Memory;
-using System.Globalization;
+﻿using System.Globalization;
 
 namespace Origami.Core
 {

@@ -3,22 +3,24 @@
 
 @if (this.Entity != null)
 {
-    <MudSelect Class="language-written-on"
-               FullWidth="true"
-               Immediate="true"
-               MultiSelection="false"
-               InputClass="d-inline-flex align-items-center"
-               @bind-Value:get="@Entity.LanguageWrittenOn"
-               @bind-Value:set="(language) => this.Entity.LanguageWrittenOn = language"
-               ReadOnly="@ReadOnly"
-               HelperText="@Text.Lower("Language")">
-        @foreach (var language in OrigamiConstants.AllLanguages())
-        {
-            <MudSelectItem Value="language.Name">
-                <Language Entity="language"></Language>
-            </MudSelectItem>
-        }
-    </MudSelect>
+    <div class="language-written-on-wrapper @Class">
+        <MudSelect Class="language-written-on"
+                   FullWidth="true"
+                   Immediate="true"
+                   MultiSelection="false"
+                   InputClass="d-inline-flex align-items-center"
+                   @bind-Value:get="@Entity.LanguageWrittenOn"
+                   @bind-Value:set="(language) => this.Entity.LanguageWrittenOn = language"
+                   ReadOnly="@ReadOnly"
+                   HelperText="@Text.Lower("Language")">
+            @foreach (var language in OrigamiConstants.AllLanguages())
+            {
+                <MudSelectItem Value="language.Name">
+                    <Language Entity="language"></Language>
+                </MudSelectItem>
+            }
+        </MudSelect>
+    </div>
 }
 
 @code {
