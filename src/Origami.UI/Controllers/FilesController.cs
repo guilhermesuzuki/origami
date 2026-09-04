@@ -97,7 +97,7 @@ namespace Origami.UI.Controllers
                         }
                         catch
                         {
-
+                            // Best-effort tracking: ignore failures (e.g., DB unavailable) so file downloads still work.
                         }
                     }
                 }
