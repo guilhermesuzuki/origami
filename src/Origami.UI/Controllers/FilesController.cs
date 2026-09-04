@@ -60,43 +60,45 @@ namespace Origami.UI.Controllers
         [Route("~/files/{*path}")]
         public async Task<IActionResult> FilesAsync([FromRoute] string path, [FromQuery] string? size)
         {
-            var virtualpath = $"/files/{path.TrimStart('/')}";
-            var file = _fileRepository.GetFile(virtualpath);
-
             try
             {
+                var virtualpath = $"/files/{path.TrimStart('/')}";
+                var file = _fileRepository.GetFile(virtualpath);
                 if (file != null)
                 {
-                    if (file.IsImage)
+                    try
                     {
-                        var esize = ePictureSizes.original; Enum.TryParse(size, true, out esize);
-                        return await PictureAsync(file, esize);
+                        if (file.IsImage)
+                        {
+                            var esize = ePictureSizes.original; Enum.TryParse(size, true, out esize);
+                            return await PictureAsync(file, esize);
+                        }
+                        return PhysicalFile(file.LocalPath, file.ContentType, file.Name, true);
                     }
-                    return PhysicalFile(file.LocalPath, file.ContentType, file.Name, true);
+                    finally
+                    {
+                        if (virtualpath.PathComesFromSoftwareReleaseFiles() == true)
+                        {
+                            var view = new OrigamiPhysicalPageView();
+                            this._fill(view);
+                            if (_appFacade.Admin.GetValueOrDefault() == true)
+                            {
+                                view.Admin = true;
+                                this._physicalPageRepository.View(virtualpath, view, this._userFacade.User);
+                            }
+                            else
+                            {
+                                view.Admin = false;
+                                this._physicalPageRepository.View(virtualpath, view, this._userFacade.SocialProfile);
+                            }
+                        }
+                    }
                 }
                 return NotFound();
             }
             catch (Exception)
             {
                 return NotFound();
-            }
-            finally
-            {
-                if (virtualpath.PathComesFromSoftwareReleaseFiles() == true && file != null)
-                {
-                    var view = new OrigamiPhysicalPageView();
-                    this._fill(view);
-                    if (_appFacade.Admin.GetValueOrDefault() == true)
-                    {
-                        view.Admin = true;
-                        this._physicalPageRepository.View(virtualpath, view, this._userFacade.User);
-                    }
-                    else
-                    {
-                        view.Admin = false;
-                        this._physicalPageRepository.View(virtualpath, view, this._userFacade.SocialProfile);
-                    }
-                }
             }
         }
 
