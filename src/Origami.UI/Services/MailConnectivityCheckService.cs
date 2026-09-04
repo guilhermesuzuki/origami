@@ -25,7 +25,7 @@ namespace Origami.UI.Services
             _appFacade = appFacade;
             _super = superRepository;
             _emailStatus = emailStatusRepository;
-            _timer = new() { AutoReset = true, Enabled = true, Interval = _timerInterval };
+            _timer = new() { AutoReset = true, Enabled = false, Interval = _timerInterval };
             _timer.Elapsed += TimeToDoSomething;
         }
 

@@ -11,7 +11,7 @@ namespace Origami.UI.Services
         public CacheRefreshService(ISuperRepository superRepository) : base()
         {
             _super = superRepository;
-            _timer = new() { AutoReset = true, Enabled = true, Interval = 1000 * 60 * 3 };
+            _timer = new() { AutoReset = true, Enabled = false, Interval = 1000 * 60 * 3 };
             _timer.Elapsed += TimeToDoSomething;
         }
 
