@@ -82,7 +82,7 @@ namespace Origami.UI.Controllers
             }
             finally
             {
-                if (virtualpath.PathComesFromSoftwareReleaseFiles() == true)
+                if (virtualpath.PathComesFromSoftwareReleaseFiles() == true && _fileRepository.GetFile(virtualpath) != null)
                 {
                     var view = new OrigamiPhysicalPageView();
                     this._fill(view);
