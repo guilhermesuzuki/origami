@@ -21,6 +21,7 @@ namespace Origami.UI.Controllers
     public class FilesController :
         ControllerBase
     {
+        protected readonly IAppFacade _appFacade;
         protected readonly IBlogRepository _blogRepository;
         protected readonly IDirectoryRepository _directoryRepository;
         protected readonly IFileRepository _fileRepository;
@@ -36,6 +37,7 @@ namespace Origami.UI.Controllers
         /// <param name="fileRepository"></param>
         public FilesController(
             IWebHostEnvironment webHostEnvironment,
+            IAppFacade appFacade,
             IDirectoryRepository directoryRepository,
             IFileRepository fileRepository,
             IBlogRepository blogRepository,
@@ -51,6 +53,7 @@ namespace Origami.UI.Controllers
             _myMemoryCache = myMemoryCache;
             _physicalPageRepository = physicalPageRepository;
             _userFacade = userFacade;
+            _appFacade = appFacade;
         }
 
         [HttpGet]
@@ -83,12 +86,14 @@ namespace Origami.UI.Controllers
                 {
                     var view = new OrigamiPhysicalPageView();
                     this._fill(view);
-                    if (this._userFacade.User != OrigamiUser.AnonymousUser)
+                    if (_appFacade.Admin.GetValueOrDefault() == true)
                     {
+                        view.Admin = true;
                         this._physicalPageRepository.View(virtualpath, view, this._userFacade.User);
                     }
-                    if (this._userFacade.SocialProfile != OrigamiSocialProfile.AnonymousUser)
+                    else
                     {
+                        view.Admin = false;
                         this._physicalPageRepository.View(virtualpath, view, this._userFacade.SocialProfile);
                     }
                 }

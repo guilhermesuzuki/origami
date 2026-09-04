@@ -26,7 +26,7 @@ namespace Origami.Core.Data
             _physicalPageViewRepository = physicalPageViewRepository;
         }
 
-        public Result<OrigamiPhysicalPageView> View(string virtualPath, OrigamiPhysicalPageView view, OrigamiSocialProfile socialProfile)
+        public Result<OrigamiPhysicalPageView> View<T>(string virtualPath, OrigamiPhysicalPageView view, T whoIsResponsible)
         {
             var physicalPage = this.ReadFromCache().FirstOrDefault(x => x.Path == virtualPath);
             if (physicalPage == null)
@@ -34,24 +34,19 @@ namespace Origami.Core.Data
                 physicalPage = new() { Path = virtualPath, DateCreated = DateTime.UtcNow };
                 this.SmartSave(physicalPage.GetContext(), false);
             }
-            view.PhysicalPageId = physicalPage.Id;
-            view.SocialProfileId = socialProfile.Id;
-            this._physicalPageViewRepository.SmartSave(view.GetContext(), false);
-            return new(view);
-        }
 
-        public Result<OrigamiPhysicalPageView> View(string virtualPath, OrigamiPhysicalPageView view, OrigamiUser user)
-        {
-            var physicalPage = this.ReadFromCache().FirstOrDefault(x => x.Path == virtualPath);
-            if (physicalPage == null)
-            {
-                physicalPage = new() { Path = virtualPath, DateCreated = DateTime.UtcNow };
-                this.SmartSave(physicalPage.GetContext(), false);
-            }
             view.PhysicalPageId = physicalPage.Id;
-            view.UserId = user.Id;
-            this._physicalPageViewRepository.SmartSave(view.GetContext(), false);
-            return new(view);
+
+            if (whoIsResponsible is OrigamiUser user && user.Id != Guid.Empty)
+            {
+                view.UserId = user.Id;
+            }
+            else if (whoIsResponsible is OrigamiSocialProfile socialProfile && socialProfile.Id != Guid.Empty)
+            {
+                view.SocialProfileId = socialProfile.Id;
+            }
+
+            return this._physicalPageViewRepository.SmartSave(view.GetContext(), false);
         }
     }
 }
