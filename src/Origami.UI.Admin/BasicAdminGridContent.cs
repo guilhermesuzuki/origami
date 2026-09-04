@@ -192,7 +192,6 @@ namespace Origami.UI.Admin
             }
 
             await ReloadDataGridAsync();
-            SelectedEntity = this.HubContentRepository.Get(SelectedEntity.Entity).Clone();
         }
 
         /// <summary>

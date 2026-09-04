@@ -102,18 +102,15 @@
                                       HelperText="@Text.Lower("Published")"></MudTextField>
                     </li>
                 }
-                @if (this._author.New == false)
-                {
-                    <li class="author">
-                        <MudTextField ReadOnly="true"
-                                      FullWidth="true"
-                                      Immediate="true"
-                                      AdornmentIcon="@Icons.Material.Filled.Person"
-                                      Adornment="Adornment.Start"
-                                      Value="@(this._author.Username.ToLower())"
-                                      HelperText="@Text.Lower("Author")"></MudTextField>
-                    </li>
-                }
+                <li class="author">
+                    <MudTextField ReadOnly="true"
+                                  FullWidth="true"
+                                  Immediate="true"
+                                  AdornmentIcon="@Icons.Material.Filled.Person"
+                                  Adornment="Adornment.Start"
+                                  Value="@(this._author.Username.ToLower())"
+                                  HelperText="@Text.Lower("Author")"></MudTextField>
+                </li>
             </ul>
         }
     </div>
