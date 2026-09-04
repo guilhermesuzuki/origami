@@ -5,33 +5,30 @@
 <div class="content-software-releases @Class">
     <MudDataGrid T="OrigamiSystemFile" Class="border mt-3" SortMode="SortMode.None" Filterable="false" Items="_getFiles()">
         <Columns>
-            <TemplateColumn CellClass="w-100">
+            <TemplateColumn CellClass="">
                 <CellTemplate>
                     @context.Item.Name
                 </CellTemplate>
             </TemplateColumn>
-            <TemplateColumn CellClass="col-2">
+            <TemplateColumn CellClass="text-right" CellStyle="width: 15%;">
                 <CellTemplate>
                     @context.Item.FileSize.SizeInBytes()
                 </CellTemplate>
             </TemplateColumn>
-            <TemplateColumn>
+            <TemplateColumn CellClass="text-center" CellStyle="width:8%;">
                 <CellTemplate>
-                    <button class="cursor-pointer" @onclick="() => this.DownloadFile(context.Item)">
+                    <button class="cursor-pointer me-2" @onclick="() => this.DownloadFile(context.Item)">
                         <i class="fa-solid fa-download"></i>
                     </button>
-                </CellTemplate>
-            </TemplateColumn>
-            @if (this.AppFacade.Admin == true)
-            {
-                <TemplateColumn>
-                    <CellTemplate>
-                        <button class="cursor-pointer" @onclick="() => this._removeFile(context.Item)">
+                    @if (this.AppFacade.Admin == true)
+                    {
+
+                        <button class="cursor-pointer ms-2" @onclick="() => this._removeFile(context.Item)">
                             <i class="bi bi-trash-fill"></i>
                         </button>
-                    </CellTemplate>
-                </TemplateColumn>
-            }
+                    }
+                </CellTemplate>
+            </TemplateColumn>
         </Columns>
         <PagerContent>
             <MudDataGridPager T="OrigamiSystemFile" PageSizeOptions="[5, 10, 15]" />
