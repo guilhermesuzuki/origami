@@ -11,10 +11,10 @@ namespace Origami.UI.Services
         protected readonly ISuperRepository _super;
         private readonly System.Timers.Timer _timer;
 
-        public TimerService(ISuperRepository superRepository)
+        public TimerService(ISuperRepository superRepository, double timerInterval = 1000 * 60 * 3)
         {
             _super = superRepository;
-            _timer = new() { AutoReset = true, Enabled = false, Interval = 1000 * 60 * 3 };
+            _timer = new() { AutoReset = true, Enabled = false, Interval = timerInterval };
             _timer.Elapsed += TimeToDoSomething;
         }
 
