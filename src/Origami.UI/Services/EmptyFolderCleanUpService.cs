@@ -16,7 +16,7 @@ namespace Origami.UI.Services
         public EmptyFolderCleanUpService(ISuperRepository super)
         {
             _super = super;
-            _timer = new() { AutoReset = true, Enabled = true, Interval = 1000 * 60 * 3 };
+            _timer = new() { AutoReset = true, Enabled = false, Interval = TimeSpan.FromMinutes(3).TotalMilliseconds };
             _timer.Elapsed += TimeToDoSomething;
         }
 
