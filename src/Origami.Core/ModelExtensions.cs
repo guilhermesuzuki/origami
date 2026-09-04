@@ -1297,7 +1297,7 @@ namespace Origami.Core
         public static T SetSlug<T>(this T entity)
             where T : IId
         {
-            if (entity is ISlug slugger && slugger.Slug.Has() == false)
+            if (entity is ISlug slugger)
             {
                 slugger.Slug = entity switch
                 {
