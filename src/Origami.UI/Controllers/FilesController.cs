@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Origami.Core;
 using Origami.Core.Data;
+using Origami.Core.Models;
 using Origami.Core.Models.FileSystem;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
@@ -11,6 +13,7 @@ using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.Processing;
 using System.Security.Cryptography;
 using System.Text;
+using UAParser;
 
 namespace Origami.UI.Controllers
 {
@@ -18,9 +21,13 @@ namespace Origami.UI.Controllers
     public class FilesController :
         ControllerBase
     {
+        protected readonly IAppFacade _appFacade;
         protected readonly IBlogRepository _blogRepository;
         protected readonly IDirectoryRepository _directoryRepository;
         protected readonly IFileRepository _fileRepository;
+        protected readonly IMyMemoryCache _myMemoryCache;
+        protected readonly IPhysicalPageRepository _physicalPageRepository;
+        protected readonly IUserFacade _userFacade;
         protected readonly IWebHostEnvironment _webHostEnvironment;
 
         /// <summary>
@@ -30,15 +37,23 @@ namespace Origami.UI.Controllers
         /// <param name="fileRepository"></param>
         public FilesController(
             IWebHostEnvironment webHostEnvironment,
+            IAppFacade appFacade,
             IDirectoryRepository directoryRepository,
             IFileRepository fileRepository,
-            IBlogRepository blogRepository)
+            IBlogRepository blogRepository,
+            IUserFacade userFacade,
+            IPhysicalPageRepository physicalPageRepository,
+            IMyMemoryCache myMemoryCache)
             : base()
         {
             _webHostEnvironment = webHostEnvironment;
+            _blogRepository = blogRepository;
             _directoryRepository = directoryRepository;
             _fileRepository = fileRepository;
-            _blogRepository = blogRepository;
+            _myMemoryCache = myMemoryCache;
+            _physicalPageRepository = physicalPageRepository;
+            _userFacade = userFacade;
+            _appFacade = appFacade;
         }
 
         [HttpGet]
@@ -47,17 +62,44 @@ namespace Origami.UI.Controllers
         {
             try
             {
-                //adds the files web directory to the virtual path
                 var virtualpath = $"/files/{path.TrimStart('/')}";
                 var file = _fileRepository.GetFile(virtualpath);
                 if (file != null)
                 {
-                    if (file.IsImage)
+                    try
                     {
-                        var esize = ePictureSizes.original; Enum.TryParse(size, true, out esize);
-                        return await PictureAsync(file, esize);
+                        if (file.IsImage)
+                        {
+                            var esize = ePictureSizes.original; Enum.TryParse(size, true, out esize);
+                            return await PictureAsync(file, esize);
+                        }
+                        return PhysicalFile(file.LocalPath, file.ContentType, file.Name, true);
                     }
-                    return PhysicalFile(file.LocalPath, file.ContentType, file.Name, true);
+                    finally
+                    {
+                        try
+                        {
+                            if (virtualpath.PathComesFromSoftwareReleaseFiles() == true)
+                            {
+                                var view = new OrigamiPhysicalPageView();
+                                this._fill(view);
+                                if (_appFacade.Admin.GetValueOrDefault() == true)
+                                {
+                                    view.Admin = true;
+                                    this._physicalPageRepository.View(virtualpath, view, this._userFacade.User);
+                                }
+                                else
+                                {
+                                    view.Admin = false;
+                                    this._physicalPageRepository.View(virtualpath, view, this._userFacade.SocialProfile);
+                                }
+                            }
+                        }
+                        catch
+                        {
+                            // Best-effort tracking: ignore failures (e.g., DB unavailable) so file downloads still work.
+                        }
+                    }
                 }
                 return NotFound();
             }
@@ -198,6 +240,35 @@ namespace Origami.UI.Controllers
             {
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Fills the <paramref name="tracking"/> with request information
+        /// </summary>
+        /// <param name="tracking"></param>
+        /// <param name="url"></param>
+        /// <param name="referrer"></param>
+        private void _fill(BaseTracking tracking)
+        {
+            var dd = Request.GetDeviceDetector();
+
+            // important!
+            dd.Parse();
+
+            tracking.DateCreated = DateTime.UtcNow;
+            tracking.UserAgent = HttpContext.Request.Header("User-Agent");
+            tracking.HostAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? string.Empty;
+            tracking.IsMobileDevice = dd.IsTablet() || dd.IsMobile();
+            tracking.IsBot = dd.IsBot();
+            tracking.SocialProfileId = _userFacade.SocialProfile.New == false ? _userFacade.SocialProfile.Id : null;
+
+            var client = Parser.GetDefault().Parse(tracking.UserAgent);
+
+            tracking.Platform = client.OS.Family;
+            tracking.Browser = client.UA.Family;
+
+            var key = $"Origami_UserLocation_{this.HttpContext.Connection.Id}";
+            tracking.Location = this._myMemoryCache.Get<Location>(key);
         }
     }
 }

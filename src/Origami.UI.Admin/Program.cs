@@ -3,6 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using Origami.Core.Data;
 using Origami.UI;
 using Origami.UI.Admin.Components;
+using Origami.UI.Services;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,7 @@ var app = builder.FoldTheOrigami<App>(
     admin: true,
     injectServices: () =>
     {
+        builder.Services.AddHostedService<EmptyFolderCleanUpService>();
         builder.Services.AddScoped<ILoginHelpMeRules, LoginHelpMeRules>();
         builder.Services.AddScoped<ILoginRules, LoginRules>();
 

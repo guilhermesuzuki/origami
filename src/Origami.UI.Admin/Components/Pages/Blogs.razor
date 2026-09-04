@@ -191,7 +191,7 @@
             var hub = this.Super.Blogs.SetPrimary(ctx, true);
             if (hub.Ok) transaction.Complete();
             this.UserFacade.Result = hub;
-            await this.ReloadDataGrid();
+            await this.ReloadDataGridAsync();
         }
     }
 }

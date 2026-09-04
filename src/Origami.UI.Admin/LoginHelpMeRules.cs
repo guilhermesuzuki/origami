@@ -1,7 +1,6 @@
 ﻿using Bogus;
 using MudBlazor;
 using NanoidDotNet;
-using Octokit;
 using Origami.Core;
 using Origami.Core.Data;
 using Origami.Core.Models;
@@ -70,7 +69,7 @@ namespace Origami.UI
             if (hub.Ok)
             {
                 var cts = this.Entity.UserBlogs.GetContexts(ctx);
-                cts.Each(x => 
+                cts.Each(x =>
                 {
                     x.Entity.UserId = ctx.Entity.Id;
                     UserBlogRepository.SmartSave(x, false).Push(hub);

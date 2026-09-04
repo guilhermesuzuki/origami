@@ -16,12 +16,12 @@
         {
             @if (p.New == false)
             {
-                <a href="@p.Hyperlink" class="me-1 border-light-subtle border-bottom-highlight">
+                <a href="@p.Hyperlink" class="me-3 border-light-subtle border-bottom-highlight">
                     <SpecialPageHeaderLite4 Entity="@p"></SpecialPageHeaderLite4>
                 </a>
             }
         }
-        <span class="origami ms-5 p-2 text-right">
+        <span class="origami ms-5 text-right">
             <span class="fw-bold origami-name">@Text.Original("Origami")</span>
             <span class="fw-bold origami-version">@GetCurrentVersion()</span>
         </span>

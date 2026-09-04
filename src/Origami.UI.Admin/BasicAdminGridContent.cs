@@ -24,7 +24,7 @@ namespace Origami.UI.Admin
         public string Filter { get; set; } = "all";
 
         [Inject] public IHubContentRepository<T2> HubContentRepository { get; set; } = null!;
-        
+
         public string NanoId { get; set; } = string.Empty;
 
         /// <summary>
@@ -192,7 +192,6 @@ namespace Origami.UI.Admin
             }
 
             await ReloadDataGridAsync();
-            SelectedEntity = this.HubContentRepository.Get(SelectedEntity.Entity).Clone();
         }
 
         /// <summary>

@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Caching.Memory;
-using Origami.Core.Models;
+﻿using Origami.Core.Models;
 using Origami.Core.Models.FileSystem;
 
 namespace Origami.Core.Data

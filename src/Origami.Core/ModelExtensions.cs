@@ -4,12 +4,10 @@ using FluentValidation;
 using Origami.Core.Models;
 using Origami.Core.Models.Settings;
 using SixLabors.ImageSharp;
-using System.Collections;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.Net.Mail;
 using System.Reflection;
 using System.Security.Cryptography;
@@ -975,6 +973,17 @@ namespace Origami.Core
             return results.All(x => x.Ok);
         }
 
+        public static bool PathComesFromSoftwareReleaseFiles(this string virtualpath)
+        {
+            var splitPath = virtualpath.Split('/', StringSplitOptions.RemoveEmptyEntries);
+            if (splitPath.Length < 7) return false;
+            if (splitPath[0].Like("files") == false) return false;
+            if (splitPath[1].Like("blogs") == false) return false;
+            if (splitPath[3].Like("software-releases") == false) return false;
+            if (splitPath[5].Like("files") == false) return false;
+            return true;
+        }
+
         /// <summary>
         /// Profile picture (or no-icon.png)
         /// </summary>
@@ -1306,11 +1315,11 @@ namespace Origami.Core
             where T1 : OrigamiContent
             where T2 : IHubContent<T1>
         {
-            root.Entity.Slug = root.Entity.Title.GetSlug();
+            root.Entity.SetSlug();
 
             foreach (var tag in root.Tags)
             {
-                tag.Slug = tag.Tag.GetSlug();
+                tag.SetSlug();
             }
 
             return root;
@@ -1484,8 +1493,8 @@ namespace Origami.Core
         /// <returns></returns>
         public static string YesNo(this bool value, Text text)
         {
-            return value 
-                ? text.Original("Yes") 
+            return value
+                ? text.Original("Yes")
                 : text.Original("No");
         }
 
@@ -1499,6 +1508,7 @@ namespace Origami.Core
             if (value != null) return value.GetValueOrDefault().YesNo();
             return "Empty (Null)";
         }
+
         /// <summary>
         /// Extracts the message.
         /// </summary>
