@@ -1286,7 +1286,7 @@ namespace Origami.Core
         public static T SetSlug<T>(this T entity)
             where T : IId
         {
-            if (entity is ISlug slugger)
+            if (entity is ISlug slugger && slugger.Slug.Has() == false)
             {
                 slugger.Slug = entity switch
                 {
@@ -1304,11 +1304,11 @@ namespace Origami.Core
             where T1 : OrigamiContent
             where T2 : IHubContent<T1>
         {
-            root.Entity.Slug = root.Entity.Title.GetSlug();
+            root.Entity.SetSlug();
 
             foreach (var tag in root.Tags)
             {
-                tag.Slug = tag.Tag.GetSlug();
+                tag.SetSlug();
             }
 
             return root;
