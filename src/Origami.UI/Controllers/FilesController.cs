@@ -61,10 +61,10 @@ namespace Origami.UI.Controllers
         public async Task<IActionResult> FilesAsync([FromRoute] string path, [FromQuery] string? size)
         {
             var virtualpath = $"/files/{path.TrimStart('/')}";
+            var file = _fileRepository.GetFile(virtualpath);
 
             try
             {
-                var file = _fileRepository.GetFile(virtualpath);
                 if (file != null)
                 {
                     if (file.IsImage)
@@ -82,7 +82,7 @@ namespace Origami.UI.Controllers
             }
             finally
             {
-                if (virtualpath.PathComesFromSoftwareReleaseFiles() == true && _fileRepository.GetFile(virtualpath) != null)
+                if (virtualpath.PathComesFromSoftwareReleaseFiles() == true && file != null)
                 {
                     var view = new OrigamiPhysicalPageView();
                     this._fill(view);
