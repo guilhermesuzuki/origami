@@ -26,16 +26,27 @@ namespace Origami.UI.Services
             _timer.Dispose();
         }
 
-        public override Task StopAsync(CancellationToken cancellationToken)
+        public override async Task StopAsync(CancellationToken cancellationToken)
         {
             _timer.Stop();
-            return Task.CompletedTask;
+            await base.StopAsync(cancellationToken);
         }
 
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             _timer.Start();
-            return Task.CompletedTask;
+            try
+            {
+                await Task.Delay(Timeout.Infinite, stoppingToken);
+            }
+            catch (TaskCanceledException)
+            {
+                // expected during shutdown
+            }
+            finally
+            {
+                _timer.Stop();
+            }
         }
 
         protected virtual void TimeToDoSomething(object? sender, System.Timers.ElapsedEventArgs e)
