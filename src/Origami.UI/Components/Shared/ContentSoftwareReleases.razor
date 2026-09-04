@@ -7,7 +7,11 @@
         <Columns>
             <TemplateColumn CellClass="">
                 <CellTemplate>
-                    @context.Item.Name
+                    <div class="fw-bold">@context.Item.Name</div>
+                    <div class="small">
+                        <i class="bi bi-file-earmark-arrow-down-fill"></i>
+                        @this.Super.PhysicalPages.Views(context.Item.WebPath)
+                    </div>
                 </CellTemplate>
             </TemplateColumn>
             <TemplateColumn CellClass="text-right" CellStyle="width: 15%;">
@@ -15,15 +19,15 @@
                     @context.Item.FileSize.SizeInBytes()
                 </CellTemplate>
             </TemplateColumn>
-            <TemplateColumn CellClass="text-center" CellStyle="width:8%;">
+            <TemplateColumn CellClass="text-right" CellStyle="width:8%;">
                 <CellTemplate>
-                    <button class="cursor-pointer me-2" @onclick="() => this.DownloadFile(context.Item)">
+                    <button class="cursor-pointer ms-3 text-success" @onclick="() => this.DownloadFile(context.Item)">
                         <i class="fa-solid fa-download"></i>
                     </button>
                     @if (this.AppFacade.Admin == true)
                     {
 
-                        <button class="cursor-pointer ms-2" @onclick="() => this._removeFile(context.Item)">
+                        <button class="cursor-pointer ms-3 text-danger" @onclick="() => this._removeFile(context.Item)">
                             <i class="bi bi-trash-fill"></i>
                         </button>
                     }

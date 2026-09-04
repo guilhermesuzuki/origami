@@ -48,5 +48,17 @@ namespace Origami.Core.Data
 
             return this._physicalPageViewRepository.SmartSave(view.GetContext(), false);
         }
+
+        public long Views(string virtualPath)
+        {
+            var physicalPage = this.ReadFromCache().FirstOrDefault(x => x.Path == virtualPath);
+            if (physicalPage != null)
+            {
+                var db = this.DbContextFactory.CreateDbContext();
+                var query = db.PhysicalPageViews.Where(x => x.PhysicalPageId == physicalPage.Id);
+                return query.LongCount();
+            }
+            return 0L;
+        }
     }
 }
