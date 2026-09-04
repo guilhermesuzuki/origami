@@ -77,20 +77,27 @@ namespace Origami.UI.Controllers
                     }
                     finally
                     {
-                        if (virtualpath.PathComesFromSoftwareReleaseFiles() == true)
+                        try
                         {
-                            var view = new OrigamiPhysicalPageView();
-                            this._fill(view);
-                            if (_appFacade.Admin.GetValueOrDefault() == true)
+                            if (virtualpath.PathComesFromSoftwareReleaseFiles() == true)
                             {
-                                view.Admin = true;
-                                this._physicalPageRepository.View(virtualpath, view, this._userFacade.User);
+                                var view = new OrigamiPhysicalPageView();
+                                this._fill(view);
+                                if (_appFacade.Admin.GetValueOrDefault() == true)
+                                {
+                                    view.Admin = true;
+                                    this._physicalPageRepository.View(virtualpath, view, this._userFacade.User);
+                                }
+                                else
+                                {
+                                    view.Admin = false;
+                                    this._physicalPageRepository.View(virtualpath, view, this._userFacade.SocialProfile);
+                                }
                             }
-                            else
-                            {
-                                view.Admin = false;
-                                this._physicalPageRepository.View(virtualpath, view, this._userFacade.SocialProfile);
-                            }
+                        }
+                        catch
+                        {
+
                         }
                     }
                 }

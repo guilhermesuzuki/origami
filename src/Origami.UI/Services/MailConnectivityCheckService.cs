@@ -12,7 +12,6 @@ namespace Origami.UI.Services
         protected readonly IEmailStatusRepository _emailStatus;
 
         public MailConnectivityCheckService(
-            Text text,
             IAppFacade appFacade,
             IEmailStatusRepository emailStatusRepository,
             ISuperRepository superRepository
