@@ -16,7 +16,7 @@ namespace Origami.UI.Controllers
         protected readonly IAppFacade _appFacade;
         protected readonly IDbContextFactory<OrigamiDbContext> _dbContextFactory;
         protected readonly IHttpContextAccessor _httpContextAccessor;
-        protected readonly IMemoryCache _memoryCache;
+        protected readonly IMyMemoryCache _myMemoryCache;
         protected readonly IPhysicalPageRepository _physicalPage;
         protected readonly IPhysicalPageViewRepository _physicalPageView;
         protected readonly ISuperRepository _superRepository;
@@ -27,7 +27,7 @@ namespace Origami.UI.Controllers
         /// </summary>
         /// <param name="post"></param>
         public ViewsController(
-            IMemoryCache memoryCache,
+            IMyMemoryCache memoryCache,
             IAppFacade appFacade,
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IHttpContextAccessor httpContextAccessor,
@@ -41,7 +41,7 @@ namespace Origami.UI.Controllers
             _appFacade = appFacade;
             _dbContextFactory = dbContextFactory;
             _httpContextAccessor = httpContextAccessor;
-            _memoryCache = memoryCache;
+            _myMemoryCache = memoryCache;
             _physicalPage = physicalPage;
             _physicalPageView = physicalPageView;
             _superRepository = superRepository;
@@ -195,12 +195,12 @@ namespace Origami.UI.Controllers
             tracking.Platform = client.OS.Family;
             tracking.Browser = client.UA.Family;
 
-            var key = $"Origami_UserLocation_{this._httpContextAccessor.HttpContext?.Connection.Id}";
-            tracking.Location = this._memoryCache.Get<Location>(key);
+            var key = $"Origami_UserLocation_{this.HttpContext.Connection.Id}";
+            tracking.Location = this._myMemoryCache.Get<Location>(key);
 
             if (tracking is OrigamiPhysicalPageView ppv)
             {
-                var user = this.HttpContext.Items["loggedIn-admin-user"] as OrigamiUser;
+                var user = this.HttpContext.Items["loggedin-admin-user"] as OrigamiUser;
                 if (user != null)
                 {
                     ppv.UserId = user.Id;

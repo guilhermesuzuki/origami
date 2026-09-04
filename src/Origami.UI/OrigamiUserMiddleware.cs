@@ -62,7 +62,7 @@ namespace Origami.UI
                         var nameId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
                         if (nameId != null && Guid.TryParse(nameId, out var id) == true)
                         {
-                            context.Items["loggedIn-admin-user"] = _userRepository.ReadFromCache().Id(id) ?? new();
+                            context.Items["loggedin-admin-user"] = _userRepository.ReadFromCache().Id(id) ?? new();
                         }
                     }
                 }

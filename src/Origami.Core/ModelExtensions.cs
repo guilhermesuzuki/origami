@@ -973,6 +973,17 @@ namespace Origami.Core
             return results.All(x => x.Ok);
         }
 
+        public static bool PathComesFromSoftwareReleaseFiles(this string virtualpath)
+        {
+            var splitPath = virtualpath.Split('/');
+            if (splitPath.Length < 6) return false;
+            if (splitPath[0].Like("files") == false) return false;
+            if (splitPath[1].Like("blogs") == false) return false;
+            if (splitPath[3].Like("software-releases") == false) return false;
+            if (splitPath[5].Like("files") == false) return false;
+            return true;
+        }
+
         /// <summary>
         /// Profile picture (or no-icon.png)
         /// </summary>
@@ -1497,6 +1508,7 @@ namespace Origami.Core
             if (value != null) return value.GetValueOrDefault().YesNo();
             return "Empty (Null)";
         }
+
         /// <summary>
         /// Extracts the message.
         /// </summary>
