@@ -25,8 +25,11 @@ namespace Origami.UI.Services
         protected override void TimeToDoSomething(object? sender, ElapsedEventArgs e)
         {
             var settings = _super.Settings.GetSettings();
-            _emailStatus.Status = settings.KeepTestingTheSmtpServerConnectivity ? _super.Emails.ConnectWithTheseSettings(settings) : null;
-            _appFacade.RefreshUI(OrigamiConstants.Events.EmailStatus);
+            if (settings.KeepTestingTheSmtpServerConnectivity)
+            {
+                _emailStatus.Status = _super.Emails.ConnectWithTheseSettings(settings);
+                _appFacade.RefreshUI(OrigamiConstants.Events.EmailStatus);
+            }
         }
     }
 }
