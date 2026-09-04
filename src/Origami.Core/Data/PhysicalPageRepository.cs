@@ -32,7 +32,8 @@ namespace Origami.Core.Data
             if (physicalPage == null)
             {
                 physicalPage = new() { Path = virtualPath, DateCreated = DateTime.UtcNow };
-                this.SmartSave(physicalPage.GetContext(), false);
+                var createResult = this.SmartSave(physicalPage.GetContext(), false);
+                if (createResult.Ok == false) return new Result<OrigamiPhysicalPageView>(view).Pull(createResult);
             }
 
             view.PhysicalPageId = physicalPage.Id;
