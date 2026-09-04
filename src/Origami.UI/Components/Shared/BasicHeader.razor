@@ -12,7 +12,7 @@
                 <li class="nano-id">
                     <MudTextField ReadOnly="true"
                                   FullWidth="true"
-                                  Immediate="true"
+                                  Disabled="true"
                                   AdornmentIcon="@Icons.Material.Filled.Key"
                                   Adornment="Adornment.Start"
                                   Value="@nanoId.NanoId"
@@ -23,7 +23,7 @@
                     <li class="version">
                         <MudTextField ReadOnly="true"
                                       FullWidth="true"
-                                      Immediate="true"
+                                      Disabled="true"
                                       AdornmentIcon="@Icons.Material.Filled.Info"
                                       Adornment="Adornment.Start"
                                       Value="@(version.Version.GetHexString())"
@@ -38,7 +38,7 @@
                 <li class="id">
                     <MudTextField ReadOnly="true"
                                   FullWidth="true"
-                                  Immediate="true"
+                                  Disabled="true"
                                   AdornmentIcon="@Icons.Material.Filled.Key"
                                   Adornment="Adornment.Start"
                                   Value="@(Entity.Id.ToString())"
@@ -49,7 +49,7 @@
                     <li class="version">
                         <MudTextField ReadOnly="true"
                                       FullWidth="true"
-                                      Immediate="true"
+                                      Disabled="true"
                                       AdornmentIcon="@Icons.Material.Filled.Info"
                                       Adornment="Adornment.Start"
                                       Value="@(version.Version.GetHexString())"
@@ -66,7 +66,7 @@
                     <li class="date-created">
                         <MudTextField ReadOnly="true"
                                       FullWidth="true"
-                                      Immediate="true"
+                                      Disabled="true"
                                       AdornmentIcon="@Icons.Material.Filled.CalendarMonth"
                                       Adornment="Adornment.Start"
                                       Value="@(dateCreated.DateCreated.GetText())"
@@ -78,7 +78,7 @@
                     <li class="date-modified">
                         <MudTextField ReadOnly="true"
                                       FullWidth="true"
-                                      Immediate="true"
+                                      Disabled="true"
                                       AdornmentIcon="@Icons.Material.Filled.CalendarMonth"
                                       Adornment="Adornment.Start"
                                       Value="@(dateModified.DateModified.GetText())"
@@ -95,22 +95,25 @@
                     <li class="date-published">
                         <MudTextField ReadOnly="true"
                                       FullWidth="true"
-                                      Immediate="true"
+                                      Disabled="true"
                                       AdornmentIcon="@Icons.Material.Filled.CalendarMonth"
                                       Adornment="Adornment.Start"
                                       Value="@((published, Text!).Published())"
                                       HelperText="@Text.Lower("Published")"></MudTextField>
                     </li>
                 }
-                <li class="author">
-                    <MudTextField ReadOnly="true"
-                                  FullWidth="true"
-                                  Immediate="true"
-                                  AdornmentIcon="@Icons.Material.Filled.Person"
-                                  Adornment="Adornment.Start"
-                                  Value="@(this._author.Username.ToLower())"
-                                  HelperText="@Text.Lower("Author")"></MudTextField>
-                </li>
+                @if (this.Entity is IAuthorId)
+                {
+                    <li class="author">
+                        <MudTextField ReadOnly="true"
+                                      FullWidth="true"
+                                      Disabled="true"
+                                      AdornmentIcon="@Icons.Material.Filled.Person"
+                                      Adornment="Adornment.Start"
+                                      Value="@(this._author.Username.ToLower())"
+                                      HelperText="@Text.Lower("Author")"></MudTextField>
+                    </li>
+                }
             </ul>
         }
     </div>
