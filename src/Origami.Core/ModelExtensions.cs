@@ -976,7 +976,7 @@ namespace Origami.Core
         public static bool PathComesFromSoftwareReleaseFiles(this string virtualpath)
         {
             var splitPath = virtualpath.Split('/', StringSplitOptions.RemoveEmptyEntries);
-            if (splitPath.Length < 6) return false;
+            if (splitPath.Length < 7) return false;
             if (splitPath[0].Like("files") == false) return false;
             if (splitPath[1].Like("blogs") == false) return false;
             if (splitPath[3].Like("software-releases") == false) return false;
