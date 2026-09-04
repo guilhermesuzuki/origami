@@ -8,37 +8,14 @@ using System.Text;
 
 namespace Origami.UI.Services
 {
-    public class EmptyFolderCleanUpService : BackgroundService
+    public class EmptyFolderCleanUpService : TimerService
     {
-        protected readonly ISuperRepository _super;
-        private readonly System.Timers.Timer _timer;
-
-        public EmptyFolderCleanUpService(ISuperRepository super)
+        public EmptyFolderCleanUpService(ISuperRepository superRepository) : base(superRepository)
         {
-            _super = super;
-            _timer = new() { AutoReset = true, Enabled = false, Interval = TimeSpan.FromMinutes(3).TotalMilliseconds };
-            _timer.Elapsed += TimeToDoSomething;
+        
         }
 
-        public override void Dispose()
-        {
-            base.Dispose();
-            _timer.Dispose();
-        }
-
-        public override Task StopAsync(CancellationToken cancellationToken)
-        {
-            _timer.Stop();
-            return Task.CompletedTask;
-        }
-
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
-        {
-            _timer.Start();
-            return Task.CompletedTask;
-        }
-
-        protected virtual void TimeToDoSomething(object? sender, System.Timers.ElapsedEventArgs e)
+        protected override void TimeToDoSomething(object? sender, System.Timers.ElapsedEventArgs e)
         {
             var blogs = this._super.Blogs.ReadFromCache();
 

@@ -55,7 +55,7 @@ namespace Origami.Core.Data
             var physicalPage = this.ReadFromCache().FirstOrDefault(x => x.Path == virtualPath);
             if (physicalPage != null)
             {
-                var db = this.DbContextFactory.CreateDbContext();
+                using var db = this.DbContextFactory.CreateDbContext();
                 var query = db.PhysicalPageViews.Where(x => x.PhysicalPageId == physicalPage.Id);
                 return query.LongCount();
             }
