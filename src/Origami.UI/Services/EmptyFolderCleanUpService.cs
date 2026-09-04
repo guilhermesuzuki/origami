@@ -84,14 +84,21 @@ namespace Origami.UI.Services
 
         private void _deleteEmptyFolders(OrigamiSystemDirectory directory)
         {
-            if (directory.Directories.Count() == 0 && directory.Files.Count() == 0)
-            {
-                Directory.Delete(directory.LocalPath);
-                return;
-            }
             foreach (var subDirectory in directory.Directories)
             {
                 this._deleteEmptyFolders(subDirectory);
+            }
+
+            if (directory.Directories.Count() == 0 && directory.Files.Count() == 0)
+            {
+                try
+                {
+                    Directory.Delete(directory.LocalPath);
+                }
+                catch
+                {
+                    // Ignore IO races (folder may have been populated/deleted concurrently)
+                }
             }
         }
     }
