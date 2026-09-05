@@ -98,7 +98,8 @@ namespace Origami.Core.Data
 
             foreach (var view in query2)
             {
-                this.MemoryCache.Set(view.Path, view.TotalViews);
+                var key = $"entities-views-count-path[{view.Path}]";
+                this.MemoryCache.Set(key, view.TotalViews);
             }
         }
     }

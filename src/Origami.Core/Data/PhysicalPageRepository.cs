@@ -52,12 +52,12 @@ namespace Origami.Core.Data
 
             if (hub.Ok)
             {
-lock (OrigamiConstants.SyncRoot)
-{
-    var key = $"entities-views-count-path[{virtualPath}]";
-    var count = this.MemoryCache.TryGetValue<long>(key, out var x) ? x : this.Views(virtualPath);
-    this.MemoryCache.Set(key, count + 1);
-}
+                lock (OrigamiConstants.SyncRoot)
+                {
+                    var key = $"entities-views-count-path[{virtualPath}]";
+                    var count = this.MemoryCache.TryGetValue<long>(key, out var x) ? x : this.Views(virtualPath);
+                    this.MemoryCache.Set(key, count + 1);
+                }
             }
 
             return hub;
@@ -65,7 +65,8 @@ lock (OrigamiConstants.SyncRoot)
 
         public long Views(string virtualPath)
         {
-            return this.MemoryCache.TryGetValue<long>(virtualPath, out long x) ? x : 0L;
+            var key = $"entities-views-count-path[{virtualPath}]";
+            return this.MemoryCache.TryGetValue<long>(key, out long x) ? x : 0L;
         }
     }
 }
