@@ -114,7 +114,8 @@ namespace Origami.UI.Controllers
                     ContentId = Guid.Parse(id),
                 };
                 this._fill(view, url, referrer);
-                _physicalPageView.SmartSave(view.GetContext(), false);
+                this._physicalPageView.SmartSave(view.GetContext(), false);
+                this._appFacade.RefreshUI(this.HttpContext.Connection.Id);
                 return Ok();
             }
 
@@ -161,7 +162,8 @@ namespace Origami.UI.Controllers
                     ContentId = null,
                 };
                 this._fill(view, url, referrer);
-                _physicalPageView.SmartSave(view.GetContext(), false);
+                this._physicalPageView.SmartSave(view.GetContext(), false);
+                this._appFacade.RefreshUI(this.HttpContext.Connection.Id);
                 return Ok();
             }
 

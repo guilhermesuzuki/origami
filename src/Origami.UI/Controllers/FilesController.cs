@@ -93,6 +93,7 @@ namespace Origami.UI.Controllers
                                     view.Admin = false;
                                     this._physicalPageRepository.View(virtualpath, view, this._userFacade.SocialProfile);
                                 }
+                                this._appFacade.RefreshUI(this.HttpContext.Connection.Id.ToString());
                             }
                         }
                         catch
