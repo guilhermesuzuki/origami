@@ -4,7 +4,10 @@
 @if (this.Entity != null)
 {
     var views = this.Super.PhysicalPageViews.GetViews(this.Entity);
-    <span class="content-view-counter @Class">@views</span>
+    <span class="content-views @Class pe-1 @(views > 0 ? null : "d-none")">
+        <i class="fa-solid fa-eye"></i>
+        @views
+    </span>
 }
 
 @code {
