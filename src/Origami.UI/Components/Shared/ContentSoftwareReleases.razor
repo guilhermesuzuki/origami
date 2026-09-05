@@ -26,7 +26,6 @@
                     </button>
                     @if (this.AppFacade.Admin == true)
                     {
-
                         <button class="cursor-pointer ms-3 text-danger" @onclick="() => this._removeFile(context.Item)">
                             <i class="bi bi-trash-fill"></i>
                         </button>
@@ -85,5 +84,18 @@
         }
 
         return [];
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        this.AppFacade.RefreshingTheUI += (sender, e) =>
+        {
+            if (sender is not string[] key) return;
+            if (key.Length != 2) return;
+            if (key[0] != this.HttpContextAccessor.HttpContext?.Connection.Id) return;
+            if (key[1] != OrigamiConstants.Events.UpdateCounters) return;
+            this.InvokeAsync(this.StateHasChanged);
+        };
     }
 }

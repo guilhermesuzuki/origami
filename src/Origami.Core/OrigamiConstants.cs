@@ -137,7 +137,7 @@ namespace Origami.Core
             public const string Restore = "restore";
             public const string RestoreComplete = "restore-complete";
             public const string RssFeeds = "rss-feeds";
-            public const string ShowCookieConsent = "show-cookie-consent";
+            public const string UpdateCounters = "update-counters";
         }
 
         public static readonly string[] BackgroundGradients =

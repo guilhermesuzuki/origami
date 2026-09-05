@@ -1,0 +1,28 @@
+﻿@inherits Basic
+@implements IEntityNull<OrigamiContent>
+
+@if (this.Entity != null)
+{
+    var views = this.Super.PhysicalPageViews.GetViews(this.Entity);
+    <span class="content-views @Class pe-1 @(views > 0 ? null : "d-none")">
+        <i class="fa-solid fa-eye"></i>
+        @views
+    </span>
+}
+
+@code {
+    [Parameter] public OrigamiContent? Entity { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        this.AppFacade.RefreshingTheUI += (sender, e) =>
+        {
+            if (sender is not string[] key) return;
+            if (key.Length != 2) return;
+            if (key[0] != this.HttpContextAccessor.HttpContext?.Connection.Id) return;
+            if (key[1] != OrigamiConstants.Events.UpdateCounters) return;
+            this.InvokeAsync(this.StateHasChanged);
+        };
+    }
+}

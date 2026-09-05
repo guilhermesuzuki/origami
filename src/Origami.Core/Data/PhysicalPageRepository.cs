@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Origami.Core.Models;
 
 namespace Origami.Core.Data
@@ -47,19 +48,25 @@ namespace Origami.Core.Data
                 view.SocialProfileId = socialProfile.Id;
             }
 
-            return this._physicalPageViewRepository.SmartSave(view.GetContext(), false);
+            var hub = this._physicalPageViewRepository.SmartSave(view.GetContext(), false);
+
+            if (hub.Ok)
+            {
+                lock (OrigamiConstants.SyncRoot)
+                {
+                    var key = $"entities-views-count-path[{virtualPath}]";
+                    var count = this.MemoryCache.TryGetValue<long>(key, out var x) ? x : this.Views(virtualPath);
+                    this.MemoryCache.Set(key, count + 1);
+                }
+            }
+
+            return hub;
         }
 
         public long Views(string virtualPath)
         {
-            var physicalPage = this.ReadFromCache().FirstOrDefault(x => x.Path == virtualPath);
-            if (physicalPage != null)
-            {
-                using var db = this.DbContextFactory.CreateDbContext();
-                var query = db.PhysicalPageViews.Where(x => x.PhysicalPageId == physicalPage.Id);
-                return query.LongCount();
-            }
-            return 0L;
+            var key = $"entities-views-count-path[{virtualPath}]";
+            return this.MemoryCache.TryGetValue<long>(key, out long x) ? x : 0L;
         }
     }
 }
