@@ -52,11 +52,12 @@ namespace Origami.Core.Data
 
             if (hub.Ok)
             {
-                lock (OrigamiConstants.SyncRoot)
-                {
-                    var count = this.MemoryCache.TryGetValue<long>(virtualPath, out long x) ? x : 0L;
-                    this.MemoryCache.Set(virtualPath, ++count);
-                }
+lock (OrigamiConstants.SyncRoot)
+{
+    var key = $"entities-views-count-path[{virtualPath}]";
+    var count = this.MemoryCache.TryGetValue<long>(key, out var x) ? x : this.Views(virtualPath);
+    this.MemoryCache.Set(key, count + 1);
+}
             }
 
             return hub;
