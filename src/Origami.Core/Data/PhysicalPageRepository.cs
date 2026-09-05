@@ -49,6 +49,7 @@ namespace Origami.Core.Data
             }
 
             var hub = this._physicalPageViewRepository.SmartSave(view.GetContext(), false);
+
             if (hub.Ok)
             {
                 lock (OrigamiConstants.SyncRoot)
@@ -57,6 +58,7 @@ namespace Origami.Core.Data
                     this.MemoryCache.Set(virtualPath, ++count);
                 }
             }
+
             return hub;
         }
 
