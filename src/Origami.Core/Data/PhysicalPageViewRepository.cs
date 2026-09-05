@@ -80,7 +80,6 @@ namespace Origami.Core.Data
         {
             using var db = DbContextFactory.CreateDbContext();
             var query = from view in db.Set<OrigamiPhysicalPageView>().AsNoTracking() group view by view.ContentId into g select new { ContentId = g.Key, TotalViews = g.LongCount() };
-            var options = new MemoryCacheEntryOptions() { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(3) };
 
             foreach (var view in query)
             {
@@ -88,7 +87,7 @@ namespace Origami.Core.Data
                 if (content != null)
                 {
                     var key = content.KeyForCachingViews();
-                    this.MemoryCache.Set(key, view.TotalViews, options);
+                    this.MemoryCache.Set(key, view.TotalViews);
                 }
             }
 
@@ -99,7 +98,7 @@ namespace Origami.Core.Data
 
             foreach (var view in query2)
             {
-                this.MemoryCache.Set(view.Path, view.TotalViews, options);
+                this.MemoryCache.Set(view.Path, view.TotalViews);
             }
         }
     }

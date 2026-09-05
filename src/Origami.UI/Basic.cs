@@ -105,12 +105,6 @@ namespace Origami.UI
         {
             base.OnInitialized();
             this.UserFacade.Changed += _currentBlogIdChangedMustRefreshUI;
-            this.AppFacade.RefreshingTheUI += (sender, e) =>
-            {
-                if (sender is not string cnx) return;
-                if (cnx != this.HttpContextAccessor.HttpContext?.Connection.Id) return;
-                this.InvokeAsync(this.StateHasChanged);
-            };
         }
 
         /// <summary>

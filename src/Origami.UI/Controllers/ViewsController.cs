@@ -115,7 +115,7 @@ namespace Origami.UI.Controllers
                 };
                 this._fill(view, url, referrer);
                 this._physicalPageView.SmartSave(view.GetContext(), false);
-                this._appFacade.RefreshUI(this.HttpContext.Connection.Id);
+                this._appFacade.RefreshUI(this.HttpContext.Connection.Id, OrigamiConstants.Events.UpdateCounters);
                 return Ok();
             }
 
@@ -163,7 +163,7 @@ namespace Origami.UI.Controllers
                 };
                 this._fill(view, url, referrer);
                 this._physicalPageView.SmartSave(view.GetContext(), false);
-                this._appFacade.RefreshUI(this.HttpContext.Connection.Id);
+                this._appFacade.RefreshUI(this.HttpContext.Connection.Id, OrigamiConstants.Events.UpdateCounters);
                 return Ok();
             }
 

@@ -85,4 +85,17 @@
 
         return [];
     }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        this.AppFacade.RefreshingTheUI += (sender, e) =>
+        {
+            if (sender is not string[] key) return;
+            if (key.Length != 2) return;
+            if (key[0] != this.HttpContextAccessor.HttpContext?.Connection.Id) return;
+            if (key[1] != OrigamiConstants.Events.UpdateCounters) return;
+            this.InvokeAsync(this.StateHasChanged);
+        };
+    }
 }
