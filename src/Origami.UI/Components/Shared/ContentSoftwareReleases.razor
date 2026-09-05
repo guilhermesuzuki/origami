@@ -1,6 +1,7 @@
 ﻿@using Origami.Core.Models.FileSystem
 @inherits Basic
 @implements IEntityNull<OrigamiSoftwareRelease>
+@implements IDisposable
 
 <div class="content-software-releases @Class">
     <MudDataGrid T="OrigamiSystemFile" Class="border mt-3" SortMode="SortMode.None" Filterable="false" Items="_getFiles()">
@@ -26,7 +27,6 @@
                     </button>
                     @if (this.AppFacade.Admin == true)
                     {
-
                         <button class="cursor-pointer ms-3 text-danger" @onclick="() => this._removeFile(context.Item)">
                             <i class="bi bi-trash-fill"></i>
                         </button>
@@ -85,5 +85,25 @@
         }
 
         return [];
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        this.AppFacade.RefreshingTheUI += this._onRefreshingTheUI;
+    }
+
+    public void Dispose()
+    {
+        this.AppFacade.RefreshingTheUI -= this._onRefreshingTheUI;
+    }
+
+    private void _onRefreshingTheUI(object? sender, object e)
+    {
+        if (sender is not string[] key) return;
+        if (key.Length != 2) return;
+        if (key[0] != this.HttpContextAccessor.HttpContext?.Connection.Id) return;
+        if (key[1] != OrigamiConstants.Events.UpdateCounters) return;
+        this.InvokeAsync(this.StateHasChanged);
     }
 }

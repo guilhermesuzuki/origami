@@ -4,7 +4,6 @@
 @if (this.Entity != null)
 {
     var header = this.Entity.Get().HeaderImage.NoHeader();
-    var views = this.Super.PhysicalPageViews.GetViews(Entity);
     var comments = this.Super.ContentComments.GetComments(Entity);
 
     var rating = Math.Round(this.Super.ContentRatings.CalculateRating(this.Entity), 1, MidpointRounding.ToEven);
@@ -51,11 +50,8 @@
                             @Entity.DateReleased.Humanize()
                         </span>
                     }
-                    <span class="content-views pe-1 @(views > 0 ? null : "d-none")">
-                        <i class="fa-solid fa-eye"></i>
-                        @views
-                    </span>
-                    <span class="content-views pe-1 @(comments > 0 ? null : "d-none")">
+                    <ContentViewCounter Entity="Entity"></ContentViewCounter>
+                    <span class="content-comments pe-1 @(comments > 0 ? null : "d-none")">
                         <i class="fa-solid fa-comment"></i>
                         @comments
                     </span>
