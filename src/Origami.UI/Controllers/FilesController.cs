@@ -196,7 +196,7 @@ namespace Origami.UI.Controllers
 
                 using var resized = image.ThumbnailImage(w, h, crop: NetVips.Enums.Interesting.None);
 
-                resized.WriteToFile(finalLocation, new VOption { { "Q", 60 } });
+resized.WriteToFile(finalLocation, new VOption { { "Q", 60 }, { "strip", true } });
 
                 return true;
             }
