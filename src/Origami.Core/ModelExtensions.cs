@@ -3,7 +3,6 @@ using CloneExtensions;
 using FluentValidation;
 using Origami.Core.Models;
 using Origami.Core.Models.Settings;
-using SixLabors.ImageSharp;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -524,17 +523,6 @@ namespace Origami.Core
             return $"/blogs/{blog.Slug}/categories/{category.Slug}/{entity?.NanoId}";
         }
 
-        public static (string Extension, string MimeType) GetImageFormat(this byte[] imageBytes)
-        {
-            using var stream = new MemoryStream(imageBytes);
-            using var image = Image.Load(stream);
-
-            var format = image.Metadata.DecodedImageFormat
-                ?? throw new InvalidOperationException("Unable to determine image format.");
-
-            return (format.Name, format.DefaultMimeType);
-        }
-
         /// <summary>
         /// Extracts the exception message, traversing diving into the inner exceptions.
         /// </summary>
@@ -830,12 +818,8 @@ namespace Origami.Core
 
             try
             {
-                using var image = Image.Load(imageBytes);
+                using var image = NetVips.Image.NewFromBuffer(imageBytes);
                 return true;
-            }
-            catch (UnknownImageFormatException)
-            {
-                return false;
             }
             catch
             {

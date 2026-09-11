@@ -5,6 +5,7 @@
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+		<Platforms>x64</Platforms>
 	</PropertyGroup>
 
 	<PropertyGroup>

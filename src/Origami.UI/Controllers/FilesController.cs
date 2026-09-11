@@ -1,16 +1,11 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using NetVips;
 using Origami.Core;
 using Origami.Core.Data;
 using Origami.Core.Models;
 using Origami.Core.Models.FileSystem;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats;
-using SixLabors.ImageSharp.Formats.Jpeg;
-using SixLabors.ImageSharp.Formats.Png;
-using SixLabors.ImageSharp.Formats.Webp;
-using SixLabors.ImageSharp.Processing;
 using System.Security.Cryptography;
 using System.Text;
 using UAParser;
@@ -157,12 +152,12 @@ namespace Origami.UI.Controllers
                 _directoryRepository.Create(directoryForScalingImages);
 
                 /*scaled file*/
-                var scaleImageFilename = $"{hash}.{file.FileSize}.{eSize}{file.Extension}";
+                var scaleImageFilename = $"{hash}.{file.FileSize}.{eSize}.webp";
                 var finalPath = $"{directoryForScalingImages}{scaleImageFilename}";
                 var scaleImage = _fileRepository.GetFile(finalPath);
 
                 //scale image does not exist or is out dated
-                if (scaleImage == null || scaleImage.DateCreated != file.DateCreated || scaleImage.DateModified != file.DateModified)
+                if (scaleImage == null || scaleImage.DateCreated < file.DateCreated || scaleImage.DateModified < file.DateModified)
                 {
                     var fileScaled = await ScalePictureAsync(file, scaleImageFilename, eSize);
                     scaleImage = fileScaled ? _fileRepository.GetFile(finalPath) : null;
@@ -193,48 +188,16 @@ namespace Origami.UI.Controllers
 
             try
             {
-                using (var memstream = new MemoryStream(file.FileContents) { })
-                using (Image image = Image.Load(memstream))
-                {
-                    var w = (short)eSize;
-                    var f = 1 - (float)(image.Size.Width - (short)eSize) / image.Size.Width;
-                    var h = (int)(image.Size.Height * f);
+                using var image = NetVips.Image.NewFromFile(file.LocalPath);
 
-                    image.Mutate(x => x.Resize(w, h));
+                var w = (short)eSize;
+                var f = 1 - (float)(image.Width - (short)eSize) / image.Width;
+                var h = (int)(image.Height * f);
 
-                    IImageEncoder? encoder = file.Extension.ToLower() switch
-                    {
-                        ".jpg" or ".jpeg" => new JpegEncoder
-                        {
-                            ColorType = JpegEncodingColor.Rgb,
-                            Interleaved = true,
-                            Quality = 50,
-                            SkipMetadata = true,
-                        },
-                        ".png" => new PngEncoder
-                        {
-                            BitDepth = PngBitDepth.Bit8,
-                            CompressionLevel = PngCompressionLevel.DefaultCompression,
-                            SkipMetadata = true,
-                            TransparentColorMode = PngTransparentColorMode.Preserve,
-                        },
-                        ".webp" => new WebpEncoder
-                        {
-                            Quality = 60,
-                            SkipMetadata = true,
-                        },
-                        _ => null,
-                    };
+                using var resized = image.ThumbnailImage(w, h, crop: NetVips.Enums.Interesting.None);
 
-                    if (encoder != null)
-                    {
-                        await image.SaveAsync(finalLocation, encoder);
-                    }
-                    else
-                    {
-                        await image.SaveAsync(finalLocation);
-                    }
-                }
+                resized.WriteToFile(finalLocation, new VOption { { "Q", 60 } });
+
                 return true;
             }
             catch

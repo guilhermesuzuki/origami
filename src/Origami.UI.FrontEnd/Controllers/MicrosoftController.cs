@@ -10,7 +10,6 @@ using Microsoft.IdentityModel.Validators;
 using Origami.Core;
 using Origami.Core.Data;
 using Origami.Core.Models;
-using SixLabors.ImageSharp;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Net.Http.Headers;
@@ -122,8 +121,9 @@ namespace Origami.UI.FrontEnd.Controllers
                 var photoBytes = await GetProfilePhotoAsync(accessToken);
                 if (photoBytes != null)
                 {
-                    using var image = Image.Load(photoBytes);
-                    user.ProfilePicture = image.ToBase64String(Image.DetectFormat(photoBytes));
+                    using var image = NetVips.Image.NewFromBuffer(photoBytes);
+                    byte[] bytes = image.WriteToBuffer(".webp");
+                    user.ProfilePicture = $"data:image/webp;base64,{Convert.ToBase64String(bytes)}";
                 }
 
                 var context = new DataOperationContext<OrigamiSocialProfile>(OrigamiUser.AnonymousUser, DateTime.UtcNow, user);
