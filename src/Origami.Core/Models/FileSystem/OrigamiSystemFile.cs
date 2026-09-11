@@ -41,9 +41,15 @@ namespace Origami.Core.Models.FileSystem
         protected Guid _id = Guid.NewGuid();
 
         /// <summary>
-        /// list of valid image extensions
+        /// Represents a collection of file extensions commonly associated with image formats.
         /// </summary>
-        protected string[] _imageExtensions = { ".bmp", ".jpg", ".jpeg", ".png", ".tiff", ".webp" };
+        /// <remarks>The collection is case-insensitive, allowing comparisons to be performed without
+        /// regard to letter casing. Supported extensions include: .jpg, .jpeg, .png, .gif, .bmp, .tiff, .webp, and
+        /// .tga.</remarks>
+        public static readonly HashSet<string> ImageExtensions = new(StringComparer.OrdinalIgnoreCase)
+        {
+            ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".tiff", ".webp", ".tga"
+        };
 
         /// <summary>
         /// the full path of the file, internal field only, use file path for external calls. reduces security concerns
@@ -209,7 +215,7 @@ namespace Origami.Core.Models.FileSystem
         /// </summary>
         public bool IsImage
         {
-            get => _imageExtensions.Any(x => x.ToLower() == Extension.ToLower());
+            get => ImageExtensions.Contains(Extension);
         }
 
         /// <summary>

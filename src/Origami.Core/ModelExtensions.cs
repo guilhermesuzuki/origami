@@ -2,6 +2,7 @@
 using CloneExtensions;
 using FluentValidation;
 using Origami.Core.Models;
+using Origami.Core.Models.FileSystem;
 using Origami.Core.Models.Settings;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -23,17 +24,6 @@ namespace Origami.Core
     /// </summary>
     public static class ModelExtensions
     {
-        /// <summary>
-        /// Represents a collection of file extensions commonly associated with image formats.
-        /// </summary>
-        /// <remarks>The collection is case-insensitive, allowing comparisons to be performed without
-        /// regard to letter casing. Supported extensions include: .jpg, .jpeg, .png, .gif, .bmp, .tiff, .webp, and
-        /// .tga.</remarks>
-        private static readonly HashSet<string> ImageExtensions = new(StringComparer.OrdinalIgnoreCase)
-        {
-            ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".tiff", ".webp", ".tga"
-        };
-
         /// <summary>
         /// Hex Digits
         /// </summary>
@@ -766,7 +756,7 @@ namespace Origami.Core
         public static bool IsImage(this string fileName)
         {
             var extension = Path.GetExtension(fileName);
-            return !string.IsNullOrEmpty(extension) && ImageExtensions.Contains(extension);
+            return !string.IsNullOrEmpty(extension) && OrigamiSystemFile.ImageExtensions.Contains(extension);
         }
 
         /// <summary>
