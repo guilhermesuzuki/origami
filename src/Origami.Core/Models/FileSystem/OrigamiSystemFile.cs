@@ -43,7 +43,7 @@ namespace Origami.Core.Models.FileSystem
         /// <summary>
         /// list of valid image extensions
         /// </summary>
-        protected string[] _imageExtensions = { ".bmp", ".jpg", ".jpeg", ".png", ".tiff" };
+        protected string[] _imageExtensions = { ".bmp", ".jpg", ".jpeg", ".png", ".tiff", ".webp" };
 
         /// <summary>
         /// the full path of the file, internal field only, use file path for external calls. reduces security concerns
