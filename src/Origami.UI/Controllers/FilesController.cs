@@ -157,7 +157,7 @@ namespace Origami.UI.Controllers
                 var scaleImage = _fileRepository.GetFile(finalPath);
 
                 //scale image does not exist or is out dated
-                if (scaleImage == null || scaleImage.DateCreated < file.DateCreated || scaleImage.DateModified < file.DateModified)
+                if (scaleImage == null)
                 {
                     var fileScaled = await ScalePictureAsync(file, scaleImageFilename, eSize);
                     scaleImage = fileScaled ? _fileRepository.GetFile(finalPath) : null;
