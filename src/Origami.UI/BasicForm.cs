@@ -297,7 +297,8 @@ namespace Origami.UI
                 basePath = Path.Combine(basePath, subDirectoryName);
             }
 
-            string tempPath = Path.Combine(basePath, $"{Guid.NewGuid()}.tmp");
+            string extension = Path.GetExtension(filename);
+            string tempPath = Path.Combine(basePath, $"{Guid.NewGuid()}.tmp{extension}");
             string finalPath = Path.Combine(basePath, filename);
 
             try
