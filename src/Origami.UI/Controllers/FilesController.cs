@@ -152,7 +152,7 @@ namespace Origami.UI.Controllers
                 _directoryRepository.Create(directoryForScalingImages);
 
                 /*scaled file*/
-                var scaleImageFilename = $"{hash}.{file.FileSize}.{eSize}.webp";
+var scaleImageFilename = $"{hash}.{file.FileSize}.{file.DateModified?.Ticks ?? file.DateCreated.Ticks}.{eSize}.webp";
                 var finalPath = $"{directoryForScalingImages}{scaleImageFilename}";
                 var scaleImage = _fileRepository.GetFile(finalPath);
 
