@@ -407,7 +407,7 @@ namespace Origami.UI
                     }
 
                     var bytes = base64Logo.Base64ImageToBytes();
-                    var image = NetVips.Image.NewFromBuffer(bytes);
+using var image = NetVips.Image.NewFromBuffer(bytes);
                     Directory.CreateDirectory(lpath);
                     image.WriteToFile(lpath + filename);
                     header.HeaderImage = wpath + filename;
