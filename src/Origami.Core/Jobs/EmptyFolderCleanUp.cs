@@ -12,6 +12,7 @@ namespace Origami.Core.Jobs
         {
             Logger.LogInformation("Executing EmptyFolderCleanUp job.");
 
+            var directories = new List<string>();
             var blogs = Super.Blogs.ReadFromCache();
 
             foreach (var blog in blogs)
@@ -20,24 +21,21 @@ namespace Origami.Core.Jobs
                 var posts = $"/files/blogs/{blog.NanoId}/posts/";
                 var softwareReleases = $"/files/blogs/{blog.NanoId}/software-releases/";
                 var videos = $"/files/blogs/{blog.NanoId}/videos/";
-                var specialPages = $"/files/special-pages/";
 
-                List<string> directories = new List<string>
-                {
-                    pages,
-                    posts,
-                    softwareReleases,
-                    videos,
-                    specialPages,
-                };
+                directories.Add(pages);
+                directories.Add(posts);
+                directories.Add(softwareReleases);
+                directories.Add(videos);
+            }
 
-                foreach (var directory in directories)
+            directories.Add($"/files/special-pages/");
+
+            foreach (var directory in directories)
+            {
+                if (Super.Directories.DirectoryExists(directory) == true)
                 {
-                    if (Super.Directories.DirectoryExists(directory) == true)
-                    {
-                        var dir = Super.Directories.GetDirectory(directory);
-                        dir.Directories.Each(this._deleteEmptyFolders);
-                    }
+                    var dir = Super.Directories.GetDirectory(directory);
+                    dir.Directories.Each(this._deleteEmptyFolders);
                 }
             }
 
