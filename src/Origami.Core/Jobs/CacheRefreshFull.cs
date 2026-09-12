@@ -7,6 +7,7 @@ using System.Text;
 
 namespace Origami.Core.Jobs
 {
+    [DisallowConcurrentExecution]
     public class CacheRefreshFull(ISuperRepository Super, ILogger<CacheRefreshFull> Logger) : IJob
     {
         public ValueTask Execute(IJobExecutionContext context, CancellationToken cancellationToken = default)
