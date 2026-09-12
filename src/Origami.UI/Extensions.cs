@@ -300,10 +300,6 @@ namespace Origami.UI
 
             var services = builder.Services.BuildServiceProvider();
 
-            var super = services.GetRequiredService<ISuperRepository>();
-            super.RefreshAllRepositories();
-            super.RefreshAllSearchIndexes();
-
             //adds the database configuration
             builder.Configuration.AddDatabase(services);
 
@@ -446,6 +442,10 @@ namespace Origami.UI
             if (openTelemetry) app.MapPrometheusScrapingEndpoint();
 
             app.MapRazorComponents<T>().AddInteractiveServerRenderMode();
+
+            var super = app.Services.GetRequiredService<ISuperRepository>();
+            super.RefreshAllRepositories();
+            super.RefreshAllSearchIndexes();
 
             if (admin == true)
             {
