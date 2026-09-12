@@ -74,17 +74,6 @@ namespace Origami.Core.Models.FileSystem
         };
 
         /// <summary>
-        /// Determines whether the specified file path corresponds to an image file based on its extension.
-        /// </summary>
-        /// <param name="filePath"></param>
-        /// <returns></returns>
-        public static bool IsFileAnImage(string filePath)
-        {
-            var extension = Path.GetExtension(filePath);
-            return ImageExtensions.Contains(extension);
-        }
-
-        /// <summary>
         /// Default constructor
         /// </summary>
         /// <param name="localPath"></param>
@@ -276,6 +265,17 @@ namespace Origami.Core.Models.FileSystem
                 var webPath = WebPath.TrimEnd('/');
                 return webPath.Substring(0, webPath.LastIndexOf('/'));
             }
+        }
+
+        /// <summary>
+        /// Determines whether the specified file path corresponds to an image file based on its extension.
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public static bool IsFileAnImage(string filePath)
+        {
+            var extension = Path.GetExtension(filePath);
+            return ImageExtensions.Contains(extension);
         }
     }
 }
