@@ -808,7 +808,7 @@ namespace Origami.Core
             try
             {
                 using var image = NetVips.Image.NewFromBuffer(imageBytes, "", NetVips.Enums.Access.Sequential);
-                var inmemory = image.WriteToMemory<byte>();
+                _ = image.WriteToMemory<byte>();
                 return true;
             }
             catch
