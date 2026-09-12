@@ -14,7 +14,7 @@ var app = builder.FoldTheOrigami<App>(
     admin: true,
     injectServices: () =>
     {
-        builder.AddQuartz(q =>
+		builder.Services.AddQuartz(q =>
         {
             q.ScheduleJob<MailConnectivityCheck>(trigger => trigger
                 .WithIdentity(nameof(MailConnectivityCheck))
