@@ -288,7 +288,7 @@ namespace Origami.UI
             {
                 q.ScheduleJob<CacheRefreshFull>(trigger => trigger
                     .WithIdentity(nameof(CacheRefreshFull))
-                    .WithCronSchedule("0 0/3 * * * ?")); // every 3 minutes
+                    .WithCronSchedule("0 0/3 * * * ?"));
             });
 
             builder.AddQuartzHostedService(options =>

@@ -18,11 +18,15 @@ var app = builder.FoldTheOrigami<App>(
         {
             q.ScheduleJob<MailConnectivityCheck>(trigger => trigger
                 .WithIdentity(nameof(MailConnectivityCheck))
-                .WithCronSchedule("0 0/5 * * * ?")); // every 5 minutes
+                .WithCronSchedule("0 0/5 * * * ?"));
 
             q.ScheduleJob<EmptyFolderCleanUp>(trigger => trigger
                 .WithIdentity(nameof(EmptyFolderCleanUp))
-                .WithCronSchedule("0 0/10 * * * ?")); // every 10 minutes
+                .WithCronSchedule("0 0/10 * * * ?"));
+
+            q.ScheduleJob<ScalingFolderCleanUp>(trigger => trigger
+                .WithIdentity(nameof(ScalingFolderCleanUp))
+                .WithSimpleSchedule(x => x.WithInterval(TimeSpan.FromDays(10)).RepeatForever()));
         });
 
         builder.Services.AddScoped<ILoginHelpMeRules, LoginHelpMeRules>();
