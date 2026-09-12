@@ -284,7 +284,7 @@ namespace Origami.UI
 
             builder.Services.AddHealthChecks();
 
-            builder.AddQuartz(q =>
+			builder.Services.AddQuartz(q =>
             {
                 q.ScheduleJob<CacheRefreshFull>(trigger => trigger
                     .WithIdentity(nameof(CacheRefreshFull))
