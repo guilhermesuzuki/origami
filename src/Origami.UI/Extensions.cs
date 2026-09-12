@@ -291,7 +291,7 @@ namespace Origami.UI
                     .WithCronSchedule("0 0/3 * * * ?"));
             });
 
-            builder.AddQuartzHostedService(options =>
+			builder.Services.AddQuartzHostedService(options =>
             {
                 options.WaitForJobsToComplete = true;
             });
