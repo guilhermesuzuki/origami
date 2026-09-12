@@ -313,6 +313,9 @@ namespace Origami.UI
                     {
                         var newFilename = $"{Path.GetFileNameWithoutExtension(filename)}.{Nanoid.Generate(Nanoid.Alphabets.UppercaseLettersAndDigits, 4)}{Path.GetExtension(filename)}";
                         finalPath = Path.Combine(basePath, newFilename);
+                    }
+                    if (File.Exists(finalPath) == true)
+                    {
                         throw new Exception("File already exists");
                     }
                     return ValueTask.CompletedTask;
@@ -408,7 +411,7 @@ namespace Origami.UI
                     }
 
                     var bytes = base64Logo.Base64ImageToBytes();
-using var image = NetVips.Image.NewFromBuffer(bytes);
+                    using var image = NetVips.Image.NewFromBuffer(bytes);
                     Directory.CreateDirectory(lpath);
                     image.WriteToFile(lpath + filename);
                     header.HeaderImage = wpath + filename;

@@ -152,7 +152,7 @@ namespace Origami.UI.Controllers
                 _directoryRepository.Create(directoryForScalingImages);
 
                 /*scaled file*/
-var scaleImageFilename = $"{hash}.{file.FileSize}.{file.DateModified?.Ticks ?? file.DateCreated.Ticks}.{eSize}.webp";
+                var scaleImageFilename = $"{hash}.{file.FileSize}.{file.DateModified?.Ticks ?? file.DateCreated.Ticks}.{eSize}.webp";
                 var finalPath = $"{directoryForScalingImages}{scaleImageFilename}";
                 var scaleImage = _fileRepository.GetFile(finalPath);
 
@@ -196,7 +196,7 @@ var scaleImageFilename = $"{hash}.{file.FileSize}.{file.DateModified?.Ticks ?? f
 
                 using var resized = image.ThumbnailImage(w, h, crop: NetVips.Enums.Interesting.None);
 
-resized.WriteToFile(finalLocation, new VOption { { "Q", 60 }, { "strip", true } });
+                resized.WriteToFile(finalLocation, new VOption { { "Q", 60 }, { "strip", true } });
 
                 return true;
             }
