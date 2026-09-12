@@ -1,7 +1,5 @@
 ﻿using FluentValidation;
 using Origami.Core.Models;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
 using System.Globalization;
 
 namespace Origami.Core.Validators
@@ -120,22 +118,7 @@ namespace Origami.Core.Validators
                 {
                     if (header.StartsWith("data:image/") == true)
                     {
-                        var base64Data = header.Contains(",") ? header[(header.IndexOf(",") + 1)..] : header;
-                        try
-                        {
-                            // Try decoding from Base64
-                            var imageBytes = Convert.FromBase64String(base64Data);
-
-                            // Validate with ImageSharp (will throw if not a valid image)
-                            using var image = Image.Load<Rgba32>(imageBytes);
-
-                            // Ok
-                            return true;
-                        }
-                        catch
-                        {
-                            return false;
-                        }
+                        return header.IsValidBase64Image();
                     }
                     if (header.Has() == true)
                     {
