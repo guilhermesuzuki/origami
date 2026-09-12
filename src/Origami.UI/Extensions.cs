@@ -24,10 +24,11 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Origami.Core;
 using Origami.Core.Data;
+using Origami.Core.Jobs;
 using Origami.Core.Models;
 using Origami.Core.Models.Jwt;
 using Origami.Core.Validators;
-using Origami.UI.Services;
+using Quartz;
 using Serilog;
 using System.Buffers;
 using System.Globalization;
@@ -202,8 +203,6 @@ namespace Origami.UI
             });
 
             builder.Services.AddScoped<CustomHeadContentService>();
-            builder.Services.AddHostedService<CacheRefreshServiceFull>();
-            builder.Services.AddHostedService<MailConnectivityCheckService>();
             builder.Services.AddSingleton<CircuitHandler, OrigamiCircuitHandler>();
             builder.Services.AddScoped<HtmlRenderer>();
 
@@ -285,9 +284,29 @@ namespace Origami.UI
 
             builder.Services.AddHealthChecks();
 
+            builder.AddQuartz(q =>
+            {
+                q.ScheduleJob<CacheRefreshFull>(trigger => trigger
+                    .WithIdentity(nameof(CacheRefreshFull))
+                    .WithCronSchedule("0 0/3 * * * ?")); // every 3 minutes
+
+                q.ScheduleJob<MailConnectivityCheck>(trigger => trigger
+                    .WithIdentity(nameof(MailConnectivityCheck))
+                    .WithCronSchedule("0 0/5 * * * ?")); // every 5 minutes
+            });
+
+            builder.AddQuartzHostedService(options =>
+            {
+                options.WaitForJobsToComplete = true;
+            });
+
             if (OperatingSystem.IsWindows()) builder.Host.UseWindowsService();
 
             var services = builder.Services.BuildServiceProvider();
+
+            var super = services.GetRequiredService<ISuperRepository>();
+            super.RefreshAllRepositories();
+            super.RefreshAllSearchIndexes();
 
             //adds the database configuration
             builder.Configuration.AddDatabase(services);
