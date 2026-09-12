@@ -755,8 +755,7 @@ namespace Origami.Core
 
         public static bool IsImage(this string fileName)
         {
-            var extension = Path.GetExtension(fileName);
-            return !string.IsNullOrEmpty(extension) && OrigamiSystemFile.IsFileAnImage(fileName);
+            return OrigamiSystemFile.IsFileAnImage(fileName);
         }
 
         /// <summary>
@@ -808,7 +807,8 @@ namespace Origami.Core
 
             try
             {
-                using var image = NetVips.Image.NewFromBuffer(imageBytes);
+                using var image = NetVips.Image.NewFromBuffer(imageBytes, "", NetVips.Enums.Access.Sequential);
+                var inmemory = image.WriteToMemory<byte>();
                 return true;
             }
             catch
