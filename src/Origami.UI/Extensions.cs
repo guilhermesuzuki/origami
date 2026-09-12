@@ -289,10 +289,6 @@ namespace Origami.UI
                 q.ScheduleJob<CacheRefreshFull>(trigger => trigger
                     .WithIdentity(nameof(CacheRefreshFull))
                     .WithCronSchedule("0 0/3 * * * ?")); // every 3 minutes
-
-                q.ScheduleJob<MailConnectivityCheck>(trigger => trigger
-                    .WithIdentity(nameof(MailConnectivityCheck))
-                    .WithCronSchedule("0 0/5 * * * ?")); // every 5 minutes
             });
 
             builder.AddQuartzHostedService(options =>

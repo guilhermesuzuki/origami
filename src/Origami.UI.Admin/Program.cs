@@ -16,6 +16,10 @@ var app = builder.FoldTheOrigami<App>(
     {
         builder.AddQuartz(q =>
         {
+            q.ScheduleJob<MailConnectivityCheck>(trigger => trigger
+                .WithIdentity(nameof(MailConnectivityCheck))
+                .WithCronSchedule("0 0/5 * * * ?")); // every 5 minutes
+
             q.ScheduleJob<EmptyFolderCleanUp>(trigger => trigger
                 .WithIdentity(nameof(EmptyFolderCleanUp))
                 .WithCronSchedule("0 0/10 * * * ?")); // every 10 minutes
