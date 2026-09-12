@@ -756,7 +756,7 @@ namespace Origami.Core
         public static bool IsImage(this string fileName)
         {
             var extension = Path.GetExtension(fileName);
-            return !string.IsNullOrEmpty(extension) && OrigamiSystemFile.ImageExtensions.Contains(extension);
+            return !string.IsNullOrEmpty(extension) && OrigamiSystemFile.IsFileAnImage(fileName);
         }
 
         /// <summary>
