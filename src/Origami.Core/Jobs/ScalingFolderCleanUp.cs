@@ -15,7 +15,10 @@ namespace Origami.Core.Jobs
 
             lock (OrigamiConstants.SyncRoot)
             {
-                System.IO.Directory.Delete(scalingPath);
+                if (System.IO.Directory.Exists(scalingPath))
+                {
+                    System.IO.Directory.Delete(scalingPath, recursive: true);
+                }
                 System.IO.Directory.CreateDirectory(scalingPath);
             }
 
