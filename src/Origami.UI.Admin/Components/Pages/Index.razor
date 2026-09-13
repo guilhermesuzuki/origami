@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using System.ComponentModel
 @inherits BasicAdmin
 @implements IId
 @inject IDashboardRepository _dashboard
@@ -558,26 +559,26 @@
         return new GridData<OrigamiUserView> { Items = result.Rows, TotalItems = (int)result.NumberOfRows, };
     }
 
-    /// <summary>
-    /// Has the Blog property changed in UserFacade?
-    /// </summary>
-    protected virtual void HasBlogChangedInUserFacade()
+    public override void Dispose()
     {
-        this.UserFacade.Changed += async (sender, p) =>
+        this.UserFacade.Changed -= this.BlogChangedNeedsToReloadCharts;
+        base.Dispose();
+    }
+
+    protected virtual async void BlogChangedNeedsToReloadCharts(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName.Like(nameof(IUserFacade.BlogId)) == true)
         {
-            if (p.PropertyName.Like(nameof(IUserFacade.BlogId)) == true)
-            {
-                await this._loadCharts();
-                if (this._userViews != null) await this._userViews.ReloadServerData();
-                await this.InvokeAsync(this.StateHasChanged);
-            }
-        };
+            await this._loadCharts();
+            if (this._userViews != null) await this._userViews.ReloadServerData();
+            await this.InvokeAsync(this.StateHasChanged);
+        }
     }
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        this.HasBlogChangedInUserFacade();
+        this.UserFacade.Changed += this.BlogChangedNeedsToReloadCharts;
     }
 
     protected override async Task OnInitializedAsync()

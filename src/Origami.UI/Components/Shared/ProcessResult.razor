@@ -100,26 +100,37 @@ else
 
     protected override void OnInitialized()
     {
-        this.UserFacade.Changed += (sender, p) =>
-        {
-            if (p.PropertyName == nameof(IUserFacade.Results))
-            {
-                this.LoadTimer();
-                this.InvokeAsync(this.StateHasChanged);
-            }
-        };
-
+        this.UserFacade.Changed += this.UserFacadeResultsChanged;
         base.OnInitialized();
     }
 
-    protected virtual void TimerHasElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    public override void Dispose()
+    {
+        this._timer.Elapsed -= this.TimerHasElapsed;
+        this._timer.Stop();
+        this._timer.Dispose();
+        this.UserFacade.Changed -= this.UserFacadeResultsChanged;
+        base.Dispose();
+    }
+
+    protected virtual async void UserFacadeResultsChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(IUserFacade.Results))
+        {
+            this.LoadTimer();
+            await this.InvokeAsync(this.StateHasChanged);
+        }
+    }
+
+    protected virtual async void TimerHasElapsed(object? sender, System.Timers.ElapsedEventArgs e)
     {
         this._secondsToDisappear -= 1;
-        this.InvokeAsync(this.StateHasChanged);
+        await this.InvokeAsync(this.StateHasChanged);
+
         if (this._secondsToDisappear <= 0)
         {
             this.UserFacade.Results.Clear();
-            this.InvokeAsync(this.StateHasChanged);
+            await this.InvokeAsync(this.StateHasChanged);
             _timer.Stop();
         }
     }

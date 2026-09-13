@@ -36,7 +36,7 @@ namespace Origami.Core.Models
             _nanoId = NanoidDotNet.Nanoid.Generate(NanoidDotNet.Nanoid.Alphabets.LettersAndDigits, size: 8);
         }
 
-        public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) => { };
+        public event EventHandler<PropertyChangedEventArgs> Changed = null!;
 
         public string? AdditionalInfo
         {
@@ -102,6 +102,7 @@ namespace Origami.Core.Models
             get => _isSpam;
             set => this.Set(ref _isSpam, value, Changed);
         }
+
         /// <summary>
         /// Comment was moderated by a social profile (ID, FK)
         /// </summary>
