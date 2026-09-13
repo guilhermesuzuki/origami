@@ -41,24 +41,13 @@
 @code {
     private List<SyndicationFeed> _feeds { get; set; } = new();
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        this.AppFacade.RefreshingTheUI += (obj, args) =>
-        {
-            if (this.HttpContextAccessor.HttpContext == null) return;
-            if (obj is string[] s)
-            {
-                if (s.Length < 2) return;
-                if (s[0] != this.HttpContextAccessor.HttpContext.Connection.Id) return;
-                if (s[1].Like(OrigamiConstants.Events.RssFeeds) == true) this.InvokeAsync(this.StateHasChanged);
-            }
-        };
-
-        base.OnInitialized();
-        this.LoadFeeds();
+        await base.OnInitializedAsync();
+        await this.LoadFeedsAsync();
     }
 
-    protected void LoadFeeds()
+    protected async Task LoadFeedsAsync()
     {
         var settings = _settings.GetSettings();
 
@@ -87,7 +76,6 @@
                     using var reader = XmlReader.Create(url);
                     var feed = SyndicationFeed.Load(reader);
                     this._feeds.Add(feed);
-                    this.AppFacade.RefreshUI(this.HttpContextAccessor.HttpContext?.Connection.Id ?? "unknown connection id", OrigamiConstants.Events.RssFeeds);
                 }
                 catch (Exception)
                 {
@@ -98,5 +86,8 @@
                 }
             }, token));
         }
+
+        Task.WaitAll(probing);
+        await this.InvokeAsync(this.StateHasChanged);
     }
 }
