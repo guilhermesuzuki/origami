@@ -348,12 +348,30 @@
         _searchTimer.Enabled = true;
         _searchTimer.AutoReset = false;
         _searchTimer.Interval = 750;
-        _searchTimer.Elapsed += (o, e) =>
-        {
-            this._queryLucene(queryTerm);
-        };
+        _searchTimer.Elapsed += _searchTimerElapsed;
 
         _searchTimer.Start();
+    }
+
+    public override void Dispose()
+    {
+        if (_searchTimer != null)
+        {
+            _searchTimer.Elapsed -= _searchTimerElapsed;
+            _searchTimer.Stop();
+            _searchTimer.Dispose();
+            _searchTimer = null;
+        }
+        base.Dispose();
+    }
+
+    private async void _searchTimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        await this.InvokeAsync(() =>
+        {
+            this._queryLucene(this.UserFacade.SearchTerm);
+            this.StateHasChanged();
+        });
     }
 
     /// <summary>
