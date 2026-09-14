@@ -58,7 +58,6 @@
 
     public override void Dispose()
     {
-        _loginHelpMeRules.GoToLoginPage -= this._goToLoginPage;
         _loginHelpMeRules.RefreshUI -= this._refreshTheUIAsync;
         base.Dispose();
     }
@@ -66,14 +65,9 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        _loginHelpMeRules.GoToLoginPage += this._goToLoginPage;
         _loginHelpMeRules.RefreshUI += this._refreshTheUIAsync;
     }
 
-    private void _goToLoginPage(object? sender, EventArgs e)
-    {
-        this.GhostOfTheNavigator.NavigateTo("/login", true);
-    }
 
     private async void _refreshTheUIAsync(object? sender, EventArgs e)
     {
