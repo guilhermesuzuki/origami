@@ -301,7 +301,13 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        this.AppFacade.RefreshingTheUI += this._mustRefreshTheUIAsync;
+this.AppFacade.RefreshingTheUI += this._mustRefreshTheUIAsync;
+    }
+
+    public override void Dispose()
+    {
+        this.AppFacade.RefreshingTheUI -= this._mustRefreshTheUIAsync;
+        base.Dispose();
     }
 
     private async void _mustRefreshTheUIAsync(object? sender, object obj)
