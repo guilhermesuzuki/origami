@@ -128,8 +128,13 @@
     {
         EmailIcon = string.Empty;
         EmailIconColor = Color.Default;
-        this._emailTimer?.Stop();
-        this._emailTimer = null;
+        if (sender is System.Timers.Timer timer)
+        {
+            timer.Elapsed -= this._emailTimerElapsed;
+            timer.Stop();
+            timer.Dispose();
+            if (ReferenceEquals(this._emailTimer, timer)) this._emailTimer = null;
+        }
     }
 
     protected override void OnAfterRender(bool firstRender)
