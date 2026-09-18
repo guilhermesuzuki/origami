@@ -1,4 +1,5 @@
 ﻿using Bogus;
+using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using NanoidDotNet;
 using Origami.Core;
@@ -12,16 +13,15 @@ namespace Origami.UI
     public class LoginHelpMeRules(
         IAppFacade AppFacade,
         IDialogService DialogService,
+        IUserBlogRepository UserBlogRepository,
         IUserFacade UserFacade,
         IUserRepository UserRepository,
         IUserRoleRepository UserRoleRepository,
-        IUserBlogRepository UserBlogRepository,
+        NavigationManager GhostOfTheNavigator,
         Text Text
         ) : ILoginHelpMeRules
     {
         public event EventHandler CurrentStepChanged = null!;
-
-        public event EventHandler GoToLoginPage = null!;
 
         public event EventHandler RefreshUI = null!;
 
@@ -162,7 +162,7 @@ namespace Origami.UI
 
         public Task RedirectUserToLoginPage()
         {
-            GoToLoginPage?.Invoke(this, EventArgs.Empty);
+            GhostOfTheNavigator.NavigateTo("/login", true);
             return Task.CompletedTask;
         }
 

@@ -220,7 +220,7 @@
     /// <summary>
     /// Static event triggered when there's an update in a comment, to refresh the your comments section
     /// </summary>
-    private static event EventHandler<BaseComment> YourCommentsMustUpdate = (sender, e) => { };
+    private static event EventHandler<BaseComment> YourCommentsMustUpdate = null!;
 
     /// <summary>
     /// Is the comment in edit mode?
@@ -230,11 +230,11 @@
     private bool _showEmojis;
     private bool _showReplies;
 
-    private void CommentHasChanged()
+    protected void CommentHasChanged()
     {
         if (this.Entity == null) return;
-        if (YourCommentsMustUpdate.GetInvocationList().Length == 0) return;
-        YourCommentsMustUpdate.Invoke(this, this.Entity);
+        if (YourCommentsMustUpdate?.GetInvocationList().Length == 0) return;
+        YourCommentsMustUpdate?.Invoke(this, this.Entity);
     }
 
     protected void CancelChangesToComment()
@@ -329,19 +329,25 @@
         }
     }
 
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        //keeps an eye open for comments changing
+        YourCommentsMustUpdate += this._yourCommentsMustUpdate;
+    }
+
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
         this.CommentForUpdating = Entity?.Clone();
+    }
 
-        //keeps an eye open for comments changing
-        YourCommentsMustUpdate += (sender, comment) =>
-        {
-            if (this == sender) return;
-            if (this.Entity == null) return;
-            if (this.Entity.Id != comment.Id) return;
-            this.InvokeAsync(this.StateHasChanged);
-        };
+    private void _yourCommentsMustUpdate(object? sender, BaseComment e)
+    {
+        if (this == sender) return;
+        if (this.Entity == null) return;
+        if (this.Entity.Id != e.Id) return;
+        this.InvokeAsync(this.StateHasChanged);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -477,5 +483,10 @@
         _isReplyingToComment = true;
     }
 
-    public void Dispose() => objRef?.Dispose();
+    public override void Dispose()
+    {
+        YourCommentsMustUpdate -= this._yourCommentsMustUpdate;
+        objRef?.Dispose();
+        base.Dispose();
+    }
 }

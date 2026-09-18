@@ -1176,54 +1176,6 @@ namespace Origami.Core
                 reference = value;
                 eventHandler?.Invoke(entity, args);
             }
-
-            //if value is an observable collection, attaches itself to the collection changed event
-            if (value is INotifyCollectionChanged notifyCollectionChanged)
-            {
-                notifyCollectionChanged.CollectionChanged += (sender, e) => eventHandler?.Invoke(entity, args);
-            }
-
-            //value is IChanged and needs to be hooked up
-            if (value is IChanged changed)
-            {
-                changed.Changed += (sender, e) => eventHandler?.Invoke(entity, args);
-            }
-
-            //value is ICommentChanged and needs to be hooked up
-            if (value is ICommentChanged commentChanged)
-            {
-                commentChanged.CommentChanged += (sender, e) => eventHandler?.Invoke(entity, args);
-            }
-
-            //value is IContentChanged and needs to be hooked up
-            if (value is IContentChanged contentChanged)
-            {
-                contentChanged.ContentChanged += (sender, e) => eventHandler?.Invoke(entity, args);
-            }
-
-            //value is IRatingChanged and needs to be hooked up
-            if (value is IRatingChanged ratingChanged)
-            {
-                ratingChanged.RatingChanged += (sender, e) => eventHandler?.Invoke(entity, args);
-            }
-
-            //value is ISettingChanged and needs to be hooked up
-            if (value is ISettingChanged settingChanged)
-            {
-                settingChanged.SettingChanged += (sender, e) => eventHandler?.Invoke(entity, args);
-            }
-
-            //value is IViewChanged and needs to be hooked up
-            if (value is IViewChanged viewChanged)
-            {
-                viewChanged.ViewChanged += (sender, e) => eventHandler?.Invoke(entity, args);
-            }
-
-            //value is IReactionChanged and needs to be hooked up
-            if (value is IReactionChanged reactionChanged)
-            {
-                reactionChanged.ReactionChanged += (sender, e) => eventHandler?.Invoke(entity, args);
-            }
         }
 
         public static T? SetAuthor<T>(this T? entity, OrigamiUser? author)

@@ -47,7 +47,7 @@ namespace Origami.Core.Models
             IsDeleted = false;
         }
 
-        public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) => { };
+        public event EventHandler<PropertyChangedEventArgs> Changed = null!;
 
         public virtual string? AdditionalInfo
         {

@@ -5,9 +5,8 @@ namespace Origami.Core.Data
     public interface ILoginHelpMeRules : IEntity<OrigamiUser>
     {
         event EventHandler CurrentStepChanged;
-        event EventHandler GoToLoginPage;
-
         event EventHandler RefreshUI;
+
         enum Steps
         {
             Step1_ValidateMasterPassword = 1,
