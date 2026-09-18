@@ -1,4 +1,5 @@
 ﻿@page "/contents/{NanoId}"
+@using System.ComponentModel
 @inherits BasicPage
 @implements IEntityNull<OrigamiContent>
 
@@ -133,7 +134,7 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        this.NewComment.Changed += (sender, e) => this.InvokeAsync(this.StateHasChanged);
+        this.NewComment.Changed += this.RefreshTheUI;
     }
 
     protected override void OnParametersSet()
@@ -147,7 +148,7 @@
     private void CreateComment()
     {
         this.NewComment.IsApproved = true;
-        this.NewComment.Id = Guid.NewGuid();
+        this.NewComment.Id = Guid.CreateVersion7();
         this.NewComment.ContentId = this._entity.Id;
         this.NewComment.DateCreated = DateTime.UtcNow;
         this.NewComment.SocialProfileId = UserFacade.SocialProfile.Id;
@@ -157,10 +158,15 @@
 
         hub.OnSuccess(() => this._comments = this.Super.ContentComments.AllComments(_entity));
 
-        this.NewComment = new();
-        this.NewComment.Changed += (sender, e) => this.InvokeAsync(this.StateHasChanged);
+        this.NewComment = this.TheCreator.Create<OrigamiContentComment>();
+        this.NewComment.Changed += this.RefreshTheUI;
 
         UserFacade.Result = hub;
+    }
+
+    private async void RefreshTheUI(object? sender, PropertyChangedEventArgs p)
+    {
+        await this.InvokeAsync(this.StateHasChanged);
     }
 
     private bool _disableSendCommentButton()
