@@ -93,6 +93,7 @@ else
         if (this._mustStopTimer == true) return;
         this._secondsToDisappear = this.SecondsToDisappear;
         _timer.Stop();
+        _timer.Elapsed -= this.TimerHasElapsed;
         _timer = new() { AutoReset = true, Enabled = false, Interval = 1000 };
         _timer.Elapsed += this.TimerHasElapsed;
         _timer.Start();
