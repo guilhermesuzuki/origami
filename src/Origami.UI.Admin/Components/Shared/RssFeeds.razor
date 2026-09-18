@@ -87,7 +87,7 @@
             }, token));
         }
 
-        Task.WaitAll(probing);
+        await Task.WhenAll(probing);
         await this.InvokeAsync(this.StateHasChanged);
     }
 }
