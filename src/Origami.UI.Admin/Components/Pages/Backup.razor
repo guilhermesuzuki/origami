@@ -312,7 +312,7 @@ this.AppFacade.RefreshingTheUI += this._mustRefreshTheUIAsync;
 
     private async void _mustRefreshTheUIAsync(object? sender, object obj)
     {
-        if (obj is string s)
+if (sender is string s)
         {
             if (s.Like(OrigamiConstants.Events.Backup) == true) await this.InvokeAsync(this.StateHasChanged);
             if (s.Like(OrigamiConstants.Events.BackupComplete) == true) await this.InvokeAsync(this.StateHasChanged);
