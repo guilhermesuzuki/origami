@@ -324,14 +324,16 @@
         }
     }
 
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        YourCommentsMustUpdate += this._yourCommentsMustUpdate;
+    }
+
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-
         this.CommentForUpdating = Entity?.Clone();
-
-        //keeps an eye open for comments changing
-        YourCommentsMustUpdate += this._yourCommentsMustUpdate;
     }
 
     private void _yourCommentsMustUpdate(object? sender, BaseComment e)
