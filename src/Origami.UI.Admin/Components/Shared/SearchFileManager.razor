@@ -119,7 +119,9 @@
 
         if (_searchTimer != null)
         {
+            _searchTimer.Elapsed -= _searchTimerElapsed;
             _searchTimer.Stop();
+            _serarchTimer.Dispose();
             _searchTimer = null;
         }
 

@@ -135,7 +135,9 @@
 
         if (_searchTimer != null)
         {
+            _searchTimer.Elapsed -= this._searchTimerElapsed;
             _searchTimer.Stop();
+            _searchTimer.Dispose();
             _searchTimer = null;
         }
 
