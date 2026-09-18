@@ -158,6 +158,7 @@
 
         hub.OnSuccess(() => this._comments = this.Super.ContentComments.AllComments(_entity));
 
+        this.NewComment.Changed -= this.RefreshTheUI;
         this.NewComment = this.TheCreator.Create<OrigamiContentComment>();
         this.NewComment.Changed += this.RefreshTheUI;
 
