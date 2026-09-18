@@ -233,7 +233,7 @@
     protected void CommentHasChanged()
     {
         if (this.Entity == null) return;
-        if (YourCommentsMustUpdate.GetInvocationList().Length == 0) return;
+        if (YourCommentsMustUpdate?.GetInvocationList().Length == 0) return;
         YourCommentsMustUpdate?.Invoke(this, this.Entity);
     }
 
@@ -329,13 +329,17 @@
         }
     }
 
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        //keeps an eye open for comments changing
+        YourCommentsMustUpdate += this._yourCommentsMustUpdate;
+    }
+
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
         this.CommentForUpdating = Entity?.Clone();
-
-        //keeps an eye open for comments changing
-        YourCommentsMustUpdate += this._yourCommentsMustUpdate;
     }
 
     private void _yourCommentsMustUpdate(object? sender, BaseComment e)
