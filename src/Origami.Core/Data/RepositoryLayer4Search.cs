@@ -9,6 +9,7 @@ using Lucene.Net.Util;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Origami.Core.Models;
+using System.Globalization;
 
 namespace Origami.Core.Data
 {
@@ -17,6 +18,7 @@ namespace Origami.Core.Data
         ISearch<T>
         where T : class, IId
     {
+        protected readonly CultureInfo _en = new("en-US");
         protected readonly IAppFacade _appFacade;
 
         protected RepositoryLayer4Search(
@@ -37,7 +39,7 @@ namespace Origami.Core.Data
             const LuceneVersion luceneVersion = LuceneVersion.LUCENE_48;
 
             //Open the Directory using a Lucene Directory class
-            var key = $"lucene_{typeof(T).GetPlural().ToLower()}";
+            var key = $"lucene_{typeof(T).GetPlural().ToLower(_en)}";
             MemoryCache.Get<RAMDirectory>(key)?.Dispose();
             var index = new RAMDirectory();
 
@@ -65,7 +67,7 @@ namespace Origami.Core.Data
         public virtual IEnumerable<T> Search(string searchTerm)
         {
             //Open the Directory using a Lucene Directory class
-            var index = typeof(T).GetPlural().ToLower();
+            var index = typeof(T).GetPlural().ToLower(_en);
             var directory = MemoryCache.Get<RAMDirectory>($"lucene_{index}");
             if (directory == null)
             {
