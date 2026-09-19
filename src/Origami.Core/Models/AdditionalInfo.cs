@@ -188,12 +188,10 @@ namespace Origami.Core.Models
             /// <summary>
             /// public constructor
             /// </summary>
-            public ClientTracking()
+            protected ClientTracking()
                 : base()
             {
-                DateCreated = System.DateTime.Now;
-                DateTime = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                Version = [];
+                
             }
 
             /// <summary>
@@ -213,14 +211,14 @@ namespace Origami.Core.Models
             /// </summary>
             [XmlAttribute("dateCreated")]
             [JsonPropertyName("dateCreated")]
-            public virtual DateTime DateCreated { get; set; }
+            public virtual DateTime DateCreated { get; set; } = System.DateTime.UtcNow;
 
             /// <summary>
             /// date and time (format: yyyy-MM-dd HH:mm)
             /// </summary>
             [XmlAttribute("dateTime")]
             [JsonPropertyName("dateTime")]
-            public virtual string DateTime { get; set; }
+            public virtual string DateTime { get; set; } = System.DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
 
             /// <summary>
             /// date and time converted to the appropriate type
@@ -331,7 +329,7 @@ namespace Origami.Core.Models
             /// </summary>
             [XmlAttribute("version")]
             [JsonPropertyName("version")]
-            public virtual byte[] Version { get; set; }
+            public virtual byte[] Version { get; set; } = [];
         }
 
         /// <summary>
