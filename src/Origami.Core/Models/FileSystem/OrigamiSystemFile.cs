@@ -41,11 +41,6 @@ namespace Origami.Core.Models.FileSystem
         protected Guid _id = Guid.NewGuid();
 
         /// <summary>
-        /// list of valid image extensions
-        /// </summary>
-        protected string[] _imageExtensions = { ".bmp", ".jpg", ".jpeg", ".png", ".tiff" };
-
-        /// <summary>
         /// the full path of the file, internal field only, use file path for external calls. reduces security concerns
         /// while outside of the buisness layer
         /// </summary>
@@ -66,6 +61,17 @@ namespace Origami.Core.Models.FileSystem
         /// web path of the file
         /// </summary>
         protected string _webPath = string.Empty;
+
+        /// <summary>
+        /// Represents a collection of file extensions commonly associated with image formats.
+        /// </summary>
+        /// <remarks>The collection is case-insensitive, allowing comparisons to be performed without
+        /// regard to letter casing. Supported extensions include: .jpg, .jpeg, .png, .gif, .bmp, .tiff, .webp, and
+        /// .tga.</remarks>
+        private static readonly HashSet<string> ImageExtensions = new(StringComparer.OrdinalIgnoreCase)
+        {
+            ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".tiff", ".webp", ".tga"
+        };
 
         /// <summary>
         /// Default constructor
@@ -209,7 +215,7 @@ namespace Origami.Core.Models.FileSystem
         /// </summary>
         public bool IsImage
         {
-            get => _imageExtensions.Any(x => x.ToLower() == Extension.ToLower());
+            get => ImageExtensions.Contains(Extension);
         }
 
         /// <summary>
@@ -259,6 +265,17 @@ namespace Origami.Core.Models.FileSystem
                 var webPath = WebPath.TrimEnd('/');
                 return webPath.Substring(0, webPath.LastIndexOf('/'));
             }
+        }
+
+        /// <summary>
+        /// Determines whether the specified file path corresponds to an image file based on its extension.
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public static bool IsFileAnImage(string filePath)
+        {
+            var extension = Path.GetExtension(filePath);
+            return ImageExtensions.Contains(extension);
         }
     }
 }
