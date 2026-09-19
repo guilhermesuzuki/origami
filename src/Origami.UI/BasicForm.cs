@@ -6,6 +6,7 @@ using Origami.Core.Models;
 using Origami.Core.Models.FileSystem;
 using Polly;
 using Polly.Retry;
+using SixLabors.ImageSharp;
 using System.Buffers;
 
 namespace Origami.UI
@@ -297,8 +298,7 @@ namespace Origami.UI
                 basePath = Path.Combine(basePath, subDirectoryName);
             }
 
-            string extension = Path.GetExtension(filename);
-            string tempPath = Path.Combine(basePath, $"{Guid.NewGuid()}.tmp{extension}");
+            string tempPath = Path.Combine(basePath, $"{Guid.NewGuid()}.tmp");
             string finalPath = Path.Combine(basePath, filename);
 
             try
@@ -313,9 +313,6 @@ namespace Origami.UI
                     {
                         var newFilename = $"{Path.GetFileNameWithoutExtension(filename)}.{Nanoid.Generate(Nanoid.Alphabets.UppercaseLettersAndDigits, 4)}{Path.GetExtension(filename)}";
                         finalPath = Path.Combine(basePath, newFilename);
-                    }
-                    if (File.Exists(finalPath) == true)
-                    {
                         throw new Exception("File already exists");
                     }
                     return ValueTask.CompletedTask;
@@ -350,9 +347,9 @@ namespace Origami.UI
 
                 if (finalPath.IsImage() == true)
                 {
-                    using (var image = NetVips.Image.NewFromFile(tempPath))
+                    using (Image image = Image.Load(tempPath))
                     {
-                        image.WriteToFile(finalPath);
+                        image.Save(finalPath);
                     }
                 }
                 else
@@ -411,9 +408,9 @@ namespace Origami.UI
                     }
 
                     var bytes = base64Logo.Base64ImageToBytes();
-                    using var image = NetVips.Image.NewFromBuffer(bytes);
+                    var image = Image.Load(bytes);
                     Directory.CreateDirectory(lpath);
-                    image.WriteToFile(lpath + filename);
+                    await image.SaveAsPngAsync(lpath + filename);
                     header.HeaderImage = wpath + filename;
                 }
                 catch (Exception ex)
