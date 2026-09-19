@@ -38,7 +38,7 @@ namespace Origami.Core.Data
 
             //Open the Directory using a Lucene Directory class
             var key = $"lucene_{typeof(T).GetPlural().ToLower()}";
-            using RAMDirectory? oldIndex = MemoryCache.Get<RAMDirectory>(key);
+            MemoryCache.Get<RAMDirectory>(key)?.Dispose();
             var index = new RAMDirectory();
 
             //Create an analyzer to process the text 
