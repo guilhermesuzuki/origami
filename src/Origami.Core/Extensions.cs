@@ -6,19 +6,7 @@ namespace Origami.Core
     {
         public static bool En(this CultureInfo culture)
         {
-            return culture.Name.StartsWith("en");
-        }
-        public static bool Es(this CultureInfo culture)
-        {
-            return culture.Name.StartsWith("es");
-        }
-        public static bool Ja(this CultureInfo culture)
-        {
-            return culture.Name.StartsWith("ja");
-        }
-        public static bool Pt(this CultureInfo culture)
-        {
-            return culture.Name.StartsWith("pt");
+            return culture.Name.StartsWith("en", StringComparison.InvariantCultureIgnoreCase);
         }
     }
 }

@@ -448,7 +448,7 @@ namespace Origami.Core
 
             if (names.Count == 2)
             {
-                if (Thread.CurrentThread.CurrentUICulture.Name.StartsWith("en") == true)
+                if (Thread.CurrentThread.CurrentUICulture.Name.StartsWith("en", StringComparison.InvariantCultureIgnoreCase) == true)
                 {
                     return $"{names[1]}, {names[0]}";
                 }
