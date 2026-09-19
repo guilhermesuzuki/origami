@@ -24,11 +24,10 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Origami.Core;
 using Origami.Core.Data;
-using Origami.Core.Jobs;
 using Origami.Core.Models;
 using Origami.Core.Models.Jwt;
 using Origami.Core.Validators;
-using Quartz;
+using Origami.UI.Services;
 using Serilog;
 using System.Buffers;
 using System.Globalization;
@@ -203,6 +202,8 @@ namespace Origami.UI
             });
 
             builder.Services.AddScoped<CustomHeadContentService>();
+            builder.Services.AddHostedService<CacheRefreshServiceFull>();
+            builder.Services.AddHostedService<MailConnectivityCheckService>();
             builder.Services.AddSingleton<CircuitHandler, OrigamiCircuitHandler>();
             builder.Services.AddScoped<HtmlRenderer>();
 
@@ -283,18 +284,6 @@ namespace Origami.UI
             });
 
             builder.Services.AddHealthChecks();
-
-			builder.Services.AddQuartz(q =>
-            {
-                q.ScheduleJob<CacheRefreshFull>(trigger => trigger
-                    .WithIdentity(nameof(CacheRefreshFull))
-                    .WithCronSchedule("0 0/3 * * * ?"));
-            });
-
-			builder.Services.AddQuartzHostedService(options =>
-            {
-                options.WaitForJobsToComplete = true;
-            });
 
             if (OperatingSystem.IsWindows()) builder.Host.UseWindowsService();
 
@@ -442,10 +431,6 @@ namespace Origami.UI
             if (openTelemetry) app.MapPrometheusScrapingEndpoint();
 
             app.MapRazorComponents<T>().AddInteractiveServerRenderMode();
-
-            var super = app.Services.GetRequiredService<ISuperRepository>();
-            super.RefreshAllRepositories();
-            super.RefreshAllSearchIndexes();
 
             if (admin == true)
             {

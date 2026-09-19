@@ -2,8 +2,8 @@
 using CloneExtensions;
 using FluentValidation;
 using Origami.Core.Models;
-using Origami.Core.Models.FileSystem;
 using Origami.Core.Models.Settings;
+using SixLabors.ImageSharp;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -24,6 +24,17 @@ namespace Origami.Core
     /// </summary>
     public static class ModelExtensions
     {
+        /// <summary>
+        /// Represents a collection of file extensions commonly associated with image formats.
+        /// </summary>
+        /// <remarks>The collection is case-insensitive, allowing comparisons to be performed without
+        /// regard to letter casing. Supported extensions include: .jpg, .jpeg, .png, .gif, .bmp, .tiff, .webp, and
+        /// .tga.</remarks>
+        private static readonly HashSet<string> ImageExtensions = new(StringComparer.OrdinalIgnoreCase)
+        {
+            ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".tiff", ".webp", ".tga"
+        };
+
         /// <summary>
         /// Hex Digits
         /// </summary>
@@ -513,6 +524,17 @@ namespace Origami.Core
             return $"/blogs/{blog.Slug}/categories/{category.Slug}/{entity?.NanoId}";
         }
 
+        public static (string Extension, string MimeType) GetImageFormat(this byte[] imageBytes)
+        {
+            using var stream = new MemoryStream(imageBytes);
+            using var image = Image.Load(stream);
+
+            var format = image.Metadata.DecodedImageFormat
+                ?? throw new InvalidOperationException("Unable to determine image format.");
+
+            return (format.Name, format.DefaultMimeType);
+        }
+
         /// <summary>
         /// Extracts the exception message, traversing diving into the inner exceptions.
         /// </summary>
@@ -755,7 +777,8 @@ namespace Origami.Core
 
         public static bool IsImage(this string fileName)
         {
-            return OrigamiSystemFile.IsFileAnImage(fileName);
+            var extension = Path.GetExtension(fileName);
+            return !string.IsNullOrEmpty(extension) && ImageExtensions.Contains(extension);
         }
 
         /// <summary>
@@ -807,9 +830,12 @@ namespace Origami.Core
 
             try
             {
-                using var image = NetVips.Image.NewFromBuffer(imageBytes, "", NetVips.Enums.Access.Sequential);
-                _ = image.WriteToMemory<byte>();
+                using var image = Image.Load(imageBytes);
                 return true;
+            }
+            catch (UnknownImageFormatException)
+            {
+                return false;
             }
             catch
             {
