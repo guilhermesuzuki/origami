@@ -390,16 +390,10 @@ namespace Origami.Core
 
         public static List<T> Read<T>(this DbContext db) where T : class
         {
-            if (typeof(T).IsAbstract == false)
+            if (typeof(OrigamiRole).IsAssignableFrom(typeof(T)) == true)
             {
-                var t = Activator.CreateInstance<T>();
-                return t switch
-                {
-                    OrigamiRole => db.GetRolesFromDatabase().Cast<T>().ToList(),
-                    _ => db.Set<T>().AsNoTracking().ToList(),
-                };
+                return db.GetRolesFromDatabase().Cast<T>().ToList();
             }
-
             return db.Set<T>().AsNoTracking().ToList();
         }
         /// <summary>

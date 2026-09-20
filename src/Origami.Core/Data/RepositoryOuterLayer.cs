@@ -21,8 +21,18 @@ namespace Origami.Core.Data
         public virtual void RefreshCache()
         {
             var k = KeyForCaching;
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"Refreshing cache for {k}");
+            var originalColor = Console.ForegroundColor;
+
+            try
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine($"Refreshing cache for {k}");
+            }
+            finally
+            {
+                Console.ForegroundColor = originalColor;
+            }
+            
             lock (OrigamiConstants.SyncRoot)
             {
                 using var db = DbContextFactory.CreateDbContext();
@@ -30,7 +40,7 @@ namespace Origami.Core.Data
                 //front-end
                 if (_appFacade.Admin.GetValueOrDefault() == false)
                 {
-                    if (typeof(T).IsAssignableTo(typeof(OrigamiBlog)) == true)
+                    if (typeof(OrigamiBlog).IsAssignableFrom(typeof(T)) == true)
                     {
                         var blogs = from a in db.Blogs.AsNoTracking()
                                     where a.IsDeleted == false
@@ -40,7 +50,7 @@ namespace Origami.Core.Data
                         MemoryCache.Set(k, blogs.ToList());
                         return;
                     }
-                    if (typeof(T).IsAssignableTo(typeof(OrigamiContent)) == true)
+                    if (typeof(OrigamiContent).IsAssignableFrom(typeof(T)) == true)
                     {
                         var contents = from a in db.Contents.AsNoTracking()
                                        join b in db.Blogs.AsNoTracking() on a.BlogId equals b.Id into blogs
