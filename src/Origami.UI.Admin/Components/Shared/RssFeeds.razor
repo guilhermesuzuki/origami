@@ -75,7 +75,10 @@
                 {
                     using var reader = XmlReader.Create(url);
                     var feed = SyndicationFeed.Load(reader);
-                    this._feeds.Add(feed);
+                    lock (OrigamiConstants.SyncRoot)
+                    {
+                        this._feeds.Add(feed);
+                    }
                 }
                 catch (Exception)
                 {
