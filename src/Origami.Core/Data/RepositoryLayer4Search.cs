@@ -42,7 +42,7 @@ namespace Origami.Core.Data
             var key = $"lucene_{typeof(T).GetPlural().ToLowerInvariant()}";
 
             //really important to dispose the previous index before creating a new one, otherwise you will get a file access exception
-            MemoryCache.Get<RAMDirectory>(key)?.Dispose();
+            using RAMDirectory? previousIndex = MemoryCache.Get<RAMDirectory>(key);
 
             var index = new RAMDirectory();
 
