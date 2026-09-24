@@ -120,7 +120,13 @@
 
     private void _startEmailTimer()
     {
-        this._emailTimer = new() { AutoReset = false, Enabled = true, Interval = 3750, };
+if (this._emailTimer != null)
+{
+    this._emailTimer.Elapsed -= this._emailTimerElapsed;
+    this._emailTimer.Stop();
+    this._emailTimer.Dispose();
+}
+this._emailTimer = new() { AutoReset = false, Enabled = true, Interval = 3750, };
         this._emailTimer.Elapsed += this._emailTimerElapsed;
     }
 
