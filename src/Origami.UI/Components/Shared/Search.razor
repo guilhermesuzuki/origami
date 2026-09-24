@@ -367,14 +367,10 @@
         base.Dispose();
     }
 
-    private async void _searchTimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
-    {
-        await this.InvokeAsync(() =>
-        {
-            this._queryLucene(this.UserFacade.SearchTerm);
-            this.StateHasChanged();
-        });
-    }
+private void _searchTimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+{
+    this._queryLucene(this.UserFacade.SearchTerm);
+}
 
     /// <summary>
     /// Searches for the <paramref name="queryTerm"/>
