@@ -40,6 +40,10 @@ namespace Origami.Core.Data
 
             //Open the Directory using a Lucene Directory class
             var key = $"lucene_{typeof(T).GetPlural().ToLowerInvariant()}";
+
+            //really important to dispose the previous index before creating a new one, otherwise you will get a file access exception
+            MemoryCache.Get<RAMDirectory>(key)?.Dispose();
+
             var index = new RAMDirectory();
 
             //Create an analyzer to process the text 
