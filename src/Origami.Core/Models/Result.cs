@@ -9,7 +9,11 @@ namespace Origami.Core.Models
     /// <summary>
     /// Simple class for Results with Status and a Message.
     /// </summary>
-    public class Result : IChanged, IId, IDateCreated
+    public class Result : 
+        IChanged, 
+        IId, 
+        IDateCreated, 
+        IDisposable
     {
         protected DateTime _dateCreated = DateTime.UtcNow;
         /// <summary>
@@ -26,10 +30,7 @@ namespace Origami.Core.Models
         {
             Id = Guid.NewGuid();
             _messages = new();
-            _messages.CollectionChanged += (sender, e) =>
-            {
-                Changed?.Invoke(this, new PropertyChangedEventArgs(nameof(Messages)));
-            };
+            _messages.CollectionChanged += this._messagesCollectionChanged;
         }
 
         /// <summary>
@@ -95,13 +96,6 @@ namespace Origami.Core.Models
         }
 
         /// <summary>
-        /// Creates a password message
-        /// </summary>
-        public virtual string? Password
-        {
-            set => AddMessage(ResultMessage.MessageTypes.Password, value);
-        }
-        /// <summary>
         /// Rows affected
         /// </summary>
         public int RowsAffected
@@ -132,6 +126,11 @@ namespace Origami.Core.Models
         public virtual string? Warning
         {
             set => AddMessage(ResultMessage.MessageTypes.Warning, value);
+        }
+
+        public void Dispose()
+        {
+            _messages.CollectionChanged -= this._messagesCollectionChanged;
         }
 
         /// <summary>
@@ -262,6 +261,16 @@ namespace Origami.Core.Models
 
             return false;
         }
+        
+        /// <summary>
+        /// Handles the collection changed event for the messages collection
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void _messagesCollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            Changed?.Invoke(this, new PropertyChangedEventArgs(nameof(Messages)));
+        }
     }
 
     /// <summary>
@@ -335,7 +344,7 @@ namespace Origami.Core.Models
         /// <summary>
         /// Event for when something changes in the instance
         /// </summary>
-        public event EventHandler<PropertyChangedEventArgs> EntityChanged = (sender, e) => { };
+        public event EventHandler<PropertyChangedEventArgs> EntityChanged = null!;
 
         /// <summary>
         /// Entity associated with the Result (if any)

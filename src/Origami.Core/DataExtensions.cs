@@ -31,7 +31,7 @@ namespace Origami.Core
         }
 
         /// <summary>
-        /// TODO: comment this
+        /// Finds all entities that have the given <paramref name="author"/> as their author.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="entities"></param>
@@ -390,17 +390,11 @@ namespace Origami.Core
 
         public static List<T> Read<T>(this DbContext db) where T : class
         {
-            if (typeof(T).IsAbstract == false)
+            if (typeof(OrigamiRole).IsAssignableFrom(typeof(T)) == true)
             {
-                var t = Activator.CreateInstance<T>();
-                return t switch
-                {
-                    OrigamiRole => [.. db.GetRolesFromDatabase().Cast<T>()],
-                    _ => [.. db.Set<T>().AsNoTracking()],
-                };
+                return db.GetRolesFromDatabase().Cast<T>().ToList();
             }
-
-            return [.. db.Set<T>().AsNoTracking()];
+            return db.Set<T>().AsNoTracking().ToList();
         }
         /// <summary>
         /// Tries to retrieve a blog by its slug. Returns null if not found or if the blog is deleted or inactive.

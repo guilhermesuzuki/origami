@@ -301,16 +301,24 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        this.AppFacade.RefreshingTheUI += (obj, args) =>
+this.AppFacade.RefreshingTheUI += this._mustRefreshTheUIAsync;
+    }
+
+    public override void Dispose()
+    {
+        this.AppFacade.RefreshingTheUI -= this._mustRefreshTheUIAsync;
+        base.Dispose();
+    }
+
+    private async void _mustRefreshTheUIAsync(object? sender, object obj)
+    {
+if (sender is string s)
         {
-            if (obj is string s)
-            {
-                if (s.Like(OrigamiConstants.Events.Backup) == true) this.InvokeAsync(this.StateHasChanged);
-                if (s.Like(OrigamiConstants.Events.BackupComplete) == true) this.InvokeAsync(this.StateHasChanged);
-                if (s.Like(OrigamiConstants.Events.Restore) == true) this.InvokeAsync(this.StateHasChanged);
-                if (s.Like(OrigamiConstants.Events.RestoreComplete) == true) this.InvokeAsync(this.StateHasChanged);
-            }
-        };
+            if (s.Like(OrigamiConstants.Events.Backup) == true) await this.InvokeAsync(this.StateHasChanged);
+            if (s.Like(OrigamiConstants.Events.BackupComplete) == true) await this.InvokeAsync(this.StateHasChanged);
+            if (s.Like(OrigamiConstants.Events.Restore) == true) await this.InvokeAsync(this.StateHasChanged);
+            if (s.Like(OrigamiConstants.Events.RestoreComplete) == true) await this.InvokeAsync(this.StateHasChanged);
+        }
     }
 
     private string _user()

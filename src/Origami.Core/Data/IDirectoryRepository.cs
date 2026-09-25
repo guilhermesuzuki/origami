@@ -41,11 +41,11 @@ namespace Origami.Core.Data
         string LocalPath(string virtualPath);
 
         /// <summary>
-        /// TODO: comment this
+        /// Returns the local path for files of a specific entity
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="entity"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">The type of the entity.</typeparam>
+        /// <param name="entity">The entity for which to get the local path.</param>
+        /// <returns>The local path for the files of the specified entity.</returns>
         string LocalPathForFiles<T>(T entity) where T : IId;
 
         /// <summary>

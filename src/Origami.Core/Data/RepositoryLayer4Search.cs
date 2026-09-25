@@ -9,6 +9,7 @@ using Lucene.Net.Util;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Origami.Core.Models;
+using System.Globalization;
 
 namespace Origami.Core.Data
 {
@@ -17,6 +18,7 @@ namespace Origami.Core.Data
         ISearch<T>
         where T : class, IId
     {
+        protected readonly CultureInfo _en = new("en-US");
         protected readonly IAppFacade _appFacade;
 
         protected RepositoryLayer4Search(
@@ -37,8 +39,11 @@ namespace Origami.Core.Data
             const LuceneVersion luceneVersion = LuceneVersion.LUCENE_48;
 
             //Open the Directory using a Lucene Directory class
-            var key = $"lucene_{typeof(T).GetPlural().ToLower()}";
-            using RAMDirectory? oldIndex = MemoryCache.Get<RAMDirectory>(key);
+            var key = $"lucene_{typeof(T).GetPlural().ToLowerInvariant()}";
+
+            //really important to dispose the previous index before creating a new one, otherwise you will get a file access exception
+            using RAMDirectory? previousIndex = MemoryCache.Get<RAMDirectory>(key);
+
             var index = new RAMDirectory();
 
             //Create an analyzer to process the text 
@@ -47,15 +52,14 @@ namespace Origami.Core.Data
             //Create an index writer
             IndexWriterConfig indexConfig = new(luceneVersion, standardAnalyzer);
             indexConfig.OpenMode = OpenMode.CREATE;
-            using IndexWriter writer = new(index, indexConfig);
 
-            foreach (var entity in ReadFromCache())
+            using (var writer = new IndexWriter(index, indexConfig))
             {
-                writer.AddDocument(this.GetLuceneDocument(entity));
+                foreach (var entity in ReadFromCache())
+                {
+                    writer.AddDocument(GetLuceneDocument(entity));
+                }
             }
-
-            //Flush and commit the index data to the directory
-            writer.Commit();
 
             MemoryCache.Set(key, index);
 
@@ -65,7 +69,7 @@ namespace Origami.Core.Data
         public virtual IEnumerable<T> Search(string searchTerm)
         {
             //Open the Directory using a Lucene Directory class
-            var index = typeof(T).GetPlural().ToLower();
+            var index = typeof(T).GetPlural().ToLower(_en);
             var directory = MemoryCache.Get<RAMDirectory>($"lucene_{index}");
             if (directory == null)
             {

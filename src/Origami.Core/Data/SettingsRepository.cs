@@ -159,8 +159,8 @@ public class SettingsRepository :
             if (property.Name.Like(nameof(OrigamiSettings.SocialNetwork)) == true) continue;
             if (property.Name.Like(nameof(OrigamiSettings.Seq)) == true) continue;
 
-            var name = property.Name.ToLower();
-            var setting = dbSettings.FirstOrDefault(x => x.Name == name);
+            var name = property.Name.ToLowerInvariant();
+            var setting = dbSettings.FirstOrDefault(x => x.Name.Equals(name) == true);
             if (setting != null)
             {
                 var value1 = setting.Value;

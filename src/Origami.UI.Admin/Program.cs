@@ -69,4 +69,4 @@ var app = builder.FoldTheOrigami<App>(
         builder.WebHost.ConfigureKestrel(serverOptions => serverOptions.Limits.MaxRequestBodySize = (long)8 * 1024 * 1024 * 1024);
     });
 
-await app.RunAsync();
+await app.RunAsync().ConfigureAwait(false);

@@ -26,7 +26,7 @@ namespace Origami.Core.Models
         private string _userAgent = string.Empty;
         private byte[] _version = [];
 
-        public BaseView() : base()
+        protected BaseView() : base()
         {
 
         }

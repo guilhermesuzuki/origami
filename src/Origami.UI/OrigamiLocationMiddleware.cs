@@ -40,11 +40,11 @@ namespace Origami.UI
                     {
                         Timeout = TimeSpan.FromMilliseconds(250),
                     };
-                    var response = await client.GetAsync(url).ConfigureAwait(false);
+                    using var response = await client.GetAsync(url).ConfigureAwait(false);
                     if (response.IsSuccessStatusCode)
                     {
                         var content = await response.Content.ReadAsStringAsync();
-                        var json = System.Text.Json.JsonDocument.Parse(content);
+                        using var json = System.Text.Json.JsonDocument.Parse(content);
                         if (json.RootElement.TryGetProperty("ip", out var ipElement))
                         {
                             ip = ipElement.GetString();
