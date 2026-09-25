@@ -419,7 +419,7 @@
 
         Task.WhenAll(tasks).Wait();
 
-        this._hits.RemoveAll(id => this.FilterHits(allowedBlogs, id));
+        this._hits.RemoveAll(id => this.ShouldRemoveHits(allowedBlogs, id));
     }
 
     protected virtual void FrontEndSearch(string queryTerm)
@@ -443,10 +443,10 @@
 
         Task.WhenAll(tasks).Wait();
 
-        this._hits.RemoveAll(id => this.FilterHits(allowedBlogs, id));
+        this._hits.RemoveAll(id => this.ShouldRemoveHits(allowedBlogs, id));
     }
 
-    protected bool FilterHits(IEnumerable<Guid> allowedBlogs, IId id)
+    protected bool ShouldRemoveHits(IEnumerable<Guid> allowedBlogs, IId id)
     {
         if (id is OrigamiSpecialPage) return false;
 
