@@ -52,6 +52,12 @@ namespace Origami.UI.Admin
         /// </summary>
         protected T2 SelectedEntity { get; set; } = new();
 
+        public override void Dispose()
+        {
+            this.UserFacade.Changed -= this.BlogChangedMustReloadDataGridAndRefreshAsync;
+            base.Dispose();
+        }
+
         /// <summary>
         /// Selected entities have changed (and need to be updated)
         /// </summary>
@@ -67,6 +73,15 @@ namespace Origami.UI.Admin
             await JSRuntime.InvokeVoidAsync("addQueryStringWithoutReload", "filter", filter);
             await DataGrid.ReloadServerData();
             Filter = filter;
+        }
+
+        protected async void BlogChangedMustReloadDataGridAndRefreshAsync(object? sender, System.ComponentModel.PropertyChangedEventArgs p)
+        {
+            if (p.PropertyName.Like(nameof(IUserFacade.BlogId)) == true)
+            {
+                await this.ReloadDataGridAsync();
+                await this.InvokeAsync(this.StateHasChanged);
+            }
         }
 
         protected override Result CanAccess()
@@ -272,22 +287,6 @@ namespace Origami.UI.Admin
 
             return items;
         }
-
-        /// <summary>
-        /// Has the Blog property changed in UserFacade?
-        /// </summary>
-        protected virtual void HasBlogChangedInUserFacade()
-        {
-            this.UserFacade.Changed += async (sender, p) =>
-            {
-                if (p.PropertyName.Like(nameof(IUserFacade.BlogId)) == true)
-                {
-                    await ReloadDataGridAsync();
-                    await this.InvokeAsync(this.StateHasChanged);
-                }
-            };
-        }
-
         /// <summary>
         /// User selects an <paramref name="entity"/> to edit
         /// </summary>
@@ -317,7 +316,7 @@ namespace Origami.UI.Admin
         {
             base.OnInitialized();
             this.SetFilterFromQueryString();
-            this.HasBlogChangedInUserFacade();
+            this.UserFacade.Changed += this.BlogChangedMustReloadDataGridAndRefreshAsync;
             this.SelectedEntity = TheCreator.Create<T2>();
             this.SetEntityFromQueryString();
         }

@@ -2,8 +2,8 @@
 using CloneExtensions;
 using FluentValidation;
 using Origami.Core.Models;
+using Origami.Core.Models.FileSystem;
 using Origami.Core.Models.Settings;
-using SixLabors.ImageSharp;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -24,17 +24,6 @@ namespace Origami.Core
     /// </summary>
     public static class ModelExtensions
     {
-        /// <summary>
-        /// Represents a collection of file extensions commonly associated with image formats.
-        /// </summary>
-        /// <remarks>The collection is case-insensitive, allowing comparisons to be performed without
-        /// regard to letter casing. Supported extensions include: .jpg, .jpeg, .png, .gif, .bmp, .tiff, .webp, and
-        /// .tga.</remarks>
-        private static readonly HashSet<string> ImageExtensions = new(StringComparer.OrdinalIgnoreCase)
-        {
-            ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".tiff", ".webp", ".tga"
-        };
-
         /// <summary>
         /// Hex Digits
         /// </summary>
@@ -459,7 +448,7 @@ namespace Origami.Core
 
             if (names.Count == 2)
             {
-                if (Thread.CurrentThread.CurrentUICulture.Name.StartsWith("en") == true)
+                if (Thread.CurrentThread.CurrentUICulture.Name.StartsWith("en", StringComparison.InvariantCultureIgnoreCase) == true)
                 {
                     return $"{names[1]}, {names[0]}";
                 }
@@ -522,17 +511,6 @@ namespace Origami.Core
         public static string GetHyperlink(this OrigamiBlog blog, OrigamiCategory category, INanoId? entity = null)
         {
             return $"/blogs/{blog.Slug}/categories/{category.Slug}/{entity?.NanoId}";
-        }
-
-        public static (string Extension, string MimeType) GetImageFormat(this byte[] imageBytes)
-        {
-            using var stream = new MemoryStream(imageBytes);
-            using var image = Image.Load(stream);
-
-            var format = image.Metadata.DecodedImageFormat
-                ?? throw new InvalidOperationException("Unable to determine image format.");
-
-            return (format.Name, format.DefaultMimeType);
         }
 
         /// <summary>
@@ -777,8 +755,7 @@ namespace Origami.Core
 
         public static bool IsImage(this string fileName)
         {
-            var extension = Path.GetExtension(fileName);
-            return !string.IsNullOrEmpty(extension) && ImageExtensions.Contains(extension);
+            return OrigamiSystemFile.IsFileAnImage(fileName);
         }
 
         /// <summary>
@@ -830,12 +807,9 @@ namespace Origami.Core
 
             try
             {
-                using var image = Image.Load(imageBytes);
+                using var image = NetVips.Image.NewFromBuffer(imageBytes, "", NetVips.Enums.Access.Sequential);
+                _ = image.WriteToMemory<byte>();
                 return true;
-            }
-            catch (UnknownImageFormatException)
-            {
-                return false;
             }
             catch
             {
@@ -1201,54 +1175,6 @@ namespace Origami.Core
             {
                 reference = value;
                 eventHandler?.Invoke(entity, args);
-            }
-
-            //if value is an observable collection, attaches itself to the collection changed event
-            if (value is INotifyCollectionChanged notifyCollectionChanged)
-            {
-                notifyCollectionChanged.CollectionChanged += (sender, e) => eventHandler?.Invoke(entity, args);
-            }
-
-            //value is IChanged and needs to be hooked up
-            if (value is IChanged changed)
-            {
-                changed.Changed += (sender, e) => eventHandler?.Invoke(entity, args);
-            }
-
-            //value is ICommentChanged and needs to be hooked up
-            if (value is ICommentChanged commentChanged)
-            {
-                commentChanged.CommentChanged += (sender, e) => eventHandler?.Invoke(entity, args);
-            }
-
-            //value is IContentChanged and needs to be hooked up
-            if (value is IContentChanged contentChanged)
-            {
-                contentChanged.ContentChanged += (sender, e) => eventHandler?.Invoke(entity, args);
-            }
-
-            //value is IRatingChanged and needs to be hooked up
-            if (value is IRatingChanged ratingChanged)
-            {
-                ratingChanged.RatingChanged += (sender, e) => eventHandler?.Invoke(entity, args);
-            }
-
-            //value is ISettingChanged and needs to be hooked up
-            if (value is ISettingChanged settingChanged)
-            {
-                settingChanged.SettingChanged += (sender, e) => eventHandler?.Invoke(entity, args);
-            }
-
-            //value is IViewChanged and needs to be hooked up
-            if (value is IViewChanged viewChanged)
-            {
-                viewChanged.ViewChanged += (sender, e) => eventHandler?.Invoke(entity, args);
-            }
-
-            //value is IReactionChanged and needs to be hooked up
-            if (value is IReactionChanged reactionChanged)
-            {
-                reactionChanged.ReactionChanged += (sender, e) => eventHandler?.Invoke(entity, args);
             }
         }
 

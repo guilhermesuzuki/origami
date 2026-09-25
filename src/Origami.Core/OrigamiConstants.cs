@@ -89,7 +89,7 @@ namespace Origami.Core
             /// <summary>
             /// TinyMCE configuration for content
             /// </summary>
-            public static Dictionary<string, object> Configuration = new Dictionary<string, object>
+            public static IDictionary<string, object> Configuration = new Dictionary<string, object>
             {
                 { "menubar", true },
                 { "plugins", "link image imagegrid filemanager code codesample emoticons searchreplace lists" },
@@ -104,7 +104,7 @@ namespace Origami.Core
             /// <summary>
             /// TinyMCE configuration for comments
             /// </summary>
-            public static Dictionary<string, object> ConfigurationForComments = new Dictionary<string, object>
+            public static IDictionary<string, object> ConfigurationForComments = new Dictionary<string, object>
             {
                 { "menubar", false },
                 { "plugins", "link image emoticons lists codesample" },
@@ -115,7 +115,7 @@ namespace Origami.Core
             /// <summary>
             /// TinyMCE lite configuration
             /// </summary>
-            public static Dictionary<string, object> ConfigurationLite = new Dictionary<string, object>
+            public static IDictionary<string, object> ConfigurationLite = new Dictionary<string, object>
             {
                 { "menubar", false },
                 { "plugins", "link image code emoticons" },

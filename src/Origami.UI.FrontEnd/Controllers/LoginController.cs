@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Origami.Core;
 using Origami.Core.Data;
 using Origami.Core.Models;
+using System.Globalization;
 using System.Security.Claims;
 
 namespace Origami.UI.FrontEnd.Controllers
@@ -16,15 +17,16 @@ namespace Origami.UI.FrontEnd.Controllers
         private readonly Text _text;
         private readonly IUserFacade _userFacade;
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly IUserRepository _userRepository;
         private readonly IUserStore<IdentityUser> _userStore;
+        private readonly CultureInfo _en = new("en-US");
+
         public LoginController(
             SignInManager<IdentityUser> signInManager,
             UserManager<IdentityUser> userManager,
             IUserStore<IdentityUser> userStore,
             IUserFacade userFacade,
-            Text text,
-            IUserRepository userRepository)
+            Text text
+            )
             : base()
         {
             _signInManager = signInManager;
@@ -33,15 +35,13 @@ namespace Origami.UI.FrontEnd.Controllers
             _emailStore = GetEmailStore();
             _userFacade = userFacade;
             _text = text;
-
-            _userRepository = userRepository;
         }
 
         [HttpGet("{provider}")]
         public IActionResult Login([FromRoute] string provider, [FromQuery] string? returnUrl = null)
         {
             //Google, Twitter or Facebook
-            provider = provider[0].ToString().ToUpper() + provider[1..].ToLower();
+            provider = provider[0].ToString().ToUpper(_en) + provider[1..].ToLower(_en);
 
             //fix for GitHub
             //fix for OpenIdConnect

@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Origami.Core.Data;
+using Origami.Core.Jobs;
 using Origami.UI;
 using Origami.UI.Admin.Components;
-using Origami.UI.Services;
+using Quartz;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,7 +14,21 @@ var app = builder.FoldTheOrigami<App>(
     admin: true,
     injectServices: () =>
     {
-        builder.Services.AddHostedService<EmptyFolderCleanUpService>();
+		builder.Services.AddQuartz(q =>
+        {
+            q.ScheduleJob<MailConnectivityCheck>(trigger => trigger
+                .WithIdentity(nameof(MailConnectivityCheck))
+                .WithCronSchedule("0 0/5 * * * ?"));
+
+            q.ScheduleJob<EmptyFolderCleanUp>(trigger => trigger
+                .WithIdentity(nameof(EmptyFolderCleanUp))
+                .WithCronSchedule("0 0/10 * * * ?"));
+
+            q.ScheduleJob<ScalingFolderCleanUp>(trigger => trigger
+                .WithIdentity(nameof(ScalingFolderCleanUp))
+                .WithSimpleSchedule(x => x.WithInterval(TimeSpan.FromDays(10)).RepeatForever()));
+        });
+
         builder.Services.AddScoped<ILoginHelpMeRules, LoginHelpMeRules>();
         builder.Services.AddScoped<ILoginRules, LoginRules>();
 
@@ -54,4 +69,4 @@ var app = builder.FoldTheOrigami<App>(
         builder.WebHost.ConfigureKestrel(serverOptions => serverOptions.Limits.MaxRequestBodySize = (long)8 * 1024 * 1024 * 1024);
     });
 
-await app.RunAsync();
+await app.RunAsync().ConfigureAwait(false);

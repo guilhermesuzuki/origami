@@ -17,7 +17,8 @@ namespace Origami.UI
         ComponentBase,
         IClass,
         IId,
-        IBlogId
+        IBlogId,
+        IDisposable
     {
         /// <summary>
         /// Sync root object
@@ -37,16 +38,21 @@ namespace Origami.UI
         [Inject] protected IConfiguration Configuration { get; set; } = null!;
         [Inject] protected IDbContextFactory<OrigamiDbContext> DbContextFactory { get; set; } = null!;
         [Inject] protected IDialogService DialogService { get; set; } = null!;
+        [Inject] protected NavigationManager GhostOfTheNavigator { get; set; } = null!;
         [Inject] protected IHttpContextAccessor HttpContextAccessor { get; set; } = null!;
         [Inject] protected IJSRuntime JSRuntime { get; set; } = null!;
         [Inject] protected IMyMemoryCache MemoryCache { get; set; } = null!;
         [Inject] protected ISuperRepository Super { get; set; } = null!;
+        [Inject] protected Text Text { get; set; } = null!;
         [Inject] protected ITheCreator TheCreator { get; set; } = null!;
         [Inject] protected IUserFacade UserFacade { get; set; } = null!;
         [Inject] protected IWebRootPath WebRootPath { get; set; } = null!;
         [Inject] protected IWhatHappensNext WhatHappensNext { get; set; } = null!;
-        [Inject] protected NavigationManager GhostOfTheNavigator { get; set; } = null!;
-        [Inject] protected Text Text { get; set; } = null!;
+
+        public virtual void Dispose()
+        {
+            this.UserFacade.Changed -= CurrentBlogChangedMustRefreshUI;
+        }
 
         public OrigamiBlog GetBlogFromSlug()
         {
@@ -66,6 +72,14 @@ namespace Origami.UI
         protected async Task CopyToClipboard(string info)
         {
             await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", info);
+        }
+
+        protected async void CurrentBlogChangedMustRefreshUI(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(IUserFacade.BlogId))
+            {
+                await this.InvokeAsync(this.StateHasChanged);
+            }
         }
 
         protected async Task DownloadFile(OrigamiSystemFile file)
@@ -104,7 +118,7 @@ namespace Origami.UI
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            this.UserFacade.Changed += _currentBlogIdChangedMustRefreshUI;
+            this.UserFacade.Changed += CurrentBlogChangedMustRefreshUI;
         }
 
         /// <summary>
@@ -153,14 +167,6 @@ namespace Origami.UI
         {
             var ctx = this.UserFacade.SocialProfile.GetContext();
             UserFacade.Result = Super.Subscribers.Unsubscribe(ctx);
-        }
-
-        private void _currentBlogIdChangedMustRefreshUI(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(IUserFacade.BlogId))
-            {
-                this.InvokeAsync(this.StateHasChanged);
-            }
         }
     }
 }

@@ -7,7 +7,7 @@
         <TinyMCE.Blazor.Editor ClassName="tinymce tinymce-comment"
                                Value="@this.Entity.Content"
                                ValueChanged="(value) => this.Entity.Content = value"
-                               Conf="@OrigamiConstants.TinyMCE.ConfigurationForComments"
+                               Conf="@OrigamiConstants.TinyMCE.ConfigurationForComments.ToDictionary()"
                                ScriptSrc="_content/Origami.UI/lib/tinymce/tinymce.min.js"></TinyMCE.Blazor.Editor>
     </div>
 }

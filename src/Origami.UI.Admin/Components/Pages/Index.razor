@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using System.ComponentModel
 @inherits BasicAdmin
 @implements IId
 @inject IDashboardRepository _dashboard
@@ -324,11 +325,6 @@
                                     var specialpage = this.Super.Contents.ReadFromCache().OfType<OrigamiSpecialPage>().Id(context.Item.Id);
                                     <ContentHeaderInline Entity="specialpage"></ContentHeaderInline>
                                 }
-                                @if (context.Item.SocialProfileId != null)
-                                {
-                                    var socialProfile = this.Super.SocialProfiles.ReadFromCache().Id(context.Item.SocialProfileId);
-                                    <SocialProfileHeaderInline Class="p-1 border mt-1" Entity="socialProfile"></SocialProfileHeaderInline>
-                                }
                             </div>
                         </CellTemplate>
                     </TemplateColumn>
@@ -370,21 +366,15 @@
                                 @if (context.Item.UserId != null)
                                 {
                                     var user = this.Super.Users.ReadFromCache().Id(context.Item.UserId);
-                                    @if (user != null)
-                                    {
-                                        <span><i class="bi bi-person-fill"></i>@user.Username (@user.DisplayName)</span>
-                                    }
+                                    <UserHeaderInline Entity="user"></UserHeaderInline>
                                 }
                             }
                             else
                             {
                                 @if (context.Item.SocialProfileId != null)
                                 {
-                                    var profile = this.Super.SocialProfiles.ReadFromCache().Id(context.Item.SocialProfileId);
-                                    @if (profile != null)
-                                    {
-                                        <span><i class="bi bi-person-fill"></i>@profile.SocialNetwork, @profile.FirstName @profile.LastName</span>
-                                    }
+                                    var socialProfile = this.Super.SocialProfiles.ReadFromCache().Id(context.Item.SocialProfileId);
+                                    <SocialProfileHeaderInline Entity="socialProfile"></SocialProfileHeaderInline>
                                 }
                             }
                         </CellTemplate>
@@ -558,26 +548,26 @@
         return new GridData<OrigamiUserView> { Items = result.Rows, TotalItems = (int)result.NumberOfRows, };
     }
 
-    /// <summary>
-    /// Has the Blog property changed in UserFacade?
-    /// </summary>
-    protected virtual void HasBlogChangedInUserFacade()
+    public override void Dispose()
     {
-        this.UserFacade.Changed += async (sender, p) =>
+        this.UserFacade.Changed -= this.BlogChangedNeedsToReloadCharts;
+        base.Dispose();
+    }
+
+    protected virtual async void BlogChangedNeedsToReloadCharts(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName.Like(nameof(IUserFacade.BlogId)) == true)
         {
-            if (p.PropertyName.Like(nameof(IUserFacade.BlogId)) == true)
-            {
-                await this._loadCharts();
-                if (this._userViews != null) await this._userViews.ReloadServerData();
-                await this.InvokeAsync(this.StateHasChanged);
-            }
-        };
+            await this._loadCharts();
+            if (this._userViews != null) await this._userViews.ReloadServerData();
+            await this.InvokeAsync(this.StateHasChanged);
+        }
     }
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        this.HasBlogChangedInUserFacade();
+        this.UserFacade.Changed += this.BlogChangedNeedsToReloadCharts;
     }
 
     protected override async Task OnInitializedAsync()
