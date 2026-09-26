@@ -123,7 +123,7 @@ namespace Origami.UI
                     var result = this.Super.PhysicalPages.SmartSave(page.GetContext(), false);
                     if (result.Ok == false)
                     {
-                        return new() { Error = "Internal server error" };
+                        return new() { Error = Text.Original("Internal server error") };
                     }
                     transaction.Complete();
                 }
@@ -147,10 +147,10 @@ namespace Origami.UI
                     return new();
                 }
 
-                return new() { Error = "Metadata error (HttpContext null)" };
+                return new() { Error = Text.Original("Metadata error (HttpContext null)") };
             }
 
-            return new() { Error = "Page not found" };
+            return new() { Error = Text.Original("Page not found") };
         }
 
         protected async Task<Result> PhysicalPagesByPathAsync()
@@ -174,7 +174,7 @@ namespace Origami.UI
                     var result = this.Super.PhysicalPages.SmartSave(page.GetContext(), false);
                     if (result.Ok == false)
                     {
-                        return new() { Error = "Internal server error" };
+                        return new() { Error = Text.Original("Internal server error") };
                     }
                     transaction.Complete();
                 }
@@ -196,10 +196,10 @@ namespace Origami.UI
                     return new();
                 }
 
-                return new() { Error = "Metadata error (HttpContext null)" };
+                return new() { Error = Text.Original("Metadata error (HttpContext null)") };
             }
 
-            return new() { Error = "Page not found" };
+            return new() { Error = Text.Original("Page not found") };
         }
 
         protected virtual void SetPageTitle()
