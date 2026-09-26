@@ -153,6 +153,10 @@ namespace Origami.UI
             return new() { Error = Text.Original("Page not found") };
         }
 
+        /// <summary>
+        /// TODO: add texts to RESX files
+        /// </summary>
+        /// <returns></returns>
         protected async Task<Result> PhysicalPagesByPathAsync()
         {
             var absolutePath = new Uri(this.GhostOfTheNavigator.Uri).AbsolutePath;
