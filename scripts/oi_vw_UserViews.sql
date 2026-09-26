@@ -1,5 +1,4 @@
-USE [origami-development-1]
-GO
+-- Execute against the currently selected Origami database.
 
 /****** Object:  View [dbo].[oi_vw_UserViews]    Script Date: 9/26/2026 5:22:26 AM ******/
 SET ANSI_NULLS ON
