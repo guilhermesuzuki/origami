@@ -100,6 +100,11 @@ namespace Origami.UI
             }
         }
 
+        /// <summary>
+        /// TODO: add texts to RESX files
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         protected async Task<Result> PhysicalPagesByContentAsync(Guid id)
         {
             var absolutePath = new Uri(this.GhostOfTheNavigator.Uri).AbsolutePath;
