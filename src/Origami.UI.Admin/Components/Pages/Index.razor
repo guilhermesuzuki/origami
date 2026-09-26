@@ -325,6 +325,11 @@
                                     var specialpage = this.Super.Contents.ReadFromCache().OfType<OrigamiSpecialPage>().Id(context.Item.Id);
                                     <ContentHeaderInline Entity="specialpage"></ContentHeaderInline>
                                 }
+                                else if (context.Item.Type.Like("SoftwareRelease") == true)
+                                {
+                                    var softwareRelease = this.Super.Contents.ReadFromCache().OfType<OrigamiSoftwareRelease>().Id(context.Item.Id);
+                                    <ContentHeaderInline Entity="softwareRelease"></ContentHeaderInline>
+                                }
                             </div>
                         </CellTemplate>
                     </TemplateColumn>
