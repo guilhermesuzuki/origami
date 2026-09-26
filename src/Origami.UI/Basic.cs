@@ -35,6 +35,7 @@ namespace Origami.UI
         [Parameter] public virtual Guid Id { get; set; } = Guid.Empty;
 
         [Inject] protected IAppFacade AppFacade { get; set; } = null!;
+        [Inject] protected TimeProvider Chronos { get; set; } = null!;
         [Inject] protected IConfiguration Configuration { get; set; } = null!;
         [Inject] protected IDbContextFactory<OrigamiDbContext> DbContextFactory { get; set; } = null!;
         [Inject] protected IDialogService DialogService { get; set; } = null!;
@@ -48,7 +49,6 @@ namespace Origami.UI
         [Inject] protected IUserFacade UserFacade { get; set; } = null!;
         [Inject] protected IWebRootPath WebRootPath { get; set; } = null!;
         [Inject] protected IWhatHappensNext WhatHappensNext { get; set; } = null!;
-
         public virtual void Dispose()
         {
             this.UserFacade.Changed -= CurrentBlogChangedMustRefreshUI;

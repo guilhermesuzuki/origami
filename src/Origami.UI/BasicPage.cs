@@ -16,6 +16,7 @@ namespace Origami.UI
     {
         [Parameter] public bool ShouldSetPageTitle { get; set; } = true;
         [Inject] protected IPageTitleRepository PageTitle { get; set; } = null!;
+
         protected virtual void ChangeBlog()
         {
             if (BlogId == Guid.Empty) return;
@@ -92,7 +93,11 @@ namespace Origami.UI
         {
             if (firstRender == false) return;
             if (this.UserFacade.IncognitoMode == true) return;
-            await this.PhysicalPagesByPathAsync();
+            var hub = await this.PhysicalPagesByPathAsync();
+            if (hub.Ok == false)
+            {
+                this.UserFacade.Result = hub;
+            }
         }
 
         protected async Task<Result> PhysicalPagesByContentAsync(Guid id)
@@ -110,7 +115,7 @@ namespace Origami.UI
                 {
                     Id = Guid.NewGuid(),
                     Path = absolutePath,
-                    DateCreated = DateTime.UtcNow,
+                    DateCreated = this.Chronos.GetUtcNow().Date,
                 };
 
                 using (var transaction = new TransactionScope())
@@ -119,7 +124,6 @@ namespace Origami.UI
                     if (result.Ok == false)
                     {
                         return new() { Error = "Internal server error" };
-                        
                     }
                     transaction.Complete();
                 }
@@ -133,11 +137,17 @@ namespace Origami.UI
                     PhysicalPageId = page.Id,
                     Admin = this.AppFacade.Admin,
                     ContentId = id,
+                    DateCreated = this.Chronos.GetUtcNow().Date,
                 };
-                this._fill(view);
-                this.Super.PhysicalPageViews.SmartSave(view.GetContext(), false);
-                this.AppFacade.RefreshUI(this.HttpContextAccessor.HttpContext?.Connection.Id ?? string.Empty, OrigamiConstants.Events.UpdateCounters);
-                return new();
+                var ok = this._fill(view);
+                if (ok) 
+                {
+                    this.Super.PhysicalPageViews.SmartSave(view.GetContext(), false);
+                    this.AppFacade.RefreshUI(this.HttpContextAccessor.HttpContext?.Connection.Id ?? string.Empty, OrigamiConstants.Events.UpdateCounters);
+                    return new();
+                }
+
+                return new() { Error = "Metadata error (HttpContext null)" };
             }
 
             return new() { Error = "Page not found" };
@@ -157,7 +167,7 @@ namespace Origami.UI
                 {
                     Id = Guid.NewGuid(),
                     Path = absolutePath,
-                    DateCreated = DateTime.UtcNow
+                    DateCreated = Chronos.GetUtcNow().Date,
                 };
                 using (var transaction = new TransactionScope())
                 {
@@ -176,12 +186,17 @@ namespace Origami.UI
                     Id = Guid.NewGuid(),
                     PhysicalPageId = page.Id,
                     Admin = this.AppFacade.Admin,
-                    ContentId = null,
+                    DateCreated = this.Chronos.GetUtcNow().Date,
                 };
-                this._fill(view);
-                this.Super.PhysicalPageViews.SmartSave(view.GetContext(), false);
-                this.AppFacade.RefreshUI(this.HttpContextAccessor.HttpContext?.Connection.Id ?? string.Empty, OrigamiConstants.Events.UpdateCounters);
-                return new();
+                var ok = this._fill(view);
+                if (ok)
+                {
+                    this.Super.PhysicalPageViews.SmartSave(view.GetContext(), false);
+                    this.AppFacade.RefreshUI(this.HttpContextAccessor.HttpContext?.Connection.Id ?? string.Empty, OrigamiConstants.Events.UpdateCounters);
+                    return new();
+                }
+
+                return new() { Error = "Metadata error (HttpContext null)" };
             }
 
             return new() { Error = "Page not found" };
@@ -196,11 +211,11 @@ namespace Origami.UI
         /// Fills the <paramref name="tracking"/> with request information
         /// </summary>
         /// <param name="tracking"></param>
-        private void _fill(BaseTracking tracking)
+        private bool _fill(BaseTracking tracking)
         {
             if (this.HttpContextAccessor.HttpContext == null)
             {
-                return;
+                return false;
             }
 
             var dd = this.HttpContextAccessor.HttpContext.Request.GetDeviceDetector();
@@ -208,7 +223,6 @@ namespace Origami.UI
             // important!
             dd.Parse();
 
-            tracking.DateCreated = DateTime.UtcNow;
             tracking.Url = this.GhostOfTheNavigator.Uri;
             tracking.UrlReferrer = this.HttpContextAccessor.HttpContext.Request.Headers.Referer.ToString();
             tracking.UserAgent = this.HttpContextAccessor.HttpContext.Request.Header("User-Agent");
@@ -226,6 +240,8 @@ namespace Origami.UI
 
             var key = $"Origami_UserLocation_{this.HttpContextAccessor.HttpContext.Connection.Id}";
             tracking.Location = this.MemoryCache.Get<Location>(key);
+
+            return true;
         }
     }
 }

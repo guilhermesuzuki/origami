@@ -296,6 +296,8 @@ namespace Origami.UI
                 options.WaitForJobsToComplete = true;
             });
 
+            builder.Services.AddSingleton(TimeProvider.System);
+
             if (OperatingSystem.IsWindows()) builder.Host.UseWindowsService();
 
             var services = builder.Services.BuildServiceProvider();
