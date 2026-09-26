@@ -44,7 +44,7 @@ namespace Origami.Core.Models
         /// <summary>
         /// Anonymous user
         /// </summary>
-        public static readonly OrigamiSocialProfile AnonymousUser = new() { Id = Guid.Empty };
+public static OrigamiSocialProfile AnonymousUser => new() { Id = Guid.Empty };
 
         public string? AdditionalInfo
         {
