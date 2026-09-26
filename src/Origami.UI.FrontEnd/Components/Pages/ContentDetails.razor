@@ -185,12 +185,11 @@
         this._comments = this.Super.ContentComments.AllComments(_entity);
     }
 
-    protected override Task PageViewAsync(bool firstRender)
+    protected override async Task PageViewAsync(bool firstRender)
     {
-        if (firstRender == false) return Task.CompletedTask;
-        if (this.UserFacade.IncognitoMode == true) return Task.CompletedTask;
-        this.PhysicalPagesByContentAsync(this._entity.Id);
-        return Task.CompletedTask;
+        if (firstRender == false) return;
+        if (this.UserFacade.IncognitoMode == true) return;
+        await this.PhysicalPagesByContentAsync(this._entity.Id);
     }
 
     protected override void SetPageTitle()
