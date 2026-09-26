@@ -318,13 +318,23 @@ namespace Origami.Core.Validators
             return ruleBuilder
                 .Must(tags =>
                 {
-                    if (tags.DistinctBy(x => x.Tag).Count() != tags.Count)
+                    if (tags.DistinctBy(x => x.Tag).Take(tags.Count + 1).Count() != tags.Count)
                     {
                         return false;
                     }
                     return true;
                 })
-                .WithMessage(text.Original("Tags must be unique"));
+                .WithMessage(text.Original("Tags must be unique"))
+                .Must(tags =>
+                {
+                    if (tags.DistinctBy(x => x.Slug).Take(tags.Count + 1).Count() != tags.Count)
+                    {
+                        return false;
+                    }
+                    return true;
+                })
+                .WithMessage(text.Original("Slug is already in use"))
+                ;
         }
 
         public static IRuleBuilderOptions<T, string> Title<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)

@@ -24,9 +24,9 @@ namespace Origami.Core
                        join b in uiRows on a.Id equals b.Id
                        select new { db = a, ui = b };
 
-            var update = join.Select(x => x.ui);
-            var add = uiRows.Except(update);
-            var purge = dbRows.ExceptBy(join.Select(x => x.db.Id), x => x.Id);
+            var update = join.Select(x => x.ui).ToList();
+            var add = uiRows.Except(update).ToList();
+            var purge = dbRows.ExceptBy(join.Select(x => x.db.Id), x => x.Id).ToList();
 
             return new(purge, update, add);
         }

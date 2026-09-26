@@ -11,7 +11,7 @@ namespace Origami.Core.Validators
         {
             RuleFor(x => x.Entity).SetValidator(new OrigamiContentValidator(text, webRootPath, dbContextFactory));
             RuleFor(x => x.Categories).CategoriesMustBeUnique(text);
-            RuleFor(x => x.Tags).TagsMustBeUnique(text);
+            RuleFor(x => x.Tags).Cascade(CascadeMode.Stop).TagsMustBeUnique(text);
             RuleForEach(x => x.Categories).SetValidator(new OrigamiContentCategoryValidator(text, webRootPath, dbContextFactory));
             RuleForEach(x => x.Tags).SetValidator(new OrigamiContentTagValidator(text, webRootPath, dbContextFactory));
             RuleFor(x => x.Entity.DateReleased).NotNull().WithMessage("Release date is required");
