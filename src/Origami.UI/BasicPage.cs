@@ -88,23 +88,22 @@ namespace Origami.UI
             await JSRuntime.InvokeVoidAsync("origami.common.title", title);
         }
 
-        protected virtual Task PageViewAsync(bool firstRender)
+        protected virtual async Task PageViewAsync(bool firstRender)
         {
-            if (firstRender == false) return Task.CompletedTask;
-            if (this.UserFacade.IncognitoMode == true) return Task.CompletedTask;
-            this.PhysicalPagesByPath();
-            return Task.CompletedTask;
+            if (firstRender == false) return;
+            if (this.UserFacade.IncognitoMode == true) return;
+            await this.PhysicalPagesByPathAsync();
         }
 
-        protected Result PhysicalPagesByContent(Guid id)
+        protected async Task<Result> PhysicalPagesByContentAsync(Guid id)
         {
             var absolutePath = new Uri(this.GhostOfTheNavigator.Uri).AbsolutePath;
             if (absolutePath.Has() == false) absolutePath = "/";
 
-            using var db = this.DbContextFactory.CreateDbContext();
+            using var db = await this.DbContextFactory.CreateDbContextAsync();
             var pages = from p in db.Set<OrigamiPhysicalPage>().AsNoTracking() where p.Path.Equals(absolutePath) == true select p;
 
-            var page = pages.FirstOrDefault();
+            var page = await pages.FirstOrDefaultAsync();
             if (page == null)
             {
                 page = new()
@@ -144,14 +143,14 @@ namespace Origami.UI
             return new() { Error = "Page not found" };
         }
 
-        protected Result PhysicalPagesByPath()
+        protected async Task<Result> PhysicalPagesByPathAsync()
         {
             var absolutePath = new Uri(this.GhostOfTheNavigator.Uri).AbsolutePath;
             if (absolutePath.Has() == false) absolutePath = "/";
 
-            using var db = this.DbContextFactory.CreateDbContext();
+            using var db = await this.DbContextFactory.CreateDbContextAsync();
 
-            var page = db.Set<OrigamiPhysicalPage>().AsNoTracking().FirstOrDefault(x => x.Path.Equals(absolutePath) == true);
+            var page = await db.Set<OrigamiPhysicalPage>().AsNoTracking().FirstOrDefaultAsync(x => x.Path.Equals(absolutePath) == true);
             if (page == null)
             {
                 page = new()

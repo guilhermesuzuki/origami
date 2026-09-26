@@ -189,7 +189,7 @@
     {
         if (firstRender == false) return Task.CompletedTask;
         if (this.UserFacade.IncognitoMode == true) return Task.CompletedTask;
-        this.PhysicalPagesByContent(this._entity.Id);
+        this.PhysicalPagesByContentAsync(this._entity.Id);
         return Task.CompletedTask;
     }
 
