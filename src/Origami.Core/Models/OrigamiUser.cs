@@ -33,7 +33,7 @@ namespace Origami.Core.Models
         /// <summary>
         /// Anonymous user
         /// </summary>
-        public static OrigamiUser AnonymousUser = new() { Id = Guid.Empty };
+        public static readonly OrigamiUser AnonymousUser = new() { Id = Guid.Empty };
 
         protected string? _additionalInfo = string.Empty;
         protected DateTime? _dateBlocked;

@@ -33,6 +33,7 @@ namespace Origami.Core.Models
         private SocialNetworks _socialProfile;
         private string _userId = string.Empty;
         private byte[] _version = Array.Empty<byte>();
+
         public OrigamiSocialProfile() : base()
         {
 
@@ -43,7 +44,8 @@ namespace Origami.Core.Models
         /// <summary>
         /// Anonymous user
         /// </summary>
-        public static OrigamiSocialProfile AnonymousUser => new() { Id = Guid.Empty };
+        public static readonly OrigamiSocialProfile AnonymousUser = new() { Id = Guid.Empty };
+
         public string? AdditionalInfo
         {
             get => _additionalInfo;
@@ -198,6 +200,7 @@ namespace Origami.Core.Models
             get => _version;
             set => this.Set(ref _version, value, Changed);
         }
+
         /// <summary>
         /// First, it tries to get the e-mail from the subscription.
         /// Then, it queries the application e-mail or the e-mail coming from the social network (when shared).
