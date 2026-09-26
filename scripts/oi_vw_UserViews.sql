@@ -196,7 +196,7 @@ SELECT
 	newid()
 	,'SoftwareRelease'
 	,'Software Release'
-	,b.Id
+	,c.BlogId
     ,ppv.ContentId
     ,ppv.[DateCreated]
     ,ppv.[HostAddress]
