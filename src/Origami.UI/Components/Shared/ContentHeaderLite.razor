@@ -52,12 +52,11 @@
             </div>
         </div>
     </div>
-    @if (_showHeaderImage)
-    {
-        <div class="position-fixed popup-container z-index-front" @onclick:stopPropagation="true">
-            <div class="border shadow-lg position-relative" style="width: 90%; height: 90%;">
+    <MudDialog @bind-Visible="_showHeaderImage" Options="_dialogOptions" TitleClass="d-none">
+        <DialogContent>
+            <div class="border shadow-lg position-relative">
                 <div class="overflow-auto text-center h-100 w-100" style="padding-bottom: 70px;">
-                    <img class="mw-100 mh-100 position-absolute" src="@header" style="top:50%;left:50%;transform:translate(-50%,-50%)" />
+                    <img class="mw-100 mh-100" src="@header" />
                 </div>
                 <ul class="inline-list position-absolute w-100 border bg-white" style="bottom:0; z-index: 50;">
                     <li></li>
@@ -71,12 +70,13 @@
                     </li>
                 </ul>
             </div>
-        </div>
-    }
+        </DialogContent>
+    </MudDialog>
 }
 
 @code {
     private bool _showHeaderImage = false;
+    private readonly DialogOptions _dialogOptions = new() { CloseOnEscapeKey = true, CloseButton = false, CloseOnNavigation = true, };
 
     [Parameter] public OrigamiContent? Entity { get; set; }
 

@@ -95,7 +95,7 @@
                                         var user = this.Super.Users.ReadFromCache().Id(context.Item.AuthorId);
                                         @if (user != null)
                                         {
-                                            <span><i class="bi bi-person-fill"></i>@user.Username (@user.DisplayName)</span>
+                                            <UserHeaderInline Entity="user"></UserHeaderInline>
                                         }
                                     }
                                 </CellTemplate>

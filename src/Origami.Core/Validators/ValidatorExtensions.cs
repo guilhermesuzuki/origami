@@ -297,10 +297,8 @@ namespace Origami.Core.Validators
         {
             return ruleBuilder
                 .NotNull()
-                // TODO: add this to resx files
                 .WithMessage(text.Original("Slug is required"))
                 .NotEmpty()
-                // TODO: add this to resx files
                 .WithMessage(text.Original("Slug is required"))
                 .MaximumLength(maximumCharactersAllowed)
                 .WithMessage(text.Original("Slug cannot exceed {0} characters", maximumCharactersAllowed));
@@ -310,7 +308,6 @@ namespace Origami.Core.Validators
         {
             return ruleBuilder
                 .NotEmpty()
-                // TODO: add this to resx files
                 .WithMessage(text.Original("Tag is required"))
                 .MaximumLength(128)
                 .WithMessage(text.Original("Tag cannot exceed {0} characters", 128));
@@ -321,13 +318,23 @@ namespace Origami.Core.Validators
             return ruleBuilder
                 .Must(tags =>
                 {
-                    if (tags.DistinctBy(x => x.Tag).Count() != tags.Count)
+                    if (tags.DistinctBy(x => x.Tag).Take(tags.Count + 1).Count() != tags.Count)
                     {
                         return false;
                     }
                     return true;
                 })
-                .WithMessage(text.Original("Tags must be unique"));
+                .WithMessage(text.Original("Tags must be unique"))
+                .Must(tags =>
+                {
+                    if (tags.DistinctBy(x => x.Slug).Take(tags.Count + 1).Count() != tags.Count)
+                    {
+                        return false;
+                    }
+                    return true;
+                })
+                .WithMessage(text.Original("Slug is already in use"))
+                ;
         }
 
         public static IRuleBuilderOptions<T, string> Title<T>(this IRuleBuilder<T, string> ruleBuilder, Text text)

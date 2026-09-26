@@ -1223,7 +1223,7 @@ namespace Origami.Core
         public static T SetSlug<T>(this T entity)
             where T : IId
         {
-            if (entity is ISlug slugger)
+            if (entity is ISlug slugger && slugger.Slug.Has() == false)
             {
                 slugger.Slug = entity switch
                 {

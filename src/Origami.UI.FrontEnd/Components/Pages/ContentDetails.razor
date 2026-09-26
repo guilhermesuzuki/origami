@@ -187,13 +187,12 @@
 
     protected override async Task PageViewAsync(bool firstRender)
     {
-        if (firstRender)
+        if (firstRender == false) return;
+        if (this.UserFacade.IncognitoMode == true) return;
+        var hub = await this.PhysicalPagesByContentAsync(this._entity.Id);
+        if (hub.Ok == false)
         {
-            if (this.UserFacade.IncognitoMode == false)
-            {
-                var uri = new Uri(GhostOfTheNavigator.Uri);
-                await JSRuntime.InvokeVoidAsync("origami.physicalpages.viewByContent", uri.AbsolutePath, this._entity.GetType().Name, this._entity.Id);
-            }
+            this.UserFacade.Result = hub;
         }
     }
 
