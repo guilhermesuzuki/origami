@@ -21,7 +21,7 @@
             <li>
                 <MudTextField Immediate="true"
                               FullWidth="true"
-                              Value="@Entity.Slug"
+                              @bind-Value="@Entity.Slug"
                               HelperText="@Text.Lower("Slug")"></MudTextField>
             </li>
         </ul>
