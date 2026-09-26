@@ -54,7 +54,7 @@ FROM [dbo].[oi_PhysicalPageViews] ppv
 JOIN [dbo].[oi_PhysicalPages] pp ON pp.Id = ppv.PhysicalPageId
 JOIN [dbo].[oi_Blogs] b ON b.IsPrimary = 1
 WHERE ppv.ContentId IS NULL
-UNION
+UNION ALL
 SELECT 
 	newid()
 	,'PageView'
@@ -88,7 +88,7 @@ SELECT
 FROM [dbo].[oi_PhysicalPageViews] ppv
 JOIN [dbo].[oi_Contents] c ON c.Id = ppv.ContentId
 WHERE c.[Type] = 'OrigamiPage'
-UNION
+UNION ALL
 SELECT 
 	newid()
 	,'PostView'
@@ -122,7 +122,7 @@ SELECT
 FROM [dbo].[oi_PhysicalPageViews] ppv
 JOIN [dbo].[oi_Contents] c ON c.Id = ppv.ContentId
 WHERE c.[Type] = 'OrigamiPost'
-UNION
+UNION ALL
 SELECT 
 	newid()
 	,'VideoView'
@@ -156,7 +156,7 @@ SELECT
 FROM [dbo].[oi_PhysicalPageViews] ppv
 JOIN [dbo].[oi_Contents] c ON c.Id = ppv.ContentId
 WHERE c.[Type] = 'OrigamiVideo'
-UNION
+UNION ALL
 SELECT 
 	newid()
 	,'SpecialPageView'
@@ -191,7 +191,7 @@ FROM [dbo].[oi_PhysicalPageViews] ppv
 JOIN [dbo].[oi_Contents] c ON c.Id = ppv.ContentId
 JOIN [dbo].[oi_Blogs] b ON b.IsPrimary = 1
 WHERE c.[Type] = 'OrigamiSpecialPage'
-UNION
+UNION ALL
 SELECT 
 	newid()
 	,'SoftwareRelease'
