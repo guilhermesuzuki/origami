@@ -297,10 +297,8 @@ namespace Origami.Core.Validators
         {
             return ruleBuilder
                 .NotNull()
-                // TODO: add this to resx files
                 .WithMessage(text.Original("Slug is required"))
                 .NotEmpty()
-                // TODO: add this to resx files
                 .WithMessage(text.Original("Slug is required"))
                 .MaximumLength(maximumCharactersAllowed)
                 .WithMessage(text.Original("Slug cannot exceed {0} characters", maximumCharactersAllowed));
@@ -310,7 +308,6 @@ namespace Origami.Core.Validators
         {
             return ruleBuilder
                 .NotEmpty()
-                // TODO: add this to resx files
                 .WithMessage(text.Original("Tag is required"))
                 .MaximumLength(128)
                 .WithMessage(text.Original("Tag cannot exceed {0} characters", 128));
