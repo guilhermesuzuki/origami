@@ -77,7 +77,7 @@ namespace Origami.UI
 
         protected async void CurrentBlogChangedMustRefreshUI(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(IUserFacade.BlogId))
+            if (e.PropertyName?.Equals(nameof(IUserFacade.BlogId), StringComparison.InvariantCultureIgnoreCase) == true)
             {
                 await this.InvokeAsync(this.StateHasChanged);
             }
