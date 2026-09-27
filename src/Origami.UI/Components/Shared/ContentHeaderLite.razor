@@ -52,7 +52,7 @@
             </div>
         </div>
     </div>
-    <MudDialog @bind-Visible="_showHeaderImage" Options="_dialogOptions" TitleClass="d-none">
+    <MudDialog @bind-Visible="_showHeaderImage" Options="DialogOptions" TitleClass="d-none">
         <DialogContent>
             <div class="border shadow-lg position-relative">
                 <div class="overflow-auto text-center h-100 w-100" style="padding-bottom: 70px;">
@@ -76,7 +76,6 @@
 
 @code {
     private bool _showHeaderImage = false;
-    private readonly DialogOptions _dialogOptions = new() { CloseOnEscapeKey = true, CloseButton = false, CloseOnNavigation = true, };
 
     [Parameter] public OrigamiContent? Entity { get; set; }
 
