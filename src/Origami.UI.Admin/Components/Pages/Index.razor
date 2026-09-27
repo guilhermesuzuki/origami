@@ -286,7 +286,7 @@
                             <div class="text-center fw-bold">
                                 @Text.Original("History")
                             </div>
-                            <MudChart Class="mt-3" ChartSeries="@_series" ChartLabels="@_xAxisLabels" ChartType="ChartType.Line" Width="100%" Height="450px" />
+                            <MudChart Class="mt-3" ChartSeries="@_series" ChartLabels="@_xAxisLabels" ChartType="ChartType.Line" Width="100%" Height="450px" ChartOptions="_chartOptions" />
                         </div>
                     }
                 </div>
@@ -413,6 +413,11 @@
 
     protected bool DisableEnterMaintenanceModeButton => this.Super.Settings.GetSettings().MaintenanceMode == true;
     protected bool DisableLeaveMaintenanceModeButton => this.Super.Settings.GetSettings().MaintenanceMode == false;
+
+    private LineChartOptions _chartOptions = new()
+    {
+        XAxisLabelRotation = 33
+    };
 
     /// <summary>
     /// Period of Time the user has selected
