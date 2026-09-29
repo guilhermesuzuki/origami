@@ -65,7 +65,7 @@ namespace Origami.UI.Controllers
                     {
                         if (file.IsImage)
                         {
-                            var esize = ePictureSizes.original; 
+                            var esize = ePictureSizes.original;
                             _ = Enum.TryParse(size, true, out esize);
                             return await PictureAsync(file, esize);
                         }
@@ -148,12 +148,12 @@ namespace Origami.UI.Controllers
 
             //image scaling
             var fileScaled = await ScalePictureAsync(file, eSize);
-            if (fileScaled.Ok == true)
+
+            if (fileScaled.Ok == true 
+                && fileScaled.File != null 
+                && fileScaled.File.FileSize < file.FileSize)
             {
-                if (fileScaled.File != null && fileScaled.File.FileSize < file.FileSize)
-                {
-                    return PhysicalFile(fileScaled.File.LocalPath, fileScaled.File.ContentType, fileScaled.File.Name, true);
-                }
+                return PhysicalFile(fileScaled.File.LocalPath, fileScaled.File.ContentType, fileScaled.File.Name, true);
             }
 
             return PhysicalFile(file.LocalPath, file.ContentType, file.Name, true);
