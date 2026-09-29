@@ -9,6 +9,7 @@ namespace Origami.Core.Jobs
     {
         public ValueTask Execute(IJobExecutionContext context, CancellationToken cancellationToken = default)
         {
+            var sizes = Enum.GetValues<ePictureSizes>();
             var scalingFiles = new List<string>();
             var scalingPath = Super.Directories.LocalPath(OrigamiSystemDirectory.DirectoryForScalingImages());
             var localPath = Super.Directories.LocalPath("/files/");
@@ -20,7 +21,7 @@ namespace Origami.Core.Jobs
 
             foreach (var file in files)
             {
-                foreach (var size in Enum.GetValues<ePictureSizes>())
+                foreach (var size in sizes)
                 {
                     var scaledFilename = file.ScaleFilename(size);
                     var scaledFilePath = Path.Combine(scalingPath, scaledFilename);
