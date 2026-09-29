@@ -144,23 +144,20 @@ namespace Origami.UI.Controllers
             //image scaling
             if (eSize != ePictureSizes.original)
             {
-                //first: get a md5 from file fullpath
-                var utf8 = Encoding.UTF8.GetBytes(file.LocalPath);
-                var hash = MD5.Create().ComputeHash(utf8).GetHexString();
                 var directoryForScalingImages = OrigamiSystemDirectory.DirectoryForScalingImages();
 
                 //creates the scaling directory
                 _directoryRepository.Create(directoryForScalingImages);
 
                 /*scaled file*/
-                var scaleImageFilename = file.ScaledFilename(eSize);
+                var scaleImageFilename = file.ScaleFilename(eSize);
                 var finalPath = $"{directoryForScalingImages}{scaleImageFilename}";
                 var scaleImage = _fileRepository.GetFile(finalPath);
 
                 //scale image does not exist or is out dated
                 if (scaleImage == null)
                 {
-                    var fileScaled = await ScalePictureAsync(file, scaleImageFilename, eSize);
+                    var fileScaled = await ScalePictureAsync(file, eSize);
                     scaleImage = fileScaled ? _fileRepository.GetFile(finalPath) : null;
                 }
 
@@ -179,11 +176,12 @@ namespace Origami.UI.Controllers
         /// It scales the image to return as thumbnails and so on (depending on the request)
         /// </summary>
         /// <returns></returns>
-        protected async Task<bool> ScalePictureAsync(OrigamiSystemFile file, string filename, ePictureSizes eSize)
+        protected async Task<bool> ScalePictureAsync(OrigamiSystemFile file, ePictureSizes eSize)
         {
             if (file == null) return false;
             if (file.IsImage == false) return false;
 
+            var filename = file.ScaleFilename(eSize);
             var directory = _directoryRepository.GetDirectory(OrigamiSystemDirectory.DirectoryForScalingImages());
             var finalLocation = Path.Combine(directory.LocalPath, filename);
 

@@ -269,12 +269,10 @@ namespace Origami.Core.Models.FileSystem
             }
         }
 
-        public string ScaledFilename(ePictureSizes eSize)
+        public string ScaleFilename(ePictureSizes eSize)
         {
-            //first: get a md5 from file fullpath
             var utf8 = Encoding.UTF8.GetBytes(LocalPath);
             var hash = MD5.Create().ComputeHash(utf8).GetHexString();
-            /*scaled file*/
             return $"{hash}.{FileSize}.{DateModified?.Ticks ?? DateCreated.Ticks}.{eSize}.webp";
         }
 
