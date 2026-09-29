@@ -189,11 +189,7 @@
     {
         if (firstRender == false) return;
         if (this.UserFacade.IncognitoMode == true) return;
-        var hub = await this.PhysicalPagesByContentAsync(this._entity.Id);
-        if (hub.Ok == false)
-        {
-            this.UserFacade.Result = hub;
-        }
+        _ = await this.PhysicalPagesByContentAsync(this._entity.Id);
     }
 
     protected override void SetPageTitle()

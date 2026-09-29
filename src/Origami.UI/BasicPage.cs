@@ -91,11 +91,7 @@ namespace Origami.UI
         {
             if (firstRender == false) return;
             if (this.UserFacade.IncognitoMode == true) return;
-            var hub = await this.PhysicalPagesByPathAsync();
-            if (hub.Ok == false)
-            {
-                this.UserFacade.Result = hub;
-            }
+            _ = await this.PhysicalPagesByPathAsync();
         }
 
         /// <summary>
