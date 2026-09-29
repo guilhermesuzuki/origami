@@ -271,10 +271,6 @@ namespace Origami.Core.Models.FileSystem
 
         public string ScaledFilename(ePictureSizes eSize)
         {
-            if (eSize == ePictureSizes.original)
-            {
-                return WebPath;
-            }
             //first: get a md5 from file fullpath
             var utf8 = Encoding.UTF8.GetBytes(LocalPath);
             var hash = MD5.Create().ComputeHash(utf8).GetHexString();
