@@ -65,7 +65,8 @@ namespace Origami.UI.Controllers
                     {
                         if (file.IsImage)
                         {
-                            var esize = ePictureSizes.original; Enum.TryParse(size, true, out esize);
+                            var esize = ePictureSizes.original; 
+                            _ = Enum.TryParse(size, true, out esize);
                             return await PictureAsync(file, esize);
                         }
                         return PhysicalFile(file.LocalPath, file.ContentType, file.Name, true);
@@ -134,7 +135,7 @@ namespace Origami.UI.Controllers
         /// <returns></returns>
         protected async Task<FileResult> PictureAsync(OrigamiSystemFile file, ePictureSizes eSize)
         {
-            var dontScale = file.WebPath.StartsWith(_blogRepository.DirectoryForScalingImages(), StringComparison.OrdinalIgnoreCase);
+            var dontScale = file.WebPath.StartsWith(OrigamiSystemDirectory.DirectoryForScalingImages(), StringComparison.OrdinalIgnoreCase);
             if (dontScale || eSize == ePictureSizes.original)
             {
                 return PhysicalFile(file.LocalPath, file.ContentType, file.Name, true);
@@ -146,13 +147,13 @@ namespace Origami.UI.Controllers
                 //first: get a md5 from file fullpath
                 var utf8 = Encoding.UTF8.GetBytes(file.LocalPath);
                 var hash = MD5.Create().ComputeHash(utf8).GetHexString();
-                var directoryForScalingImages = _blogRepository.DirectoryForScalingImages();
+                var directoryForScalingImages = OrigamiSystemDirectory.DirectoryForScalingImages();
 
                 //creates the scaling directory
                 _directoryRepository.Create(directoryForScalingImages);
 
                 /*scaled file*/
-                var scaleImageFilename = $"{hash}.{file.FileSize}.{file.DateModified?.Ticks ?? file.DateCreated.Ticks}.{eSize}.webp";
+                var scaleImageFilename = file.ScaledFilename(eSize);
                 var finalPath = $"{directoryForScalingImages}{scaleImageFilename}";
                 var scaleImage = _fileRepository.GetFile(finalPath);
 
@@ -183,7 +184,7 @@ namespace Origami.UI.Controllers
             if (file == null) return false;
             if (file.IsImage == false) return false;
 
-            var directory = _directoryRepository.GetDirectory(_blogRepository.DirectoryForScalingImages());
+            var directory = _directoryRepository.GetDirectory(OrigamiSystemDirectory.DirectoryForScalingImages());
             var finalLocation = Path.Combine(directory.LocalPath, filename);
 
             try

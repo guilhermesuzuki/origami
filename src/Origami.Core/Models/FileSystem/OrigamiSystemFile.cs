@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Origami.Core.Models.FileSystem
 {
@@ -112,7 +114,7 @@ namespace Origami.Core.Models.FileSystem
         {
             get
             {
-                var extension = Extension.TrimStart('.').ToLower();
+                var extension = Extension.TrimStart('.').ToLowerInvariant();
 
                 if (this.IsImage)
                 {
@@ -207,7 +209,7 @@ namespace Origami.Core.Models.FileSystem
         /// </summary>
         public bool IsAudio
         {
-            get => _audioExtensions.Any(x => x.ToLower() == Extension.ToLower());
+            get => _audioExtensions.Any(x => x.Equals(Extension, StringComparison.InvariantCultureIgnoreCase) == true);
         }
 
         /// <summary>
@@ -223,7 +225,7 @@ namespace Origami.Core.Models.FileSystem
         /// </summary>
         public bool IsVideo
         {
-            get => _videoExtensions.Any(x => x.ToLower() == Extension.ToLower());
+            get => _videoExtensions.Any(x => x.Equals(Extension, StringComparison.InvariantCultureIgnoreCase) == true);
         }
 
         /// <summary>
@@ -265,6 +267,19 @@ namespace Origami.Core.Models.FileSystem
                 var webPath = WebPath.TrimEnd('/');
                 return webPath.Substring(0, webPath.LastIndexOf('/'));
             }
+        }
+
+        public string ScaledFilename(ePictureSizes eSize)
+        {
+            if (eSize == ePictureSizes.original)
+            {
+                return WebPath;
+            }
+            //first: get a md5 from file fullpath
+            var utf8 = Encoding.UTF8.GetBytes(LocalPath);
+            var hash = MD5.Create().ComputeHash(utf8).GetHexString();
+            /*scaled file*/
+            return $"{hash}.{FileSize}.{DateModified?.Ticks ?? DateCreated.Ticks}.{eSize}.webp";
         }
 
         /// <summary>

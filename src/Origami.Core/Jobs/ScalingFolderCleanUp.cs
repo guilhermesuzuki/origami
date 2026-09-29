@@ -1,4 +1,5 @@
 ﻿using Origami.Core.Data;
+using Origami.Core.Models.FileSystem;
 using Quartz;
 
 namespace Origami.Core.Jobs
@@ -7,7 +8,7 @@ namespace Origami.Core.Jobs
     {
         public ValueTask Execute(IJobExecutionContext context, CancellationToken cancellationToken = default)
         {
-            var scaling = Super.Blogs.DirectoryForScalingImages();
+            var scaling = OrigamiSystemDirectory.DirectoryForScalingImages();
             var scalingPath = Super.Directories.LocalPath(scaling);
 
             lock (OrigamiConstants.SyncRoot)
