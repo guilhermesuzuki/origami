@@ -26,7 +26,7 @@ var app = builder.FoldTheOrigami<App>(
 
             q.ScheduleJob<ScalingFolderCleanUp>(trigger => trigger
                 .WithIdentity(nameof(ScalingFolderCleanUp))
-                .WithSimpleSchedule(x => x.WithInterval(TimeSpan.FromDays(10)).RepeatForever()));
+                .WithSimpleSchedule(x => x.WithInterval(TimeSpan.FromDays(5)).RepeatForever()));
         });
 
         builder.Services.AddScoped<ILoginHelpMeRules, LoginHelpMeRules>();
