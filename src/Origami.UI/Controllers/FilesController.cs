@@ -135,37 +135,24 @@ namespace Origami.UI.Controllers
         /// <returns></returns>
         protected async Task<FileResult> PictureAsync(OrigamiSystemFile file, ePictureSizes eSize)
         {
+            if (eSize == ePictureSizes.original)
+            {
+                return PhysicalFile(file.LocalPath, file.ContentType, file.Name, true);
+            }
+
             var dontScale = file.WebPath.StartsWith(OrigamiSystemDirectory.DirectoryForScalingImages(), StringComparison.OrdinalIgnoreCase);
-            if (dontScale || eSize == ePictureSizes.original)
+            if (dontScale)
             {
                 return PhysicalFile(file.LocalPath, file.ContentType, file.Name, true);
             }
 
             //image scaling
-            if (eSize != ePictureSizes.original)
+            var fileScaled = await ScalePictureAsync(file, eSize);
+            if (fileScaled.Ok == true)
             {
-                var directoryForScalingImages = OrigamiSystemDirectory.DirectoryForScalingImages();
-
-                //creates the scaling directory
-                _directoryRepository.Create(directoryForScalingImages);
-
-                /*scaled file*/
-                var scaleImageFilename = file.ScaleFilename(eSize);
-                var finalPath = $"{directoryForScalingImages}{scaleImageFilename}";
-                var scaleImage = _fileRepository.GetFile(finalPath);
-
-                //scale image does not exist or is out dated
-                if (scaleImage == null)
+                if (fileScaled.File != null && fileScaled.File.FileSize < file.FileSize)
                 {
-                    var fileScaled = await ScalePictureAsync(file, eSize);
-                    scaleImage = fileScaled ? _fileRepository.GetFile(finalPath) : null;
-                }
-
-                //there's a scaled image
-                //verifies that the scaled image file size is smaller than the original file
-                if (scaleImage != null && scaleImage.FileSize < file.FileSize)
-                {
-                    file = scaleImage;
+                    return PhysicalFile(fileScaled.File.LocalPath, fileScaled.File.ContentType, fileScaled.File.Name, true);
                 }
             }
 
@@ -176,10 +163,10 @@ namespace Origami.UI.Controllers
         /// It scales the image to return as thumbnails and so on (depending on the request)
         /// </summary>
         /// <returns></returns>
-        protected async Task<bool> ScalePictureAsync(OrigamiSystemFile file, ePictureSizes eSize)
+        protected async Task<(bool Ok, OrigamiSystemFile? File)> ScalePictureAsync(OrigamiSystemFile file, ePictureSizes eSize)
         {
-            if (file == null) return false;
-            if (file.IsImage == false) return false;
+            if (file == null) return (false, null);
+            if (file.IsImage == false) return (false, null);
 
             var filename = file.ScaleFilename(eSize);
             var directory = _directoryRepository.GetDirectory(OrigamiSystemDirectory.DirectoryForScalingImages());
@@ -188,20 +175,13 @@ namespace Origami.UI.Controllers
             try
             {
                 using var image = NetVips.Image.NewFromFile(file.LocalPath);
-
-                var w = (short)eSize;
-                var f = 1 - (float)(image.Width - (short)eSize) / image.Width;
-                var h = (int)(image.Height * f);
-
-                using var resized = image.ThumbnailImage(w, h, crop: NetVips.Enums.Interesting.None);
-
+                using var resized = image.ThumbnailImage((int)eSize, 0, Enums.Size.Both, crop: NetVips.Enums.Interesting.None);
                 resized.WriteToFile(finalLocation, new VOption { { "Q", 60 }, { "strip", true } });
-
-                return true;
+                return (true, _fileRepository.GetFile(finalLocation));
             }
             catch
             {
-                return false;
+                return (false, null);
             }
         }
 
