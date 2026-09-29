@@ -284,14 +284,14 @@ namespace Origami.UI
 
             builder.Services.AddHealthChecks();
 
-			builder.Services.AddQuartz(q =>
+            builder.Services.AddQuartz(q =>
             {
                 q.ScheduleJob<CacheRefreshFull>(trigger => trigger
                     .WithIdentity(nameof(CacheRefreshFull))
                     .WithCronSchedule("0 0/3 * * * ?"));
             });
 
-			builder.Services.AddQuartzHostedService(options =>
+            builder.Services.AddQuartzHostedService(options =>
             {
                 options.WaitForJobsToComplete = true;
             });

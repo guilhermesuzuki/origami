@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.JSInterop;
@@ -145,7 +143,7 @@ namespace Origami.UI
                     DateCreated = this.Chronos.GetUtcNow().Date,
                 };
                 var ok = this._fill(view);
-                if (ok) 
+                if (ok)
                 {
                     this.Super.PhysicalPageViews.SmartSave(view.GetContext(), false);
                     this.AppFacade.RefreshUI(this.HttpContextAccessor.HttpContext?.Connection.Id ?? string.Empty, OrigamiConstants.Events.UpdateCounters);

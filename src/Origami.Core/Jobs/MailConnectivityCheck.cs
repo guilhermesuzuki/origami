@@ -2,16 +2,13 @@
 using Origami.Core.Data;
 using Origami.Core.Models;
 using Quartz;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Origami.Core.Jobs
 {
     [DisallowConcurrentExecution]
     public class MailConnectivityCheck(
-        IAppFacade AppFacade, 
-        IEmailStatusRepository EmailStatusRepository, 
+        IAppFacade AppFacade,
+        IEmailStatusRepository EmailStatusRepository,
         ISuperRepository Super,
         ILogger<MailConnectivityCheck> Logger) : IJob
     {

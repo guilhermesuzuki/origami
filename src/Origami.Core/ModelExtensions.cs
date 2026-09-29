@@ -4,7 +4,6 @@ using FluentValidation;
 using Origami.Core.Models;
 using Origami.Core.Models.FileSystem;
 using Origami.Core.Models.Settings;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;

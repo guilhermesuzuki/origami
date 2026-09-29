@@ -32,7 +32,7 @@ namespace Origami.Core.Data
             {
                 Console.ForegroundColor = originalColor;
             }
-            
+
             lock (OrigamiConstants.SyncRoot)
             {
                 using var db = DbContextFactory.CreateDbContext();

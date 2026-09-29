@@ -9,10 +9,10 @@ namespace Origami.Core.Models
     /// <summary>
     /// Simple class for Results with Status and a Message.
     /// </summary>
-    public class Result : 
-        IChanged, 
-        IId, 
-        IDateCreated, 
+    public class Result :
+        IChanged,
+        IId,
+        IDateCreated,
         IDisposable
     {
         protected DateTime _dateCreated = DateTime.UtcNow;
@@ -261,7 +261,7 @@ namespace Origami.Core.Models
 
             return false;
         }
-        
+
         /// <summary>
         /// Handles the collection changed event for the messages collection
         /// </summary>
