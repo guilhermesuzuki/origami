@@ -171,15 +171,16 @@ namespace Origami.UI.Controllers
             var filename = file.ScaleFilename(eSize);
             var directory = _directoryRepository.GetDirectory(OrigamiSystemDirectory.DirectoryForScalingImages());
             var finalLocation = Path.Combine(directory.LocalPath, filename);
+            var virtualPath = $"{OrigamiSystemDirectory.DirectoryForScalingImages()}{filename}";
 
             try
             {
-var existing = _fileRepository.GetFile($"{OrigamiSystemDirectory.DirectoryForScalingImages()}{filename}");
+                var existing = _fileRepository.GetFile(virtualPath);
                 if (existing != null) return (true, existing);
                 using var image = NetVips.Image.NewFromFile(file.LocalPath);
                 using var resized = image.ThumbnailImage((int)eSize, 0, Enums.Size.Both, crop: NetVips.Enums.Interesting.None);
                 resized.WriteToFile(finalLocation, new VOption { { "Q", 60 }, { "strip", true } });
-                return (true, _fileRepository.GetFile(finalLocation));
+                return (true, _fileRepository.GetFile(virtualPath));
             }
             catch
             {
