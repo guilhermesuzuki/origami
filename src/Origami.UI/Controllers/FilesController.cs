@@ -174,6 +174,8 @@ namespace Origami.UI.Controllers
 
             try
             {
+var existing = _fileRepository.GetFile($"{OrigamiSystemDirectory.DirectoryForScalingImages()}{filename}");
+                if (existing != null) return (true, existing);
                 using var image = NetVips.Image.NewFromFile(file.LocalPath);
                 using var resized = image.ThumbnailImage((int)eSize, 0, Enums.Size.Both, crop: NetVips.Enums.Interesting.None);
                 resized.WriteToFile(finalLocation, new VOption { { "Q", 60 }, { "strip", true } });
