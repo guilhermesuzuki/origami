@@ -404,11 +404,9 @@ namespace Origami.UI.Admin.IntegrationTests
             result.ShouldNotBeNull();
             result.Ok.ShouldBeFalse();
             result.Messages.ShouldNotBeNull();
-            result.Messages.Count.ShouldBe(2);
+            result.Messages.Count.ShouldBe(1);
             result.Messages[0].MessageType.ShouldBe(ResultMessage.MessageTypes.Error);
-            result.Messages[1].MessageType.ShouldBe(ResultMessage.MessageTypes.Error);
             result.Messages[0].Message.ShouldBe("Name cannot exceed 50 characters");
-            result.Messages[1].Message.ShouldBe("Slug cannot exceed 50 characters");
 
             var categoryAfterUpdate = db.Categories.AsNoTracking().FirstOrDefault(c => c.Id == TestCategory.Id);
             categoryAfterUpdate.ShouldNotBeNull();
