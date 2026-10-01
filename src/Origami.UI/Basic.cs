@@ -25,6 +25,8 @@ namespace Origami.UI
         /// </summary>
         public static readonly Lock SyncRoot = new();
 
+        protected readonly DialogOptions DialogOptions = new() { CloseOnEscapeKey = true, CloseButton = false, CloseOnNavigation = true, MaxWidth = MaxWidth.ExtraLarge, };
+
         [Parameter] public Guid BlogId { get; set; }
         [Parameter] public string BlogSlug { get; set; } = string.Empty;
         [Parameter] public virtual string Class { get; set; } = string.Empty;
@@ -35,6 +37,7 @@ namespace Origami.UI
         [Parameter] public virtual Guid Id { get; set; } = Guid.Empty;
 
         [Inject] protected IAppFacade AppFacade { get; set; } = null!;
+        [Inject] protected TimeProvider Chronos { get; set; } = null!;
         [Inject] protected IConfiguration Configuration { get; set; } = null!;
         [Inject] protected IDbContextFactory<OrigamiDbContext> DbContextFactory { get; set; } = null!;
         [Inject] protected IDialogService DialogService { get; set; } = null!;
@@ -48,12 +51,10 @@ namespace Origami.UI
         [Inject] protected IUserFacade UserFacade { get; set; } = null!;
         [Inject] protected IWebRootPath WebRootPath { get; set; } = null!;
         [Inject] protected IWhatHappensNext WhatHappensNext { get; set; } = null!;
-
         public virtual void Dispose()
         {
             this.UserFacade.Changed -= CurrentBlogChangedMustRefreshUI;
         }
-
         public OrigamiBlog GetBlogFromSlug()
         {
             if (this.BlogSlug.Has() == true)
@@ -76,7 +77,7 @@ namespace Origami.UI
 
         protected async void CurrentBlogChangedMustRefreshUI(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(IUserFacade.BlogId))
+            if (e.PropertyName?.Equals(nameof(IUserFacade.BlogId), StringComparison.InvariantCultureIgnoreCase) == true)
             {
                 await this.InvokeAsync(this.StateHasChanged);
             }

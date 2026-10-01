@@ -14,7 +14,7 @@ var app = builder.FoldTheOrigami<App>(
     admin: true,
     injectServices: () =>
     {
-		builder.Services.AddQuartz(q =>
+        builder.Services.AddQuartz(q =>
         {
             q.ScheduleJob<MailConnectivityCheck>(trigger => trigger
                 .WithIdentity(nameof(MailConnectivityCheck))
@@ -26,7 +26,7 @@ var app = builder.FoldTheOrigami<App>(
 
             q.ScheduleJob<ScalingFolderCleanUp>(trigger => trigger
                 .WithIdentity(nameof(ScalingFolderCleanUp))
-                .WithSimpleSchedule(x => x.WithInterval(TimeSpan.FromDays(10)).RepeatForever()));
+                .WithSimpleSchedule(x => x.WithInterval(TimeSpan.FromDays(5)).RepeatForever()));
         });
 
         builder.Services.AddScoped<ILoginHelpMeRules, LoginHelpMeRules>();

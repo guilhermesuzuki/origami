@@ -160,9 +160,8 @@
                 <div class="selected-tags mt-3">
                     @foreach (var content in Entity.Tags)
                     {
-                        var tag = new OrigamiContentTag { ContentId = Entity.Entity.Id, Tag = content.Tag };
                         <div class="d-inline-flex align-items-center p-1 border shadow-sm me-1">
-                            <ContentTagHeaderInline Entity="tag" Class="me-1"></ContentTagHeaderInline>
+                            <ContentTagHeaderInline Entity="content" Class="me-1"></ContentTagHeaderInline>
                             <button class="cursor-pointer" @onclick="() => this.Entity.Tags.Remove(content)">
                                 <i class="bi bi-trash-fill"></i>
                             </button>

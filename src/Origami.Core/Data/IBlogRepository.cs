@@ -19,12 +19,6 @@ namespace Origami.Core.Data
         Result<OrigamiBlog> Deactivate(DataOperationContext<OrigamiBlog> ctx, bool checkPermission);
 
         /// <summary>
-        ///  Directory where scaled images will be saved
-        /// </summary>
-        /// <returns></returns>
-        string DirectoryForScalingImages();
-
-        /// <summary>
         /// Returns the only primary blog
         /// </summary>
         /// <returns></returns>

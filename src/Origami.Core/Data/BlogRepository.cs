@@ -120,11 +120,6 @@ namespace Origami.Core.Data
             return hub;
         }
 
-        public string DirectoryForScalingImages()
-        {
-            return $"/scaling/";
-        }
-
         public OrigamiBlog GetPrimary()
         {
             return this.ReadFromCache().Single(x => x.IsPrimary);

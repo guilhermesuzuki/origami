@@ -65,7 +65,8 @@ namespace Origami.UI.Controllers
                     {
                         if (file.IsImage)
                         {
-                            var esize = ePictureSizes.original; Enum.TryParse(size, true, out esize);
+                            var esize = ePictureSizes.original;
+                            _ = Enum.TryParse(size, true, out esize);
                             return await PictureAsync(file, esize);
                         }
                         return PhysicalFile(file.LocalPath, file.ContentType, file.Name, true);
@@ -134,41 +135,25 @@ namespace Origami.UI.Controllers
         /// <returns></returns>
         protected async Task<FileResult> PictureAsync(OrigamiSystemFile file, ePictureSizes eSize)
         {
-            var dontScale = file.WebPath.StartsWith(_blogRepository.DirectoryForScalingImages(), StringComparison.OrdinalIgnoreCase);
-            if (dontScale || eSize == ePictureSizes.original)
+            if (eSize == ePictureSizes.original)
+            {
+                return PhysicalFile(file.LocalPath, file.ContentType, file.Name, true);
+            }
+
+            var dontScale = file.WebPath.StartsWith(OrigamiSystemDirectory.DirectoryForScalingImages(), StringComparison.OrdinalIgnoreCase);
+            if (dontScale)
             {
                 return PhysicalFile(file.LocalPath, file.ContentType, file.Name, true);
             }
 
             //image scaling
-            if (eSize != ePictureSizes.original)
+            var fileScaled = await ScalePictureAsync(file, eSize);
+
+            if (fileScaled.Ok == true 
+                && fileScaled.File != null 
+                && fileScaled.File.FileSize < file.FileSize)
             {
-                //first: get a md5 from file fullpath
-                var utf8 = Encoding.UTF8.GetBytes(file.LocalPath);
-                var hash = MD5.Create().ComputeHash(utf8).GetHexString();
-                var directoryForScalingImages = _blogRepository.DirectoryForScalingImages();
-
-                //creates the scaling directory
-                _directoryRepository.Create(directoryForScalingImages);
-
-                /*scaled file*/
-                var scaleImageFilename = $"{hash}.{file.FileSize}.{file.DateModified?.Ticks ?? file.DateCreated.Ticks}.{eSize}.webp";
-                var finalPath = $"{directoryForScalingImages}{scaleImageFilename}";
-                var scaleImage = _fileRepository.GetFile(finalPath);
-
-                //scale image does not exist or is out dated
-                if (scaleImage == null)
-                {
-                    var fileScaled = await ScalePictureAsync(file, scaleImageFilename, eSize);
-                    scaleImage = fileScaled ? _fileRepository.GetFile(finalPath) : null;
-                }
-
-                //there's a scaled image
-                //verifies that the scaled image file size is smaller than the original file
-                if (scaleImage != null && scaleImage.FileSize < file.FileSize)
-                {
-                    file = scaleImage;
-                }
+                return PhysicalFile(fileScaled.File.LocalPath, fileScaled.File.ContentType, fileScaled.File.Name, true);
             }
 
             return PhysicalFile(file.LocalPath, file.ContentType, file.Name, true);
@@ -178,31 +163,28 @@ namespace Origami.UI.Controllers
         /// It scales the image to return as thumbnails and so on (depending on the request)
         /// </summary>
         /// <returns></returns>
-        protected async Task<bool> ScalePictureAsync(OrigamiSystemFile file, string filename, ePictureSizes eSize)
+        protected async Task<(bool Ok, OrigamiSystemFile? File)> ScalePictureAsync(OrigamiSystemFile file, ePictureSizes eSize)
         {
-            if (file == null) return false;
-            if (file.IsImage == false) return false;
+            if (file == null) return (false, null);
+            if (file.IsImage == false) return (false, null);
 
-            var directory = _directoryRepository.GetDirectory(_blogRepository.DirectoryForScalingImages());
+            var filename = file.ScaleFilename(eSize);
+            var directory = _directoryRepository.GetDirectory(OrigamiSystemDirectory.DirectoryForScalingImages());
             var finalLocation = Path.Combine(directory.LocalPath, filename);
+            var virtualPath = $"{OrigamiSystemDirectory.DirectoryForScalingImages()}{filename}";
 
             try
             {
+                var existing = _fileRepository.GetFile(virtualPath);
+                if (existing != null) return (true, existing);
                 using var image = NetVips.Image.NewFromFile(file.LocalPath);
-
-                var w = (short)eSize;
-                var f = 1 - (float)(image.Width - (short)eSize) / image.Width;
-                var h = (int)(image.Height * f);
-
-                using var resized = image.ThumbnailImage(w, h, crop: NetVips.Enums.Interesting.None);
-
+                using var resized = image.ThumbnailImage((int)eSize, 0, Enums.Size.Both, crop: NetVips.Enums.Interesting.None);
                 resized.WriteToFile(finalLocation, new VOption { { "Q", 60 }, { "strip", true } });
-
-                return true;
+                return (true, _fileRepository.GetFile(virtualPath));
             }
             catch
             {
-                return false;
+                return (false, null);
             }
         }
 

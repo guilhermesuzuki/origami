@@ -191,7 +191,7 @@ namespace Origami.Core.Models
             protected ClientTracking()
                 : base()
             {
-                
+
             }
 
             /// <summary>
