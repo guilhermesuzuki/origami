@@ -32,6 +32,7 @@ namespace Origami.Core.Jobs
                 }
             }
 
+Directory.CreateDirectory(scalingPath);
             var query = from file in Directory.EnumerateFiles(scalingPath, "*", SearchOption.AllDirectories)
                         where !scalingFiles.Contains(file)
                         select file;
