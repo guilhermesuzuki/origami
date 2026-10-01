@@ -14,6 +14,8 @@ namespace Origami.Core.Jobs
             var scalingPath = Super.Directories.LocalPath(OrigamiSystemDirectory.DirectoryForScalingImages());
             var localPath = Super.Directories.LocalPath("/files/");
 
+            Directory.CreateDirectory(scalingPath);
+
             var files = Directory.EnumerateFiles(localPath, "*", SearchOption.AllDirectories)
                 .Select(filename => new OrigamiSystemFile(filename))
                 .Where(file => file.IsImage)
@@ -32,7 +34,6 @@ namespace Origami.Core.Jobs
                 }
             }
 
-Directory.CreateDirectory(scalingPath);
             var query = from file in Directory.EnumerateFiles(scalingPath, "*", SearchOption.AllDirectories)
                         where !scalingFiles.Contains(file)
                         select file;
