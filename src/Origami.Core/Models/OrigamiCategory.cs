@@ -106,7 +106,11 @@ namespace Origami.Core.Models
         public string Name
         {
             get => _name;
-            set => this.Set(ref _name, value, Changed);
+            set
+            {
+                this.Set(ref _name, value, Changed);
+                this.SetSlug();
+            }
         }
 
         public bool New => Version.SequenceEqual([]);
