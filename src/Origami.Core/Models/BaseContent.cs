@@ -41,7 +41,7 @@ namespace Origami.Core.Models
         /// <summary>
         /// Default constructor
         /// </summary>
-        public BaseContent() : base()
+        protected BaseContent() : base()
         {
             IsDraft = true;
             IsDeleted = false;
@@ -120,7 +120,7 @@ namespace Origami.Core.Models
         /// </summary>
         public virtual string Hyperlink
         {
-            get => $"/{this.GetType().GetPlural().ToLower()}/{NanoId}/";
+            get => $"/{this.GetType().GetPlural().ToLowerInvariant()}/{NanoId}/";
         }
 
         /// <summary>
@@ -166,7 +166,11 @@ namespace Origami.Core.Models
         public string Title
         {
             get => _title;
-            set => this.Set(ref _title, value, Changed);
+            set
+            {
+                this.Set(ref _title, value, Changed);
+                this._slug = value.GetSlug();
+            }
         }
 
         [Timestamp]
