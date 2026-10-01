@@ -114,7 +114,7 @@ namespace Origami.Core.Models
             set
             {
                 this.Set(ref _name, value, Changed);
-                this._slug = value.GetSlug();
+                this.SetSlug();
             }
         }
 
