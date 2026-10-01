@@ -31,12 +31,12 @@
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="BootstrapBlazor.ImageCropper" Version="10.0.0" />
-		<PackageReference Include="Meziantou.Analyzer" Version="3.0.262">
+		<PackageReference Include="Meziantou.Analyzer" Version="3.0.290">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.11" />
-		<PackageReference Include="System.ServiceModel.Syndication" Version="10.0.11" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.12" />
+		<PackageReference Include="System.ServiceModel.Syndication" Version="10.0.12" />
 	</ItemGroup>
 
 </Project>
