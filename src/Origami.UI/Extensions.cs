@@ -105,7 +105,6 @@ namespace Origami.UI
 
             builder.Services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<OrigamiIdentityDbContext>();
 
-            builder.Services.AddScoped<OrigamiUserMiddleware>();
             builder.Services.AddScoped<OrigamiLocationMiddleware>();
 
             builder.Services.AddSingleton<Text>();
@@ -623,7 +622,6 @@ namespace Origami.UI
             app.UseAuthorization();
             app.UseAntiforgery();
 
-            app.UseMiddleware<OrigamiUserMiddleware>();
             app.UseMiddleware<OrigamiLocationMiddleware>();
 
             app.MapRazorPages();
