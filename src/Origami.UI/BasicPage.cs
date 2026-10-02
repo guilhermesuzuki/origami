@@ -14,6 +14,7 @@ namespace Origami.UI
     {
         [Parameter] public bool ShouldSetPageTitle { get; set; } = true;
         [Inject] protected IPageTitleRepository PageTitle { get; set; } = null!;
+        protected RequestContext RequestContext { get; set; } = new();
 
         protected virtual void ChangeBlog()
         {
@@ -69,6 +70,17 @@ namespace Origami.UI
             await LanguageFromQueryStringAsync();
         }
 
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+            this.RequestContext.ConnectionId = this.HttpContextAccessor.HttpContext?.Connection.Id;
+            this.RequestContext.Headers = this.HttpContextAccessor.HttpContext?.Request.Headers.ToDictionary(x => x.Key, x => x.Value.ToString());
+            this.RequestContext.Host = this.HttpContextAccessor.HttpContext?.Request.Host.ToString();
+            this.RequestContext.IpAddress = this.HttpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
+            this.RequestContext.Referrer = this.HttpContextAccessor.HttpContext?.Request.Headers["Referer"].ToString();
+            this.RequestContext.Scheme = this.HttpContextAccessor.HttpContext?.Request.Scheme;
+            this.RequestContext.UserAgent = this.HttpContextAccessor.HttpContext?.Request.Headers["User-Agent"].ToString();
+        }
         protected virtual async Task PageAsync(bool firstRender)
         {
             if (firstRender)
@@ -142,7 +154,7 @@ namespace Origami.UI
                 if (ok)
                 {
                     this.Super.PhysicalPageViews.SmartSave(view.GetContext(), false);
-                    this.AppFacade.RefreshUI(this.HttpContextAccessor.HttpContext?.Connection.Id ?? string.Empty, OrigamiConstants.Events.UpdateCounters);
+                    this.AppFacade.RefreshUI(this.RequestContext.ConnectionId ?? string.Empty, OrigamiConstants.Events.UpdateCounters);
                     return new();
                 }
 
@@ -195,7 +207,7 @@ namespace Origami.UI
                 if (ok)
                 {
                     this.Super.PhysicalPageViews.SmartSave(view.GetContext(), false);
-                    this.AppFacade.RefreshUI(this.HttpContextAccessor.HttpContext?.Connection.Id ?? string.Empty, OrigamiConstants.Events.UpdateCounters);
+                    this.AppFacade.RefreshUI(this.RequestContext.ConnectionId ?? string.Empty, OrigamiConstants.Events.UpdateCounters);
                     return new();
                 }
 
@@ -216,20 +228,15 @@ namespace Origami.UI
         /// <param name="tracking"></param>
         private bool _fill(BaseTracking tracking)
         {
-            if (this.HttpContextAccessor.HttpContext == null)
-            {
-                return false;
-            }
-
-            var dd = this.HttpContextAccessor.HttpContext.Request.GetDeviceDetector();
+            var dd = this.RequestContext.GetDeviceDetector();
 
             // important!
             dd.Parse();
 
             tracking.Url = this.GhostOfTheNavigator.Uri;
-            tracking.UrlReferrer = this.HttpContextAccessor.HttpContext.Request.Headers.Referer.ToString();
-            tracking.UserAgent = this.HttpContextAccessor.HttpContext.Request.Header("User-Agent");
-            tracking.HostAddress = this.HttpContextAccessor.HttpContext.Connection.RemoteIpAddress?.ToString() ?? string.Empty;
+            tracking.UrlReferrer = this.RequestContext.Referrer;
+            tracking.UserAgent = this.RequestContext.UserAgent ?? string.Empty;
+            tracking.HostAddress = this.RequestContext.IpAddress ?? string.Empty;
             tracking.IsMobileDevice = dd.IsTablet() || dd.IsMobile();
             tracking.IsBot = dd.IsBot();
 
@@ -241,7 +248,7 @@ namespace Origami.UI
             tracking.Platform = client.OS.Family;
             tracking.Browser = client.UA.Family;
 
-            var key = $"Origami_UserLocation_{this.HttpContextAccessor.HttpContext.Connection.Id}";
+            var key = $"Origami_UserLocation_{this.RequestContext.ConnectionId}";
             tracking.Location = this.MemoryCache.Get<Location>(key);
 
             return true;

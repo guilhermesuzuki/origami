@@ -506,6 +506,12 @@ namespace Origami.UI
             return new DeviceDetector(userAgent, clientHints);
         }
 
+        public static DeviceDetector GetDeviceDetector(this RequestContext requestContext)
+        {
+            var clientHints = ClientHints.Factory(requestContext.Headers?.ToDictionary() ?? new Dictionary<string, string>());  // client hints are optional
+            return new DeviceDetector(requestContext.UserAgent, clientHints);
+        }
+
         public static string GetUserCookieKey(this IConfiguration configuration)
         {
             return configuration.GetValue("User:Cookie-Key", OrigamiConstants.Cookie)!;
@@ -637,10 +643,11 @@ namespace Origami.UI
                 // RSS feed endpoint (minimal API)
                 app.MapGet("/blogs/{slug}/rss.xml", async (string slug, HttpContext context, IRssRepository rss) =>
                 {
+                    CancellationTokenSource token = new(10000);
                     var oi = context.Request.Scheme + "://" + context.Request.Host.Value;
                     var xml = rss.GetRss(slug, oi);
                     context.Response.ContentType = "application/rss+xml; charset=utf-8";
-                    await context.Response.WriteAsync(xml);
+                    await context.Response.WriteAsync(xml, token.Token).ConfigureAwait(false);
                 });
             }
 
