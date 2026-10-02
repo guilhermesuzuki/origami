@@ -7,18 +7,20 @@
         </li>
         <li class="w-50">
             <MudTextField ReadOnly="true"
-            FullWidth="true"
-            Immediate="true"
-            Value="@Author.DisplayName.ToLower()"
-            HelperText="@Text.Lower("Author")"></MudTextField>
+                          FullWidth="true"
+                          Immediate="true"
+                          AdornmentIcon="@Icons.Material.Filled.Person"
+                          Adornment="Adornment.Start"
+                          Value="@Author.DisplayName.ToLower()"
+                          HelperText="@Text.Lower("Author")"></MudTextField>
         </li>
     </ul>
     <ul class="inline-list">
         <li>
             <MudTextField FullWidth="true"
-            Immediate="true"
-            @bind-Value="@Entity.Entity.Title"
-            HelperText="@Text.Lower("Type Here")"></MudTextField>
+                          Immediate="true"
+                          @bind-Value="@Entity.Entity.Title"
+                          HelperText="@Text.Lower("Type Here")"></MudTextField>
         </li>
     </ul>
     <div class="btn-group w-100 mt-3">
