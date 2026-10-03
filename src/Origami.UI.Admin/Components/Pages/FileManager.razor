@@ -214,7 +214,7 @@
 </Root>
 <MudDialog @bind-Visible:get="IsSelectedFile" @bind-Visible:set="this.IgnoreVisibilityChangeForSelectedFile" Options="this.DialogOptions" TitleClass="d-none" ContentClass="p-2">
     <DialogContent>
-        <div class="border shadow-lg position-relative" style="width:1000px;">
+        <div class="border shadow-lg position-relative" style="width:100%; max-width:1000px;">
             <div class="overflow-auto text-center h-100 w-100" style="padding-bottom: 70px;">
                 <FileForm Class="p-3 shadow-sm border" Entity="this._selectedFile"></FileForm>
             </div>
