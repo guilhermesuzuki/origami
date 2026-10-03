@@ -1,0 +1,508 @@
+﻿@using Microsoft.Extensions.Caching.Memory
+
+@inherits Basic
+
+@inject IMemoryCache _memoryCache
+@inject ISuperRepository _superRepository
+@inject IHttpContextAccessor _httpContextAccessor
+
+<style>
+    .logged-in-user .id { display: none !important; }
+</style>
+<div class="p-5 @Class">
+    @if (this.Super.Roles.CanTheUserViewTheConnectivityDetails(this.UserFacade.User) == true)
+    {
+        <div class="">
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-info">
+                        <ConnectionDetails Class="p-2"></ConnectionDetails>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <div class="mt-5">
+        <div class="row" style="min-height: 150px;">
+            <div class="col-12 col-xxl-6 mb-3">
+                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-danger">
+                    <div class="text-center mb-3">
+                        <i class="fa-solid fa-person-digging"></i>
+                        <span>@Text.Lower("Maintenance mode")</span>
+                    </div>
+                    <div class="text-center">
+                        <div class="btn-group">
+                            <button class="btn btn-danger text-white" title="@Text.Lower("Enter maintenance mode")" disabled="@this.DisableEnterMaintenanceModeButton" @onclick="this.EnterMaintenanceMode">
+                                <i class="fa-solid fa-arrow-down"></i>
+                                <span class="">@Text.Lower("Enter")</span>
+                            </button>
+                            <button class="btn btn-success text-white" title="@Text.Lower("Leave maintenance mode")" disabled="@this.DisableLeaveMaintenanceModeButton" @onclick="this.LeaveMaintenanceMode">
+                                <i class="fa-solid fa-arrow-up"></i>
+                                <span class="">@Text.Lower("Leave")</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-xxl-6 mb-3">
+                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-danger" @onclick="GoToCacheExplorer">
+                    <div class="text-center">
+                        <i class="fa-solid fa-book"></i>
+                        <span>@Text.Lower("Cache explorer")</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="">
+        <div class="row" style="min-height: 150px;">
+            <div class="col-12 col-md-6 col-xxl-2 mb-3">
+                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-danger" @onclick="GoToBlogs">
+                    <div class="text-center" style="bottom:0;">
+                        <i class="fa-solid fa-cubes"></i>
+                        <span>@Text.Lower("Blogs")</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-xxl-2 mb-3">
+                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-danger" @onclick="GoToSoftwareReleases">
+                    <div class="text-center" style="bottom:0;">
+                        <i class="fa-solid fa-file-zipper"></i>
+                        <span>@Text.Lower("Software releases")</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-xxl-2 mb-3">
+                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-danger" @onclick="GoToRoles">
+                    <div class="text-center" style="bottom:0;">
+                        <i class="fa-solid fa-id-badge"></i>
+                        <span>@Text.Lower("Roles")</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-xxl-2 mb-3">
+                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-danger" @onclick="GoToUsers">
+                    <div class="text-center" style="bottom:0;">
+                        <i class="fa-solid fa-user-group"></i>
+                        <span>@Text.Lower("Users")</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-xxl-2 mb-3">
+                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-danger" @onclick="GoToBackupAndRestore">
+                    <div class="text-center" style="bottom:0;">
+                        <i class="fa-solid fa-database"></i>
+                        <span>@Text.Lower("Backup and restore")</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-xxl-2 mb-3">
+                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-danger" @onclick="GoToSettings">
+                    <div class="text-center" style="bottom:0;">
+                        <i class="fa-solid fa-gear"></i>
+                        <span>@Text.Lower("Settings")</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mt-5">
+        <div class="row" style="min-height: 150px;">
+            <div class="col-12 col-md-6 col-xxl-2 mb-3">
+                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToFileManager">
+                    <div class="text-center" style="bottom:0;">
+                        <i class="fa-solid fa-folder-closed"></i>
+                        <span>@Text.Lower("File manager")</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-xxl-2 mb-3">
+                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToQuickNotes">
+                    <div class="text-center" style="bottom:0;">
+                        <i class="bi bi-lightning-fill"></i>
+                        <span>@Text.Lower("Quick notes")</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-xxl-2 mb-3">
+                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToPosts">
+                    <div class="text-center" style="bottom:0;">
+                        <i class="bi bi-file-earmark-text-fill"></i>
+                        <span>@Text.Lower("Posts")</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-xxl-2 mb-3">
+                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToPostsComments">
+                    <div class="text-center" style="bottom:0;">
+                        <i class="fa-solid fa-comment"></i>
+                        <span>@Text.Lower("Posts comments")</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-xxl-2 mb-3">
+                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToVideos">
+                    <div class="text-center" style="bottom:0;">
+                        <i class="fa-solid fa-video"></i>
+                        <span>@Text.Lower("Videos")</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-xxl-2 mb-3">
+                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToVideosComments">
+                    <div class="text-center" style="bottom:0;">
+                        <i class="fa-solid fa-comment"></i>
+                        <span>@Text.Lower("Videos comments")</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="">
+        <div class="row" style="min-height: 150px;">
+            <div class="col-12 col-md-6 col-xxl-2 mb-3">
+                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToPages">
+                    <div class="text-center" style="bottom:0;">
+                        <i class="bi bi-file-earmark-text-fill"></i>
+                        <span>@Text.Lower("Pages")</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-xxl-2 mb-3">
+                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToCategories">
+                    <div class="text-center" style="bottom:0;">
+                        <i class="fa-solid fa-layer-group"></i>
+                        <span>@Text.Lower("Categories")</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-xxl-2 mb-3">
+                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToTags">
+                    <div class="text-center" style="bottom:0;">
+                        <i class="fa-solid fa-tag"></i>
+                        <span>@Text.Lower("Tags")</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-xxl-2 mb-3">
+                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToSocialProfiles">
+                    <div class="text-center" style="bottom:0;">
+                        <i class="fa-solid fa-id-badge"></i>
+                        <span>@Text.Lower("Social profiles")</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-xxl-2 mb-3">
+                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToSpecialMessages">
+                    <div class="text-center" style="bottom:0;">
+                        <i class="fa-solid fa-bullhorn me-1"></i>
+                        <span>@Text.Lower("Special messages")</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-xxl-2 mb-3">
+                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToSpecialPages">
+                    <div class="text-center" style="bottom:0;">
+                        <i class="bi bi-file-earmark-text-fill"></i>
+                        <span>@Text.Lower("Special pages")</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mt-5">
+        <div class="row" style="min-height: 150px;">
+            <div class="col-12 col-xxl-6 mb-3">
+                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-info" @onclick="GoToUserTrashes">
+                    <div class="text-center" style="bottom:0;">
+                        <i class="fa-solid fa-trash-can"></i>
+                        <span>@Text.Lower("User trashes")</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-xxl-6 mb-3">
+                <div class="border border-2 h-100 p-3 bg-light border-info">
+                    <div class="text-center">
+                        @if (this.GetUserLocation() != null)
+                        {
+                            var location = this.GetUserLocation()!;
+                            <div class="">
+                                <i class="fa-solid fa-map-location-dot"></i>
+                                <div class="ellipsis" style="-webkit-line-clamp: 2;">@location.Country, @location.Region, @location.City</div>
+                                <div class="x-small mb-2" style="line-height:10px;">@location.Provider</div>
+                            </div>
+                        }
+                        else
+                        {
+                            <span>@Text.Original("No user location")</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    bool _contentExpanded = true;
+    bool _usersExpanded = false;
+    bool _settingsExpanded = false;
+
+    protected bool DisableEnterMaintenanceModeButton => this.Super.Settings.GetSettings().MaintenanceMode == true;
+    protected bool DisableLeaveMaintenanceModeButton => this.Super.Settings.GetSettings().MaintenanceMode == false;
+
+    protected async Task EnterMaintenanceMode()
+    {
+        var ok = await DialogService.ShowMessageBoxAsync(
+            Text.Upper("Entering maintenance mode"),
+            Text.Original("Are you sure?"),
+            yesText: Text.Lower("Yes"),
+            noText: Text.Lower("No"));
+
+        if (ok.GetValueOrDefault())
+        {
+            using (var transaction = new TransactionScope())
+            {
+                var ctx = new DataOperationContext(this.UserFacade.User, DateTime.UtcNow);
+                var hub = this.Super.SpecialPages.EnterMaintenanceMode(ctx);
+                this.UserFacade.Result = hub;
+                if (hub.Ok) transaction.Complete();
+            }
+        }
+    }
+
+    protected async Task LeaveMaintenanceMode()
+    {
+        var ok = await DialogService.ShowMessageBoxAsync(
+            Text.Upper("Leaving maintenance mode"),
+            Text.Original("Are you sure?"),
+            yesText: Text.Lower("Yes"),
+            noText: Text.Lower("No"));
+
+        if (ok.GetValueOrDefault())
+        {
+            using (var transaction = new TransactionScope())
+            {
+                var ctx = new DataOperationContext(this.UserFacade.User, DateTime.UtcNow);
+                var hub = this.Super.SpecialPages.LeaveMaintenanceMode(ctx);
+                this.UserFacade.Result = hub;
+                if (hub.Ok) transaction.Complete();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Logs the user out
+    /// </summary>
+    private async Task ClearCache()
+    {
+        var answer = await this.DialogService.ShowMessageBoxAsync(
+            this.Text.Upper("Clear cache of the admin website"),
+            this.Text.Original("Are you sure?"),
+            yesText: this.Text.Lower("Yes"),
+            noText: this.Text.Lower("No"));
+
+        if (answer.GetValueOrDefault() == true)
+        {
+            if (_memoryCache is MemoryCache memoryCache)
+            {
+                memoryCache.Clear();
+                this.GhostOfTheNavigator.NavigateTo(this.GhostOfTheNavigator.Uri, forceLoad: true);
+            }
+        }
+    }
+
+    protected async Task LogoutAsync()
+    {
+        var answer = await this.DialogService.ShowMessageBoxAsync(
+            this.Text.Upper("Log out"),
+            this.Text.Original("Are you sure?"),
+            yesText: this.Text.Lower("Yes"),
+            noText: this.Text.Lower("No"));
+
+        if (answer.GetValueOrDefault() == true)
+        {
+            await this.JSRuntime.InvokeVoidAsync("$.removeCookie", this.Configuration.GetUserCookieKey(), new { path = "/" });
+            this.UserFacade.UserId = OrigamiUser.AnonymousUser.Id;
+            this.GhostOfTheNavigator.Refresh(true);
+        }
+    }
+
+    private void OnContentClick()
+    {
+        _contentExpanded = !_contentExpanded;
+    }
+
+    private void OnUsersClick()
+    {
+        _usersExpanded = !_usersExpanded;
+    }
+
+    private void OnSettingsClick()
+    {
+        _settingsExpanded = !_settingsExpanded;
+    }
+
+    private void GoToBlogs()
+    {
+        this.GhostOfTheNavigator.NavigateTo($"/blogs");
+    }
+
+    private void GoToCategories()
+    {
+        this.GhostOfTheNavigator.NavigateTo($"/categories");
+    }
+
+    private void GoToChangePassword()
+    {
+        this.GhostOfTheNavigator.NavigateTo($"/password/change");
+    }
+
+    private void GoToDashboard()
+    {
+        this.GhostOfTheNavigator.NavigateTo($"/");
+    }
+
+    private void GoToFileManager()
+    {
+        this.GhostOfTheNavigator.NavigateTo($"/filemanager");
+    }
+
+    private void GoToPages()
+    {
+        this.GhostOfTheNavigator.NavigateTo($"/pages");
+    }
+
+    private void GoToPostsComments()
+    {
+        this.GhostOfTheNavigator.NavigateTo($"/posts/comments");
+    }
+
+    private void GoToPosts()
+    {
+        this.GhostOfTheNavigator.NavigateTo($"/posts");
+    }
+
+    private void GoToPosts2()
+    {
+        this.GhostOfTheNavigator.NavigateTo($"/posts2");
+    }
+
+    private void GoToSpecialMessages()
+    {
+        this.GhostOfTheNavigator.NavigateTo($"/specialmessages");
+    }
+
+    private void GoToSpecialPages()
+    {
+        this.GhostOfTheNavigator.NavigateTo($"/specialpages");
+    }
+
+    private void GoToSocialProfiles()
+    {
+        this.GhostOfTheNavigator.NavigateTo($"/socialprofiles");
+    }
+
+    private void GoToTags()
+    {
+        this.GhostOfTheNavigator.NavigateTo($"/tags");
+    }
+
+    private void GoToVideos()
+    {
+        this.GhostOfTheNavigator.NavigateTo($"/videos");
+    }
+
+    private void GoToVideosComments()
+    {
+        this.GhostOfTheNavigator.NavigateTo($"/videos/comments");
+    }
+
+    private void GoToUsers()
+    {
+        this.GhostOfTheNavigator.NavigateTo($"/users");
+    }
+
+    private void GoToRoles()
+    {
+        this.GhostOfTheNavigator.NavigateTo($"/roles");
+    }
+
+    private void GoToSettings()
+    {
+        this.GhostOfTheNavigator.NavigateTo($"/settings");
+    }
+
+    private void GoToHome()
+    {
+        this.GhostOfTheNavigator.NavigateTo($"/", true);
+    }
+
+    private void GoToTrashes()
+    {
+        this.GhostOfTheNavigator.NavigateTo($"/trashes");
+    }
+
+    private void GoToUserTrashes()
+    {
+        this.GhostOfTheNavigator.NavigateTo($"/user/trashes");
+    }
+
+    private void GoToUserProfile()
+    {
+        this.GhostOfTheNavigator.NavigateTo($"/user/profile");
+    }
+
+    private void GoToQuickNotes()
+    {
+        this.GhostOfTheNavigator.NavigateTo($"/quicknotes");
+    }
+
+    private void GoToCacheExplorer()
+    {
+        this.GhostOfTheNavigator.NavigateTo($"/cache/explorer");
+    }
+
+    private void GoToSoftwareReleases()
+    {
+        this.GhostOfTheNavigator.NavigateTo($"/softwarereleases");
+    }
+
+    private async Task RegenerateNanoIds()
+    {
+        var answer = await this.DialogService.ShowMessageBoxAsync(
+            this.Text.Upper("Regenerate nano-ids"),
+            this.Text.Original("Are you sure?"),
+            yesText: this.Text.Lower("Yes"),
+            noText: this.Text.Lower("No"));
+
+        if (answer.GetValueOrDefault() == true)
+        {
+            try
+            {
+                using (var transaction = new TransactionScope())
+                {
+                    this.UserFacade.Result = _superRepository.RegenerateNanoIds();
+                    transaction.Complete();
+                }
+                this.GhostOfTheNavigator.NavigateTo(this.GhostOfTheNavigator.Uri, forceLoad: true);
+            }
+            catch (Exception ex)
+            {
+                this.UserFacade.Result = new(ex);
+                return;
+            }
+        }
+    }
+
+    protected Location? GetUserLocation()
+    {
+        if (_httpContextAccessor.HttpContext == null) return null;
+        return _memoryCache.Get<Location?>($"Origami_UserLocation_{_httpContextAccessor.HttpContext.Connection.Id}");
+    }
+
+    private void GoToBackupAndRestore()
+    {
+        this.GhostOfTheNavigator.NavigateTo($"/backups");
+    }
+}

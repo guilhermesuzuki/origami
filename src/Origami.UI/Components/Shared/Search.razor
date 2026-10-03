@@ -3,7 +3,7 @@
 
 <div class="search @Class">
     <div class="search-field position-relative">
-        <ul class="expand-size p-3 border shadow-sm">
+        <ul class="expand-size p-3 shadow-sm">
             <li>
                 <MudTextField T="string"
                               FullWidth="true"
@@ -21,7 +21,7 @@
     </div>
     @if (this._hits.Any() == true)
     {
-        <div class="search-results mt-3 border shadow-lg p-3">
+        <div class="search-results m-3 border shadow-lg p-3">
             @if (this._posts.Any() == true)
             {
                 <div class="search-posts">
