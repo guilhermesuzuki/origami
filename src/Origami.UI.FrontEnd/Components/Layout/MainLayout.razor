@@ -80,8 +80,8 @@
         //it failed to authenticate the user, must log them out
         if (UserFacade.SocialProfile.New)
         {
-            var returnUrl = Uri.EscapeDataString(this.NavigationManager.Uri);
-            this.NavigationManager.NavigateTo("/login/out".QueryString("returnUrl", returnUrl), true);
+            var returnUrl = Uri.EscapeDataString(this.GhostOfTheNavigator.Uri);
+            this.GhostOfTheNavigator.NavigateTo("/login/out".QueryString("returnUrl", returnUrl), true);
         }
     }
 }

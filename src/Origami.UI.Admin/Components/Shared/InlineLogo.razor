@@ -1,0 +1,55 @@
+﻿@using System;
+@using System.Threading;
+@using System.Globalization;
+@using Microsoft.AspNetCore.Localization;
+
+@inherits Basic
+@implements IBlogId
+@inject ISettingsRepository _settingsRepository
+
+@{
+    var settings = this.Super.Settings.GetSettings(); 
+}
+<div class="m-auto inline-logo-wrapper text-center">
+    <div class="@Class inline-logo cursor-pointer position-relative d-inline-flex align-items-center" style="z-index:25;" @onclick="GoHome">
+        @if (this._settings.LogoUrl.Has() == true)
+        {
+            <ul class="inline-list">
+                <li style="width: 40px;">
+                    <img class="logo-image h-100 w-100" src="@_settings.LogoUrl" title="@_settings.LogoUrl" />
+                </li>
+                <li>
+                    <span class="fw-bold site-name text-ellipsis" style="font-size: 1.2rem!important;">@_settings.Name</span>
+                </li>
+            </ul>
+        }
+        else
+        {
+            <span class="fw-bold site-name text-ellipsis" style="font-size: 1.2rem!important;">@_settings.Name</span>
+        }
+    </div>
+</div>
+
+@code {
+    private OrigamiSettings _settings = new();
+
+    [Parameter] public RenderFragment? SubtitleTemplate { get; set; }
+
+    private void GoHome()
+    {
+        var home = "/#content-start";
+        GhostOfTheNavigator!.NavigateTo(home, false);
+    }
+
+    private void _loadSettings()
+    {
+        this._settings = this._settingsRepository.GetSettings();
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        this._loadSettings();
+    }
+}
+

@@ -3,20 +3,46 @@
 <CustomHeadContent>
     <link rel="stylesheet" href="_content/Origami.UI/lib/css/style-site-admin.css" />
     <AppLinks></AppLinks>
+    <style>
+        .language-name { display: none; }
+    </style>
 </CustomHeadContent>
 <PageTitle>@Text.Lower("Admin"): @Super.Settings.GetSettings().Name.ToLower()</PageTitle>
 @if (UserFacade.User.New != true)
 {
     <div class="page">
         <ProcessResult></ProcessResult>
-        <div class="sidebar col-12 col-lg-3 hidden-sm visible-lg position-sticky overflow-hidden" style="overflow-y:auto!important;">
-            <Logo Class="p-4 border-bottom" />
-            <NavMenu></NavMenu>
-        </div>
+        <EmailStatus></EmailStatus>
         <main class="overflow-hidden position-relative" style="overflow-y:auto !important;">
-            <EmailStatus></EmailStatus>    
-            <div style="flex:1;">@Body</div>
-            <Footer Class=""></Footer>
+            <ul class="inline-list d-inline-flex align-items-center p-2 border-bottom bg-light">
+                <li style="width: 67px;"></li>
+                <li>
+                    <InlineLogo></InlineLogo>
+                </li>
+                <li style="width: 67px;">
+                    <Languages></Languages>
+                </li>
+            </ul>
+            <div class="p-3">
+                <div class="logged-in-user text-center">
+                    <UserHeaderCard Entity="this.UserFacade.User"></UserHeaderCard>
+                </div>
+                <div class="m-auto border" style="max-width: 500px;">
+                    <ul class="inline-list cursor-pointer w-100">
+                        <li class="border-end text-center p-2" @onclick="LogoutAsync">
+                            <i class="fa-solid fa-power-off"></i>
+                        </li>
+                        <li class="border-end text-center p-2" @onclick="GoToChangePassword">
+                            <i class="fa-solid fa-key"></i>
+                        </li>
+                        <li class="text-center p-2" @onclick="GoToUserProfile">
+                            <i class="fa-solid fa-user"></i>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="" style="flex:1;">@Body</div>
+            <Footer></Footer>
         </main>
     </div>
 }
@@ -31,5 +57,29 @@ else
 <BlazorErrorUi></BlazorErrorUi>
 
 @code {
-    
+    private void GoToChangePassword()
+    {
+        this.GhostOfTheNavigator.NavigateTo($"/password/change");
+    }
+
+    private void GoToUserProfile()
+    {
+        this.GhostOfTheNavigator.NavigateTo($"/user/profile");
+    }
+
+    protected async Task LogoutAsync()
+    {
+        var answer = await this.DialogService.ShowMessageBoxAsync(
+            this.Text.Upper("Log out"),
+            this.Text.Original("Are you sure?"),
+            yesText: this.Text.Lower("Yes"),
+            noText: this.Text.Lower("No"));
+
+        if (answer.GetValueOrDefault() == true)
+        {
+            await this.JSRuntime.InvokeVoidAsync("$.removeCookie", this.Configuration.GetUserCookieKey(), new { path = "/" });
+            this.UserFacade.UserId = OrigamiUser.AnonymousUser.Id;
+            this.GhostOfTheNavigator.Refresh(true);
+        }
+    }
 }

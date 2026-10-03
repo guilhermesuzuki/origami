@@ -21,18 +21,6 @@
                 <div class="d-inline-flex align-items-center col-12 col-xxl-8">
                     <i class="fa-solid fa-gauge-simple pe-1"></i>
                     <span class="me-3">@Text.Upper("Dashboard")</span>
-                    <div class="btn-group pe-1">
-                        <button class="btn btn-danger text-white" title="@Text.Lower("Enter maintenance mode")" disabled="@this.DisableEnterMaintenanceModeButton" @onclick="this.EnterMaintenanceMode">
-                            <i class="fa-solid fa-person-digging"></i>
-                            <i class="fa-solid fa-arrow-down"></i>
-                            <span class="">@Text.Lower("Enter")</span>
-                        </button>
-                        <button class="btn btn-success text-white" title="@Text.Lower("Leave maintenance mode")" disabled="@this.DisableLeaveMaintenanceModeButton" @onclick="this.LeaveMaintenanceMode">
-                            <i class="fa-solid fa-person-digging"></i>
-                            <i class="fa-solid fa-arrow-up"></i>
-                            <span class="">@Text.Lower("Leave")</span>
-                        </button>
-                    </div>
                 </div>
                 <div class="col-12 col-xxl-4">
                     <BlogSelect></BlogSelect>
@@ -41,6 +29,7 @@
         </div>
     </HeaderTemplate>
     <ContentTemplate>
+        <NavMenu2 Class="border-bottom"></NavMenu2>
         <div class="p-3">
             <div class="row">
                 <div class="col-12 col-xxl-4">
