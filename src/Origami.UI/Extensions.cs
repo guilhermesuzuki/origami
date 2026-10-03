@@ -659,6 +659,7 @@ namespace Origami.UI
 
             // 13. Endpoints
             app.MapRazorPages();
+            app.UseMvcWithDefaultRoute();
             app.MapControllers();
 
             app.MapHealthChecks("/health");
