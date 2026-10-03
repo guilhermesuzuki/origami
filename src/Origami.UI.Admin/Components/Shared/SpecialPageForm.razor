@@ -141,6 +141,26 @@
         </div>
     </div>
 </div>
+@if (this.FileUploading)
+{
+    <div class="position-fixed popup-container">
+        <div class="border p-3 shadow-lg" style="width: 50%; background-color:white;">
+            <div class="text-center">@Text.Lower("Uploading a file")...</div>
+            <!-- Progress bar for file upload -->
+            <div class="progress" style="height: 10px;">
+                <div class="progress-bar bg-secondary" role="progressbar" style="width: @this.FileUploadingProgress%;" aria-valuenow="@this.FileUploadingProgress" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+            <div class="actions text-right mt-3">
+                <div class="btn-group">
+                    <button class="btn btn-danger" @onclick="() => this.FileUploadingToken.Cancel()">
+                        <i class="fa-solid fa-stop"></i>
+                        @Text.Lower("Stop")
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 @if (FileManagerForImages)
 {
     <div class="position-fixed popup-container">

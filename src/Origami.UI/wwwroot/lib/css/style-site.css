@@ -82,9 +82,11 @@ html body .reaction-selected { border: 1px solid var(--site-highlight) !importan
 
 .login-on-the-fly * { color:black!important; }
 
+.tox.tox-tinymce-aux { z-index: 20000!important; }
+
 @media (max-width: 576px) {
-    html body .footer { display:block!important; }
-    html body .footer > * { display: block !important; margin: 0px !important; margin-bottom:10px!important; }
-    html body .footer .origami { margin-bottom:0!important; }
-    html body .footer .specialpage-header-lite-4 > span { justify-content:end!important; }
+    html body .footer { display: block !important; }
+    html body .footer > * { display: block !important; margin: 0px !important; margin-bottom: 10px !important; }
+    html body .footer .origami { margin-bottom: 0 !important; }
+    html body .footer .specialpage-header-lite-4 > span { justify-content: end !important; }
 }
