@@ -8,45 +8,45 @@
     <div class="file-form @Class p-3">
         @if (Entity.IsImage)
         {
-            <div class="border" style="background-color: #20202050; background-image: url(@(Entity.WebPath));background-repeat: no-repeat;background-position: center;background-size: contain;height:400px;"></div>
+            <div class="border mb-3" style="background-color: #20202050; background-image: url(@(Entity.WebPath));background-repeat: no-repeat;background-position: center;background-size: contain;height:400px;"></div>
         }
         else if (Entity.IsVideo)
         {
-            <video src="@Entity.WebPath" controls style="width:100%;"></video>
+            <video class="border mb-3" src="@Entity.WebPath" controls style="width:100%;"></video>
         }
         else if (Entity.IsAudio)
         {
-            <audio src="@Entity.WebPath" controls style="width:100%;"></audio>
+            <audio class="border mb-3" src="@Entity.WebPath" controls style="width:100%;"></audio>
         }
-        <table class="w-100 mt-3 border">
+        <table class="w-100 border text-left">
             <tr>
-                <td class="p-3" style="width:25%;">@Text.Lower("Path"):</td>
+                <td class="p-3" style="width:15%;">@Text.Lower("Path"):</td>
                 <td class="p-3">
                     <span title="@Entity.WebPath">@Entity.WebPath</span>
                 </td>
             </tr>
             <tr>
-                <td class="p-3" style="width:25%;">@Text.Lower("Name"):</td>
+                <td class="p-3" style="width:15%;">@Text.Lower("Name"):</td>
                 <td class="p-3">@Entity.Name</td>
             </tr>
             <tr>
-                <td class="p-3" style="width:25%;">@Text.Lower("Size"):</td>
+                <td class="p-3" style="width:15%;">@Text.Lower("Size"):</td>
                 <td class="p-3">@Entity.FileSize.SizeInBytes()</td>
             </tr>
             <tr>
-                <td class="p-3" style="width:25%;">@Text.Lower("Created"):</td>
+                <td class="p-3" style="width:15%;">@Text.Lower("Created"):</td>
                 <td class="p-3">@_fileInfo().CreationTimeUtc</td>
             </tr>
             <tr>
-                <td class="p-3" style="width:25%;">@Text.Lower("Modified"):</td>
+                <td class="p-3" style="width:15%;">@Text.Lower("Modified"):</td>
                 <td class="p-3">@_fileInfo().LastWriteTimeUtc</td>
             </tr>
             <tr>
-                <td class="p-3" style="width:25%;">@Text.Lower("Accessed"):</td>
+                <td class="p-3" style="width:15%;">@Text.Lower("Accessed"):</td>
                 <td class="p-3">@_fileInfo().LastAccessTimeUtc</td>
             </tr>
             <tr>
-                <td class="p-3" style="width:25%;">@Text.Lower("Local path"):</td>
+                <td class="p-3" style="width:15%;">@Text.Lower("Local path"):</td>
                 <td class="p-3">
                     <span title="@Entity.LocalPath">@Entity.LocalPath</span>
                 </td>
