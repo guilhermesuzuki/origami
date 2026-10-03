@@ -8,17 +8,17 @@
     <div class="file-form @Class p-3">
         @if (Entity.IsImage)
         {
-            <div class="border" style="background-color: #20202050; background-image: url(@(Entity.WebPath));background-repeat: no-repeat;background-position: center;background-size: contain;height:400px;"></div>
+            <div class="border mb-3" style="background-color: #20202050; background-image: url(@(Entity.WebPath));background-repeat: no-repeat;background-position: center;background-size: contain;height:400px;"></div>
         }
         else if (Entity.IsVideo)
         {
-            <video src="@Entity.WebPath" controls style="width:100%;"></video>
+            <video class="border mb-3" src="@Entity.WebPath" controls style="width:100%;"></video>
         }
         else if (Entity.IsAudio)
         {
-            <audio src="@Entity.WebPath" controls style="width:100%;"></audio>
+            <audio class="border mb-3" src="@Entity.WebPath" controls style="width:100%;"></audio>
         }
-        <table class="w-100 mt-3 border text-left">
+        <table class="w-100 border text-left">
             <tr>
                 <td class="p-3" style="width:15%;">@Text.Lower("Path"):</td>
                 <td class="p-3">
