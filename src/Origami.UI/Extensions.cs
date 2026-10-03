@@ -593,10 +593,40 @@ namespace Origami.UI
 
         public static WebApplication UseOrigami(this WebApplication app, bool admin = false)
         {
+            // 1. Infrastructure / proxy headers
             app.UseForwardedHeaders();
-            app.UseAuthentication();
 
-            var supportedCultures = OrigamiConstants.AllLanguages().Select(x => x.Name).ToArray();
+            // 2. HTTPS
+            if (!app.Environment.IsDevelopment())
+            {
+                app.UseHsts();
+            }
+
+            app.UseHttpsRedirection();
+
+            // 3. Error handling
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Error");
+            }
+
+            // 4. Response handling
+            if (!app.Environment.IsDevelopment())
+            {
+                app.UseResponseCaching();
+                app.UseResponseCompression();
+            }
+
+            // 5. Localization
+            var supportedCultures = OrigamiConstants
+                .AllLanguages()
+                .Select(x => x.Name)
+                .ToArray();
+
             var localizationOptions = new RequestLocalizationOptions()
                 .SetDefaultCulture("en-US")
                 .AddSupportedCultures(supportedCultures)
@@ -604,51 +634,50 @@ namespace Origami.UI
 
             app.UseRequestLocalization(localizationOptions);
 
-            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(supportedCultures[0]);
-
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment() == false)
-            {
-                app.UseResponseCaching();
-                app.UseResponseCompression();
-                app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
-
-            if (app.Environment.IsDevelopment() == true)
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseHttpsRedirection();
-            }
-
+            // 6. Cookies / session
             app.UseCookiePolicy();
             app.UseSession();
-            app.UseRouting();
-            app.UseAuthorization();
-            app.UseAntiforgery();
 
+            // 7. Routing
+            app.UseRouting();
+
+            // 8. Authentication / authorization
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            // 9. Your request-specific middleware
             app.UseMiddleware<OrigamiLocationMiddleware>();
 
-            app.MapRazorPages();
-            app.UseMvcWithDefaultRoute();
-            app.MapControllers();
+            // 10. Antiforgery
+            app.UseAntiforgery();
+
+            // 11. Static files
             app.UseStaticFiles();
+
+            // 12. Rate limiting
             app.UseRateLimiter();
+
+            // 13. Endpoints
+            app.MapRazorPages();
+            app.MapControllers();
 
             app.MapHealthChecks("/health");
 
-            if (admin == false)
+            if (!admin)
             {
-                // RSS feed endpoint (minimal API)
-                app.MapGet("/blogs/{slug}/rss.xml", async (string slug, HttpContext context, IRssRepository rss) =>
-                {
-                    CancellationTokenSource token = new(10000);
-                    var oi = context.Request.Scheme + "://" + context.Request.Host.Value;
-                    var xml = rss.GetRss(slug, oi);
-                    context.Response.ContentType = "application/rss+xml; charset=utf-8";
-                    await context.Response.WriteAsync(xml, token.Token).ConfigureAwait(false);
-                });
+                app.MapGet(
+                    "/blogs/{slug}/rss.xml",
+                    async (string slug, HttpContext context, IRssRepository rss) =>
+                    {
+                        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+                        
+                        var baseUrl = $"{context.Request.Scheme}://{context.Request.Host}";
+                        var xml = rss.GetRss(slug, baseUrl);
+
+                        context.Response.ContentType = "application/rss+xml; charset=utf-8";
+
+                        await context.Response.WriteAsync(xml, cts.Token).ConfigureAwait(false);
+                    });
             }
 
             return app;

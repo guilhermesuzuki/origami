@@ -476,6 +476,7 @@ namespace Origami.UI.Admin
             {
                 HubContentPage page => page.Entity,
                 HubContentPost post => post.Entity,
+                HubContentSoftwareRelease softwareRelease => softwareRelease.Entity,
                 HubContentSpecialMessage specialMessage => specialMessage.Entity,
                 HubContentSpecialPage specialPage => specialPage.Entity,
                 HubContentVideo video => video.Entity,
