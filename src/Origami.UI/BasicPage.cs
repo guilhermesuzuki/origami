@@ -13,6 +13,7 @@ namespace Origami.UI
     public class BasicPage : Basic
     {
         [Parameter] public bool ShouldSetPageTitle { get; set; } = true;
+        [Parameter] public bool ShouldTrackUserVisit { get; set; } = true;
         [Inject] protected IPageTitleRepository PageTitle { get; set; } = null!;
         protected RequestContext RequestContext { get; set; } = new();
 
@@ -103,6 +104,7 @@ namespace Origami.UI
         {
             if (firstRender == false) return;
             if (this.UserFacade.IncognitoMode == true) return;
+            if (this.ShouldTrackUserVisit == false) return;
             _ = await this.PhysicalPagesByPathAsync();
         }
 
