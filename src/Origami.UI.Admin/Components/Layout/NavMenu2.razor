@@ -15,7 +15,7 @@
         <div class="">
             <div class="row">
                 <div class="col-12 mb-3">
-                    <div class="border border-2 h-100 p-3 cursor-pointer">
+                    <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-info">
                         <ConnectionDetails Class="p-2"></ConnectionDetails>
                     </div>
                 </div>
@@ -25,7 +25,7 @@
     <div class="mt-5">
         <div class="row" style="min-height: 150px;">
             <div class="col-12 col-xxl-6 mb-3">
-                <div class="border border-2 h-100 p-3 cursor-pointer">
+                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-danger">
                     <div class="text-center mb-3">
                         <i class="fa-solid fa-person-digging"></i>
                         <span>@Text.Lower("Maintenance mode")</span>
@@ -45,20 +45,19 @@
                 </div>
             </div>
             <div class="col-12 col-xxl-6 mb-3">
-                <div class="border border-2 h-100 p-3 cursor-pointer" @onclick="GoToCacheExplorer">
+                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-danger" @onclick="GoToCacheExplorer">
                     <div class="text-center">
                         <i class="fa-solid fa-book"></i>
                         <span>@Text.Lower("Cache explorer")</span>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
     <div class="">
         <div class="row" style="min-height: 150px;">
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <div class="border border-2 h-100 p-3 cursor-pointer" @onclick="GoToBlogs">
+                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-danger" @onclick="GoToBlogs">
                     <div class="text-center" style="bottom:0;">
                         <i class="fa-solid fa-cubes"></i>
                         <span>@Text.Lower("Blogs")</span>
@@ -66,7 +65,7 @@
                 </div>
             </div>
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <div class="border border-2 h-100 p-3 cursor-pointer" @onclick="GoToSoftwareReleases">
+                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-danger" @onclick="GoToSoftwareReleases">
                     <div class="text-center" style="bottom:0;">
                         <i class="fa-solid fa-file-zipper"></i>
                         <span>@Text.Lower("Software releases")</span>
@@ -74,7 +73,7 @@
                 </div>
             </div>
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <div class="border border-2 h-100 p-3 cursor-pointer" @onclick="GoToRoles">
+                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-danger" @onclick="GoToRoles">
                     <div class="text-center" style="bottom:0;">
                         <i class="fa-solid fa-id-badge"></i>
                         <span>@Text.Lower("Roles")</span>
@@ -82,7 +81,7 @@
                 </div>
             </div>
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <div class="border border-2 h-100 p-3 cursor-pointer" @onclick="GoToUsers">
+                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-danger" @onclick="GoToUsers">
                     <div class="text-center" style="bottom:0;">
                         <i class="fa-solid fa-user-group"></i>
                         <span>@Text.Lower("Users")</span>
@@ -90,7 +89,7 @@
                 </div>
             </div>
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <div class="border border-2 h-100 p-3 cursor-pointer" @onclick="GoToBackupAndRestore">
+                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-danger" @onclick="GoToBackupAndRestore">
                     <div class="text-center" style="bottom:0;">
                         <i class="fa-solid fa-database"></i>
                         <span>@Text.Lower("Backup and restore")</span>
@@ -98,7 +97,7 @@
                 </div>
             </div>
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <div class="border border-2 h-100 p-3 cursor-pointer" @onclick="GoToSettings">
+                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-danger" @onclick="GoToSettings">
                     <div class="text-center" style="bottom:0;">
                         <i class="fa-solid fa-gear"></i>
                         <span>@Text.Lower("Settings")</span>
@@ -110,7 +109,7 @@
     <div class="mt-5">
         <div class="row" style="min-height: 150px;">
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <div class="border border-2 h-100 p-3 cursor-pointer" @onclick="GoToFileManager">
+                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToFileManager">
                     <div class="text-center" style="bottom:0;">
                         <i class="fa-solid fa-folder-closed"></i>
                         <span>@Text.Lower("File manager")</span>
@@ -118,7 +117,7 @@
                 </div>
             </div>
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <div class="border border-2 h-100 p-3 cursor-pointer" @onclick="GoToQuickNotes">
+                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToQuickNotes">
                     <div class="text-center" style="bottom:0;">
                         <i class="bi bi-lightning-fill"></i>
                         <span>@Text.Lower("Quick notes")</span>
@@ -126,7 +125,7 @@
                 </div>
             </div>
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <div class="border border-2 h-100 p-3 cursor-pointer" @onclick="GoToPosts">
+                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToPosts">
                     <div class="text-center" style="bottom:0;">
                         <i class="bi bi-file-earmark-text-fill"></i>
                         <span>@Text.Lower("Posts")</span>
@@ -134,7 +133,7 @@
                 </div>
             </div>
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <div class="border border-2 h-100 p-3 cursor-pointer" @onclick="GoToPostsComments">
+                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToPostsComments">
                     <div class="text-center" style="bottom:0;">
                         <i class="fa-solid fa-comment"></i>
                         <span>@Text.Lower("Posts comments")</span>
@@ -142,7 +141,7 @@
                 </div>
             </div>
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <div class="border border-2 h-100 p-3 cursor-pointer" @onclick="GoToVideos">
+                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToVideos">
                     <div class="text-center" style="bottom:0;">
                         <i class="fa-solid fa-video"></i>
                         <span>@Text.Lower("Videos")</span>
@@ -150,7 +149,7 @@
                 </div>
             </div>
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <div class="border border-2 h-100 p-3 cursor-pointer" @onclick="GoToVideosComments">
+                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToVideosComments">
                     <div class="text-center" style="bottom:0;">
                         <i class="fa-solid fa-comment"></i>
                         <span>@Text.Lower("Videos comments")</span>
@@ -162,7 +161,7 @@
     <div class="">
         <div class="row" style="min-height: 150px;">
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <div class="border border-2 h-100 p-3 cursor-pointer" @onclick="GoToPages">
+                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToPages">
                     <div class="text-center" style="bottom:0;">
                         <i class="bi bi-file-earmark-text-fill"></i>
                         <span>@Text.Lower("Pages")</span>
@@ -170,7 +169,7 @@
                 </div>
             </div>
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <div class="border border-2 h-100 p-3 cursor-pointer" @onclick="GoToCategories">
+                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToCategories">
                     <div class="text-center" style="bottom:0;">
                         <i class="fa-solid fa-layer-group"></i>
                         <span>@Text.Lower("Categories")</span>
@@ -178,7 +177,7 @@
                 </div>
             </div>
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <div class="border border-2 h-100 p-3 cursor-pointer" @onclick="GoToTags">
+                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToTags">
                     <div class="text-center" style="bottom:0;">
                         <i class="fa-solid fa-tag"></i>
                         <span>@Text.Lower("Tags")</span>
@@ -186,7 +185,7 @@
                 </div>
             </div>
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <div class="border border-2 h-100 p-3 cursor-pointer" @onclick="GoToSocialProfiles">
+                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToSocialProfiles">
                     <div class="text-center" style="bottom:0;">
                         <i class="fa-solid fa-id-badge"></i>
                         <span>@Text.Lower("Social profiles")</span>
@@ -194,7 +193,7 @@
                 </div>
             </div>
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <div class="border border-2 h-100 p-3 cursor-pointer" @onclick="GoToSpecialMessages">
+                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToSpecialMessages">
                     <div class="text-center" style="bottom:0;">
                         <i class="fa-solid fa-bullhorn me-1"></i>
                         <span>@Text.Lower("Special messages")</span>
@@ -202,7 +201,7 @@
                 </div>
             </div>
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <div class="border border-2 h-100 p-3 cursor-pointer" @onclick="GoToSpecialPages">
+                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToSpecialPages">
                     <div class="text-center" style="bottom:0;">
                         <i class="bi bi-file-earmark-text-fill"></i>
                         <span>@Text.Lower("Special pages")</span>
@@ -214,7 +213,7 @@
     <div class="mt-5">
         <div class="row" style="min-height: 150px;">
             <div class="col-12 col-xxl-6 mb-3">
-                <div class="border border-2 h-100 p-3 cursor-pointer" @onclick="GoToUserTrashes">
+                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-info" @onclick="GoToUserTrashes">
                     <div class="text-center" style="bottom:0;">
                         <i class="fa-solid fa-trash-can"></i>
                         <span>@Text.Lower("User trashes")</span>
@@ -222,7 +221,7 @@
                 </div>
             </div>
             <div class="col-12 col-xxl-6 mb-3">
-                <div class="border border-2 h-100 p-3">
+                <div class="border border-2 h-100 p-3 bg-light border-info">
                     <div class="text-center">
                         @if (this.GetUserLocation() != null)
                         {
