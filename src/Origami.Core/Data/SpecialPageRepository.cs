@@ -9,6 +9,7 @@ namespace Origami.Core.Data
         ISpecialPageRepository
     {
         protected readonly ISettingRepository _settingRepository;
+        protected readonly ISettingsRepository _settingsRepository;
         protected readonly IValidator<OrigamiSpecialPage> _validator;
 
         /// <summary>
@@ -22,12 +23,14 @@ namespace Origami.Core.Data
             IDbContextFactory<OrigamiDbContext> dbContextFactory,
             IMyMemoryCache memoryCache,
             ISettingRepository settingRepository,
+            ISettingsRepository settingsRepository,
             Text text,
             IWebRootPath wwwRoot)
             : base(text, dbContextFactory, memoryCache, wwwRoot, appFacade)
         {
             _validator = validator;
             _settingRepository = settingRepository;
+            _settingsRepository = settingsRepository;
         }
 
         public override string CreatePermission => nameof(OrigamiRole.CreateNewSpecialPages);
@@ -64,6 +67,7 @@ namespace Origami.Core.Data
             }
 
             this._settingRepository.UpdateOnlyThisSetting(context, nameof(OrigamiSettings.MaintenanceMode).ToLowerInvariant(), true.ToString()).Push(hub);
+            this._settingsRepository.GetSettings().MaintenanceMode = true;
 
             return hub;
         }
@@ -89,6 +93,7 @@ namespace Origami.Core.Data
             }
 
             this._settingRepository.UpdateOnlyThisSetting(context, nameof(OrigamiSettings.MaintenanceMode).ToLowerInvariant(), false.ToString()).Push(hub);
+            this._settingsRepository.GetSettings().MaintenanceMode = false;
 
             return hub;
         }

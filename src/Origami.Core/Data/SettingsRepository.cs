@@ -89,7 +89,7 @@ public class SettingsRepository :
 
     public OrigamiSettings GetSettings()
     {
-        var key = $"entity-{typeof(OrigamiSettings).FullName}";
+        var key = KeyForCaching;
 
         if (MemoryCache.Get(key) == null)
         {

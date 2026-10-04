@@ -27,7 +27,7 @@ namespace Origami.UI
 
                 if (_memoryCache.Get(key) is Location location)
                 {
-                    await next(context);
+                    await next(context).ConfigureAwait(false);
                     return;
                 }
 
@@ -43,7 +43,7 @@ namespace Origami.UI
                     using var response = await client.GetAsync(url).ConfigureAwait(false);
                     if (response.IsSuccessStatusCode)
                     {
-                        var content = await response.Content.ReadAsStringAsync();
+                        var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                         using var json = System.Text.Json.JsonDocument.Parse(content);
                         if (json.RootElement.TryGetProperty("ip", out var ipElement))
                         {
@@ -51,7 +51,7 @@ namespace Origami.UI
                         }
                     }
                 }
-                var result = await _locationRepository.GetLocationByIpAsync(ip!);
+                var result = await _locationRepository.GetLocationByIpAsync(ip!).ConfigureAwait(false);
                 if (result.Ok)
                 {
                     _memoryCache.Set(key, result.Entity, TimeSpan.FromHours(1));
