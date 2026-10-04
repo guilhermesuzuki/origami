@@ -25,24 +25,24 @@
     <div class="mt-5">
         <div class="row" style="min-height: 150px;">
             <div class="col-12 col-xxl-6 mb-3">
-                <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-danger">
-                    <div class="text-center me-3">
-                        <i class="fa-solid fa-person-digging"></i>
-                        <span>@Text.Lower("Maintenance mode")</span>
-                    </div>
-                    <div class="text-center">
-                        <div class="btn-group">
-                            <button class="btn btn-danger text-white" title="@Text.Lower("Enter maintenance mode")" disabled="@this.DisableEnterMaintenanceModeButton" @onclick="this.EnterMaintenanceMode">
-                                <i class="fa-solid fa-arrow-down"></i>
-                                <span class="">@Text.Lower("Enter")</span>
-                            </button>
-                            <button class="btn btn-success text-white" title="@Text.Lower("Leave maintenance mode")" disabled="@this.DisableLeaveMaintenanceModeButton" @onclick="this.LeaveMaintenanceMode">
-                                <i class="fa-solid fa-arrow-up"></i>
-                                <span class="">@Text.Lower("Leave")</span>
-                            </button>
-                        </div>
-                    </div>
-                </button>
+<div class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-danger">
+    <div class="text-center me-3">
+        <i class="fa-solid fa-person-digging"></i>
+        <span>@Text.Lower("Maintenance mode")</span>
+    </div>
+    <div class="text-center">
+        <div class="btn-group">
+            <button class="btn btn-danger text-white" title="@Text.Lower("Enter maintenance mode")" disabled="@this.DisableEnterMaintenanceModeButton" @onclick="this.EnterMaintenanceMode">
+                <i class="fa-solid fa-arrow-down"></i>
+                <span class="">@Text.Lower("Enter")</span>
+            </button>
+            <button class="btn btn-success text-white" title="@Text.Lower("Leave maintenance mode")" disabled="@this.DisableLeaveMaintenanceModeButton" @onclick="this.LeaveMaintenanceMode">
+                <i class="fa-solid fa-arrow-up"></i>
+                <span class="">@Text.Lower("Leave")</span>
+            </button>
+        </div>
+    </div>
+</div>
             </div>
             <div class="col-12 col-xxl-6 mb-3">
                 <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-danger" @onclick="GoToCacheExplorer">
