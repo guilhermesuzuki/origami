@@ -62,7 +62,7 @@ namespace Origami.Core.Data
                 var ctx = new DataOperationContext<OrigamiSpecialPage>(context.User, page);
                 this.SmartPublish(ctx, true).Push(hub);
             }
-            this._settingRepository.UpdateOnlyThisSetting(context, nameof(OrigamiSettings.MaintenanceMode).ToLower(), true.ToString()).Push(hub);
+            this._settingRepository.UpdateOnlyThisSetting(context, nameof(OrigamiSettings.MaintenanceMode).ToLowerInvariant(), true.ToString()).Push(hub);
             return hub;
         }
 
@@ -85,7 +85,7 @@ namespace Origami.Core.Data
                 var ctx = new DataOperationContext<OrigamiSpecialPage>(context.User, page);
                 this.SmartUnpublish(ctx, true).Push(hub);
             }
-            this._settingRepository.UpdateOnlyThisSetting(context, nameof(OrigamiSettings.MaintenanceMode).ToLower(), false.ToString()).Push(hub);
+            this._settingRepository.UpdateOnlyThisSetting(context, nameof(OrigamiSettings.MaintenanceMode).ToLowerInvariant(), false.ToString()).Push(hub);
             return hub;
         }
 
