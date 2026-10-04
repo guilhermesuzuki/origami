@@ -167,7 +167,7 @@ public class SettingsRepository :
 
                 if (property.PropertyType.IsEnum)
                 {
-                    Enum.TryParse(property.PropertyType, value1, out var value2);
+                    _ = Enum.TryParse(property.PropertyType, value1, out var value2);
                     property.SetValue(settings, value2);
                 }
                 else
