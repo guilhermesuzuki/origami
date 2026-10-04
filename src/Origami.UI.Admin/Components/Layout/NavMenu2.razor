@@ -25,8 +25,8 @@
     <div class="mt-5">
         <div class="row" style="min-height: 150px;">
             <div class="col-12 col-xxl-6 mb-3">
-                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-danger">
-                    <div class="text-center mb-3">
+                <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-danger">
+                    <div class="text-center me-3">
                         <i class="fa-solid fa-person-digging"></i>
                         <span>@Text.Lower("Maintenance mode")</span>
                     </div>
@@ -42,186 +42,186 @@
                             </button>
                         </div>
                     </div>
-                </div>
+                </button>
             </div>
             <div class="col-12 col-xxl-6 mb-3">
-                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-danger" @onclick="GoToCacheExplorer">
+                <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-danger" @onclick="GoToCacheExplorer">
                     <div class="text-center">
                         <i class="fa-solid fa-book"></i>
                         <span>@Text.Lower("Cache explorer")</span>
                     </div>
-                </div>
+                </button>
             </div>
         </div>
     </div>
     <div class="">
         <div class="row" style="min-height: 150px;">
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-danger" @onclick="GoToBlogs">
+                <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-danger" @onclick="GoToBlogs">
                     <div class="text-center" style="bottom:0;">
                         <i class="fa-solid fa-cubes"></i>
                         <span>@Text.Lower("Blogs")</span>
                     </div>
-                </div>
+                </button>
             </div>
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-danger" @onclick="GoToSoftwareReleases">
+                <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-danger" @onclick="GoToSoftwareReleases">
                     <div class="text-center" style="bottom:0;">
                         <i class="fa-solid fa-file-zipper"></i>
                         <span>@Text.Lower("Software releases")</span>
                     </div>
-                </div>
+                </button>
             </div>
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-danger" @onclick="GoToRoles">
+                <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-danger" @onclick="GoToRoles">
                     <div class="text-center" style="bottom:0;">
                         <i class="fa-solid fa-id-badge"></i>
                         <span>@Text.Lower("Roles")</span>
                     </div>
-                </div>
+                </button>
             </div>
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-danger" @onclick="GoToUsers">
+                <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-danger" @onclick="GoToUsers">
                     <div class="text-center" style="bottom:0;">
                         <i class="fa-solid fa-user-group"></i>
                         <span>@Text.Lower("Users")</span>
                     </div>
-                </div>
+                </button>
             </div>
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-danger" @onclick="GoToBackupAndRestore">
+                <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-danger" @onclick="GoToBackupAndRestore">
                     <div class="text-center" style="bottom:0;">
                         <i class="fa-solid fa-database"></i>
                         <span>@Text.Lower("Backup and restore")</span>
                     </div>
-                </div>
+                </button>
             </div>
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-danger" @onclick="GoToSettings">
+                <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-danger" @onclick="GoToSettings">
                     <div class="text-center" style="bottom:0;">
                         <i class="fa-solid fa-gear"></i>
                         <span>@Text.Lower("Settings")</span>
                     </div>
-                </div>
+                </button>
             </div>
         </div>
     </div>
     <div class="mt-5">
         <div class="row" style="min-height: 150px;">
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToFileManager">
+                <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToFileManager">
                     <div class="text-center" style="bottom:0;">
                         <i class="fa-solid fa-folder-closed"></i>
                         <span>@Text.Lower("File manager")</span>
                     </div>
-                </div>
+                </button>
             </div>
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToQuickNotes">
+                <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToQuickNotes">
                     <div class="text-center" style="bottom:0;">
                         <i class="bi bi-lightning-fill"></i>
                         <span>@Text.Lower("Quick notes")</span>
                     </div>
-                </div>
+                </button>
             </div>
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToPosts">
+                <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToPosts">
                     <div class="text-center" style="bottom:0;">
                         <i class="bi bi-file-earmark-text-fill"></i>
                         <span>@Text.Lower("Posts")</span>
                     </div>
-                </div>
+                </button>
             </div>
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToPostsComments">
+                <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToPostsComments">
                     <div class="text-center" style="bottom:0;">
                         <i class="fa-solid fa-comment"></i>
                         <span>@Text.Lower("Posts comments")</span>
                     </div>
-                </div>
+                </button>
             </div>
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToVideos">
+                <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToVideos">
                     <div class="text-center" style="bottom:0;">
                         <i class="fa-solid fa-video"></i>
                         <span>@Text.Lower("Videos")</span>
                     </div>
-                </div>
+                </button>
             </div>
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToVideosComments">
+                <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToVideosComments">
                     <div class="text-center" style="bottom:0;">
                         <i class="fa-solid fa-comment"></i>
                         <span>@Text.Lower("Videos comments")</span>
                     </div>
-                </div>
+                </button>
             </div>
         </div>
     </div>
     <div class="">
         <div class="row" style="min-height: 150px;">
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToPages">
+                <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToPages">
                     <div class="text-center" style="bottom:0;">
                         <i class="bi bi-file-earmark-text-fill"></i>
                         <span>@Text.Lower("Pages")</span>
                     </div>
-                </div>
+                </button>
             </div>
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToCategories">
+                <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToCategories">
                     <div class="text-center" style="bottom:0;">
                         <i class="fa-solid fa-layer-group"></i>
                         <span>@Text.Lower("Categories")</span>
                     </div>
-                </div>
+                </button>
             </div>
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToTags">
+                <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToTags">
                     <div class="text-center" style="bottom:0;">
                         <i class="fa-solid fa-tag"></i>
                         <span>@Text.Lower("Tags")</span>
                     </div>
-                </div>
+                </button>
             </div>
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToSocialProfiles">
+                <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToSocialProfiles">
                     <div class="text-center" style="bottom:0;">
                         <i class="fa-solid fa-id-badge"></i>
                         <span>@Text.Lower("Social profiles")</span>
                     </div>
-                </div>
+                </button>
             </div>
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToSpecialMessages">
+                <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToSpecialMessages">
                     <div class="text-center" style="bottom:0;">
                         <i class="fa-solid fa-bullhorn me-1"></i>
                         <span>@Text.Lower("Special messages")</span>
                     </div>
-                </div>
+                </button>
             </div>
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToSpecialPages">
+                <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToSpecialPages">
                     <div class="text-center" style="bottom:0;">
                         <i class="bi bi-file-earmark-text-fill"></i>
                         <span>@Text.Lower("Special pages")</span>
                     </div>
-                </div>
+                </button>
             </div>
         </div>
     </div>
     <div class="mt-5">
         <div class="row" style="min-height: 150px;">
             <div class="col-12 col-xxl-6 mb-3">
-                <div class="border border-2 h-100 p-3 cursor-pointer bg-light border-info" @onclick="GoToUserTrashes">
+                <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-info" @onclick="GoToUserTrashes">
                     <div class="text-center" style="bottom:0;">
                         <i class="fa-solid fa-trash-can"></i>
                         <span>@Text.Lower("User trashes")</span>
                     </div>
-                </div>
+                </button>
             </div>
             <div class="col-12 col-xxl-6 mb-3">
-                <div class="border border-2 h-100 p-3 bg-light border-info">
+                <button class="border border-2 h-100 w-100 p-3 bg-light border-info">
                     <div class="text-center">
                         @if (this.GetUserLocation() != null)
                         {
@@ -237,7 +237,7 @@
                             <span>@Text.Original("No user location")</span>
                         }
                     </div>
-                </div>
+                </button>
             </div>
         </div>
     </div>
