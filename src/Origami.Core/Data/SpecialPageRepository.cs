@@ -66,8 +66,7 @@ namespace Origami.Core.Data
                 this.SmartPublish(ctx, true).Push(hub);
             }
 
-            this._settingRepository.UpdateOnlyThisSetting(context, nameof(OrigamiSettings.MaintenanceMode).ToLowerInvariant(), true.ToString()).Push(hub);
-            this._settingsRepository.GetSettings().MaintenanceMode = true;
+this._settingRepository.UpdateOnlyThisSetting(context, nameof(OrigamiSettings.MaintenanceMode).ToLowerInvariant(), true.ToString()).OnSuccess(() => this._settingsRepository.GetSettings().MaintenanceMode = true).Push(hub);
 
             return hub;
         }
