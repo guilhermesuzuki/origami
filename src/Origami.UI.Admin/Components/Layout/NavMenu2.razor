@@ -251,6 +251,20 @@
     protected bool DisableEnterMaintenanceModeButton => this.Super.Settings.GetSettings().MaintenanceMode == true;
     protected bool DisableLeaveMaintenanceModeButton => this.Super.Settings.GetSettings().MaintenanceMode == false;
 
+    protected RequestContext RequestContext { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        this.RequestContext.ConnectionId = this.HttpContextAccessor.HttpContext?.Connection.Id;
+        this.RequestContext.Headers = this.HttpContextAccessor.HttpContext?.Request.Headers.ToDictionary(x => x.Key, x => x.Value.ToString());
+        this.RequestContext.Host = this.HttpContextAccessor.HttpContext?.Request.Host.ToString();
+        this.RequestContext.IpAddress = this.HttpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
+        this.RequestContext.Referrer = this.HttpContextAccessor.HttpContext?.Request.Headers["Referer"].ToString();
+        this.RequestContext.Scheme = this.HttpContextAccessor.HttpContext?.Request.Scheme;
+        this.RequestContext.UserAgent = this.HttpContextAccessor.HttpContext?.Request.Headers["User-Agent"].ToString();
+    }
+
     protected async Task EnterMaintenanceMode()
     {
         var ok = await DialogService.ShowMessageBoxAsync(
@@ -497,8 +511,7 @@
 
     protected Location? GetUserLocation()
     {
-        if (_httpContextAccessor.HttpContext == null) return null;
-        return _memoryCache.Get<Location?>($"Origami_UserLocation_{_httpContextAccessor.HttpContext.Connection.Id}");
+        return _memoryCache.Get<Location?>($"Origami_UserLocation_{this.RequestContext.ConnectionId}");
     }
 
     private void GoToBackupAndRestore()
