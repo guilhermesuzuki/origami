@@ -9,7 +9,7 @@ namespace Origami.Core.Data
         /// This method should create the index
         /// </summary>
         /// <returns></returns>
-        bool CreateSearchIndex();
+        void CreateSearchIndex();
 
         /// <summary>
         /// This method should look into the records and search with a query string
