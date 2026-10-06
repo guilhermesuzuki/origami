@@ -33,27 +33,21 @@ namespace Origami.Core.Data
             this._appFacade = appFacade;
         }
 
-        public virtual bool CreateSearchIndex()
+        public virtual void CreateSearchIndex()
         {
-            // Specify the compatibility version we want
             const LuceneVersion luceneVersion = LuceneVersion.LUCENE_48;
-
-            //Open the Directory using a Lucene Directory class
             var key = $"lucene_{typeof(T).GetPlural().ToLowerInvariant()}";
 
-            //really important to dispose the previous index before creating a new one, otherwise you will get a file access exception
-            using RAMDirectory? previousIndex = MemoryCache.Get<RAMDirectory>(key);
+            using var analyzer = new StandardAnalyzer(luceneVersion);
 
-            var index = new RAMDirectory();
+            var newIndex = new RAMDirectory();
 
-            //Create an analyzer to process the text 
-            using Analyzer standardAnalyzer = new StandardAnalyzer(luceneVersion);
+            var config = new IndexWriterConfig(luceneVersion, analyzer)
+            {
+                OpenMode = OpenMode.CREATE,
+            };
 
-            //Create an index writer
-            IndexWriterConfig indexConfig = new(luceneVersion, standardAnalyzer);
-            indexConfig.OpenMode = OpenMode.CREATE;
-
-            using (var writer = new IndexWriter(index, indexConfig))
+            using (var writer = new IndexWriter(newIndex, config))
             {
                 foreach (var entity in ReadFromCache())
                 {
@@ -61,9 +55,9 @@ namespace Origami.Core.Data
                 }
             }
 
-            MemoryCache.Set(key, index);
+            using var oldIndex = MemoryCache.Get<RAMDirectory>(key);
 
-            return true;
+            MemoryCache.Set(key, newIndex);
         }
 
         public virtual IEnumerable<T> Search(string searchTerm)
