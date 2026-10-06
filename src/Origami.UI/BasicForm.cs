@@ -120,6 +120,18 @@ namespace Origami.UI
         public virtual void UndoChanges() { }
 
         /// <summary>
+        /// Cancels the file upload
+        /// </summary>
+        protected void CancelFileUpload()
+        {
+            FileUploadingToken.Cancel();
+            FileUploading = false;
+            FileUploadingProgress = 0;
+            FileUploadingName = string.Empty;
+            FileUploadingToken = new CancellationTokenSource();
+        }
+
+        /// <summary>
         /// Clears the header image, setting it to a default value
         /// </summary>
         /// <exception cref="NotImplementedException"></exception>
