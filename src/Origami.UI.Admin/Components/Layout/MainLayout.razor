@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="_content/Origami.UI/lib/css/style-site-admin.css" />
     <AppLinks></AppLinks>
     <style>
-        .language-name { display: none; }
+        .language-header .language-name { display: none; }
     </style>
 </CustomHeadContent>
 <PageTitle>@Text.Lower("Admin"): @Super.Settings.GetSettings().Name.ToLower()</PageTitle>
@@ -19,7 +19,7 @@
                 <li>
                     <InlineLogo></InlineLogo>
                 </li>
-                <li style="width: 67px;">
+                <li class="language-header" style="width: 67px;">
                     <Languages></Languages>
                 </li>
             </ul>
