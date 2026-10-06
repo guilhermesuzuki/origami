@@ -45,12 +45,14 @@ namespace Origami.UI
         [Inject] protected IHttpContextAccessor HttpContextAccessor { get; set; } = null!;
         [Inject] protected IJSRuntime JSRuntime { get; set; } = null!;
         [Inject] protected IMyMemoryCache MemoryCache { get; set; } = null!;
+        protected RequestContext RequestContext { get; set; } = new();
         [Inject] protected ISuperRepository Super { get; set; } = null!;
         [Inject] protected Text Text { get; set; } = null!;
         [Inject] protected ITheCreator TheCreator { get; set; } = null!;
         [Inject] protected IUserFacade UserFacade { get; set; } = null!;
         [Inject] protected IWebRootPath WebRootPath { get; set; } = null!;
         [Inject] protected IWhatHappensNext WhatHappensNext { get; set; } = null!;
+
         public virtual void Dispose()
         {
             this.UserFacade.Changed -= CurrentBlogChangedMustRefreshUI;
@@ -120,6 +122,15 @@ namespace Origami.UI
         {
             base.OnInitialized();
             this.UserFacade.Changed += CurrentBlogChangedMustRefreshUI;
+
+            this.RequestContext = new();
+            this.RequestContext.ConnectionId = this.HttpContextAccessor.HttpContext?.Connection.Id;
+            this.RequestContext.Headers = this.HttpContextAccessor.HttpContext?.Request.Headers.ToDictionary(x => x.Key, x => x.Value.ToString());
+            this.RequestContext.Host = this.HttpContextAccessor.HttpContext?.Request.Host.ToString();
+            this.RequestContext.IpAddress = this.HttpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
+            this.RequestContext.Referrer = this.HttpContextAccessor.HttpContext?.Request.Headers["Referer"].ToString();
+            this.RequestContext.Scheme = this.HttpContextAccessor.HttpContext?.Request.Scheme;
+            this.RequestContext.UserAgent = this.HttpContextAccessor.HttpContext?.Request.Headers["User-Agent"].ToString();
         }
 
         /// <summary>
