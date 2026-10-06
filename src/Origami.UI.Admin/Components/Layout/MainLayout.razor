@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="_content/Origami.UI/lib/css/style-site-admin.css" />
     <AppLinks></AppLinks>
     <style>
-        .language-header .language-name { display: none; }
+            .language-header .language-name { display: none; }
     </style>
 </CustomHeadContent>
 <PageTitle>@Text.Lower("Admin"): @Super.Settings.GetSettings().Name.ToLower()</PageTitle>
@@ -23,22 +23,20 @@
                     <Languages></Languages>
                 </li>
             </ul>
-            <div class="p-3 bg-light">
-                <div class="logged-in-user text-center">
+            <div class="p-3 bg-light text-center">
+                <div class="logged-in-user">
                     <UserHeaderCard Entity="this.UserFacade.User"></UserHeaderCard>
                 </div>
-                <div class="m-auto border" style="max-width: 500px;">
-                    <ul class="inline-list cursor-pointer w-100">
-                        <li class="border-end text-center p-2" @onclick="LogoutAsync">
-                            <i class="fa-solid fa-power-off"></i>
-                        </li>
-                        <li class="border-end text-center p-2" @onclick="GoToChangePassword">
-                            <i class="fa-solid fa-key"></i>
-                        </li>
-                        <li class="text-center p-2" @onclick="GoToUserProfile">
-                            <i class="fa-solid fa-user"></i>
-                        </li>
-                    </ul>
+                <div class="btn-group">
+                    <button class="btn btn-light text-center p-2" aria-label="@Text.Lower("Log out")" @onclick="LogoutAsync">
+                        <i class="fa-solid fa-power-off"></i>
+                    </button>
+                    <button class="btn btn-light text-center p-2" aria-label="@Text.Lower("Change password")" @onclick="GoToChangePassword">
+                        <i class="fa-solid fa-key"></i>
+                    </button>
+                    <button class="btn btn-light text-center p-2" aria-label="@Text.Lower("User profile")" @onclick="GoToUserProfile">
+                        <i class="fa-solid fa-user"></i>
+                    </button>
                 </div>
             </div>
             <div class="" style="flex:1;">@Body</div>

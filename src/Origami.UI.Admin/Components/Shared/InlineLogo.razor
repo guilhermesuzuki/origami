@@ -10,24 +10,18 @@
 @{
     var settings = this.Super.Settings.GetSettings(); 
 }
-<div class="m-auto inline-logo-wrapper text-center">
-    <div class="@Class inline-logo cursor-pointer position-relative d-inline-flex align-items-center" style="z-index:25;" @onclick="GoHome">
+<div class="m-auto inline-logo-wrapper text-center @Class">
+    <button class="inline-logo cursor-pointer position-relative d-inline-flex align-items-center" style="z-index:25;" @onclick="GoHome">
         @if (this._settings.LogoUrl.Has() == true)
         {
-            <ul class="inline-list">
-                <li style="width: 40px;">
-                    <img class="logo-image h-100 w-100" src="@_settings.LogoUrl" title="@_settings.LogoUrl" alt="@_settings.Name" />
-                </li>
-                <li>
-                    <span class="fw-bold site-name text-ellipsis" style="font-size: 1.2rem!important;">@_settings.Name</span>
-                </li>
-            </ul>
+            <img src="@_settings.LogoUrl" title="@_settings.LogoUrl" alt="@_settings.Name" style="width: 40px;" />
+            <span class="fw-bold site-name text-ellipsis" style="font-size: 1.2rem!important;">@_settings.Name</span>
         }
         else
         {
             <span class="fw-bold site-name text-ellipsis" style="font-size: 1.2rem!important;">@_settings.Name</span>
         }
-    </div>
+    </button>
 </div>
 
 @code {

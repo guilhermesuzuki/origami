@@ -151,8 +151,8 @@ SELECT
     ,ppv.[Location_ZipCode]
     ,ppv.[SocialProfileId]
 	,ppv.IsBot
-	,null
-	,null
+	,ppv.[Admin]
+	,ppv.UserId
 FROM [dbo].[oi_PhysicalPageViews] ppv
 JOIN [dbo].[oi_Contents] c ON c.Id = ppv.ContentId
 WHERE c.[Type] = 'OrigamiVideo'
@@ -185,8 +185,8 @@ SELECT
     ,ppv.[Location_ZipCode]
     ,ppv.[SocialProfileId]
 	,ppv.IsBot
-	,null
-	,null
+	,ppv.[Admin]
+	,ppv.UserId
 FROM [dbo].[oi_PhysicalPageViews] ppv
 JOIN [dbo].[oi_Contents] c ON c.Id = ppv.ContentId
 JOIN [dbo].[oi_Blogs] b ON b.IsPrimary = 1
@@ -220,8 +220,8 @@ SELECT
     ,ppv.[Location_ZipCode]
     ,ppv.[SocialProfileId]
 	,ppv.IsBot
-	,null
-	,null
+	,ppv.[Admin]
+	,ppv.UserId
 FROM [dbo].[oi_PhysicalPageViews] ppv
 JOIN [dbo].[oi_Contents] c ON c.Id = ppv.ContentId
 WHERE c.[Type] = 'OrigamiSoftwareRelease'
