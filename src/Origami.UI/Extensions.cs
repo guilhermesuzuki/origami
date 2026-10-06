@@ -24,10 +24,11 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Origami.Core;
 using Origami.Core.Data;
+using Origami.Core.Jobs;
 using Origami.Core.Models;
 using Origami.Core.Models.Jwt;
 using Origami.Core.Validators;
-using Origami.UI.Services;
+using Quartz;
 using Serilog;
 using System.Buffers;
 using System.Globalization;
@@ -104,7 +105,6 @@ namespace Origami.UI
 
             builder.Services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<OrigamiIdentityDbContext>();
 
-            builder.Services.AddScoped<OrigamiUserMiddleware>();
             builder.Services.AddScoped<OrigamiLocationMiddleware>();
 
             builder.Services.AddSingleton<Text>();
@@ -202,8 +202,6 @@ namespace Origami.UI
             });
 
             builder.Services.AddScoped<CustomHeadContentService>();
-            builder.Services.AddHostedService<CacheRefreshServiceFull>();
-            builder.Services.AddHostedService<MailConnectivityCheckService>();
             builder.Services.AddSingleton<CircuitHandler, OrigamiCircuitHandler>();
             builder.Services.AddScoped<HtmlRenderer>();
 
@@ -284,6 +282,20 @@ namespace Origami.UI
             });
 
             builder.Services.AddHealthChecks();
+
+            builder.Services.AddQuartz(q =>
+            {
+                q.ScheduleJob<CacheRefreshFull>(trigger => trigger
+                    .WithIdentity(nameof(CacheRefreshFull))
+                    .WithCronSchedule("0 0/3 * * * ?"));
+            });
+
+            builder.Services.AddQuartzHostedService(options =>
+            {
+                options.WaitForJobsToComplete = true;
+            });
+
+            builder.Services.AddSingleton(TimeProvider.System);
 
             if (OperatingSystem.IsWindows()) builder.Host.UseWindowsService();
 
@@ -432,6 +444,10 @@ namespace Origami.UI
 
             app.MapRazorComponents<T>().AddInteractiveServerRenderMode();
 
+            var super = app.Services.GetRequiredService<ISuperRepository>();
+            super.RefreshAllRepositories();
+            super.RefreshAllSearchIndexes();
+
             if (admin == true)
             {
                 app.Logger.LogInformation("*************************");
@@ -488,6 +504,12 @@ namespace Origami.UI
             var headers = httpRequest.Headers.ToDictionary(a => a.Key, a => a.Value.ToArray().FirstOrDefault());
             var clientHints = ClientHints.Factory(headers);  // client hints are optional
             return new DeviceDetector(userAgent, clientHints);
+        }
+
+        public static DeviceDetector GetDeviceDetector(this RequestContext requestContext)
+        {
+            var clientHints = ClientHints.Factory(requestContext.Headers?.ToDictionary() ?? new Dictionary<string, string>());  // client hints are optional
+            return new DeviceDetector(requestContext.UserAgent, clientHints);
         }
 
         public static string GetUserCookieKey(this IConfiguration configuration)
@@ -571,10 +593,40 @@ namespace Origami.UI
 
         public static WebApplication UseOrigami(this WebApplication app, bool admin = false)
         {
+            // 1. Infrastructure / proxy headers
             app.UseForwardedHeaders();
-            app.UseAuthentication();
 
-            var supportedCultures = OrigamiConstants.AllLanguages().Select(x => x.Name).ToArray();
+            // 2. HTTPS
+            if (!app.Environment.IsDevelopment())
+            {
+                app.UseHsts();
+            }
+
+            app.UseHttpsRedirection();
+
+            // 3. Error handling
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Error");
+            }
+
+            // 4. Response handling
+            if (!app.Environment.IsDevelopment())
+            {
+                app.UseResponseCaching();
+                app.UseResponseCompression();
+            }
+
+            // 5. Localization
+            var supportedCultures = OrigamiConstants
+                .AllLanguages()
+                .Select(x => x.Name)
+                .ToArray();
+
             var localizationOptions = new RequestLocalizationOptions()
                 .SetDefaultCulture("en-US")
                 .AddSupportedCultures(supportedCultures)
@@ -582,51 +634,51 @@ namespace Origami.UI
 
             app.UseRequestLocalization(localizationOptions);
 
-            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(supportedCultures[0]);
-
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment() == false)
-            {
-                app.UseResponseCaching();
-                app.UseResponseCompression();
-                app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
-
-            if (app.Environment.IsDevelopment() == true)
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseHttpsRedirection();
-            }
-
+            // 6. Cookies / session
             app.UseCookiePolicy();
             app.UseSession();
-            app.UseRouting();
-            app.UseAuthorization();
-            app.UseAntiforgery();
 
-            app.UseMiddleware<OrigamiUserMiddleware>();
+            // 7. Routing
+            app.UseRouting();
+
+            // 8. Authentication / authorization
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            // 9. Your request-specific middleware
             app.UseMiddleware<OrigamiLocationMiddleware>();
 
+            // 10. Antiforgery
+            app.UseAntiforgery();
+
+            // 11. Static files
+            app.UseStaticFiles();
+
+            // 12. Rate limiting
+            app.UseRateLimiter();
+
+            // 13. Endpoints
             app.MapRazorPages();
             app.UseMvcWithDefaultRoute();
             app.MapControllers();
-            app.UseStaticFiles();
-            app.UseRateLimiter();
 
             app.MapHealthChecks("/health");
 
-            if (admin == false)
+            if (!admin)
             {
-                // RSS feed endpoint (minimal API)
-                app.MapGet("/blogs/{slug}/rss.xml", async (string slug, HttpContext context, IRssRepository rss) =>
-                {
-                    var oi = context.Request.Scheme + "://" + context.Request.Host.Value;
-                    var xml = rss.GetRss(slug, oi);
-                    context.Response.ContentType = "application/rss+xml; charset=utf-8";
-                    await context.Response.WriteAsync(xml);
-                });
+                app.MapGet(
+                    "/blogs/{slug}/rss.xml",
+                    async (string slug, HttpContext context, IRssRepository rss) =>
+                    {
+                        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+                        
+                        var baseUrl = $"{context.Request.Scheme}://{context.Request.Host}";
+                        var xml = rss.GetRss(slug, baseUrl);
+
+                        context.Response.ContentType = "application/rss+xml; charset=utf-8";
+
+                        await context.Response.WriteAsync(xml, cts.Token).ConfigureAwait(false);
+                    });
             }
 
             return app;

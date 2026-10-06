@@ -11,12 +11,20 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        this.AppFacade.RefreshingTheUI += (obj, args) =>
+        this.AppFacade.RefreshingTheUI += _refreshingTheUIAsync;
+    }
+
+    public override void Dispose()
+    {
+        this.AppFacade.RefreshingTheUI -= _refreshingTheUIAsync;
+        base.Dispose();
+    }
+
+    private async void _refreshingTheUIAsync(object? sender, object args)
+    {
+        if (sender is string s)
         {
-            if (obj is string s)
-            {
-                if (s.Like(OrigamiConstants.Events.EmailStatus) == true) this.InvokeAsync(this.StateHasChanged);
-            }
-        };
+            if (s.Like(OrigamiConstants.Events.EmailStatus) == true) await this.InvokeAsync(this.StateHasChanged);
+        }
     }
 }

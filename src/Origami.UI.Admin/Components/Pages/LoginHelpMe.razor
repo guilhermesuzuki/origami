@@ -55,18 +55,21 @@
 }
 
 @code {
+
+    public override void Dispose()
+    {
+        _loginHelpMeRules.RefreshUI -= this._refreshTheUIAsync;
+        base.Dispose();
+    }
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
+        _loginHelpMeRules.RefreshUI += this._refreshTheUIAsync;
+    }
 
-        _loginHelpMeRules.GoToLoginPage += (sender, args) =>
-        {
-            this.GhostOfTheNavigator.NavigateTo("/login", true);
-        };
-
-        _loginHelpMeRules.RefreshUI += (sender, args) =>
-        {
-            this.InvokeAsync(StateHasChanged);
-        };
+    private async void _refreshTheUIAsync(object? sender, EventArgs e)
+    {
+        await this.InvokeAsync(StateHasChanged);
     }
 }

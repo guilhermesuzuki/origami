@@ -73,7 +73,11 @@ namespace Origami.Core.Data
                                 where a.Tag == ctx.EntityBeforeModifications.Tag
                                 select a;
 
-                    query.ExecuteUpdate(setters => setters.SetProperty(t => t.Tag, ctx.Entity.Tag));
+                    query.ExecuteUpdate(setters =>
+                    {
+                        setters.SetProperty(t => t.Tag, ctx.Entity.Tag);
+                        setters.SetProperty(t => t.Slug, ctx.Entity.Slug);
+                    });
 
                     this.RefreshCache(blog.FirstOrDefault() ?? throw new InvalidOperationException("Blog not found"), ctx.EntityBeforeModifications.Tag, ctx.Entity.Tag);
                 }

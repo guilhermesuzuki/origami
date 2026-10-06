@@ -1,6 +1,4 @@
-﻿@using SixLabors.ImageSharp
-@using SixLabors.ImageSharp.Formats.Jpeg
-@inherits BasicFormFullContent<OrigamiVideo, HubContentVideo>
+﻿@inherits BasicFormFullContent<OrigamiVideo, HubContentVideo>
 @inject ICategoryRepository _category
 @inject IDirectoryRepository _directoryRepository
 @inject IFileRepository _fileRepository
@@ -59,7 +57,7 @@
                                       AdornmentIcon="@Icons.Material.Filled.Link"
                                       Adornment="Adornment.Start"
                                       @bind-Value="@Entity.Entity.Slug"
-                                      HelperText="@Text.Lower("Slug")" 
+                                      HelperText="@Text.Lower("Slug")"
                                       MaxLength="255"></MudTextField>
                     </li>
                     <li style="width:140px;">
@@ -224,9 +222,8 @@
                 <div class="selected-tags mt-3">
                     @foreach (var content in Entity.Tags)
                     {
-                        var tag = new OrigamiContentTag { ContentId = Entity.Entity.Id, Tag = content.Tag };
                         <div class="d-inline-flex align-items-center p-1 border shadow-sm me-1">
-                            <ContentTagHeaderInline Entity="tag" Class="me-1"></ContentTagHeaderInline>
+                            <ContentTagHeaderInline Entity="content" Class="me-1"></ContentTagHeaderInline>
                             <button class="cursor-pointer" @onclick="() => this.Entity.Tags.Remove(content)">
                                 <i class="bi bi-trash-fill"></i>
                             </button>
@@ -280,8 +277,8 @@
                 <MudTextField FullWidth="true"
                               Immediate="true"
                               @bind-Value="@Entity.Entity.Description"
-                              HelperText="@Text.Lower("Description")" 
-                              MaxLength="2048" 
+                              HelperText="@Text.Lower("Description")"
+                              MaxLength="2048"
                               MaxLines="16"></MudTextField>
             </div>
             <div class="p-3">
@@ -376,5 +373,5 @@
     </div>
 }
 @code {
-    
+
 }

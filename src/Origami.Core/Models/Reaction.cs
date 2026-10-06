@@ -23,9 +23,9 @@ namespace Origami.Core.Models
         protected string? _url = string.Empty;
         protected string? _urlReferrer = string.Empty;
         protected string _userAgent = string.Empty;
-        protected byte[] _version = [];
+        protected byte[] _version = Array.Empty<byte>();
 
-        public Reaction() : base()
+        protected Reaction() : base()
         {
 
         }

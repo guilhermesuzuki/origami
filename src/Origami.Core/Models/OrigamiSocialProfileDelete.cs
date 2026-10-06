@@ -18,7 +18,6 @@ namespace Origami.Core.Models
         private int _contentReactions;
         private DateTime _dateCreated;
         private Guid _id = Guid.NewGuid();
-        private OrigamiSocialProfile? _socialProfile;
         private Guid _socialProfileId;
         public event EventHandler<PropertyChangedEventArgs> Changed = (sender, e) => { };
 

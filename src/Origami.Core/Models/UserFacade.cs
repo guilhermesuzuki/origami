@@ -6,7 +6,8 @@ namespace Origami.Core.Models
 {
     public class UserFacade :
         IUserFacade,
-        IChanged
+        IChanged,
+        IDisposable
     {
         protected readonly ISuperRepository _super;
         protected Guid _blogId = new();
@@ -24,23 +25,13 @@ namespace Origami.Core.Models
         /// </summary>
         public UserFacade(ISuperRepository super) : base()
         {
-            _super = super;
-
-            _results.CollectionChanged += (sender, e) =>
-            {
-                Changed?.Invoke(this, new PropertyChangedEventArgs(nameof(Results)));
-            };
-            this.Changed += (sender, e) =>
-            {
-                if (e.PropertyName == nameof(IUserFacade.UserId))
-                {
-                    this.BlogId = this.BlogsTheUserHasAccessTo.FirstOrDefault()?.Id ?? Guid.Empty;
-                }
-            };
+            this._super = super;
+            this._results.CollectionChanged += this._resultsChanged;
+            this.Changed += this._userIdChanged;
         }
 
-        public event EventHandler<PropertyChangedEventArgs> Changed = (sender, p) => { };
-        public event EventHandler<EntityOperation>? EntityHasChanged;
+        public event EventHandler<PropertyChangedEventArgs> Changed = null!;
+        public event EventHandler<string> RefreshingTheUI = null!;
 
         public Guid BlogId
         {
@@ -128,9 +119,28 @@ namespace Origami.Core.Models
             set => this.Set(ref _userId, value, Changed);
         }
 
-        public void EntityChanged(object sender, EntityOperation operation)
+        public void Dispose()
         {
-            EntityHasChanged?.Invoke(sender, operation);
+            this._results.CollectionChanged -= this._resultsChanged;
+            this.Changed -= this._userIdChanged;
+        }
+
+        public void RefreshTheUI(string key)
+        {
+            RefreshingTheUI?.Invoke(this, key);
+        }
+
+        private void _resultsChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            Changed?.Invoke(this, new PropertyChangedEventArgs(nameof(Results)));
+        }
+
+        private void _userIdChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(IUserFacade.UserId))
+            {
+                this.BlogId = this.BlogsTheUserHasAccessTo.FirstOrDefault()?.Id ?? Guid.Empty;
+            }
         }
     }
 }

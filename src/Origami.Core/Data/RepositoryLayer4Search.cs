@@ -9,6 +9,7 @@ using Lucene.Net.Util;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Origami.Core.Models;
+using System.Globalization;
 
 namespace Origami.Core.Data
 {
@@ -17,6 +18,7 @@ namespace Origami.Core.Data
         ISearch<T>
         where T : class, IId
     {
+        protected readonly CultureInfo _en = new("en-US");
         protected readonly IAppFacade _appFacade;
 
         protected RepositoryLayer4Search(
@@ -31,41 +33,37 @@ namespace Origami.Core.Data
             this._appFacade = appFacade;
         }
 
-        public virtual bool CreateSearchIndex()
+        public virtual void CreateSearchIndex()
         {
-            // Specify the compatibility version we want
             const LuceneVersion luceneVersion = LuceneVersion.LUCENE_48;
+            var key = $"lucene_{typeof(T).GetPlural().ToLowerInvariant()}";
 
-            //Open the Directory using a Lucene Directory class
-            var key = $"lucene_{typeof(T).GetPlural().ToLower()}";
-            using RAMDirectory? oldIndex = MemoryCache.Get<RAMDirectory>(key);
-            var index = new RAMDirectory();
+            using var analyzer = new StandardAnalyzer(luceneVersion);
 
-            //Create an analyzer to process the text 
-            using Analyzer standardAnalyzer = new StandardAnalyzer(luceneVersion);
+            var newIndex = new RAMDirectory();
 
-            //Create an index writer
-            IndexWriterConfig indexConfig = new(luceneVersion, standardAnalyzer);
-            indexConfig.OpenMode = OpenMode.CREATE;
-            using IndexWriter writer = new(index, indexConfig);
-
-            foreach (var entity in ReadFromCache())
+            var config = new IndexWriterConfig(luceneVersion, analyzer)
             {
-                writer.AddDocument(this.GetLuceneDocument(entity));
+                OpenMode = OpenMode.CREATE,
+            };
+
+            using (var writer = new IndexWriter(newIndex, config))
+            {
+                foreach (var entity in ReadFromCache())
+                {
+                    writer.AddDocument(GetLuceneDocument(entity));
+                }
             }
 
-            //Flush and commit the index data to the directory
-            writer.Commit();
+            using var oldIndex = MemoryCache.Get<RAMDirectory>(key);
 
-            MemoryCache.Set(key, index);
-
-            return true;
+            MemoryCache.Set(key, newIndex);
         }
 
         public virtual IEnumerable<T> Search(string searchTerm)
         {
             //Open the Directory using a Lucene Directory class
-            var index = typeof(T).GetPlural().ToLower();
+            var index = typeof(T).GetPlural().ToLower(_en);
             var directory = MemoryCache.Get<RAMDirectory>($"lucene_{index}");
             if (directory == null)
             {

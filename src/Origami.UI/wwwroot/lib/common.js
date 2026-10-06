@@ -53,20 +53,6 @@ var origami = {
 
         title: (title) => document.title = title,
     },
-    physicalpages: {
-        viewByPath: (path) => {
-            var url = encodeURIComponent(location.href);
-            var referrer = encodeURIComponent(document.referrer);
-            var view = `/views/physicalpages/bypath/?path=${path}&url=${url}&referrer=${referrer}&v=${Math.random()}`;
-            $.get(view);
-        },
-        viewByContent: (path, type, id) => {
-            var url = encodeURIComponent(location.href);
-            var referrer = encodeURIComponent(document.referrer);
-            var view = `/views/physicalpages/bycontent/?path=${path}&type=${type}&id=${id}&url=${url}&referrer=${referrer}&v=${Math.random()}`;
-            $.get(view);
-        },
-    },
     editor: {
         add: (url, name, size, type) => {
 

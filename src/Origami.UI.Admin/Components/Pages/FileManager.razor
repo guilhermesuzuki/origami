@@ -72,7 +72,7 @@
         </div>
         <div class="p-3">
             <div class="row">
-                <div class="col-12 col-xxl-8">
+                <div class="col-12">
                     <div class="filemanager-wrapper row text-center">
                         @if (this.VirtualPath.Like(RootPath) == false)
                         {
@@ -194,6 +194,11 @@
                                                             <i class="fa-solid fa-trash-can"></i>
                                                         </button>
                                                     </li>
+                                                    <li>
+                                                        <button @onclick="() => this._selectedFile = file" @onclick:stopPropagation="true">
+                                                            <i class="fa-solid fa-circle-info"></i>
+                                                        </button>
+                                                    </li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -203,13 +208,30 @@
                         }
                     </div>
                 </div>
-                <div class="col-12 col-xxl-4">
-                    <FileForm Class="p-3 shadow-sm border position-sticky" Entity="this._selectedFile"></FileForm>
-                </div>
             </div>
         </div>
     </ContentTemplate>
 </Root>
+<MudDialog @bind-Visible:get="IsSelectedFile" @bind-Visible:set="this.IgnoreVisibilityChangeForSelectedFile" Options="this.DialogOptions" TitleClass="d-none" ContentClass="p-2">
+    <DialogContent>
+        <div class="border shadow-lg position-relative" style="width:100%; max-width:1000px;">
+            <div class="overflow-auto text-center h-100 w-100" style="padding-bottom: 70px;">
+                <FileForm Class="p-3 shadow-sm border" Entity="this._selectedFile"></FileForm>
+            </div>
+            <ul class="inline-list position-absolute w-100 border bg-white" style="bottom:0; z-index: 50;">
+                <li></li>
+                <li class="text-right">
+                    <div class="btn-group p-3">
+                        <button class="btn btn-secondary" @onclick="() => this._selectedFile = null">
+                            <i class="fa-solid fa-circle-xmark"></i>
+                            @Text.Lower("Close window")
+                        </button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </DialogContent>
+</MudDialog>
 <MudDialog @bind-Visible="_addingFolder" Options="_dialogOptions" TitleClass="d-none" ContentClass="p-2">
     <DialogContent>
         <div class="border p-3 shadow-lg" style="width: 500px;">
@@ -319,6 +341,16 @@
             if (this._directories?.Any(x => x.Directory.Checked) == true) return false;
             if (this._files?.Any(x => x.Checked) == true) return false;
             return true;
+        }
+    }
+
+    private bool IsSelectedFile => this._selectedFile != null;
+
+    private void IgnoreVisibilityChangeForSelectedFile(bool value)
+    {
+        if (value == false)
+        {
+            this._selectedFile = null;
         }
     }
 
@@ -660,75 +692,6 @@
         base.OnParametersSet();
         this._loadFiles(true);
         this._loadDirectories(true);
-    }
-
-    protected virtual void OnSearch(string query)
-    {
-        try
-        {
-            if (query.Has() == false)
-            {
-                this._hits = null;
-                return;
-            }
-
-            this._hits = [];
-
-            var rootPath = this.directoryRepository.LocalPath(this.VirtualPath);
-            var directories = Directory.GetDirectories(rootPath, "*", SearchOption.AllDirectories);
-            var files = Directory.GetFiles(rootPath, $"*{query}*", SearchOption.AllDirectories);
-
-            foreach (var file in files)
-            {
-                var info = new FileInfo(file);
-                var webpath = $"/{file.Split("Origami.Files")[1].Replace("\\", "/").TrimStart('/')}";
-                var origamiFile = new OrigamiSystemFile(info.FullName, webpath);
-                this._hits.Add(origamiFile);
-            }
-
-            foreach (var directory in directories)
-            {
-                var info = new DirectoryInfo(directory);
-                var webpath = $"/{directory.Split("Origami.Files")[1].Replace("\\", "/").TrimStart('/')}";
-                var origamiDirectory = new OrigamiSystemDirectory(info.FullName, webpath);
-                var context = new DirectoryContext(origamiDirectory) { Context = this.Super.GuessWho(info.Name) };
-
-                if (info.Name.Contains(query, StringComparison.CurrentCultureIgnoreCase) == true)
-                {
-                    this._hits.Add(context);
-                    continue;
-                }
-
-                if (context.Name.Contains(query, StringComparison.CurrentCultureIgnoreCase) == true)
-                {
-                    this._hits.Add(context);
-                    continue;
-                }
-            }
-
-            this._hits = this._hits
-            .OrderBy(x =>
-            {
-                return x switch
-                {
-                    DirectoryContext context => 2,
-                    OrigamiSystemFile file => 1,
-                    _ => 3
-                };
-            }).OrderBy(x =>
-            {
-                return x switch
-                {
-                    DirectoryContext context => context.Name.Has() ? context.Name : context.Directory.Name,
-                    OrigamiSystemFile file => file.Name,
-                    _ => string.Empty
-                };
-            }).ToList();
-        }
-        catch (Exception ex)
-        {
-            this.UserFacade.Result = new() { Error = ex.GetMessage() };
-        }
     }
 }
 

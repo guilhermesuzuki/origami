@@ -31,7 +31,7 @@ namespace Origami.Core.Data
 
         public OrigamiSystemFile? GetFile(string virtualPath)
         {
-            if (virtualPath.StartsWith("data:image") == true)
+            if (virtualPath.StartsWith("data:image", StringComparison.InvariantCultureIgnoreCase) == true)
             {
                 return null;
             }

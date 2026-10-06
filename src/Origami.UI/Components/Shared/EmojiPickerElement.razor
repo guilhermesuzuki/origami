@@ -40,8 +40,9 @@
         await this.OnEmojiSelected.InvokeAsync(reaction);
     }
 
-    public void Dispose()
+    public override void Dispose()
     {
         objRef?.Dispose();
+        base.Dispose();
     }
 }

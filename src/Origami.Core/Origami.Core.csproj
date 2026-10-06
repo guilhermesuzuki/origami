@@ -4,33 +4,47 @@
 		<TargetFramework>net10.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<Platforms>x64</Platforms>
+		<PlatformTarget>x64</PlatformTarget>
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<Version>2.0.0-beta</Version>
+		<Version>2.16.36-beta</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="AngleSharp" Version="1.7.1" />
+		<PackageReference Include="AngleSharp" Version="1.8.3" />
+		<PackageReference Include="AsyncFixer" Version="2.1.0">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 		<PackageReference Include="CloneExtensions" Version="1.4.2" />
 		<PackageReference Include="FluentValidation" Version="12.1.1" />
-		<PackageReference Include="HtmlAgilityPack" Version="1.12.4" />
+		<PackageReference Include="HtmlAgilityPack" Version="1.13.0" />
 		<PackageReference Include="Humanizer" Version="3.0.10" />
-		<PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="10.0.11" />
+		<PackageReference Include="Meziantou.Analyzer" Version="3.0.290">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="10.0.12" />
 		<PackageReference Include="Nanoid" Version="3.1.0" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="FuzzySharp" Version="2.0.2" />
-		<PackageReference Include="Lucene.Net.Analysis.Common" Version="4.8.0-beta00017" />
-		<PackageReference Include="Lucene.Net.QueryParser" Version="4.8.0-beta00017" />
-		<PackageReference Include="MailKit" Version="4.17.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.11" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.11" />
+		<PackageReference Include="Lucene.Net.Analysis.Common" Version="4.8.0-beta00018" />
+		<PackageReference Include="Lucene.Net.QueryParser" Version="4.8.0-beta00018" />
+		<PackageReference Include="MailKit" Version="4.18.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.12" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.12" />
+		<PackageReference Include="NetVips" Version="3.2.0" />
+		<PackageReference Include="NetVips.Native" Version="8.18.7" />
+		<PackageReference Include="NetVips.Native.linux-x64" Version="8.18.7" />
+		<PackageReference Include="NetVips.Native.win-x64" Version="8.18.7" />
 		<PackageReference Include="Otp.NET" Version="1.4.1" />
 		<PackageReference Include="QRCoder" Version="1.8.0" />
-		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
-		<PackageReference Include="System.Linq.Dynamic.Core" Version="1.7.3" />
+		<PackageReference Include="Quartz" Version="4.3.0" />
+		<PackageReference Include="System.Linq.Dynamic.Core" Version="1.7.4" />
 	</ItemGroup>
 
 </Project>

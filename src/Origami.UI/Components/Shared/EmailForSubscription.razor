@@ -120,19 +120,44 @@
 
     private void _startEmailTimer()
     {
-        this._emailTimer = new() { AutoReset = false, Enabled = true, Interval = 3750, };
-        this._emailTimer.Elapsed += (sender, e) =>
+if (this._emailTimer != null)
+{
+    this._emailTimer.Elapsed -= this._emailTimerElapsed;
+    this._emailTimer.Stop();
+    this._emailTimer.Dispose();
+}
+this._emailTimer = new() { AutoReset = false, Enabled = true, Interval = 3750, };
+        this._emailTimer.Elapsed += this._emailTimerElapsed;
+    }
+
+    private void _emailTimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        EmailIcon = string.Empty;
+        EmailIconColor = Color.Default;
+        if (sender is System.Timers.Timer timer)
         {
-            EmailIcon = string.Empty;
-            EmailIconColor = Color.Default;
-            this._emailTimer.Stop();
-            this._emailTimer = null;
-        };
+            timer.Elapsed -= this._emailTimerElapsed;
+            timer.Stop();
+            timer.Dispose();
+            if (ReferenceEquals(this._emailTimer, timer)) this._emailTimer = null;
+        }
     }
 
     protected override void OnAfterRender(bool firstRender)
     {
         base.OnAfterRender(firstRender);
         if (firstRender && this._emailField != null) this._emailField.FocusAsync();
+    }
+
+    public override void Dispose()
+    {
+        if (this._emailTimer != null)
+        {
+            this._emailTimer.Elapsed -= this._emailTimerElapsed;
+            this._emailTimer.Stop();
+            this._emailTimer.Dispose();
+            this._emailTimer = null;
+        }
+        base.Dispose();
     }
 }

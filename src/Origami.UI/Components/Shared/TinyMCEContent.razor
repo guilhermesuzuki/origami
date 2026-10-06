@@ -8,7 +8,7 @@
         <TinyMCE.Blazor.Editor ClassName="tinymce tinymce-content"
                                Value="@this.Entity.Content"
                                ValueChanged="(value) => this.Entity.Content = value"
-                               Conf="@OrigamiConstants.TinyMCE.Configuration"
+                               Conf="@OrigamiConstants.TinyMCE.Configuration.ToDictionary()"
                                ScriptSrc="_content/Origami.UI/lib/tinymce-5.10.7/tinymce.min.js"></TinyMCE.Blazor.Editor>
     </div>
 }

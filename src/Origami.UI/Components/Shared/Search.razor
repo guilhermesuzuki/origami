@@ -3,7 +3,7 @@
 
 <div class="search @Class">
     <div class="search-field position-relative">
-        <ul class="expand-size p-3 border shadow-sm">
+        <ul class="expand-size p-3 shadow-sm">
             <li>
                 <MudTextField T="string"
                               FullWidth="true"
@@ -21,7 +21,7 @@
     </div>
     @if (this._hits.Any() == true)
     {
-        <div class="search-results mt-3 border shadow-lg p-3">
+        <div class="search-results m-3 border shadow-lg p-3">
             @if (this._posts.Any() == true)
             {
                 <div class="search-posts">
@@ -340,7 +340,9 @@
 
         if (_searchTimer != null)
         {
+            _searchTimer.Elapsed -= _searchTimerElapsed;
             _searchTimer.Stop();
+            _searchTimer.Dispose();
             _searchTimer = null;
         }
 
@@ -348,13 +350,27 @@
         _searchTimer.Enabled = true;
         _searchTimer.AutoReset = false;
         _searchTimer.Interval = 750;
-        _searchTimer.Elapsed += (o, e) =>
-        {
-            this._queryLucene(queryTerm);
-        };
+        _searchTimer.Elapsed += _searchTimerElapsed;
 
         _searchTimer.Start();
     }
+
+    public override void Dispose()
+    {
+        if (_searchTimer != null)
+        {
+            _searchTimer.Elapsed -= _searchTimerElapsed;
+            _searchTimer.Stop();
+            _searchTimer.Dispose();
+            _searchTimer = null;
+        }
+        base.Dispose();
+    }
+
+private void _searchTimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+{
+    this._queryLucene(this.UserFacade.SearchTerm);
+}
 
     /// <summary>
     /// Searches for the <paramref name="queryTerm"/>
@@ -419,7 +435,7 @@
 
         Task.WhenAll(tasks).Wait();
 
-        this._hits.RemoveAll(id => this.FilterHits(allowedBlogs, id));
+        this._hits.RemoveAll(id => this.ShouldRemoveHits(allowedBlogs, id));
     }
 
     protected virtual void FrontEndSearch(string queryTerm)
@@ -443,10 +459,10 @@
 
         Task.WhenAll(tasks).Wait();
 
-        this._hits.RemoveAll(id => this.FilterHits(allowedBlogs, id));
+        this._hits.RemoveAll(id => this.ShouldRemoveHits(allowedBlogs, id));
     }
 
-    protected bool FilterHits(IEnumerable<Guid> allowedBlogs, IId id)
+    protected bool ShouldRemoveHits(IEnumerable<Guid> allowedBlogs, IId id)
     {
         if (id is OrigamiSpecialPage) return false;
 

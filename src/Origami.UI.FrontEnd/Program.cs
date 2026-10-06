@@ -81,4 +81,4 @@ var app = builder.FoldTheOrigami<App>(
             });
     });
 
-await app.RunAsync();
+await app.RunAsync().ConfigureAwait(false);

@@ -3,12 +3,10 @@
     public interface IUserFacade :
         IId,
         IChanged,
-        IBlogId
+        IBlogId,
+        IDisposable
     {
-        /// <summary>
-        /// Event indicating that an Entity has changed
-        /// </summary>
-        event EventHandler<EntityOperation>? EntityHasChanged;
+        event EventHandler<string> RefreshingTheUI;
 
         /// <summary>
         /// Blogs the user has access to. This is used for the blog switcher in the admin area and for filtering content in the front-end. It should be set when the user logs in and whenever their permissions change.
@@ -61,10 +59,9 @@
         Guid UserId { get; set; }
 
         /// <summary>
-        /// Method that calls <see cref="EntityHasChanged"/> event
+        /// Triggers the RefreshingTheUI event to notify subscribers that the user interface should be refreshed for a specific key.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="entityOperation"></param>
-        void EntityChanged(object sender, EntityOperation entityOperation);
+        /// <param name="key"></param>
+        void RefreshTheUI(string key);
     }
 }

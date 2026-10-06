@@ -89,7 +89,7 @@
                 </li>
                 <li class="text-right" style="width: 50px;">
                     <i class="bi bi-emoji-laughing-fill cursor-pointer focusable" @onclick="() => _showEmojis = !_showEmojis" @onclick:stopPropagation="true"></i>
-                    <MudDialog @bind-Visible="_showEmojis" Options="_dialogOptions" TitleClass="border-bottom" Style="min-width: 400px; max-width:600px;">
+                    <MudDialog @bind-Visible="_showEmojis" Options="DialogOptions" TitleClass="border-bottom" Style="min-width: 400px; max-width:600px;">
                         <TitleContent>
                             <span class="fs-3">@Text.Lower("Reactions")</span>
                         </TitleContent>
@@ -219,14 +219,13 @@
             </div>
         </div>
     }
-    @if (_showHeaderImage)
-    {
-        <div class="position-fixed popup-container z-index-front">
-            <div class="border shadow-lg position-relative" style="width: 90%; height: 90%;">
+    <MudDialog @bind-Visible="_showHeaderImage" Options="DialogOptions" TitleClass="d-none">
+        <DialogContent>
+            <div class="border shadow-lg position-relative">
                 <div class="overflow-auto text-center h-100 w-100" style="padding-bottom: 70px;">
-                    <img class="mw-100 mh-100 position-absolute" src="@header" style="top:50%;left:50%;transform:translate(-50%,-50%)" />
+                    <img class="mw-100 mh-100" src="@header" />
                 </div>
-                <ul class="inline-list position-absolute w-100 border bg-white" style="bottom:0;">
+                <ul class="inline-list position-absolute w-100 border bg-white" style="bottom:0; z-index: 50;">
                     <li></li>
                     <li class="text-right">
                         <div class="btn-group p-3">
@@ -238,26 +237,23 @@
                     </li>
                 </ul>
             </div>
-        </div>
-    }
-    @if (_showQuickReply)
-    {
-        <div class="position-fixed popup-container z-index-front">
-            <div class="border shadow-lg position-relative" style="width: 90%; height: 90%;">
-                <div class="overflow-auto text-center h-100 w-100" style="padding-bottom: 70px;">
-                    <div class="mw-100 mh-100 position-absolute" style="top:50%;left:50%;transform:translate(-50%,-50%)">
-                        <ContentHeaderLite Entity="this.Entity"></ContentHeaderLite>
-                        <ContentCommentAuthor Class="mt-3" Entity="this._quickReply"></ContentCommentAuthor>
-                        <TinyMCEComment Class="mt-3" Entity="this._quickReply"></TinyMCEComment>
-                        <div class="mt-3 text-right">
-                            <button class="btn btn-light border" @onclick="this.SaveReplyToComment">
-                                <i class="fa-solid fa-paper-plane"></i>
-                                @Text.Lower("Reply")
-                            </button>
-                        </div>
+        </DialogContent>
+    </MudDialog>
+    <MudDialog @bind-Visible="_showQuickReply" Options="DialogOptions" TitleClass="d-none">
+        <DialogContent>
+            <div class="border shadow-lg position-relative">
+                <div class="overflow-auto text-center p-5">
+                    <ContentHeaderLite Entity="this.Entity"></ContentHeaderLite>
+                    <ContentCommentAuthor Class="mt-3" Entity="this._quickReply"></ContentCommentAuthor>
+                    <TinyMCEComment Class="mt-3" Entity="this._quickReply"></TinyMCEComment>
+                    <div class="mt-3 text-right">
+                        <button class="btn btn-light border" @onclick="this.SaveReplyToComment">
+                            <i class="fa-solid fa-paper-plane"></i>
+                            @Text.Lower("Reply")
+                        </button>
                     </div>
                 </div>
-                <ul class="inline-list position-absolute w-100 border bg-white" style="bottom:0;">
+                <ul class="inline-list w-100 border bg-white">
                     <li></li>
                     <li class="text-right">
                         <div class="btn-group p-3">
@@ -269,13 +265,11 @@
                     </li>
                 </ul>
             </div>
-        </div>
-    }
+        </DialogContent>
+    </MudDialog>
 }
 
 @code {
-
-    private readonly DialogOptions _dialogOptions = new() { CloseOnEscapeKey = true, CloseButton = false, CloseOnNavigation = false, };
 
     private bool _showHeaderImage = false;
     private bool _showEmojis = false;

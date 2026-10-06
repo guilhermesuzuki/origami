@@ -1,4 +1,5 @@
-﻿@using Origami.Core.Models.FileSystem
+﻿@using System.Timers
+@using Origami.Core.Models.FileSystem
 @inherits Basic
 
 <div class="search-filemanager-lite @Class">
@@ -118,7 +119,9 @@
 
         if (_searchTimer != null)
         {
+            _searchTimer.Elapsed -= _searchTimerElapsed;
             _searchTimer.Stop();
+            _searchTimer.Dispose();
             _searchTimer = null;
         }
 
@@ -126,16 +129,30 @@
         _searchTimer.Enabled = true;
         _searchTimer.AutoReset = false;
         _searchTimer.Interval = 750;
-        _searchTimer.Elapsed += (o, e) =>
-        {
-            this.InvokeAsync(() =>
-            {
-                this.OnSearch(queryTerm);
-                this.StateHasChanged();
-            });
-        };
+        _searchTimer.Elapsed += _searchTimerElapsed;
 
         _searchTimer.Start();
+    }
+
+    public override void Dispose()
+    {
+        if (_searchTimer != null)
+        {
+            _searchTimer.Elapsed -= _searchTimerElapsed;
+            _searchTimer.Stop();
+            _searchTimer.Dispose();
+            _searchTimer = null;
+        }
+        base.Dispose();
+    }
+
+    private async void _searchTimerElapsed(object? sender, ElapsedEventArgs e)
+    {
+        await this.InvokeAsync(() =>
+        {
+            this.OnSearch(this._search);
+            this.StateHasChanged();
+        });
     }
 
     private async Task _selectFile(OrigamiSystemFile file)

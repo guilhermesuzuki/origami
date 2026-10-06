@@ -89,7 +89,7 @@ public class SettingsRepository :
 
     public OrigamiSettings GetSettings()
     {
-        var key = $"entity-{typeof(OrigamiSettings).FullName}";
+        var key = KeyForCaching;
 
         if (MemoryCache.Get(key) == null)
         {
@@ -159,15 +159,15 @@ public class SettingsRepository :
             if (property.Name.Like(nameof(OrigamiSettings.SocialNetwork)) == true) continue;
             if (property.Name.Like(nameof(OrigamiSettings.Seq)) == true) continue;
 
-            var name = property.Name.ToLower();
-            var setting = dbSettings.FirstOrDefault(x => x.Name == name);
+            var name = property.Name.ToLowerInvariant();
+            var setting = dbSettings.FirstOrDefault(x => x.Name.Equals(name) == true);
             if (setting != null)
             {
                 var value1 = setting.Value;
 
                 if (property.PropertyType.IsEnum)
                 {
-                    Enum.TryParse(property.PropertyType, value1, out var value2);
+                    _ = Enum.TryParse(property.PropertyType, value1, out var value2);
                     property.SetValue(settings, value2);
                 }
                 else

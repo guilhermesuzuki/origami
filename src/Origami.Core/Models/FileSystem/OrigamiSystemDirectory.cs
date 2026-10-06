@@ -129,7 +129,7 @@ namespace Origami.Core.Models.FileSystem
                 return parent != null ? new OrigamiSystemDirectory(parent.FullName) : null;
             }
 
-            set => throw new NotImplementedException();
+            set => throw new NotSupportedException();
         }
 
         /// <summary>
@@ -142,6 +142,11 @@ namespace Origami.Core.Models.FileSystem
         {
             get => _webPath;
             private set => this.Set(ref _webPath, value, Changed);
+        }
+
+        public static string DirectoryForScalingImages()
+        {
+            return "/scaling/";
         }
     }
 }

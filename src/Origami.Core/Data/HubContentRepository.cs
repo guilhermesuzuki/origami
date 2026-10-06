@@ -73,7 +73,6 @@ namespace Origami.Core.Data
                     }
                     if (fresh.Any(f => f == true))
                     {
-                        // TODO: add this to resx files
                         return new(root) { Error = Text.Original("Content is already deleted"), };
                     }
                 }
@@ -227,7 +226,6 @@ namespace Origami.Core.Data
                     }
                     if (fresh.Any(f => f == true))
                     {
-                        // TODO: add this to resx files
                         return new(root) { Error = Text.Original("Content is already published"), };
                     }
                 }
@@ -350,7 +348,6 @@ namespace Origami.Core.Data
                     }
                     if (fresh.Any(f => f == false))
                     {
-                        // TODO: add this to resx files
                         return new(root) { Error = Text.Original("Content is already restored"), };
                     }
                 }
@@ -461,7 +458,6 @@ namespace Origami.Core.Data
                     }
                     if (fresh.Any(f => f == false))
                     {
-                        // TODO: add this to resx files
                         return new(root) { Error = Text.Original("Content is already unpublished"), };
                     }
                 }

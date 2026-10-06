@@ -26,7 +26,7 @@ namespace Origami.Core.Data
 
         public async Task<IEnumerable<ProcessedUserView>> GetBrowsersAsync(Guid blog, DateTime start, DateTime end)
         {
-            using var db = await DbContextFactory.CreateDbContextAsync();
+            using var db = await DbContextFactory.CreateDbContextAsync().ConfigureAwait(false);
 
             var paramBlog = new SqlParameter("@blog", blog);
             var paramStart = new SqlParameter("@start", start);
@@ -34,7 +34,8 @@ namespace Origami.Core.Data
 
             return await db.ProcessedUserViews
                 .FromSqlRaw($"EXEC dbo.usp_GetBrowserHistory @blog, @start, @end", paramBlog, paramStart, paramEnd)
-                .ToListAsync();
+                .ToListAsync()
+                .ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<ProcessedUserViewForHistory>> GetHistoryAsync(TimePeriod timePeriod, Guid blog, DateTime start, DateTime end)
@@ -56,12 +57,12 @@ namespace Origami.Core.Data
             };
 
             // Adjust for English culture in 24 hours format
-            if (format == timePeriod24hours && Thread.CurrentThread.CurrentUICulture.En() == true)
+            if (format.Equals(timePeriod24hours) && Thread.CurrentThread.CurrentUICulture.En() == true)
             {
                 format = "dd [hh tt]";
             }
 
-            using var db = await DbContextFactory.CreateDbContextAsync();
+            using var db = await DbContextFactory.CreateDbContextAsync().ConfigureAwait(false);
 
             var paramBlog = new SqlParameter("@blog", blog);
             var paramStart = new SqlParameter("@start", start);
@@ -70,12 +71,13 @@ namespace Origami.Core.Data
 
             return await db.ProcessedUserViewForHistories
                 .FromSqlRaw($"EXEC dbo.usp_GetHistoryByFormat @blog, @start, @end, @format", paramBlog, paramStart, paramEnd, paramFormat)
-                .ToListAsync();
+                .ToListAsync()
+                .ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<ProcessedUserView>> GetPlatformsAsync(Guid blog, DateTime start, DateTime end)
         {
-            using var db = await DbContextFactory.CreateDbContextAsync();
+            using var db = await DbContextFactory.CreateDbContextAsync().ConfigureAwait(false);
 
             var paramBlog = new SqlParameter("@blog", blog);
             var paramStart = new SqlParameter("@start", start);
@@ -83,7 +85,8 @@ namespace Origami.Core.Data
 
             return await db.ProcessedUserViews
                 .FromSqlRaw($"EXEC dbo.usp_GetPlatformHistory @blog, @start, @end", paramBlog, paramStart, paramEnd)
-                .ToListAsync();
+                .ToListAsync()
+                .ConfigureAwait(false);
         }
     }
 }

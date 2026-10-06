@@ -17,12 +17,15 @@ namespace Origami.UI
         ComponentBase,
         IClass,
         IId,
-        IBlogId
+        IBlogId,
+        IDisposable
     {
         /// <summary>
         /// Sync root object
         /// </summary>
         public static readonly Lock SyncRoot = new();
+
+        protected readonly DialogOptions DialogOptions = new() { CloseOnEscapeKey = true, CloseButton = false, CloseOnNavigation = true, MaxWidth = MaxWidth.ExtraLarge, };
 
         [Parameter] public Guid BlogId { get; set; }
         [Parameter] public string BlogSlug { get; set; } = string.Empty;
@@ -34,20 +37,26 @@ namespace Origami.UI
         [Parameter] public virtual Guid Id { get; set; } = Guid.Empty;
 
         [Inject] protected IAppFacade AppFacade { get; set; } = null!;
+        [Inject] protected TimeProvider Chronos { get; set; } = null!;
         [Inject] protected IConfiguration Configuration { get; set; } = null!;
         [Inject] protected IDbContextFactory<OrigamiDbContext> DbContextFactory { get; set; } = null!;
         [Inject] protected IDialogService DialogService { get; set; } = null!;
+        [Inject] protected NavigationManager GhostOfTheNavigator { get; set; } = null!;
         [Inject] protected IHttpContextAccessor HttpContextAccessor { get; set; } = null!;
         [Inject] protected IJSRuntime JSRuntime { get; set; } = null!;
         [Inject] protected IMyMemoryCache MemoryCache { get; set; } = null!;
+        protected RequestContext RequestContext { get; set; } = new();
         [Inject] protected ISuperRepository Super { get; set; } = null!;
+        [Inject] protected Text Text { get; set; } = null!;
         [Inject] protected ITheCreator TheCreator { get; set; } = null!;
         [Inject] protected IUserFacade UserFacade { get; set; } = null!;
         [Inject] protected IWebRootPath WebRootPath { get; set; } = null!;
         [Inject] protected IWhatHappensNext WhatHappensNext { get; set; } = null!;
-        [Inject] protected NavigationManager GhostOfTheNavigator { get; set; } = null!;
-        [Inject] protected Text Text { get; set; } = null!;
 
+        public virtual void Dispose()
+        {
+            this.UserFacade.Changed -= CurrentBlogChangedMustRefreshUI;
+        }
         public OrigamiBlog GetBlogFromSlug()
         {
             if (this.BlogSlug.Has() == true)
@@ -66,6 +75,14 @@ namespace Origami.UI
         protected async Task CopyToClipboard(string info)
         {
             await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", info);
+        }
+
+        protected async void CurrentBlogChangedMustRefreshUI(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName?.Equals(nameof(IUserFacade.BlogId), StringComparison.InvariantCultureIgnoreCase) == true)
+            {
+                await this.InvokeAsync(this.StateHasChanged);
+            }
         }
 
         protected async Task DownloadFile(OrigamiSystemFile file)
@@ -104,7 +121,16 @@ namespace Origami.UI
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            this.UserFacade.Changed += _currentBlogIdChangedMustRefreshUI;
+            this.UserFacade.Changed += CurrentBlogChangedMustRefreshUI;
+
+            this.RequestContext = new();
+            this.RequestContext.ConnectionId = this.HttpContextAccessor.HttpContext?.Connection.Id;
+            this.RequestContext.Headers = this.HttpContextAccessor.HttpContext?.Request.Headers.ToDictionary(x => x.Key, x => x.Value.ToString());
+            this.RequestContext.Host = this.HttpContextAccessor.HttpContext?.Request.Host.ToString();
+            this.RequestContext.IpAddress = this.HttpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
+            this.RequestContext.Referrer = this.HttpContextAccessor.HttpContext?.Request.Headers["Referer"].ToString();
+            this.RequestContext.Scheme = this.HttpContextAccessor.HttpContext?.Request.Scheme;
+            this.RequestContext.UserAgent = this.HttpContextAccessor.HttpContext?.Request.Headers["User-Agent"].ToString();
         }
 
         /// <summary>
@@ -153,14 +179,6 @@ namespace Origami.UI
         {
             var ctx = this.UserFacade.SocialProfile.GetContext();
             UserFacade.Result = Super.Subscribers.Unsubscribe(ctx);
-        }
-
-        private void _currentBlogIdChangedMustRefreshUI(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(IUserFacade.BlogId))
-            {
-                this.InvokeAsync(this.StateHasChanged);
-            }
         }
     }
 }
