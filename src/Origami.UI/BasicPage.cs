@@ -116,7 +116,7 @@ namespace Origami.UI
                 {
                     Id = Guid.NewGuid(),
                     Path = absolutePath,
-                    DateCreated = this.Chronos.GetUtcNow().Date,
+DateCreated = this.Chronos.GetUtcNow().UtcDateTime,
                 };
 
                 using (var transaction = new TransactionScope())
