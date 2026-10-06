@@ -25,7 +25,7 @@
             </div>
             <div class="actions text-right mt-3">
                 <div class="btn-group">
-                    <button class="btn btn-danger" @onclick="() => this.FileUploadingToken.Cancel()">
+                    <button class="btn btn-danger" @onclick="CancelFileUpload">
                         <i class="fa-solid fa-stop"></i>
                         @Text.Lower("Stop")
                     </button>
