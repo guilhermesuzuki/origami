@@ -91,8 +91,7 @@ this._settingRepository.UpdateOnlyThisSetting(context, nameof(OrigamiSettings.Ma
                 this.SmartUnpublish(ctx, true).Push(hub);
             }
 
-            this._settingRepository.UpdateOnlyThisSetting(context, nameof(OrigamiSettings.MaintenanceMode).ToLowerInvariant(), false.ToString()).Push(hub);
-            this._settingsRepository.GetSettings().MaintenanceMode = false;
+            this._settingRepository.UpdateOnlyThisSetting(context, nameof(OrigamiSettings.MaintenanceMode).ToLowerInvariant(), false.ToString()).OnSuccess(() => this._settingsRepository.GetSettings().MaintenanceMode = false).Push(hub);
 
             return hub;
         }
