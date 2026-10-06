@@ -150,7 +150,7 @@ namespace Origami.UI
                     PhysicalPageId = page.Id,
                     Admin = this.AppFacade.Admin,
                     ContentId = id,
-                    DateCreated = this.Chronos.GetUtcNow().Date,
+                    DateCreated = this.Chronos.GetUtcNow().UtcDateTime,
                 };
                 var ok = this._fill(view);
                 if (ok)
