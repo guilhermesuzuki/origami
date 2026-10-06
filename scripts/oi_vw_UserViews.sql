@@ -224,7 +224,6 @@ SELECT
 	,null
 FROM [dbo].[oi_PhysicalPageViews] ppv
 JOIN [dbo].[oi_Contents] c ON c.Id = ppv.ContentId
-JOIN [dbo].[oi_Blogs] b ON b.IsPrimary = 1
 WHERE c.[Type] = 'OrigamiSoftwareRelease'
 ;
 GO
