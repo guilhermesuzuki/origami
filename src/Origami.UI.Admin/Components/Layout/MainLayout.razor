@@ -28,13 +28,13 @@
                     <UserHeaderCard Entity="this.UserFacade.User"></UserHeaderCard>
                 </div>
                 <div class="btn-group">
-                    <button class="btn-light text-center p-2" @onclick="LogoutAsync">
+                    <button class="btn-light text-center p-2" aria-label="@Text.Lower("Log out")" @onclick="LogoutAsync">
                         <i class="fa-solid fa-power-off"></i>
                     </button>
-                    <button class="btn-light text-center p-2" @onclick="GoToChangePassword">
+                    <button class="btn-light text-center p-2" aria-label="@Text.Lower("Change password")" @onclick="GoToChangePassword">
                         <i class="fa-solid fa-key"></i>
                     </button>
-                    <button class="btn-light text-center p-2" @onclick="GoToUserProfile">
+                    <button class="btn-light text-center p-2" aria-label="@Text.Lower("User profile")" @onclick="GoToUserProfile">
                         <i class="fa-solid fa-user"></i>
                     </button>
                 </div>
