@@ -172,7 +172,7 @@ DateCreated = this.Chronos.GetUtcNow().UtcDateTime,
                 {
                     Id = Guid.NewGuid(),
                     Path = absolutePath,
-                    DateCreated = Chronos.GetUtcNow().Date,
+                    DateCreated = Chronos.GetUtcNow().UtcDateTime,
                 };
                 using (var transaction = new TransactionScope())
                 {
