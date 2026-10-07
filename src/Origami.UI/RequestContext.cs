@@ -12,8 +12,6 @@ namespace Origami.Core.Models
     {
         public RequestContext(ILogger<RequestContext> logger, IHttpContextAccessor accessor)
         {
-            this.logger = logger;
-
             var httpContext = accessor.HttpContext;
             if (httpContext is null) return;
 
@@ -27,8 +25,6 @@ namespace Origami.Core.Models
 
             logger.LogInformation("RequestContext connection ID: {ConnectionId}, Host: {Host}, IP Address: {IpAddress}, Referrer: {Referrer}, Scheme: {Scheme}, User-Agent: {UserAgent}", ConnectionId, Host, IpAddress, Referrer, Scheme, UserAgent);
         }
-
-        private readonly ILogger<RequestContext> logger;
 
         public string? ConnectionId { get; }
         public IDictionary<string, string>? Headers { get; }
