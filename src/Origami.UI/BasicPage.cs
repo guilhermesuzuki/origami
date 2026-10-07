@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 using Origami.Core;
 using Origami.Core.Data;
@@ -218,6 +220,14 @@ DateCreated = this.Chronos.GetUtcNow().UtcDateTime,
         /// <param name="tracking"></param>
         private bool _fill(BaseTracking tracking)
         {
+            Logger.LogInformation("RequestContext Connection ID: {ConnectionId}, Host: {Host}, IP Address: {IpAddress}, Referrer: {Referrer}, Scheme: {Scheme}, User-Agent: {UserAgent}"
+                , RequestContext.ConnectionId
+                , RequestContext.Host
+                , RequestContext.IpAddress
+                , RequestContext.Referrer
+                , RequestContext.Scheme
+                , RequestContext.UserAgent);
+
             var dd = this.RequestContext.GetDeviceDetector();
 
             // important!

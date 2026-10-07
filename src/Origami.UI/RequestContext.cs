@@ -19,9 +19,9 @@ namespace Origami.Core.Models
             Headers = httpContext.Request.Headers.ToDictionary(x => x.Key, x => x.Value.ToString());
             Host = httpContext.Request.Host.Value;
             IpAddress = httpContext.Connection.RemoteIpAddress?.ToString();
-            Referrer = httpContext.Request.Headers["Referer"].ToString();
+            Referrer = httpContext.Request.Headers.Referer;
             Scheme = httpContext.Request.Scheme;
-            UserAgent = httpContext.Request.Headers["User-Agent"].ToString();
+            UserAgent = httpContext.Request.Headers.UserAgent;
 
             logger.LogInformation("RequestContext Connection ID: {ConnectionId}, Host: {Host}, IP Address: {IpAddress}, Referrer: {Referrer}, Scheme: {Scheme}, User-Agent: {UserAgent}", ConnectionId, Host, IpAddress, Referrer, Scheme, UserAgent);
         }

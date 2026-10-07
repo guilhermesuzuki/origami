@@ -202,7 +202,7 @@ namespace Origami.UI
             });
 
             builder.Services.AddScoped<CustomHeadContentService>();
-            builder.Services.AddSingleton<CircuitHandler, OrigamiCircuitHandler>();
+            builder.Services.AddScoped<CircuitHandler, OrigamiCircuitHandler>();
             builder.Services.AddScoped<HtmlRenderer>();
 
             builder.Services.AddSingleton<IValidator<HubContentPage>, HubContentPageValidator>();
