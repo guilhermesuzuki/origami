@@ -232,7 +232,7 @@
         </div>
     </DialogContent>
 </MudDialog>
-<MudDialog @bind-Visible="_addingFolder" Options="_dialogOptions" TitleClass="d-none" ContentClass="p-2">
+<MudDialog @bind-Visible="_addingFolder" Options="this.DialogOptions" TitleClass="d-none" ContentClass="p-2">
     <DialogContent>
         <div class="border p-3 shadow-lg" style="width: 500px;">
             <div>
@@ -246,14 +246,14 @@
         </div>
     </DialogContent>
 </MudDialog>
-<MudDialog @bind-Visible="_uploadingFiles" Options="_dialogOptions" Style="width: 80%;" TitleClass="d-none" ContentClass="p-2">
+<MudDialog @bind-Visible="_uploadingFiles" Options="this.DialogOptions" Style="width: 80%;" TitleClass="d-none" ContentClass="p-2">
     <DialogContent>
         <div class="border p-3 shadow-lg">
             <FileUpload VirtualPath="@this.VirtualPath" OnCloseWindow="() => { this._loadFiles(true); _uploadingFiles = false; }"></FileUpload>
         </div>
     </DialogContent>
 </MudDialog>
-<MudDialog @bind-Visible="_renamingDirectory" Options="_dialogOptions" TitleClass="d-none" ContentClass="p-2">
+<MudDialog @bind-Visible="_renamingDirectory" Options="this.DialogOptions" TitleClass="d-none" ContentClass="p-2">
     <DialogContent>
         <div class="border p-3 shadow-lg" style="width: 500px;">
             <div>
@@ -267,7 +267,7 @@
         </div>
     </DialogContent>
 </MudDialog>
-<MudDialog @bind-Visible="_renamingFile" Options="_dialogOptions" TitleClass="d-none" ContentClass="p-2">
+<MudDialog @bind-Visible="_renamingFile" Options="this.DialogOptions" TitleClass="d-none" ContentClass="p-2">
     <DialogContent>
         <div class="border p-3 shadow-lg" style="width: 500px;">
             <div>
@@ -294,7 +294,6 @@
 
 @code {
     private Guid _version = Guid.NewGuid();
-    private readonly DialogOptions _dialogOptions = new() { CloseOnEscapeKey = true, CloseButton = false, CloseOnNavigation = true, MaxWidth = MaxWidth.Large, };
 
     /// <summary>
     /// This event happens when a file is selected/clicked in the UI
@@ -319,7 +318,6 @@
     private string _nameExtension = string.Empty;
     private string _nameFile = string.Empty;
     private string _nameFolder = string.Empty;
-    private CancellationTokenSource _cancellationTokenSource = new();
 
     /// <summary>
     /// Current virtual path
