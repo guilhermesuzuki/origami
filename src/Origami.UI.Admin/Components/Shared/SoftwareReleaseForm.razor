@@ -352,8 +352,9 @@
 @code {
     private async Task _onUploadingFiles(InputFileChangeEventArgs e)
     {
-        var files = e.GetMultipleFiles();
-        foreach (var file in files)
+        this.FileUploadingToken = new();
+
+        foreach (var file in e.GetMultipleFiles())
         {
             await this.UploadFile(file, OrigamiConstants.MaximumFileSizeForVideos, subDirectoryName: "files");
         }
