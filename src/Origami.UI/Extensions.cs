@@ -257,7 +257,7 @@ namespace Origami.UI
 
             builder.Services.Configure<ForwardedHeadersOptions>(options =>
             {
-                options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+                options.ForwardedHeaders = ForwardedHeaders.All;
                 options.KnownProxies.Add(System.Net.IPAddress.Loopback); // 127.0.0.1
                 options.KnownProxies.Add(System.Net.IPAddress.IPv6Loopback); // ::1
             });
@@ -296,6 +296,7 @@ namespace Origami.UI
             });
 
             builder.Services.AddSingleton(TimeProvider.System);
+            builder.Services.AddScoped<RequestContext>();
 
             if (OperatingSystem.IsWindows()) builder.Host.UseWindowsService();
 
