@@ -23,7 +23,7 @@ namespace Origami.Core.Models
             Scheme = httpContext.Request.Scheme;
             UserAgent = httpContext.Request.Headers["User-Agent"].ToString();
 
-            logger.LogInformation("RequestContext connection ID: {ConnectionId}, Host: {Host}, IP Address: {IpAddress}, Referrer: {Referrer}, Scheme: {Scheme}, User-Agent: {UserAgent}", ConnectionId, Host, IpAddress, Referrer, Scheme, UserAgent);
+            logger.LogInformation("RequestContext Connection ID: {ConnectionId}, Host: {Host}, IP Address: {IpAddress}, Referrer: {Referrer}, Scheme: {Scheme}, User-Agent: {UserAgent}", ConnectionId, Host, IpAddress, Referrer, Scheme, UserAgent);
         }
 
         public string? ConnectionId { get; }
