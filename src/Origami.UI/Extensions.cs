@@ -569,36 +569,6 @@ namespace Origami.UI
         /// <param name="tracking"></param>
         /// <param name="url"></param>
         /// <param name="referrer"></param>
-        public static void TrackFields(this HttpContext httpContext, IMemoryCache memoryCache, BaseTracking tracking, string url, string referrer = "")
-        {
-            var dd = httpContext.Request.GetDeviceDetector();
-
-            // important!
-            dd.Parse();
-
-            tracking.DateCreated = DateTime.UtcNow;
-            tracking.Url = url;
-            tracking.UrlReferrer = referrer;
-            tracking.UserAgent = httpContext.Request.Header("User-Agent");
-            tracking.HostAddress = httpContext.Connection.RemoteIpAddress?.ToString() ?? string.Empty;
-            tracking.IsMobileDevice = dd.IsTablet() || dd.IsMobile();
-            tracking.IsBot = dd.IsBot();
-
-            var client = Parser.GetDefault().Parse(tracking.UserAgent);
-
-            tracking.Platform = client.OS.Family;
-            tracking.Browser = client.UA.Family;
-
-            var key = $"Origami_UserLocation_{httpContext.Connection.Id}";
-            tracking.Location = memoryCache.Get<Location>(key);
-        }
-
-        /// <summary>
-        /// Fills the <paramref name="tracking"/> with request information
-        /// </summary>
-        /// <param name="tracking"></param>
-        /// <param name="url"></param>
-        /// <param name="referrer"></param>
         public static void TrackFields(this RequestContext requestContext, IMemoryCache memoryCache, BaseTracking tracking, string url, string referrer = "")
         {
             var dd = requestContext.GetDeviceDetector();
