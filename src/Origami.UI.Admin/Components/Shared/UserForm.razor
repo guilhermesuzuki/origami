@@ -708,7 +708,7 @@
                 var key = string.Empty;
                 using (var transaction = new TransactionScope())
                 {
-                    var ctx = new DataOperationContext<OrigamiUser>(this.UserFacade.User, this.Entity);
+                    var ctx = new DataOperationContext<OrigamiUser>(this.Entity, this.Entity);
                     var hub = this.Super.Users.ResetPassword(ctx, true);
                     if (hub.Ok == false)
                     {
@@ -718,7 +718,7 @@
                     key = hub.Entity;
                     transaction.Complete();
                 }
-                var html = await this.RazorComponentRenderer.RenderAsync<Email>(new Dictionary<string, object?> { ["Key"] = key, });
+                var html = await this.JSRuntime.InvokeAsync<string>("$.get", $"/email/password/reset/{key}");
                 this.UserFacade.Result = this.Super.Emails.Send(Text.Original("Password reset link"), new() { HtmlBody = html }, new[] { this.Entity.Email });
             }
         }
