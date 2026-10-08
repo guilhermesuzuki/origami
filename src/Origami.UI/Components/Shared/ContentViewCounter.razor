@@ -17,21 +17,20 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        this.AppFacade.RefreshingTheUI += this._onRefreshingTheUIAsync;
+        this.UserFacade.RefreshingTheUI += this._onRefreshingTheUIAsync;
     }
 
-    private async void _onRefreshingTheUIAsync(object? sender, object e)
+    private async void _onRefreshingTheUIAsync(object? sender, StringEventArgs e)
     {
-        if (sender is not string[] key) return;
-        if (key.Length != 2) return;
-        if (key[0] != (await this.GetRequestContext()).ConnectionId) return;
-        if (key[1] != OrigamiConstants.Events.UpdateCounters) return;
-        await this.InvokeAsync(this.StateHasChanged);
+        if (e.Value.Like(OrigamiConstants.Events.UpdateCounters) == true)
+        {
+            await this.InvokeAsync(this.StateHasChanged);
+        }
     }
 
     public override void Dispose()
     {
-        this.AppFacade.RefreshingTheUI -= this._onRefreshingTheUIAsync;
+        this.UserFacade.RefreshingTheUI -= this._onRefreshingTheUIAsync;
         base.Dispose();
     }
 }

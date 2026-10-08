@@ -113,6 +113,8 @@ namespace Origami.UI
                 contentId, 
                 this.UserFacade.UserId, 
                 this.UserFacade.SocialProfileId);
+
+            this.UserFacade.RefreshTheUI(OrigamiConstants.Events.UpdateCounters);
         }
 
         /// <summary>
@@ -128,6 +130,8 @@ namespace Origami.UI
                 path,
                 this.UserFacade.UserId,
                 this.UserFacade.SocialProfileId);
+
+            this.UserFacade.RefreshTheUI(OrigamiConstants.Events.UpdateCounters);
         }
 
         protected virtual void SetPageTitle()
