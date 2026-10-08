@@ -3,7 +3,7 @@ using Origami.Core.Models;
 
 namespace Origami.UI
 {
-    public class OrigamiCircuitHandler(IAppFacade appFacade) : CircuitHandler
+    internal class OrigamiCircuitHandler(IAppFacade appFacade) : CircuitHandler
     {
         public override Task OnCircuitOpenedAsync(Circuit circuit, CancellationToken cancellationToken)
         {

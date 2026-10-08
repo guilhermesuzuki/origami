@@ -32,6 +32,7 @@ using Quartz;
 using Serilog;
 using System.Buffers;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.RateLimiting;
 using UAParser;
@@ -295,10 +296,9 @@ namespace Origami.UI
                 options.WaitForJobsToComplete = true;
             });
 
-            builder.Services.AddSingleton(TimeProvider.System);
-            builder.Services.AddScoped<RequestContext>();
-
             if (OperatingSystem.IsWindows()) builder.Host.UseWindowsService();
+
+            builder.Services.AddHttpClient<OrigamiHttpClient>();
 
             var services = builder.Services.BuildServiceProvider();
 
@@ -681,6 +681,14 @@ namespace Origami.UI
                         await context.Response.WriteAsync(xml, cts.Token).ConfigureAwait(false);
                     });
             }
+
+            app.MapGet("/debug/request", (IHttpContextAccessor accessor) => 
+            {
+                return new RequestContext()
+                {
+                    ConnectionId = accessor.HttpContext!.Connection.Id,
+                };
+            });
 
             return app;
         }

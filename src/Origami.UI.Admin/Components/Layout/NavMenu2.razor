@@ -224,13 +224,12 @@
             <div class="col-12 col-xxl-6 mb-3">
                 <button class="border border-2 h-100 w-100 p-3 bg-light border-info">
                     <div class="text-center">
-                        @if (this.GetUserLocation() != null)
+                        @if (this.UserLocation != null)
                         {
-                            var location = this.GetUserLocation()!;
                             <div class="">
                                 <i class="fa-solid fa-map-location-dot"></i>
-                                <div class="ellipsis" style="-webkit-line-clamp: 2;">@location.Country, @location.Region, @location.City</div>
-                                <div class="x-small mb-2" style="line-height:10px;">@location.Provider</div>
+                                <div class="ellipsis" style="-webkit-line-clamp: 2;">@this.UserLocation.Country, @this.UserLocation.Region, @this.UserLocation.City</div>
+                                <div class="x-small mb-2" style="line-height:10px;">@this.UserLocation.Provider</div>
                             </div>
                         }
                         else
@@ -251,6 +250,13 @@
 
     protected bool DisableEnterMaintenanceModeButton => this.Super.Settings.GetSettings().MaintenanceMode == true;
     protected bool DisableLeaveMaintenanceModeButton => this.Super.Settings.GetSettings().MaintenanceMode == false;
+    protected Location? UserLocation { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        this.UserLocation = await this.GetUserLocationAsync();
+    }
 
     protected async Task EnterMaintenanceMode()
     {
@@ -496,9 +502,12 @@
         }
     }
 
-    protected Location? GetUserLocation()
+    protected async Task<Location?> GetUserLocationAsync()
     {
-        return _memoryCache.Get<Location?>($"Origami_UserLocation_{this.RequestContext.ConnectionId}");
+        var token = new CancellationTokenSource(5000);
+        using var client = this.OrigamiHttpClient.GetHttpClient();
+        var requestContext = await client.GetFromJsonAsync<RequestContext>("/debug/request", token.Token);
+        return _memoryCache.Get<Location>($"Origami_UserLocation_{requestContext?.ConnectionId}");
     }
 
     private void GoToBackupAndRestore()
