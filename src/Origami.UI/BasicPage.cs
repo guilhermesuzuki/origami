@@ -105,14 +105,12 @@ namespace Origami.UI
         /// <returns></returns>
         protected async Task PhysicalPagesByContentAsync(Guid contentId)
         {
-            var path = new Uri(this.GhostOfTheNavigator.Uri).AbsolutePath;
-
             await this.JSRuntime.InvokeAsync<RequestContext>(
                 "origami.physicalpages.viewByContent",
-                path, 
                 contentId, 
                 this.UserFacade.UserId, 
-                this.UserFacade.SocialProfileId);
+                this.UserFacade.SocialProfileId)
+                .ConfigureAwait(false);
 
             this.UserFacade.RefreshTheUI(OrigamiConstants.Events.UpdateCounters);
         }
@@ -123,13 +121,11 @@ namespace Origami.UI
         /// <returns></returns>
         protected async Task PhysicalPagesByPathAsync()
         {
-            var path = new Uri(this.GhostOfTheNavigator.Uri).AbsolutePath;
-
             await this.JSRuntime.InvokeAsync<RequestContext>(
                 "origami.physicalpages.viewByPath",
-                path,
                 this.UserFacade.UserId,
-                this.UserFacade.SocialProfileId);
+                this.UserFacade.SocialProfileId)
+                .ConfigureAwait(false);
 
             this.UserFacade.RefreshTheUI(OrigamiConstants.Events.UpdateCounters);
         }

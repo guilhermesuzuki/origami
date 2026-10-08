@@ -54,15 +54,17 @@ var origami = {
         title: (title) => document.title = title,
     },
     physicalpages: {
-        viewByPath: (path, userId, socialProfileId) => {
-            var url = encodeURIComponent(location.href);
-            var view = `/views/physicalpages/bypath/?path=${path}&url=${url}&userId=${userId}&socialProfileId=${socialProfileId}&v=${Math.random()}`;
-            $.get(view);
+        viewByPath: async (userId, socialProfileId) => {
+            const url = encodeURIComponent(location.href);
+            const path = new URL(location.href).pathname;
+            const view = `/views/physicalpages/bypath/?path=${path}&url=${url}&userId=${userId}&socialProfileId=${socialProfileId}&v=${Math.random()}`;
+            await $.get(view);
         },
-        viewByContent: (path, contentId, userId, socialProfileId) => {
-            var url = encodeURIComponent(location.href);
-            var view = `/views/physicalpages/bycontent/?path=${path}&contentId=${contentId}&userId=${userId}&socialProfileId=${socialProfileId}&url=${url}&v=${Math.random()}`;
-            $.get(view);
+        viewByContent: async (contentId, userId, socialProfileId) => {
+            const url = encodeURIComponent(location.href);
+            const path = new URL(location.href).pathname;
+            const view = `/views/physicalpages/bycontent/?path=${path}&contentId=${contentId}&userId=${userId}&socialProfileId=${socialProfileId}&url=${url}&v=${Math.random()}`;
+            await $.get(view);
         },
     },
     editor: {
