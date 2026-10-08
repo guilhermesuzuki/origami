@@ -53,7 +53,7 @@ var origami = {
 
         title: (title) => document.title = title,
 
-        userLocation: async () => {
+        requestContext: async () => {
             return await $.get("/debug/request");
         },
     },

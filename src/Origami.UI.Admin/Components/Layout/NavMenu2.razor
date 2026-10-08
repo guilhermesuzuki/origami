@@ -484,7 +484,7 @@
     {
         if (firstRender)
         {
-            var rc = await this.JSRuntime.InvokeAsync<RequestContext?>("origami.common.userLocation");
+            var rc = await this.JSRuntime.InvokeAsync<RequestContext?>("origami.common.requestContext");
             this.UserLocation = rc?.Location;
             await this.InvokeAsync(this.StateHasChanged);
         }

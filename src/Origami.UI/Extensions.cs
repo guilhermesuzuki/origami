@@ -593,6 +593,36 @@ namespace Origami.UI
             tracking.Location = memoryCache.Get<Location>(key);
         }
 
+        /// <summary>
+        /// Fills the <paramref name="tracking"/> with request information
+        /// </summary>
+        /// <param name="tracking"></param>
+        /// <param name="url"></param>
+        /// <param name="referrer"></param>
+        public static void TrackFields(this RequestContext requestContext, IMemoryCache memoryCache, BaseTracking tracking, string url, string referrer = "")
+        {
+            var dd = requestContext.GetDeviceDetector();
+
+            // important!
+            dd.Parse();
+
+            tracking.DateCreated = DateTime.UtcNow;
+            tracking.Url = url;
+            tracking.UrlReferrer = referrer;
+            tracking.UserAgent = requestContext.UserAgent ?? string.Empty;
+            tracking.HostAddress = requestContext.IpAddress ?? string.Empty;
+            tracking.IsMobileDevice = dd.IsTablet() || dd.IsMobile();
+            tracking.IsBot = dd.IsBot();
+
+            var client = Parser.GetDefault().Parse(tracking.UserAgent);
+
+            tracking.Platform = client.OS.Family;
+            tracking.Browser = client.UA.Family;
+
+            var key = $"Origami_UserLocation_{requestContext.ConnectionId}";
+            tracking.Location = memoryCache.Get<Location>(key);
+        }
+
         public static WebApplication UseOrigami(this WebApplication app, bool admin = false)
         {
             // 1. Infrastructure / proxy headers
