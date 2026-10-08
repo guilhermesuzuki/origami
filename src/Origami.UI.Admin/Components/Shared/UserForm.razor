@@ -725,7 +725,7 @@
                     key = hub.Entity;
                     transaction.Complete();
                 }
-                using var client = this.OrigamiHttpClient.GetHttpClient();
+                using var client = this.HttpClientFactory.CreateClient("origami");
                 var response = await client.GetAsync($"/email/password/reset/{key}");
                 if (response.IsSuccessStatusCode == true)
                 {

@@ -48,18 +48,18 @@ namespace Origami.UI
         [Inject] protected IJSRuntime JSRuntime { get; set; } = null!;
         [Inject] protected ILogger<Basic> Logger { get; set; } = null!;
         [Inject] protected IMyMemoryCache MemoryCache { get; set; } = null!;
-        [Inject] protected OrigamiHttpClient OrigamiHttpClient { get; set; } = null!;
         [Inject] protected ISuperRepository Super { get; set; } = null!;
         [Inject] protected Text Text { get; set; } = null!;
         [Inject] protected ITheCreator TheCreator { get; set; } = null!;
         [Inject] protected IUserFacade UserFacade { get; set; } = null!;
         [Inject] protected IWebRootPath WebRootPath { get; set; } = null!;
         [Inject] protected IWhatHappensNext WhatHappensNext { get; set; } = null!;
+        [Inject] protected IHttpClientFactory HttpClientFactory { get; set; } = null!;
 
         protected async Task<RequestContext> GetRequestContext()
         {
             var token = new CancellationTokenSource(5000);
-            using var client = this.OrigamiHttpClient.GetHttpClient();
+            using var client = this.HttpClientFactory.CreateClient("origami");
             return await client.GetFromJsonAsync<RequestContext>("/debug/request", token.Token) ?? new();
         }
 

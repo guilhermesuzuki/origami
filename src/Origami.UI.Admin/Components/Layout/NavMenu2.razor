@@ -505,7 +505,7 @@
     protected async Task<Location?> GetUserLocationAsync()
     {
         var token = new CancellationTokenSource(5000);
-        using var client = this.OrigamiHttpClient.GetHttpClient();
+        using var client = this.HttpClientFactory.CreateClient("origami");
         var requestContext = await client.GetFromJsonAsync<RequestContext>("/debug/request", token.Token);
         return _memoryCache.Get<Location>($"Origami_UserLocation_{requestContext?.ConnectionId}");
     }

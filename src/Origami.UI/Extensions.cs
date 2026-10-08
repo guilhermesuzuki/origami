@@ -298,7 +298,19 @@ namespace Origami.UI
 
             if (OperatingSystem.IsWindows()) builder.Host.UseWindowsService();
 
-            builder.Services.AddHttpClient<OrigamiHttpClient>();
+            builder.Services.AddHttpClient("origami", (sp, client) =>
+            {
+                var accessor = sp.GetRequiredService<IHttpContextAccessor>();
+
+                var uri = new UriBuilder(
+                    accessor.HttpContext!.Request.Scheme,
+                    accessor.HttpContext!.Request.Host.Host,
+                    accessor.HttpContext!.Request.Host.Port ?? 80
+                    ).Uri;
+
+                client.BaseAddress = uri;
+                client.Timeout = TimeSpan.FromSeconds(5);
+            });
 
             var services = builder.Services.BuildServiceProvider();
 
