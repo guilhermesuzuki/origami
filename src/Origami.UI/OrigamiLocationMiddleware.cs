@@ -54,14 +54,14 @@ namespace Origami.UI
                 var result = await _locationRepository.GetLocationByIpAsync(ip!).ConfigureAwait(false);
                 if (result.Ok)
                 {
-                    _memoryCache.Set(key, result.Entity, TimeSpan.FromHours(1));
+                    _memoryCache.Set(key, result.Entity, TimeSpan.FromMinutes(20));
                 }
             }
             catch (Exception)
             {
 
             }
-            await next(context);
+            await next(context).ConfigureAwait(false);
         }
     }
 }
