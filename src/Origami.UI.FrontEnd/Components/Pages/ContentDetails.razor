@@ -190,7 +190,7 @@
         if (firstRender == false) return;
         if (this.UserFacade.IncognitoMode == true) return;
         if (this.ShouldTrackUserVisit == false) return;
-        _ = await this.PhysicalPagesByContentAsync(this._entity.Id);
+        await this.PhysicalPagesByContentAsync(this._entity.Id);
     }
 
     protected override void SetPageTitle()

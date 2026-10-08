@@ -56,14 +56,12 @@ var origami = {
     physicalpages: {
         viewByPath: (path, userId, socialProfileId) => {
             var url = encodeURIComponent(location.href);
-            var referrer = encodeURIComponent(document.referrer);
-            var view = `/views/physicalpages/bypath/?path=${path}&url=${url}&referrer=${referrer}&userId=${userId}&socialProfileId=${socialProfileId}&v=${Math.random()}`;
+            var view = `/views/physicalpages/bypath/?path=${path}&url=${url}&userId=${userId}&socialProfileId=${socialProfileId}&v=${Math.random()}`;
             $.get(view);
         },
         viewByContent: (path, contentId, userId, socialProfileId) => {
             var url = encodeURIComponent(location.href);
-            var referrer = encodeURIComponent(document.referrer);
-            var view = `/views/physicalpages/bycontent/?path=${path}&contentId=${contentId}&userId=${userId}&socialProfileId=${socialProfileId}&url=${url}&referrer=${referrer}&v=${Math.random()}`;
+            var view = `/views/physicalpages/bycontent/?path=${path}&contentId=${contentId}&userId=${userId}&socialProfileId=${socialProfileId}&url=${url}&v=${Math.random()}`;
             $.get(view);
         },
     },
