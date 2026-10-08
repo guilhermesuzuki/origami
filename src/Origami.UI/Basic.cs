@@ -44,6 +44,7 @@ namespace Origami.UI
         [Inject] protected IDbContextFactory<OrigamiDbContext> DbContextFactory { get; set; } = null!;
         [Inject] protected IDialogService DialogService { get; set; } = null!;
         [Inject] protected NavigationManager GhostOfTheNavigator { get; set; } = null!;
+        [Inject] protected IHttpClientFactory HttpClientFactory { get; set; } = null!;
         [Inject] protected IHttpContextAccessor HttpContextAccessor { get; set; } = null!;
         [Inject] protected IJSRuntime JSRuntime { get; set; } = null!;
         [Inject] protected ILogger<Basic> Logger { get; set; } = null!;
@@ -54,19 +55,12 @@ namespace Origami.UI
         [Inject] protected IUserFacade UserFacade { get; set; } = null!;
         [Inject] protected IWebRootPath WebRootPath { get; set; } = null!;
         [Inject] protected IWhatHappensNext WhatHappensNext { get; set; } = null!;
-        [Inject] protected IHttpClientFactory HttpClientFactory { get; set; } = null!;
-
-        protected async Task<RequestContext> GetRequestContext()
-        {
-            var token = new CancellationTokenSource(5000);
-            using var client = this.HttpClientFactory.CreateClient("origami");
-            return await client.GetFromJsonAsync<RequestContext>("/debug/request", token.Token) ?? new();
-        }
 
         public virtual void Dispose()
         {
             this.UserFacade.Changed -= CurrentBlogChangedMustRefreshUI;
         }
+
         public OrigamiBlog GetBlogFromSlug()
         {
             if (this.BlogSlug.Has() == true)
@@ -100,6 +94,12 @@ namespace Origami.UI
             await this.JSRuntime.InvokeVoidAsync("origami.common.downloadFileFromUrl", file.WebPath);
         }
 
+        protected async Task<RequestContext> GetRequestContext()
+        {
+            var token = new CancellationTokenSource(5000);
+            using var client = this.HttpClientFactory.CreateClient("origami");
+            return await client.GetFromJsonAsync<RequestContext>("/debug/request", token.Token) ?? new();
+        }
         /// <summary>
         /// Logs the SOCIAL PROFILE out and redirects to the login page.
         /// </summary>
