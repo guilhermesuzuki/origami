@@ -83,7 +83,7 @@ namespace Origami.UI
 
         protected async void CurrentBlogChangedMustRefreshUI(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName?.Equals(nameof(IUserFacade.BlogId), StringComparison.InvariantCultureIgnoreCase) == true)
+            if (e.PropertyName?.Like(nameof(IUserFacade.BlogId)) == true)
             {
                 await this.InvokeAsync(this.StateHasChanged);
             }
@@ -94,12 +94,6 @@ namespace Origami.UI
             await this.JSRuntime.InvokeVoidAsync("origami.common.downloadFileFromUrl", file.WebPath);
         }
 
-        protected async Task<RequestContext> GetRequestContext()
-        {
-            var token = new CancellationTokenSource(5000);
-            using var client = this.HttpClientFactory.CreateClient("origami");
-            return await client.GetFromJsonAsync<RequestContext>("/debug/request", token.Token) ?? new();
-        }
         /// <summary>
         /// Logs the SOCIAL PROFILE out and redirects to the login page.
         /// </summary>
