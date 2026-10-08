@@ -477,14 +477,7 @@
                                     @if (context.Item.AuthorId != Guid.Empty)
                                     {
                                         var author = this.Super.Users.ReadFromCache().Id(context.Item.AuthorId);
-                                        <ul class="inline-list">
-                                            <li class="pe-1" style="width:50px;">
-                                                <HeaderImageCard Entity="author"></HeaderImageCard>
-                                            </li>
-                                            <li>
-                                                <UserHeader Entity="author"></UserHeader>
-                                            </li>
-                                        </ul>
+                                        <UserHeaderInline Entity="author"></UserHeaderInline>
                                     }
                                 </CellTemplate>
                             </TemplateColumn>
@@ -725,15 +718,8 @@
                     key = hub.Entity;
                     transaction.Complete();
                 }
-                using var client = this.HttpClientFactory.CreateClient("origami");
-                var response = await client.GetAsync($"/email/password/reset/{key}");
-                if (response.IsSuccessStatusCode == true)
-                {
-                    //reads the response content
-                    var html = await response.Content.ReadAsStringAsync();
-                    //send the email
-                    this.UserFacade.Result = this.Super.Emails.Send(Text.Original("Password reset link"), new() { HtmlBody = html }, [this.Entity.Email]);
-                }
+                var html = await this.RazorComponentRenderer.RenderAsync<Email>(new Dictionary<string, object?> { ["Key"] = key, });
+                this.UserFacade.Result = this.Super.Emails.Send(Text.Original("Password reset link"), new() { HtmlBody = html }, new[] { this.Entity.Email });
             }
         }
         catch (Exception ex)

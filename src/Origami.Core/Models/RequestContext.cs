@@ -1,12 +1,4 @@
-﻿using Azure;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-using Polly;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Origami.Core.Models
+﻿namespace Origami.Core.Models
 {
     public sealed class RequestContext
     {

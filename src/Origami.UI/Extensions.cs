@@ -28,6 +28,7 @@ using Origami.Core.Jobs;
 using Origami.Core.Models;
 using Origami.Core.Models.Jwt;
 using Origami.Core.Validators;
+using Origami.UI.Components;
 using Polly;
 using Quartz;
 using Serilog;
@@ -206,6 +207,7 @@ namespace Origami.UI
             builder.Services.AddScoped<CustomHeadContentService>();
             builder.Services.AddScoped<CircuitHandler, OrigamiCircuitHandler>();
             builder.Services.AddScoped<HtmlRenderer>();
+            builder.Services.AddScoped<RazorComponentRenderer>();
 
             builder.Services.AddSingleton<IValidator<HubContentPage>, HubContentPageValidator>();
             builder.Services.AddSingleton<IValidator<HubContentPost>, HubContentPostValidator>();
