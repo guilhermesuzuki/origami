@@ -1,32 +1,25 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 using Origami.Core;
 using Origami.Core.Data;
 using Origami.Core.Models;
 
 namespace Origami.UI
 {
-    internal class OrigamiLocationMiddleware : IMiddleware
+    internal class OrigamiLocationMiddleware(IMyMemoryCache _memoryCache, IIpLocationRepository _locationRepository, ILogger<OrigamiLocationMiddleware> _logger) : IMiddleware
     {
-        private readonly IMemoryCache _memoryCache;
-        private readonly IIpLocationRepository _locationRepository;
-
-        public OrigamiLocationMiddleware(IMemoryCache memoryCache, IIpLocationRepository locationRepository)
-        {
-            _memoryCache = memoryCache;
-            _locationRepository = locationRepository;
-        }
-
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
             try
             {
-                Console.WriteLine($"Connection Id: {context.Connection.Id}");
-
                 var key = $"Origami_UserLocation_{context.Connection.Id}";
+
+                _logger.LogInformation("Checking for user location in cache with key: {Key}", key);
 
                 if (_memoryCache.Get(key) is Location location)
                 {
+                    _logger.LogInformation("User location found in cache for key: {Key}", key);
                     await next(context).ConfigureAwait(false);
                     return;
                 }
@@ -54,6 +47,7 @@ namespace Origami.UI
                 var result = await _locationRepository.GetLocationByIpAsync(ip!).ConfigureAwait(false);
                 if (result.Ok)
                 {
+                    _logger.LogInformation("User location retrieved for key: {Key}", key);
                     _memoryCache.Set(key, result.Entity, TimeSpan.FromMinutes(20));
                 }
             }

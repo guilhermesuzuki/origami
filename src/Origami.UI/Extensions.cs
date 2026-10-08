@@ -28,6 +28,7 @@ using Origami.Core.Jobs;
 using Origami.Core.Models;
 using Origami.Core.Models.Jwt;
 using Origami.Core.Validators;
+using Polly;
 using Quartz;
 using Serilog;
 using System.Buffers;
@@ -297,20 +298,6 @@ namespace Origami.UI
             });
 
             if (OperatingSystem.IsWindows()) builder.Host.UseWindowsService();
-
-            builder.Services.AddHttpClient("origami", (sp, client) =>
-            {
-                var accessor = sp.GetRequiredService<IHttpContextAccessor>();
-
-                var uri = new UriBuilder(
-                    accessor.HttpContext!.Request.Scheme,
-                    accessor.HttpContext!.Request.Host.Host,
-                    accessor.HttpContext!.Request.Host.Port ?? 80
-                    ).Uri;
-
-                client.BaseAddress = uri;
-                client.Timeout = TimeSpan.FromSeconds(5);
-            });
 
             var services = builder.Services.BuildServiceProvider();
 
@@ -694,11 +681,19 @@ namespace Origami.UI
                     });
             }
 
-            app.MapGet("/debug/request", (IHttpContextAccessor accessor) => 
+            app.MapGet("/debug/request", (IHttpContextAccessor accessor, IMyMemoryCache memoryCache) => 
             {
+                var key = $"Origami_UserLocation_{accessor.HttpContext!.Connection.Id}";
                 return new RequestContext()
                 {
                     ConnectionId = accessor.HttpContext!.Connection.Id,
+                    Headers = accessor.HttpContext!.Request.Headers.ToDictionary(a => a.Key, a => a.Value.ToString()),
+                    Host = accessor.HttpContext!.Request.Host.Value,
+                    IpAddress = accessor.HttpContext!.Connection.RemoteIpAddress?.ToString(),
+                    Referrer = accessor.HttpContext!.Request.Headers["Referer"].ToString(),
+                    Scheme = accessor.HttpContext!.Request.Scheme,
+                    UserAgent = accessor.HttpContext!.Request.Headers["User-Agent"].ToString(),
+                    Location = memoryCache.Get<Location>(key),
                 };
             });
 

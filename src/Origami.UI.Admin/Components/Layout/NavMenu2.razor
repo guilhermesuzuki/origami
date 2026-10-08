@@ -252,10 +252,10 @@
     protected bool DisableLeaveMaintenanceModeButton => this.Super.Settings.GetSettings().MaintenanceMode == false;
     protected Location? UserLocation { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await base.OnInitializedAsync();
-        this.UserLocation = await this.GetUserLocationAsync();
+        await this.UserLocationAsync(firstRender);
+        await base.OnAfterRenderAsync(firstRender);
     }
 
     protected async Task EnterMaintenanceMode()
@@ -475,43 +475,18 @@
         this.GhostOfTheNavigator.NavigateTo($"/softwarereleases");
     }
 
-    private async Task RegenerateNanoIds()
-    {
-        var answer = await this.DialogService.ShowMessageBoxAsync(
-            this.Text.Upper("Regenerate nano-ids"),
-            this.Text.Original("Are you sure?"),
-            yesText: this.Text.Lower("Yes"),
-            noText: this.Text.Lower("No"));
-
-        if (answer.GetValueOrDefault() == true)
-        {
-            try
-            {
-                using (var transaction = new TransactionScope())
-                {
-                    this.UserFacade.Result = _superRepository.RegenerateNanoIds();
-                    transaction.Complete();
-                }
-                this.GhostOfTheNavigator.NavigateTo(this.GhostOfTheNavigator.Uri, forceLoad: true);
-            }
-            catch (Exception ex)
-            {
-                this.UserFacade.Result = new(ex);
-                return;
-            }
-        }
-    }
-
-    protected async Task<Location?> GetUserLocationAsync()
-    {
-        var token = new CancellationTokenSource(5000);
-        using var client = this.HttpClientFactory.CreateClient("origami");
-        var requestContext = await client.GetFromJsonAsync<RequestContext>("/debug/request", token.Token);
-        return _memoryCache.Get<Location>($"Origami_UserLocation_{requestContext?.ConnectionId}");
-    }
-
     private void GoToBackupAndRestore()
     {
         this.GhostOfTheNavigator.NavigateTo($"/backups");
+    }
+
+    protected async Task UserLocationAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var rc = await this.JSRuntime.InvokeAsync<RequestContext?>("origami.common.userLocation");
+            this.UserLocation = rc?.Location;
+            await this.InvokeAsync(this.StateHasChanged);
+        }
     }
 }

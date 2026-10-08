@@ -52,6 +52,10 @@ var origami = {
         },
 
         title: (title) => document.title = title,
+
+        userLocation: async () => {
+            return await $.get("/debug/request");
+        },
     },
     physicalpages: {
         viewByPath: async (userId, socialProfileId) => {
@@ -124,6 +128,7 @@ var origami = {
             }
         },
     },
+
 };
 
 function OkToCookies() {
