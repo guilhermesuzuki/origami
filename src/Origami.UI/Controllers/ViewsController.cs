@@ -160,7 +160,6 @@ namespace Origami.UI.Controllers
 
             tracking.DateCreated = DateTime.UtcNow;
             tracking.Url = url;
-            tracking.UrlReferrer = HttpContext.Request.Headers.Referer.ToString();
             tracking.UserAgent = HttpContext.Request.Headers.UserAgent.ToString();
             tracking.HostAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? string.Empty;
             tracking.IsMobileDevice = dd.IsTablet() || dd.IsMobile();
