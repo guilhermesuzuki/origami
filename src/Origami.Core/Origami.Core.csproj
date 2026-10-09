@@ -13,7 +13,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="AngleSharp" Version="1.8.3" />
+		<PackageReference Include="AngleSharp" Version="1.8.4" />
 		<PackageReference Include="AsyncFixer" Version="2.1.0">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -22,7 +22,7 @@
 		<PackageReference Include="FluentValidation" Version="12.1.1" />
 		<PackageReference Include="HtmlAgilityPack" Version="1.13.0" />
 		<PackageReference Include="Humanizer" Version="3.0.10" />
-		<PackageReference Include="Meziantou.Analyzer" Version="3.0.290">
+		<PackageReference Include="Meziantou.Analyzer" Version="3.0.296">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
@@ -43,7 +43,7 @@
 		<PackageReference Include="NetVips.Native.win-x64" Version="8.18.7" />
 		<PackageReference Include="Otp.NET" Version="1.4.1" />
 		<PackageReference Include="QRCoder" Version="1.8.0" />
-		<PackageReference Include="Quartz" Version="4.3.0" />
+		<PackageReference Include="Quartz" Version="4.4.0" />
 		<PackageReference Include="System.Linq.Dynamic.Core" Version="1.7.4" />
 	</ItemGroup>
 

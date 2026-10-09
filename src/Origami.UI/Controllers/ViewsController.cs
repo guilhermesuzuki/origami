@@ -13,16 +13,16 @@ namespace Origami.UI.Controllers
 {
     [Route("views")]
     public class ViewsController(
-            IAppFacade appFacade,
-            IDbContextFactory<OrigamiDbContext> _dbContextFactory,
-            IHttpContextAccessor _httpContextAccessor,
-            IMyMemoryCache memoryCache,
-            IPhysicalPageRepository _physicalPage,
-            IPhysicalPageViewRepository physicalPageView,
-            ISuperRepository _superRepository,
-            IUserFacade _userFacade,
-            TimeProvider chronos
-            ) : Controller
+        IAppFacade appFacade,
+        IDbContextFactory<OrigamiDbContext> _dbContextFactory,
+        IHttpContextAccessor _httpContextAccessor,
+        IMyMemoryCache memoryCache,
+        IPhysicalPageRepository _physicalPage,
+        IPhysicalPageViewRepository physicalPageView,
+        ISuperRepository _superRepository,
+        IUserFacade _userFacade,
+        TimeProvider chronos
+        ) : Controller
     {
         [HttpGet]
         [Route("physicalpages/bycontent")]

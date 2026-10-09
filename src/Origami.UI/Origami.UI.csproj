@@ -30,7 +30,7 @@
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="DeviceDetector.NET" Version="6.5.2" />
-		<PackageReference Include="Meziantou.Analyzer" Version="3.0.290">
+		<PackageReference Include="Meziantou.Analyzer" Version="3.0.296">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
