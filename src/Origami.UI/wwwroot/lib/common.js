@@ -60,7 +60,7 @@ var origami = {
     physicalpages: {
         viewByPath: async (userId, socialProfileId) => {
             const url = encodeURIComponent(location.href);
-            const path = new URL(location.href).pathname;
+const path = encodeURIComponent(new URL(location.href).pathname);
             const view = `/views/physicalpages/bypath/?path=${path}&url=${url}&userId=${userId}&socialProfileId=${socialProfileId}&v=${Math.random()}`;
             await $.get(view);
         },
