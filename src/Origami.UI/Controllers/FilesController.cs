@@ -13,44 +13,17 @@ using UAParser;
 namespace Origami.UI.Controllers
 {
     [ApiController]
-    public class FilesController :
+    public class FilesController(
+        IAppFacade _appFacade,
+        IBlogRepository _blogRepository,
+        IDirectoryRepository _directoryRepository,
+        IFileRepository _fileRepository,
+        IMyMemoryCache _myMemoryCache,
+        IPhysicalPageRepository _physicalPageRepository,
+        IUserFacade _userFacade,
+        IWebHostEnvironment _webHostEnvironment) :
         ControllerBase
     {
-        protected readonly IAppFacade _appFacade;
-        protected readonly IBlogRepository _blogRepository;
-        protected readonly IDirectoryRepository _directoryRepository;
-        protected readonly IFileRepository _fileRepository;
-        protected readonly IMyMemoryCache _myMemoryCache;
-        protected readonly IPhysicalPageRepository _physicalPageRepository;
-        protected readonly IUserFacade _userFacade;
-        protected readonly IWebHostEnvironment _webHostEnvironment;
-
-        /// <summary>
-        /// Default constructor with DI
-        /// </summary>
-        /// <param name="webHostEnvironment"></param>
-        /// <param name="fileRepository"></param>
-        public FilesController(
-            IWebHostEnvironment webHostEnvironment,
-            IAppFacade appFacade,
-            IDirectoryRepository directoryRepository,
-            IFileRepository fileRepository,
-            IBlogRepository blogRepository,
-            IUserFacade userFacade,
-            IPhysicalPageRepository physicalPageRepository,
-            IMyMemoryCache myMemoryCache)
-            : base()
-        {
-            _webHostEnvironment = webHostEnvironment;
-            _blogRepository = blogRepository;
-            _directoryRepository = directoryRepository;
-            _fileRepository = fileRepository;
-            _myMemoryCache = myMemoryCache;
-            _physicalPageRepository = physicalPageRepository;
-            _userFacade = userFacade;
-            _appFacade = appFacade;
-        }
-
         [HttpGet]
         [Route("~/files/{*path}")]
         public async Task<IActionResult> FilesAsync([FromRoute] string path, [FromQuery] string? size)
@@ -82,14 +55,14 @@ namespace Origami.UI.Controllers
                                 if (_appFacade.Admin.GetValueOrDefault() == true)
                                 {
                                     view.Admin = true;
-                                    this._physicalPageRepository.View(virtualpath, view, this._userFacade.User);
+                                    _physicalPageRepository.View(virtualpath, view, _userFacade.User);
                                 }
                                 else
                                 {
                                     view.Admin = false;
-                                    this._physicalPageRepository.View(virtualpath, view, this._userFacade.SocialProfile);
+                                    _physicalPageRepository.View(virtualpath, view, _userFacade.SocialProfile);
                                 }
-                                this._appFacade.RefreshUI(this.HttpContext.Connection.Id, OrigamiConstants.Events.UpdateCounters);
+                                _userFacade.RefreshTheUI(OrigamiConstants.Events.UpdateCounters);
                             }
                         }
                         catch
@@ -213,8 +186,8 @@ namespace Origami.UI.Controllers
             tracking.Platform = client.OS.Family;
             tracking.Browser = client.UA.Family;
 
-            var key = $"Origami_UserLocation_{this.HttpContext.Connection.Id}";
-            tracking.Location = this._myMemoryCache.Get<Location>(key);
+            var key = $"Origami_UserLocation_{HttpContext.Connection.Id}";
+            tracking.Location = _myMemoryCache.Get<Location>(key);
         }
     }
 }
