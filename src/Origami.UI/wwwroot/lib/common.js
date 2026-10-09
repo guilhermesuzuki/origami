@@ -52,6 +52,24 @@ var origami = {
         },
 
         title: (title) => document.title = title,
+
+        requestContext: async () => {
+            return await $.get("/debug/request");
+        },
+    },
+    physicalpages: {
+        viewByPath: async (userId, socialProfileId) => {
+            const url = encodeURIComponent(location.href);
+const path = encodeURIComponent(new URL(location.href).pathname);
+            const view = `/views/physicalpages/bypath/?path=${path}&url=${url}&userId=${userId}&socialProfileId=${socialProfileId}&v=${Math.random()}`;
+            await $.get(view);
+        },
+        viewByContent: async (contentId, userId, socialProfileId) => {
+            const url = encodeURIComponent(location.href);
+            const path = new URL(location.href).pathname;
+            const view = `/views/physicalpages/bycontent/?path=${path}&contentId=${contentId}&userId=${userId}&socialProfileId=${socialProfileId}&url=${url}&v=${Math.random()}`;
+            await $.get(view);
+        },
     },
     editor: {
         add: (url, name, size, type) => {
@@ -110,6 +128,7 @@ var origami = {
             }
         },
     },
+
 };
 
 function OkToCookies() {

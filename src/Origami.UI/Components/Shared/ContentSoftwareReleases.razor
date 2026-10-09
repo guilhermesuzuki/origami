@@ -90,21 +90,26 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        this.AppFacade.RefreshingTheUI += this._onRefreshingTheUIAsync;
+        this.UserFacade.RefreshingTheUI += this._onRefreshingTheUIAsync;
     }
 
     public override void Dispose()
     {
-        this.AppFacade.RefreshingTheUI -= this._onRefreshingTheUIAsync;
+        this.UserFacade.RefreshingTheUI -= this._onRefreshingTheUIAsync;
         base.Dispose();
     }
 
-    private async void _onRefreshingTheUIAsync(object? sender, object e)
+    private async void _onRefreshingTheUIAsync(object? sender, StringEventArgs e)
     {
-        if (sender is not string[] key) return;
-        if (key.Length != 2) return;
-        if (key[0] != this.RequestContext.ConnectionId) return;
-        if (key[1] != OrigamiConstants.Events.UpdateCounters) return;
+        if (e.Value.Like(OrigamiConstants.Events.UpdateCounters) == true)
+        {
+            await this.InvokeAsync(this.StateHasChanged);
+        }
+    }
+
+    protected override async Task DownloadFile(OrigamiSystemFile file)
+    {
+        await base.DownloadFile(file);
         await this.InvokeAsync(this.StateHasChanged);
     }
 }

@@ -362,11 +362,6 @@
     /// </summary>
     private IEnumerable<DirectoryContext>? _directories;
 
-    /// <summary>
-    /// All hits from the search, if any
-    /// </summary>
-    private IList<IId>? _hits;
-
     private void _addFolder()
     {
         try
@@ -569,7 +564,6 @@
 
     private void _openFolder(string webPath)
     {
-        this._hits = null;
         this.VirtualPath = $"/{webPath.Trim('/')}/";
         this._loadFiles(true);
         this._loadDirectories(true);

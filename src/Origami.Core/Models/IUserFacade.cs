@@ -6,7 +6,7 @@
         IBlogId,
         IDisposable
     {
-        event EventHandler<string> RefreshingTheUI;
+        event EventHandler<StringEventArgs> RefreshingTheUI;
 
         /// <summary>
         /// Blogs the user has access to. This is used for the blog switcher in the admin area and for filtering content in the front-end. It should be set when the user logs in and whenever their permissions change.

@@ -477,14 +477,7 @@
                                     @if (context.Item.AuthorId != Guid.Empty)
                                     {
                                         var author = this.Super.Users.ReadFromCache().Id(context.Item.AuthorId);
-                                        <ul class="inline-list">
-                                            <li class="pe-1" style="width:50px;">
-                                                <HeaderImageCard Entity="author"></HeaderImageCard>
-                                            </li>
-                                            <li>
-                                                <UserHeader Entity="author"></UserHeader>
-                                            </li>
-                                        </ul>
+                                        <UserHeaderInline Entity="author"></UserHeaderInline>
                                     }
                                 </CellTemplate>
                             </TemplateColumn>
@@ -715,7 +708,7 @@
                 var key = string.Empty;
                 using (var transaction = new TransactionScope())
                 {
-                    var ctx = new DataOperationContext<OrigamiUser>(this.UserFacade.User, this.Entity);
+var ctx = new DataOperationContext<OrigamiUser>(this.UserFacade.User, this.Entity);
                     var hub = this.Super.Users.ResetPassword(ctx, true);
                     if (hub.Ok == false)
                     {
@@ -725,15 +718,8 @@
                     key = hub.Entity;
                     transaction.Complete();
                 }
-                var client = this.GetHttpClient();
-                var response = await client.GetAsync($"/email/password/reset/{key}");
-                if (response.IsSuccessStatusCode == true)
-                {
-                    //reads the response content
-                    var html = await response.Content.ReadAsStringAsync();
-                    //send the email
-                    this.UserFacade.Result = this.Super.Emails.Send(Text.Original("Password reset link"), new() { HtmlBody = html }, [this.Entity.Email]);
-                }
+                var html = await this.JSRuntime.InvokeAsync<string>("$.get", $"/email/password/reset/{key}");
+                this.UserFacade.Result = this.Super.Emails.Send(Text.Original("Password reset link"), new() { HtmlBody = html }, new[] { this.Entity.Email });
             }
         }
         catch (Exception ex)

@@ -28,10 +28,13 @@ using Origami.Core.Jobs;
 using Origami.Core.Models;
 using Origami.Core.Models.Jwt;
 using Origami.Core.Validators;
+using Origami.UI.Components;
+using Polly;
 using Quartz;
 using Serilog;
 using System.Buffers;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.RateLimiting;
 using UAParser;
@@ -202,7 +205,7 @@ namespace Origami.UI
             });
 
             builder.Services.AddScoped<CustomHeadContentService>();
-            builder.Services.AddSingleton<CircuitHandler, OrigamiCircuitHandler>();
+            builder.Services.AddScoped<CircuitHandler, OrigamiCircuitHandler>();
             builder.Services.AddScoped<HtmlRenderer>();
 
             builder.Services.AddSingleton<IValidator<HubContentPage>, HubContentPageValidator>();
@@ -257,7 +260,7 @@ namespace Origami.UI
 
             builder.Services.Configure<ForwardedHeadersOptions>(options =>
             {
-                options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+                options.ForwardedHeaders = ForwardedHeaders.All;
                 options.KnownProxies.Add(System.Net.IPAddress.Loopback); // 127.0.0.1
                 options.KnownProxies.Add(System.Net.IPAddress.IPv6Loopback); // ::1
             });
@@ -294,8 +297,6 @@ namespace Origami.UI
             {
                 options.WaitForJobsToComplete = true;
             });
-
-            builder.Services.AddSingleton(TimeProvider.System);
 
             if (OperatingSystem.IsWindows()) builder.Host.UseWindowsService();
 
@@ -567,9 +568,9 @@ namespace Origami.UI
         /// <param name="tracking"></param>
         /// <param name="url"></param>
         /// <param name="referrer"></param>
-        public static void TrackFields(this HttpContext httpContext, IMemoryCache memoryCache, BaseTracking tracking, string url, string referrer = "")
+        public static void TrackFields(this RequestContext requestContext, IMemoryCache memoryCache, BaseTracking tracking, string url, string referrer = "")
         {
-            var dd = httpContext.Request.GetDeviceDetector();
+            var dd = requestContext.GetDeviceDetector();
 
             // important!
             dd.Parse();
@@ -577,8 +578,8 @@ namespace Origami.UI
             tracking.DateCreated = DateTime.UtcNow;
             tracking.Url = url;
             tracking.UrlReferrer = referrer;
-            tracking.UserAgent = httpContext.Request.Header("User-Agent");
-            tracking.HostAddress = httpContext.Connection.RemoteIpAddress?.ToString() ?? string.Empty;
+            tracking.UserAgent = requestContext.UserAgent ?? string.Empty;
+            tracking.HostAddress = requestContext.IpAddress ?? string.Empty;
             tracking.IsMobileDevice = dd.IsTablet() || dd.IsMobile();
             tracking.IsBot = dd.IsBot();
 
@@ -587,7 +588,7 @@ namespace Origami.UI
             tracking.Platform = client.OS.Family;
             tracking.Browser = client.UA.Family;
 
-            var key = $"Origami_UserLocation_{httpContext.Connection.Id}";
+            var key = $"Origami_UserLocation_{requestContext.ConnectionId}";
             tracking.Location = memoryCache.Get<Location>(key);
         }
 
@@ -680,6 +681,24 @@ namespace Origami.UI
                         await context.Response.WriteAsync(xml, cts.Token).ConfigureAwait(false);
                     });
             }
+
+            app.MapGet("/debug/request", (IHttpContextAccessor accessor, IMyMemoryCache memoryCache) => 
+            {
+                var key = $"Origami_UserLocation_{accessor.HttpContext!.Connection.Id}";
+                return new RequestContext()
+                {
+                    ConnectionId = accessor.HttpContext!.Connection.Id,
+                    Headers = accessor.HttpContext!.Request.Headers
+                        .Where(x => x.Key.StartsWith("Sec-CH-", StringComparison.OrdinalIgnoreCase))
+                        .ToDictionary(a => a.Key, a => a.Value.ToString()),
+                    Host = accessor.HttpContext!.Request.Host.Value,
+                    IpAddress = accessor.HttpContext!.Connection.RemoteIpAddress?.ToString(),
+                    Referrer = accessor.HttpContext!.Request.Headers["Referer"].ToString(),
+                    Scheme = accessor.HttpContext!.Request.Scheme,
+                    UserAgent = accessor.HttpContext!.Request.Headers["User-Agent"].ToString(),
+                    Location = memoryCache.Get<Location>(key),
+                };
+            });
 
             return app;
         }

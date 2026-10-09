@@ -224,13 +224,12 @@
             <div class="col-12 col-xxl-6 mb-3">
                 <button class="border border-2 h-100 w-100 p-3 bg-light border-info">
                     <div class="text-center">
-                        @if (this.GetUserLocation() != null)
+                        @if (this.UserLocation != null)
                         {
-                            var location = this.GetUserLocation()!;
                             <div class="">
                                 <i class="fa-solid fa-map-location-dot"></i>
-                                <div class="ellipsis" style="-webkit-line-clamp: 2;">@location.Country, @location.Region, @location.City</div>
-                                <div class="x-small mb-2" style="line-height:10px;">@location.Provider</div>
+                                <div class="ellipsis" style="-webkit-line-clamp: 2;">@this.UserLocation.Country, @this.UserLocation.Region, @this.UserLocation.City</div>
+                                <div class="x-small mb-2" style="line-height:10px;">@this.UserLocation.Provider</div>
                             </div>
                         }
                         else
@@ -251,6 +250,13 @@
 
     protected bool DisableEnterMaintenanceModeButton => this.Super.Settings.GetSettings().MaintenanceMode == true;
     protected bool DisableLeaveMaintenanceModeButton => this.Super.Settings.GetSettings().MaintenanceMode == false;
+    protected Location? UserLocation { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await this.UserLocationAsync(firstRender);
+        await base.OnAfterRenderAsync(firstRender);
+    }
 
     protected async Task EnterMaintenanceMode()
     {
@@ -469,40 +475,18 @@
         this.GhostOfTheNavigator.NavigateTo($"/softwarereleases");
     }
 
-    private async Task RegenerateNanoIds()
-    {
-        var answer = await this.DialogService.ShowMessageBoxAsync(
-            this.Text.Upper("Regenerate nano-ids"),
-            this.Text.Original("Are you sure?"),
-            yesText: this.Text.Lower("Yes"),
-            noText: this.Text.Lower("No"));
-
-        if (answer.GetValueOrDefault() == true)
-        {
-            try
-            {
-                using (var transaction = new TransactionScope())
-                {
-                    this.UserFacade.Result = _superRepository.RegenerateNanoIds();
-                    transaction.Complete();
-                }
-                this.GhostOfTheNavigator.NavigateTo(this.GhostOfTheNavigator.Uri, forceLoad: true);
-            }
-            catch (Exception ex)
-            {
-                this.UserFacade.Result = new(ex);
-                return;
-            }
-        }
-    }
-
-    protected Location? GetUserLocation()
-    {
-        return _memoryCache.Get<Location?>($"Origami_UserLocation_{this.RequestContext.ConnectionId}");
-    }
-
     private void GoToBackupAndRestore()
     {
         this.GhostOfTheNavigator.NavigateTo($"/backups");
+    }
+
+    protected async Task UserLocationAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var rc = await this.JSRuntime.InvokeAsync<RequestContext?>("$.get", "/debug/request");
+            this.UserLocation = rc?.Location;
+            await this.InvokeAsync(this.StateHasChanged);
+        }
     }
 }

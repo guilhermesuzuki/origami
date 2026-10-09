@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 using Origami.Core;
 using Origami.Core.Data;
@@ -93,155 +95,44 @@ namespace Origami.UI
             if (firstRender == false) return;
             if (this.UserFacade.IncognitoMode == true) return;
             if (this.ShouldTrackUserVisit == false) return;
-            _ = await this.PhysicalPagesByPathAsync();
+            await this.PhysicalPagesByPathAsync();
         }
 
         /// <summary>
         /// TODO: add texts to RESX files
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="contentId"></param>
         /// <returns></returns>
-        protected async Task<Result> PhysicalPagesByContentAsync(Guid id)
+        protected async Task PhysicalPagesByContentAsync(Guid contentId)
         {
-            var absolutePath = new Uri(this.GhostOfTheNavigator.Uri).AbsolutePath;
-            if (absolutePath.Has() == false) absolutePath = "/";
+            await this.JSRuntime.InvokeAsync<RequestContext>(
+                "origami.physicalpages.viewByContent",
+                contentId, 
+                this.UserFacade.UserId, 
+                this.UserFacade.SocialProfileId)
+                .ConfigureAwait(false);
 
-            using var db = await this.DbContextFactory.CreateDbContextAsync();
-            var pages = from p in db.Set<OrigamiPhysicalPage>().AsNoTracking() where p.Path.Equals(absolutePath) == true select p;
-
-            var page = await pages.FirstOrDefaultAsync();
-            if (page == null)
-            {
-                page = new()
-                {
-                    Id = Guid.NewGuid(),
-                    Path = absolutePath,
-DateCreated = this.Chronos.GetUtcNow().UtcDateTime,
-                };
-
-                using (var transaction = new TransactionScope())
-                {
-                    var result = this.Super.PhysicalPages.SmartSave(page.GetContext(), false);
-                    if (result.Ok == false)
-                    {
-                        return new() { Error = Text.Original("Internal server error") };
-                    }
-                    transaction.Complete();
-                }
-            }
-
-            if (page != null)
-            {
-                var view = new OrigamiPhysicalPageView
-                {
-                    Id = Guid.NewGuid(),
-                    PhysicalPageId = page.Id,
-                    Admin = this.AppFacade.Admin,
-                    ContentId = id,
-                    DateCreated = this.Chronos.GetUtcNow().UtcDateTime,
-                };
-                var ok = this._fill(view);
-                if (ok)
-                {
-                    this.Super.PhysicalPageViews.SmartSave(view.GetContext(), false);
-                    this.AppFacade.RefreshUI(this.RequestContext.ConnectionId ?? string.Empty, OrigamiConstants.Events.UpdateCounters);
-                    return new();
-                }
-
-                return new() { Error = Text.Original("Metadata error (HttpContext null)") };
-            }
-
-            return new() { Error = Text.Original("Page not found") };
+            this.UserFacade.RefreshTheUI(OrigamiConstants.Events.UpdateCounters);
         }
 
         /// <summary>
         /// TODO: add texts to RESX files
         /// </summary>
         /// <returns></returns>
-        protected async Task<Result> PhysicalPagesByPathAsync()
+        protected async Task PhysicalPagesByPathAsync()
         {
-            var absolutePath = new Uri(this.GhostOfTheNavigator.Uri).AbsolutePath;
-            if (absolutePath.Has() == false) absolutePath = "/";
+            await this.JSRuntime.InvokeAsync<RequestContext>(
+                "origami.physicalpages.viewByPath",
+                this.UserFacade.UserId,
+                this.UserFacade.SocialProfileId)
+                .ConfigureAwait(false);
 
-            using var db = await this.DbContextFactory.CreateDbContextAsync();
-
-            var page = await db.Set<OrigamiPhysicalPage>().AsNoTracking().FirstOrDefaultAsync(x => x.Path.Equals(absolutePath) == true);
-            if (page == null)
-            {
-                page = new()
-                {
-                    Id = Guid.NewGuid(),
-                    Path = absolutePath,
-                    DateCreated = Chronos.GetUtcNow().UtcDateTime,
-                };
-                using (var transaction = new TransactionScope())
-                {
-                    var result = this.Super.PhysicalPages.SmartSave(page.GetContext(), false);
-                    if (result.Ok == false)
-                    {
-                        return new() { Error = Text.Original("Internal server error") };
-                    }
-                    transaction.Complete();
-                }
-            }
-            if (page != null)
-            {
-                var view = new OrigamiPhysicalPageView
-                {
-                    Id = Guid.NewGuid(),
-                    PhysicalPageId = page.Id,
-                    Admin = this.AppFacade.Admin,
-                    DateCreated = this.Chronos.GetUtcNow().Date,
-                };
-                var ok = this._fill(view);
-                if (ok)
-                {
-                    this.Super.PhysicalPageViews.SmartSave(view.GetContext(), false);
-                    this.AppFacade.RefreshUI(this.RequestContext.ConnectionId ?? string.Empty, OrigamiConstants.Events.UpdateCounters);
-                    return new();
-                }
-
-                return new() { Error = Text.Original("Metadata error (HttpContext null)") };
-            }
-
-            return new() { Error = Text.Original("Page not found") };
+            this.UserFacade.RefreshTheUI(OrigamiConstants.Events.UpdateCounters);
         }
 
         protected virtual void SetPageTitle()
         {
             this.PageTitle.SetTitle();
-        }
-
-        /// <summary>
-        /// Fills the <paramref name="tracking"/> with request information
-        /// </summary>
-        /// <param name="tracking"></param>
-        private bool _fill(BaseTracking tracking)
-        {
-            var dd = this.RequestContext.GetDeviceDetector();
-
-            // important!
-            dd.Parse();
-
-            tracking.Url = this.GhostOfTheNavigator.Uri;
-            tracking.UrlReferrer = this.RequestContext.Referrer;
-            tracking.UserAgent = this.RequestContext.UserAgent ?? string.Empty;
-            tracking.HostAddress = this.RequestContext.IpAddress ?? string.Empty;
-            tracking.IsMobileDevice = dd.IsTablet() || dd.IsMobile();
-            tracking.IsBot = dd.IsBot();
-
-            tracking.UserId = this.UserFacade.User.New == false ? this.UserFacade.User.Id : null;
-            tracking.SocialProfileId = this.UserFacade.SocialProfile.New == false ? this.UserFacade.SocialProfile.Id : null;
-
-            var client = Parser.GetDefault().Parse(tracking.UserAgent);
-
-            tracking.Platform = client.OS.Family;
-            tracking.Browser = client.UA.Family;
-
-            var key = $"Origami_UserLocation_{this.RequestContext.ConnectionId}";
-            tracking.Location = this.MemoryCache.Get<Location>(key);
-
-            return true;
         }
     }
 }

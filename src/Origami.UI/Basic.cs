@@ -3,13 +3,16 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 using MudBlazor;
 using Origami.Core;
 using Origami.Core.Data;
 using Origami.Core.Models;
 using Origami.Core.Models.FileSystem;
+using Origami.UI.Components;
 using System.Globalization;
+using System.Net.Http.Json;
 
 namespace Origami.UI
 {
@@ -42,10 +45,9 @@ namespace Origami.UI
         [Inject] protected IDbContextFactory<OrigamiDbContext> DbContextFactory { get; set; } = null!;
         [Inject] protected IDialogService DialogService { get; set; } = null!;
         [Inject] protected NavigationManager GhostOfTheNavigator { get; set; } = null!;
-        [Inject] protected IHttpContextAccessor HttpContextAccessor { get; set; } = null!;
         [Inject] protected IJSRuntime JSRuntime { get; set; } = null!;
+        [Inject] protected ILogger<Basic> Logger { get; set; } = null!;
         [Inject] protected IMyMemoryCache MemoryCache { get; set; } = null!;
-        protected RequestContext RequestContext { get; set; } = new();
         [Inject] protected ISuperRepository Super { get; set; } = null!;
         [Inject] protected Text Text { get; set; } = null!;
         [Inject] protected ITheCreator TheCreator { get; set; } = null!;
@@ -57,6 +59,7 @@ namespace Origami.UI
         {
             this.UserFacade.Changed -= CurrentBlogChangedMustRefreshUI;
         }
+
         public OrigamiBlog GetBlogFromSlug()
         {
             if (this.BlogSlug.Has() == true)
@@ -79,34 +82,15 @@ namespace Origami.UI
 
         protected async void CurrentBlogChangedMustRefreshUI(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName?.Equals(nameof(IUserFacade.BlogId), StringComparison.InvariantCultureIgnoreCase) == true)
+            if (e.PropertyName?.Like(nameof(IUserFacade.BlogId)) == true)
             {
                 await this.InvokeAsync(this.StateHasChanged);
             }
         }
 
-        protected async Task DownloadFile(OrigamiSystemFile file)
+        protected virtual async Task DownloadFile(OrigamiSystemFile file)
         {
             await this.JSRuntime.InvokeVoidAsync("origami.common.downloadFileFromUrl", file.WebPath);
-        }
-
-        /// <summary>
-        /// For self-calling the application
-        /// </summary>
-        /// <returns></returns>
-        protected virtual HttpClient GetHttpClient()
-        {
-            var baseUri = this.HttpContextAccessor.HttpContext?.Request.Scheme + "://" +
-                          this.HttpContextAccessor.HttpContext?.Request.Host.Value;
-
-            var client = new HttpClient
-            {
-                BaseAddress = new Uri(baseUri),
-                DefaultRequestVersion = new Version(2, 0),
-                Timeout = TimeSpan.FromSeconds(30)
-            };
-
-            return client;
         }
 
         /// <summary>
@@ -122,15 +106,6 @@ namespace Origami.UI
         {
             base.OnInitialized();
             this.UserFacade.Changed += CurrentBlogChangedMustRefreshUI;
-
-            this.RequestContext = new();
-            this.RequestContext.ConnectionId = this.HttpContextAccessor.HttpContext?.Connection.Id;
-            this.RequestContext.Headers = this.HttpContextAccessor.HttpContext?.Request.Headers.ToDictionary(x => x.Key, x => x.Value.ToString());
-            this.RequestContext.Host = this.HttpContextAccessor.HttpContext?.Request.Host.ToString();
-            this.RequestContext.IpAddress = this.HttpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
-            this.RequestContext.Referrer = this.HttpContextAccessor.HttpContext?.Request.Headers["Referer"].ToString();
-            this.RequestContext.Scheme = this.HttpContextAccessor.HttpContext?.Request.Scheme;
-            this.RequestContext.UserAgent = this.HttpContextAccessor.HttpContext?.Request.Headers["User-Agent"].ToString();
         }
 
         /// <summary>
