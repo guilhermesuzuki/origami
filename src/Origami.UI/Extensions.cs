@@ -688,7 +688,9 @@ namespace Origami.UI
                 return new RequestContext()
                 {
                     ConnectionId = accessor.HttpContext!.Connection.Id,
-                    Headers = accessor.HttpContext!.Request.Headers.ToDictionary(a => a.Key, a => a.Value.ToString()),
+                    Headers = accessor.HttpContext!.Request.Headers
+                        .Where(x => x.Key.StartsWith("Sec-CH-", StringComparison.OrdinalIgnoreCase))
+                        .ToDictionary(a => a.Key, a => a.Value.ToString()),
                     Host = accessor.HttpContext!.Request.Host.Value,
                     IpAddress = accessor.HttpContext!.Connection.RemoteIpAddress?.ToString(),
                     Referrer = accessor.HttpContext!.Request.Headers["Referer"].ToString(),
