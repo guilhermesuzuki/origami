@@ -106,4 +106,10 @@
             await this.InvokeAsync(this.StateHasChanged);
         }
     }
+
+    protected override async Task DownloadFile(OrigamiSystemFile file)
+    {
+        await base.DownloadFile(file);
+        await this.InvokeAsync(this.StateHasChanged);
+    }
 }

@@ -88,7 +88,7 @@ namespace Origami.UI
             }
         }
 
-        protected async Task DownloadFile(OrigamiSystemFile file)
+        protected virtual async Task DownloadFile(OrigamiSystemFile file)
         {
             await this.JSRuntime.InvokeVoidAsync("origami.common.downloadFileFromUrl", file.WebPath);
         }
