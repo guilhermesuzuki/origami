@@ -73,7 +73,7 @@ namespace Origami.UI.Controllers
                 return Ok(new RequestContext
                 {
                     ConnectionId = HttpContext.Connection.Id,
-                    Headers = HttpContext.Request.Headers.ToDictionary(x => x.Key, x => x.Value.ToString()),
+Headers = null,
                     Host = HttpContext.Request.Host.Value,
                     IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString(),
                     Referrer = HttpContext.Request.Headers.Referer.ToString(),
