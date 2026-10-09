@@ -48,7 +48,6 @@ namespace Origami.UI
         [Inject] protected IJSRuntime JSRuntime { get; set; } = null!;
         [Inject] protected ILogger<Basic> Logger { get; set; } = null!;
         [Inject] protected IMyMemoryCache MemoryCache { get; set; } = null!;
-        [Inject] protected RazorComponentRenderer RazorComponentRenderer { get; set; } = null!;
         [Inject] protected ISuperRepository Super { get; set; } = null!;
         [Inject] protected Text Text { get; set; } = null!;
         [Inject] protected ITheCreator TheCreator { get; set; } = null!;
