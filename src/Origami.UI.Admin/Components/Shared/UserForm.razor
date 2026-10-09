@@ -708,7 +708,7 @@
                 var key = string.Empty;
                 using (var transaction = new TransactionScope())
                 {
-                    var ctx = new DataOperationContext<OrigamiUser>(this.Entity, this.Entity);
+var ctx = new DataOperationContext<OrigamiUser>(this.UserFacade.User, this.Entity);
                     var hub = this.Super.Users.ResetPassword(ctx, true);
                     if (hub.Ok == false)
                     {
