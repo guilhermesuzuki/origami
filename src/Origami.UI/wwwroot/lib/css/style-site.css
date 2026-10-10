@@ -82,7 +82,7 @@ html body .reaction-selected { border: 1px solid var(--site-highlight) !importan
 
 .login-on-the-fly * { color:black!important; }
 
-.tox.tox-tinymce-aux { z-index: 20000!important; }
+.tox.tox-tinymce-aux, .process-result, .email-status { z-index: 20000!important; }
 
 @media (max-width: 576px) {
     html body .footer { display: block !important; }
