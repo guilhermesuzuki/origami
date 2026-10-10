@@ -16,8 +16,14 @@
 
         public List<OrigamiContentHistory> Histories { get; set; } = [];
 
+        /// <summary>
+        /// Dummy implementation to satisfy IHubContent interface, since the actual ID is stored in the Entity
+        /// </summary>
         public Guid Id { get => this.Root.Id; set => this.Root.Id = value; }
 
+        /// <summary>
+        /// Necessary implementation of the INanoId interface, since the actual NanoId is stored in the Entity
+        /// </summary>
         public string NanoId => this.Root.NanoId;
 
         public List<OrigamiContentRating> Ratings { get; set; } = [];
@@ -58,16 +64,6 @@
         public T? Entity { get; set; } = Activator.CreateInstance<T>();
 
         
-
-        /// <summary>
-        /// Dummy implementation to satisfy IHubContent interface, since the actual ID is stored in the Entity
-        /// </summary>
-        public Guid Id { get => Entity.Id; set => Entity.Id = value; }
-
-        /// <summary>
-        /// Necessary implementation of the INanoId interface, since the actual NanoId is stored in the Entity
-        /// </summary>
-        public string NanoId => Entity.NanoId;
 
         /// <summary>
         /// Parent element of the current object. This is used to establish a hierarchy or relationship between content items.
