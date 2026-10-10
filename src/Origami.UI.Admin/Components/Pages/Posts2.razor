@@ -59,7 +59,7 @@
                             <TemplateColumn Title="@Text.Upper("Title")">
                                 <CellTemplate>
                                     <div class="cursor-pointer" @onclick="() => OnEdit(context.Item)">
-                                        <ContentTitleColumn Entity="context.Item.Entity"></ContentTitleColumn>
+                                        <ContentHeaderInline Entity="context.Item.Entity"></ContentHeaderInline>
                                     </div>
                                 </CellTemplate>
                             </TemplateColumn>
@@ -70,7 +70,7 @@
                             </TemplateColumn>
                             <TemplateColumn Title="@Text.Upper("Categories")" Sortable="false" Filterable="false" CellClass="col-2 categories">
                                 <CellTemplate>
-                                    @foreach (var category in this.Super.GetCategories(context.Item.Entity))
+                                    @foreach (var category in this.Super.GetCategories(context.Item.Entity ?? new()))
                                     {
                                         <div class="wrapper p-2 mb-1 me-1 shadow-sm border d-inline-block">
                                             <CategoryHeaderInline Class="" Entity="category"></CategoryHeaderInline>
@@ -80,7 +80,7 @@
                             </TemplateColumn>
                             <TemplateColumn Title="@Text.Upper("Published")" Sortable="false" Filterable="false" CellClass="col-1 text-center">
                                 <CellTemplate>
-                                    @if (context.Item.Entity.IsPublished)
+                                    @if (context.Item.Entity?.IsPublished ?? false)
                                     {
                                         <i class="fa-solid fa-thumbs-up"></i>
                                         <div class="small">@context.Item.Entity.DatePublished</div>
@@ -90,13 +90,13 @@
                             <TemplateColumn Title="@Text.Upper("Date")" Sortable="false" Filterable="false" CellClass="col-1 text-center">
                                 <CellTemplate>
                                     <i class="fa-solid fa-calendar"></i>
-                                    <div class="small">@context.Item.Entity.GetDate()</div>
+                                    <div class="small">@context.Item.Entity?.GetDate()</div>
                                 </CellTemplate>
                             </TemplateColumn>
                             <TemplateColumn Title="@Text.Upper("Actions")" Sortable="false" Filterable="false" CellClass="col-1 text-center">
                                 <CellTemplate>
                                     <div class="btn-group-vertical w-100">
-                                        <button class="btn btn-light" title="@Text.Original("Edit")" @onclick="() => this.SelectedEntity = context.Item">
+                                        <button class="btn btn-light" title="@Text.Original("Edit")" @onclick="() => OnEdit(context.Item)">
                                             <i class="fa-solid fa-pen-to-square"></i>
                                         </button>
                                     </div>
@@ -119,7 +119,7 @@
             </TitleContent>
             <DialogContent>
                 <div class="position-relative pt-3 pb-3" style="width: 1700px; height: 1200px; max-width:100%; max-height: 100%;">
-                    <PostForm2 Entity="this.SelectedEntity" Class="w-100 h-100"></PostForm2>
+                    <PostForm2 Entity="this.SelectedEntity" Class="w-100 h-100" Saved="this.EntitySaved" Cancelled="this.EntityCancelled" Created="this.EntityCreated"></PostForm2>
                 </div>
             </DialogContent>
         </MudDialog>

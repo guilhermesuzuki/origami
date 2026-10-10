@@ -162,7 +162,7 @@ namespace Origami.UI.Admin
         protected virtual void EntitySaved(T2 entity)
         {
             DataGrid.ReloadServerData();
-            SelectedEntity = entity.Clone();
+            SelectedEntity = null;
         }
 
         /// <summary>
@@ -331,11 +331,6 @@ namespace Origami.UI.Admin
             this.SetEntityFromQueryString();
         }
 
-        protected virtual void OnSearchResultSelected(T1 entity)
-        {
-            SelectedEntity = this.HubContentRepository.Get(entity).Clone();
-        }
-
         /// <summary>
         /// Promote the selected page to front-page
         /// </summary>
@@ -404,7 +399,6 @@ namespace Origami.UI.Admin
         /// <returns></returns>
         protected virtual async Task ReloadDataGridAsync()
         {
-            SelectedEntity = TheCreator.Create<T2>();
             SelectedEntities = new();
             await DataGrid.ReloadServerData();
         }
