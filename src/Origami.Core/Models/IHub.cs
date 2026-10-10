@@ -1,6 +1,6 @@
 ﻿namespace Origami.Core.Models
 {
-    public interface IHub<T> : IEntity<T>, IId, INanoId, IBlogIdNull
+    public interface IHub<T> : IEntityNull<T>, IId, INanoId, IBlogIdNull
     {
 
     }
