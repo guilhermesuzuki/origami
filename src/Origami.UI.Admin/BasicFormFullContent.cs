@@ -55,15 +55,13 @@ namespace Origami.UI.Admin
             this.Entity = HubContentRepository.Get(Entity.Entity).Clone();
         }
 
-        public void UndoChanges2()
+        public void UndoNew()
         {
             if (this.Entity is INew { New: true })
             {
                 this.ShowParentSelector = false;
                 this.Entity = this.TheCreator.Create<T2>();
-                return;
             }
-            this.UndoChanges();
         }
 
         /// <summary>
