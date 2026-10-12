@@ -18,7 +18,7 @@
                               Adornment="Adornment.Start"
                               Value="@(Text.Lower(Entity.Entity.IsCommentEnabled.YesNo()))"
                               HelperText="@Text.Lower("Are comments enabled?")"
-                              Class="cursor-pointer ms-2"
+                              Class="cursor-pointer"
                               title="@Text.Lower("Click here to change it")"
                               @onclick="() => this.Entity.Entity.IsCommentEnabled = !this.Entity.Entity.IsCommentEnabled"></MudTextField>
             </div>
@@ -27,7 +27,7 @@
                     Immediate="true"
                     Value="@(Text.Lower(Entity.Entity.IsDraft.YesNo()))"
                     HelperText="@Text.Lower("Still a draft?")"
-                    Class="cursor-pointer yes-no ms-2"
+                    Class="cursor-pointer yes-no"
                     title="@Text.Lower("Click here to change it")"
                     @onclick="() => this.Entity.Entity.IsDraft = !this.Entity.Entity.IsDraft.GetValueOrDefault()"></MudTextField>
             </div>

@@ -131,21 +131,5 @@
 
     protected override string DefaultOrdering => $"{nameof(OrigamiPage.Title)}";
 
-    /// <summary>
-    /// Can the user delete the selected entities?
-    /// </summary>
     protected virtual bool DisableTheFrontPageButton => SelectedEntities.Any() == false;
-
-    protected override IEnumerable<OrigamiPage> GetItems()
-    {
-        if (this.IncludeDeletedEntitiesInDataGrid)
-        {
-            return base.GetItems();
-        }
-
-        return from x in base.GetItems()
-               where x.IsDeleted == false
-               where this.Super.IsParentDeleted(x) == false
-               select x;
-    }
 }

@@ -57,7 +57,7 @@ public class WhatHappensNext : IWhatHappensNext
             {
                 OrigamiCategory => $"/categories?nanoid={(e.Entity as INanoId)?.NanoId}",
                 OrigamiContentTag => $"/tags?nanoid={(e.Entity as INanoId)?.NanoId}",
-                OrigamiPage => $"/pages?nanoid={(e.Entity as INanoId)?.NanoId}",
+                OrigamiPage => $"/new/pages?nanoid={(e.Entity as INanoId)?.NanoId}",
                 OrigamiPost => $"/new/posts?nanoid={(e.Entity as INanoId)?.NanoId}",
                 OrigamiQuickNote => $"/quicknotes?nanoid={(e.Entity as INanoId)?.NanoId}",
                 OrigamiRole => $"/roles?nanoid={(e.Entity as INanoId)?.NanoId}",
