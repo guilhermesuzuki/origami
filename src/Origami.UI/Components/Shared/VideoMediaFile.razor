@@ -7,7 +7,7 @@
     <div class="video-media-file @Class">
         @if (Entity.MediaFile.WebPath.Has() == true && _fileRepository.FileExists(this.Entity.MediaFile.WebPath) == true)
         {
-            <video class="w-100 border" src="@(Entity.MediaFile.WebPath)" style="height:auto;" controls>
+            <video class="w-100" src="@(Entity.MediaFile.WebPath)" style="height:auto;" controls>
                 @foreach (var subtitle in this.Entity.GetSubtitles()) 
                 {
                     <track src="@subtitle.WebPath" kind="subtitles" srclang="@subtitle.Language?.ToLower().Split('-')[0]" label="@subtitle.FileName" />
@@ -23,7 +23,7 @@
         }
         else
         {
-            <img class="w-100 border no-video" src="@OrigamiConstants.NoVideo" style="height:auto" />
+            <img class="w-100 no-video" src="@OrigamiConstants.NoVideo" style="height:auto" />
         }
     </div>
 }
