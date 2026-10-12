@@ -4,9 +4,9 @@
 @if (Entity is not null && Entity.Root is not null)
 {
     <div class="content-preview @Class">
-        <ContentHeader2 Entity="@Entity.Root" OnUserHasRated="() => this.StateHasChanged()" ShowRelatedContent="true"></ContentHeader2>
+        <ContentHeader2 Entity="@Entity" OnUserHasRated="() => this.StateHasChanged()" ShowRelatedContent="true"></ContentHeader2>
         <ContentHtml Class="mt-3 p-4 border shadow-sm" Entity="Entity.Root"></ContentHtml>
-    </div>    
+    </div>
 }
 
 @code {

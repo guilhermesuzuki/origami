@@ -1,17 +1,13 @@
 ﻿@inherits Basic
-@implements IEntityNull<OrigamiContent>
+@implements IEntityNull<HubContent>
 
-@if (this.Entity != null)
+@if (this.Entity != null && this.Entity.Root != null)
 {
-    var header = this.Entity.Get().HeaderImage.NoHeader();
-    var comments = this.Super.ContentComments.GetComments(Entity);
-
-    var rating = Math.Round(this.Super.ContentRatings.CalculateRating(this.Entity), 1, MidpointRounding.ToEven);
-    var ratings = this.Super.ContentRatings.Ratings(Entity).Count();
-
+    var header = this.Entity.Root.Get().HeaderImage.NoHeader();
+    var comments = this.Entity.Comments;
     <AuthorHeaderLite Entity="this.Entity"></AuthorHeaderLite>
-    <div class="content-header position-relative shadow-sm cursor-pointer @Class" lang="@Entity.LanguageWrittenOn">
-        @if (this.Entity is OrigamiQuickNote quickNote)
+    <div class="content-header position-relative shadow-sm cursor-pointer @Class" lang="@Entity.Root.LanguageWrittenOn">
+        @if (this.Entity.Root is OrigamiQuickNote quickNote)
         {
             <div class="content-header-image content-header-background" style="background: @quickNote.Background;"></div>
         }
@@ -22,26 +18,26 @@
         <div class="content-header-title position-absolute overflow-auto zeroes">
             <ul class="inline-list position-absolute w-100 z-index-middle cursor-pointer p-2" style="top:0;">
                 <li class="text-left" style="width: 50px;">
-                    <ContentIcon Entity="Entity"></ContentIcon>
+                    <ContentIcon Entity="this.Entity.Root"></ContentIcon>
                 </li>
                 <li class="text-center">
-                    <Draft Entity="this.Entity"></Draft>
+                    <Draft Entity="this.Entity.Root"></Draft>
                 </li>
                 <li class="text-right" style="width: 50px;">
                 </li>
             </ul>
             <div class="p-3">
                 <div class="content-header-title-tinyheader small d-inline-flex align-items-center">
-                    <span class="language d-inline-block @Entity.Get().LanguageWrittenOn mx-1"></span>
+                    <span class="language d-inline-block @Entity.Root.Get().LanguageWrittenOn mx-1"></span>
                 </div>
                 <div class="dummy" style="margin-bottom: -8px;"></div>
-                @if (this.Entity.New == false)
+                @if (this.Entity.Root.New == false)
                 {
-                    <ContentRating Entity="this.Entity" OnUserHasRated="OnUserHasRated"></ContentRating>    
+                    <ContentRating Entity="this.Entity.Root" OnUserHasRated="OnUserHasRated"></ContentRating>    
                 }
-                @if (Entity.Title.Has() == true)
+                @if (Entity.Root.Title.Has() == true)
                 {
-                    <span class="title fw-bold text-uppercase focusable ellipsis" style="-webkit-line-clamp:5!important;" title="@Entity.Title">@Entity.Title</span>    
+                    <span class="title fw-bold text-uppercase focusable ellipsis" style="-webkit-line-clamp:5!important;" title="@Entity.Root.Title">@Entity.Root.Title</span>    
                 }
                 else
                 {
@@ -50,33 +46,33 @@
                 <div>
                     <span class="content-date-published pe-1" title="@Text.Original("Date published")">
                         <i class="fa-solid fa-calendar-day"></i>
-                        @Entity.DatePublished.Humanize()
+                        @Entity.Root.DatePublished.Humanize()
                     </span>
-                    @if (Entity.DateReleased.HasValue == true)
+                    @if (Entity.Root.DateReleased.HasValue == true)
                     {
                         <span class="content-date-released pe-1" title="@Text.Original("Date released")">
                             <i class="fa-solid fa-calendar-check"></i>
-                            @Entity.DateReleased.Humanize()
+                            @Entity.Root.DateReleased.Humanize()
                         </span>
                     }
-                    <ContentViewCounter Entity="Entity"></ContentViewCounter>
-                    <span class="content-comments pe-1 @(comments > 0 ? null : "d-none")">
+                    <ContentViewCounter Entity="Entity.Root"></ContentViewCounter>
+                    <span class="content-comments pe-1 @(comments.Any() ? null : "d-none")">
                         <i class="fa-solid fa-comment"></i>
-                        @comments
+                        @comments.Count()
                     </span>
                 </div>
                 <div class="content-tags mt-2 text-center">
-                    @foreach (var tag in this.Super.GetTags(Entity).OrderBy(x => x.Tag))
+                    @foreach (var tag in this.Entity.Tags.OrderBy(x => x.Tag))
                     {
-                        <ContentTag Entity="tag"></ContentTag>
+                        <span class="post-tag m-1 @Class d-inline-block text-uppercase focusable">@tag.Tag</span>
                     }
                 </div>
             </div>
-            @if (this.Entity.New == false)
+            @if (this.Entity.Root.New == false)
             {
                 <ul class="inline-list position-absolute w-100 z-index-middle p-2" style="bottom:0;align-items: end;">
                     <li class="text-left" style="width: 50px;">
-                        @if (Entity.IsCommentEnabled)
+                        @if (Entity.Root.IsCommentEnabled)
                         {
                             <AuthorizeView>
                                 <Authorized>
@@ -255,7 +251,7 @@
         <DialogContent>
             <div class="border shadow-lg position-relative">
                 <div class="overflow-auto text-center p-5">
-                    <ContentHeaderLite Entity="this.Entity"></ContentHeaderLite>
+                    <ContentHeaderLite Entity="this.Entity.Root"></ContentHeaderLite>
                     <ContentCommentAuthor Class="mt-3" Entity="this._quickReply"></ContentCommentAuthor>
                     <TinyMCEComment Class="mt-3" Entity="this._quickReply"></TinyMCEComment>
                     <div class="mt-3 text-right">
@@ -289,8 +285,7 @@
 
     private OrigamiContentComment _quickReply = new();
 
-    [Parameter] public ISlug? Slug { get; set; }
-    [Parameter] public OrigamiContent? Entity { get; set; }
+    [Parameter] public HubContent? Entity { get; set; }
     [Parameter] public bool ShowRelatedContent { get; set; } = false;
     [Parameter] public ePictureSizes HeaderImageSize { get; set; } = ePictureSizes.original;
 
@@ -305,24 +300,13 @@
     [Parameter] public EventCallback<OrigamiContentRating?> OnUserHasRated { get; set; }
 
     /// <summary>
-    /// Browses to the Post Details
-    /// </summary>
-    protected void Go()
-    {
-        if (Entity != null)
-        {
-            this.WhatHappensNext.WhenIClickHere(this, new() { Slug = this.Slug, Entity = this.Entity });
-        }
-    }
-
-    /// <summary>
     /// Loads all related content
     /// </summary>
     protected void LoadRelatedContent()
     {
         if (this.Entity == null) return;
         this.RelatedContent = new();
-        this.RelatedContent.AddRange(this.Super.Contents.ReadFromCache().Published().Where(x => x.Id == this.Entity.ParentId));
+        this.RelatedContent.AddRange(this.Super.Contents.ReadFromCache().Published().Where(x => x.Id == this.Entity.Root?.ParentId));
         this.RelatedContent.AddRange(this.Super.Contents.ReadFromCache().Published().Where(x => x.ParentId == this.Entity.Id));
     }
 
@@ -373,7 +357,7 @@
     {
         if (Entity != null)
         {
-            return this.Super.ContentReactions.Reactions(Entity);
+            return this.Entity.Reactions;
         }
         return [];
     }

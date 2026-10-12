@@ -1,0 +1,13 @@
+﻿@inherits Basic
+@implements IEntityNull<HubContent>
+
+@if (Entity is not null)
+{
+    <div class="content-summary @Class">
+        
+    </div>
+}
+
+@code {
+    [Parameter] public HubContent? Entity { get; set; }
+}

@@ -226,7 +226,7 @@
             </MudTabPanel>
             <MudTabPanel Text="@Text.Upper("Summary")">
                 <ChildContent>
-                     
+                     <PostSummary Entity="this.Entity"></PostSummary>
                 </ChildContent>
             </MudTabPanel>
         </MudTabs>
@@ -236,7 +236,7 @@
                     <i class="fa-solid fa-floppy-disk"></i>
                     @Text.Lower("Save")
                 </button>
-                <button class="btn btn-secondary text-white fw-bold" @onclick="UndoChanges" disabled="@this.Entity.Entity.New">
+                <button class="btn btn-secondary text-white fw-bold" @onclick="UndoChanges2">
                     <i class="fa-solid fa-rotate-left"></i>
                     @Text.Lower("Undo changes")
                 </button>

@@ -286,7 +286,7 @@ namespace Origami.Core.Validators
                 {
                     if (url.Has() == true)
                     {
-                        return Uri.TryCreate(url, UriKind.Absolute, out var uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+                        return Uri.TryCreate(url, UriKind.Absolute, out var uriResult) && (uriResult.Scheme.Like(Uri.UriSchemeHttp) || uriResult.Scheme.Like(Uri.UriSchemeHttps));
                     }
                     return true;
                 })

@@ -5,7 +5,8 @@
         INanoId,
         IHeaderImage,
         IAuthorId,
-        IBlogIdNull
+        IBlogIdNull,
+        INew
     {
         public Guid AuthorId
         {
@@ -48,6 +49,8 @@
         /// </summary>
         public string NanoId => this.Root?.NanoId ?? string.Empty;
 
+        public bool New => Root.New;
+
         public List<OrigamiContentRating> Ratings { get; set; } = [];
 
         public List<OrigamiContentReaction> Reactions { get; set; } = [];
@@ -55,7 +58,12 @@
         /// <summary>
         /// OrigamiContent abstraction for the main entity, root of all information here
         /// </summary>
-        public abstract OrigamiContent? Root { get; }
+        public abstract OrigamiContent Root { get; }
+
+        /// <summary>
+        /// Parent of root
+        /// </summary>
+        public abstract OrigamiContent? RootParent { get; }
 
         public List<OrigamiContentTag> Tags { get; set; } = [];
     }
@@ -66,7 +74,7 @@
         IHubContent<T>,
         IAuthorId,
         IHeaderImage
-        where T : OrigamiContent
+        where T : OrigamiContent, new()
     {
         protected HubContent() { }
 
@@ -75,16 +83,15 @@
         /// <summary>
         /// The main entity, root of all information here
         /// </summary>
-        public T? Entity { get; set; } = Activator.CreateInstance<T>();
+        public T Entity { get; set; } = new();
 
         /// <summary>
         /// Parent element of the current object. This is used to establish a hierarchy or relationship between content items.
         /// </summary>
         public T? Parent { get; set; }
 
-        /// <summary>
-        /// Root implementation to satisfy the abstract property in the base class. This returns the main entity, which is the root of all information in this hub content.
-        /// </summary>
-        public override OrigamiContent? Root => this.Entity;
+        public override OrigamiContent Root => this.Entity;
+
+        public override OrigamiContent? RootParent => this.Parent;
     }
 }
