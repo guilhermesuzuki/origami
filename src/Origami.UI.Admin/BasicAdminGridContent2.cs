@@ -82,10 +82,10 @@ namespace Origami.UI.Admin
 
         public virtual async Task SetFilterAndRefreshUI(string filter)
         {
+            Filter = filter;
             await JSRuntime.InvokeVoidAsync("removeQueryStringWithoutReload", "filter");
             await JSRuntime.InvokeVoidAsync("addQueryStringWithoutReload", "filter", filter);
             await DataGrid.ReloadServerData();
-            Filter = filter;
         }
 
         protected async void BlogChangedMustReloadDataGridAndRefreshAsync(object? sender, System.ComponentModel.PropertyChangedEventArgs p)
@@ -234,7 +234,7 @@ namespace Origami.UI.Admin
             var filters = new StringBuilder("(true)");
 
             // pulls information from cache
-            var result = GetItems().Query(
+            var result = GetEntities().Query(
                 state.PageSize,
                 state.Page * state.PageSize,
                 filters.ToString(),
@@ -253,7 +253,7 @@ namespace Origami.UI.Admin
         /// Retrieves all the items for the DataGrid.
         /// </summary>
         /// <returns></returns>
-        protected virtual IEnumerable<T1> GetItems()
+        protected virtual IEnumerable<T1> GetEntities()
         {
             var t1 = new T1();
 
@@ -291,10 +291,10 @@ namespace Origami.UI.Admin
                     break;
             }
 
-            items = this.Filter switch
+            items = this.Filter.ToLowerInvariant() switch
             {
-                "Drafts" => from item in items where item.IsDraft == true select item,
-                "Published" => from item in items where item.IsPublished == true select item,
+                "drafts" => from item in items where item.IsDraft == true select item,
+                "published" => from item in items where item.IsPublished == true select item,
                 _ => items
             };
 
