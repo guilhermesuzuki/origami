@@ -15,7 +15,6 @@ namespace Origami.UI.Controllers
     public class ViewsController(
         IAppFacade appFacade,
         IDbContextFactory<OrigamiDbContext> _dbContextFactory,
-        IHttpContextAccessor _httpContextAccessor,
         IMyMemoryCache memoryCache,
         IPhysicalPageRepository _physicalPage,
         IPhysicalPageViewRepository physicalPageView,

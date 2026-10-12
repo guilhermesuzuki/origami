@@ -28,7 +28,14 @@ namespace Origami.UI.Admin
         public bool IsSelectedEntityNotNull
         {
             get => this.SelectedEntity != null;
-            set => this.SelectedEntity = value ? this.SelectedEntity : null;
+            set
+            {
+                if (value == false)
+                {
+                    this.SelectedEntity = null;
+                    JSRuntime.InvokeVoidAsync("removeQueryStringWithoutReload", "nanoid");
+                }
+            }
         }
 
         public string NanoId { get; set; } = string.Empty;
