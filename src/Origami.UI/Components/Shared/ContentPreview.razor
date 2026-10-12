@@ -3,9 +3,13 @@
 
 @if (Entity is not null && Entity.Root is not null)
 {
+    <style>
+        .content-software-releases .remove-file {display:none;}
+    </style>
     <div class="content-preview @Class">
         <ContentHeader2 Entity="@Entity"></ContentHeader2>
         <ContentHtml Class="mt-3 p-4 border shadow-sm" Entity="Entity.Root"></ContentHtml>
+        <ContentSoftwareReleases Entity="(this.Entity.Root as OrigamiSoftwareRelease)"></ContentSoftwareReleases>
     </div>
 }
 
