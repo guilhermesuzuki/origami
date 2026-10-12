@@ -13,6 +13,15 @@
             </div>
             <div class="col-12 col-xxl-4">
                 <MudTextField ReadOnly="true"
+                    Immediate="true"
+                    Value="@(Text.Lower(Entity.Entity.IsDraft.YesNo()))"
+                    HelperText="@Text.Lower("Still a draft?")"
+                    Class="cursor-pointer yes-no"
+                    title="@Text.Lower("Click here to change it")"
+                    @onclick="() => this.Entity.Entity.IsDraft = !this.Entity.Entity.IsDraft.GetValueOrDefault()"></MudTextField>
+            </div>
+            <div class="col-12 col-xxl-4">
+                <MudTextField ReadOnly="true"
                               Immediate="true"
                               AdornmentIcon="@Icons.Material.Filled.Comment"
                               Adornment="Adornment.Start"
@@ -21,15 +30,6 @@
                               Class="cursor-pointer"
                               title="@Text.Lower("Click here to change it")"
                               @onclick="() => this.Entity.Entity.IsCommentEnabled = !this.Entity.Entity.IsCommentEnabled"></MudTextField>
-            </div>
-            <div class="col-12 col-xxl-4">
-                <MudTextField ReadOnly="true"
-                    Immediate="true"
-                    Value="@(Text.Lower(Entity.Entity.IsDraft.YesNo()))"
-                    HelperText="@Text.Lower("Still a draft?")"
-                    Class="cursor-pointer yes-no"
-                    title="@Text.Lower("Click here to change it")"
-                    @onclick="() => this.Entity.Entity.IsDraft = !this.Entity.Entity.IsDraft.GetValueOrDefault()"></MudTextField>
             </div>
         </div>
         <MudTabs Class="mt-5 border" TabPanelsClass="p-3">

@@ -12,15 +12,6 @@
                 <LanguageWrittenOn Entity="this.Entity.Entity" Class=""></LanguageWrittenOn>
             </div>
             <div class="col-12 col-xxl-4">
-                <MudTextField Disabled="true"
-                              Immediate="true"
-                              AdornmentIcon="@Icons.Material.Filled.Comment"
-                              Adornment="Adornment.Start"
-                              Value="@(Text.Lower(Entity.Entity.IsCommentEnabled.YesNo()))"
-                              HelperText="@Text.Lower("Are comments enabled?")"
-                              Class="cursor-pointer"></MudTextField>
-            </div>
-            <div class="col-12 col-xxl-4">
                 <MudTextField ReadOnly="true"
                     Immediate="true"
                     Value="@(Text.Lower(Entity.Entity.IsDraft.YesNo()))"

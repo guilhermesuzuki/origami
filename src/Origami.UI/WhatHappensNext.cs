@@ -63,10 +63,10 @@ public class WhatHappensNext : IWhatHappensNext
                 OrigamiRole => $"/roles?nanoid={(e.Entity as INanoId)?.NanoId}",
                 OrigamiSocialProfile => $"/socialprofiles?nanoid={(e.Entity as INanoId)?.NanoId}",
                 OrigamiSoftwareRelease => $"/new/softwarereleases?nanoid={(e.Entity as INanoId)?.NanoId}",
-                OrigamiSpecialMessage => $"/specialmessages?nanoid={(e.Entity as INanoId)?.NanoId}",
+                OrigamiSpecialMessage => $"/new/specialmessages?nanoid={(e.Entity as INanoId)?.NanoId}",
                 OrigamiSpecialPage => $"/new/specialpages?nanoid={(e.Entity as INanoId)?.NanoId}",
                 OrigamiUser => $"/users?nanoid={(e.Entity as INanoId)?.NanoId}",
-                OrigamiVideo => $"/videos?nanoid={(e.Entity as INanoId)?.NanoId}",
+                OrigamiVideo => $"/new/videos?nanoid={(e.Entity as INanoId)?.NanoId}",
                 _ => string.Empty,
             };
 
