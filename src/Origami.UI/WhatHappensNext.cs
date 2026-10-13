@@ -57,16 +57,16 @@ public class WhatHappensNext : IWhatHappensNext
             {
                 OrigamiCategory => $"/categories?nanoid={(e.Entity as INanoId)?.NanoId}",
                 OrigamiContentTag => $"/tags?nanoid={(e.Entity as INanoId)?.NanoId}",
-                OrigamiPage => $"/new/pages?nanoid={(e.Entity as INanoId)?.NanoId}",
-                OrigamiPost => $"/new/posts?nanoid={(e.Entity as INanoId)?.NanoId}",
+                OrigamiPage => $"/n/pages?nanoid={(e.Entity as INanoId)?.NanoId}",
+                OrigamiPost => $"/n/posts?nanoid={(e.Entity as INanoId)?.NanoId}",
                 OrigamiQuickNote => $"/quicknotes?nanoid={(e.Entity as INanoId)?.NanoId}",
-                OrigamiRole => $"/new/roles?nanoid={(e.Entity as INanoId)?.NanoId}",
+                OrigamiRole => $"/n/roles?nanoid={(e.Entity as INanoId)?.NanoId}",
                 OrigamiSocialProfile => $"/socialprofiles?nanoid={(e.Entity as INanoId)?.NanoId}",
-                OrigamiSoftwareRelease => $"/new/softwarereleases?nanoid={(e.Entity as INanoId)?.NanoId}",
-                OrigamiSpecialMessage => $"/new/specialmessages?nanoid={(e.Entity as INanoId)?.NanoId}",
-                OrigamiSpecialPage => $"/new/specialpages?nanoid={(e.Entity as INanoId)?.NanoId}",
+                OrigamiSoftwareRelease => $"/n/softwarereleases?nanoid={(e.Entity as INanoId)?.NanoId}",
+                OrigamiSpecialMessage => $"/n/specialmessages?nanoid={(e.Entity as INanoId)?.NanoId}",
+                OrigamiSpecialPage => $"/n/specialpages?nanoid={(e.Entity as INanoId)?.NanoId}",
                 OrigamiUser => $"/users?nanoid={(e.Entity as INanoId)?.NanoId}",
-                OrigamiVideo => $"/new/videos?nanoid={(e.Entity as INanoId)?.NanoId}",
+                OrigamiVideo => $"/n/videos?nanoid={(e.Entity as INanoId)?.NanoId}",
                 _ => string.Empty,
             };
 

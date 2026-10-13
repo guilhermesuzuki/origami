@@ -20,6 +20,18 @@
                     title="@Text.Lower("Click here to change it")"
                     @onclick="() => this.Entity.Entity.IsDraft = !this.Entity.Entity.IsDraft.GetValueOrDefault()"></MudTextField>
             </div>
+            <div class="col-12 col-xxl-4">
+                <MudTextField ReadOnly="true"
+                              Immediate="true"
+                              AdornmentIcon="@Icons.Material.Filled.Comment"
+                              Adornment="Adornment.Start"
+                              Value="@(Text.Lower(Entity.Entity.IsCommentEnabled.YesNo()))"
+                              HelperText="@Text.Lower("Are comments enabled?")"
+                              Class="cursor-pointer"
+                              title="@Text.Lower("Click here to change it")"
+                              Disabled="true"
+                              @onclick="() => this.Entity.Entity.IsCommentEnabled = !this.Entity.Entity.IsCommentEnabled"></MudTextField>
+            </div>
         </div>
         <MudTabs Class="mt-5 border" TabPanelsClass="p-3">
             <MudTabPanel Text="@Text.Upper("Header image")" Class="text-center">
