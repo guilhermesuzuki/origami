@@ -244,7 +244,7 @@
             </MudTabPanel>
             <MudTabPanel Text="@Text.Upper("Actions")" Visible="@(this.Entity.New == false)">
                 <ChildContent>
-                    <div class="btn-group-vertical w-100">
+                    <div class="btn-group-vertical w-100 p-5">
                         @if (this.UserFacade.User.Id == this.Entity.Id)
                         {
                             <button class="btn btn-danger text-white fw-bold w-100" @onclick="BlockUserSelf" disabled="@this.Entity.IsBlocked" title="@Text.Original("This will block yourself")">
