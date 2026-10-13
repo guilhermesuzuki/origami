@@ -1,9 +1,8 @@
 ﻿@inherits BasicFormFull<OrigamiUser>
 
 <style>
-    .post-header-image, .video-header-image, .page-header-image, .softwarerelease-header-image { height: 200px; }
     .mud-tabs { flex:1; }
-    .header-image-lite img { max-width: 400px!important; }
+    .header-image-lite img { max-width: 500px!important; }
 </style>
 <div class="new-user-form d-flex @Class" style="flex-flow: column;">
     @if (this.Entity != null)
@@ -244,7 +243,7 @@
             </MudTabPanel>
             <MudTabPanel Text="@Text.Upper("Actions")" Visible="@(this.Entity.New == false)">
                 <ChildContent>
-                    <div class="btn-group-vertical w-100 p-5">
+                    <div class="btn-group-vertical w-100">
                         @if (this.UserFacade.User.Id == this.Entity.Id)
                         {
                             <button class="btn btn-danger text-white fw-bold w-100" @onclick="BlockUserSelf" disabled="@this.Entity.IsBlocked" title="@Text.Original("This will block yourself")">
@@ -414,11 +413,10 @@
         </div>
     </div>
 }
-@if (this._showPasswordResetHistory)
-{
-    <div class="position-fixed popup-container">
-        <div class="border shadow-lg position-relative" style="width: 90%; height: 90%;">
-            <div class="overflow-auto" style="height:100%; padding-bottom: 70px;">
+<MudDialog Options="this.DialogOptions" @bind-Visible="this._showPasswordResetHistory" TitleClass="d-none">
+    <DialogContent>
+        <div class="border shadow-lg position-relative" style="max-width: 1000px; width:100%;">
+            <div class="overflow-auto" style="padding-bottom: 70px;">
                 <div class="p-3">
                     <MudDataGrid T="OrigamiUserPasswordReset" Items="this.GetPasswordResetHistory()">
                         <Columns>
@@ -471,8 +469,8 @@
                 </li>
             </ul>
         </div>
-    </div>
-}
+    </DialogContent>
+</MudDialog>
 @code {
     private bool _showPasswordResetHistory = false;
 
