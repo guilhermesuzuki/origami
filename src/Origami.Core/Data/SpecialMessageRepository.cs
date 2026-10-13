@@ -44,7 +44,11 @@ namespace Origami.Core.Data
         {
             var now = new DateOnly(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day);
             var messages = base.ReadFromCache();
-            return messages.NonDeleted().Published().Where(x => x.StartDate <= now).Where(x => x.EndDate >= now);
+
+            return messages.NonDeleted().Published()
+                .Where(x => x.StartDate <= now)
+                .Where(x => x.EndDate >= now)
+                .OrderByDescending(x => x.DatePublished);
         }
 
         public override Result<OrigamiSpecialMessage> CreateValidation(DataOperationContext<OrigamiSpecialMessage> ctx)
