@@ -1,287 +1,250 @@
 ﻿@inherits BasicFormFull<OrigamiUser>
 
 <style>
-    .post-header-image, .video-header-image, .page-header-image { height: 200px; }
-    .mud-file-upload, .mud-file-upload > * { height: 100%; }
+    .post-header-image, .video-header-image, .page-header-image, .softwarerelease-header-image { height: 200px; }
+    .mud-tabs { flex:1; }
+    .header-image-lite img { max-width: 400px!important; }
 </style>
-<style>
-    ul.expand { display: flex; list-style: none; padding: 0; margin: 0; }
-    ul.expand > li { display: flex; flex-direction: column; flex: 1; }
-</style>
-<div class="user-form @Class">
-    <div class="row">
-        <div class="col-12 col-xxl-6">
-            <div class="p-3">
-                <BasicHeaderNotes Entity="this.Entity"></BasicHeaderNotes>
-                <BasicHeader Class="mt-3" Entity="this.Entity"></BasicHeader>
-                @if (this.Entity.New)
-                {
-                    <ul class="inline-list mt-3">
-                        <li>
-                            <div class="border border-warning text-warning text-center p-3">
-                                <span class="fs-3">
-                                    <i class="fa-solid fa-triangle-exclamation"></i>
-                                </span>
-                                <br />
-                                <span class="fw-bold">
-                                    @Text.Original("Be careful when choosing a username, you won't be able to change it later")
-                                    <span>.</span>
+<div class="new-user-form d-flex @Class" style="flex-flow: column;">
+    @if (this.Entity != null)
+    {
+        <BasicHeaderNotes Entity="this.Entity"></BasicHeaderNotes>
+        <MudTabs Class="mt-5 border" TabPanelsClass="p-3">
+            <MudTabPanel Text="@Text.Upper("Header image")" Class="text-center">
+                <ChildContent>
+                    <HeaderImageCard Class="text-center" Entity="@Entity"></HeaderImageCard>
+                    <MudFileUpload T="IBrowserFile" FilesChanged="UploadHeader" Accept=".png, .jpg, .bmp, .tiff" MaximumFileCount="1">
+                        <SelectedTemplate></SelectedTemplate>
+                        <CustomContent>
+                            <div class="btn-group mt-2 w-100">
+                                <button class="btn btn-light" @onclick="context.OpenFilePickerAsync">
+                                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                                    <div>@Text.Lower("Only image files")</div>
+                                    <div class="x-small">@Text.Original("{0}MB max.", 6)</div>
+                                </button>
+                                <button class="btn btn-light" @onclick="() => this.FileManagerForImages = true">
+                                    <i class="fa-solid fa-folder"></i>
+                                    @Text.Lower("Pick from file manager")
+                                </button>
+                                <button class="btn btn-light" @onclick="ClearHeader">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                    @Text.Lower("Clear header")
+                                </button>
+                            </div>
+                        </CustomContent>
+                    </MudFileUpload>
+                </ChildContent>
+            </MudTabPanel>
+            <MudTabPanel Text="@Text.Upper("Basic")">
+                <ChildContent>
+                    <BasicHeader Entity="this.Entity"></BasicHeader>
+                    @if (this.Entity.New)
+                    {
+                        <ul class="inline-list mt-3">
+                            <li>
+                                <div class="border border-warning text-warning text-center p-3">
+                                    <span class="fs-3">
+                                        <i class="fa-solid fa-triangle-exclamation"></i>
+                                    </span>
                                     <br />
-                                    @Text.Original("You can change your display name at any time though")
-                                    <span>.</span>
-                                </span>
-                            </div>
+                                    <span class="fw-bold">
+                                        @Text.Original("Be careful when choosing a username, you won't be able to change it later")
+                                        <span>.</span>
+                                        <br />
+                                        @Text.Original("You can change your display name at any time though")
+                                        <span>.</span>
+                                    </span>
+                                </div>
+                            </li>
+                        </ul>
+                    }
+                    <ul class="inline-list mt-3">
+                        <li class="">
+                            @if (this.Entity.New)
+                            {
+                                <MudTextField @bind-Value="this.Entity.Username"
+                                              HelperText="@Text.Lower("Username")"
+                                              Immediate="true"></MudTextField>
+                            }
+                            else
+                            {
+                                <MudTextField @bind-Value="this.Entity.Username"
+                                              HelperText="@Text.Lower("Username (read-only)")"
+                                              ReadOnly="true"></MudTextField>
+                            }
+                        </li>
+                        <li class="">
+                            <MudTextField @bind-Value="this.Entity.DisplayName"
+                                          Immediate="true"
+                                          HelperText="@Text.Lower("Display name")"></MudTextField>
                         </li>
                     </ul>
-                }
-                <ul class="inline-list mt-3">
-                    <li class="">
-                        @if (this.Entity.New)
-                        {
-                            <MudTextField @bind-Value="this.Entity.Username"
-                                          HelperText="@Text.Lower("Username")"
+                    <ul class="inline-list mt-3">
+                        <li class="">
+                            <MudTextField @bind-Value="this.Entity.Email"
+                                          HelperText="@Text.Lower("E-mail")"
+                                          InputType="InputType.Email"
                                           Immediate="true"></MudTextField>
-                        }
-                        else
-                        {
-                            <MudTextField @bind-Value="this.Entity.Username"
-                                          HelperText="@Text.Lower("Username (read-only)")"
-                                          ReadOnly="true"></MudTextField>
-                        }
-                    </li>
-                    <li class="">
-                        <MudTextField @bind-Value="this.Entity.DisplayName"
-                                      Immediate="true"
-                                      HelperText="@Text.Lower("Display name")"></MudTextField>
-                    </li>
-                </ul>
-                <ul class="inline-list mt-3">
-                    <li class="">
-                        <MudTextField @bind-Value="this.Entity.Email"
-                                      HelperText="@Text.Lower("E-mail")"
-                                      InputType="InputType.Email"
-                                      Immediate="true"></MudTextField>
-                    </li>
-                    <li>
-                        <Filler></Filler>
-                    </li>
-                </ul>
-                <ul class="inline-list mt-3">
-                    <li>
-                        <MudTextField @bind-Value="this.Entity.FirstName"
-                                      Immediate="true"
-                                      HelperText="@Text.Lower("First name")"></MudTextField>
-                    </li>
-                    <li>
-                        <MudTextField @bind-Value="this.Entity.LastName"
-                                      Immediate="true"
-                                      HelperText="@Text.Lower("Last name")"></MudTextField>
-                    </li>
-                </ul>
-                <div class="mt-6 p-2 border">
-                    <ul class="inline-list">
-                        <li>
-                            <MudTextField @bind-Value="this.Entity.NewPassword1"
-                                          Immediate="true"
-                                          HelperText="@Text.Lower("Password")"
-                                          InputType="InputType.Password"></MudTextField>
                         </li>
                         <li>
-                            <MudTextField @bind-Value="this.Entity.NewPassword2"
-                                          Immediate="true"
-                                          HelperText="@Text.Lower("Confirm password")"
-                                          InputType="InputType.Password"></MudTextField>
+                            <Filler></Filler>
                         </li>
                     </ul>
                     <ul class="inline-list mt-3">
                         <li>
-                            <div class="btn-group w-100">
-                                <button class="btn btn-success fs-small w-100" @onclick="() => this.Entity.GenerateNewPasswordForNewUsers()">
-                                    @Text.Lower("New random password")
-                                </button>
-                                <button class="btn btn-secondary fs-small w-100" @onclick="() => this.Entity.ClearNewPasswords()">
-                                    @Text.Lower("Clear")
-                                </button>
-                                <button class="btn btn-info fs-small" style="width: 50px;" @onclick="() => this.CopyToClipboard(this.Entity.NewPassword1)">
-                                    <i class="fa-solid fa-copy"></i>
-                                </button>
-                            </div>
+                            <MudTextField @bind-Value="this.Entity.FirstName"
+                                          Immediate="true"
+                                          HelperText="@Text.Lower("First name")"></MudTextField>
+                        </li>
+                        <li>
+                            <MudTextField @bind-Value="this.Entity.LastName"
+                                          Immediate="true"
+                                          HelperText="@Text.Lower("Last name")"></MudTextField>
                         </li>
                     </ul>
-                </div>
-            </div>
-            <div class="text-center p-3 mt-3">
-                <ul class="expand p-3 border">
-                    <li>
-                        <HeaderImageCard Entity="this.Entity" ImgMaxWidth="256px" Footer="true"></HeaderImageCard>
-                    </li>
-                    <li class="position-relative ms-3">
-                        <MudFileUpload T="IBrowserFile" FilesChanged="UploadHeaderBase64" Accept=".png, .jpg, .bmp, .tiff" MaximumFileCount="1">
-                            <CustomContent>
-                                <div class="position-absolute zeroes btn-group-vertical">
-                                    <button class="btn btn-light w-100" @onclick="context.OpenFilePickerAsync" style="height:34%;">
-                                        <i class="fa-solid fa-cloud-arrow-up"></i>
-                                        <div>@Text.Lower("Only image files")</div>
-                                        <div class="x-small">@Text.Original("{0}MB max.", 2)</div>
+                    <div class="mt-6 p-2 border">
+                        <ul class="inline-list">
+                            <li>
+                                <MudTextField @bind-Value="this.Entity.NewPassword1"
+                                              Immediate="true"
+                                              HelperText="@Text.Lower("Password")"
+                                              InputType="InputType.Password"></MudTextField>
+                            </li>
+                            <li>
+                                <MudTextField @bind-Value="this.Entity.NewPassword2"
+                                              Immediate="true"
+                                              HelperText="@Text.Lower("Confirm password")"
+                                              InputType="InputType.Password"></MudTextField>
+                            </li>
+                        </ul>
+                        <ul class="inline-list mt-3">
+                            <li>
+                                <div class="btn-group w-100">
+                                    <button class="btn btn-success fs-small w-100" @onclick="() => this.Entity.GenerateNewPasswordForNewUsers()">
+                                        @Text.Lower("New random password")
                                     </button>
-                                    <button class="btn btn-light w-100" @onclick="() => this.FileManagerForImages = true" style="height:33%;">
-                                        <i class="fa-solid fa-folder"></i>
-                                        <div>@Text.Lower("Pick from file manager")</div>
+                                    <button class="btn btn-secondary fs-small w-100" @onclick="() => this.Entity.ClearNewPasswords()">
+                                        @Text.Lower("Clear")
                                     </button>
-                                    <button class="btn btn-light w-100" @onclick="ClearHeader" style="height:33%;">
-                                        <i class="fa-solid fa-trash-can"></i>
-                                        <div>@Text.Lower("Clear picture")</div>
+                                    <button class="btn btn-info fs-small" style="width: 50px;" @onclick="() => this.CopyToClipboard(this.Entity.NewPassword1)">
+                                        <i class="fa-solid fa-copy"></i>
                                     </button>
                                 </div>
-                            </CustomContent>
-                            <SelectedTemplate></SelectedTemplate>
-                        </MudFileUpload>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div class="col-12 col-xxl-6">
-            <div class="misc p-3">
-                <div class="w-100 text-white bg-secondary text-center">
-                    <i class="fa-solid fa-circle-info"></i>
-                    @Text.Lower("Misc")
-                </div>
-                <ul class="inline-list mt-3">
-                    <li>
-                        <MudTextField @bind-Value="this.Entity.Website"
-                                      Immediate="true"
-                                      Adornment="Adornment.Start"
-                                      AdornmentIcon="@Icons.Material.Filled.Web"
-                                      HelperText="@Text.Lower("Website")"></MudTextField>
-                    </li>
-                </ul>
-                <ul class="inline-list mt-3">
-                    <li>
-                        <MudTextField @bind-Value="this.Entity.GitHub"
-                                      Immediate="true"
-                                      Adornment="Adornment.Start"
-                                      AdornmentIcon="@Icons.Custom.Brands.GitHub"
-                                      HelperText="@Text.Lower("GitHub")"></MudTextField>
-                    </li>
-                </ul>
-                <ul class="inline-list mt-3">
-                    <li>
-                        <MudTextField @bind-Value="this.Entity.LinkedIn"
-                                      Immediate="true"
-                                      Adornment="Adornment.Start"
-                                      AdornmentIcon="@Icons.Custom.Brands.LinkedIn"
-                                      HelperText="@Text.Lower("LinkedIn")"></MudTextField>
-                    </li>
-                </ul>
-                <ul class="inline-list mt-3">
-                    <li>
-                        <MudTextField @bind-Value="this.Entity.Facebook"
-                                      Immediate="true"
-                                      Adornment="Adornment.Start"
-                                      AdornmentIcon="@Icons.Custom.Brands.Facebook"
-                                      HelperText="@Text.Lower("Facebook")"></MudTextField>
-                    </li>
-                </ul>
-                <ul class="inline-list mt-3">
-                    <li>
-                        <MudTextField @bind-Value="this.Entity.Instagram"
-                                      Immediate="true"
-                                      Adornment="Adornment.Start"
-                                      AdornmentIcon="@Icons.Custom.Brands.Instagram"
-                                      HelperText="@Text.Lower("Instagram")"></MudTextField>
-                    </li>
-                </ul>
-                <ul class="inline-list mt-3">
-                    <li>
-                        <MudTextField ReadOnly="true"
-                                      Immediate="true"
-                                      Value="@(Text.Lower(Entity.TOTPSecret.Has().YesNo(Text)))"
-                                      HelperText="@Text.Lower("2FA secret?")"
-                                      Class="yes-no"></MudTextField>
-                    </li>
-                    <li>
-                        <MudTextField ReadOnly="true"
-                                      Immediate="true"
-                                      Value="@(Text.Lower(Entity.GetTOTPRecoveryCodes().Any().YesNo(Text)))"
-                                      HelperText="@Text.Lower("2FA recovery codes?")"
-                                      Class="yes-no"></MudTextField>
-                    </li>
-                </ul>
-            </div>
-            <div class="blogs p-3">
-                <div class="w-100 text-white bg-secondary text-center">
-                    <i class="fa-solid fa-id-badge"></i>
-                    @Text.Lower("Blogs this user has access to")
-                </div>
-                <MudDataGrid T="OrigamiBlog" Class="border mt-3" Items="this.Super.Blogs.ReadFromCache().OrderBy(x => x.Name)" SortMode="SortMode.None" Filterable="false">
-                    <Columns>
-                        <TemplateColumn>
-                            <CellTemplate>
-                                <MudCheckBox T="bool" Value="@IsBlogSelected(context.Item)" @onclick="() => SelectBlog(context.Item)"></MudCheckBox>
-                            </CellTemplate>
-                        </TemplateColumn>
-                        <TemplateColumn CellClass="w-100">
-                            <CellTemplate>
-                                <BlogHeaderInline Entity="context.Item"></BlogHeaderInline>
-                            </CellTemplate>
-                        </TemplateColumn>
-                        <TemplateColumn>
-                            <CellTemplate>
-                                @if (NewBlog(context.Item) == true)
-                                {
-                                    <i class="fa-solid fa-circle-plus"></i>
-                                }
-                            </CellTemplate>
-                        </TemplateColumn>
-                    </Columns>
-                    <PagerContent>
-                        <MudDataGridPager T="OrigamiBlog" PageSizeOptions="[10, 25, 50, 100]" />
-                    </PagerContent>
-                </MudDataGrid>
-            </div>
-            <div class="roles p-3">
-                <div class="w-100 text-white bg-secondary text-center">
-                    <i class="fa-solid fa-id-badge"></i>
-                    @Text.Lower("Roles")
-                </div>
-                <MudDataGrid T="OrigamiRole" Class="border mt-3" Items="this.Super.Roles.ReadFromCache().NonDeleted().OrderBy(x => x.Name)" SortMode="SortMode.None" Filterable="false">
-                    <Columns>
-                        <TemplateColumn>
-                            <CellTemplate>
-                                <MudCheckBox T="bool" Value="@IsRoleSelected(context.Item)" @onclick="() => SelectRole(context.Item)"></MudCheckBox>
-                            </CellTemplate>
-                        </TemplateColumn>
-                        <TemplateColumn CellClass="w-100">
-                            <CellTemplate>
-                                <RoleHeaderLite Entity="context.Item"></RoleHeaderLite>
-                            </CellTemplate>
-                        </TemplateColumn>
-                        <TemplateColumn>
-                            <CellTemplate>
-                                @if (NewRole(context.Item) == true)
-                                {
-                                    <i class="fa-solid fa-circle-plus"></i>
-                                }
-                            </CellTemplate>
-                        </TemplateColumn>
-                    </Columns>
-                    <PagerContent>
-                        <MudDataGridPager T="OrigamiRole" PageSizeOptions="[10, 25, 50, 100]" />
-                    </PagerContent>
-                </MudDataGrid>
-            </div>
-        </div>
-    </div>
-    @if (this.Entity.New == false)
-    {
-        <div class="p-3 mt-3">
-            <div class="row">
-                <div class="col-12">
-                    <div class="w-100 text-white bg-secondary text-center">
-                        <i class="fa-solid fa-user-gear"></i>
-                        @Text.Lower("User actions")
+                            </li>
+                        </ul>
                     </div>
-                    <div class="btn-group w-100 mt-3">
+                </ChildContent>
+            </MudTabPanel>
+            <MudTabPanel Text="@Text.Upper("Misc")">
+                <ChildContent>
+                    <ul class="inline-list">
+                        <li>
+                            <MudTextField @bind-Value="this.Entity.Website"
+                                          Immediate="true"
+                                          Adornment="Adornment.Start"
+                                          AdornmentIcon="@Icons.Material.Filled.Web"
+                                          HelperText="@Text.Lower("Website")"></MudTextField>
+                        </li>
+                    </ul>
+                    <ul class="inline-list mt-3">
+                        <li>
+                            <MudTextField @bind-Value="this.Entity.GitHub"
+                                          Immediate="true"
+                                          Adornment="Adornment.Start"
+                                          AdornmentIcon="@Icons.Custom.Brands.GitHub"
+                                          HelperText="@Text.Lower("GitHub")"></MudTextField>
+                        </li>
+                    </ul>
+                    <ul class="inline-list mt-3">
+                        <li>
+                            <MudTextField @bind-Value="this.Entity.LinkedIn"
+                                          Immediate="true"
+                                          Adornment="Adornment.Start"
+                                          AdornmentIcon="@Icons.Custom.Brands.LinkedIn"
+                                          HelperText="@Text.Lower("LinkedIn")"></MudTextField>
+                        </li>
+                    </ul>
+                    <ul class="inline-list mt-3">
+                        <li>
+                            <MudTextField @bind-Value="this.Entity.Facebook"
+                                          Immediate="true"
+                                          Adornment="Adornment.Start"
+                                          AdornmentIcon="@Icons.Custom.Brands.Facebook"
+                                          HelperText="@Text.Lower("Facebook")"></MudTextField>
+                        </li>
+                    </ul>
+                    <ul class="inline-list mt-3">
+                        <li>
+                            <MudTextField @bind-Value="this.Entity.Instagram"
+                                          Immediate="true"
+                                          Adornment="Adornment.Start"
+                                          AdornmentIcon="@Icons.Custom.Brands.Instagram"
+                                          HelperText="@Text.Lower("Instagram")"></MudTextField>
+                        </li>
+                    </ul>
+                </ChildContent>
+            </MudTabPanel>
+            <MudTabPanel Text="@Text.Upper("Blogs")">
+                <ChildContent>
+                    <MudDataGrid T="OrigamiBlog" Class="border" Items="this.Super.Blogs.ReadFromCache().OrderBy(x => x.Name)" SortMode="SortMode.None" Filterable="false">
+                        <Columns>
+                            <TemplateColumn>
+                                <CellTemplate>
+                                    <MudCheckBox T="bool" Value="@IsBlogSelected(context.Item)" @onclick="() => SelectBlog(context.Item)"></MudCheckBox>
+                                </CellTemplate>
+                            </TemplateColumn>
+                            <TemplateColumn CellClass="w-100">
+                                <CellTemplate>
+                                    <BlogHeaderInline Entity="context.Item"></BlogHeaderInline>
+                                </CellTemplate>
+                            </TemplateColumn>
+                            <TemplateColumn>
+                                <CellTemplate>
+                                    @if (NewBlog(context.Item) == true)
+                                    {
+                                        <i class="fa-solid fa-circle-plus"></i>
+                                    }
+                                </CellTemplate>
+                            </TemplateColumn>
+                        </Columns>
+                        <PagerContent>
+                            <MudDataGridPager T="OrigamiBlog" PageSizeOptions="[10, 25, 50, 100]" />
+                        </PagerContent>
+                    </MudDataGrid>
+                </ChildContent>
+            </MudTabPanel>
+            <MudTabPanel Text="@Text.Upper("Roles")">
+                <ChildContent>
+                    <MudDataGrid T="OrigamiRole" Class="border" Items="this.Super.Roles.ReadFromCache().NonDeleted().OrderBy(x => x.Name)" SortMode="SortMode.None" Filterable="false">
+                        <Columns>
+                            <TemplateColumn>
+                                <CellTemplate>
+                                    <MudCheckBox T="bool" Value="@IsRoleSelected(context.Item)" @onclick="() => SelectRole(context.Item)"></MudCheckBox>
+                                </CellTemplate>
+                            </TemplateColumn>
+                            <TemplateColumn CellClass="w-100">
+                                <CellTemplate>
+                                    <RoleHeaderLite Entity="context.Item"></RoleHeaderLite>
+                                </CellTemplate>
+                            </TemplateColumn>
+                            <TemplateColumn>
+                                <CellTemplate>
+                                    @if (NewRole(context.Item) == true)
+                                    {
+                                        <i class="fa-solid fa-circle-plus"></i>
+                                    }
+                                </CellTemplate>
+                            </TemplateColumn>
+                        </Columns>
+                        <PagerContent>
+                            <MudDataGridPager T="OrigamiRole" PageSizeOptions="[10, 25, 50, 100]" />
+                        </PagerContent>
+                    </MudDataGrid>
+                </ChildContent>
+            </MudTabPanel>
+            <MudTabPanel Text="@Text.Upper("Actions")" Visible="@(this.Entity.New == false)">
+                <ChildContent>
+                    <div class="btn-group w-100">
                         @if (this.UserFacade.User.Id == this.Entity.Id)
                         {
                             <button class="btn btn-danger text-white fw-bold w-100" @onclick="BlockUserSelf" disabled="@this.Entity.IsBlocked" title="@Text.Original("This will block yourself")">
@@ -314,78 +277,79 @@
                             @Text.Lower("Reset 2FA")
                         </button>
                     </div>
-                </div>
-            </div>
-        </div>
-    }
-    @if (this.Entity.New == false)
-    {
-        <div class="p-3 mt-3">
-            <div class="row">
-                <div class="col-12 col-xxl-4">
-                    <div class="p-3 border mt-3">
-                        <div class="w-100 text-white bg-secondary text-center">
-                            <i class="bi bi-file-earmark-text-fill"></i>
-                            @Text.Lower("Pages")
-                        </div>
-                        <MudDataGrid Class="mt-3" T="OrigamiPage" Items="this.GetPages()" Filterable="false" SortMode="SortMode.None">
-                            <Columns>
-                                <TemplateColumn>
-                                    <CellTemplate>
-                                        <ContentHeader Entity="context.Item" ShowRelatedContent="false"></ContentHeader>
-                                    </CellTemplate>
-                                </TemplateColumn>
-                            </Columns>
-                            <PagerContent>
-                                <MudDataGridPager T="OrigamiPage" PageSizeOptions="new int[] { 5, 10, 25, }"></MudDataGridPager>
-                            </PagerContent>
-                        </MudDataGrid>
-                    </div>
-                </div>
-                <div class="col-12 col-xxl-4">
-                    <div class="p-3 border mt-3">
-                        <div class="w-100 text-white bg-secondary text-center">
-                            <i class="bi bi-file-earmark-text-fill"></i>
-                            @Text.Lower("Posts")
-                        </div>
-                        <MudDataGrid Class="mt-3" T="OrigamiPost" Items="this.GetPosts()" Filterable="false" SortMode="SortMode.None">
-                            <Columns>
-                                <TemplateColumn>
-                                    <CellTemplate>
-                                        <ContentHeader Entity="context.Item"></ContentHeader>
-                                    </CellTemplate>
-                                </TemplateColumn>
-                            </Columns>
-                            <PagerContent>
-                                <MudDataGridPager T="OrigamiPost" PageSizeOptions="new int[] { 5, 10, 25, }"></MudDataGridPager>
-                            </PagerContent>
-                        </MudDataGrid>
-                    </div>
-                </div>
-                <div class="col-12 col-xxl-4">
-                    <div class="p-3 border mt-3">
-                        <div class="w-100 text-white bg-secondary text-center">
-                            <i class="fa-solid fa-video"></i>
-                            @Text.Lower("Videos")
-                        </div>
-                        <MudDataGrid Class="mt-3" T="OrigamiVideo" Items="this.GetVideos()" Filterable="false" SortMode="SortMode.None">
-                            <Columns>
-                                <TemplateColumn>
-                                    <CellTemplate>
-                                        <ContentHeader Entity="context.Item"></ContentHeader>
-                                    </CellTemplate>
-                                </TemplateColumn>
-                            </Columns>
-                            <PagerContent>
-                                <MudDataGridPager T="OrigamiVideo" PageSizeOptions="new int[] { 5, 10, 25, }"></MudDataGridPager>
-                            </PagerContent>
-                        </MudDataGrid>
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
-    <div class="buttons text-center z-index-front position-sticky" style="bottom: 0;">
+                </ChildContent>
+            </MudTabPanel>    
+            <MudTabPanel Text="@Text.Upper("Pages")" Visible="@(this.Entity.New == false)">
+                <ChildContent>
+                    <MudDataGrid Class="" T="OrigamiPage" Items="this.GetPages()" Filterable="false" SortMode="SortMode.None">
+                        <Columns>
+                            <TemplateColumn>
+                                <CellTemplate>
+                                    <ContentHeader Entity="context.Item" ShowRelatedContent="false"></ContentHeader>
+                                </CellTemplate>
+                            </TemplateColumn>
+                        </Columns>
+                        <PagerContent>
+                            <MudDataGridPager T="OrigamiPage" PageSizeOptions="new int[] { 5, 10, 25, }"></MudDataGridPager>
+                        </PagerContent>
+                    </MudDataGrid>
+                </ChildContent>
+            </MudTabPanel>
+            <MudTabPanel Text="@Text.Upper("Posts")" Visible="@(this.Entity.New == false)">
+                <ChildContent>
+                    <MudDataGrid Class="" T="OrigamiPost" Items="this.GetPosts()" Filterable="false" SortMode="SortMode.None">
+                        <Columns>
+                            <TemplateColumn>
+                                <CellTemplate>
+                                    <ContentHeader Entity="context.Item"></ContentHeader>
+                                </CellTemplate>
+                            </TemplateColumn>
+                        </Columns>
+                        <PagerContent>
+                            <MudDataGridPager T="OrigamiPost" PageSizeOptions="new int[] { 5, 10, 25, }"></MudDataGridPager>
+                        </PagerContent>
+                    </MudDataGrid>
+                </ChildContent>
+            </MudTabPanel>
+            <MudTabPanel Text="@Text.Upper("Videos")" Visible="@(this.Entity.New == false)">
+                <ChildContent>
+                    <MudDataGrid Class="" T="OrigamiVideo" Items="this.GetVideos()" Filterable="false" SortMode="SortMode.None">
+                        <Columns>
+                            <TemplateColumn>
+                                <CellTemplate>
+                                    <ContentHeader Entity="context.Item"></ContentHeader>
+                                </CellTemplate>
+                            </TemplateColumn>
+                        </Columns>
+                        <PagerContent>
+                            <MudDataGridPager T="OrigamiVideo" PageSizeOptions="new int[] { 5, 10, 25, }"></MudDataGridPager>
+                        </PagerContent>
+                    </MudDataGrid>
+                </ChildContent>
+            </MudTabPanel>
+            <MudTabPanel Text="@Text.Upper("Software releases")" Visible="@(this.Entity.New == false)">
+                <ChildContent>
+                    <MudDataGrid Class="" T="OrigamiSoftwareRelease" Items="this.GetSoftwareReleases()" Filterable="false" SortMode="SortMode.None">
+                        <Columns>
+                            <TemplateColumn>
+                                <CellTemplate>
+                                    <ContentHeader Entity="context.Item" ShowRelatedContent="false"></ContentHeader>
+                                </CellTemplate>
+                            </TemplateColumn>
+                        </Columns>
+                        <PagerContent>
+                            <MudDataGridPager T="OrigamiSoftwareRelease" PageSizeOptions="new int[] { 5, 10, 25, }"></MudDataGridPager>
+                        </PagerContent>
+                    </MudDataGrid>
+                </ChildContent>
+            </MudTabPanel>
+            <MudTabPanel Text="@Text.Upper("Summary")">
+                <ChildContent>
+                     <UserSummary Entity="this.Entity"></UserSummary>
+                </ChildContent>
+            </MudTabPanel>
+        </MudTabs>
+        <div class="buttons text-center z-index-front position-sticky" style="bottom: 0;">
             <div class="btn-group">
                 <button class="btn btn-success text-white fw-bold" @onclick="Save" disabled="@this.DisableTheSaveButton">
                     <i class="fa-solid fa-floppy-disk"></i>
@@ -407,6 +371,7 @@
                 }
             </div>
         </div>
+    }
 </div>
 @if (this.FileUploading)
 {
@@ -588,6 +553,11 @@
     protected List<OrigamiPost> GetPosts()
     {
         return this.Super.Contents.ReadFromCache().OfType<OrigamiPost>().Published().Author(this.Entity).ToList();
+    }
+
+    protected List<OrigamiSoftwareRelease> GetSoftwareReleases()
+    {
+        return this.Super.Contents.ReadFromCache().OfType<OrigamiSoftwareRelease>().Published().Author(this.Entity).ToList();
     }
 
     protected List<OrigamiVideo> GetVideos()

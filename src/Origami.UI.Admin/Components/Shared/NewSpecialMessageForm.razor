@@ -101,7 +101,7 @@
             </MudTabPanel>
             <MudTabPanel Text="@Text.Upper("History")" Visible="@(this.Entity.Entity.New == false)">
                 <ChildContent>
-                    <ContentHistories2 Entity="this.Entity"></ContentHistories2>
+                    <ContentHistories Entity="this.Entity.Entity"></ContentHistories>
                 </ChildContent>
             </MudTabPanel>    
             <MudTabPanel Text="@Text.Upper("Preview")">

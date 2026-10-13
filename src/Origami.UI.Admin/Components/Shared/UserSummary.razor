@@ -1,0 +1,46 @@
+﻿@using FluentValidation
+@inherits Basic
+@implements IEntityNull<OrigamiUser>
+
+@if (Entity != null)
+{
+    var validation = this.Validator?.Validate(this.Entity);
+    <div class="user-summary @Class">
+        @if (validation is { IsValid: false })
+        {
+            <table class="w-100" style="max-width: 500px;">
+                <thead>
+                    <tr>
+                        <td class="fw-bold">@Text.Original("Name")</td>
+                        <td class="fw-bold">@Text.Original("Error")</td>
+                        <td></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var error in validation.Errors)
+                    {
+                        <tr>
+                            <td>@error.PropertyName</td>
+                            <td>@error.ErrorMessage</td>
+                            <td class="text-danger" style="width: 20px;">
+                                <i class="fa-solid fa-circle-xmark"></i>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>    
+        }
+        else
+        {
+            <span>
+                @Text.Original(Text.OperationCompletedSuccessfully)
+                <i class="fa-solid fa-circle-check text-success"></i>
+            </span>
+        }
+    </div>
+}
+
+@code {
+    [Parameter] public OrigamiUser? Entity { get; set; }
+    [Inject] public IValidator<OrigamiUser>? Validator { get; set; }
+}
