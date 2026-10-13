@@ -61,7 +61,7 @@
                 </div>
                 <div class="posts col-12">
                     <MudDataGrid @ref="DataGrid" T="HubContentPage" ServerData="GetEntities" Filterable="false" SortMode="SortMode.None" Class="border selectable" SelectedItems="this.SelectedEntities" MultiSelection="true" SelectedItemsChanged="this.SelectedEntitiesChanged"
-                                 Bordered="true" SelectOnRowClick="false">
+                                 Bordered="true" SelectOnRowClick="false" RowClassFunc="this.RowClassFunc">
                         <Columns>
                             <SelectColumn T="HubContentPage"></SelectColumn>
                             <TemplateColumn Title="@Text.Upper("Title")">

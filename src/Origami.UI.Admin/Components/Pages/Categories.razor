@@ -84,14 +84,14 @@
 @code {
     protected override string DefaultOrdering => $"{nameof(OrigamiCategory.Name)}";
 
-    protected override IEnumerable<OrigamiCategory> GetItems()
+    protected override IEnumerable<OrigamiCategory> GetEntities()
     {
         if (this.IncludeDeletedEntitiesInDataGrid)
         {
-            return base.GetItems();
+            return base.GetEntities();
         }
 
-        return from x in base.GetItems() 
+        return from x in base.GetEntities() 
                where x.IsDeleted == false
                where this.Super.IsParentDeleted(x) == false 
                select x;

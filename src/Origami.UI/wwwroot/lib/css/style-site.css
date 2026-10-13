@@ -66,13 +66,9 @@ main { flex: 1; }
 
 .footer .id { display: none!important; }
 
-/*.login .fa-brands { font-size:30px; }*/
-
 .z-index-back { z-index: 001 !important; }
 .z-index-middle { z-index: 100 !important; }
 .z-index-front { z-index: 200 !important; }
-
-.yes-no .mud-input-helper-text { font-weight: bold!important; }
 
 .embed-iframe iframe { min-height: 500px; }
 
