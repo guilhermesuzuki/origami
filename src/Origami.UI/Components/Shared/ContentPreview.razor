@@ -6,12 +6,20 @@
     <style>
         .content-software-releases .remove-file {display:none;}
     </style>
+    
     <div class="content-preview @Class">
-        <ContentHeader2 Entity="@Entity"></ContentHeader2>
-        <ContentEmbedIFrame Entity="Entity.Root" Class="mt-3"></ContentEmbedIFrame>
-        <ContentMediaFile Entity="Entity.Root" Class="mt-3"></ContentMediaFile>
-        <ContentHtml Class="mt-3 p-4 border shadow-sm" Entity="Entity.Root"></ContentHtml>
-        <ContentSoftwareReleases Entity="(this.Entity.Root as OrigamiSoftwareRelease)"></ContentSoftwareReleases>
+        @if (this.Entity is not HubContentSpecialMessage hubSpecialMessage)
+        {
+            <ContentHeader2 Entity="@Entity"></ContentHeader2>
+            <ContentEmbedIFrame Entity="Entity.Root" Class="mt-3"></ContentEmbedIFrame>
+            <ContentMediaFile Entity="Entity.Root" Class="mt-3"></ContentMediaFile>
+            <ContentHtml Class="mt-3 p-4 border shadow-sm" Entity="Entity.Root"></ContentHtml>
+            <ContentSoftwareReleases Entity="(this.Entity.Root as OrigamiSoftwareRelease)"></ContentSoftwareReleases>
+        }
+        else
+        {
+            <SpecialMessageHeader Entity="hubSpecialMessage.Entity"></SpecialMessageHeader>
+        }
     </div>
 }
 
