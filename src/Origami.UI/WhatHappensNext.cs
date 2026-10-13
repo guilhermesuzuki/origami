@@ -65,7 +65,7 @@ public class WhatHappensNext : IWhatHappensNext
                 OrigamiSoftwareRelease => $"/n/softwarereleases?nanoid={(e.Entity as INanoId)?.NanoId}",
                 OrigamiSpecialMessage => $"/n/specialmessages?nanoid={(e.Entity as INanoId)?.NanoId}",
                 OrigamiSpecialPage => $"/n/specialpages?nanoid={(e.Entity as INanoId)?.NanoId}",
-                OrigamiUser => $"/users?nanoid={(e.Entity as INanoId)?.NanoId}",
+                OrigamiUser => $"/n/users?nanoid={(e.Entity as INanoId)?.NanoId}",
                 OrigamiVideo => $"/n/videos?nanoid={(e.Entity as INanoId)?.NanoId}",
                 _ => string.Empty,
             };

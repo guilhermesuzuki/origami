@@ -31,5 +31,23 @@ namespace Origami.UI.Admin
         {
             this.SelectedEntity = this.TheCreator.Create<T>();
         }
+
+        protected override async Task ReloadDataGridAsync()
+        {
+            SelectedEntity = null;
+            SelectedEntities = new();
+            await DataGrid.ReloadServerData();
+            await this.InvokeAsync(this.StateHasChanged);
+        }
+
+        protected override void SetEntityFromQueryString()
+        {
+            base.SetEntityFromQueryString();
+
+            if (this.NanoId.Has() == false)
+            {
+                this.SelectedEntity = null;
+            }
+        }
     }
 }

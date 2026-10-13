@@ -1,5 +1,5 @@
-﻿@page "/users"
-@inherits BasicAdminGrid<OrigamiUser>
+﻿@page "/n/users"
+@inherits BasicAdminGrid2<OrigamiUser>
 <style>
     .roles .id { display: none !important; }
 </style>
@@ -78,11 +78,18 @@
                         </NoRecordsContent>
                     </MudDataGrid>
                 </div>
-                <div class="users-form col-12 mt-3">
-                    <UserForm Class="p-3 shadow-sm border position-sticky" Entity="this.SelectedEntity" Saved="this.EntitySaved" Cancelled="this.EntityCancelled" Created="this.EntityCreated" OnUserBlocked="this.EntitySaved" OnUserUnblocked="this.EntitySaved"></UserForm>
-                </div>
             </div>
         </div>
+        <MudDialog @bind-Visible="IsSelectedEntityNotNull" Options="this.DialogOptions">
+            <TitleContent>
+                @Text.Upper("Editor")
+            </TitleContent>
+            <DialogContent>
+                <div class="position-relative pt-3 pb-3" style="width: 1700px; height: 1000px; max-width:100%; max-height: 100%;">
+                    <NewUserForm Entity="this.SelectedEntity" Class="w-100 h-100" Saved="this.EntitySaved" Cancelled="this.EntityCancelled" Created="this.EntityCreated"></NewUserForm>
+                </div>
+            </DialogContent>
+        </MudDialog>
     </ContentTemplate>
 </Root>
 @code {
