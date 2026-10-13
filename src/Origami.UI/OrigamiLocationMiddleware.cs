@@ -13,18 +13,9 @@ namespace Origami.UI
         {
             try
             {
-                var key = $"Origami_UserLocation_{context.Connection.Id}";
-
-                _logger.LogInformation("Checking for user location in cache with key: {Key}", key);
-
-                if (_memoryCache.Get(key) is Location location)
-                {
-                    _logger.LogInformation("User location found in cache for key: {Key}", key);
-                    await next(context).ConfigureAwait(false);
-                    return;
-                }
-
+                var key = $"Origami_UserLocation";
                 var ip = context.Connection.RemoteIpAddress?.ToString();
+
                 if (ip == null || ip.Like("::1") || ip.Like("127.0.0.1"))
                 {
                     //needs to get the public ip address from 'localhost'
@@ -48,7 +39,7 @@ namespace Origami.UI
                 if (result.Ok)
                 {
                     _logger.LogInformation("User location retrieved for key: {Key}", key);
-                    _memoryCache.Set(key, result.Entity, TimeSpan.FromMinutes(20));
+                    context.Items[key] = result.Entity;
                 }
             }
             catch (Exception)

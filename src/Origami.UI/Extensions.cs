@@ -587,9 +587,7 @@ namespace Origami.UI
 
             tracking.Platform = client.OS.Family;
             tracking.Browser = client.UA.Family;
-
-            var key = $"Origami_UserLocation_{requestContext.ConnectionId}";
-            tracking.Location = memoryCache.Get<Location>(key);
+            tracking.Location = requestContext.Location;
         }
 
         public static WebApplication UseOrigami(this WebApplication app, bool admin = false)
@@ -684,19 +682,18 @@ namespace Origami.UI
 
             app.MapGet("/debug/request", (IHttpContextAccessor accessor, IMyMemoryCache memoryCache) => 
             {
-                var key = $"Origami_UserLocation_{accessor.HttpContext!.Connection.Id}";
                 return new RequestContext()
                 {
-                    ConnectionId = accessor.HttpContext!.Connection.Id,
-                    Headers = accessor.HttpContext!.Request.Headers
+                    ConnectionId = accessor.HttpContext?.Connection.Id,
+                    Headers = accessor.HttpContext?.Request.Headers
                         .Where(x => x.Key.StartsWith("Sec-CH-", StringComparison.OrdinalIgnoreCase))
                         .ToDictionary(a => a.Key, a => a.Value.ToString()),
-                    Host = accessor.HttpContext!.Request.Host.Value,
-                    IpAddress = accessor.HttpContext!.Connection.RemoteIpAddress?.ToString(),
-                    Referrer = accessor.HttpContext!.Request.Headers["Referer"].ToString(),
-                    Scheme = accessor.HttpContext!.Request.Scheme,
-                    UserAgent = accessor.HttpContext!.Request.Headers["User-Agent"].ToString(),
-                    Location = memoryCache.Get<Location>(key),
+                    Host = accessor.HttpContext?.Request.Host.Value,
+                    IpAddress = accessor.HttpContext?.Connection.RemoteIpAddress?.ToString(),
+                    Referrer = accessor.HttpContext?.Request.Headers["Referer"].ToString(),
+                    Scheme = accessor.HttpContext?.Request.Scheme,
+                    UserAgent = accessor.HttpContext?.Request.Headers["User-Agent"].ToString(),
+                    Location = accessor.HttpContext?.Items["Origami_UserLocation"] as Location,
                 };
             });
 

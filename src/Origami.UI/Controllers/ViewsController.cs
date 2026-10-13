@@ -169,9 +169,7 @@ namespace Origami.UI.Controllers
 
             tracking.Platform = client.OS.Family;
             tracking.Browser = client.UA.Family;
-
-            var key = $"Origami_UserLocation_{HttpContext.Connection.Id}";
-            tracking.Location = memoryCache.Get<Location>(key);
+            tracking.Location = HttpContext.Items["Origami_UserLocation"] as Location;
 
             var user = memoryCache.Read<OrigamiUser>().FirstOrDefault(x => x.Id == userId);
             tracking.UserId = user?.Id;
