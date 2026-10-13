@@ -58,6 +58,15 @@
                                     }
                                 </CellTemplate>
                             </TemplateColumn>
+                            <TemplateColumn Title="@Text.Upper("Actions")" Sortable="false" Filterable="false" CellClass="col-1 text-center">
+                                <CellTemplate>
+                                    <div class="btn-group-vertical w-100">
+                                        <button class="btn btn-light" title="@Text.Original("Edit")" @onclick="() => OnEdit(context.Item)">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                        </button>
+                                    </div>
+                                </CellTemplate>
+                            </TemplateColumn>
                         </Columns>
                         <PagerContent>
                             <MudDataGridPager T="OrigamiRole" />
