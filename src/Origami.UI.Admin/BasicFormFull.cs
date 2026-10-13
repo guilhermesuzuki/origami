@@ -65,6 +65,15 @@ namespace Origami.UI.Admin
             this.Entity = Repository.ReadFromCache().Id(this.Entity.Id).Clone() ?? new();
         }
 
+        public void UndoNew()
+        {
+            if (this.Entity is INew { New: true })
+            {
+                this.ShowParentSelector = false;
+                this.Entity = this.TheCreator.Create<T>();
+            }
+        }
+
         protected virtual Result<T> BeforeSaving()
         {
             this.ShowParentSelector = false;

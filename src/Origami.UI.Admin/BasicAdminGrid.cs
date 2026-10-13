@@ -60,7 +60,7 @@ namespace Origami.UI.Admin
         /// <summary>
         /// Selected entity
         /// </summary>
-        protected T SelectedEntity { get; set; } = new();
+        protected T? SelectedEntity { get; set; }
 
         public override void Dispose()
         {
@@ -429,7 +429,7 @@ namespace Origami.UI.Admin
         protected virtual string RowClassFunc(T entity, int index)
         {
             var result = string.Empty;
-            if (entity.Id == SelectedEntity.Id) result += " selected-row";
+            if (SelectedEntity != null && entity.Id == SelectedEntity.Id) result += " selected-row";
             if (entity is IPublished published1 && published1.IsPublished == false) result += " unpublished";
             if (entity is IPublished published2 && published2.IsPublished == true) result += " published";
             if (entity is IDeleted deleted && deleted.IsDeleted == true) result += " deleted";
@@ -470,6 +470,12 @@ namespace Origami.UI.Admin
 
         protected override void SetPageTitle()
         {
+            if (this.SelectedEntity == null || this.SelectedEntity is INew { New: true })
+            {
+                this.PageTitle.SetTitle(typeof(T).GetPlural());
+                return;
+            }
+
             if (SelectedEntity is INew neu && neu.New == true)
             {
                 this.PageTitle.SetTitle(SelectedEntity.GetType().GetPlural());

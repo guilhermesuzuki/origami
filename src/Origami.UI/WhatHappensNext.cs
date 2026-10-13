@@ -60,7 +60,7 @@ public class WhatHappensNext : IWhatHappensNext
                 OrigamiPage => $"/new/pages?nanoid={(e.Entity as INanoId)?.NanoId}",
                 OrigamiPost => $"/new/posts?nanoid={(e.Entity as INanoId)?.NanoId}",
                 OrigamiQuickNote => $"/quicknotes?nanoid={(e.Entity as INanoId)?.NanoId}",
-                OrigamiRole => $"/roles?nanoid={(e.Entity as INanoId)?.NanoId}",
+                OrigamiRole => $"/new/roles?nanoid={(e.Entity as INanoId)?.NanoId}",
                 OrigamiSocialProfile => $"/socialprofiles?nanoid={(e.Entity as INanoId)?.NanoId}",
                 OrigamiSoftwareRelease => $"/new/softwarereleases?nanoid={(e.Entity as INanoId)?.NanoId}",
                 OrigamiSpecialMessage => $"/new/specialmessages?nanoid={(e.Entity as INanoId)?.NanoId}",
