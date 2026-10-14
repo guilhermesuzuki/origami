@@ -1,0 +1,114 @@
+﻿@page "/n/categories"
+@inherits BasicAdminGrid2<OrigamiCategory>
+
+<Root Access="this.CanAccess()">
+    <HeaderTemplate>
+        <div class="p-3 border-bottom">
+            <div class="row">
+                <div class="d-inline-flex align-items-center col-12 col-xxl-8">
+                    <i class="fa-solid fa-layer-group pe-1"></i>
+                    <span class="me-3">@Text.Upper("Categories")</span>
+                    <div class="btn-group me-1">
+                        <button class="btn btn-light text-danger border border-danger" disabled="@this.DisableTheDeleteButton" @onclick="this.DeleteSelectedEntities">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                    <div class="btn-group me-1">
+                        <button class="btn btn-info text-white fw-bold" @onclick="this.New">
+                            <i class="fa-solid fa-square-plus"></i>
+                            @Text.Lower("New")
+                        </button>
+                    </div>
+                </div>
+                <div class="col-12 col-xxl-4">
+                    <BlogSelect></BlogSelect>
+                </div>
+            </div>
+        </div>
+    </HeaderTemplate>
+    <ContentTemplate>
+        <div class="p-3">
+            <div class="row">
+                <div class="datagrid-options col-12 text-right mb-1">
+                    <DataGridOptions Deleted="this.IncludeDeletedEntitiesInDataGrid" DeletedChanged="this.OnIncludeDeletedEntitiesChanged"></DataGridOptions>
+                </div>
+                <div class="categories col-12">
+                    <MudDataGrid @ref="DataGrid" T="OrigamiCategory" ServerData="GetEntities" Filterable="false" SortMode="SortMode.None" Class="border selectable" SelectedItems="this.SelectedEntities" MultiSelection="true" SelectedItemsChanged="this.SelectedEntitiesChanged"
+                                 RowClassFunc="this.RowClassFunc" Bordered="true" SelectOnRowClick="false">
+                        <Columns>
+                            <SelectColumn T="OrigamiCategory"></SelectColumn>
+                            <TemplateColumn Title="@Text.Upper("Name")" Sortable="false" Filterable="false" CellClass="col-6" SortBy="x => nameof(x.Name)">
+                                <CellTemplate>
+                                    <div class="cursor-pointer" @onclick="() => OnEdit(context.Item)">
+                                        <CategoryHeaderInline Class="" Entity="context.Item"></CategoryHeaderInline>
+                                        <div class="x-small">@context.Item.Description</div>
+                                    </div>
+                                </CellTemplate>
+                            </TemplateColumn>
+                            <TemplateColumn Title="@Text.Upper("Parent category")" Sortable="false" Filterable="false" CellClass="col-3 parent-category">
+                                <CellTemplate>
+                                    @if (context.Item.ParentId != null)
+                                    {
+                                        var parent = this.Repository.ReadFromCache().Id(context.Item.ParentId.Value);
+                                        @if (parent != null)
+                                        {
+                                            <div class="category-parent mb-1 me-1 shadow-sm border p-2 d-inline-block @(parent.IsDeleted ? "deleted" : null)">
+                                                <CategoryHeaderInline Entity="parent"></CategoryHeaderInline>
+                                            </div>
+                                        }
+                                    }
+                                </CellTemplate>
+                            </TemplateColumn>
+                            <TemplateColumn Title="@Text.Upper("Child categories")" Sortable="false" Filterable="false" CellClass="col-3 child-categories">
+                                <CellTemplate>
+                                    @foreach (var category in this.Repository.ReadFromCache().GetChildren(context.Item).OrderBy(x => x.Name))
+                                    {
+                                        if (this.IncludeDeletedEntitiesInDataGrid == false && category.IsDeleted)
+                                        {
+                                            continue;
+                                        }
+                                        <div class="category-child mb-1 me-1 shadow-sm border p-2 d-inline-block @(category.IsDeleted ? "deleted" : null)">
+                                            <CategoryHeaderInline Entity="category"></CategoryHeaderInline>
+                                        </div>
+                                    }
+                                </CellTemplate>
+                            </TemplateColumn>
+                        </Columns>
+                        <PagerContent>
+                            <MudDataGridPager T="OrigamiCategory" />
+                        </PagerContent>
+                        <NoRecordsContent>
+                            <NoEntriesWereFound></NoEntriesWereFound>
+                        </NoRecordsContent>
+                    </MudDataGrid>
+                </div>
+            </div>
+        </div>
+        <MudDialog @bind-Visible="IsSelectedEntityNotNull" Options="this.DialogOptions">
+            <TitleContent>
+                @Text.Upper("Editor")
+            </TitleContent>
+            <DialogContent>
+                <div class="position-relative pt-3 pb-3" style="width: 1700px; height: 1000px; max-width:100%; max-height: 100%;">
+                    <NewCategoryForm Entity="this.SelectedEntity" Class="w-100 h-100" Saved="this.EntitySaved" Cancelled="this.EntityCancelled" Created="this.EntityCreated"></NewCategoryForm>
+                </div>
+            </DialogContent>
+        </MudDialog>
+    </ContentTemplate>
+</Root>
+@code {
+    protected override string DefaultOrdering => $"{nameof(OrigamiCategory.Name)}";
+
+    protected override IEnumerable<OrigamiCategory> GetEntities()
+    {
+        if (this.IncludeDeletedEntitiesInDataGrid)
+        {
+            return base.GetEntities();
+        }
+
+        return from x in base.GetEntities() 
+               where x.IsDeleted == false
+               where this.Super.IsParentDeleted(x) == false 
+               select x;
+    }
+}

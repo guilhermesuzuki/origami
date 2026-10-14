@@ -55,7 +55,7 @@ public class WhatHappensNext : IWhatHappensNext
         {
             hyperlink = e.Entity switch
             {
-                OrigamiCategory => $"/categories?nanoid={(e.Entity as INanoId)?.NanoId}",
+                OrigamiCategory => $"/n/categories?nanoid={(e.Entity as INanoId)?.NanoId}",
                 OrigamiContentTag => $"/tags?nanoid={(e.Entity as INanoId)?.NanoId}",
                 OrigamiPage => $"/n/pages?nanoid={(e.Entity as INanoId)?.NanoId}",
                 OrigamiPost => $"/n/posts?nanoid={(e.Entity as INanoId)?.NanoId}",

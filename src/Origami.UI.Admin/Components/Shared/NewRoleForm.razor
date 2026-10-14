@@ -1148,27 +1148,27 @@
         </div>
     </div>
     <div class="buttons text-center z-index-front position-sticky" style="bottom: 0;">
-            <div class="btn-group">
-                <button class="btn btn-success text-white fw-bold" @onclick="Save" disabled="@this.DisableTheSaveButton">
-                    <i class="fa-solid fa-floppy-disk"></i>
-                    @Text.Lower("Save")
+        <div class="btn-group">
+            <button class="btn btn-success text-white fw-bold" @onclick="Save" disabled="@this.DisableTheSaveButton">
+                <i class="fa-solid fa-floppy-disk"></i>
+                @Text.Lower("Save")
+            </button>
+            @if (this.Entity.New == false)
+            {
+                <button class="btn btn-secondary text-white fw-bold" @onclick="UndoChanges">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    @Text.Lower("Undo changes")
                 </button>
-                @if (this.Entity.New == false)
-                {
-                    <button class="btn btn-secondary text-white fw-bold" @onclick="UndoChanges">
-                        <i class="fa-solid fa-rotate-left"></i>
-                        @Text.Lower("Undo changes")
-                    </button>
-                }
-                else
-                {
-                    <button class="btn btn-secondary text-white fw-bold" @onclick="UndoNew">
-                        <i class="fa-solid fa-rotate-left"></i>
-                        @Text.Lower("Undo changes")
-                    </button>
-                }
-            </div>
+            }
+            else
+            {
+                <button class="btn btn-secondary text-white fw-bold" @onclick="UndoNew">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    @Text.Lower("Undo changes")
+                </button>
+            }
         </div>
+    </div>
 </div>
 
 @code {
