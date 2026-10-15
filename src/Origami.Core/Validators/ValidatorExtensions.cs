@@ -101,7 +101,9 @@ namespace Origami.Core.Validators
         {
             return ruleBuilder
                 .Must(x => x.DisplayName.Like(x.Username) == false)
-                .WithMessage("For security reasons, the username and display name must be different from each other");
+                .WithMessage("For security reasons, the username and display name must be different from each other")
+                .WithName(nameof(IUsername.Username))
+                ;
         }
 
         public static IRuleBuilderOptions<T, string> Domain<T>(this IRuleBuilder<T, string> ruleBuilder, Text text, string field = "website")
