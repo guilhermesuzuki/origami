@@ -1,0 +1,31 @@
+﻿@using FluentValidation
+@inherits Basic
+@implements IEntityNull<OrigamiCategory>
+
+@if (Entity != null)
+{
+    var validation = this.Validator?.Validate(this.Entity);
+    <div class="category-summary @Class">
+        @if (validation is { IsValid: false })
+        {
+            <MudDataGrid Items="validation.Errors">
+                <Columns>
+                    <PropertyColumn Property="(x) => x.PropertyName" Title="@Text.Upper("Property")" HeaderClass="col-2"></PropertyColumn>
+                    <PropertyColumn Property="(x) => x.ErrorMessage" Title="@Text.Upper("Error")"></PropertyColumn>
+                </Columns>
+            </MudDataGrid>
+        }
+        else
+        {
+            <span>
+                @Text.Original(Text.OperationCompletedSuccessfully)
+                <i class="fa-solid fa-circle-check text-success"></i>
+            </span>
+        }
+    </div>
+}
+
+@code {
+    [Parameter] public OrigamiCategory? Entity { get; set; }
+    [Inject] public IValidator<OrigamiCategory>? Validator { get; set; }
+}
