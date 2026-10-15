@@ -243,7 +243,23 @@
             </MudTabPanel>
             <MudTabPanel Text="@Text.Upper("Actions")" Visible="@(this.Entity.New == false)">
                 <ChildContent>
-                    <div class="btn-group-vertical w-100">
+                    <ul class="inline-list">
+                        <li>
+                            <MudTextField ReadOnly="true"
+                                          Immediate="true"
+                                          Value="@(Text.Lower(Entity.TOTPSecret.Has().YesNo(Text)))"
+                                          HelperText="@Text.Lower("2FA secret?")"
+                                          Class="yes-no"></MudTextField>
+                        </li>
+                        <li>
+                            <MudTextField ReadOnly="true"
+                                          Immediate="true"
+                                          Value="@(Text.Lower(Entity.GetTOTPRecoveryCodes().Any().YesNo(Text)))"
+                                          HelperText="@Text.Lower("2FA recovery codes?")"
+                                          Class="yes-no"></MudTextField>
+                        </li>
+                    </ul>
+                    <div class="btn-group w-100 mt-3">
                         @if (this.UserFacade.User.Id == this.Entity.Id)
                         {
                             <button class="btn btn-danger text-white fw-bold w-100" @onclick="BlockUserSelf" disabled="@this.Entity.IsBlocked" title="@Text.Original("This will block yourself")">
