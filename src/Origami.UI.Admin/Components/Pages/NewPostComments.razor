@@ -32,13 +32,12 @@
                             <TemplateColumn Title="@Text.Upper("Comment")">
                                 <CellTemplate>
                                     <div class="cursor-pointer" @onclick="() => OnEdit(context.Item)">
-                                        <CommentLite Entity="context.Item"></CommentLite>
                                         @if (context.Item.ParentId != null)
                                         {
                                             var parent = this.Super.ContentComments.ReadFromCache().Id(context.Item.ParentId.Value);
                                             @if (parent != null)
                                             {
-                                                <div class="mt-3 border p-3 shadow-sm">
+                                                <div class="mb-3 pb-3 border-bottom">
                                                     <span class="small fw-bold">
                                                         <i class="fa-solid fa-reply"></i>
                                                         @Text.Lower("Answering")
@@ -47,6 +46,7 @@
                                                 </div>
                                             }
                                         }
+                                        <CommentLite Entity="context.Item"></CommentLite>
                                     </div>
                                 </CellTemplate>
                             </TemplateColumn>

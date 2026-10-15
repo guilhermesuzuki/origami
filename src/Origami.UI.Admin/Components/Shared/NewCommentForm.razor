@@ -5,13 +5,25 @@
 <div class="content-comment-form @Class">
     @if (this.Entity != null)
     {
-        var post = this.Super.Contents.ReadFromCache().OfType<OrigamiPost>().Id(Entity.ContentId);
+        var content = this.Super.Contents.ReadFromCache().Id(Entity.ContentId);
         var socialProfile = this.Super.SocialProfiles.ReadFromCache().Id(Entity.SocialProfileId);
         var user = this.Super.Users.ReadFromCache().Id(Entity.UserId);
         <BasicHeaderNotes Entity="this.Entity"></BasicHeaderNotes>
         <MudTabs Class="mt-5 border" TabPanelsClass="p-3">
+            <MudTabPanel Class="@(this.Entity.ParentId != null ? null : "d-none")" Text="@Text.Upper("Answering")">
+                @if (Entity.ParentId != null)
+                {
+                    var parent = this.Repository.ReadFromCache().Id(Entity.ParentId.Value);
+                    @if (parent != null)
+                    {
+                        <div class="comment-answering-to border p-3 shadow-sm">
+                            <CommentLite Entity="parent"></CommentLite>
+                        </div>
+                    }
+                }
+            </MudTabPanel>
             <MudTabPanel Text="@Text.Upper("Comment")">
-                <ContentHeaderLite Class="mt-3" Entity="post"></ContentHeaderLite>
+                <ContentHeaderLite Class="" Entity="content"></ContentHeaderLite>
                 <SocialProfileCard Class="mt-3 p-3 border shadow-sm" Entity="socialProfile"></SocialProfileCard>
                 <UserHeaderCard Class="mt-3 p-3 border shadow-sm" Entity="user"></UserHeaderCard>
                 <BasicHeader Class="mt-3" Entity="this.Entity"></BasicHeader>
@@ -67,22 +79,7 @@
                         </ul>
                     </li>
                 </ul>
-                @if (Entity.ParentId != null)
-                {
-                    var parent = this.Repository.ReadFromCache().Id(Entity.ParentId.Value);
-                    @if (parent != null)
-                    {
-                        <div class="p-3">
-                            <div class="w-100 text-white bg-secondary text-center mb-3">
-                                @Text.Lower("Answering")
-                            </div>
-                            <div class="mt-3 border p-3 shadow-sm">
-                                <CommentLite Entity="parent"></CommentLite>
-                            </div>
-                        </div>
-                    }
-                }
-                <div class="border-top border-bottom mt-3 p-3 bg-light bg-gradient post-comment-text" style="margin-left: -1rem; margin-right: -1rem; font-size:x-large;">
+                <div class="border mt-3 p-3 bg-light bg-gradient post-comment-text" style="font-size:x-large;">
                     @Entity.Content.Markup()
                 </div>
             </MudTabPanel>

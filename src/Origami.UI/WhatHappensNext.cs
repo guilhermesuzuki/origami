@@ -76,7 +76,7 @@ public class WhatHappensNext : IWhatHappensNext
                 hyperlink = content switch
                 {
                     OrigamiPost => $"/n/posts/comments?nanoid={comment.NanoId}",
-                    OrigamiVideo => $"/videos/comments?nanoid={comment.NanoId}",
+                    OrigamiVideo => $"/n/videos/comments?nanoid={comment.NanoId}",
                     _ => string.Empty,
                 };
             }
