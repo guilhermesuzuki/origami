@@ -1,0 +1,209 @@
+﻿@inherits BasicFormFull<OrigamiSocialProfile>
+
+@inject IUserActivityRepository _userActivity
+@inject ISocialProfileRepository _socialProfile
+@inject IContentCommentReactionRepository _postCommentReaction
+@inject IContentCommentRepository _postComment
+@inject IContentRatingRepository _postRating
+
+<style>
+    .mud-tabs { flex:1; }
+</style>
+<div class="new-social-profile-form d-flex @Class" style="flex-flow: column;">
+    <BasicHeaderNotes Entity="this.Entity"></BasicHeaderNotes>
+    <MudTabs Class="mt-5 border" TabPanelsClass="p-3">
+        <MudTabPanel Text="@Text.Upper("Basic")">
+            <ChildContent>
+                <div class="text-center py-2">
+                    <div>
+                        <img src="@this.Entity.ProfilePicture()" style="width:120px; height: 120px;" onerror="this.src='@(OrigamiConstants.NoUser)'" />
+                    </div>
+                    <div class="features">
+                        <SocialProfileFeatures Entity="Entity"></SocialProfileFeatures>
+                    </div>
+                </div>
+                <BasicHeader Class="mt-3" Entity="this.Entity"></BasicHeader>
+                <MudTextField FullWidth="true"
+                              Text="@Entity.GetName()"
+                              HelperText="@Text.Lower("Name")"
+                              ReadOnly="true"
+                              AdornmentIcon="@Entity.SocialNetwork.Icon().Value"
+                              Adornment="Adornment.Start"
+                              Class="social-profile name mt-3"
+                              T="string"></MudTextField>
+
+                <MudTextField FullWidth="true"
+                              Text="@this.Entity.GetEmail(Text)"
+                              HelperText="@Text.Lower("E-mail")"
+                              ReadOnly="true"
+                              AdornmentIcon="@Icons.Material.Filled.AlternateEmail"
+                              Adornment="Adornment.Start"
+                              Class="social-profile e-mail mt-3"
+                              T="string"></MudTextField>
+
+                <MudTextField FullWidth="true"
+                              Text="@(SubscriberText())"
+                              HelperText="@Text.Lower("Subscriber")"
+                              ReadOnly="true"
+                              AdornmentIcon="@Icons.Material.Filled.ContactMail"
+                              Adornment="Adornment.Start"
+                              Class="social-profile subscriber mt-3"
+                              T="string"></MudTextField>
+
+                <div class="row mt-3">
+                    <div class="col-12 col-xl-6">
+                        <div class="fs-5">
+                            @Text.Lower("Ratings")
+                        </div>
+                        <span>
+                            @this.Super.ContentRatings.RatingsFromProfile(this.Entity).Count()
+                        </span>
+                    </div>
+                    <div class="col-12 col-xl-6">
+                        <div class="fs-5">
+                            @Text.Lower("Reactions")
+                        </div>
+                        <span>
+                            @(this.Super.ContentCommentReactions.ReactionsFromProfile(this.Entity).Count() + this.Super.ContentReactions.ReactionsFromProfile(this.Entity).Count())
+                        </span>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <div class="fs-5">
+                            @Text.Lower("Comments [including deleted]")
+                        </div>
+                        <span>
+                            @this.Super.ContentComments.CommentsFromProfile(this.Entity, true).Count()
+                        </span>
+                    </div>
+                </div>
+            </ChildContent>
+        </MudTabPanel>
+        <MudTabPanel Text="@Text.Upper("User Activity")">
+            <ChildContent>
+                <div class="user-activity">
+                    <div class="w-100 text-center fs-4 p-2">
+                        <i class="fa-solid fa-bolt"></i>
+                        @Text.Lower("User Activity")
+                    </div>
+                    <MudDataGrid @ref="_userActivities" T="OrigamiUserActivity" Class="border-top" ServerData="this.UserActivities" SortMode="SortMode.None" Filterable="false">
+                        <Columns>
+                            <TemplateColumn>
+                                <CellTemplate>
+                                    <span class="fw-bold">
+                                        <i class="fa-solid fa-calendar"></i>
+                                        @context.Item.Date
+                                    </span>
+                                    @if (context.Item.Type.Like("ContentCommentReaction") == true)
+                                    {
+                                        <UserActivityContentCommentReaction Id="@context.Item.Id"></UserActivityContentCommentReaction>
+                                    }
+                                    else if (context.Item.Type.Like("ContentComment") == true)
+                                    {
+                                        <UserActivityContentComment Id="@context.Item.Id"></UserActivityContentComment>
+                                    }
+                                    else if (context.Item.Type.Like("ContentRating") == true)
+                                    {
+                                        <UserActivityContentRating Id="@context.Item.Id"></UserActivityContentRating>
+                                    }
+                                    else if (context.Item.Type.Like("ContentReaction") == true)
+                                    {
+                                        <UserActivityContentReaction Id="@context.Item.Id"></UserActivityContentReaction>
+                                    }
+                                    else if (context.Item.Type.Like("SocialProfileDelete") == true)
+                                    {
+                                        <UserActivitySocialProfileDelete Id="@context.Item.Id"></UserActivitySocialProfileDelete>
+                                    }
+                                    else if (context.Item.Type.Like("SocialProfileLogsIntoWebsiteEvent") == true)
+                                    {
+                                        <UserActivitySocialProfileLogsIntoWebsite Id="@context.Item.Id"></UserActivitySocialProfileLogsIntoWebsite>
+                                    }
+                                    else if (context.Item.Type.Like("SocialProfileSubscribesToWebsiteEvent") == true)
+                                    {
+                                        <UserActivitySocialProfileSubscribesToWebsite Id="@context.Item.Id"></UserActivitySocialProfileSubscribesToWebsite>
+                                    }
+                                    else if (context.Item.Type.Like("SocialProfileUnsubscribesFromWebsiteEvent") == true)
+                                    {
+                                        <UserActivitySocialProfileUnsubscribesFromWebsite Id="@context.Item.Id"></UserActivitySocialProfileUnsubscribesFromWebsite>
+                                    }
+                                </CellTemplate>
+                            </TemplateColumn>
+                        </Columns>
+                        <PagerContent>
+                            <MudDataGridPager T="OrigamiUserActivity" PageSizeOptions="[5, 10, 25, 50, 100]"></MudDataGridPager>
+                        </PagerContent>
+                    </MudDataGrid>
+                </div>
+            </ChildContent>
+        </MudTabPanel>
+    </MudTabs>
+</div>
+
+@code {
+    /// <summary>
+    /// User Activities DataGrid
+    /// </summary>
+    private MudDataGrid<OrigamiUserActivity>? _userActivities;
+
+    protected override bool DisableTheSaveButton => true;
+
+    /// <summary>
+    /// Do not call this function
+    /// </summary>
+    /// <exception cref="InvalidOperationException"></exception>
+    public override void Save()
+    {
+        throw new InvalidOperationException();
+    }
+
+    protected Task<GridData<OrigamiUserActivity>> UserActivities(GridState<OrigamiUserActivity> state, CancellationToken token)
+    {
+        var orders = new StringBuilder();
+
+        //iterates through every sort definition
+        foreach (var definition in state.SortDefinitions)
+        {
+            orders.AppendFormat(",{0} {1}",
+                definition.SortBy,
+                definition.Descending ? "DESC" : "ASC");
+        }
+
+        var filters = new StringBuilder($"({nameof(OrigamiUserActivity.SocialProfileId)} == \"{Entity.Id}\")");
+
+        //iterates through every filter definition
+        foreach (var definition in state.FilterDefinitions)
+        {
+            filters.AppendFormat("&& ({0})", definition.Filter());
+        }
+
+        var orderBy = orders.ToString();
+
+        using var db = DbContextFactory.CreateDbContext();
+
+        var result = db.Set<OrigamiUserActivity>().AsNoTracking().Query(
+            state.PageSize,
+            state.Page * state.PageSize,
+            filters.ToString(),
+            orderBy != string.Empty ? orderBy[1..] : $"{nameof(OrigamiUserActivity.Date)} DESC"
+        );
+
+        return Task.FromResult(new GridData<OrigamiUserActivity> { Items = result.Rows, TotalItems = (int)result.NumberOfRows, });
+    }
+
+    private string SubscriberText()
+    {
+        var sub = this.Super.GetSubscriber(this.Entity);
+        if (sub != null)
+        {
+            return $"{Text.Lower("Yes, since")}: {sub.GetDate()}";
+        }
+        return Text.Lower("No");
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        this._userActivities?.ReloadServerData();
+    }
+}

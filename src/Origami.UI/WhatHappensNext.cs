@@ -56,12 +56,12 @@ public class WhatHappensNext : IWhatHappensNext
             hyperlink = e.Entity switch
             {
                 OrigamiCategory => $"/n/categories?nanoid={(e.Entity as INanoId)?.NanoId}",
-                OrigamiContentTag => $"/tags?nanoid={(e.Entity as INanoId)?.NanoId}",
+                OrigamiContentTag => $"/n/tags?nanoid={(e.Entity as INanoId)?.NanoId}",
                 OrigamiPage => $"/n/pages?nanoid={(e.Entity as INanoId)?.NanoId}",
                 OrigamiPost => $"/n/posts?nanoid={(e.Entity as INanoId)?.NanoId}",
                 OrigamiQuickNote => $"/quicknotes?nanoid={(e.Entity as INanoId)?.NanoId}",
                 OrigamiRole => $"/n/roles?nanoid={(e.Entity as INanoId)?.NanoId}",
-                OrigamiSocialProfile => $"/socialprofiles?nanoid={(e.Entity as INanoId)?.NanoId}",
+                OrigamiSocialProfile => $"/n/socialprofiles?nanoid={(e.Entity as INanoId)?.NanoId}",
                 OrigamiSoftwareRelease => $"/n/softwarereleases?nanoid={(e.Entity as INanoId)?.NanoId}",
                 OrigamiSpecialMessage => $"/n/specialmessages?nanoid={(e.Entity as INanoId)?.NanoId}",
                 OrigamiSpecialPage => $"/n/specialpages?nanoid={(e.Entity as INanoId)?.NanoId}",
