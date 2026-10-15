@@ -45,7 +45,7 @@
                                  RowClassFunc="this.RowClassFunc" Bordered="true" SelectOnRowClick="false">
                         <Columns>
                             <SelectColumn T="OrigamiUser"></SelectColumn>
-                            <TemplateColumn Title="@Text.Upper("User")" HeaderStyle="width: 75%;">
+                            <TemplateColumn Title="@Text.Upper("User")">
                                 <CellTemplate>
                                     <div class="cursor-pointer" @onclick="() => OnEdit(context.Item)">
                                         <ul class="inline-list">
@@ -59,7 +59,7 @@
                                     </div>
                                 </CellTemplate>
                             </TemplateColumn>
-                            <TemplateColumn Title="@Text.Upper("Roles")" HeaderStyle="width: 25%;" CellClass="roles">
+                            <TemplateColumn Title="@Text.Upper("Roles")" CellClass="roles col-1">
                                 <CellTemplate>
                                     @if (context.Item != null)
                                     {

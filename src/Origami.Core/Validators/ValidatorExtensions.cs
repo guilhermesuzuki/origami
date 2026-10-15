@@ -265,11 +265,13 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("Note cannot exceed {0} characters", 255));
         }
 
-        public static IRuleBuilderOptions<T, T> ParentId<T>(this IRuleBuilder<T, T> ruleBuilder, Text text) where T : IId, IParentIdNull
+        public static IRuleBuilderOptions<T, T> Parent<T>(this IRuleBuilder<T, T> ruleBuilder, Text text) where T : IId, IParentIdNull
         {
             return ruleBuilder
                 .Must(x => x.ParentId == null || x.Id != x.ParentId)
-                .WithMessage(text.Original("An entity cannot be its own parent"));
+                .WithMessage(text.Original("An entity cannot be its own parent"))
+                .WithName(text.Original("Parent"))
+                ;
         }
 
         public static IRuleBuilderOptions<T, byte> Rating<T>(this IRuleBuilder<T, byte> ruleBuilder, Text text)

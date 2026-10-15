@@ -63,7 +63,7 @@
                                     </div>
                                 </CellTemplate>
                             </TemplateColumn>
-                            <TemplateColumn Title="@Text.Upper("Header")" CellClass="col-3">
+                            <TemplateColumn Title="@Text.Upper("Header")">
                                 <CellTemplate>
                                     <ContentHeader Entity="context.Item.Entity"></ContentHeader>
                                 </CellTemplate>
@@ -93,7 +93,7 @@
                                     <div class="small">@context.Item.Entity?.GetDate()</div>
                                 </CellTemplate>
                             </TemplateColumn>
-                            <TemplateColumn Title="@Text.Upper("Actions")" Sortable="false" Filterable="false" CellClass="col-1 text-center">
+                            <TemplateColumn Title="@Text.Upper("Actions")" Sortable="false" Filterable="false" HeaderClass="col-1 text-center">
                                 <CellTemplate>
                                     <div class="btn-group-vertical w-100">
                                         <button class="btn btn-light" title="@Text.Original("Edit")" @onclick="() => OnEdit(context.Item)">

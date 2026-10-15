@@ -37,7 +37,7 @@
                                  RowClassFunc="this.RowClassFunc" Bordered="true" SelectOnRowClick="false">
                         <Columns>
                             <SelectColumn T="OrigamiCategory"></SelectColumn>
-                            <TemplateColumn Title="@Text.Upper("Name")" Sortable="false" Filterable="false" CellClass="col-6" SortBy="x => nameof(x.Name)">
+                            <TemplateColumn Title="@Text.Upper("Name")" Sortable="false" Filterable="false" SortBy="x => nameof(x.Name)">
                                 <CellTemplate>
                                     <div class="cursor-pointer" @onclick="() => OnEdit(context.Item)">
                                         <CategoryHeaderInline Class="" Entity="context.Item"></CategoryHeaderInline>
@@ -45,7 +45,7 @@
                                     </div>
                                 </CellTemplate>
                             </TemplateColumn>
-                            <TemplateColumn Title="@Text.Upper("Parent category")" Sortable="false" Filterable="false" CellClass="col-3 parent-category">
+                            <TemplateColumn Title="@Text.Upper("Parent category")" Sortable="false" Filterable="false" CellClass="col-2 parent-category">
                                 <CellTemplate>
                                     @if (context.Item.ParentId != null)
                                     {
@@ -59,7 +59,7 @@
                                     }
                                 </CellTemplate>
                             </TemplateColumn>
-                            <TemplateColumn Title="@Text.Upper("Child categories")" Sortable="false" Filterable="false" CellClass="col-3 child-categories">
+                            <TemplateColumn Title="@Text.Upper("Child categories")" Sortable="false" Filterable="false" CellClass="col-2 child-categories">
                                 <CellTemplate>
                                     @foreach (var category in this.Repository.ReadFromCache().GetChildren(context.Item).OrderBy(x => x.Name))
                                     {
@@ -71,6 +71,15 @@
                                             <CategoryHeaderInline Entity="category"></CategoryHeaderInline>
                                         </div>
                                     }
+                                </CellTemplate>
+                            </TemplateColumn>
+                            <TemplateColumn Title="@Text.Upper("Actions")" Sortable="false" Filterable="false" CellClass="col-1 text-center">
+                                <CellTemplate>
+                                    <div class="btn-group-vertical w-100">
+                                        <button class="btn btn-light" title="@Text.Original("Edit")" @onclick="() => OnEdit(context.Item)">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                        </button>
+                                    </div>
                                 </CellTemplate>
                             </TemplateColumn>
                         </Columns>
