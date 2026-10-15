@@ -10,7 +10,7 @@
         var user = this.Super.Users.ReadFromCache().Id(Entity.UserId);
         <BasicHeaderNotes Entity="this.Entity"></BasicHeaderNotes>
         <MudTabs Class="mt-5 border" TabPanelsClass="p-3">
-            <MudTabPanel Class="@(this.Entity.ParentId != null ? null : "d-none")" Text="@Text.Upper("Answering")">
+            <MudTabPanel Visible="@(this.Entity.ParentId != null)" Text="@Text.Upper("Answering")">
                 @if (Entity.ParentId != null)
                 {
                     var parent = this.Repository.ReadFromCache().Id(Entity.ParentId.Value);
