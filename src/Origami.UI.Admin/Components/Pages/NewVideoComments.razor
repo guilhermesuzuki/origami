@@ -37,16 +37,10 @@
                                             var parent = this.Super.ContentComments.ReadFromCache().Id(context.Item.ParentId.Value);
                                             @if (parent != null)
                                             {
-                                                <div class="mb-3 pb-3 border-bottom">
-                                                    <span class="small fw-bold">
-                                                        <i class="fa-solid fa-reply"></i>
-                                                        @Text.Lower("Answering")
-                                                    </span>
-                                                    <CommentLite Entity="parent"></CommentLite>
-                                                </div>
+                                                <CommentLite Class="mb-3 p-3 border bg-primary-subtle shadow-sm" Entity="parent"></CommentLite>
                                             }
                                         }
-                                        <CommentLite Entity="context.Item"></CommentLite>
+                                        <CommentLite Class="p-3 border bg-secondary-subtle shadow-sm" Entity="context.Item"></CommentLite>
                                     </div>
                                 </CellTemplate>
                             </TemplateColumn>
@@ -82,7 +76,7 @@
         </MudDialog>
     </ContentTemplate>
 </Root>
-@code 
+@code
 {
     protected override string DefaultOrdering => $"{nameof(OrigamiContentComment.DateCreated)} DESC";
 
