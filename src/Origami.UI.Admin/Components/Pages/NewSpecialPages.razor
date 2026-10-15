@@ -63,12 +63,12 @@
                                     </div>
                                 </CellTemplate>
                             </TemplateColumn>
-                            <TemplateColumn Title="@Text.Upper("Header")">
+                            <TemplateColumn Title="@Text.Upper("Header")" HeaderClass="col-3">
                                 <CellTemplate>
                                     <ContentHeader Entity="context.Item.Entity"></ContentHeader>
                                 </CellTemplate>
                             </TemplateColumn>
-                            <TemplateColumn Title="@Text.Upper("Published")" Sortable="false" Filterable="false" CellClass="col-1 text-center">
+                            <TemplateColumn Title="@Text.Upper("Published")" Sortable="false" Filterable="false" HeaderClass="col-1" CellClass="text-center">
                                 <CellTemplate>
                                     @if (context.Item.Entity?.IsPublished ?? false)
                                     {
@@ -77,13 +77,13 @@
                                     }
                                 </CellTemplate>
                             </TemplateColumn>
-                            <TemplateColumn Title="@Text.Upper("Date")" Sortable="false" Filterable="false" CellClass="col-1 text-center">
+                            <TemplateColumn Title="@Text.Upper("Date")" Sortable="false" Filterable="false" HeaderClass="col-1" CellClass="text-center">
                                 <CellTemplate>
                                     <i class="fa-solid fa-calendar"></i>
                                     <div class="small">@context.Item.Entity?.GetDate()</div>
                                 </CellTemplate>
                             </TemplateColumn>
-                            <TemplateColumn Title="@Text.Upper("Actions")" Sortable="false" Filterable="false" CellClass="col-1 text-center">
+                            <TemplateColumn Title="@Text.Upper("Actions")" Sortable="false" Filterable="false" HeaderClass="col-1" CellClass="text-center">
                                 <CellTemplate>
                                     <div class="btn-group-vertical w-100">
                                         <button class="btn btn-light" title="@Text.Original("Edit")" @onclick="() => OnEdit(context.Item)">
