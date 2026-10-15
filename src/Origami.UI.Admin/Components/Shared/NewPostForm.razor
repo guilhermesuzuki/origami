@@ -274,27 +274,16 @@
         </div>
     </div>
 }
-@if (FileManagerForImages)
-{
-    <div class="position-fixed popup-container">
-        <div class="border shadow-lg position-relative" style="width: 90%; height: 90%;">
-            <div class="overflow-auto" style="height:100%; padding-bottom: 70px;">
-                <FileManager Mode="Image" OnFileClicked="this.ImageFromFileManagerWillAssignEntityHeader"></FileManager>
-            </div>
-            <ul class="inline-list position-absolute w-100 border bg-white" style="bottom:0; z-index: 50;">
-                <li></li>
-                <li class="text-right">
-                    <div class="btn-group p-3">
-                        <button class="btn btn-secondary" @onclick="() => this.FileManagerForImages = false">
-                            <i class="fa-solid fa-circle-xmark"></i>
-                            @Text.Lower("Close window")
-                        </button>
-                    </div>
-                </li>
-            </ul>
+<MudDialog Options="this.DialogOptions" @bind-Visible="this.FileManagerForImages" ContentClass="p-0">
+    <TitleContent>
+        @Text.Original("Press ESC to close")
+    </TitleContent>
+    <DialogContent>
+        <div class="overflow-auto" style="max-width: 1700px; max-height: 1000px; width:100%; height: 100%;">
+            <FileManager Mode="Image" OnFileClicked="this.ImageFromFileManagerWillAssignEntityHeader"></FileManager>
         </div>
-    </div>
-}
+    </DialogContent>
+</MudDialog>
 @code {
     
 }
