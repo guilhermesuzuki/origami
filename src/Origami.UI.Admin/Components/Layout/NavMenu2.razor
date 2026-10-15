@@ -74,6 +74,14 @@
                 </button>
             </div>
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
+                <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-danger" @onclick="GoToSoftwareReleaseComments">
+                    <div class="text-center" style="bottom:0;">
+                        <i class="fa-solid fa-comment"></i
+                        <span>@Text.Lower("Software releases comments")</span>
+                    </div>
+                </button>
+            </div>
+            <div class="col-12 col-md-6 col-xxl-2 mb-3">
                 <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-danger" @onclick="GoToRoles">
                     <div class="text-center" style="bottom:0;">
                         <i class="fa-solid fa-id-badge"></i>
@@ -97,7 +105,11 @@
                     </div>
                 </button>
             </div>
-            <div class="col-12 col-md-6 col-xxl-2 mb-3">
+        </div>
+    </div>
+    <div class="">
+        <div class="row" style="min-height: 150px;">
+            <div class="col-12">
                 <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-danger" @onclick="GoToSettings">
                     <div class="text-center" style="bottom:0;">
                         <i class="fa-solid fa-gear"></i>
@@ -473,6 +485,11 @@
     private void GoToBackupAndRestore()
     {
         this.GhostOfTheNavigator.NavigateTo($"/backups");
+    }
+
+    private void GoToSoftwareReleaseComments()
+    {
+        this.GhostOfTheNavigator.NavigateTo($"/n/softwarereleases/comments");
     }
 
     protected async Task UserLocationAsync(bool firstRender)

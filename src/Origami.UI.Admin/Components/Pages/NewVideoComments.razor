@@ -40,7 +40,9 @@
                                                 <CommentLite Class="mb-3 p-3 border bg-primary-subtle shadow-sm" Entity="parent"></CommentLite>
                                             }
                                         }
-                                        <CommentLite Class="p-3 border bg-secondary-subtle shadow-sm" Entity="context.Item"></CommentLite>
+                                        <div class="ps-3" style="border-left: gray 2px solid;">
+                                            <CommentLite Class="p-3 border bg-secondary-subtle shadow-sm" Entity="context.Item"></CommentLite>
+                                        </div>
                                     </div>
                                 </CellTemplate>
                             </TemplateColumn>
@@ -48,7 +50,7 @@
                                 <CellTemplate>
                                     @if (context.Item != null)
                                     {
-                                        var video = this.Super.Contents.ReadFromCache().OfType<OrigamiVideo>().Id(context.Item.ContentId);
+                                        var video = this.Super.Contents.ReadFromCache().Id(context.Item.ContentId);
                                         <ContentHeaderInline Entity="video"></ContentHeaderInline>
                                     }
                                 </CellTemplate>
