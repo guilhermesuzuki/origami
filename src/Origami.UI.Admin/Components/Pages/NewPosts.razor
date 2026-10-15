@@ -68,7 +68,7 @@
                                     <ContentHeader Entity="context.Item.Entity"></ContentHeader>
                                 </CellTemplate>
                             </TemplateColumn>
-                            <TemplateColumn Title="@Text.Upper("Categories")" Sortable="false" Filterable="false" HeaderClass="col-2" CellClass="categories">
+                            <TemplateColumn Title="@Text.Upper("Categories")" Sortable="false" Filterable="false" HeaderClass="col-1" CellClass="categories">
                                 <CellTemplate>
                                     @foreach (var category in this.Super.GetCategories(context.Item.Entity ?? new()))
                                     {
