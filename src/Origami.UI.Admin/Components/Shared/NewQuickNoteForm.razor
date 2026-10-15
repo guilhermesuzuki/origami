@@ -1,0 +1,86 @@
+﻿@inherits BasicFormFullContent<OrigamiQuickNote, HubContentQuickNote>
+
+<div class="new-quick-note-form d-flex @Class" style="flex-flow: column;">
+    <BasicHeaderNotes Entity="this.Entity.Entity"></BasicHeaderNotes>
+    <div style="flex: 1;">
+        <BasicHeader Class="mt-3" Entity="this.Entity.Entity"></BasicHeader>
+        <ul class="inline-list mt-3">
+            <li>
+                <LanguageWrittenOn Entity="this.Entity.Entity"></LanguageWrittenOn>
+            </li>
+        </ul>
+        <ul class="inline-list mt-3">
+            <li>
+                <MudTextField FullWidth="true"
+                              Immediate="true"
+                              AdornmentIcon="@Icons.Material.Filled.Description"
+                              Adornment="Adornment.Start"
+                              @bind-Value="@Entity.Entity.Title"
+                              HelperText="@Text.Lower("Type your note here")"></MudTextField>
+            </li>
+        </ul>
+        <ul class="inline-list mt-3">
+            <li>
+                <div class="border p-3">
+                    <div>@Text.Lower("Choose the background style")</div>
+                    <div class="mt-2">
+                        @foreach (var bg in OrigamiConstants.BackgroundGradients)
+                        {
+                            var bgStyle = $"background: {bg}; width: 40px; height: 40px;";
+                            @if (Entity.Entity.Background == bg)
+                            {
+                                bgStyle += "border: 2px solid var(--site-highlight);";
+                            }
+                            <MudAvatar Class="me-2 mb-2 cursor-pointer"
+                                       Size="Size.Large"
+                                       Style="@bgStyle"
+                                       Square="true"
+                                       @onclick="@(() => Entity.Entity.Background = bg)">
+                            </MudAvatar>
+                        }
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="buttons text-center z-index-front position-sticky" style="bottom: 0;">
+        <div class="btn-group">
+            <button class="btn btn-success text-white fw-bold" @onclick="Save" disabled="@this.DisableTheSaveButton">
+                <i class="fa-solid fa-floppy-disk"></i>
+                @Text.Lower("Save")
+            </button>
+            @if (this.Entity.New == false)
+            {
+                <button class="btn btn-secondary text-white fw-bold" @onclick="UndoChanges">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    @Text.Lower("Undo changes")
+                </button>
+            }
+            else
+            {
+                <button class="btn btn-secondary text-white fw-bold" @onclick="UndoNew">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    @Text.Lower("Undo changes")
+                </button>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    public override void Save()
+    {
+        if (Entity.Entity.New)
+        {
+            Entity.Entity.AuthorId = this.UserFacade.User.Id;
+            Entity.Entity.BlogId = this.UserFacade.BlogId;
+            Entity.Entity.DateCreated = DateTime.UtcNow;
+            if (Entity.Entity.Background.Has() == false)
+            {
+                Entity.Entity.Background = OrigamiConstants.BackgroundGradients[Random.Shared.Next(OrigamiConstants.BackgroundGradients.Length)];
+            }
+        }
+
+        base.Save();
+    }
+}
