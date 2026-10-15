@@ -75,7 +75,7 @@ public class WhatHappensNext : IWhatHappensNext
                 var content = this.SuperRepository.Contents.ReadFromCache().Id(comment.ContentId);
                 hyperlink = content switch
                 {
-                    OrigamiPost => $"/posts/comments?nanoid={comment.NanoId}",
+                    OrigamiPost => $"/n/posts/comments?nanoid={comment.NanoId}",
                     OrigamiVideo => $"/videos/comments?nanoid={comment.NanoId}",
                     _ => string.Empty,
                 };
