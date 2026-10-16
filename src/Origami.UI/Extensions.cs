@@ -592,10 +592,10 @@ namespace Origami.UI
 
         public static WebApplication UseOrigami(this WebApplication app, bool admin = false)
         {
-            // 1. Infrastructure / proxy headers
+            // Infrastructure / proxy headers
             app.UseForwardedHeaders();
 
-            // 2. HTTPS
+            // HTTPS
             if (!app.Environment.IsDevelopment())
             {
                 app.UseHsts();
@@ -603,7 +603,7 @@ namespace Origami.UI
 
             app.UseHttpsRedirection();
 
-            // 3. Error handling
+            // Error handling
             if (app.Environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -613,14 +613,14 @@ namespace Origami.UI
                 app.UseExceptionHandler("/Error");
             }
 
-            // 4. Response handling
+            // Response handling
             if (!app.Environment.IsDevelopment())
             {
                 app.UseResponseCaching();
                 app.UseResponseCompression();
             }
 
-            // 5. Localization
+            // Localization
             var supportedCultures = OrigamiConstants
                 .AllLanguages()
                 .Select(x => x.Name)
@@ -633,35 +633,35 @@ namespace Origami.UI
 
             app.UseRequestLocalization(localizationOptions);
 
-            // 6. Cookies / session
+            // Cookies / session
             app.UseCookiePolicy();
             app.UseSession();
 
-            // 7. Routing
+            // Routing
             app.UseRouting();
 
-            // 8. Authentication / authorization
+            // Authentication / authorization
             app.UseAuthentication();
             app.UseAuthorization();
 
-            // 9. Your request-specific middleware
-            app.UseMiddleware<OrigamiLocationMiddleware>();
-
-            // 10. Antiforgery
+            // Antiforgery
             app.UseAntiforgery();
 
-            // 11. Static files
+            // Static files
             app.UseStaticFiles();
 
-            // 12. Rate limiting
+            // Rate limiting
             app.UseRateLimiter();
 
-            // 13. Endpoints
+            // Endpoints
             app.MapRazorPages();
             app.UseMvcWithDefaultRoute();
             app.MapControllers();
 
             app.MapHealthChecks("/health");
+
+            // Your request-specific middleware
+            app.UseMiddleware<OrigamiLocationMiddleware>();
 
             if (!admin)
             {

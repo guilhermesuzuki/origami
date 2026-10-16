@@ -56,9 +56,14 @@ namespace Origami.Core.Models
         /// <summary>
         /// Creates an error message
         /// </summary>
-        public virtual string? Error
+        public string? Error
         {
             set => AddMessage(ResultMessage.MessageTypes.Error, value);
+        }
+
+        public (string Message, Exception Exception) ErrorWithException
+        {
+            set => AddException(value.Message, value.Exception);
         }
 
         public Guid Id { get; set; }
@@ -66,7 +71,7 @@ namespace Origami.Core.Models
         /// <summary>
         /// Creates an info message
         /// </summary>
-        public virtual string? Info
+        public string? Info
         {
             set => AddMessage(ResultMessage.MessageTypes.Info, value);
         }
@@ -107,7 +112,7 @@ namespace Origami.Core.Models
         /// <summary>
         /// Creates a simple message
         /// </summary>
-        public virtual string? Simple
+        public string? Simple
         {
             set => AddMessage(ResultMessage.MessageTypes.Simple, value);
         }
@@ -115,23 +120,15 @@ namespace Origami.Core.Models
         /// <summary>
         /// Creates a success message
         /// </summary>
-        public virtual string? Success
+        public string? Success
         {
             set => AddMessage(ResultMessage.MessageTypes.Success, value);
         }
 
         /// <summary>
-        /// Creates a stale data message
-        /// </summary>
-        public virtual string? StaleData
-        {
-            set => AddMessage(ResultMessage.MessageTypes.StaleData, value);
-        }
-
-        /// <summary>
         /// Creates a warning message
         /// </summary>
-        public virtual string? Warning
+        public string? Warning
         {
             set => AddMessage(ResultMessage.MessageTypes.Warning, value);
         }
@@ -241,35 +238,42 @@ namespace Origami.Core.Models
             return to;
         }
 
+        protected void AddException(string message, Exception exception)
+        {
+            var rm = this.AddMessage(ResultMessage.MessageTypes.Error, message);
+            if (rm.Ok)
+            {
+                rm.ResultMessage.Exception = exception;
+            }
+        }
+
         /// <summary>
         /// Creates a message, if it doesn't exist in the collection
         /// </summary>
         /// <param name="messageType"></param>
         /// <param name="message"></param>
         /// <returns></returns>
-        protected virtual bool AddMessage(ResultMessage.MessageTypes messageType, string? message)
+        protected virtual (bool Ok, ResultMessage ResultMessage) AddMessage(ResultMessage.MessageTypes messageType, string? message)
         {
             if (message != null && message.Has() == true)
             {
-                var found = _messages.FirstOrDefault(x =>
-                    x.MessageType == messageType &&
-                    x.Message.Like(message) == true);
-
-                if (found == null)
+                var found = _messages.Any(x => x.MessageType == messageType && x.Message.Like(message) == true);
+                if (found == false)
                 {
-                    _messages.Add(new ResultMessage
+                    var resultMessage = new ResultMessage
                     {
                         Message = message,
                         MessageType = messageType
-                    });
+                    };
 
-                    return true;
+                    _messages.Add(resultMessage);
+
+                    return (true, resultMessage);
                 }
             }
 
-            return false;
+            return (false, null!);
         }
-
         /// <summary>
         /// Handles the collection changed event for the messages collection
         /// </summary>

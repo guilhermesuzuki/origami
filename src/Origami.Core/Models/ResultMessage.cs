@@ -17,7 +17,6 @@ namespace Origami.Core.Models
             Simple = 0,
             Success = 1,
             Warning = 3,
-            StaleData = 6,
         }
 
         private MessageTypes _messageType;
@@ -44,6 +43,12 @@ namespace Origami.Core.Models
         {
             get => _message;
             set => this.Set(ref _message, value, Changed);
+        }
+
+        public Exception? Exception
+        {
+            get => field;
+            set => this.Set(ref field, value, Changed);
         }
     }
 }

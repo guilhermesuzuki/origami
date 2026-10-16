@@ -1,6 +1,8 @@
 ﻿using AngleSharp;
 using CloneExtensions;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics.Internal;
 using Origami.Core.Models;
 using Origami.Core.Models.FileSystem;
 using Origami.Core.Models.Settings;
@@ -660,7 +662,7 @@ namespace Origami.Core
         public static string GetText(this DateTime dateTime)
         {
             if (dateTime == DateTime.MinValue) return string.Empty;
-            return dateTime.ToString();
+            return dateTime.ToString(Thread.CurrentThread.CurrentCulture);
         }
 
         /// <summary>
@@ -673,7 +675,7 @@ namespace Origami.Core
             if (dateTime != null && dateTime.HasValue)
             {
                 if (dateTime.Value == DateTime.MinValue) return string.Empty;
-                return dateTime.Value.ToString();
+                return dateTime.Value.ToString(Thread.CurrentThread.CurrentCulture);
             }
             return string.Empty;
         }
@@ -691,6 +693,25 @@ namespace Origami.Core
         public static bool Has<T>([NotNullWhen(true)] this T? entity) where T : class, INew
         {
             return entity is { New: false };
+        }
+
+        public static bool HasStaleData(this Result result)
+        {
+            if (result == null) return false;
+            if (result.Messages == null) return false;
+
+            var query = from m in result.Messages
+                        where m.MessageType == ResultMessage.MessageTypes.Error
+                        where m.Exception is DbUpdateConcurrencyException
+                        select m;
+
+            return query.Any();
+        }
+
+        public static bool HasStaleData(this IEnumerable<Result> results)
+        {
+            if (results == null) return false;
+            return results.Any(x => x.HasStaleData());
         }
 
         /// <summary>

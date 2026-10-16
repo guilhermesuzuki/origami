@@ -429,6 +429,10 @@ namespace Origami.Core.Data
             {
                 hub.Pull(ex);
             }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                hub.ErrorWithException = (Text.Original("A concurrency error occurred while updating the content."), ex);
+            }
             catch (Exception ex)
             {
                 hub.Error = ex.GetMessage();
