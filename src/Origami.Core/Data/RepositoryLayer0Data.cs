@@ -145,7 +145,11 @@ namespace Origami.Core.Data
             }
             catch (DbUpdateConcurrencyException ex)
             {
-                return new(ctx.Entity) { ErrorWithException = (Text.Original("A concurrency error occurred while updating the content."), ex) };
+                return new(ctx.Entity)
+                {
+                    ErrorWithException = (Text.Original("A concurrency error occurred while updating the content."), ex),
+                    Info = Text.Original("Please, refresh your screen or try again in a few minutes."),
+                };
             }
             catch (Exception ex)
             {
