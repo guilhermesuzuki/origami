@@ -45,11 +45,11 @@ public class WhatHappensNext : IWhatHappensNext
 
         if (e.Slug is OrigamiCategory category)
         {
-            hyperlink = $"/categories?nanoid={category.NanoId}";
+            hyperlink = $"/n/categories?nanoid={category.NanoId}";
         }
         else if (e.Slug is OrigamiContentTag tag)
         {
-            hyperlink = $"/tags?nanoid={tag.NanoId}";
+            hyperlink = $"/n/tags?nanoid={tag.NanoId}";
         }
         else
         {
