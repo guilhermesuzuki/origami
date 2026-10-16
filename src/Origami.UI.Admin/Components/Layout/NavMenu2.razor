@@ -126,18 +126,18 @@
                 </button>
             </div>
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToPosts">
+                <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToPages">
                     <div class="text-center" style="bottom:0;">
                         <i class="bi bi-file-earmark-text-fill"></i>
-                        <span>@Text.Lower("Posts")</span>
+                        <span>@Text.Lower("Pages")</span>
                     </div>
                 </button>
             </div>
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToPostsComments">
+                <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToPosts">
                     <div class="text-center" style="bottom:0;">
-                        <i class="fa-solid fa-comment"></i>
-                        <span>@Text.Lower("Posts comments")</span>
+                        <i class="bi bi-file-earmark-text-fill"></i>
+                        <span>@Text.Lower("Posts")</span>
                     </div>
                 </button>
             </div>
@@ -150,26 +150,6 @@
                 </button>
             </div>
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToVideosComments">
-                    <div class="text-center" style="bottom:0;">
-                        <i class="fa-solid fa-comment"></i>
-                        <span>@Text.Lower("Videos comments")</span>
-                    </div>
-                </button>
-            </div>
-        </div>
-    </div>
-    <div class="">
-        <div class="row" style="min-height: 150px;">
-            <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToPages">
-                    <div class="text-center" style="bottom:0;">
-                        <i class="bi bi-file-earmark-text-fill"></i>
-                        <span>@Text.Lower("Pages")</span>
-                    </div>
-                </button>
-            </div>
-            <div class="col-12 col-md-6 col-xxl-2 mb-3">
                 <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToCategories">
                     <div class="text-center" style="bottom:0;">
                         <i class="fa-solid fa-layer-group"></i>
@@ -177,6 +157,10 @@
                     </div>
                 </button>
             </div>
+        </div>
+    </div>
+    <div class="">
+        <div class="row" style="min-height: 150px;">
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
                 <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToTags">
                     <div class="text-center" style="bottom:0;">
@@ -206,6 +190,14 @@
                     <div class="text-center" style="bottom:0;">
                         <i class="bi bi-file-earmark-text-fill"></i>
                         <span>@Text.Lower("Special pages")</span>
+                    </div>
+                </button>
+            </div>
+            <div class="col-12 col-md-6 col-xxl-4 mb-3">
+                <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToComments">
+                    <div class="text-center" style="bottom:0;">
+                        <i class="fa-solid fa-comment"></i>
+                        <span>@Text.Lower("Comments")</span>
                     </div>
                 </button>
             </div>
@@ -357,7 +349,7 @@
 
     private void GoToCategories()
     {
-        this.GhostOfTheNavigator.NavigateTo($"/categories");
+        this.GhostOfTheNavigator.NavigateTo($"/n/categories");
     }
 
     private void GoToChangePassword()
@@ -377,62 +369,57 @@
 
     private void GoToPages()
     {
-        this.GhostOfTheNavigator.NavigateTo($"/pages");
+        this.GhostOfTheNavigator.NavigateTo($"/n/pages");
     }
 
     private void GoToPostsComments()
     {
-        this.GhostOfTheNavigator.NavigateTo($"/posts/comments");
+        this.GhostOfTheNavigator.NavigateTo($"/n/posts/comments");
     }
 
     private void GoToPosts()
     {
-        this.GhostOfTheNavigator.NavigateTo($"/posts");
-    }
-
-    private void GoToPosts2()
-    {
-        this.GhostOfTheNavigator.NavigateTo($"/posts2");
+        this.GhostOfTheNavigator.NavigateTo($"/n/posts");
     }
 
     private void GoToSpecialMessages()
     {
-        this.GhostOfTheNavigator.NavigateTo($"/specialmessages");
+        this.GhostOfTheNavigator.NavigateTo($"/n/specialmessages");
     }
 
     private void GoToSpecialPages()
     {
-        this.GhostOfTheNavigator.NavigateTo($"/specialpages");
+        this.GhostOfTheNavigator.NavigateTo($"/n/specialpages");
     }
 
     private void GoToSocialProfiles()
     {
-        this.GhostOfTheNavigator.NavigateTo($"/socialprofiles");
+        this.GhostOfTheNavigator.NavigateTo($"/n/socialprofiles");
     }
 
     private void GoToTags()
     {
-        this.GhostOfTheNavigator.NavigateTo($"/tags");
+        this.GhostOfTheNavigator.NavigateTo($"/n/tags");
     }
 
     private void GoToVideos()
     {
-        this.GhostOfTheNavigator.NavigateTo($"/videos");
+        this.GhostOfTheNavigator.NavigateTo($"/n/videos");
     }
 
     private void GoToVideosComments()
     {
-        this.GhostOfTheNavigator.NavigateTo($"/videos/comments");
+        this.GhostOfTheNavigator.NavigateTo($"/n/videos/comments");
     }
 
     private void GoToUsers()
     {
-        this.GhostOfTheNavigator.NavigateTo($"/users");
+        this.GhostOfTheNavigator.NavigateTo($"/n/users");
     }
 
     private void GoToRoles()
     {
-        this.GhostOfTheNavigator.NavigateTo($"/roles");
+        this.GhostOfTheNavigator.NavigateTo($"/n/roles");
     }
 
     private void GoToSettings()
@@ -462,7 +449,7 @@
 
     private void GoToQuickNotes()
     {
-        this.GhostOfTheNavigator.NavigateTo($"/quicknotes");
+        this.GhostOfTheNavigator.NavigateTo($"/n/quicknotes");
     }
 
     private void GoToCacheExplorer()
@@ -472,12 +459,22 @@
 
     private void GoToSoftwareReleases()
     {
-        this.GhostOfTheNavigator.NavigateTo($"/softwarereleases");
+        this.GhostOfTheNavigator.NavigateTo($"/n/softwarereleases");
     }
 
     private void GoToBackupAndRestore()
     {
         this.GhostOfTheNavigator.NavigateTo($"/backups");
+    }
+
+    private void GoToSoftwareReleaseComments()
+    {
+        this.GhostOfTheNavigator.NavigateTo($"/n/softwarereleases/comments");
+    }
+
+    private void GoToComments()
+    {
+        this.GhostOfTheNavigator.NavigateTo($"/n/comments");
     }
 
     protected async Task UserLocationAsync(bool firstRender)

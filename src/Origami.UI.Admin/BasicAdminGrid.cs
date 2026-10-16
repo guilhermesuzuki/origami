@@ -60,7 +60,7 @@ namespace Origami.UI.Admin
         /// <summary>
         /// Selected entity
         /// </summary>
-        protected T SelectedEntity { get; set; } = new();
+        protected T? SelectedEntity { get; set; }
 
         public override void Dispose()
         {
@@ -79,10 +79,10 @@ namespace Origami.UI.Admin
 
         public virtual async Task SetFilterAndRefreshUI(string filter)
         {
+            Filter = filter;
             await JSRuntime.InvokeVoidAsync("removeQueryStringWithoutReload", "filter");
             await JSRuntime.InvokeVoidAsync("addQueryStringWithoutReload", "filter", filter);
             await DataGrid.ReloadServerData();
-            Filter = filter;
         }
 
         protected async void BlogChangedMustReloadDataGridAndRefreshAsync(object? sender, PropertyChangedEventArgs p)
@@ -113,9 +113,9 @@ namespace Origami.UI.Admin
         /// The user wants to delete certain entities
         /// </summary>
         /// <returns></returns>
-        protected virtual async Task DeleteSelectedEntities()
+        protected virtual Task DeleteSelectedEntities()
         {
-            await ExecuteWithSelectedEntities(
+            return ExecuteWithSelectedEntities(
                 async () =>
                 {
                     return await DialogService.ShowMessageBoxAsync(
@@ -233,32 +233,10 @@ namespace Origami.UI.Admin
             }
             else
             {
-                if (DefaultOrdering.Has() == true)
-                {
-                    orders.Append($",{DefaultOrdering}");
-                }
+                orders.Append($",{DefaultOrdering}");
             }
 
             var filters = new StringBuilder("(true)");
-
-            //needs to filter by all, published or drafts
-            if (this is IFilter filter)
-            {
-                if (filter.Filter.Like("published") == true)
-                {
-                    if (typeof(T).Implements<IPublished>() == true)
-                    {
-                        filters.Append($" && ({nameof(IPublished.IsPublished)} == true)");
-                    }
-                }
-                else if (filter.Filter.Like("drafts") == true)
-                {
-                    if (typeof(T).Implements<IDraft>() == true)
-                    {
-                        filters.Append($" && ({nameof(IDraft.IsDraft)} == true)");
-                    }
-                }
-            }
 
             //iterates through every filter definition
             foreach (var definition in state.FilterDefinitions)
@@ -269,7 +247,7 @@ namespace Origami.UI.Admin
             var orderBy = orders.ToString();
 
             //pulls information from cache
-            var result = GetItems().Query(
+            var result = GetEntities().Query(
                 state.PageSize,
                 state.Page * state.PageSize,
                 filters.ToString(),
@@ -283,7 +261,7 @@ namespace Origami.UI.Admin
         /// Retrieves all the items for the DataGrid.
         /// </summary>
         /// <returns></returns>
-        protected virtual IEnumerable<T> GetItems()
+        protected virtual IEnumerable<T> GetEntities()
         {
             IEnumerable<T> items = Repository.ReadFromCache();
 
@@ -320,6 +298,13 @@ namespace Origami.UI.Admin
                 items = query.Cast<T>();
             }
 
+            items = this.Filter.ToLowerInvariant() switch
+            {
+                "drafts" => from item in items.OfType<IDraft>() where item.IsDraft == true select (T)item,
+                "published" => from item in items.OfType<IPublished>() where item.IsPublished == true select (T)item,
+                _ => items
+            };
+
             return items;
         }
 
@@ -329,11 +314,19 @@ namespace Origami.UI.Admin
         /// <param name="entity"></param>
         protected virtual async Task OnEdit(T entity)
         {
-            SelectedEntity = entity.Clone();
-            if (SelectedEntity is INanoId nanoId)
+            if (this.SelectedEntity != null && this.SelectedEntity.Id == entity.Id)
             {
+                this.SelectedEntity = this.TheCreator.Create<T>();
                 await JSRuntime.InvokeVoidAsync("removeQueryStringWithoutReload", "nanoid");
-                await JSRuntime.InvokeVoidAsync("addQueryStringWithoutReload", "nanoid", nanoId.NanoId);
+            }
+            else
+            {
+                SelectedEntity = entity.Clone();
+                if (SelectedEntity is INanoId nanoId)
+                {
+                    await JSRuntime.InvokeVoidAsync("removeQueryStringWithoutReload", "nanoid");
+                    await JSRuntime.InvokeVoidAsync("addQueryStringWithoutReload", "nanoid", nanoId.NanoId);
+                }
             }
         }
 
@@ -342,10 +335,10 @@ namespace Origami.UI.Admin
         /// </summary>
         /// <param name="newValue"></param>
         /// <returns></returns>
-        protected virtual async Task OnIncludeDeletedEntitiesChanged(bool newValue)
+        protected virtual Task OnIncludeDeletedEntitiesChanged(bool newValue)
         {
             IncludeDeletedEntitiesInDataGrid = newValue;
-            await ReloadDataGridAsync();
+            return ReloadDataGridAsync();
         }
 
         protected override void OnInitialized()
@@ -356,9 +349,9 @@ namespace Origami.UI.Admin
             this.SetEntityFromQueryString();
         }
 
-        protected virtual async Task OnSearchResultSelected(T entity)
+        protected virtual Task OnSearchResultSelected(T entity)
         {
-            await this.OnEdit(entity);
+            return this.OnEdit(entity);
         }
 
         /// <summary>
@@ -415,9 +408,9 @@ namespace Origami.UI.Admin
         /// The user wants to purge certain entities
         /// </summary>
         /// <returns></returns>
-        protected virtual async Task RestoreSelectedEntities()
+        protected virtual Task RestoreSelectedEntities()
         {
-            await ExecuteWithSelectedEntities(
+            return ExecuteWithSelectedEntities(
                 async () =>
                 {
                     return await DialogService.ShowMessageBoxAsync(
@@ -433,7 +426,7 @@ namespace Origami.UI.Admin
         protected virtual string RowClassFunc(T entity, int index)
         {
             var result = string.Empty;
-            if (entity.Id == SelectedEntity.Id) result += " selected-row";
+            if (SelectedEntity != null && entity.Id == SelectedEntity.Id) result += " selected-row";
             if (entity is IPublished published1 && published1.IsPublished == false) result += " unpublished";
             if (entity is IPublished published2 && published2.IsPublished == true) result += " published";
             if (entity is IDeleted deleted && deleted.IsDeleted == true) result += " deleted";
@@ -474,6 +467,12 @@ namespace Origami.UI.Admin
 
         protected override void SetPageTitle()
         {
+            if (this.SelectedEntity == null || this.SelectedEntity is INew { New: true })
+            {
+                this.PageTitle.SetTitle(typeof(T).GetPlural());
+                return;
+            }
+
             if (SelectedEntity is INew neu && neu.New == true)
             {
                 this.PageTitle.SetTitle(SelectedEntity.GetType().GetPlural());

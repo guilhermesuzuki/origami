@@ -587,17 +587,15 @@ namespace Origami.UI
 
             tracking.Platform = client.OS.Family;
             tracking.Browser = client.UA.Family;
-
-            var key = $"Origami_UserLocation_{requestContext.ConnectionId}";
-            tracking.Location = memoryCache.Get<Location>(key);
+            tracking.Location = requestContext.Location;
         }
 
         public static WebApplication UseOrigami(this WebApplication app, bool admin = false)
         {
-            // 1. Infrastructure / proxy headers
+            // Infrastructure / proxy headers
             app.UseForwardedHeaders();
 
-            // 2. HTTPS
+            // HTTPS
             if (!app.Environment.IsDevelopment())
             {
                 app.UseHsts();
@@ -605,7 +603,7 @@ namespace Origami.UI
 
             app.UseHttpsRedirection();
 
-            // 3. Error handling
+            // Error handling
             if (app.Environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -615,14 +613,14 @@ namespace Origami.UI
                 app.UseExceptionHandler("/Error");
             }
 
-            // 4. Response handling
+            // Response handling
             if (!app.Environment.IsDevelopment())
             {
                 app.UseResponseCaching();
                 app.UseResponseCompression();
             }
 
-            // 5. Localization
+            // Localization
             var supportedCultures = OrigamiConstants
                 .AllLanguages()
                 .Select(x => x.Name)
@@ -635,30 +633,30 @@ namespace Origami.UI
 
             app.UseRequestLocalization(localizationOptions);
 
-            // 6. Cookies / session
+            // Cookies / session
             app.UseCookiePolicy();
             app.UseSession();
 
-            // 7. Routing
+            // Routing
             app.UseRouting();
 
-            // 8. Authentication / authorization
+            // Authentication / authorization
             app.UseAuthentication();
             app.UseAuthorization();
 
-            // 9. Your request-specific middleware
-            app.UseMiddleware<OrigamiLocationMiddleware>();
-
-            // 10. Antiforgery
+            // Antiforgery
             app.UseAntiforgery();
 
-            // 11. Static files
+            // Static files
             app.UseStaticFiles();
 
-            // 12. Rate limiting
+            // Rate limiting
             app.UseRateLimiter();
 
-            // 13. Endpoints
+            // Your request-specific middleware
+            app.UseMiddleware<OrigamiLocationMiddleware>();
+
+            // Endpoints
             app.MapRazorPages();
             app.UseMvcWithDefaultRoute();
             app.MapControllers();
@@ -684,19 +682,18 @@ namespace Origami.UI
 
             app.MapGet("/debug/request", (IHttpContextAccessor accessor, IMyMemoryCache memoryCache) => 
             {
-                var key = $"Origami_UserLocation_{accessor.HttpContext!.Connection.Id}";
                 return new RequestContext()
                 {
-                    ConnectionId = accessor.HttpContext!.Connection.Id,
-                    Headers = accessor.HttpContext!.Request.Headers
+                    ConnectionId = accessor.HttpContext?.Connection.Id,
+                    Headers = accessor.HttpContext?.Request.Headers
                         .Where(x => x.Key.StartsWith("Sec-CH-", StringComparison.OrdinalIgnoreCase))
                         .ToDictionary(a => a.Key, a => a.Value.ToString()),
-                    Host = accessor.HttpContext!.Request.Host.Value,
-                    IpAddress = accessor.HttpContext!.Connection.RemoteIpAddress?.ToString(),
-                    Referrer = accessor.HttpContext!.Request.Headers["Referer"].ToString(),
-                    Scheme = accessor.HttpContext!.Request.Scheme,
-                    UserAgent = accessor.HttpContext!.Request.Headers["User-Agent"].ToString(),
-                    Location = memoryCache.Get<Location>(key),
+                    Host = accessor.HttpContext?.Request.Host.Value,
+                    IpAddress = accessor.HttpContext?.Connection.RemoteIpAddress?.ToString(),
+                    Referrer = accessor.HttpContext?.Request.Headers["Referer"].ToString(),
+                    Scheme = accessor.HttpContext?.Request.Scheme,
+                    UserAgent = accessor.HttpContext?.Request.Headers["User-Agent"].ToString(),
+                    Location = accessor.HttpContext?.Items["Origami_UserLocation"] as Location,
                 };
             });
 

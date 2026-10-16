@@ -7,10 +7,8 @@ namespace Origami.Core.Models
     public class OrigamiContentComment :
         BaseComment,
         ICommentChanged,
-        IContentId,
-        IParentIdNull
+        IContentId
     {
-        protected Guid? _parentId;
         protected Guid _contentId;
 
         /// <summary>
@@ -18,19 +16,11 @@ namespace Origami.Core.Models
         /// </summary>
         public OrigamiContentComment() : base()
         {
-            Id = Guid.NewGuid();
+            this.Id = Guid.NewGuid();
+            this.IsApproved = true;
         }
 
         public event EventHandler<PropertyChangedEventArgs> CommentChanged = (sender, e) => { };
-
-        /// <summary>
-        /// Parent Comment Id (In Reply To)
-        /// </summary>
-        public Guid? ParentId
-        {
-            get => _parentId;
-            set => this.Set(ref _parentId, value, CommentChanged);
-        }
 
         public Guid ContentId
         {

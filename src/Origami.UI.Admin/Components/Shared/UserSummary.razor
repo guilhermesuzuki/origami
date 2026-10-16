@@ -1,0 +1,27 @@
+﻿@using FluentValidation
+@inherits Basic
+@implements IEntityNull<OrigamiUser>
+
+@if (Entity != null)
+{
+    var validation = this.Validator.Validate(this.Entity);
+    <div class="user-summary @Class">
+        <MudDataGrid Items="validation.Errors">
+            <Columns>
+                <PropertyColumn Property="(x) => x.PropertyName" Title="@Text.Upper("Property")" HeaderClass="col-2"></PropertyColumn>
+                <PropertyColumn Property="(x) => x.ErrorMessage" Title="@Text.Upper("Error")"></PropertyColumn>
+            </Columns>
+            <NoRecordsContent>
+                <span>
+                    @Text.Original(Text.OperationCompletedSuccessfully)
+                    <i class="fa-solid fa-circle-check text-success"></i>
+                </span>
+            </NoRecordsContent>
+        </MudDataGrid>
+    </div>
+}
+
+@code {
+    [Parameter] public OrigamiUser? Entity { get; set; }
+    [Inject] public IValidator<OrigamiUser> Validator { get; set; } = null!;
+}

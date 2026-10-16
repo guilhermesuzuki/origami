@@ -136,14 +136,14 @@
     /// </summary>
     protected virtual bool DisableTheFrontPageButton => SelectedEntities.Any() == false;
 
-    protected override IEnumerable<OrigamiPage> GetItems()
+    protected override IEnumerable<OrigamiPage> GetEntities()
     {
         if (this.IncludeDeletedEntitiesInDataGrid)
         {
-            return base.GetItems();
+            return base.GetEntities();
         }
 
-        return from x in base.GetItems()
+        return from x in base.GetEntities()
                where x.IsDeleted == false
                where this.Super.IsParentDeleted(x) == false
                select x;

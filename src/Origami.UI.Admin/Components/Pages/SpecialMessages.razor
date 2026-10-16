@@ -27,7 +27,7 @@
                     </ul>
                 </div>
                 <div class="col-12 col-xxl-4">
-                    <MudSelect T="string" HelperText="@Text.Lower("Filter")" @bind-Value:get="Filter" @bind-Value:set="(filter) => SetFilterAndRefreshUI(filter)">
+                    <MudSelect T="string" HelperText="@Text.Lower("Filter")" @bind-Value:get="Filter" @bind-Value:set="SetFilterAndRefreshUI">
                         <MudSelectItem T="string" Value="@(new string("all"))">@Text.Original("All")</MudSelectItem>
                         <MudSelectItem T="string" Value="@(new string("published"))">@Text.Original("Published")</MudSelectItem>
                         <MudSelectItem T="string" Value="@(new string("drafts"))">@Text.Original("Drafts")</MudSelectItem>

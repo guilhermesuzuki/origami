@@ -9,7 +9,7 @@ namespace Origami.Core.Validators
         {
             RuleFor(x => x.Id).Id(text);
             RuleFor(x => x.Content).Cascade(CascadeMode.Stop).Html(text).HtmlInjection(text);
-            RuleFor(x => x).ParentId(text);
+            RuleFor(x => x).Parent(text);
         }
     }
 }

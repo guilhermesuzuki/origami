@@ -3,45 +3,48 @@
 @implements IEntityNull<OrigamiSoftwareRelease>
 @implements IDisposable
 
-<div class="content-software-releases @Class">
-    <MudDataGrid T="OrigamiSystemFile" Class="border mt-3" SortMode="SortMode.None" Filterable="false" Items="_getFiles()">
-        <Columns>
-            <TemplateColumn CellClass="">
-                <CellTemplate>
-                    <div class="fw-bold">@context.Item.Name</div>
-                    <div class="small">
-                        <i class="bi bi-file-earmark-arrow-down-fill"></i>
-                        @this.Super.PhysicalPages.Views(context.Item.WebPath)
-                    </div>
-                </CellTemplate>
-            </TemplateColumn>
-            <TemplateColumn CellClass="text-right" CellStyle="width: 15%;">
-                <CellTemplate>
-                    @context.Item.FileSize.SizeInBytes()
-                </CellTemplate>
-            </TemplateColumn>
-            <TemplateColumn CellClass="text-right" CellStyle="width:8%;">
-                <CellTemplate>
-                    <button class="cursor-pointer ms-3 text-success" @onclick="() => this.DownloadFile(context.Item)">
-                        <i class="fa-solid fa-download"></i>
-                    </button>
-                    @if (this.AppFacade.Admin == true)
-                    {
-                        <button class="cursor-pointer ms-3 text-danger" @onclick="() => this._removeFile(context.Item)">
-                            <i class="bi bi-trash-fill"></i>
+@if (this.Entity != null)
+{
+    <div class="content-software-releases @Class">
+        <MudDataGrid T="OrigamiSystemFile" Class="border mt-3" SortMode="SortMode.None" Filterable="false" Items="_getFiles()">
+            <Columns>
+                <TemplateColumn CellClass="">
+                    <CellTemplate>
+                        <div class="fw-bold">@context.Item.Name</div>
+                        <div class="small">
+                            <i class="bi bi-file-earmark-arrow-down-fill"></i>
+                            @this.Super.PhysicalPages.Views(context.Item.WebPath)
+                        </div>
+                    </CellTemplate>
+                </TemplateColumn>
+                <TemplateColumn CellClass="text-right" CellStyle="width: 15%;">
+                    <CellTemplate>
+                        @context.Item.FileSize.SizeInBytes()
+                    </CellTemplate>
+                </TemplateColumn>
+                <TemplateColumn CellClass="text-right" CellStyle="width:8%;">
+                    <CellTemplate>
+                        <button class="download-file cursor-pointer ms-3 text-success" @onclick="() => this.DownloadFile(context.Item)">
+                            <i class="fa-solid fa-download"></i>
                         </button>
-                    }
-                </CellTemplate>
-            </TemplateColumn>
-        </Columns>
-        <PagerContent>
-            <MudDataGridPager T="OrigamiSystemFile" PageSizeOptions="[5, 10, 15]" />
-        </PagerContent>
-        <NoRecordsContent>
-            <NoEntriesWereFound></NoEntriesWereFound>
-        </NoRecordsContent>
-    </MudDataGrid>
-</div>
+                        @if (this.AppFacade.Admin == true)
+                        {
+                            <button class="remove-file cursor-pointer ms-3 text-danger" @onclick="() => this._removeFile(context.Item)">
+                                <i class="bi bi-trash-fill"></i>
+                            </button>
+                        }
+                    </CellTemplate>
+                </TemplateColumn>
+            </Columns>
+            <PagerContent>
+                <MudDataGridPager T="OrigamiSystemFile" PageSizeOptions="[5, 10, 15]" />
+            </PagerContent>
+            <NoRecordsContent>
+                <NoEntriesWereFound></NoEntriesWereFound>
+            </NoRecordsContent>
+        </MudDataGrid>
+    </div>    
+}
 
 @code {
     [Parameter]

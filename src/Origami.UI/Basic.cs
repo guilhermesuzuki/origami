@@ -28,7 +28,7 @@ namespace Origami.UI
         /// </summary>
         public static readonly Lock SyncRoot = new();
 
-        protected readonly DialogOptions DialogOptions = new() { CloseOnEscapeKey = true, CloseButton = false, CloseOnNavigation = true, MaxWidth = MaxWidth.ExtraLarge, };
+        protected readonly DialogOptions DialogOptions = new() { CloseOnEscapeKey = true, CloseButton = true, CloseOnNavigation = true, MaxWidth = MaxWidth.ExtraLarge, };
 
         [Parameter] public Guid BlogId { get; set; }
         [Parameter] public string BlogSlug { get; set; } = string.Empty;

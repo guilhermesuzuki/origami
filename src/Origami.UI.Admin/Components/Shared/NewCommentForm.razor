@@ -1,0 +1,133 @@
+﻿@inherits BasicFormFull<OrigamiContentComment>
+@inject ISocialProfileRepository _socialProfile
+@inject IContentCommentReactionRepository _contentCommentReaction
+
+<div class="content-comment-form @Class">
+    @if (this.Entity != null)
+    {
+        var content = this.Super.Contents.ReadFromCache().Id(Entity.ContentId);
+        var socialProfile = this.Super.SocialProfiles.ReadFromCache().Id(Entity.SocialProfileId);
+        var user = this.Super.Users.ReadFromCache().Id(Entity.UserId);
+        <BasicHeaderNotes Entity="this.Entity"></BasicHeaderNotes>
+        <MudTabs Class="mt-5 border" TabPanelsClass="p-3">
+            <MudTabPanel Visible="@(this.Entity.ParentId != null)" Text="@Text.Upper("Answering")">
+                @if (Entity.ParentId != null)
+                {
+                    var parent = this.Repository.ReadFromCache().Id(Entity.ParentId.Value);
+                    @if (parent != null)
+                    {
+                        <div class="comment-answering-to border p-3 shadow-sm">
+                            <CommentLite Entity="parent"></CommentLite>
+                        </div>
+                    }
+                }
+            </MudTabPanel>
+            <MudTabPanel Text="@Text.Upper("Comment")">
+                <ContentHeaderLite Class="" Entity="content"></ContentHeaderLite>
+                <SocialProfileCard Class="mt-3 p-3 border shadow-sm" Entity="socialProfile"></SocialProfileCard>
+                <UserHeaderCard Class="mt-3 p-3 border shadow-sm" Entity="user"></UserHeaderCard>
+                <BasicHeader Class="mt-3" Entity="this.Entity"></BasicHeader>
+                <ul class="inline-list mt-3">
+                    <li>
+                        <MudTextField ReadOnly="true"
+                                      FullWidth="true"
+                                      Immediate="true"
+                                      AdornmentIcon="@_pinnedBy?.SocialNetwork.Icon().Value"
+                                      Adornment="Adornment.Start"
+                                      Value="@_pinnedBy.GetName()"
+                                      Class="social-profile icon"
+                                      HelperText="@Text.Lower("Pinned by")"></MudTextField>
+                    </li>
+                    <li>
+                        <MudTextField ReadOnly="true"
+                                      FullWidth="true"
+                                      Immediate="true"
+                                      AdornmentIcon="@_moderatedBy?.SocialNetwork.Icon().Value"
+                                      Adornment="Adornment.Start"
+                                      Class="social-profile icon"
+                                      Value="@_moderatedBy.GetName()"
+                                      HelperText="@Text.Lower("Moderated by")"></MudTextField>
+                    </li>
+                </ul>
+                <ul class="inline-list mt-3">
+                    <li>
+                        <Filler></Filler>
+                    </li>
+                    <li>
+                        <ul class="inline-list w-100">
+                            <li>
+                                <MudTextField ReadOnly="true"
+                                              AdornmentIcon="@Icons.Material.Filled.FactCheck"
+                                              Adornment="Adornment.Start"
+                                              Value="@Text.Lower(Entity.IsApproved.YesNo())"
+                                              HelperText="@Text.Lower("Approved")"></MudTextField>
+                            </li>
+                            <li>
+                                <MudTextField ReadOnly="true"
+                                              AdornmentIcon="@Icons.Material.Filled.Block"
+                                              Adornment="Adornment.Start"
+                                              Value="@Text.Lower(Entity.IsSpam.YesNo())"
+                                              HelperText="@Text.Lower("Spam")"></MudTextField>
+                            </li>
+                            <li>
+                                <MudTextField ReadOnly="true"
+                                              AdornmentIcon="@Icons.Material.Filled.Delete"
+                                              Adornment="Adornment.Start"
+                                              Value="@Text.Lower(Entity.IsDeleted.YesNo())"
+                                              HelperText="@Text.Lower("Deleted")"></MudTextField>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="border mt-3 p-3 bg-light bg-gradient post-comment-text" style="font-size:x-large;">
+                    @Entity.Content.Markup()
+                </div>
+            </MudTabPanel>
+            <MudTabPanel Text="@Text.Upper("Reactions")">
+                @foreach (var reaction in _contentCommentReaction.Reactions(Entity).GroupBy(x => x.Reaction))
+                {
+                    <label class="post-comment-reaction pe-1 me-1 border" style="border-radius: 12px; padding-left: 3px; padding-right: 6px; padding-bottom: 3px;">
+                        <span>@reaction.Key</span>
+                        <span>@reaction.Count()</span>
+                    </label>
+                }
+                <MudDataGrid Class="mt-3" T="OrigamiContentCommentReaction" Items="_contentCommentReaction.Reactions(Entity).OrderByDescending(x => x.DateCreated)">
+                    <Columns>
+                        <TemplateColumn>
+                            <CellTemplate>
+                                <UserHeaderInline Class="d-inline-block" Entity="this.Super.Users.ReadFromCache().Id(context.Item.UserId)"></UserHeaderInline>
+                                <SocialProfileHeaderInline Class="d-inline-block" Entity="_socialProfile.ReadFromCache().Id(context.Item.SocialProfileId)"></SocialProfileHeaderInline>
+                                <div class="x-small">
+                                    <i class="fa-solid fa-calendar"></i>
+                                    @context.Item.DateCreated
+                                </div>
+                            </CellTemplate>
+                        </TemplateColumn>
+                        <TemplateColumn CellClass="text-right">
+                            <CellTemplate>
+                                @context.Item.Reaction
+                            </CellTemplate>
+                        </TemplateColumn>
+                    </Columns>
+                    <PagerContent>
+                        <MudDataGridPager T="OrigamiContentCommentReaction" />
+                    </PagerContent>
+                </MudDataGrid>
+            </MudTabPanel>
+        </MudTabs>
+
+        
+    }
+</div>
+
+@code {
+    private OrigamiSocialProfile? _pinnedBy
+    {
+        get => this._socialProfile.ReadFromCache().Id(this.Entity.PinnedById);
+    }
+
+    private OrigamiSocialProfile? _moderatedBy
+    {
+        get => this._socialProfile.ReadFromCache().Id(this.Entity.ModeratedById);
+    }
+}

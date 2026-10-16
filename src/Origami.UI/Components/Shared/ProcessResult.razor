@@ -2,36 +2,27 @@
 
 @if (UserFacade.Results.Any() == true)
 {
-    <div class="wrapper p-3 position-fixed overflow-auto z-index-front" style="left: 50%; transform: translateX(-50%); max-height: 100%;">
-        <div class="process-result fs-5 bg-white border shadow-sm" style="min-width: 600px; max-width:100%;" @onmouseover="_focusIn" @onmouseout="_focusOut">
-            <ul class="inline-list p-2 text-white @(this.UserFacade.Results.Ok() ? "bg-success" : "bg-danger")">
+    var results = UserFacade.Results.DistinctBy(x => x.Id);
+    <div class="process-result wrapper p-3 position-fixed overflow-auto z-index-front @Class" style="left: 50%; transform: translateX(-50%); max-height: 100%;">
+        <div class="fs-5 bg-white border shadow-sm" style="min-width: 600px; max-width:100%;" @onmouseover="_focusIn" @onmouseout="_focusOut">
+            <ul class="inline-list p-2 text-white @(results.Ok() ? "bg-success" : "bg-danger")">
                 <li>
-                    @if (UserFacade.Results.Ok() == true)
+                    @if (results.Ok() == true)
                     {
                         <div class="text-center">
-                            <label>
-                                <span>
-                                    @Text.Lower(Text.OperationCompletedSuccessfully)
-                                    @if (this._mustStopTimer == false)
-                                    {
-                                        <span class="ps-1">(@(this._secondsToDisappear)s)</span>
-                                    }
-                                </span>
-                            </label>
+                            <span>
+                                @Text.Lower(Text.OperationCompletedSuccessfully)
+                                <span class="ps-1">(@(this._secondsToDisappear)s)</span>
+                            </span>
                         </div>
                     }
                     else
                     {
                         <div class="text-center">
-                            <label>
-                                <span>
-                                    @Text.Lower(Text.SomethingWentWrongPleaseTryAgain)
-                                    @if (this._mustStopTimer == false)
-                                    {
-                                        <span class="ps-1">(@(this._secondsToDisappear)s)</span>
-                                    }
-                                </span>
-                            </label>
+                            <span>
+                                @Text.Lower(Text.SomethingWentWrongPleaseTryAgain)
+                                <span class="ps-1">(@(this._secondsToDisappear)s)</span>
+                            </span>
                         </div>
                     }
                 </li>
@@ -48,19 +39,21 @@
                     </div>
                 </li>
             </ul>
-            @foreach (var result in UserFacade.Results.DistinctBy(x => x.Id))
+            @if (results.Count() > 1 || results.Ok() == false)
             {
-                <Result Class="m-2 border" Entity="result"></Result>
+                @foreach (var result in results)
+                {
+                    <Result Class="m-2 border" Entity="result"></Result>
+                }
             }
         </div>
     </div>
 }
-else 
+else
 {
     this._mustStopTimer = false;
     this._secondsToDisappear = this.SecondsToDisappear;
 }
-
 @code {
     private byte _secondsToDisappear;
     private bool _mustStopTimer = false;
@@ -119,6 +112,7 @@ else
     {
         if (e.PropertyName == nameof(IUserFacade.Results))
         {
+            this.DoesItHaveStaleData();
             this.LoadTimer();
             await this.InvokeAsync(this.StateHasChanged);
         }
@@ -137,14 +131,21 @@ else
         }
     }
 
-    private void _close() 
+    private void _close()
     {
         this.UserFacade.Results.Clear();
     }
 
-    private void _stopTimer() 
+    private void _stopTimer()
     {
         this._mustStopTimer = true;
         this._timer.Stop();
+    }
+
+    protected void DoesItHaveStaleData()
+    {
+        var staleData = this.UserFacade.Results.HasStaleData();
+        if (staleData == false) return;
+        this.UserFacade.RefreshTheUI(OrigamiConstants.Events.DataIsStale);
     }
 }

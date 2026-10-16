@@ -63,7 +63,9 @@ namespace Origami.Core.Validators
                     using var db = dbContextFactory.CreateDbContext();
                     return IsInfiniteLoopDetected(db, entity, []) == false;
                 })
-                .WithMessage(text.Original("Loop in relationships are not allowed"));
+                .WithMessage(text.Original("Loop in relationships are not allowed"))
+                .WithName(text.Original("Parent"))
+                ;
         }
 
         public static bool IsInfiniteLoopDetected<T>(DbContext db, T? entity, IList<T> list) where T : class, IId, IParentIdNull
