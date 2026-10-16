@@ -233,10 +233,7 @@ namespace Origami.UI.Admin
             }
             else
             {
-                if (DefaultOrdering.Has() == true)
-                {
-                    orders.Append($",{DefaultOrdering}");
-                }
+                orders.Append($",{DefaultOrdering}");
             }
 
             var filters = new StringBuilder("(true)");

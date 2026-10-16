@@ -25,7 +25,7 @@
     }
     <div class="mt-5">
         <div class="row" style="min-height: 150px;">
-            <div class="col-12 col-xxl-4 mb-3">
+            <div class="col-12 col-xxl-6 mb-3">
                 <div class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-danger d-inline-flex align-items-center">
                     <div class="m-auto">
                         <div class="text-center mb-3">
@@ -45,19 +45,11 @@
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-xxl-4 mb-3">
+            <div class="col-12 col-xxl-6 mb-3">
                 <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-danger" @onclick="GoToCacheExplorer">
                     <div class="text-center">
                         <i class="fa-solid fa-book"></i>
                         <span>@Text.Lower("Cache explorer")</span>
-                    </div>
-                </button>
-            </div>
-            <div class="col-12 col-xxl-4 mb-3">
-                <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-danger" @onclick="GoToSettings">
-                    <div class="text-center" style="bottom:0;">
-                        <i class="fa-solid fa-gear"></i>
-                        <span>@Text.Lower("Settings")</span>
                     </div>
                 </button>
             </div>
@@ -78,14 +70,6 @@
                     <div class="text-center" style="bottom:0;">
                         <i class="fa-solid fa-file-zipper"></i>
                         <span>@Text.Lower("Software releases")</span>
-                    </div>
-                </button>
-            </div>
-            <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-danger" @onclick="GoToSoftwareReleaseComments">
-                    <div class="text-center" style="bottom:0;">
-                        <i class="fa-solid fa-comment"></i
-                        <span>@Text.Lower("Software releases comments")</span>
                     </div>
                 </button>
             </div>
@@ -113,6 +97,14 @@
                     </div>
                 </button>
             </div>
+            <div class="col-12 col-md-6 col-xxl-2 mb-3">
+                <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-danger" @onclick="GoToSettings">
+                    <div class="text-center" style="bottom:0;">
+                        <i class="fa-solid fa-gear"></i>
+                        <span>@Text.Lower("Settings")</span>
+                    </div>
+                </button>
+            </div>
         </div>
     </div>
     <div class="mt-5">
@@ -134,18 +126,18 @@
                 </button>
             </div>
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToPosts">
+                <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToPages">
                     <div class="text-center" style="bottom:0;">
                         <i class="bi bi-file-earmark-text-fill"></i>
-                        <span>@Text.Lower("Posts")</span>
+                        <span>@Text.Lower("Pages")</span>
                     </div>
                 </button>
             </div>
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToPostsComments">
+                <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToPosts">
                     <div class="text-center" style="bottom:0;">
-                        <i class="fa-solid fa-comment"></i>
-                        <span>@Text.Lower("Posts comments")</span>
+                        <i class="bi bi-file-earmark-text-fill"></i>
+                        <span>@Text.Lower("Posts")</span>
                     </div>
                 </button>
             </div>
@@ -158,26 +150,6 @@
                 </button>
             </div>
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToVideosComments">
-                    <div class="text-center" style="bottom:0;">
-                        <i class="fa-solid fa-comment"></i>
-                        <span>@Text.Lower("Videos comments")</span>
-                    </div>
-                </button>
-            </div>
-        </div>
-    </div>
-    <div class="">
-        <div class="row" style="min-height: 150px;">
-            <div class="col-12 col-md-6 col-xxl-2 mb-3">
-                <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToPages">
-                    <div class="text-center" style="bottom:0;">
-                        <i class="bi bi-file-earmark-text-fill"></i>
-                        <span>@Text.Lower("Pages")</span>
-                    </div>
-                </button>
-            </div>
-            <div class="col-12 col-md-6 col-xxl-2 mb-3">
                 <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToCategories">
                     <div class="text-center" style="bottom:0;">
                         <i class="fa-solid fa-layer-group"></i>
@@ -185,6 +157,10 @@
                     </div>
                 </button>
             </div>
+        </div>
+    </div>
+    <div class="">
+        <div class="row" style="min-height: 150px;">
             <div class="col-12 col-md-6 col-xxl-2 mb-3">
                 <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToTags">
                     <div class="text-center" style="bottom:0;">
@@ -214,6 +190,14 @@
                     <div class="text-center" style="bottom:0;">
                         <i class="bi bi-file-earmark-text-fill"></i>
                         <span>@Text.Lower("Special pages")</span>
+                    </div>
+                </button>
+            </div>
+            <div class="col-12 col-md-6 col-xxl-4 mb-3">
+                <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-warning" @onclick="GoToComments">
+                    <div class="text-center" style="bottom:0;">
+                        <i class="fa-solid fa-comment"></i>
+                        <span>@Text.Lower("Comments")</span>
                     </div>
                 </button>
             </div>
@@ -486,6 +470,11 @@
     private void GoToSoftwareReleaseComments()
     {
         this.GhostOfTheNavigator.NavigateTo($"/n/softwarereleases/comments");
+    }
+
+    private void GoToComments()
+    {
+        this.GhostOfTheNavigator.NavigateTo($"/n/comments");
     }
 
     protected async Task UserLocationAsync(bool firstRender)
