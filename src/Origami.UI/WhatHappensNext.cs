@@ -77,6 +77,7 @@ public class WhatHappensNext : IWhatHappensNext
                 {
                     OrigamiPost => $"/n/posts/comments?nanoid={comment.NanoId}",
                     OrigamiVideo => $"/n/videos/comments?nanoid={comment.NanoId}",
+                    OrigamiSoftwareRelease => $"/n/softwarereleases/comments?nanoid={comment.NanoId}",
                     _ => string.Empty,
                 };
             }
