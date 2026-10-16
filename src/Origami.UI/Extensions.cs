@@ -653,15 +653,15 @@ namespace Origami.UI
             // Rate limiting
             app.UseRateLimiter();
 
+            // Your request-specific middleware
+            app.UseMiddleware<OrigamiLocationMiddleware>();
+
             // Endpoints
             app.MapRazorPages();
             app.UseMvcWithDefaultRoute();
             app.MapControllers();
 
             app.MapHealthChecks("/health");
-
-            // Your request-specific middleware
-            app.UseMiddleware<OrigamiLocationMiddleware>();
 
             if (!admin)
             {
