@@ -25,7 +25,7 @@
     }
     <div class="mt-5">
         <div class="row" style="min-height: 150px;">
-            <div class="col-12 col-xxl-6 mb-3">
+            <div class="col-12 col-xxl-4 mb-3">
                 <div class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-danger d-inline-flex align-items-center">
                     <div class="m-auto">
                         <div class="text-center mb-3">
@@ -45,11 +45,19 @@
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-xxl-6 mb-3">
+            <div class="col-12 col-xxl-4 mb-3">
                 <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-danger" @onclick="GoToCacheExplorer">
                     <div class="text-center">
                         <i class="fa-solid fa-book"></i>
                         <span>@Text.Lower("Cache explorer")</span>
+                    </div>
+                </button>
+            </div>
+            <div class="col-12 col-xxl-4 mb-3">
+                <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-danger" @onclick="GoToSettings">
+                    <div class="text-center" style="bottom:0;">
+                        <i class="fa-solid fa-gear"></i>
+                        <span>@Text.Lower("Settings")</span>
                     </div>
                 </button>
             </div>
@@ -102,18 +110,6 @@
                     <div class="text-center" style="bottom:0;">
                         <i class="fa-solid fa-database"></i>
                         <span>@Text.Lower("Backup and restore")</span>
-                    </div>
-                </button>
-            </div>
-        </div>
-    </div>
-    <div class="">
-        <div class="row" style="min-height: 150px;">
-            <div class="col-12 mb-3">
-                <button class="border border-2 h-100 w-100 p-3 cursor-pointer bg-light border-danger" @onclick="GoToSettings">
-                    <div class="text-center" style="bottom:0;">
-                        <i class="fa-solid fa-gear"></i>
-                        <span>@Text.Lower("Settings")</span>
                     </div>
                 </button>
             </div>
