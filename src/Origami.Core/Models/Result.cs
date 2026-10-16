@@ -121,6 +121,14 @@ namespace Origami.Core.Models
         }
 
         /// <summary>
+        /// Creates a stale data message
+        /// </summary>
+        public virtual string? StaleData
+        {
+            set => AddMessage(ResultMessage.MessageTypes.StaleData, value);
+        }
+
+        /// <summary>
         /// Creates a warning message
         /// </summary>
         public virtual string? Warning
