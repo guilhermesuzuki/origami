@@ -53,12 +53,12 @@
                     <ul class="inline-list mt-5">
                         <li>
                             <MudSelect T="string" @bind-Value="Entity.Entity.Subtype" HelperText="@Text.Lower("Type")">
-                                <MudSelectItem Value="OrigamiSpecialPageTypes.CookiePolicy.ToString()">@Text.Lower("Cookie policy")</MudSelectItem>
-                                <MudSelectItem Value="OrigamiSpecialPageTypes.HowToDeleteYourData.ToString()">@Text.Lower("How to delete your data")</MudSelectItem>
-                                <MudSelectItem Value="OrigamiSpecialPageTypes.PrivacyPolicy.ToString()">@Text.Lower("Privacy policy")</MudSelectItem>
-                                <MudSelectItem Value="OrigamiSpecialPageTypes.TermsAndConditions.ToString()">@Text.Lower("Terms and conditions")</MudSelectItem>
-                                <MudSelectItem Value="OrigamiSpecialPageTypes.TermsOfService.ToString()">@Text.Lower("Terms of service")</MudSelectItem>
-                                <MudSelectItem Value="OrigamiSpecialPageTypes.Maintenance.ToString()">@Text.Lower("Maintenance")</MudSelectItem>
+                                <MudSelectItem Value="@nameof(OrigamiSpecialPageTypes.CookiePolicy)">@Text.Lower("Cookie policy")</MudSelectItem>
+                                <MudSelectItem Value="@nameof(OrigamiSpecialPageTypes.HowToDeleteYourData)">@Text.Lower("How to delete your data")</MudSelectItem>
+                                <MudSelectItem Value="@nameof(OrigamiSpecialPageTypes.PrivacyPolicy)">@Text.Lower("Privacy policy")</MudSelectItem>
+                                <MudSelectItem Value="@nameof(OrigamiSpecialPageTypes.TermsAndConditions)">@Text.Lower("Terms and conditions")</MudSelectItem>
+                                <MudSelectItem Value="@nameof(OrigamiSpecialPageTypes.TermsOfService)">@Text.Lower("Terms of service")</MudSelectItem>
+                                <MudSelectItem Value="@nameof(OrigamiSpecialPageTypes.Maintenance)">@Text.Lower("Maintenance")</MudSelectItem>
                             </MudSelect>
                         </li>
                     </ul>
