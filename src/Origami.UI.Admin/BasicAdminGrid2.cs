@@ -27,11 +27,11 @@ namespace Origami.UI.Admin
             }
         }
 
-protected async Task New()
-{
-    await this.JSRuntime.InvokeVoidAsync("removeQueryStringWithoutReload", "nanoid");
-    this.SelectedEntity = this.TheCreator.Create<T>();
-}
+        protected async Task New()
+        {
+            await this.JSRuntime.InvokeVoidAsync("removeQueryStringWithoutReload", "nanoid");
+            this.SelectedEntity = this.TheCreator.Create<T>();
+        }
 
         protected override async Task ReloadDataGridAsync()
         {

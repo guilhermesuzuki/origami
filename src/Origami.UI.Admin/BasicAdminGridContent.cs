@@ -300,11 +300,11 @@ namespace Origami.UI.Admin
             return items;
         }
 
-protected async Task New()
-{
-    await this.JSRuntime.InvokeVoidAsync("removeQueryStringWithoutReload", "nanoid");
-    this.SelectedEntity = this.TheCreator.Create<T2>();
-}
+        protected async Task New()
+        {
+            await this.JSRuntime.InvokeVoidAsync("removeQueryStringWithoutReload", "nanoid");
+            this.SelectedEntity = this.TheCreator.Create<T2>();
+        }
 
         /// <summary>
         /// User selects an <paramref name="entity"/> to edit
