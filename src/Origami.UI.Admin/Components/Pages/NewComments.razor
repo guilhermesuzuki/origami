@@ -95,15 +95,5 @@
 </Root>
 @code
 {
-    protected override string DefaultOrdering => string.Empty;
-
-    protected override IEnumerable<OrigamiContentComment> GetEntities()
-    {
-        var query = from cmt in base.GetEntities()
-                    join content in this.Super.Contents.ReadFromCache() on cmt.ContentId equals content.Id
-                    orderby content.Title, cmt.DateCreated descending
-                    select cmt;
-
-        return query.AsQueryable();
-    }
+    protected override string DefaultOrdering => $"{nameof(OrigamiContentComment.DateCreated)} DESC";
 }
