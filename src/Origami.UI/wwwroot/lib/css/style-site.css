@@ -80,6 +80,8 @@ html body .reaction-selected { border: 1px solid var(--site-highlight) !importan
 
 .tox.tox-tinymce-aux, .process-result, .email-status { z-index: 20000!important; }
 
+.dialog-form { width: 1800px; height: 1000px; max-width: 100%; max-height: 100%; }
+
 @media (max-width: 576px) {
     html body .footer { display: block !important; }
     html body .footer > * { display: block !important; margin: 0px !important; margin-bottom: 10px !important; }
