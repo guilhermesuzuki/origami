@@ -293,67 +293,56 @@
                         </button>
                     </div>
                 </ChildContent>
-            </MudTabPanel>    
-            <MudTabPanel Text="@Text.Upper("Pages")" Visible="@(this.Entity.New == false)">
-                <ChildContent>
-                    <MudDataGrid Class="" T="OrigamiPage" Items="this.GetPages()" Filterable="false" SortMode="SortMode.None">
-                        <Columns>
-                            <TemplateColumn>
-                                <CellTemplate>
-                                    <ContentHeader Entity="context.Item" ShowRelatedContent="false"></ContentHeader>
-                                </CellTemplate>
-                            </TemplateColumn>
-                        </Columns>
-                        <PagerContent>
-                            <MudDataGridPager T="OrigamiPage" PageSizeOptions="new int[] { 5, 10, 25, }"></MudDataGridPager>
-                        </PagerContent>
-                    </MudDataGrid>
-                </ChildContent>
             </MudTabPanel>
-            <MudTabPanel Text="@Text.Upper("Posts")" Visible="@(this.Entity.New == false)">
+            <MudTabPanel Text="@Text.Upper("Content")" Visible="@(this.Entity.New == false)">
                 <ChildContent>
-                    <MudDataGrid Class="" T="OrigamiPost" Items="this.GetPosts()" Filterable="false" SortMode="SortMode.None">
+                    <MudDataGrid Class="" T="OrigamiContent" Items="this.GetContent()" Filterable="false" SortMode="SortMode.None" Bordered="true">
                         <Columns>
-                            <TemplateColumn>
+                            <TemplateColumn Title="@Text.Upper("Title")">
                                 <CellTemplate>
-                                    <ContentHeader Entity="context.Item"></ContentHeader>
+                                    <ContentHeaderInline Entity="context.Item"></ContentHeaderInline>
+                                </CellTemplate>
+                            </TemplateColumn>
+                            <TemplateColumn Title="@Text.Upper("Header")" HeaderClass="col-3">
+                                <CellTemplate>
+                                    @if (context.Item is OrigamiSpecialMessage m)
+                                    {
+                                        <SpecialMessageHeader Entity="m"></SpecialMessageHeader>
+                                    }
+                                    else
+                                    {
+                                        <ContentHeader Entity="context.Item" ShowRelatedContent="false"></ContentHeader>
+                                    }
+                                </CellTemplate>
+                            </TemplateColumn>
+                            <TemplateColumn Title="@Text.Upper("Categories")" Sortable="false" Filterable="false" HeaderClass="col-1" CellClass="categories">
+                                <CellTemplate>
+                                    @foreach (var category in this.Super.GetCategories(context.Item))
+                                    {
+                                        <div class="wrapper p-2 mb-1 me-1 shadow-sm border d-inline-block">
+                                            <CategoryHeaderInline Class="" Entity="category"></CategoryHeaderInline>
+                                        </div>
+                                    }
+                                </CellTemplate>
+                            </TemplateColumn>
+                            <TemplateColumn Title="@Text.Upper("Published")" Sortable="false" Filterable="false" HeaderClass="col-1" CellClass="text-center">
+                                <CellTemplate>
+                                    @if (context.Item.IsPublished)
+                                    {
+                                        <i class="fa-solid fa-thumbs-up"></i>
+                                        <div class="small">@context.Item.DatePublished</div>
+                                    }
+                                </CellTemplate>
+                            </TemplateColumn>
+                            <TemplateColumn Title="@Text.Upper("Date")" Sortable="false" Filterable="false" HeaderClass="col-1" CellClass="text-center">
+                                <CellTemplate>
+                                    <i class="fa-solid fa-calendar"></i>
+                                    <div class="small">@context.Item.GetDate()</div>
                                 </CellTemplate>
                             </TemplateColumn>
                         </Columns>
                         <PagerContent>
-                            <MudDataGridPager T="OrigamiPost" PageSizeOptions="new int[] { 5, 10, 25, }"></MudDataGridPager>
-                        </PagerContent>
-                    </MudDataGrid>
-                </ChildContent>
-            </MudTabPanel>
-            <MudTabPanel Text="@Text.Upper("Videos")" Visible="@(this.Entity.New == false)">
-                <ChildContent>
-                    <MudDataGrid Class="" T="OrigamiVideo" Items="this.GetVideos()" Filterable="false" SortMode="SortMode.None">
-                        <Columns>
-                            <TemplateColumn>
-                                <CellTemplate>
-                                    <ContentHeader Entity="context.Item"></ContentHeader>
-                                </CellTemplate>
-                            </TemplateColumn>
-                        </Columns>
-                        <PagerContent>
-                            <MudDataGridPager T="OrigamiVideo" PageSizeOptions="new int[] { 5, 10, 25, }"></MudDataGridPager>
-                        </PagerContent>
-                    </MudDataGrid>
-                </ChildContent>
-            </MudTabPanel>
-            <MudTabPanel Text="@Text.Upper("Software releases")" Visible="@(this.Entity.New == false)">
-                <ChildContent>
-                    <MudDataGrid Class="" T="OrigamiSoftwareRelease" Items="this.GetSoftwareReleases()" Filterable="false" SortMode="SortMode.None">
-                        <Columns>
-                            <TemplateColumn>
-                                <CellTemplate>
-                                    <ContentHeader Entity="context.Item" ShowRelatedContent="false"></ContentHeader>
-                                </CellTemplate>
-                            </TemplateColumn>
-                        </Columns>
-                        <PagerContent>
-                            <MudDataGridPager T="OrigamiSoftwareRelease" PageSizeOptions="new int[] { 5, 10, 25, }"></MudDataGridPager>
+                            <MudDataGridPager T="OrigamiContent" PageSizeOptions="new int[] { 5, 10, 25, }"></MudDataGridPager>
                         </PagerContent>
                     </MudDataGrid>
                 </ChildContent>
@@ -413,14 +402,14 @@
         @Text.Original("Press ESC to close")
     </TitleContent>
     <DialogContent>
-        <div class="overflow-auto" style="width: 1700px; height: 1000px; max-width:100%; max-height: 100%;">
+        <div class="position-relative pt-3 pb-3 dialog-content">
             <FileManager Mode="Image" OnFileClicked="this.ImageFromFileManagerWillAssignEntityHeader"></FileManager>
         </div>
     </DialogContent>
 </MudDialog>
 <MudDialog Options="this.DialogOptions" @bind-Visible="this._showPasswordResetHistory" TitleClass="d-none">
     <DialogContent>
-        <div class="border shadow-lg position-relative" style="max-width: 1000px; width:100%;">
+        <div class="position-relative pt-3 pb-3 dialog-content">
             <div class="overflow-auto" style="padding-bottom: 70px;">
                 <div class="p-3">
                     <MudDataGrid T="OrigamiUserPasswordReset" Items="this.GetPasswordResetHistory()">
@@ -548,25 +537,16 @@
         }
     }
 
-    protected List<OrigamiPage> GetPages()
+    protected List<OrigamiContent> GetContent()
     {
-        return this.Super.GetVisiblePages().Author(this.Entity).ToList();
+        var query = from c in this.MemoryCache.Read<OrigamiContent>()
+                    where c.AuthorId == this.Entity.Id
+                    orderby c.Title
+                    select c;
+
+        return query.ToList();
     }
 
-    protected List<OrigamiPost> GetPosts()
-    {
-        return this.Super.Contents.ReadFromCache().OfType<OrigamiPost>().Published().Author(this.Entity).ToList();
-    }
-
-    protected List<OrigamiSoftwareRelease> GetSoftwareReleases()
-    {
-        return this.Super.Contents.ReadFromCache().OfType<OrigamiSoftwareRelease>().Published().Author(this.Entity).ToList();
-    }
-
-    protected List<OrigamiVideo> GetVideos()
-    {
-        return this.Super.Contents.ReadFromCache().OfType<OrigamiVideo>().Published().Author(this.Entity).ToList();
-    }
 
     protected List<OrigamiUserPasswordReset> GetPasswordResetHistory()
     {

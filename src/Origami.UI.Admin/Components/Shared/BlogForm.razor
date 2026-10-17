@@ -40,6 +40,42 @@
                     </li>
                 </ul>
             </div>
+            @if (this.Entity.New == false)
+            {
+                <div class="content p-3 mt-3">
+                    <div class="w-100 text-white bg-secondary text-center">
+                        <i class="bi bi-file-earmark-text-fill"></i>
+                        @Text.Lower("Content")
+                    </div>
+                    <MudDataGrid T="OrigamiContent" Class="border mt-3" Items="_getContent()" SortMode="SortMode.None" Filterable="false" RowClassFunc="this.RowClassFunc">
+                        <Columns>
+                            <TemplateColumn>
+                                <HeaderTemplate>
+                                    @Text.Upper("Header")
+                                </HeaderTemplate>
+                                <CellTemplate>
+                                    <ContentHeaderInline Entity="context.Item"></ContentHeaderInline>
+                                </CellTemplate>
+                            </TemplateColumn>
+                            <TemplateColumn HeaderClass="col-3">
+                                <HeaderTemplate>
+                                    <span>@Text.Upper("Publish Date")</span>
+                                </HeaderTemplate>
+                                <CellTemplate>
+                                    @if (context.Item.IsPublished)
+                                    {
+                                        <i class="fa-solid fa-thumbs-up me-1"></i>
+                                        <span>@context.Item.DatePublished.Humanize()</span>
+                                    }
+                                </CellTemplate>
+                            </TemplateColumn>
+                        </Columns>
+                        <PagerContent>
+                            <MudDataGridPager T="OrigamiContent" PageSizeOptions="[10, 25, 50, 100]" />
+                        </PagerContent>
+                    </MudDataGrid>
+                </div>
+            }
         </div>
         <div class="col-12 col-xxl-8">
             <div class="row">
@@ -66,70 +102,6 @@
                             </CustomContent>
                             <SelectedTemplate></SelectedTemplate>
                         </MudFileUpload>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-12">
-            <div class="row">
-                <div class="col-12 col-xxl-4">
-                    <div class="pages p-3">
-                        <div class="w-100 text-white bg-secondary text-center">
-                            <i class="bi bi-file-earmark-text-fill"></i>
-                            @Text.Lower("Pages")
-                        </div>
-                        <MudDataGrid T="OrigamiPage" Class="border mt-3" Items="_getPages()" SortMode="SortMode.None" Filterable="false">
-                            <Columns>
-                                <TemplateColumn CellClass="w-100">
-                                    <CellTemplate>
-                                        <ContentHeaderInline Entity="context.Item"></ContentHeaderInline>
-                                    </CellTemplate>
-                                </TemplateColumn>
-                            </Columns>
-                            <PagerContent>
-                                <MudDataGridPager T="OrigamiPage" PageSizeOptions="[10,25,50,100]" />
-                            </PagerContent>
-                        </MudDataGrid>
-                    </div>
-                </div>
-                <div class="col-12 col-xxl-4">
-                    <div class="posts p-3">
-                        <div class="w-100 text-white bg-secondary text-center">
-                            <i class="bi bi-file-earmark-text-fill"></i>
-                            @Text.Lower("Posts")
-                        </div>
-                        <MudDataGrid T="OrigamiPost" Class="border mt-3" Items="_getPosts()" SortMode="SortMode.None" Filterable="false">
-                            <Columns>
-                                <TemplateColumn CellClass="w-100">
-                                    <CellTemplate>
-                                        <ContentHeaderInline Entity="context.Item"></ContentHeaderInline>
-                                    </CellTemplate>
-                                </TemplateColumn>
-                            </Columns>
-                            <PagerContent>
-                                <MudDataGridPager T="OrigamiPost" PageSizeOptions="[10,25,50,100]" />
-                            </PagerContent>
-                        </MudDataGrid>
-                    </div>
-                </div>
-                <div class="col-12 col-xxl-4">
-                    <div class="videos p-3">
-                        <div class="w-100 text-white bg-secondary text-center">
-                            <i class="fa-solid fa-video"></i>
-                            @Text.Lower("Videos")
-                        </div>
-                        <MudDataGrid T="OrigamiVideo" Class="border mt-3" Items="_getVideos()" SortMode="SortMode.None" Filterable="false">
-                            <Columns>
-                                <TemplateColumn CellClass="w-100">
-                                    <CellTemplate>
-                                        <ContentHeaderInline Entity="context.Item"></ContentHeaderInline>
-                                    </CellTemplate>
-                                </TemplateColumn>
-                            </Columns>
-                            <PagerContent>
-                                <MudDataGridPager T="OrigamiVideo" PageSizeOptions="[10,25,50,100]" />
-                            </PagerContent>
-                        </MudDataGrid>
                     </div>
                 </div>
             </div>
@@ -174,18 +146,17 @@
     </div>
 }
 @code {
-    private IEnumerable<OrigamiPage> _getPages()
+    private IEnumerable<OrigamiContent> _getContent()
     {
-        return this.Super.Contents.ReadFromCache().OfType<OrigamiPage>().NonDeleted().Blog(this.Entity.Id).OrderBy(x => x.Title);
+        return this.Super.Contents.ReadFromCache().Blog(this.Entity.Id).OrderBy(x => x.Title);
     }
 
-    private IEnumerable<OrigamiPost> _getPosts()
+    private string RowClassFunc(OrigamiContent content, int index)
     {
-        return this.Super.Contents.ReadFromCache().OfType<OrigamiPost>().NonDeleted().Blog(this.Entity.Id).OrderBy(x => x.Title);
-    }
+        var sb = new StringBuilder();
 
-    private IEnumerable<OrigamiVideo> _getVideos()
-    {
-        return this.Super.Contents.ReadFromCache().OfType<OrigamiVideo>().NonDeleted().Blog(this.Entity.Id).OrderBy(x => x.Title);
+        if (content.IsDeleted) sb.Append(" deleted");
+
+        return sb.ToString();
     }
 }
