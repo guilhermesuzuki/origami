@@ -16,7 +16,7 @@ namespace Origami.Core.Validators
             RuleFor(x => x.Description).Description(text);
             RuleFor(x => x.Slug).Cascade(CascadeMode.Stop).Slug(text);
             RuleFor(x => x.Content).Html(text);
-            RuleFor(x => x).ParentId(text);
+            RuleFor(x => x).Parent(text);
             RuleFor(x => x.HeaderImage).HeaderImage(text, webRootPath);
             RuleFor(x => x.LanguageWrittenOn).Language(text);
             RuleFor(x => x).InfiniteLoopsAreNotAllowed(text, dbContextFactory);

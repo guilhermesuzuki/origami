@@ -363,7 +363,7 @@ namespace Origami.Core.Data
             };
 
             using var db = DbContextFactory.CreateDbContext();
-            db.Add(reset);
+            db.Entry(reset).State = EntityState.Added;
             var row = db.SaveChanges();
 
             _userPasswordResetRepository.CreateCache(reset);

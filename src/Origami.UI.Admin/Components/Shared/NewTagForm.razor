@@ -1,0 +1,47 @@
+﻿@inherits BasicFormFull<OrigamiContentTag>
+
+<div class="new-tag-form d-flex @Class" style="flex-flow: column;">
+    <div style="flex:1;">
+        <BasicHeaderNotes Entity="this.Entity"></BasicHeaderNotes>
+        <ul class="inline-list mt-3">
+            <li>
+                <MudTextField Immediate="true"
+                              FullWidth="true"
+                              @bind-Value="@Entity.Tag"
+                              HelperText="@Text.Lower("Tag")"></MudTextField>
+            </li>
+            <li>
+                <MudTextField Immediate="true"
+                              FullWidth="true"
+                              @bind-Value="@Entity.Slug"
+                              HelperText="@Text.Lower("Slug")"></MudTextField>
+            </li>
+        </ul>
+    </div>
+    <div class="buttons text-center z-index-front position-sticky" style="bottom: 0;">
+        <div class="btn-group">
+            <button class="btn btn-success text-white fw-bold" @onclick="Save" disabled="@this.DisableTheSaveButton">
+                <i class="fa-solid fa-floppy-disk"></i>
+                @Text.Lower("Save")
+            </button>
+            @if (this.Entity.New == false)
+            {
+                <button class="btn btn-secondary text-white fw-bold" @onclick="UndoChanges">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    @Text.Lower("Undo changes")
+                </button>
+            }
+            else
+            {
+                <button class="btn btn-secondary text-white fw-bold" @onclick="UndoNew">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    @Text.Lower("Undo changes")
+                </button>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+
+}

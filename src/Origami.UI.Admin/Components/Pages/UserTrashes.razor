@@ -185,7 +185,7 @@
     /// Retrieves the deleted items
     /// </summary>
     /// <returns></returns>
-    protected override IEnumerable<OrigamiUserTrash> GetItems()
+    protected override IEnumerable<OrigamiUserTrash> GetEntities()
     {
         using var db = this.DbContextFactory.CreateDbContext();
 

@@ -14,23 +14,23 @@
             <ul class="d-inline-flex align-items-center rating" data-rating="@rating">
                 <li>
                     <div data-rating-level="1" class="rating-star rating-star-1 rating-star-empty @(HasRated() == true ? null : "cursor-pointer rateable")"
-                         @onclick="() => this.Rate(1)" @onclick:stopPropagation="true"></div>
+                         @onclick="async () => await this.RateAsync(1)" @onclick:stopPropagation="true"></div>
                 </li>
                 <li>
                     <div data-rating-level="2" class="rating-star rating-star-2 rating-star-empty @(HasRated() == true ? null : "cursor-pointer rateable")"
-                         @onclick="() => this.Rate(2)" @onclick:stopPropagation="true"></div>
+                         @onclick="async () => await this.RateAsync(2)" @onclick:stopPropagation="true"></div>
                 </li>
                 <li>
                     <div data-rating-level="3" class="rating-star rating-star-3 rating-star-empty @(HasRated() == true ? null : "cursor-pointer rateable")"
-                         @onclick="() => this.Rate(3)" @onclick:stopPropagation="true"></div>
+                         @onclick="async () => await this.RateAsync(3)" @onclick:stopPropagation="true"></div>
                 </li>
                 <li>
                     <div data-rating-level="4" class="rating-star rating-star-4 rating-star-empty @(HasRated() == true ? null : "cursor-pointer rateable")"
-                         @onclick="() => this.Rate(4)" @onclick:stopPropagation="true"></div>
+                         @onclick="async () => await this.RateAsync(4)" @onclick:stopPropagation="true"></div>
                 </li>
                 <li>
                     <div data-rating-level="5" class="rating-star rating-star-5 rating-star-empty @(HasRated() == true ? null : "cursor-pointer rateable")"
-                         @onclick="() => this.Rate(5)" @onclick:stopPropagation="true"></div>
+                         @onclick="async () => await this.RateAsync(5)" @onclick:stopPropagation="true"></div>
                 </li>
                 <li class="ratings ps-1 x-small">
                     <span>[ </span>
@@ -120,7 +120,7 @@
         return RatingFromCurrentUser() != null;
     }
 
-    protected void Rate(byte rate)
+    protected async Task RateAsync(byte rate)
     {
         if (HasRated() == false)
         {
@@ -131,7 +131,8 @@
                 Rating = rate,
             };
 
-            this.HttpContextAccessor.HttpContext?.TrackFields(this.MemoryCache, rating, GhostOfTheNavigator.Uri);
+            var rc = await this.JSRuntime.InvokeAsync<RequestContext?>("origami.common.requestContext");
+            rc?.TrackFields(this.MemoryCache, rating, GhostOfTheNavigator.Uri);
 
             // social user is rating this
             if (this.UserFacade.SocialProfile.New == false)
@@ -139,7 +140,7 @@
                 rating.SocialProfileId = this.UserFacade.SocialProfile.Id;
                 var context = new DataOperationContextFrontEnd<OrigamiContentRating>(UserFacade.SocialProfile, DateTime.UtcNow, rating);
                 var hub = this.Super.ContentRatings.SmartCreate(context);
-                if (hub.Ok) this.OnUserHasRated.InvokeAsync(rating);
+                if (hub.Ok) await this.OnUserHasRated.InvokeAsync(rating);
                 return;
             }
 
@@ -149,7 +150,7 @@
                 rating.UserId = this.UserFacade.User.Id;
                 var context = new DataOperationContext<OrigamiContentRating>(UserFacade.User, DateTime.UtcNow, rating);
                 var hub = this.Super.ContentRatings.SmartSave(context, false);
-                if (hub.Ok) this.OnUserHasRated.InvokeAsync(rating);
+                if (hub.Ok) await this.OnUserHasRated.InvokeAsync(rating);
                 return;
             }
         }

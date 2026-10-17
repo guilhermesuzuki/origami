@@ -5,12 +5,8 @@
 {
     <div class="user-header @Class">
         <span class="d-block">
-            <span class="fw-bold username" title="@Text.Lower("Username")">
-                <i class="bi bi-person-circle"></i>
-                <span>@Entity.Username</span>
-            </span>
             <span class="display-name" title="@Text.Lower("Display name")">
-                (@Entity.DisplayName)
+                <span class="fw-bold">@Entity.DisplayName</span>
                 @if (this.UserFacade.User.Id == this.Entity.Id)
                 {
                     <span class="bg-info text-white is-blocked px-1 fw-bold xx-small ms-1">

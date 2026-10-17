@@ -5,12 +5,8 @@
     var author = this.Super.Users.ReadFromCache().Id(this.Entity.AuthorId);
     @if (author != null) 
     {
-        <div class="content-header-lite text-center p-1 bg-light border">
-            <ul class="inline-list">
-                <li>
-                    <UserHeaderInline Entity="author"></UserHeaderInline>
-                </li>
-            </ul>
+        <div class="author-header-lite text-center p-1 bg-light border">
+            <UserHeaderInline Entity="author"></UserHeaderInline>
         </div>
     }
 }

@@ -368,7 +368,7 @@
     protected Location? GetUserLocation()
     {
         if (_httpContextAccessor.HttpContext == null) return null;
-        return _memoryCache.Get<Location?>($"Origami_UserLocation_{_httpContextAccessor.HttpContext.Connection.Id}");
+        return _httpContextAccessor.HttpContext.Items["Origami_UserLocation"] as Location;
     }
 
     private void GoToBackupAndRestore()

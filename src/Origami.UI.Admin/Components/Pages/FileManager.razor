@@ -8,12 +8,13 @@
 @inject IFileManagerRepository fileManagerRepository
 
 <style>
-    .filemanager-wrapper .directory { height: 200px; }
-    .filemanager-wrapper .file { height: 200px; }
-    .filemanager-wrapper .selected-file { border-color: #202020 !important; }
-    .search-wrapper { display: none !important; }
+    .file-manager .search-wrapper { display: none !important; }
+    .file-manager-contents .directory { height: 200px; }
+    .file-manager-contents .file { height: 200px; }
+    .file-manager-contents .selected-file { border-color: #202020 !important; }
 </style>
-<Root Access="this.CanAccess()" Class="@Class">
+<div class="file-manager wrapper">
+    <Root Access="this.CanAccess()" Class="@Class">
     <HeaderTemplate>
         <div class="header p-3 border-bottom">
             <div class="row">
@@ -73,7 +74,7 @@
         <div class="p-3">
             <div class="row">
                 <div class="col-12">
-                    <div class="filemanager-wrapper row text-center">
+                    <div class="file-manager-contents row text-center">
                         @if (this.VirtualPath.Like(RootPath) == false)
                         {
                             <div class="mb-3 cursor-pointer col-6 col-xxl-3" @onclick="_goBackInNavigation">
@@ -212,9 +213,10 @@
         </div>
     </ContentTemplate>
 </Root>
+</div>
 <MudDialog @bind-Visible:get="IsSelectedFile" @bind-Visible:set="this.IgnoreVisibilityChangeForSelectedFile" Options="this.DialogOptions" TitleClass="d-none" ContentClass="p-2">
     <DialogContent>
-        <div class="border shadow-lg position-relative" style="width:100%; max-width:1000px;">
+        <div class="position-relative pt-3 pb-3 dialog-content">
             <div class="overflow-auto text-center h-100 w-100" style="padding-bottom: 70px;">
                 <FileForm Class="p-3 shadow-sm border" Entity="this._selectedFile"></FileForm>
             </div>
@@ -248,7 +250,7 @@
 </MudDialog>
 <MudDialog @bind-Visible="_uploadingFiles" Options="this.DialogOptions" Style="width: 80%;" TitleClass="d-none" ContentClass="p-2">
     <DialogContent>
-        <div class="border p-3 shadow-lg">
+        <div class="position-relative pt-3 pb-3 dialog-content">
             <FileUpload VirtualPath="@this.VirtualPath" OnCloseWindow="() => { this._loadFiles(true); _uploadingFiles = false; }"></FileUpload>
         </div>
     </DialogContent>
@@ -361,11 +363,6 @@
     /// Gets all subdirectories from <see cref="VirtualPath"/>
     /// </summary>
     private IEnumerable<DirectoryContext>? _directories;
-
-    /// <summary>
-    /// All hits from the search, if any
-    /// </summary>
-    private IList<IId>? _hits;
 
     private void _addFolder()
     {
@@ -569,7 +566,6 @@
 
     private void _openFolder(string webPath)
     {
-        this._hits = null;
         this.VirtualPath = $"/{webPath.Trim('/')}/";
         this._loadFiles(true);
         this._loadDirectories(true);

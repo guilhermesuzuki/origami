@@ -12,7 +12,8 @@ namespace Origami.Core.Models
         IDateModified,
         IDeleted,
         IAdditionalInfo,
-        INanoId
+        INanoId,
+        IParentIdNull
     {
         protected string? _additionalInfo;
         protected string _content = string.Empty;
@@ -26,12 +27,12 @@ namespace Origami.Core.Models
         protected Guid? _moderatedByUserId;
         protected string _nanoId;
         protected Guid? _pinnedById;
-
         protected Guid? _pinnedByUserId;
+
         /// <summary>
         /// Default constructor
         /// </summary>
-        public BaseComment() : base()
+        protected BaseComment() : base()
         {
             _nanoId = NanoidDotNet.Nanoid.Generate(NanoidDotNet.Nanoid.Alphabets.LettersAndDigits, size: 8);
         }
@@ -126,6 +127,12 @@ namespace Origami.Core.Models
         {
             get => _nanoId;
             set => this.Set(ref _nanoId, value, Changed);
+        }
+
+        public Guid? ParentId
+        {
+            get => field;
+            set => this.Set(ref field, value, Changed);
         }
 
         /// <summary>

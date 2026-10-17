@@ -518,30 +518,30 @@ namespace Origami.UI
         /// A video was picked from the file manager and should be assigned in the entity as a header
         /// </summary>
         /// <param name="videofile"></param>
-        protected virtual void VideoFromFileManagerWillAssignEntityHeader(OrigamiSystemFile video)
+        protected virtual void VideoFromFileManagerWillAssignEntityHeader(OrigamiSystemFile file)
         {
-            if (video.IsVideo == false)
+            if (file.IsVideo == false)
             {
                 UserFacade.Result = new() { Error = Text.Original("You need to pick a video") };
                 return;
             }
 
-            if (Entity is OrigamiVideo oiVideo)
+            if (Entity is OrigamiVideo video)
             {
-                if (video.WebPath.Like(oiVideo.MediaFile.WebPath) == true)
+                if (file.WebPath.Like(video.MediaFile.WebPath) == true)
                 {
                     FileManagerForImages = false;
                     UserFacade.Result = new() { Info = Text.Original("Source and destination images share the same location") };
                     return;
                 }
 
-                var sourcePath = Super.Files.LocalPath(video.WebPath);
+                var sourcePath = Super.Files.LocalPath(file.WebPath);
                 var webPath = Super.Directories.WebPathForFiles(Entity);
                 var localPath = Super.Directories.LocalPathForFiles(Entity);
 
                 if (sourcePath.StartsWith(localPath) == true)
                 {
-                    oiVideo.HeaderImage = video.WebPath;
+                    video.HeaderImage = file.WebPath;
                 }
                 else
                 {
@@ -559,7 +559,7 @@ namespace Origami.UI
                         {
                             throw new InvalidOperationException("File with the same name exists. Please, try again");
                         }
-                        oiVideo.HeaderImage = $"{webPath}{Path.GetFileName(destinationPath)}";
+                        video.HeaderImage = $"{webPath}{Path.GetFileName(destinationPath)}";
                         var destinationDirectory = Path.GetDirectoryName(destinationPath);
                         if (destinationDirectory.Has() == true)
                         {

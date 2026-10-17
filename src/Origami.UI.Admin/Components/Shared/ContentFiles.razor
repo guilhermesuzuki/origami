@@ -2,7 +2,6 @@
 @implements IEntityNull<TEntity>
 @typeparam TEntity where TEntity : OrigamiContent
 
-
 <div class="content-files @Class">
     <FileManager Mode="TinyMCE" RootPath="@RootPath" VirtualPath="@VirtualPath" ShouldSetPageTitle="false" ShouldTrackUserVisit="false"></FileManager>
 </div>
@@ -24,7 +23,7 @@
         }
 
         var directory = this.Super.Directories.WebPathForFiles(this.Entity);
-        this.VirtualPath = $"{directory}";
+        this.VirtualPath = directory;
         this.Super.Directories.Create(directory);
     }
 }

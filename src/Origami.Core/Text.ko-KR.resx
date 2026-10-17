@@ -2691,4 +2691,10 @@
   <data name="E-mail is already in use" xml:space="preserve">
     <value>이메일 주소가 이미 사용 중입니다</value>
   </data>
+  <data name="A concurrency error occurred while updating the content." xml:space="preserve">
+    <value>콘텐츠를 업데이트하는 동안 동시성 오류가 발생했습니다.</value>
+  </data>
+  <data name="Please, refresh your screen or try again in a few minutes." xml:space="preserve">
+    <value>화면을 새로 고치거나 몇 분 후에 다시 시도해 주세요.</value>
+  </data>
 </root>

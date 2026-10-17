@@ -20,9 +20,40 @@ else if (Entity is OrigamiSpecialMessage)
 {
     <i class="bi bi-megaphone-fill" title="@Text.Lower("Special message")"></i>
 }
-else if (Entity is OrigamiSpecialPage)
+else if (Entity is OrigamiSpecialPage specialPage)
 {
-    <i class="bi bi-file-earmark-text-fill" title="@Text.Lower("Special page")" style="margin-left: -2px;"></i>
+    @if (specialPage.Subtype.Like(nameof(OrigamiSpecialPageTypes.CookiePolicy)) == true)
+    {
+        <i class="sub-type text-left fa-solid fa-cookie" title="@Text.Lower("Cookie policy")"></i>
+    }
+    else if (specialPage.Subtype.Like(nameof(OrigamiSpecialPageTypes.HowToDeleteYourData)) == true)
+    {
+        <i class="sub-type text-left fa-solid fa-trash-can" title="@Text.Lower("How to delete your data")"></i>
+    }
+    else if (specialPage.Subtype.Like(nameof(OrigamiSpecialPageTypes.Maintenance)) == true)
+    {
+        <i class="sub-type text-left fa-solid fa-person-digging" title="@Text.Lower("Maintenance")"></i>
+    }
+    else if (specialPage.Subtype.Like(nameof(OrigamiSpecialPageTypes.PrivacyPolicy)) == true)
+    {
+        <i class="sub-type text-left fa-solid fa-file-lines" title="@Text.Lower("Privacy policy")"></i>
+    }
+    else if (specialPage.Subtype.Like(nameof(OrigamiSpecialPageTypes.TermsAndConditions)) == true)
+    {
+        <i class="sub-type text-left fa-solid fa-file-lines" title="@Text.Lower("Terms and conditions")"></i>
+    }
+    else if (specialPage.Subtype.Like(nameof(OrigamiSpecialPageTypes.TermsOfService)) == true)
+    {
+        <i class="sub-type text-left fa-solid fa-file-lines" title="@Text.Lower("Terms of service")"></i>
+    }
+    else if (specialPage.Subtype.Like(nameof(OrigamiSpecialPageTypes.None)) == true)
+    {
+        <i class="sub-type text-left fa-solid fa-file-lines" title="@Text.Lower("None")"></i>
+    }
+    else
+    {
+        <i class="fa-solid fa-circle-question" title="@Text.Lower("?")"></i>
+    }
 }
 else if (Entity is OrigamiVideo)
 {

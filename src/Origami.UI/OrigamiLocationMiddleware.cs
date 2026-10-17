@@ -1,37 +1,21 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 using Origami.Core;
 using Origami.Core.Data;
 using Origami.Core.Models;
 
 namespace Origami.UI
 {
-    internal class OrigamiLocationMiddleware : IMiddleware
+    internal class OrigamiLocationMiddleware(IMyMemoryCache _memoryCache, IIpLocationRepository _locationRepository, ILogger<OrigamiLocationMiddleware> _logger) : IMiddleware
     {
-        private readonly IMemoryCache _memoryCache;
-        private readonly IIpLocationRepository _locationRepository;
-
-        public OrigamiLocationMiddleware(IMemoryCache memoryCache, IIpLocationRepository locationRepository)
-        {
-            _memoryCache = memoryCache;
-            _locationRepository = locationRepository;
-        }
-
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
             try
             {
-                Console.WriteLine($"Connection Id: {context.Connection.Id}");
-
-                var key = $"Origami_UserLocation_{context.Connection.Id}";
-
-                if (_memoryCache.Get(key) is Location location)
-                {
-                    await next(context).ConfigureAwait(false);
-                    return;
-                }
-
+                var key = $"Origami_UserLocation";
                 var ip = context.Connection.RemoteIpAddress?.ToString();
+
                 if (ip == null || ip.Like("::1") || ip.Like("127.0.0.1"))
                 {
                     //needs to get the public ip address from 'localhost'
@@ -54,14 +38,15 @@ namespace Origami.UI
                 var result = await _locationRepository.GetLocationByIpAsync(ip!).ConfigureAwait(false);
                 if (result.Ok)
                 {
-                    _memoryCache.Set(key, result.Entity, TimeSpan.FromHours(1));
+                    _logger.LogInformation("User location retrieved for key: {Key}", key);
+                    context.Items[key] = result.Entity;
                 }
             }
             catch (Exception)
             {
 
             }
-            await next(context);
+            await next(context).ConfigureAwait(false);
         }
     }
 }

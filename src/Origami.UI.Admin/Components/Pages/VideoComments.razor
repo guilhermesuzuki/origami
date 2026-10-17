@@ -76,9 +76,9 @@
 {
     protected override string DefaultOrdering => $"{nameof(OrigamiContentComment.DateCreated)} DESC";
 
-    protected override IEnumerable<OrigamiContentComment> GetItems()
+    protected override IEnumerable<OrigamiContentComment> GetEntities()
     {
-        return from comment in base.GetItems()
+        return from comment in base.GetEntities()
                join content in this.Super.Contents.ReadFromCache().OfType<OrigamiVideo>() on comment.ContentId equals content.Id
                select comment;
     }

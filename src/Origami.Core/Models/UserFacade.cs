@@ -31,7 +31,7 @@ namespace Origami.Core.Models
         }
 
         public event EventHandler<PropertyChangedEventArgs> Changed = null!;
-        public event EventHandler<string> RefreshingTheUI = null!;
+        public event EventHandler<StringEventArgs> RefreshingTheUI = null!;
 
         public Guid BlogId
         {
@@ -125,9 +125,9 @@ namespace Origami.Core.Models
             this.Changed -= this._userIdChanged;
         }
 
-        public void RefreshTheUI(string key)
+        public void RefreshTheUI(string value)
         {
-            RefreshingTheUI?.Invoke(this, key);
+            RefreshingTheUI?.Invoke(this, new(value));
         }
 
         private void _resultsChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -137,7 +137,7 @@ namespace Origami.Core.Models
 
         private void _userIdChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(IUserFacade.UserId))
+            if (e.PropertyName?.Equals(nameof(IUserFacade.UserId), StringComparison.InvariantCultureIgnoreCase) == true)
             {
                 this.BlogId = this.BlogsTheUserHasAccessTo.FirstOrDefault()?.Id ?? Guid.Empty;
             }

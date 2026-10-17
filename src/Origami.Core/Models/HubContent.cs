@@ -1,52 +1,97 @@
 ﻿namespace Origami.Core.Models
 {
-    public abstract class HubContent<T> :
-        IHubContent<T>,
+    public abstract class HubContent :
+        IId,
+        INanoId,
+        IHeaderImage,
         IAuthorId,
-        IHeaderImage
-        where T : OrigamiContent
+        IBlogIdNull,
+        INew
     {
-        protected HubContent() { }
-
         public Guid AuthorId
         {
-            get => Entity.AuthorId;
-            set => Entity.AuthorId = value;
+            get => this.Root?.AuthorId ?? Guid.Empty;
+            set => this.Root?.AuthorId = value;
         }
 
-        public Guid? BlogId { get => Entity.BlogId; set => Entity.BlogId = value; }
+        public Guid? BlogId
+        {
+            get => this.Root?.BlogId;
+            set => this.Root?.BlogId = value;
+        }
 
         public List<OrigamiContentCategory> Categories { get; set; } = [];
-
-        public List<T> Children { get; set; } = [];
 
         public List<OrigamiContentComment> Comments { get; set; } = [];
 
         /// <summary>
-        /// The main entity, root of all information here
-        /// </summary>
-        public T Entity { get; set; } = Activator.CreateInstance<T>();
-
-        /// <summary>
         /// Header image for the content, if any. This is a URL or path to the image.
         /// </summary>
-        public string HeaderImage { get => Entity.HeaderImage; set => Entity.HeaderImage = value; }
+        public string HeaderImage
+        {
+            get => Root?.HeaderImage ?? string.Empty;
+            set => Root?.HeaderImage = value;
+        }
 
         public List<OrigamiContentHistory> Histories { get; set; } = [];
 
         /// <summary>
         /// Dummy implementation to satisfy IHubContent interface, since the actual ID is stored in the Entity
         /// </summary>
-        public Guid Id { get => Entity.Id; set => Entity.Id = value; }
+        public Guid Id
+        {
+            get => this.Root?.Id ?? Guid.Empty;
+            set => this.Root?.Id = value;
+        }
 
         /// <summary>
         /// Necessary implementation of the INanoId interface, since the actual NanoId is stored in the Entity
         /// </summary>
-        public string NanoId => Entity.NanoId;
+        public string NanoId => this.Root?.NanoId ?? string.Empty;
 
-        public T? Parent { get; set; }
+        public bool New => Root.New;
+
         public List<OrigamiContentRating> Ratings { get; set; } = [];
+
         public List<OrigamiContentReaction> Reactions { get; set; } = [];
+
+        /// <summary>
+        /// OrigamiContent abstraction for the main entity, root of all information here
+        /// </summary>
+        public abstract OrigamiContent Root { get; }
+
+        /// <summary>
+        /// Parent of root
+        /// </summary>
+        public abstract OrigamiContent? RootParent { get; }
+
         public List<OrigamiContentTag> Tags { get; set; } = [];
+    }
+
+
+    public abstract class HubContent<T> :
+        HubContent,
+        IHubContent<T>,
+        IAuthorId,
+        IHeaderImage
+        where T : OrigamiContent, new()
+    {
+        protected HubContent() { }
+
+        public List<T> Children { get; set; } = [];
+
+        /// <summary>
+        /// The main entity, root of all information here
+        /// </summary>
+        public T Entity { get; set; } = new();
+
+        /// <summary>
+        /// Parent element of the current object. This is used to establish a hierarchy or relationship between content items.
+        /// </summary>
+        public T? Parent { get; set; }
+
+        public override OrigamiContent Root => this.Entity;
+
+        public override OrigamiContent? RootParent => this.Parent;
     }
 }

@@ -101,7 +101,9 @@ namespace Origami.Core.Validators
         {
             return ruleBuilder
                 .Must(x => x.DisplayName.Like(x.Username) == false)
-                .WithMessage("For security reasons, the username and display name must be different from each other");
+                .WithMessage("For security reasons, the username and display name must be different from each other")
+                .WithName(nameof(IUsername.Username))
+                ;
         }
 
         public static IRuleBuilderOptions<T, string> Domain<T>(this IRuleBuilder<T, string> ruleBuilder, Text text, string field = "website")
@@ -265,11 +267,13 @@ namespace Origami.Core.Validators
                 .WithMessage(text.Original("Note cannot exceed {0} characters", 255));
         }
 
-        public static IRuleBuilderOptions<T, T> ParentId<T>(this IRuleBuilder<T, T> ruleBuilder, Text text) where T : IId, IParentIdNull
+        public static IRuleBuilderOptions<T, T> Parent<T>(this IRuleBuilder<T, T> ruleBuilder, Text text) where T : IId, IParentIdNull
         {
             return ruleBuilder
                 .Must(x => x.ParentId == null || x.Id != x.ParentId)
-                .WithMessage(text.Original("An entity cannot be its own parent"));
+                .WithMessage(text.Original("An entity cannot be its own parent"))
+                .WithName(text.Original("Parent"))
+                ;
         }
 
         public static IRuleBuilderOptions<T, byte> Rating<T>(this IRuleBuilder<T, byte> ruleBuilder, Text text)
@@ -286,7 +290,7 @@ namespace Origami.Core.Validators
                 {
                     if (url.Has() == true)
                     {
-                        return Uri.TryCreate(url, UriKind.Absolute, out var uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+                        return Uri.TryCreate(url, UriKind.Absolute, out var uriResult) && (uriResult.Scheme.Like(Uri.UriSchemeHttp) || uriResult.Scheme.Like(Uri.UriSchemeHttps));
                     }
                     return true;
                 })

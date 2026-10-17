@@ -1,0 +1,342 @@
+﻿@inherits BasicFormFullContent<OrigamiVideo, HubContentVideo>
+
+<style>
+    .mud-tabs { flex:1; }
+</style>
+<div class="new-post-form d-flex @Class" style="flex-flow: column;">
+    @if (this.Entity.Entity is not null)
+    {
+        <BasicHeaderNotes Entity="this.Entity.Entity"></BasicHeaderNotes>
+        <div class="row mt-5">
+            <div class="col-12 col-xxl-4">
+                <LanguageWrittenOn Entity="this.Entity.Entity" Class=""></LanguageWrittenOn>
+            </div>
+            <div class="col-12 col-xxl-4">
+                <MudTextField ReadOnly="true"
+                    Immediate="true"
+                    Value="@(Text.Lower(Entity.Entity.IsDraft.YesNo()))"
+                    HelperText="@Text.Lower("Still a draft?")"
+                    Class="cursor-pointer yes-no"
+                    title="@Text.Lower("Click here to change it")"
+                    @onclick="() => this.Entity.Entity.IsDraft = !this.Entity.Entity.IsDraft.GetValueOrDefault()"></MudTextField>
+            </div>
+            <div class="col-12 col-xxl-4">
+                <MudTextField ReadOnly="true"
+                              Immediate="true"
+                              AdornmentIcon="@Icons.Material.Filled.Comment"
+                              Adornment="Adornment.Start"
+                              Value="@(Text.Lower(Entity.Entity.IsCommentEnabled.YesNo()))"
+                              HelperText="@Text.Lower("Are comments enabled?")"
+                              Class="cursor-pointer"
+                              title="@Text.Lower("Click here to change it")"
+                              @onclick="() => this.Entity.Entity.IsCommentEnabled = !this.Entity.Entity.IsCommentEnabled"></MudTextField>
+            </div>
+        </div>
+        <MudTabs Class="mt-5 border" TabPanelsClass="p-3">
+            <MudTabPanel Text="@Text.Upper("Header image")" Class="text-center">
+                <ChildContent>
+                    <HeaderImageCard Entity="@Entity.Entity"></HeaderImageCard>
+                    <MudFileUpload T="IBrowserFile" FilesChanged="UploadHeader" Accept=".png, .jpg, .bmp, .tiff" MaximumFileCount="1">
+                        <SelectedTemplate></SelectedTemplate>
+                        <CustomContent>
+                            <div class="btn-group mt-2 w-100">
+                                <button class="btn btn-light" @onclick="context.OpenFilePickerAsync">
+                                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                                    <div>@Text.Lower("Only image files")</div>
+                                    <div class="x-small">@Text.Original("{0}MB max.", 6)</div>
+                                </button>
+                                <button class="btn btn-light" @onclick="() => this.FileManagerForImages = true">
+                                    <i class="fa-solid fa-folder"></i>
+                                    @Text.Lower("Pick from file manager")
+                                </button>
+                                <button class="btn btn-light" @onclick="ClearHeader">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                    @Text.Lower("Clear header")
+                                </button>
+                            </div>
+                        </CustomContent>
+                    </MudFileUpload>
+                </ChildContent>
+            </MudTabPanel>
+            <MudTabPanel Text="@Text.Upper("Video")" Class="text-center">
+                <ChildContent>
+                    <div class="p-3 border">
+                        <MudTextField FullWidth="true"
+                                      Immediate="true"
+                                      @bind-Value="@Entity.Entity.EmbedIFrame"
+                                      HelperText="@Text.Lower("Paste your HTML iframe here to embed, like YouTube and so on")"
+                                      MaxLength="1024"></MudTextField>
+                        @if (Entity.Entity.EmbedIFrame.IsIFrame() == true)
+                        {
+                            <div class="embed-iframe mt-3">
+                                @this.Entity.Entity.EmbedIFrame.Markup()
+                            </div>
+                        }
+                    </div>
+                    <div class="mt-3">
+                        <VideoMediaFile Entity="this.Entity.Entity"></VideoMediaFile>
+                        <MudFileUpload T="IBrowserFile" FilesChanged="UploadVideo" Accept=".mp4" MaximumFileCount="1">
+                            <SelectedTemplate></SelectedTemplate>
+                            <CustomContent>
+                                <div class="btn-group mt-2 w-100">
+                                    <button class="btn btn-light" @onclick="context.OpenFilePickerAsync" style="width:33.33%;">
+                                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                                        <div>@Text.Lower("Only video files")</div>
+                                        <div class="x-small">@Text.Original("{0}GB max.", 2)</div>
+                                    </button>
+                                    <button class="btn btn-light" @onclick="() => this.FileManagerForVideos = true" style="width:33.34%;">
+                                        <i class="fa-solid fa-folder"></i>
+                                        @Text.Lower("Pick from file manager")
+                                    </button>
+                                    <button class="btn btn-light" @onclick="ClearVideo" style="width:33.33%;">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                        @Text.Lower("Clear video")
+                                    </button>
+                                </div>
+                            </CustomContent>
+                        </MudFileUpload>
+                    </div>
+                    <div class="mt-3">
+                        <VideoSubtitle Class="border p-2 mt-0" Video="@this.Entity.Entity" Entity="@this.Entity.Entity.Subtitle1" FileSaved="subtitle => this.Entity.Entity.Subtitle1 = subtitle" FileDeleted="subtitle => this.Entity.Entity.Subtitle1 = null"></VideoSubtitle>
+                        <VideoSubtitle Class="border p-2 mt-1" Video="@this.Entity.Entity" Entity="@this.Entity.Entity.Subtitle2" FileSaved="subtitle => this.Entity.Entity.Subtitle2 = subtitle" FileDeleted="subtitle => this.Entity.Entity.Subtitle2 = null"></VideoSubtitle>
+                        <VideoSubtitle Class="border p-2 mt-1" Video="@this.Entity.Entity" Entity="@this.Entity.Entity.Subtitle3" FileSaved="subtitle => this.Entity.Entity.Subtitle3 = subtitle" FileDeleted="subtitle => this.Entity.Entity.Subtitle3 = null"></VideoSubtitle>
+                    </div>
+                </ChildContent>
+            </MudTabPanel>
+            <MudTabPanel Text="@Text.Upper("Title")">
+                <ChildContent>
+                    <BasicHeader Entity="this.Entity.Entity"></BasicHeader>
+                    <ul class="inline-list mt-5">
+                        <li>
+                            <MudTextField Immediate="true"
+                                          AdornmentIcon="@Icons.Material.Filled.Description"
+                                          Adornment="Adornment.Start"
+                                          @bind-Value="@Entity.Entity.Title"
+                                          HelperText="@Text.Lower("Title")" 
+                                          MaxLength="255"></MudTextField>
+                        </li>
+                    </ul>
+                    <ul class="inline-list mt-5">
+                        <li class="pe-2">
+                            <MudTextField Immediate="true"
+                                          AdornmentIcon="@Icons.Material.Filled.Link"
+                                          Adornment="Adornment.Start"
+                                          @bind-Value="@Entity.Entity.Slug"
+                                          HelperText="@Text.Lower("Slug")" 
+                                          MaxLength="255"></MudTextField>
+                        </li>
+                        <li style="width:140px;">
+                            <button class="btn btn-secondary" @onclick="() => Entity.Entity.Slug = Entity.Entity.Title.GetSlug()" style="line-height: 15px;">
+                                @Text.Lower("Create slug")
+                                <span class="x-small">@Text.Lower("Based on title")</span>
+                            </button>
+                        </li>
+                    </ul>
+                </ChildContent>
+            </MudTabPanel>
+            <MudTabPanel Text="@Text.Upper("Content")">
+                <ChildContent>
+                    <MudTextField FullWidth="true"
+                        Immediate="true"
+                        @bind-Value="@Entity.Entity.Description"
+                        HelperText="@Text.Lower("Description")" 
+                        MaxLength="2048" 
+                        MaxLines="16"></MudTextField>
+                    <div class="mt-5">
+                        <TinyMCEContent Entity="Entity.Entity" Title="@Text.Lower("Content")"></TinyMCEContent>
+                    </div>
+                    <div class="mt-5">
+                        <ContentFiles Entity="this.Entity.Entity" Class="border"></ContentFiles>
+                    </div>
+                </ChildContent>
+            </MudTabPanel>
+            <MudTabPanel Text="@Text.Upper("Categories")">
+                <ChildContent>
+                    <div class="picked-categories">
+                        @foreach (var content in Entity.Categories)
+                        {
+                            var category = this.Get<OrigamiCategory>().Id(content.CategoryId);
+                            <div class="d-inline-flex align-items-center p-1 border shadow-sm me-1">
+                                <CategoryHeaderInline Entity="category" Class="me-1"></CategoryHeaderInline>
+                                <button class="cursor-pointer" @onclick="() => this.Entity.Categories.Remove(content)">
+                                    <i class="bi bi-trash-fill"></i>
+                                </button>
+                            </div>
+                        }
+                        @if (Entity.Categories.Any() == false)
+                        {
+                            <span class="">
+                                <i class="bi bi-info-circle-fill"></i>
+                                @Text.Lower("Pick your categories")
+                            </span>
+                        }
+                    </div>
+                    <ul class="inline-list mt-5">
+                        <li>
+                            <MudTextField T="string"
+                                          FullWidth="true"
+                                          Immediate="true"
+                                          AdornmentIcon="@Icons.Material.Filled.Search"
+                                          Adornment="Adornment.Start"
+                                          @bind-Value="CategoriesSearch"
+                                          OnKeyUp="SearchCategory"
+                                          HelperText="@Text.Lower("Search")"></MudTextField>
+                        </li>
+                    </ul>
+                    <MudDataGrid T="OrigamiCategory" Class="border mt-5" Items="Categories" SortMode="SortMode.None" Filterable="false">
+                        <Columns>
+                            <TemplateColumn CellClass="w-100">
+                                <CellTemplate>
+                                    <CategoryHeaderInline Entity="@context.Item"></CategoryHeaderInline>
+                                </CellTemplate>
+                            </TemplateColumn>
+                            <TemplateColumn>
+                                <CellTemplate>
+                                    <button class="cursor-pointer" @onclick="() => this.Add(context.Item)">
+                                        <i class="bi bi-plus-square-fill"></i>
+                                    </button>
+                                </CellTemplate>
+                            </TemplateColumn>
+                        </Columns>
+                        <PagerContent>
+                            <MudDataGridPager T="OrigamiCategory" PageSizeOptions="[10, 25, 50, 100]" />
+                        </PagerContent>
+                    </MudDataGrid>
+                </ChildContent>
+            </MudTabPanel>
+            <MudTabPanel Text="@Text.Upper("Tags")">
+                <ChildContent>
+                    <div class="picked-tags">
+                        @foreach (var content in Entity.Tags)
+                        {
+                            <div class="d-inline-flex align-items-center p-1 border shadow-sm me-1">
+                                <ContentTagHeaderInline Entity="content" Class="me-1"></ContentTagHeaderInline>
+                                <button class="cursor-pointer" @onclick="() => this.Entity.Tags.Remove(content)">
+                                    <i class="bi bi-trash-fill"></i>
+                                </button>
+                            </div>
+                        }
+                        @if (Entity.Tags.Any() == false)
+                        {
+                            <span class="">
+                                <i class="bi bi-info-circle-fill"></i>
+                                @Text.Lower("Pick your tags")
+                            </span>
+                        }
+                    </div>
+                    <ul class="inline-list mt-5">
+                        <li>
+                            <MudTextField T="string"
+                                          FullWidth="true"
+                                          Immediate="true"
+                                          AdornmentIcon="@Icons.Material.Filled.Search"
+                                          Adornment="Adornment.Start"
+                                          @bind-Value="TagsSearch"
+                                          OnKeyUp="SearchTag"
+                                          HelperText="@Text.Lower("Search")"></MudTextField>
+                        </li>
+                    </ul>
+                    <MudDataGrid T="OrigamiContentTag" Class="border mt-5" Items="Tags" SortMode="SortMode.None" Filterable="false">
+                        <Columns>
+                            <TemplateColumn CellClass="w-100">
+                                <CellTemplate>
+                                    <ContentTagHeaderInline Entity="context.Item"></ContentTagHeaderInline>
+                                </CellTemplate>
+                            </TemplateColumn>
+                            <TemplateColumn>
+                                <CellTemplate>
+                                    <button class="cursor-pointer" @onclick="() => this.Add(context.Item)">
+                                        <i class="bi bi-plus-square-fill"></i>
+                                    </button>
+                                </CellTemplate>
+                            </TemplateColumn>
+                        </Columns>
+                        <PagerContent>
+                            <MudDataGridPager T="OrigamiContentTag" PageSizeOptions="[10, 25, 50, 100]" />
+                        </PagerContent>
+                    </MudDataGrid>
+                </ChildContent>
+            </MudTabPanel>
+            <MudTabPanel Text="@Text.Upper("History")" Visible="@(this.Entity.Entity.New == false)">
+                <ChildContent>
+                    <ContentHistories Entity="this.Entity.Entity"></ContentHistories>
+                </ChildContent>
+            </MudTabPanel>    
+            <MudTabPanel Text="@Text.Upper("Preview")">
+                <ChildContent>
+                    <ContentPreview Entity="this.Entity"></ContentPreview>
+                </ChildContent>
+            </MudTabPanel>
+            <MudTabPanel Text="@Text.Upper("Summary")">
+                <ChildContent>
+                     <VideoSummary Entity="this.Entity"></VideoSummary>
+                </ChildContent>
+            </MudTabPanel>
+        </MudTabs>
+        <div class="buttons text-center z-index-front position-sticky" style="bottom: 0;">
+            <div class="btn-group">
+                <button class="btn btn-success text-white fw-bold" @onclick="Save" disabled="@this.DisableTheSaveButton">
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    @Text.Lower("Save")
+                </button>
+                @if (this.Entity.New == false)
+                {
+                    <button class="btn btn-secondary text-white fw-bold" @onclick="UndoChanges">
+                        <i class="fa-solid fa-rotate-left"></i>
+                        @Text.Lower("Undo changes")
+                    </button>
+                }
+                else
+                {
+                    <button class="btn btn-secondary text-white fw-bold" @onclick="UndoNew">
+                        <i class="fa-solid fa-rotate-left"></i>
+                        @Text.Lower("Undo changes")
+                    </button>
+                }
+            </div>
+        </div>
+    }
+</div>
+@if (this.FileUploading)
+{
+    <div class="position-fixed popup-container">
+        <div class="border p-3 shadow-lg" style="width: 50%; background-color:white;">
+            <div class="text-center">@Text.Lower("Uploading a file")...</div>
+            <!-- Progress bar for file upload -->
+            <div class="progress" style="height: 10px;">
+                <div class="progress-bar bg-secondary" role="progressbar" style="width: @this.FileUploadingProgress%;" aria-valuenow="@this.FileUploadingProgress" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+            <div class="actions text-right mt-3">
+                <div class="btn-group">
+                    <button class="btn btn-danger" @onclick="CancelFileUpload">
+                        <i class="fa-solid fa-stop"></i>
+                        @Text.Lower("Stop")
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<MudDialog Options="this.DialogOptions" @bind-Visible="this.FileManagerForVideos" ContentClass="p-0">
+    <TitleContent>
+        @Text.Original("Press ESC to close")
+    </TitleContent>
+    <DialogContent>
+        <div class="overflow-auto" style="width: 1700px; height: 1000px; max-width:100%; max-height: 100%;">
+            <FileManager Mode="Image" OnFileClicked="this.VideoFromFileManagerWillAssignEntityHeader"></FileManager>
+        </div>
+    </DialogContent>
+</MudDialog>
+<MudDialog Options="this.DialogOptions" @bind-Visible="this.FileManagerForImages" ContentClass="p-0">
+    <TitleContent>
+        @Text.Original("Press ESC to close")
+    </TitleContent>
+    <DialogContent>
+        <div class="overflow-auto" style="width: 1700px; height: 1000px; max-width:100%; max-height: 100%;">
+            <FileManager Mode="Image" OnFileClicked="this.ImageFromFileManagerWillAssignEntityHeader"></FileManager>
+        </div>
+    </DialogContent>
+</MudDialog>
+@code {
+    
+}

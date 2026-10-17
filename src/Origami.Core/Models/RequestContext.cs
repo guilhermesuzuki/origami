@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Origami.Core.Models
+﻿namespace Origami.Core.Models
 {
     public sealed class RequestContext
     {
@@ -10,6 +6,7 @@ namespace Origami.Core.Models
         public IDictionary<string, string>? Headers { get; set; }
         public string? Host { get; set; }
         public string? IpAddress { get; set; }
+        public Location? Location { get; set; }
         public string? Referrer { get; set; }
         public string? Scheme { get; set; }
         public string? UserAgent { get; set; }

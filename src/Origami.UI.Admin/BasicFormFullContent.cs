@@ -16,9 +16,8 @@ namespace Origami.UI.Admin
         [Inject] public IHubContentRepository<T2> HubContentRepository { get; set; } = null!;
 
         protected List<OrigamiCategory> Categories { get; set; } = [];
-        protected List<OrigamiContentTag> Tags { get; set; } = [];
-
         protected string CategoriesSearch { get; set; } = string.Empty;
+        protected List<OrigamiContentTag> Tags { get; set; } = [];
         protected string TagsSearch { get; set; } = string.Empty;
 
         public override void Save()
@@ -44,10 +43,25 @@ namespace Origami.UI.Admin
             }
         }
 
+        public override void SetParent(IId entity)
+        {
+            this.Entity.Parent = entity as T1;
+            this.Entity.Entity.ParentId = entity.Id;
+        }
+
         public override void UndoChanges()
         {
             this.ShowParentSelector = false;
             this.Entity = HubContentRepository.Get(Entity.Entity).Clone();
+        }
+
+        public void UndoNew()
+        {
+            if (this.Entity is INew { New: true })
+            {
+                this.ShowParentSelector = false;
+                this.Entity = this.TheCreator.Create<T2>();
+            }
         }
 
         /// <summary>
@@ -66,7 +80,8 @@ namespace Origami.UI.Admin
             }
             else if (content is OrigamiContentTag tag)
             {
-                Entity.Tags.Add(new() { ContentId = Entity.Entity.Id, Tag = tag.Tag });
+                var newtag = new OrigamiContentTag { ContentId = Entity.Entity.Id, Tag = tag.Tag, Slug = SlugGenerator.Generate(tag.Tag), };
+                Entity.Tags.Add(newtag);
                 Entity.Tags = Entity.Tags.DistinctBy(x => x.Tag).ToList();
             }
         }
@@ -96,6 +111,16 @@ namespace Origami.UI.Admin
             return [.. query];
         }
 
+        protected virtual IEnumerable<T1> GetParents()
+        {
+            return from x in this.MemoryCache.Read<T1>()
+                   where x.BlogId == this.UserFacade.BlogId
+                   where x.IsDeleted == false
+                   where this.Super.IsParentDeleted(x) == false
+                   orderby x.Title
+                   select x;
+        }
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -120,22 +145,6 @@ namespace Origami.UI.Admin
         {
             this.Tags = TagsSearch.Has() == false ? this.Get<OrigamiContentTag>() : [new() { Tag = TagsSearch }, .. this.Get<OrigamiContentTag>().Where(x => x.Tag.Contains(TagsSearch, StringComparison.OrdinalIgnoreCase))];
             this.InvokeAsync(this.StateHasChanged);
-        }
-
-        public override void SetParent(IId entity)
-        {
-            this.Entity.Parent = entity as T1;
-            this.Entity.Entity.ParentId = entity.Id;
-        }
-
-        protected virtual IEnumerable<T1> GetParents()
-        {
-            return from x in this.MemoryCache.Read<T1>()
-                   where x.BlogId == this.UserFacade.BlogId
-                   where x.IsDeleted == false
-                   where this.Super.IsParentDeleted(x) == false
-                   orderby x.Title
-                   select x;
         }
     }
 }
