@@ -47,7 +47,7 @@
                         <i class="bi bi-file-earmark-text-fill"></i>
                         @Text.Lower("Content")
                     </div>
-                    <MudDataGrid T="OrigamiContent" Class="border mt-3" Items="_getContent()" SortMode="SortMode.None" Filterable="false">
+                    <MudDataGrid T="OrigamiContent" Class="border mt-3" Items="_getContent()" SortMode="SortMode.None" Filterable="false" RowClassFunc="this.RowClassFunc">
                         <Columns>
                             <TemplateColumn>
                                 <HeaderTemplate>
@@ -149,5 +149,14 @@
     private IEnumerable<OrigamiContent> _getContent()
     {
         return this.Super.Contents.ReadFromCache().Blog(this.Entity.Id).OrderBy(x => x.Title);
+    }
+
+    private string RowClassFunc(OrigamiContent content, int index)
+    {
+        var sb = new StringBuilder();
+
+        if (content.IsDeleted) sb.Append(" deleted");
+
+        return sb.ToString();
     }
 }
