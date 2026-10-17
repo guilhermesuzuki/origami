@@ -40,24 +40,42 @@
                     </li>
                 </ul>
             </div>
-            <div class="content p-3 mt-3">
-                <div class="w-100 text-white bg-secondary text-center">
-                    <i class="bi bi-file-earmark-text-fill"></i>
-                    @Text.Lower("Content")
+            @if (this.Entity.New == false)
+            {
+                <div class="content p-3 mt-3">
+                    <div class="w-100 text-white bg-secondary text-center">
+                        <i class="bi bi-file-earmark-text-fill"></i>
+                        @Text.Lower("Content")
+                    </div>
+                    <MudDataGrid T="OrigamiContent" Class="border mt-3" Items="_getContent()" SortMode="SortMode.None" Filterable="false">
+                        <Columns>
+                            <TemplateColumn>
+                                <HeaderTemplate>
+                                    @Text.Upper("Header")
+                                </HeaderTemplate>
+                                <CellTemplate>
+                                    <ContentHeaderInline Entity="context.Item"></ContentHeaderInline>
+                                </CellTemplate>
+                            </TemplateColumn>
+                            <TemplateColumn HeaderClass="col-3">
+                                <HeaderTemplate>
+                                    <span>@Text.Upper("Publish Date")</span>
+                                </HeaderTemplate>
+                                <CellTemplate>
+                                    @if (context.Item.IsPublished)
+                                    {
+                                        <i class="fa-solid fa-thumbs-up me-1"></i>
+                                        <span>@context.Item.DatePublished.Humanize()</span>
+                                    }
+                                </CellTemplate>
+                            </TemplateColumn>
+                        </Columns>
+                        <PagerContent>
+                            <MudDataGridPager T="OrigamiContent" PageSizeOptions="[10, 25, 50, 100]" />
+                        </PagerContent>
+                    </MudDataGrid>
                 </div>
-                <MudDataGrid T="OrigamiContent" Class="border mt-3" Items="_getContent()" SortMode="SortMode.None" Filterable="false">
-                    <Columns>
-                        <TemplateColumn CellClass="w-100">
-                            <CellTemplate>
-                                <ContentHeaderInline Entity="context.Item"></ContentHeaderInline>
-                            </CellTemplate>
-                        </TemplateColumn>
-                    </Columns>
-                    <PagerContent>
-                        <MudDataGridPager T="OrigamiContent" PageSizeOptions="[10, 25, 50, 100]" />
-                    </PagerContent>
-                </MudDataGrid>
-            </div>
+            }
         </div>
         <div class="col-12 col-xxl-8">
             <div class="row">
