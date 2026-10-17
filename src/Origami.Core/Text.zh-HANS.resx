@@ -2691,4 +2691,10 @@
   <data name="E-mail is already in use" xml:space="preserve">
     <value>电子邮件地址已被使用</value>
   </data>
+  <data name="A concurrency error occurred while updating the content." xml:space="preserve">
+    <value>更新内容时发生并发错误。</value>
+  </data>
+  <data name="Please, refresh your screen or try again in a few minutes." xml:space="preserve">
+    <value>请刷新页面，或几分钟后重试。</value>
+  </data>
 </root>

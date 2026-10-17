@@ -2691,4 +2691,10 @@
   <data name="E-mail is already in use" xml:space="preserve">
     <value>ईमेल पता पहले से उपयोग में है</value>
   </data>
+  <data name="A concurrency error occurred while updating the content." xml:space="preserve">
+    <value>सामग्री अपडेट करते समय समवर्तीता त्रुटि हुई।</value>
+  </data>
+  <data name="Please, refresh your screen or try again in a few minutes." xml:space="preserve">
+    <value>कृपया अपनी स्क्रीन रीफ़्रेश करें या कुछ मिनटों बाद फिर से प्रयास करें।</value>
+  </data>
 </root>
