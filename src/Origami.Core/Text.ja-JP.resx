@@ -2691,4 +2691,10 @@
   <data name="E-mail is already in use" xml:space="preserve">
     <value>メールアドレスはすでに使用されています</value>
   </data>
+  <data name="A concurrency error occurred while updating the content." xml:space="preserve">
+    <value>コンテンツの更新中に同時実行性エラーが発生しました。</value>
+  </data>
+  <data name="Please, refresh your screen or try again in a few minutes." xml:space="preserve">
+    <value>画面を更新するか、数分後にもう一度お試しください。</value>
+  </data>
 </root>
