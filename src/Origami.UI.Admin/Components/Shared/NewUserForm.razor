@@ -402,14 +402,14 @@
         @Text.Original("Press ESC to close")
     </TitleContent>
     <DialogContent>
-        <div class="overflow-auto" style="width: 1700px; height: 1000px; max-width:100%; max-height: 100%;">
+        <div class="position-relative pt-3 pb-3 dialog-content">
             <FileManager Mode="Image" OnFileClicked="this.ImageFromFileManagerWillAssignEntityHeader"></FileManager>
         </div>
     </DialogContent>
 </MudDialog>
 <MudDialog Options="this.DialogOptions" @bind-Visible="this._showPasswordResetHistory" TitleClass="d-none">
     <DialogContent>
-        <div class="border shadow-lg position-relative" style="max-width: 1000px; width:100%;">
+        <div class="position-relative pt-3 pb-3 dialog-content">
             <div class="overflow-auto" style="padding-bottom: 70px;">
                 <div class="p-3">
                     <MudDataGrid T="OrigamiUserPasswordReset" Items="this.GetPasswordResetHistory()">
