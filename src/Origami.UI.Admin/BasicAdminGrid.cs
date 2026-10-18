@@ -11,7 +11,7 @@ using System.Transactions;
 namespace Origami.UI.Admin
 {
     public abstract class BasicAdminGrid<T> :
-        BasicAdmin,
+        BasicAdminPage,
         IFilter,
         INanoId
         where T : class, IId, new()

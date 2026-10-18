@@ -10,7 +10,7 @@ using System.Transactions;
 namespace Origami.UI.Admin
 {
     public abstract class BasicAdminGridContent<T1, T2> :
-        BasicAdmin,
+        BasicAdminPage,
         IFilter,
         INanoId
         where T1 : OrigamiContent, new()

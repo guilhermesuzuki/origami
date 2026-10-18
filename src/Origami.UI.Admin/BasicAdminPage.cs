@@ -3,12 +3,12 @@ using Origami.Core.Models;
 
 namespace Origami.UI.Admin
 {
-    public abstract class BasicAdmin : BasicPage
+    public abstract class BasicAdminPage : BasicPage
     {
         /// <summary>
         /// Default constructor
         /// </summary>
-        protected BasicAdmin() : base()
+        protected BasicAdminPage() : base()
         {
 
         }
