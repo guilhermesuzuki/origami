@@ -72,14 +72,7 @@ public class WhatHappensNext : IWhatHappensNext
 
             if (e.Entity is OrigamiContentComment comment)
             {
-                var content = this.SuperRepository.Contents.ReadFromCache().Id(comment.ContentId);
-                hyperlink = content switch
-                {
-                    OrigamiPost => $"/n/posts/comments?nanoid={comment.NanoId}",
-                    OrigamiVideo => $"/n/videos/comments?nanoid={comment.NanoId}",
-                    OrigamiSoftwareRelease => $"/n/softwarereleases/comments?nanoid={comment.NanoId}",
-                    _ => string.Empty,
-                };
+                hyperlink = $"/n/comments?nanoid={comment.NanoId}";
             }
         }
 
