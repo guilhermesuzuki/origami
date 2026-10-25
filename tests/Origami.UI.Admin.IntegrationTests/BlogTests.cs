@@ -145,6 +145,7 @@ namespace Origami.UI.Admin.IntegrationTests
             dbBlog.NanoId.ShouldBe(blog.NanoId);
             dbBlog.IsDeleted.ShouldBe(true);
             dbBlog.IsDeleted.ShouldBe(blog.IsDeleted);
+            dbBlog.Version.ShouldBe(blog.Version);
 
             var cacheBlog = superRepository.MyMemoryCache.Read<OrigamiBlog>().Id(TestBlog.Id)!;
             cacheBlog.ShouldNotBeNull();

@@ -48,6 +48,7 @@ namespace Origami.Core.Data
                 if (clone is IDeleted deleted)
                 {
                     deleted.IsDeleted = true;
+
                     using (var db = DbContextFactory.CreateDbContext())
                     {
                         clone = db.Update(clone).Entity;
